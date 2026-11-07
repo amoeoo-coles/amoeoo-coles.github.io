@@ -1,0 +1,31 @@
+name: Update visitor stats
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency: visitors
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch GoatCounter stats
+        env:
+          GOATCOUNTER_TOKEN: ${{ secrets.GOATCOUNTER_TOKEN }}
+        run: python3 scripts/fetch_visitors.py
+      - name: Commit if changed
+        run: |
+          python3 - <<'PY'
+          import json;d=json.load(open('data/visitors.json'));d.pop('updated_utc',None);json.dump(d,open('/tmp/new.json','w'),sort_keys=True)
+          PY
+          if git show HEAD:data/visitors.json > /tmp/old_raw.json 2>/dev/null; then
+            python3 -c "import json;d=json.load(open('/tmp/old_raw.json'));d.pop('updated_utc',None);json.dump(d,open('/tmp/old.json','w'),sort_keys=True)"
+            if cmp -s /tmp/new.json /tmp/old.json; then echo "No change"; exit 0; fi
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/visitors.json
+          git commit -m "Update visitor stats"
+          git push

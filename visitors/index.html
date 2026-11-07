@@ -1,0 +1,32 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Visitors - ACI Always on APIC Monitoring</title>
+<style>body{font-family:sans-serif;margin:20px;background:#111;color:#eee;max-width:1000px}a{color:#8cf}nav.site{margin:0 0 10px}table{border-collapse:collapse;width:100%;margin:8px 0 24px}th,td{border:1px solid #333;padding:6px 8px;text-align:left;font-size:14px}th{background:#1d1d1d}td.n{text-align:right;width:90px}.muted{color:#999;font-size:13px}.kpis{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0 20px}.kpi{background:#1b1b1b;border:1px solid #333;border-radius:6px;padding:10px 14px;min-width:150px}.kpi b{display:block;font-size:26px;color:#6c6}.bar{background:#2a6;height:8px;border-radius:4px}</style></head><body>
+<nav class="site"><a href="../">Home</a> | <a href="../grafana-screenshots/">Group 1</a> | <a href="../grafana-screenshots-part2/">Group 2</a> | <a href="../aoapic-nac-test-status/">nac-test status</a> | <a href="./">Visitors</a></nav>
+<h1>Visitors</h1>
+<p class="muted">Unique visitors to amoeoo-coles.github.io, counted from 7 Nov 2026. Each person counts once per page per day rather than on every reload. Where visitors are located comes from their country and region only, never their exact address or name. Browsers with ad blockers aren't counted.</p>
+<h2>Unique visitors by page (live)</h2>
+<div class="kpis" id="kpis"></div>
+<h2>Where visitors are</h2>
+<table id="loc"><thead><tr><th>#</th><th>Country</th><th>Regions</th><th class="n">Visitors</th></tr></thead><tbody><tr><td colspan="4" class="muted">Loading…</td></tr></tbody></table>
+<h2>Pages visited</h2>
+<table id="pages"><thead><tr><th>#</th><th>Page</th><th class="n">Visitors</th></tr></thead><tbody></tbody></table>
+<h2>Where they came from</h2>
+<table id="refs"><thead><tr><th>#</th><th>Referrer</th><th class="n">Visitors</th></tr></thead><tbody></tbody></table>
+<p class="muted" id="upd"></p>
+<p class="muted">Full live dashboard: <a href="https://amoeoo-coles.goatcounter.com/">amoeoo-coles.goatcounter.com</a></p>
+<script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>
+const GC='https://amoeoo-coles.goatcounter.com/counter/';
+const P=[['Home','/'],['Group 1','/grafana-screenshots/'],['Group 2','/grafana-screenshots-part2/'],['nac-test status','/aoapic-nac-test-status/'],['Visitors','/visitors/']];
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const k=document.getElementById('kpis');
+P.forEach(([n,p])=>{const d=document.createElement('div');d.className='kpi';d.innerHTML='<b>…</b><a href="'+'..'+p+'">'+n+'</a>';k.appendChild(d);
+ fetch(GC+encodeURIComponent(p)+'.json').then(r=>r.ok?r.json():{count_unique:'0'}).then(j=>{d.querySelector('b').textContent=j.count_unique||j.count||'0'}).catch(()=>{d.querySelector('b').textContent='0'})});
+function rows(id,list,f){const tb=document.querySelector('#'+id+' tbody');if(!list||!list.length){tb.innerHTML='<tr><td colspan="4" class="muted">No visits recorded yet.</td></tr>';return}
+ const max=Math.max(...list.map(x=>+x.count||0),1);tb.innerHTML=list.map((x,i)=>f(x,i,max)).join('')}
+fetch('../data/visitors.json?'+Date.now()).then(r=>r.json()).then(d=>{
+ rows('loc',d.countries,(c,i,m)=>'<tr><td>'+(i+1)+'</td><td>'+esc(c.name||c.id||'Unknown')+'<div class="bar" style="width:'+(100*(+c.count||0)/m)+'%"></div></td><td>'+esc((c.regions||[]).map(r=>(r.name||'Unknown')+' ('+r.count+')').join(', '))+'</td><td class="n">'+esc(c.count)+'</td></tr>');
+ rows('pages',d.pages,(p,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(p.path)+(p.title?' <span class="muted">'+esc(p.title)+'</span>':'')+'</td><td class="n">'+esc(p.count)+'</td></tr>');
+ rows('refs',d.toprefs,(p,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(p.name||'Direct or unknown')+'</td><td class="n">'+esc(p.count)+'</td></tr>');
+ if(d.updated_utc)document.getElementById('upd').textContent='Location and page tables last refreshed '+new Date(d.updated_utc).toLocaleString('en-AU',{timeZone:'Australia/Melbourne'})+' (Melbourne time). They refresh about every 30 minutes.';
+}).catch(()=>{document.querySelector('#loc tbody').innerHTML='<tr><td colspan="4" class="muted">Location data will appear after the first refresh.</td></tr>'});
+</script></body></html>
