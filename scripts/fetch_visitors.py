@@ -17,8 +17,17 @@ out = {"updated_utc": now.strftime("%Y-%m-%dT%H:%M:%SZ"), "since": "2026-11-07"}
 try: out["total"] = get("/stats/total", **rng)
 except Exception as e: out["total_error"] = str(e)
 try:
-    h = get("/stats/hits", limit=100, **rng)
-    out["pages"] = [{"path": x.get("path"), "title": x.get("title"), "count": x.get("count")} for x in h.get("hits", [])]
+    # Per-page unique visitors for every page (paginate past 100 paths with exclude_paths).
+    pages, seen = [], []
+    for _ in range(20):
+        q = dict(limit=100, **rng)
+        if seen: q["exclude_paths"] = ",".join(str(i) for i in seen)
+        h = get("/stats/hits", **q)
+        hits = h.get("hits", [])
+        pages += [{"path": x.get("path"), "title": x.get("title"), "count": x.get("count")} for x in hits]
+        seen += [x.get("path_id") for x in hits if x.get("path_id") is not None]
+        if not h.get("more") or not hits: break
+    out["pages"] = pages
 except Exception as e: out["pages_error"] = str(e)
 countries = []
 try:
