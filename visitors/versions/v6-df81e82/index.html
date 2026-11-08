@@ -1,0 +1,32 @@
+<!doctype html><html><head><meta name="robots" content="noindex"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Visitors - ACI Always on APIC Monitoring</title>
+<style>body{font-family:sans-serif;margin:20px;background:#111;color:#eee;max-width:1000px}a{color:#8cf}nav.site{margin:0 0 10px}table{border-collapse:collapse;width:100%;margin:8px 0 24px}th,td{border:1px solid #333;padding:6px 8px;text-align:left;font-size:14px}th{background:#1d1d1d}td.n{text-align:right;width:90px}.muted{color:#999;font-size:13px}.kpis{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0 20px}.kpi{background:#1b1b1b;border:1px solid #333;border-radius:6px;padding:10px 14px;min-width:150px}.kpi b{display:block;font-size:26px;color:#6c6}.bar{background:#2a6;height:8px;border-radius:4px}</style></head><body><div style="background:#302d20;border-left:4px solid #fc6;color:#eee;padding:10px 14px;margin:0 0 14px;font:14px system-ui,sans-serif"><b>Archived version v6</b> of /visitors/ — commit <a style="color:#8cf" href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/df81e82eddddb1590350119582eeb2c887ecf7a3">df81e82</a>, 08 Nov 2026 16:50 AEDT (Melbourne time). Not live. Recovered from git; links, images and downloads open the current files. <a style="color:#8cf" href="/visitors/">Latest version →</a></div>
+<div class="topbar" style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-bottom:16px"><nav class="site" style="margin:0"><a href="/">Home</a> | <a href="/report17-aoapic-monitoring/tenants/">Tenants Detail</a> | <a href="/report17-aoapic-monitoring/objects/">Object Drill-down</a> | <a href="/report17-aoapic-monitoring/">Report 17</a> | <a href="/grafana-screenshots/">Group 1</a> | <a href="/grafana-screenshots-part2/">Group 2</a> | <a href="/visitors/">Visitors</a></nav><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:#bbb">Visitor stats<span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span><span class="uvt" style="font-size:11px;color:#888"></span></div></div>
+<h1>Visitors</h1>
+<p class="muted">Unique visitors to amoeoo-coles.github.io, counted from 7 Nov 2026. Each person counts once per page per day rather than on every reload. Where visitors are located comes from their country and region only, never their exact address or name. Browsers with ad blockers aren't counted.</p>
+<h2>Unique visitors by page</h2>
+<div class="kpis" id="kpis"></div>
+<h2>Where visitors are</h2>
+<table id="loc"><thead><tr><th>#</th><th>Country</th><th>Regions</th><th class="n">Visitors</th></tr></thead><tbody><tr><td colspan="4" class="muted">Loading…</td></tr></tbody></table>
+<h2>Pages visited</h2>
+<table id="pages"><thead><tr><th>#</th><th>Page</th><th class="n">Visitors</th></tr></thead><tbody></tbody></table>
+<h2>Where they came from</h2>
+<table id="refs"><thead><tr><th>#</th><th>Referrer</th><th class="n">Visitors</th></tr></thead><tbody></tbody></table>
+<p class="muted" id="upd"></p>
+<p class="muted">Full live dashboard: <a href="https://amoeoo-coles.goatcounter.com/">amoeoo-coles.goatcounter.com</a></p>
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/+$/,"")||"/"}}</script>
+<script>
+const GC='https://amoeoo-coles.goatcounter.com/counter/';
+const P=[['Home','/'],['Group 1','/grafana-screenshots'],['Group 2','/grafana-screenshots-part2'],['nac-test status','/aoapic-nac-test-status'],['Visitors','/visitors']];
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const k=document.getElementById('kpis');const B={};
+P.forEach(([n,p])=>{const d=document.createElement('div');d.className='kpi';d.innerHTML='<b>0</b><a href="../../'+(p==='/'?'/':p+'/')+'">'+n+'</a>';k.appendChild(d);B[p]=d.querySelector('b')});
+function rows(id,list,f){const tb=document.querySelector('#'+id+' tbody');if(!list||!list.length){tb.innerHTML='<tr><td colspan="4" class="muted">No visits recorded yet.</td></tr>';return}
+ const max=Math.max(...list.map(x=>+x.count||0),1);tb.innerHTML=list.map((x,i)=>f(x,i,max)).join('')}
+fetch('../data/visitors.json?'+Date.now()).then(r=>r.json()).then(d=>{
+ (d.pages||[]).forEach(x=>{if(B[x.path])B[x.path].textContent=x.count});
+ rows('loc',d.countries,(c,i,m)=>'<tr><td>'+(i+1)+'</td><td>'+esc(c.name||c.id||'Unknown')+'<div class="bar" style="width:'+(100*(+c.count||0)/m)+'%"></div></td><td>'+esc((c.regions||[]).map(r=>(r.name||'Unknown')+' ('+r.count+')').join(', '))+'</td><td class="n">'+esc(c.count)+'</td></tr>');
+ rows('pages',d.pages,(p,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(p.path)+(p.title?' <span class="muted">'+esc(p.title)+'</span>':'')+'</td><td class="n">'+esc(p.count)+'</td></tr>');
+ rows('refs',d.toprefs,(p,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(p.name||'Direct or unknown')+'</td><td class="n">'+esc(p.count)+'</td></tr>');
+ if(d.updated_utc)document.getElementById('upd').textContent='Location and page tables last refreshed '+new Date(d.updated_utc).toLocaleString('en-AU',{timeZone:'Australia/Melbourne'})+' (Melbourne time). All numbers on this page refresh about every 30 minutes.';
+}).catch(()=>{document.querySelector('#loc tbody').innerHTML='<tr><td colspan="4" class="muted">Location data will appear after the first refresh.</td></tr>'});
+</script><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc)e.textContent=" (counts as of "+new Date(d.updated_utc).toLocaleString("en-AU",{timeZone:"Australia/Melbourne",day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})+")"})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script></body></html>
