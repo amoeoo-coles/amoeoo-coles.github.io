@@ -405,13 +405,33 @@
    "source": "NetBox (restored from the 29 Oct 2026 07:39 backup on 8 Nov 2026 ~23:34 AEDT) compared with AOAPIC",
    "requested_at": "2026-11-08T23:35:38+11:00",
    "target": "AOAPIC (sandboxapicdc.cisco.com)",
-   "status": "Pending — awaiting Aung's approval: tenant is in NetBox but missing on AOAPIC (6 objects to create). Not deployed.",
-   "deployment_evidence": null,
-   "note": "Applying needs Aung's explicit approval. Compared object by object with a fresh read-only AOAPIC read at 2026-11-08 23:35 AEDT.",
-   "preflight": null,
-   "history_note": "Last dry-run on record: 20261022-212403-dryrun.log (22 Oct 2026, ok=9 changed=6 failed=0); no fresh preflight has been run for this request.",
+   "status": "Deployed to AOAPIC (approved by Aung t174u 8 Nov 23:49 AEDT; postcheck 20261108-235716-post; independently verified 6/6 objects present)",
+   "deployment_evidence": {
+    "target": "AOAPIC (https://sandboxapicdc.cisco.com)",
+    "run_id": "20261108-235716-post",
+    "verified_at": "2026-11-08T23:56:50+11:00",
+    "preflight_run_id": "20261108-235234-pre",
+    "apply_summary": "Apply 23:55:23-23:55:59 AEDT (scripts/pipeline.sh apply --approved --direct): ok=8 changed=6 failed=0. Post-test PASS 48/48 (fabric 40/40, tenant 8/8). Post-change backup diff 20261108-235735-diff: target +22 MOs, out-of-band +44 (the other two new tenants), -0, ~0.",
+    "source": "aci-nac pipeline postcheck",
+    "my_check": {
+     "checked_at": "2026-11-08T23:56:50+11:00",
+     "result": "6/6 objects present",
+     "method": "read-only GET (aaaLogin, GET, aaaLogout): tenant/VRF/BD/subnet/AP/EPG DNs, BD arp=yes unk=flood routing=yes limit=yes, subnet private, EPG->BD binding"
+    },
+    "approvals": "Approved by Aung (t174u) on 8 Nov 2026 at 23:49 AEDT; preflight run 20261108-235234-pre"
+   },
+   "note": "Applied with Aung's explicit approval (t174u). Fresh pre-write drift check run immediately before the apply.",
+   "preflight": {
+    "target": "AOAPIC (sandboxapicdc.cisco.com)",
+    "run_id": "20261108-235234-pre",
+    "verified_at": "2026-11-08T23:52:34+11:00",
+    "summary": "Fresh pre-write drift check 23:50:58 and again 23:54:48 AEDT (read-only): tenant absent, no name clash, no overlapping subnet. Ansible check mode ok=9 changed=6 failed=0; nac-test pre BASELINE fabric 37/37, tenant 0/8 (expected before apply). Pre-change config backup 20261108-235423-pre (11 tenants, 3297 MOs).",
+    "scope": "1 VRF, 1 BD + subnet, 1 AP, 1 EPG (no contracts/L3Out)",
+    "source": "aci-nac pipeline (scripts/pipeline.sh dryrun + pre), model branch tenant/Cursor_Tenant2-20261108-2351"
+   },
+   "history_note": null,
    "planned_structure": {
-    "label": "Planned from NetBox, not on AOAPIC yet",
+    "label": "Deployed structure (verified on AOAPIC)",
     "source": "NetBox ACI plugin (restored from the 29 Oct 2026 07:39 backup on 8 Nov 2026 ~23:34 AEDT)",
     "generated": "2026-11-08T23:35:38+11:00",
     "object_counts": {
@@ -423,7 +443,7 @@
      "fvAp": 1,
      "fvAEPg": 1
     },
-    "vni_note": "VNIs are assigned by the APIC on deploy.",
+    "vni_note": "VNIs/pcTags read from AOAPIC at 2026-11-08 23:56 AEDT (read-only postcheck).",
     "not_in_scope": "Contracts, filters, L3Outs, domains and static paths are not modelled in NetBox for this tenant.",
     "tenant": {
      "name": "Cursor_Tenant2",
@@ -435,7 +455,7 @@
        "description": null,
        "dn": "uni/tn-Cursor_Tenant2/ctx-cursor2_vrf",
        "vni_kind": "L3 VNI",
-       "vni": null
+       "vni": "2097154"
       }
      ],
      "bridge_domains": [
@@ -449,7 +469,7 @@
        "limit_ip_learn_to_subnets": true,
        "dn": "uni/tn-Cursor_Tenant2/BD-cursor2_bd",
        "vni_kind": "L2 VNI",
-       "vni": null,
+       "vni": "14811120",
        "subnets": [
         {
          "ip": "10.250.3.1/24",
@@ -470,7 +490,8 @@
          "name": "web",
          "description": null,
          "bridge_domain": "cursor2_bd",
-         "dn": "uni/tn-Cursor_Tenant2/ap-cursor2_ap/epg-web"
+         "dn": "uni/tn-Cursor_Tenant2/ap-cursor2_ap/epg-web",
+         "pctag": "49153"
         }
        ]
       }
@@ -478,8 +499,8 @@
     }
    },
    "planned_objects": {
-    "title": "Objects (6) — VNIs assigned on deploy",
-    "source": "NetBox ACI plugin vs fresh read-only AOAPIC read 2026-11-08 23:35 AEDT",
+    "title": "Objects (6) — deployed; VNIs read from AOAPIC",
+    "source": "NetBox ACI plugin vs read-only AOAPIC postcheck 2026-11-08 23:56 AEDT",
     "objects": [
      {
       "type": "Tenant",
@@ -487,23 +508,23 @@
       "name": "Cursor_Tenant2",
       "dn": "uni/tn-Cursor_Tenant2",
       "vni": "n/a",
-      "status": "missing on AOAPIC"
+      "status": "deployed (verified 23:56 AEDT)"
      },
      {
       "type": "VRF",
       "class": "fvCtx",
       "name": "cursor2_vrf",
       "dn": "uni/tn-Cursor_Tenant2/ctx-cursor2_vrf",
-      "vni": "assigned on deploy",
-      "status": "missing on AOAPIC"
+      "vni": "L3 VNI 2097154",
+      "status": "deployed (verified 23:56 AEDT)"
      },
      {
       "type": "Bridge domain",
       "class": "fvBD",
       "name": "cursor2_bd",
       "dn": "uni/tn-Cursor_Tenant2/BD-cursor2_bd",
-      "vni": "assigned on deploy",
-      "status": "missing on AOAPIC"
+      "vni": "L2 VNI 14811120",
+      "status": "deployed (verified 23:56 AEDT)"
      },
      {
       "type": "BD subnet",
@@ -511,7 +532,7 @@
       "name": "cursor2_bd 10.250.3.1/24",
       "dn": "uni/tn-Cursor_Tenant2/BD-cursor2_bd/subnet-[10.250.3.1/24]",
       "vni": "n/a",
-      "status": "missing on AOAPIC"
+      "status": "deployed (verified 23:56 AEDT)"
      },
      {
       "type": "App profile",
@@ -519,17 +540,18 @@
       "name": "cursor2_ap",
       "dn": "uni/tn-Cursor_Tenant2/ap-cursor2_ap",
       "vni": "n/a",
-      "status": "missing on AOAPIC"
+      "status": "deployed (verified 23:56 AEDT)"
      },
      {
       "type": "EPG",
       "class": "fvAEPg",
       "name": "cursor2_ap/web (BD cursor2_bd)",
       "dn": "uni/tn-Cursor_Tenant2/ap-cursor2_ap/epg-web",
-      "vni": "assigned on deploy",
-      "status": "missing on AOAPIC"
+      "vni": "pcTag 49153",
+      "status": "deployed (verified 23:56 AEDT)"
      }
-    ]
+    ],
+    "verified": "2026-11-08T23:56:50+11:00"
    }
   },
   {
@@ -540,13 +562,33 @@
    "source": "NetBox (restored from the 29 Oct 2026 07:39 backup on 8 Nov 2026 ~23:34 AEDT) compared with AOAPIC",
    "requested_at": "2026-11-08T23:35:38+11:00",
    "target": "AOAPIC (sandboxapicdc.cisco.com)",
-   "status": "Pending — awaiting Aung's approval: tenant is in NetBox but missing on AOAPIC (6 objects to create). Not deployed.",
-   "deployment_evidence": null,
-   "note": "Applying needs Aung's explicit approval. Compared object by object with a fresh read-only AOAPIC read at 2026-11-08 23:35 AEDT.",
-   "preflight": null,
-   "history_note": "Last dry-run on record: 20261022-200534-dryrun.log (22 Oct 2026, ok=9 changed=6 failed=0); no fresh preflight has been run for this request.",
+   "status": "Deployed to AOAPIC (approved by Aung t174u 8 Nov 23:49 AEDT; postcheck 20261108-235753-post; independently verified 6/6 objects present)",
+   "deployment_evidence": {
+    "target": "AOAPIC (https://sandboxapicdc.cisco.com)",
+    "run_id": "20261108-235753-post",
+    "verified_at": "2026-11-08T23:56:50+11:00",
+    "preflight_run_id": "20261108-235329-pre",
+    "apply_summary": "Apply 23:55:59-23:56:34 AEDT (scripts/pipeline.sh apply --approved --direct): ok=8 changed=6 failed=0. Post-test PASS 48/48 (fabric 40/40, tenant 8/8). Post-change backup diff 20261108-235813-diff: target +22 MOs, out-of-band +44 (the other two new tenants), -0, ~0.",
+    "source": "aci-nac pipeline postcheck",
+    "my_check": {
+     "checked_at": "2026-11-08T23:56:50+11:00",
+     "result": "6/6 objects present",
+     "method": "read-only GET (aaaLogin, GET, aaaLogout): tenant/VRF/BD/subnet/AP/EPG DNs, BD arp=yes unk=flood routing=yes limit=yes, subnet private, EPG->BD binding"
+    },
+    "approvals": "Approved by Aung (t174u) on 8 Nov 2026 at 23:49 AEDT; preflight run 20261108-235329-pre"
+   },
+   "note": "Applied with Aung's explicit approval (t174u). Fresh pre-write drift check run immediately before the apply.",
+   "preflight": {
+    "target": "AOAPIC (sandboxapicdc.cisco.com)",
+    "run_id": "20261108-235329-pre",
+    "verified_at": "2026-11-08T23:53:29+11:00",
+    "summary": "Fresh pre-write drift check 23:50:58 and again 23:54:48 AEDT (read-only): tenant absent, no name clash, no overlapping subnet. Ansible check mode ok=9 changed=6 failed=0; nac-test pre BASELINE fabric 37/37, tenant 0/8 (expected before apply). Pre-change config backup 20261108-235432-pre (11 tenants, 3297 MOs).",
+    "scope": "1 VRF, 1 BD + subnet, 1 AP, 1 EPG (no contracts/L3Out)",
+    "source": "aci-nac pipeline (scripts/pipeline.sh dryrun + pre), model branch tenant/Cursor_Tenant3-20261108-2351"
+   },
+   "history_note": null,
    "planned_structure": {
-    "label": "Planned from NetBox, not on AOAPIC yet",
+    "label": "Deployed structure (verified on AOAPIC)",
     "source": "NetBox ACI plugin (restored from the 29 Oct 2026 07:39 backup on 8 Nov 2026 ~23:34 AEDT)",
     "generated": "2026-11-08T23:35:38+11:00",
     "object_counts": {
@@ -558,7 +600,7 @@
      "fvAp": 1,
      "fvAEPg": 1
     },
-    "vni_note": "VNIs are assigned by the APIC on deploy.",
+    "vni_note": "VNIs/pcTags read from AOAPIC at 2026-11-08 23:56 AEDT (read-only postcheck).",
     "not_in_scope": "Contracts, filters, L3Outs, domains and static paths are not modelled in NetBox for this tenant.",
     "tenant": {
      "name": "Cursor_Tenant3",
@@ -570,7 +612,7 @@
        "description": null,
        "dn": "uni/tn-Cursor_Tenant3/ctx-cursor3_vrf",
        "vni_kind": "L3 VNI",
-       "vni": null
+       "vni": "2162688"
       }
      ],
      "bridge_domains": [
@@ -584,7 +626,7 @@
        "limit_ip_learn_to_subnets": true,
        "dn": "uni/tn-Cursor_Tenant3/BD-cursor3_bd",
        "vni_kind": "L2 VNI",
-       "vni": null,
+       "vni": "14909412",
        "subnets": [
         {
          "ip": "10.250.4.1/24",
@@ -605,7 +647,8 @@
          "name": "web",
          "description": null,
          "bridge_domain": "cursor3_bd",
-         "dn": "uni/tn-Cursor_Tenant3/ap-cursor3_ap/epg-web"
+         "dn": "uni/tn-Cursor_Tenant3/ap-cursor3_ap/epg-web",
+         "pctag": "49153"
         }
        ]
       }
@@ -613,8 +656,8 @@
     }
    },
    "planned_objects": {
-    "title": "Objects (6) — VNIs assigned on deploy",
-    "source": "NetBox ACI plugin vs fresh read-only AOAPIC read 2026-11-08 23:35 AEDT",
+    "title": "Objects (6) — deployed; VNIs read from AOAPIC",
+    "source": "NetBox ACI plugin vs read-only AOAPIC postcheck 2026-11-08 23:56 AEDT",
     "objects": [
      {
       "type": "Tenant",
@@ -622,23 +665,23 @@
       "name": "Cursor_Tenant3",
       "dn": "uni/tn-Cursor_Tenant3",
       "vni": "n/a",
-      "status": "missing on AOAPIC"
+      "status": "deployed (verified 23:56 AEDT)"
      },
      {
       "type": "VRF",
       "class": "fvCtx",
       "name": "cursor3_vrf",
       "dn": "uni/tn-Cursor_Tenant3/ctx-cursor3_vrf",
-      "vni": "assigned on deploy",
-      "status": "missing on AOAPIC"
+      "vni": "L3 VNI 2162688",
+      "status": "deployed (verified 23:56 AEDT)"
      },
      {
       "type": "Bridge domain",
       "class": "fvBD",
       "name": "cursor3_bd",
       "dn": "uni/tn-Cursor_Tenant3/BD-cursor3_bd",
-      "vni": "assigned on deploy",
-      "status": "missing on AOAPIC"
+      "vni": "L2 VNI 14909412",
+      "status": "deployed (verified 23:56 AEDT)"
      },
      {
       "type": "BD subnet",
@@ -646,7 +689,7 @@
       "name": "cursor3_bd 10.250.4.1/24",
       "dn": "uni/tn-Cursor_Tenant3/BD-cursor3_bd/subnet-[10.250.4.1/24]",
       "vni": "n/a",
-      "status": "missing on AOAPIC"
+      "status": "deployed (verified 23:56 AEDT)"
      },
      {
       "type": "App profile",
@@ -654,17 +697,18 @@
       "name": "cursor3_ap",
       "dn": "uni/tn-Cursor_Tenant3/ap-cursor3_ap",
       "vni": "n/a",
-      "status": "missing on AOAPIC"
+      "status": "deployed (verified 23:56 AEDT)"
      },
      {
       "type": "EPG",
       "class": "fvAEPg",
       "name": "cursor3_ap/web (BD cursor3_bd)",
       "dn": "uni/tn-Cursor_Tenant3/ap-cursor3_ap/epg-web",
-      "vni": "assigned on deploy",
-      "status": "missing on AOAPIC"
+      "vni": "pcTag 49153",
+      "status": "deployed (verified 23:56 AEDT)"
      }
-    ]
+    ],
+    "verified": "2026-11-08T23:56:50+11:00"
    }
   },
   {
@@ -675,13 +719,33 @@
    "source": "NetBox (restored from the 29 Oct 2026 07:39 backup on 8 Nov 2026 ~23:34 AEDT) compared with AOAPIC",
    "requested_at": "2026-11-08T23:35:38+11:00",
    "target": "AOAPIC (sandboxapicdc.cisco.com)",
-   "status": "Pending — awaiting Aung's approval: tenant is in NetBox but missing on AOAPIC (6 objects to create). Not deployed.",
-   "deployment_evidence": null,
-   "note": "Applying needs Aung's explicit approval. Compared object by object with a fresh read-only AOAPIC read at 2026-11-08 23:35 AEDT.",
-   "preflight": null,
-   "history_note": "Last dry-run on record: 20261022-205327-dryrun.log (22 Oct 2026, ok=9 changed=6 failed=0); no fresh preflight has been run for this request.",
+   "status": "Deployed to AOAPIC (approved by Aung t174u 8 Nov 23:49 AEDT; postcheck 20261108-235845-post; independently verified 6/6 objects present)",
+   "deployment_evidence": {
+    "target": "AOAPIC (https://sandboxapicdc.cisco.com)",
+    "run_id": "20261108-235845-post",
+    "verified_at": "2026-11-08T23:56:50+11:00",
+    "preflight_run_id": "20261108-235137-pre",
+    "apply_summary": "Apply 23:54:49-23:55:23 AEDT (scripts/pipeline.sh apply --approved --direct): ok=8 changed=6 failed=0. Post-test 46/48 at 20261108-235639-post (transient fabric health 88->0 and a new critical sensor fault F103824 on node-103, not tenant-related); re-run 20261108-235845-post PASS 48/48 (fabric 40/40, tenant 8/8). Post-change backup diff 20261108-235658-diff: target +22 MOs, out-of-band +44 (the other two new tenants), -0, ~0.",
+    "source": "aci-nac pipeline postcheck",
+    "my_check": {
+     "checked_at": "2026-11-08T23:56:50+11:00",
+     "result": "6/6 objects present",
+     "method": "read-only GET (aaaLogin, GET, aaaLogout): tenant/VRF/BD/subnet/AP/EPG DNs, BD arp=yes unk=flood routing=yes limit=yes, subnet private, EPG->BD binding"
+    },
+    "approvals": "Approved by Aung (t174u) on 8 Nov 2026 at 23:49 AEDT; preflight run 20261108-235137-pre"
+   },
+   "note": "Applied with Aung's explicit approval (t174u). Fresh pre-write drift check run immediately before the apply.",
+   "preflight": {
+    "target": "AOAPIC (sandboxapicdc.cisco.com)",
+    "run_id": "20261108-235137-pre",
+    "verified_at": "2026-11-08T23:51:37+11:00",
+    "summary": "Fresh pre-write drift check 23:50:58 and again 23:54:48 AEDT (read-only): tenant absent, no name clash, no overlapping subnet. Ansible check mode ok=9 changed=6 failed=0; nac-test pre BASELINE fabric 37/37, tenant 0/8 (expected before apply). Pre-change config backup 20261108-235416-pre (11 tenants, 3297 MOs).",
+    "scope": "1 VRF, 1 BD + subnet, 1 AP, 1 EPG (no contracts/L3Out)",
+    "source": "aci-nac pipeline (scripts/pipeline.sh dryrun + pre), model branch tenant/Cursor_tenant1-20261108-2351"
+   },
+   "history_note": null,
    "planned_structure": {
-    "label": "Planned from NetBox, not on AOAPIC yet",
+    "label": "Deployed structure (verified on AOAPIC)",
     "source": "NetBox ACI plugin (restored from the 29 Oct 2026 07:39 backup on 8 Nov 2026 ~23:34 AEDT)",
     "generated": "2026-11-08T23:35:38+11:00",
     "object_counts": {
@@ -693,7 +757,7 @@
      "fvAp": 1,
      "fvAEPg": 1
     },
-    "vni_note": "VNIs are assigned by the APIC on deploy.",
+    "vni_note": "VNIs/pcTags read from AOAPIC at 2026-11-08 23:56 AEDT (read-only postcheck).",
     "not_in_scope": "Contracts, filters, L3Outs, domains and static paths are not modelled in NetBox for this tenant.",
     "tenant": {
      "name": "Cursor_tenant1",
@@ -705,7 +769,7 @@
        "description": null,
        "dn": "uni/tn-Cursor_tenant1/ctx-cursor_vrf",
        "vni_kind": "L3 VNI",
-       "vni": null
+       "vni": "2523137"
       }
      ],
      "bridge_domains": [
@@ -719,7 +783,7 @@
        "limit_ip_learn_to_subnets": true,
        "dn": "uni/tn-Cursor_tenant1/BD-cursor_bd",
        "vni_kind": "L2 VNI",
-       "vni": null,
+       "vni": "15105996",
        "subnets": [
         {
          "ip": "10.250.2.1/24",
@@ -740,7 +804,8 @@
          "name": "web",
          "description": null,
          "bridge_domain": "cursor_bd",
-         "dn": "uni/tn-Cursor_tenant1/ap-cursor_ap/epg-web"
+         "dn": "uni/tn-Cursor_tenant1/ap-cursor_ap/epg-web",
+         "pctag": "49154"
         }
        ]
       }
@@ -748,8 +813,8 @@
     }
    },
    "planned_objects": {
-    "title": "Objects (6) — VNIs assigned on deploy",
-    "source": "NetBox ACI plugin vs fresh read-only AOAPIC read 2026-11-08 23:35 AEDT",
+    "title": "Objects (6) — deployed; VNIs read from AOAPIC",
+    "source": "NetBox ACI plugin vs read-only AOAPIC postcheck 2026-11-08 23:56 AEDT",
     "objects": [
      {
       "type": "Tenant",
@@ -757,23 +822,23 @@
       "name": "Cursor_tenant1",
       "dn": "uni/tn-Cursor_tenant1",
       "vni": "n/a",
-      "status": "missing on AOAPIC"
+      "status": "deployed (verified 23:56 AEDT)"
      },
      {
       "type": "VRF",
       "class": "fvCtx",
       "name": "cursor_vrf",
       "dn": "uni/tn-Cursor_tenant1/ctx-cursor_vrf",
-      "vni": "assigned on deploy",
-      "status": "missing on AOAPIC"
+      "vni": "L3 VNI 2523137",
+      "status": "deployed (verified 23:56 AEDT)"
      },
      {
       "type": "Bridge domain",
       "class": "fvBD",
       "name": "cursor_bd",
       "dn": "uni/tn-Cursor_tenant1/BD-cursor_bd",
-      "vni": "assigned on deploy",
-      "status": "missing on AOAPIC"
+      "vni": "L2 VNI 15105996",
+      "status": "deployed (verified 23:56 AEDT)"
      },
      {
       "type": "BD subnet",
@@ -781,7 +846,7 @@
       "name": "cursor_bd 10.250.2.1/24",
       "dn": "uni/tn-Cursor_tenant1/BD-cursor_bd/subnet-[10.250.2.1/24]",
       "vni": "n/a",
-      "status": "missing on AOAPIC"
+      "status": "deployed (verified 23:56 AEDT)"
      },
      {
       "type": "App profile",
@@ -789,17 +854,18 @@
       "name": "cursor_ap",
       "dn": "uni/tn-Cursor_tenant1/ap-cursor_ap",
       "vni": "n/a",
-      "status": "missing on AOAPIC"
+      "status": "deployed (verified 23:56 AEDT)"
      },
      {
       "type": "EPG",
       "class": "fvAEPg",
       "name": "cursor_ap/web (BD cursor_bd)",
       "dn": "uni/tn-Cursor_tenant1/ap-cursor_ap/epg-web",
-      "vni": "assigned on deploy",
-      "status": "missing on AOAPIC"
+      "vni": "pcTag 49154",
+      "status": "deployed (verified 23:56 AEDT)"
      }
-    ]
+    ],
+    "verified": "2026-11-08T23:56:50+11:00"
    }
   },
   {
