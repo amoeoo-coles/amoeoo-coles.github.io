@@ -1,0 +1,108 @@
+# Network-as-Code (nac-aci) model generated from NetBox (ACI plugin, read-only) - same schema as /workspace/aci-nac data/tenants/
+# NetBox data read 09 Nov 2026 00:00:41 AEDT (Melbourne time). Source: NetBox 4.7.3 REST API (http://127.0.0.1:8001), netbox_aci_plugin 0.5.0, GET only
+---
+apic:
+  tenants:
+  - name: Cursor_tenant5
+    description: Cursor tenant 5 - Web App DB tiers with firewall hops and DMZ L3Out via NetBox pipeline (NaC + Ansible)
+    vrfs:
+    - name: cursor5_vrf
+      description: Single VRF - zones isolated by whitelist, inter-zone only via FW service graph
+    bridge_domains:
+    - name: cursor5_app_bd
+      description: App tier
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: proxy
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 10.250.52.1/24
+        description: App tier
+        public: false
+        shared: false
+    - name: cursor5_db_bd
+      description: DB tier
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: proxy
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 10.250.53.1/24
+        description: DB tier
+        public: false
+        shared: false
+    - name: cursor5_fw_app_bd
+      description: FW service leg App (PBR dest .34 active .35 standby)
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: flood
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 10.250.59.33/28
+        description: FW service leg App (PBR dest .34 active .35 standby)
+        public: false
+        shared: false
+    - name: cursor5_fw_db_bd
+      description: FW service leg DB (PBR dest .50 active .51 standby)
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: flood
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 10.250.59.49/28
+        description: FW service leg DB (PBR dest .50 active .51 standby)
+        public: false
+        shared: false
+    - name: cursor5_fw_dmz_bd
+      description: FW service leg DMZ side (PBR dest .2 active .3 standby)
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: flood
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 10.250.59.1/28
+        description: FW service leg DMZ side (PBR dest .2 active .3 standby)
+        public: false
+        shared: false
+    - name: cursor5_fw_web_bd
+      description: FW service leg Web (PBR dest .18 active .19 standby)
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: flood
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 10.250.59.17/28
+        description: FW service leg Web (PBR dest .18 active .19 standby)
+        public: false
+        shared: false
+    - name: cursor5_web_bd
+      description: Web tier (advertised to DMZ via L3Out)
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: proxy
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 10.250.51.1/24
+        description: Web tier (advertised to DMZ via L3Out)
+        public: true
+        shared: false
+    application_profiles:
+    - name: cursor5_ap
+      description: Three-tier application (web app db)
+      endpoint_groups:
+      - name: app
+        description: App servers - reached from Web via FW
+        bridge_domain: cursor5_app_bd
+      - name: db
+        description: DB servers - reached from App via FW
+        bridge_domain: cursor5_db_bd
+      - name: web
+        description: Web servers - reached from DMZ via FW
+        bridge_domain: cursor5_web_bd
