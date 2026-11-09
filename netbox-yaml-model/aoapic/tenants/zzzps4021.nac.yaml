@@ -1,0 +1,225 @@
+# Network-as-Code (nac-aci data model, apic: root)
+# Environment: AOAPIC — complete ACI model
+# Source: Live read-only collection from the Cisco DevNet Always-On APIC sandbox (sandboxapicdc.cisco.com)
+# Collected: 10 Nov 2026 05:31:58 AEDT
+# Method: read-only aaaLogin + GET class/mo queries + aaaLogout
+# Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.
+# SNMP communities and SNMPv3 users are omitted from the published files.
+---
+apic:
+  tenants:
+  - name: zzzps4021
+    description: Round-trip test clone of Test100
+    vrfs:
+    - name: PROD
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    - name: DEV
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: PROD-DB
+      vrf: PROD
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 198.18.10.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    - name: PROD-APP
+      vrf: PROD
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 198.18.11.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    - name: DEV-APP
+      vrf: DEV
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 198.18.12.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    - name: DEV-DB
+      vrf: DEV
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 198.18.13.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    application_profiles:
+    - name: PROD
+      endpoint_groups:
+      - name: P-DB
+        bridge_domain: PROD-DB
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+      - name: P-APP
+        bridge_domain: PROD-APP
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+    - name: DEV
+      endpoint_groups:
+      - name: D-DB
+        bridge_domain: DEV-DB
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+      - name: D-APP
+        bridge_domain: DEV-APP
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+    l3outs:
+    - name: L3out
+      vrf: PROD
+      export_route_control: true
+      import_route_control: false
+      domain: zzzps4021_L3DOM
+      node_profiles:
+      - name: L3out_nodeProfile
+        nodes:
+        - node_id: 101
+          router_id: 198.18.255.1
+          router_id_as_loopback: true
+        interface_profiles:
+        - name: L3out_interfaceProfile
+          interfaces:
+          - ip: 198.18.20.1/30
+            mac: 00:22:BD:F8:19:FF
+            mtu: inherit
+            pod_id: 1
+            node_id: 101
+            module: 1
+            port: 29
+      external_endpoint_groups:
+      - name: EXT-EPG
+        preferred_group: false
+        qos_class: level3
+        subnets:
+        - prefix: 198.18.200.0/24
+          export_route_control: false
+          import_route_control: false
+          import_security: true
+          shared_route_control: false
+          shared_security: false
+        contracts:
+          providers:
+          - L3out
+    contracts:
+    - name: APP-to-DB
+      scope: application-profile
+      subjects:
+      - name: icmp
+        reverse_filter_ports: true
+        filters:
+        - filter: icmp
+          action: permit
+          log: false
+          no_stats: false
+    - name: L3out
+      scope: context
+      subjects:
+      - name: icmp
+        reverse_filter_ports: true
+        filters:
+        - filter: icmp
+          action: permit
+          log: false
+          no_stats: false
+    - name: ESG
+      scope: global
+      subjects:
+      - name: icmp
+        reverse_filter_ports: true
+        filters:
+        - filter: icmp
+          action: permit
+          log: false
+          no_stats: false
+    filters:
+    - name: icmp
+      entries:
+      - name: icmp
+        ethertype: ip
+        protocol: icmp

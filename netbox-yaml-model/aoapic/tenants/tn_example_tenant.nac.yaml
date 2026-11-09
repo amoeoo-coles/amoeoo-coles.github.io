@@ -1,0 +1,153 @@
+# Network-as-Code (nac-aci data model, apic: root)
+# Environment: AOAPIC — complete ACI model
+# Source: Live read-only collection from the Cisco DevNet Always-On APIC sandbox (sandboxapicdc.cisco.com)
+# Collected: 10 Nov 2026 05:31:58 AEDT
+# Method: read-only aaaLogin + GET class/mo queries + aaaLogout
+# Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.
+# SNMP communities and SNMPv3 users are omitted from the published files.
+---
+apic:
+  tenants:
+  - name: tn_example_tenant
+    description: My Example Tenant
+    vrfs:
+    - name: my_example_vrf
+      description: My Example VRF
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: Production-BD
+      vrf: my_example_vrf
+      arp_flooding: false
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 192.0.2.1/29
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    application_profiles:
+    - name: app-profile
+    l3outs:
+    - name: my_first_l3out
+      description: This is My First L3Out
+      vrf: my_example_vrf
+      export_route_control: true
+      import_route_control: true
+      domain: my_L3_domain
+      node_profiles:
+      - name: fabric
+        nodes:
+        - node_id: 101
+          router_id: 10.255.255.1
+          router_id_as_loopback: true
+        - node_id: 102
+          router_id: 10.255.255.2
+          router_id_as_loopback: true
+        interface_profiles:
+        - name: My_Interface_Profile
+          interfaces:
+          - ip: 192.0.2.2/29
+            mac: 00:22:BD:F8:19:FF
+            mtu: 9000
+            pod_id: 1
+            node_id: 101
+            node2_id: 102
+            channel: My_VPC_1
+      external_endpoint_groups:
+      - name: my_first_epg_for_bgp
+        preferred_group: false
+        qos_class: level3
+        subnets:
+        - prefix: 0.0.0.0/0
+          export_route_control: false
+          import_route_control: false
+          import_security: true
+          shared_route_control: false
+          shared_security: false
+        contracts:
+          providers:
+          - out-contract
+          consumers:
+          - in-contract
+    contracts:
+    - name: in-contract
+      description: Inbound traffic contract - web, ssh and icmp only
+      scope: context
+      subjects:
+      - name: default
+        reverse_filter_ports: true
+        filters:
+        - filter: allow-https
+          action: permit
+          log: false
+          no_stats: false
+        - filter: allow-icmp
+          action: permit
+          log: false
+          no_stats: false
+        - filter: allow-ssh
+          action: permit
+          log: false
+          no_stats: false
+    - name: out-contract
+      description: Outbound traffic contract - any IP
+      scope: context
+      subjects:
+      - name: default
+        reverse_filter_ports: true
+        filters:
+        - filter: ip-any
+          action: permit
+          log: false
+          no_stats: false
+    filters:
+    - name: ip-any
+      description: Match any IP traffic
+      entries:
+      - name: any
+        ethertype: unspecified
+    - name: allow-https
+      description: TCP 443
+      entries:
+      - name: tcp-443
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 443
+        destination_to_port: 443
+        stateful: false
+    - name: allow-ssh
+      description: TCP 22
+      entries:
+      - name: tcp-22
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 22
+        destination_to_port: 22
+        stateful: false
+    - name: allow-icmp
+      description: ICMP (ping and error messages)
+      entries:
+      - name: icmp
+        ethertype: ip
+        protocol: icmp

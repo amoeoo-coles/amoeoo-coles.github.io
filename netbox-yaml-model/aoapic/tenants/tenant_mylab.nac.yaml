@@ -1,0 +1,52 @@
+# Network-as-Code (nac-aci data model, apic: root)
+# Environment: AOAPIC — complete ACI model
+# Source: Live read-only collection from the Cisco DevNet Always-On APIC sandbox (sandboxapicdc.cisco.com)
+# Collected: 10 Nov 2026 05:31:58 AEDT
+# Method: read-only aaaLogin + GET class/mo queries + aaaLogout
+# Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.
+# SNMP communities and SNMPv3 users are omitted from the published files.
+---
+apic:
+  tenants:
+  - name: tenant_mylab
+    description: Tenant Created Using Ansible
+    l3outs:
+    - name: ok
+      vrf: default
+      export_route_control: true
+      import_route_control: false
+      domain: test-L3DOMAIN
+      node_profiles:
+      - name: ok_nodeProfile
+        nodes:
+        - node_id: 101
+          router_id: 172.20.55.55
+          router_id_as_loopback: true
+        - node_id: 102
+          router_id: 172.20.44.44
+          router_id_as_loopback: true
+        interface_profiles:
+        - name: ok_interfaceProfile
+          interfaces:
+          - ip: 172.20.40.40/24
+            mac: 00:22:BD:F8:19:FF
+            mtu: inherit
+            pod_id: 1
+            node_id: 101
+            module: 1
+            port: 40
+      external_endpoint_groups:
+      - name: EEPG-gosote
+        preferred_group: false
+        subnets:
+        - prefix: 0.0.0.0/0
+          export_route_control: false
+          import_route_control: false
+          import_security: true
+          shared_route_control: false
+          shared_security: false
+        contracts:
+          providers:
+          - default
+          consumers:
+          - default

@@ -1,0 +1,171 @@
+# Network-as-Code (nac-aci data model, apic: root)
+# Environment: ARR (Simulator APIC)
+# Source: Saved read-only export of the reservable DevNet APIC simulator (10.10.20.14) at /workspace/nac-test-private-run/baseline-2/raw. Live aaaLogin failed (no answer within 12 s); the DevNet reservation VPN is probably not connected.
+# Collected: 2026-10-28 22:16 AEDT
+# Method: converted from a saved read-only APIC export (live login was not available)
+# Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.
+# SNMP communities and SNMPv3 users are omitted from the published files.
+# system tenant
+---
+apic:
+  tenants:
+  - name: common
+    vrfs:
+    - name: copy
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    - name: default
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: default
+      arp_flooding: false
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+    application_profiles:
+    - name: default
+    l3outs:
+    - name: default
+      export_route_control: true
+      import_route_control: false
+    contracts:
+    - name: default
+      scope: context
+      subjects:
+      - name: default
+        reverse_filter_ports: true
+        filters:
+        - filter: default
+          action: permit
+          log: false
+          no_stats: false
+    - name: sql
+      scope: application-profile
+      subjects:
+      - name: sql-browser
+        reverse_filter_ports: true
+        filters:
+        - filter: sql_browser
+          action: permit
+          log: false
+          no_stats: false
+      - name: sql-server
+        reverse_filter_ports: true
+        filters:
+        - filter: sql_server
+          action: permit
+          log: false
+          no_stats: false
+    - name: power_up
+      scope: context
+      subjects:
+      - name: app_ports
+        reverse_filter_ports: true
+        filters:
+        - filter: power_up
+          action: permit
+          log: false
+          no_stats: false
+    - name: web
+      scope: context
+      subjects:
+      - name: https
+        reverse_filter_ports: true
+        filters:
+        - filter: https
+          action: permit
+          log: false
+          no_stats: false
+      - name: http
+        reverse_filter_ports: true
+        filters:
+        - filter: http
+          action: permit
+          log: false
+          no_stats: false
+    filters:
+    - name: icmp
+      entries:
+      - name: icmp
+        ethertype: ip
+        protocol: icmp
+    - name: arp
+      entries:
+      - name: arp
+        ethertype: arp
+    - name: http
+      entries:
+      - name: tcp-80
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 80
+        destination_to_port: 80
+        stateful: false
+    - name: est
+      entries:
+      - name: est
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 0
+        destination_to_port: 0
+        stateful: false
+    - name: default
+      entries:
+      - name: default
+        ethertype: unspecified
+    - name: power_up
+      entries:
+      - name: tcp_9001-9002
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 9001
+        destination_to_port: 9002
+        stateful: false
+    - name: https
+      entries:
+      - name: tcp-443
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 443
+        destination_to_port: 443
+        stateful: false
+    - name: sql_server
+      entries:
+      - name: tcp-1433
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 1433
+        destination_to_port: 1433
+        stateful: false
+    - name: sql_browser
+      entries:
+      - name: udp-1434
+        ethertype: ip
+        protocol: udp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 1434
+        destination_to_port: 1434

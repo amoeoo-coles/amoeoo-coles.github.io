@@ -1,0 +1,196 @@
+# Network-as-Code (nac-aci data model, apic: root)
+# Environment: AOAPIC — complete ACI model
+# Source: Live read-only collection from the Cisco DevNet Always-On APIC sandbox (sandboxapicdc.cisco.com)
+# Collected: 10 Nov 2026 05:31:58 AEDT
+# Method: read-only aaaLogin + GET class/mo queries + aaaLogout
+# Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.
+# SNMP communities and SNMPv3 users are omitted from the published files.
+---
+apic:
+  tenants:
+  - name: TN-LAB-K02
+    vrfs:
+    - name: VRF-LAB
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: BD-WE
+      vrf: VRF-LAB
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.10.20.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    - name: BD-APP
+      vrf: VRF-LAB
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.10.10.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    - name: BD-DB
+      vrf: VRF-LAB
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.10.30.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    application_profiles:
+    - name: WEB-APP
+      endpoint_groups:
+      - name: EGP-WEB
+        bridge_domain: BD-WE
+        flood_in_encap: false
+        intra_epg_isolation: true
+        proxy_arp: false
+        preferred_group: false
+        contracts:
+          consumers:
+          - CT-WEB-APP
+      - name: EGP-APP
+        bridge_domain: BD-APP
+        flood_in_encap: false
+        intra_epg_isolation: true
+        proxy_arp: false
+        preferred_group: false
+        contracts:
+          providers:
+          - CT-WEB-APP
+      - name: EGP-DB
+        bridge_domain: BD-DB
+        flood_in_encap: false
+        intra_epg_isolation: true
+        proxy_arp: false
+        preferred_group: false
+        contracts:
+          providers:
+          - CT-APP-DB
+    contracts:
+    - name: CT-WEB-APP
+      scope: tenant
+      subjects:
+      - name: SUBJ-APP
+        reverse_filter_ports: true
+        filters:
+        - filter: TCP-8443
+          action: permit
+          log: false
+          no_stats: false
+    - name: CT-WEB-DB
+      scope: tenant
+      subjects:
+      - name: SUBJ-WEB-DB
+        reverse_filter_ports: true
+        filters:
+        - filter: WEB-DB
+          action: deny
+          log: false
+          no_stats: false
+    - name: CT-APP-DB
+      scope: tenant
+      subjects:
+      - name: SUBJ-APP-DB
+        reverse_filter_ports: true
+        filters:
+        - filter: APP-DB
+          action: deny
+          log: false
+          no_stats: false
+        - filter: FLT-DB
+          action: permit
+          log: false
+          no_stats: false
+    filters:
+    - name: TCP-8443
+      entries:
+      - name: '8443'
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 8443
+        destination_to_port: 8443
+        stateful: false
+    - name: FLT-DB
+      entries:
+      - name: FLT-DB
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 3306
+        destination_to_port: 3306
+        stateful: false
+    - name: WEB-DB
+      entries:
+      - name: WEB-DB
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 3306
+        destination_to_port: 3306
+        stateful: false
+    - name: APP-DB
+      entries:
+      - name: APP-DB
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 22
+        destination_to_port: 22
+        stateful: false

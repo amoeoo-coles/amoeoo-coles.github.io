@@ -1,0 +1,5441 @@
+# Network-as-Code (nac-aci data model, apic: root)
+# Environment: AOAPIC — complete ACI model
+# Source: Live read-only collection from the Cisco DevNet Always-On APIC sandbox (sandboxapicdc.cisco.com)
+# Collected: 10 Nov 2026 05:31:58 AEDT
+# Method: read-only aaaLogin + GET class/mo queries + aaaLogout
+# Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.
+# SNMP communities and SNMPv3 users are omitted from the published files.
+---
+apic:
+  fabric_policies:
+    pod_policies:
+      date_time_policies:
+      - name: default
+        ntp_admin_state: true
+        ntp_auth_state: false
+        apic_ntp_server_state: false
+        apic_ntp_server_master_mode: false
+      snmp_policies:
+      - name: default
+        admin_state: false
+    date_time_format:
+      display_format: local
+      timezone: p0_UTC
+      show_offset: true
+    dns_policies:
+    - name: default
+    fabric_bgp_as: 65002
+    fabric_bgp_rr:
+    - id: 103
+      pod_id: 1
+    pod_profiles:
+    - name: default
+      selectors:
+      - name: default
+        type: all
+    pod_profile_name: default
+    config_exports:
+    - name: DailyAutoBackup
+      format: xml
+      snapshot: true
+      scheduler: EveryEightHours
+    - name: default
+      format: json
+      snapshot: false
+    schedulers:
+    - name: EveryEightHours
+      recurring_windows:
+      - name: first
+        day: every-day
+        hour: 1
+        minute: 0
+      - name: third
+        day: every-day
+        hour: 17
+        minute: 0
+      - name: second
+        day: every-day
+        hour: 9
+        minute: 0
+    coop_group_policy: compatible
+    ep_loop_protection:
+      action: port-disable
+      admin_state: false
+      detection_interval: 60
+      detection_multiplier: 4
+    global_settings:
+      domain_validation: false
+      enforce_subnet_check: true
+      opflex_authentication: true
+      disable_remote_endpoint_learn: false
+      overlapping_vlan_validation: false
+      remote_leaf_direct: true
+      reallocate_gipo: false
+    infra_dscp_translation_policy:
+      admin_state: false
+      control_plane: CS0
+      policy_plane: CS4
+      span: CS5
+      traceroute: CS6
+      level_1: CS1
+      level_2: CS2
+      level_3: CS3
+      level_4: AF11
+      level_5: AF21
+      level_6: AF31
+    ip_aging: true
+    fabric_isis_redistribute_metric: 32
+    port_tracking:
+      admin_state: false
+      delay: 120
+      min_links: 0
+    rogue_ep_control:
+      admin_state: false
+      hold_interval: 1800
+      detection_interval: 60
+      detection_multiplier: 6
+  access_policies:
+    vlan_pools:
+    - name: VY-PHYS
+      allocation: static
+      ranges:
+      - from: 100
+        to: 200
+        allocation: static
+        role: external
+    - name: LF1_PROD_PHYS_VP
+      allocation: static
+      ranges:
+      - from: 3100
+        to: 3199
+        allocation: static
+        role: external
+    - name: RG_PHY_RT_POOL
+      allocation: static
+      ranges:
+      - from: 1400
+        to: 1500
+        allocation: static
+        role: external
+    - name: rg_ext_routed
+      allocation: static
+      ranges:
+      - from: 1501
+        to: 1600
+        allocation: static
+        role: external
+    - name: LAB-VLAN
+      allocation: dynamic
+      ranges:
+      - from: 1
+        to: 100
+        allocation: inherit
+        role: external
+    - name: LAB-VLAN
+      allocation: static
+      ranges:
+      - from: 97
+        to: 100
+        allocation: static
+        role: external
+    - name: VP-LAB-01
+      allocation: static
+      ranges:
+      - from: 210
+        to: 220
+        allocation: static
+        role: external
+    - name: S_VLAN-Pool-1
+      allocation: static
+      ranges:
+      - from: 100
+        to: 299
+        allocation: static
+        role: external
+    - name: EM-VLAN-POOL
+      allocation: static
+      ranges:
+      - from: 2100
+        to: 2199
+        allocation: inherit
+        role: external
+    - name: l3out_svlan_pool
+      allocation: static
+      ranges:
+      - from: 997
+        to: 998
+        allocation: inherit
+        role: external
+    - name: zzzps4021_pool
+      allocation: static
+      ranges:
+      - from: 4000
+        to: 4001
+        allocation: inherit
+        role: external
+    - name: Pool_VMM_RG
+      allocation: dynamic
+      ranges:
+      - from: 1100
+        to: 1200
+        allocation: dynamic
+        role: external
+    physical_domains:
+    - name: VY-PHY
+      vlan_pool: VY-PHYS
+      vlan_pool_allocation: static
+    - name: PHY_RG_ROUTED
+      vlan_pool: RG_PHY_RT_POOL
+      vlan_pool_allocation: static
+    - name: LAB-Server
+      vlan_pool: LAB-VLAN
+      vlan_pool_allocation: static
+    - name: VY-PHYS-TEST
+      vlan_pool: VY-PHYS
+      vlan_pool_allocation: static
+    - name: S_Physical-Domain_1
+      vlan_pool: S_VLAN-Pool-1
+      vlan_pool_allocation: static
+    - name: A-Physical-Domain
+    - name: EM-PHYS-DOM
+      vlan_pool: EM-VLAN-POOL
+      vlan_pool_allocation: static
+    routed_domains:
+    - name: test-L3DOMAIN
+    - name: RG_EXT_ROUTED
+      vlan_pool: rg_ext_routed
+      vlan_pool_allocation: static
+    - name: my_L3_domain
+      vlan_pool: l3out_svlan_pool
+      vlan_pool_allocation: static
+    - name: zzzps4021_L3DOM
+      vlan_pool: zzzps4021_pool
+      vlan_pool_allocation: static
+    infra_vlan: 4
+    aaeps:
+    - name: default
+      infra_vlan: true
+    - name: AEP_RG_ROUTED
+      physical_domains:
+      - PHY_RG_ROUTED
+      routed_domains:
+      - RG_EXT_ROUTED
+    - name: LAB-AAEP
+      physical_domains:
+      - LAB-Server
+    - name: VY-AEP
+      physical_domains:
+      - VY-PHY
+      - VY-PHYS-TEST
+    - name: VIRTUAL-AEP
+    - name: AAEP
+      physical_domains:
+      - A-Physical-Domain
+      routed_domains:
+      - my_L3_domain
+    - name: AEP-IAI
+    - name: EM-AAEP
+      physical_domains:
+      - EM-PHYS-DOM
+      infra_vlan: true
+    - name: zzzps4021_AEP
+      routed_domains:
+      - zzzps4021_L3DOM
+    leaf_interface_policy_groups:
+    - name: LS119_120_Data_vPC26_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      port_channel_policy: PO-LACP_Active
+    - name: LS119_120_Data_vPC36_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC60_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS119_120_Data_vPC24_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: Test100
+      type: vpc
+      aaep: VIRTUAL-AEP
+      link_level_policy: system-link-level-10G-auto
+      cdp_policy: system-cdp-disabled
+      lldp_policy: system-lldp-enabled
+      port_channel_policy: system-mac-pinning
+    - name: LS123_124_Data_vPC50_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC88_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC2_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS119_120_Data_vPC12_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC46_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC14_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC86_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS119_120_Data_vPC10_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: ESX-SRVR03
+      type: vpc
+      aaep: VIRTUAL-AEP
+      cdp_policy: system-cdp-disabled
+      lldp_policy: system-lldp-enabled
+      port_channel_policy: system-mac-pinning
+    - name: LS123_124_Data_vPC44_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC52_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS119_120_Data_vPC30_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC6_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC54_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: My_VPC_1
+      type: vpc
+      aaep: AAEP
+      port_channel_policy: lacp_active
+    - name: LS125_126_Back_Rep_vPC17_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC84_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS119_120_Data_vPC20_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS119_120_Data_vPC28_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC66_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC4_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC64_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC20_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS125_126_Data_vPC8_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC18_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC48_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS125_126_Back_Rep_vPC18_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC16_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC90_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS119_120_Data_vPC16_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC62_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS119_120_Data_vPC22_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC12_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS119_120_Data_vPC34_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC92_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC8_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS119_120_Data_vPC14_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC56_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: INT_VPC_RG
+      type: vpc
+      aaep: AEP_RG_ROUTED
+      link_level_policy: system-link-level-100G-auto
+      cdp_policy: system-cdp-enabled
+      port_channel_policy: system-lacp-active
+    - name: LS119_120_Data_vPC32_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS125_126_Data_vPC3_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: PC101-32-33
+      type: pc
+      aaep: VY-AEP
+      cdp_policy: system-cdp-enabled
+      lldp_policy: system-lldp-enabled
+      port_channel_policy: system-lacp-active
+    - name: LS119_120_Data_vPC6_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS125_126_Data_vPC12_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS125_126_Data_vPC14_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS125_126_Data_vPC6_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS119_120_Data_vPC18_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS125_126_Data_vPC4_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS119_120_Data_vPC8_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC58_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_124_Data_vPC10_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS125_126_Data_vPC16_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: PG-VPC-20
+      type: vpc
+      aaep: VY-AEP
+      cdp_policy: system-cdp-enabled
+      lldp_policy: system-lldp-enabled
+    - name: LS119_120_Data_vPC4_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS125_126_Data_vPC10_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS119_120_Data_vPC3_PolGrp1_25G
+      type: vpc
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+      port_channel_policy: PO-LACP_Active
+    - name: LS123_Back_Rep_PolGrp1_25G
+      type: access
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+    - name: LS119_Mgmt_PolGrp1_25G
+      type: access
+      aaep: INB_MGMT_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+    - name: pol_grp_RG
+      type: access
+      aaep: AEP_RG_ROUTED
+      link_level_policy: default
+      cdp_policy: default
+      lldp_policy: default
+    - name: LS120_Mgmt_PolGrp1_25G
+      type: access
+      aaep: INB_MGMT_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+    - name: Std-Accessport-10G
+      type: access
+      aaep: LAB-AAEP
+      link_level_policy: Std-10G-Auto
+      cdp_policy: Std-CDP-Enable
+      lldp_policy: Std-LLDP-Enable
+    - name: LS119_Back_Rep_PolGrp1_25G
+      type: access
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+    - name: LS123_Mgmt_PolGrp1_25G
+      type: access
+      aaep: INB_MGMT_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+    - name: LS120_Back_Rep_PolGrp1_25G
+      type: access
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+    - name: LAP-NRBG4INTFW008_MGMT2
+      description: NRBG4INTFW008_MGMT2
+      type: access
+      aaep: AEP-IAI
+      link_level_policy: LLP-DEFAULT
+      cdp_policy: CDP-DISABLE
+      lldp_policy: LLDP-DISABLE
+      mcp_policy: MCP-ENABLED
+      storm_control_policy: SC-0.1
+    - name: LS125_Mgmt_PolGrp1_25G
+      type: access
+      aaep: INB_MGMT_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+    - name: LS126_Back_Rep_PolGrp1_25G
+      type: access
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+    - name: LAP-NRBG4INTFW008_MGMT1
+      description: NRBG4INTFW008_MGMT1
+      type: access
+      aaep: AEP-IAI
+      link_level_policy: LLP-DEFAULT
+      cdp_policy: CDP-DISABLE
+      lldp_policy: LLDP-DISABLE
+      mcp_policy: MCP-ENABLED
+      storm_control_policy: SC-0.1
+    - name: LAP-NRBG4INTFW007_MGMT2
+      description: NRBG4INTFW007_MGMT2
+      type: access
+      aaep: AEP-IAI
+      link_level_policy: LLP-DEFAULT
+      cdp_policy: CDP-DISABLE
+      lldp_policy: LLDP-DISABLE
+      mcp_policy: MCP-ENABLED
+      storm_control_policy: SC-0.1
+    - name: LAP-NRBG4INTFW007_MGMT1
+      description: NRBG4INTFW007_MGMT1
+      type: access
+      aaep: AEP-IAI
+      link_level_policy: LLP-DEFAULT
+      cdp_policy: CDP-DISABLE
+      lldp_policy: LLDP-DISABLE
+      mcp_policy: MCP-ENABLED
+      storm_control_policy: SC-0.1
+    - name: LS124_Back_Rep_PolGrp1_25G
+      type: access
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+    - name: VY-A-35_38
+      type: access
+      aaep: VY-AEP
+      cdp_policy: Std-CDP-Enable
+      lldp_policy: Std-LLDP-Enable
+    - name: LAP-1U1_SIGTRAN_FIREWALL
+      description: 1U1_SIGTRAN_FIREWALL
+      type: access
+      aaep: AEP-IAI
+      link_level_policy: LLP-DEFAULT
+      cdp_policy: CDP-DISABLE
+      lldp_policy: LLDP-DISABLE
+      mcp_policy: MCP-ENABLED
+      storm_control_policy: SC-0.1
+    - name: S_Leaf-A-P-P-G_1
+      type: access
+    - name: LS124_Mgmt_PolGrp1_25G
+      type: access
+      aaep: INB_MGMT_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+    - name: LS126_Mgmt_PolGrp1_25G
+      type: access
+      aaep: INB_MGMT_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+    - name: LS125_Back_Rep_PolGrp1_25G
+      type: access
+      aaep: PHY_AAEP
+      link_level_policy: 25G-Auto_LLP
+      cdp_policy: CDP_Disable
+      lldp_policy: LLDP_Disable
+      spanning_tree_policy: BPDU_Guard
+      mcp_policy: MCP_Enable
+      storm_control_policy: Brodcast_Storm_Shut
+    - name: zzzps4021_PG
+      type: access
+      aaep: zzzps4021_AEP
+    leaf_interface_profiles:
+    - name: 126_IntProf
+      selectors:
+      - name: IntSel_1_94
+        description: A-RITM0582156-VMWARE-20-11-2023
+        policy_group: LS126_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block119494
+          from_module: 1
+          from_port: 94
+          to_module: 1
+          to_port: 94
+      - name: IntSel_1_56
+        description: A-RITM0582167-VMWARE-19-11-2023
+        policy_group: LS126_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block115656
+          from_module: 1
+          from_port: 56
+          to_module: 1
+          to_port: 56
+      - name: IntSel_1_54
+        description: A-RITM0582166-VMWARE-19-11-2023
+        policy_group: LS126_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block115454
+          from_module: 1
+          from_port: 54
+          to_module: 1
+          to_port: 54
+      - name: IntSel_1_92
+        description: A-RITM0582166-VMWARE-20-11-2023
+        policy_group: LS126_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block119292
+          from_module: 1
+          from_port: 92
+          to_module: 1
+          to_port: 92
+      - name: IntSel_1_50
+        description: A-RITM0582156-VMWARE-19-11-2023
+        policy_group: LS126_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block115050
+          from_module: 1
+          from_port: 50
+          to_module: 1
+          to_port: 50
+      - name: IntSel_1_48
+        description: A-RITM0582153-VMWARE-19-11-2023
+        policy_group: LS126_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block114848
+          from_module: 1
+          from_port: 48
+          to_module: 1
+          to_port: 48
+      - name: IntSel_1_93
+        description: A-RITM0582164-VMWARE-20-11-2023
+        policy_group: LS126_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block119393
+          from_module: 1
+          from_port: 93
+          to_module: 1
+          to_port: 93
+      - name: IntSel_1_44
+        description: A-RITM0582145-VMWARE-19-11-2023
+        policy_group: LS126_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block114444
+          from_module: 1
+          from_port: 44
+          to_module: 1
+          to_port: 44
+      - name: IntSel_1_91
+        description: A-RITM0582167-VMWARE-20-11-2023
+        policy_group: LS126_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block119191
+          from_module: 1
+          from_port: 91
+          to_module: 1
+          to_port: 91
+      - name: IntSel_1_46
+        description: A-RITM0582150-VMWARE-19-11-2023
+        policy_group: LS126_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block114646
+          from_module: 1
+          from_port: 46
+          to_module: 1
+          to_port: 46
+      - name: IntSel_1_52
+        description: A-RITM0582164-VMWARE-19-11-2023
+        policy_group: LS126_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block115252
+          from_module: 1
+          from_port: 52
+          to_module: 1
+          to_port: 52
+      - name: IntSel_1_42
+        description: A-RITM0582142-VMWARE-19-11-2023
+        policy_group: LS126_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block114242
+          from_module: 1
+          from_port: 42
+          to_module: 1
+          to_port: 42
+    - name: 123_124_VPC_IntProf
+      selectors:
+      - name: IntSel_1_6
+        description: A-RITM0544498-VMWARE-09_08_2023
+        policy_group: LS123_124_Data_vPC6_PolGrp1_25G
+        port_blocks:
+        - name: Block1166
+          from_module: 1
+          from_port: 6
+          to_module: 1
+          to_port: 6
+      - name: IntSel_1_12
+        description: A-RITM0544508-VMWARE-09_08_2023
+        policy_group: LS123_124_Data_vPC12_PolGrp1_25G
+        port_blocks:
+        - name: Block111212
+          from_module: 1
+          from_port: 12
+          to_module: 1
+          to_port: 12
+      - name: IntSel_1_52
+        description: A-RITM0500466-VMWARE-2_09-2023
+        policy_group: LS123_124_Data_vPC52_PolGrp1_25G
+        port_blocks:
+        - name: Block115252
+          from_module: 1
+          from_port: 52
+          to_module: 1
+          to_port: 52
+      - name: IntSel_1_46
+        description: A-RITM0500545-VMWARE-2_09_2023
+        policy_group: LS123_124_Data_vPC46_PolGrp1_25G
+        port_blocks:
+        - name: Block114646
+          from_module: 1
+          from_port: 46
+          to_module: 1
+          to_port: 46
+      - name: IntSel_1_62
+        description: A-RITM0500487-VMWARE-2_09_2023
+        policy_group: LS123_124_Data_vPC62_PolGrp1_25G
+        port_blocks:
+        - name: Block116262
+          from_module: 1
+          from_port: 62
+          to_module: 1
+          to_port: 62
+      - name: IntSel_1_20
+        description: A-RITM0544566-VMWARE-09_08_2023
+        policy_group: LS123_124_Data_vPC20_PolGrp1_25G
+        port_blocks:
+        - name: Block112020
+          from_module: 1
+          from_port: 20
+          to_module: 1
+          to_port: 20
+      - name: IntSel_1_50
+        description: A-RITM0500548-VMWARE-2_09_2023
+        policy_group: LS123_124_Data_vPC50_PolGrp1_25G
+        port_blocks:
+        - name: Block115050
+          from_module: 1
+          from_port: 50
+          to_module: 1
+          to_port: 50
+      - name: IntSel_1_92
+        description: A-RITM0501298-VMWARE-2_09_2023
+        policy_group: LS123_124_Data_vPC92_PolGrp1_25G
+        port_blocks:
+        - name: Block119292
+          from_module: 1
+          from_port: 92
+          to_module: 1
+          to_port: 92
+      - name: IntSel_1_2
+        description: A-RITM0544489-VMWARE-09_08_2023
+        policy_group: LS123_124_Data_vPC2_PolGrp1_25G
+        port_blocks:
+        - name: Block1122
+          from_module: 1
+          from_port: 2
+          to_module: 1
+          to_port: 2
+      - name: IntSel_1_18
+        description: A-RITM0544562-VMWARE-09_08_2023
+        policy_group: LS123_124_Data_vPC18_PolGrp1_25G
+        port_blocks:
+        - name: Block111818
+          from_module: 1
+          from_port: 18
+          to_module: 1
+          to_port: 18
+      - name: IntSel_1_8
+        description: A-RITM0544481-VMWARE-09_08_2023
+        policy_group: LS123_124_Data_vPC8_PolGrp1_25G
+        port_blocks:
+        - name: Block1188
+          from_module: 1
+          from_port: 8
+          to_module: 1
+          to_port: 8
+      - name: IntSel_1_88
+        description: A-RITM0500480-VMWARE-2_09_2023
+        policy_group: LS123_124_Data_vPC88_PolGrp1_25G
+        port_blocks:
+        - name: Block118888
+          from_module: 1
+          from_port: 88
+          to_module: 1
+          to_port: 88
+      - name: IntSel_1_66
+        description: A-RITM0500493-VMWARE-2_09_2023
+        policy_group: LS123_124_Data_vPC66_PolGrp1_25G
+        port_blocks:
+        - name: Block116666
+          from_module: 1
+          from_port: 66
+          to_module: 1
+          to_port: 66
+      - name: IntSel_1_84
+        description: A-RITM0500461-VMWARE-2_09_2023
+        policy_group: LS123_124_Data_vPC84_PolGrp1_25G
+        port_blocks:
+        - name: Block118484
+          from_module: 1
+          from_port: 84
+          to_module: 1
+          to_port: 84
+      - name: IntSel_1_14
+        description: A-RITM0544520-VMWARE-09_08_2023
+        policy_group: LS123_124_Data_vPC14_PolGrp1_25G
+        port_blocks:
+        - name: Block111414
+          from_module: 1
+          from_port: 14
+          to_module: 1
+          to_port: 14
+      - name: IntSel_1_10
+        description: A-RITM0544497-VMWARE-09_08_2023
+        policy_group: LS123_124_Data_vPC10_PolGrp1_25G
+        port_blocks:
+        - name: Block111010
+          from_module: 1
+          from_port: 10
+          to_module: 1
+          to_port: 10
+      - name: IntSel_1_60
+        description: A-RITM0500475-VMWARE-2_09_2023
+        policy_group: LS123_124_Data_vPC60_PolGrp1_25G
+        port_blocks:
+        - name: Block116060
+          from_module: 1
+          from_port: 60
+          to_module: 1
+          to_port: 60
+      - name: IntSel_1_56
+        description: A-RITM0500471-VMWARE-2_09_2023
+        policy_group: LS123_124_Data_vPC56_PolGrp1_25G
+        port_blocks:
+        - name: Block115656
+          from_module: 1
+          from_port: 56
+          to_module: 1
+          to_port: 56
+      - name: IntSel_1_44
+        description: A-RITM0500544-VMWARE-2_09_2023
+        policy_group: LS123_124_Data_vPC44_PolGrp1_25G
+        port_blocks:
+        - name: Block114444
+          from_module: 1
+          from_port: 44
+          to_module: 1
+          to_port: 44
+      - name: IntSel_1_54
+        description: A-RITM0500468-VMWARE-11_08-2023
+        policy_group: LS123_124_Data_vPC54_PolGrp1_25G
+        port_blocks:
+        - name: Block115454
+          from_module: 1
+          from_port: 54
+          to_module: 1
+          to_port: 54
+      - name: IntSel_1_90
+        description: A-RITM0500483-VMWARE-2_09_2023
+        policy_group: LS123_124_Data_vPC90_PolGrp1_25G
+        port_blocks:
+        - name: Block119090
+          from_module: 1
+          from_port: 90
+          to_module: 1
+          to_port: 90
+      - name: IntSel_1_4
+        description: A-RITM0544494-VMWARE-09_08_2023
+        policy_group: LS123_124_Data_vPC4_PolGrp1_25G
+        port_blocks:
+        - name: Block1144
+          from_module: 1
+          from_port: 4
+          to_module: 1
+          to_port: 4
+      - name: IntSel_1_16
+        description: A-RITM0544554-VMWARE-09_08_2023
+        policy_group: LS123_124_Data_vPC16_PolGrp1_25G
+        port_blocks:
+        - name: Block111616
+          from_module: 1
+          from_port: 16
+          to_module: 1
+          to_port: 16
+      - name: IntSel_1_48
+        description: A-RITM0500547-VMWARE-2_09_2023
+        policy_group: LS123_124_Data_vPC48_PolGrp1_25G
+        port_blocks:
+        - name: Block114848
+          from_module: 1
+          from_port: 48
+          to_module: 1
+          to_port: 48
+      - name: IntSel_1_64
+        description: A-RITM0500490-VMWARE-2_09_2023
+        policy_group: LS123_124_Data_vPC64_PolGrp1_25G
+        port_blocks:
+        - name: Block116464
+          from_module: 1
+          from_port: 64
+          to_module: 1
+          to_port: 64
+      - name: IntSel_1_86
+        description: A-RITM0500476-VMWARE-2_09_2023
+        policy_group: LS123_124_Data_vPC86_PolGrp1_25G
+        port_blocks:
+        - name: Block118686
+          from_module: 1
+          from_port: 86
+          to_module: 1
+          to_port: 86
+      - name: IntSel_1_58
+        description: A-RITM0500473-VMWARE-2_09_2023
+        policy_group: LS123_124_Data_vPC58_PolGrp1_25G
+        port_blocks:
+        - name: Block115858
+          from_module: 1
+          from_port: 58
+          to_module: 1
+          to_port: 58
+    - name: My_VPC_1_ports
+      selectors:
+      - name: My_VPC_1_ports_hports
+        policy_group: My_VPC_1
+        port_blocks:
+        - name: ports_27_28
+          from_module: 1
+          from_port: 27
+          to_module: 1
+          to_port: 28
+    - name: 125_126_VPC_IntProf
+      selectors:
+      - name: IntSel_1_32
+        description: A-RITM0731609-BACKUP TEAM-21-03-2024
+        policy_group: LS125_126_Back_Rep_vPC18_PolGrp1_25G
+        port_blocks:
+        - name: Block113232
+          from_module: 1
+          from_port: 32
+          to_module: 1
+          to_port: 32
+      - name: IntSel_1_53
+        description: A-RITM0582164-VMWARE-19-11-2023
+        policy_group: LS125_126_Data_vPC12_PolGrp1_25G
+        port_blocks:
+        - name: Block115353
+          from_module: 1
+          from_port: 53
+          to_module: 1
+          to_port: 53
+      - name: IntSel_1_29
+        description: A-RITM0731609-BACKUP TEAM-21-03-2024
+        policy_group: LS125_126_Back_Rep_vPC18_PolGrp1_25G
+        port_blocks:
+        - name: Block112929
+          from_module: 1
+          from_port: 29
+          to_module: 1
+          to_port: 29
+      - name: IntSel_1_82
+        description: A-RITM0731609-BACKUP TEAM-21-03-2024
+        policy_group: LS125_126_Back_Rep_vPC17_PolGrp1_25G
+        port_blocks:
+        - name: Block118282
+          from_module: 1
+          from_port: 82
+          to_module: 1
+          to_port: 82
+      - name: IntSel_1_55
+        description: A-RITM0582166-VMWARE-19-11-2023
+        policy_group: LS125_126_Data_vPC14_PolGrp1_25G
+        port_blocks:
+        - name: Block115555
+          from_module: 1
+          from_port: 55
+          to_module: 1
+          to_port: 55
+      - name: IntSel_1_59
+        description: A-RITM0731609-BACKUP TEAM-21-03-2024
+        policy_group: LS125_126_Back_Rep_vPC17_PolGrp1_25G
+        port_blocks:
+        - name: Block115959
+          from_module: 1
+          from_port: 59
+          to_module: 1
+          to_port: 59
+      - name: IntSel_1_79
+        description: A-RITM0731609-BACKUP TEAM-21-03-2024
+        policy_group: LS125_126_Back_Rep_vPC17_PolGrp1_25G
+        port_blocks:
+        - name: Block117979
+          from_module: 1
+          from_port: 79
+          to_module: 1
+          to_port: 79
+      - name: IntSel_1_76
+        description: A-RITM0731609-BACKUP TEAM-21-03-2024
+        policy_group: LS125_126_Back_Rep_vPC17_PolGrp1_25G
+        port_blocks:
+        - name: Block117676
+          from_module: 1
+          from_port: 76
+          to_module: 1
+          to_port: 76
+      - name: IntSel_1_43
+        description: A-RITM0582142-VMWARE-19-11-2023
+        policy_group: LS125_126_Data_vPC3_PolGrp1_25G
+        port_blocks:
+        - name: Block114343
+          from_module: 1
+          from_port: 43
+          to_module: 1
+          to_port: 43
+      - name: IntSel_1_51
+        description: A-RITM0582156-VMWARE-19-11-2023
+        policy_group: LS125_126_Data_vPC10_PolGrp1_25G
+        port_blocks:
+        - name: Block115151
+          from_module: 1
+          from_port: 51
+          to_module: 1
+          to_port: 51
+      - name: IntSel_1_80
+        description: A-RITM0731609-BACKUP TEAM-21-03-2024
+        policy_group: LS125_126_Back_Rep_vPC17_PolGrp1_25G
+        port_blocks:
+        - name: Block118080
+          from_module: 1
+          from_port: 80
+          to_module: 1
+          to_port: 80
+      - name: IntSel_1_47
+        description: A-RITM0582150-VMWARE-19-11-2023
+        policy_group: LS125_126_Data_vPC6_PolGrp1_25G
+        port_blocks:
+        - name: Block114747
+          from_module: 1
+          from_port: 47
+          to_module: 1
+          to_port: 47
+      - name: IntSel_1_83
+        description: A-RITM0731609-BACKUP TEAM-21-03-2024
+        policy_group: LS125_126_Back_Rep_vPC17_PolGrp1_25G
+        port_blocks:
+        - name: Block118383
+          from_module: 1
+          from_port: 83
+          to_module: 1
+          to_port: 83
+      - name: IntSel_1_57
+        description: A-RITM0582167-VMWARE-19-11-2023
+        policy_group: LS125_126_Data_vPC16_PolGrp1_25G
+        port_blocks:
+        - name: Block115757
+          from_module: 1
+          from_port: 57
+          to_module: 1
+          to_port: 57
+      - name: IntSel_1_58
+        description: A-RITM0731609-BACKUP TEAM-21-03-2024
+        policy_group: LS125_126_Back_Rep_vPC17_PolGrp1_25G
+        port_blocks:
+        - name: Block115858
+          from_module: 1
+          from_port: 58
+          to_module: 1
+          to_port: 58
+      - name: IntSel_1_60
+        description: A-RITM0731609-BACKUP TEAM-21-03-2024
+        policy_group: LS125_126_Back_Rep_vPC17_PolGrp1_25G
+        port_blocks:
+        - name: Block116060
+          from_module: 1
+          from_port: 60
+          to_module: 1
+          to_port: 60
+      - name: IntSel_1_30
+        description: A-RITM0731609-BACKUP TEAM-21-03-2024
+        policy_group: LS125_126_Back_Rep_vPC18_PolGrp1_25G
+        port_blocks:
+        - name: Block113030
+          from_module: 1
+          from_port: 30
+          to_module: 1
+          to_port: 30
+      - name: IntSel_1_45
+        description: A-RITM0582145-VMWARE-19-11-2023
+        policy_group: LS125_126_Data_vPC4_PolGrp1_25G
+        port_blocks:
+        - name: Block114545
+          from_module: 1
+          from_port: 45
+          to_module: 1
+          to_port: 45
+      - name: IntSel_1_78
+        description: A-RITM0731609-BACKUP TEAM-21-03-2024
+        policy_group: LS125_126_Back_Rep_vPC17_PolGrp1_25G
+        port_blocks:
+        - name: Block117878
+          from_module: 1
+          from_port: 78
+          to_module: 1
+          to_port: 78
+      - name: IntSel_1_77
+        description: A-RITM0731609-BACKUP TEAM-21-03-2024
+        policy_group: LS125_126_Back_Rep_vPC17_PolGrp1_25G
+        port_blocks:
+        - name: Block117777
+          from_module: 1
+          from_port: 77
+          to_module: 1
+          to_port: 77
+      - name: IntSel_1_84
+        description: A-RITM0731609-BACKUP TEAM-21-03-2024
+        policy_group: LS125_126_Back_Rep_vPC17_PolGrp1_25G
+        port_blocks:
+        - name: Block118484
+          from_module: 1
+          from_port: 84
+          to_module: 1
+          to_port: 84
+      - name: IntSel_1_49
+        description: A-RITM0582153-VMWARE-19-11-2023
+        policy_group: LS125_126_Data_vPC8_PolGrp1_25G
+        port_blocks:
+        - name: Block114949
+          from_module: 1
+          from_port: 49
+          to_module: 1
+          to_port: 49
+      - name: IntSel_1_31
+        description: A-RITM0731609-BACKUP TEAM-21-03-2024
+        policy_group: LS125_126_Back_Rep_vPC18_PolGrp1_25G
+        port_blocks:
+        - name: Block113131
+          from_module: 1
+          from_port: 31
+          to_module: 1
+          to_port: 31
+      - name: IntSel_1_81
+        description: A-RITM0731609-BACKUP TEAM-21-03-2024
+        policy_group: LS125_126_Back_Rep_vPC17_PolGrp1_25G
+        port_blocks:
+        - name: Block118181
+          from_module: 1
+          from_port: 81
+          to_module: 1
+          to_port: 81
+    - name: LIP-101
+      selectors:
+      - name: APS-NRBG4XTCFW001_MGMT_MGMT
+        policy_group: LAP-NRBG4XTCFW001_MGMT
+        port_blocks:
+        - name: NRBG4XTCFW001_MGMT_24
+          from_module: 1
+          from_port: 24
+          to_module: 1
+          to_port: 24
+    - name: Test102
+      selectors:
+      - name: E1
+        policy_group: Test100
+        port_blocks:
+        - name: block2
+          from_module: 1
+          from_port: 25
+          to_module: 1
+          to_port: 25
+    - name: DPC101-32-33
+      selectors:
+      - name: 101-32
+        policy_group: PC101-32-33
+        port_blocks:
+        - name: block2
+          from_module: 1
+          from_port: 32
+          to_module: 1
+          to_port: 32
+        - name: block3
+          from_module: 1
+          from_port: 33
+          to_module: 1
+          to_port: 33
+    - name: VPC-20
+      selectors:
+      - name: 1-120
+        policy_group: PG-VPC-20
+        port_blocks:
+        - name: block2
+          from_module: 1
+          from_port: 20
+          to_module: 1
+          to_port: 20
+    - name: VY-LF-35-38
+      selectors:
+      - name: 35-38
+        policy_group: VY-A-35_38
+        port_blocks:
+        - name: block2
+          from_module: 1
+          from_port: 35
+          to_module: 1
+          to_port: 38
+    - name: INT_PROF_VPC_Prof
+      selectors:
+      - name: int_select_1-2
+        policy_group: INT_VPC_RG
+        port_blocks:
+        - name: block2
+          from_module: 1
+          from_port: 2
+          to_module: 1
+          to_port: 2
+    - name: LEAF-201-202
+      selectors:
+      - name: E1
+        policy_group: ESX-SRVR03
+        port_blocks:
+        - name: block2
+          from_module: 1
+          from_port: 1
+          to_module: 1
+          to_port: 1
+    - name: Leaf101
+      selectors:
+      - name: eth_1-5
+        policy_group: Std-Accessport-10G
+        port_blocks:
+        - name: block2
+          from_module: 1
+          from_port: 5
+          to_module: 1
+          to_port: 5
+    - name: zzzps4021_ports
+      selectors:
+      - name: zzzps4021_ports_hports
+        policy_group: zzzps4021_PG
+        port_blocks:
+        - name: ports_29_29
+          from_module: 1
+          from_port: 29
+          to_module: 1
+          to_port: 29
+    - name: 123_IntProf
+      selectors:
+      - name: IntSel_1_23
+        description: A-RITM0559188-VMWARE-22-08-2023
+        policy_group: LS123_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block112323
+          from_module: 1
+          from_port: 23
+          to_module: 1
+          to_port: 23
+      - name: IntSel_1_85
+        description: A-RITM0500476-VMWARE-2_09_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block118585
+          from_module: 1
+          from_port: 85
+          to_module: 1
+          to_port: 85
+      - name: IntSel_1_63
+        description: A-RITM0500490-VMWARE-2_09_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block116363
+          from_module: 1
+          from_port: 63
+          to_module: 1
+          to_port: 63
+      - name: IntSel_1_57
+        description: A-RITM0500473-VMWARE-2_09_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block115757
+          from_module: 1
+          from_port: 57
+          to_module: 1
+          to_port: 57
+      - name: IntSel_1_65
+        description: A-RITM0500493-VMWARE-2_09_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block116565
+          from_module: 1
+          from_port: 65
+          to_module: 1
+          to_port: 65
+      - name: IntSel_1_49
+        description: A-RITM0500548-VMWARE-2_09_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block114949
+          from_module: 1
+          from_port: 49
+          to_module: 1
+          to_port: 49
+      - name: IntSel_1_11
+        description: A-RITM0544508-VMWARE-09_08_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block111111
+          from_module: 1
+          from_port: 11
+          to_module: 1
+          to_port: 11
+      - name: IntSel_1_3
+        description: A-RITM0544494-VMWARE-09_08_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block1133
+          from_module: 1
+          from_port: 3
+          to_module: 1
+          to_port: 3
+      - name: IntSel_1_37
+        description: A-RITM0544562-VMWARE-09_08_2023
+        policy_group: LS123_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block113737
+          from_module: 1
+          from_port: 37
+          to_module: 1
+          to_port: 37
+      - name: IntSel_1_30
+        description: A-RITM0544494-VMWARE-09_08_2023
+        policy_group: LS123_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block113030
+          from_module: 1
+          from_port: 30
+          to_module: 1
+          to_port: 30
+      - name: IntSel_1_1
+        description: A-RITM0544489-VMWARE-09_08_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block1111
+          from_module: 1
+          from_port: 1
+          to_module: 1
+          to_port: 1
+      - name: IntSel_1_47
+        description: A-RITM0500547-VMWARE-2_09_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block114747
+          from_module: 1
+          from_port: 47
+          to_module: 1
+          to_port: 47
+      - name: IntSel_1_91
+        description: A-RITM0501298-VMWARE-2_09_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block119191
+          from_module: 1
+          from_port: 91
+          to_module: 1
+          to_port: 91
+      - name: IntSel_1_55
+        description: A-RITM0500471-VMWARE-2_09_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block115555
+          from_module: 1
+          from_port: 55
+          to_module: 1
+          to_port: 55
+      - name: IntSel_1_59
+        description: A-RITM0500475-VMWARE-2_09_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block115959
+          from_module: 1
+          from_port: 59
+          to_module: 1
+          to_port: 59
+      - name: IntSel_1_36
+        description: A-RITM0544554-VMWARE-09_08_2023
+        policy_group: LS123_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block113636
+          from_module: 1
+          from_port: 36
+          to_module: 1
+          to_port: 36
+      - name: IntSel_1_26
+        description: A-RITM0559188-VMWARE-22-08-2023
+        policy_group: LS123_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block112626
+          from_module: 1
+          from_port: 26
+          to_module: 1
+          to_port: 26
+      - name: IntSel_1_9
+        description: A-RITM0544497-VMWARE-09_08_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block1199
+          from_module: 1
+          from_port: 9
+          to_module: 1
+          to_port: 9
+      - name: IntSel_1_33
+        description: A-RITM0544497-VMWARE-09_08_2023
+        policy_group: LS123_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block113333
+          from_module: 1
+          from_port: 33
+          to_module: 1
+          to_port: 33
+      - name: IntSel_1_24
+        description: A-RITM0559188-VMWARE-22-08-2023
+        policy_group: LS123_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block112424
+          from_module: 1
+          from_port: 24
+          to_module: 1
+          to_port: 24
+      - name: IntSel_1_38
+        description: A-RITM0544566-VMWARE-09_08_2023
+        policy_group: LS123_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block113838
+          from_module: 1
+          from_port: 38
+          to_module: 1
+          to_port: 38
+      - name: IntSel_1_43
+        description: A-RITM0500544-VMWARE-2_09_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block114343
+          from_module: 1
+          from_port: 43
+          to_module: 1
+          to_port: 43
+      - name: IntSel_1_15
+        description: A-RITM0544554-VMWARE-09_08_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block111515
+          from_module: 1
+          from_port: 15
+          to_module: 1
+          to_port: 15
+      - name: IntSel_1_31
+        description: A-RITM0544498-VMWARE-09_08_2023
+        policy_group: LS123_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block113131
+          from_module: 1
+          from_port: 31
+          to_module: 1
+          to_port: 31
+      - name: IntSel_1_13
+        description: A-RITM0544520-VMWARE-09_08_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block111313
+          from_module: 1
+          from_port: 13
+          to_module: 1
+          to_port: 13
+      - name: IntSel_1_5
+        description: A-RITM0544498-VMWARE-09_08_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block1155
+          from_module: 1
+          from_port: 5
+          to_module: 1
+          to_port: 5
+      - name: IntSel_1_87
+        description: A-RITM0500480-VMWARE-2_09_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block118787
+          from_module: 1
+          from_port: 87
+          to_module: 1
+          to_port: 87
+      - name: IntSel_1_27
+        description: A-RITM0559188-VMWARE-22-08-2023
+        policy_group: LS123_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block112727
+          from_module: 1
+          from_port: 27
+          to_module: 1
+          to_port: 27
+      - name: IntSel_1_7
+        description: A-RITM0544481-VMWARE-09_08_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block1177
+          from_module: 1
+          from_port: 7
+          to_module: 1
+          to_port: 7
+      - name: IntSel_1_19
+        description: A-RITM0544566-VMWARE-09_08_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block111919
+          from_module: 1
+          from_port: 19
+          to_module: 1
+          to_port: 19
+      - name: IntSel_1_34
+        description: A-RITM0544508-VMWARE-09_08_2023
+        policy_group: LS123_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block113434
+          from_module: 1
+          from_port: 34
+          to_module: 1
+          to_port: 34
+      - name: IntSel_1_29
+        description: A-RITM0544489-VMWARE-09_08_2023
+        policy_group: LS123_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block112929
+          from_module: 1
+          from_port: 29
+          to_module: 1
+          to_port: 29
+      - name: IntSel_1_89
+        description: A-RITM0500483-VMWARE-2_09_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block118989
+          from_module: 1
+          from_port: 89
+          to_module: 1
+          to_port: 89
+      - name: IntSel_1_35
+        description: A-RITM0544520-VMWARE-09_08_2023
+        policy_group: LS123_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block113535
+          from_module: 1
+          from_port: 35
+          to_module: 1
+          to_port: 35
+      - name: IntSel_1_45
+        description: A-RITM0500545-VMWARE-2_09_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block114545
+          from_module: 1
+          from_port: 45
+          to_module: 1
+          to_port: 45
+      - name: IntSel_1_61
+        description: A-RITM0500487-VMWARE-2_09_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block116161
+          from_module: 1
+          from_port: 61
+          to_module: 1
+          to_port: 61
+      - name: IntSel_1_83
+        description: A-RITM0500461-VMWARE-2_09_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block118383
+          from_module: 1
+          from_port: 83
+          to_module: 1
+          to_port: 83
+      - name: IntSel_1_51
+        description: A-RITM0500466-VMWARE-2_09_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block115151
+          from_module: 1
+          from_port: 51
+          to_module: 1
+          to_port: 51
+      - name: IntSel_1_53
+        description: A-RITM0500468-VMWARE-2_09_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block115353
+          from_module: 1
+          from_port: 53
+          to_module: 1
+          to_port: 53
+      - name: IntSel_1_32
+        description: A-RITM0544481-VMWARE-09_08_2023
+        policy_group: LS123_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block113232
+          from_module: 1
+          from_port: 32
+          to_module: 1
+          to_port: 32
+      - name: IntSel_1_17
+        description: A-RITM0544562-VMWARE-09_08_2023
+        policy_group: LS123_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block111717
+          from_module: 1
+          from_port: 17
+          to_module: 1
+          to_port: 17
+      - name: IntSel_1_25
+        description: A-RITM0559188-VMWARE-22-08-2023
+        policy_group: LS123_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block112525
+          from_module: 1
+          from_port: 25
+          to_module: 1
+          to_port: 25
+    - name: Test101
+      selectors:
+      - name: E1
+        policy_group: Test100
+        port_blocks:
+        - name: block2
+          from_module: 1
+          from_port: 25
+          to_module: 1
+          to_port: 25
+    - name: 125_IntProf
+      selectors:
+      - name: IntSel_1_93
+        description: A-RITM0582164-VMWARE-20-11-2023
+        policy_group: LS125_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block119393
+          from_module: 1
+          from_port: 93
+          to_module: 1
+          to_port: 93
+      - name: IntSel_1_56
+        description: A-RITM0582167-VMWARE-19-11-2023
+        policy_group: LS125_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block115656
+          from_module: 1
+          from_port: 56
+          to_module: 1
+          to_port: 56
+      - name: IntSel_1_52
+        description: A-RITM0582164-VMWARE-19-11-2023
+        policy_group: LS125_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block115252
+          from_module: 1
+          from_port: 52
+          to_module: 1
+          to_port: 52
+      - name: IntSel_1_94
+        description: A-RITM0582156-VMWARE-20-11-2023
+        policy_group: LS125_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block119494
+          from_module: 1
+          from_port: 94
+          to_module: 1
+          to_port: 94
+      - name: IntSel_1_54
+        description: A-RITM0582166-VMWARE-19-11-2023
+        policy_group: LS125_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block115454
+          from_module: 1
+          from_port: 54
+          to_module: 1
+          to_port: 54
+      - name: IntSel_1_48
+        description: A-RITM0582153-VMWARE-19-11-2023
+        policy_group: LS125_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block114848
+          from_module: 1
+          from_port: 48
+          to_module: 1
+          to_port: 48
+      - name: IntSel_1_46
+        description: A-RITM0582150-VMWARE-19-11-2023
+        policy_group: LS125_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block114646
+          from_module: 1
+          from_port: 46
+          to_module: 1
+          to_port: 46
+      - name: IntSel_1_44
+        description: A-RITM0582145-VMWARE-19-11-2023
+        policy_group: LS125_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block114444
+          from_module: 1
+          from_port: 44
+          to_module: 1
+          to_port: 44
+      - name: IntSel_1_91
+        description: A-RITM0582167-VMWARE-20-11-2023
+        policy_group: LS125_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block119191
+          from_module: 1
+          from_port: 91
+          to_module: 1
+          to_port: 91
+      - name: IntSel_1_42
+        description: A-RITM0582142-VMWARE-19-11-2023
+        policy_group: LS125_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block114242
+          from_module: 1
+          from_port: 42
+          to_module: 1
+          to_port: 42
+      - name: IntSel_1_92
+        description: A-RITM0582166-VMWARE-20-11-2023
+        policy_group: LS125_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block119292
+          from_module: 1
+          from_port: 92
+          to_module: 1
+          to_port: 92
+      - name: IntSel_1_50
+        description: A-RITM0582156-VMWARE-19-11-2023
+        policy_group: LS125_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block115050
+          from_module: 1
+          from_port: 50
+          to_module: 1
+          to_port: 50
+    - name: 124_IntProf
+      selectors:
+      - name: IntSel_1_89
+        description: A-RITM0500483-VMWARE-2_09_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block118989
+          from_module: 1
+          from_port: 89
+          to_module: 1
+          to_port: 89
+      - name: IntSel_1_87
+        description: A-RITM0500480-VMWARE-2_09_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block118787
+          from_module: 1
+          from_port: 87
+          to_module: 1
+          to_port: 87
+      - name: IntSel_1_27
+        description: A-RITM0559188-VMWARE-22-08-2023
+        policy_group: LS124_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block112727
+          from_module: 1
+          from_port: 27
+          to_module: 1
+          to_port: 27
+      - name: IntSel_1_31
+        description: A-RITM0559188-VMWARE-22-08-2023
+        policy_group: LS124_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block113131
+          from_module: 1
+          from_port: 31
+          to_module: 1
+          to_port: 31
+      - name: IntSel_1_63
+        description: A-RITM0500490-VMWARE-2_09_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block116363
+          from_module: 1
+          from_port: 63
+          to_module: 1
+          to_port: 63
+      - name: IntSel_1_85
+        description: A-RITM0500476-VMWARE-2_09_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block118585
+          from_module: 1
+          from_port: 85
+          to_module: 1
+          to_port: 85
+      - name: IntSel_1_45
+        description: A-RITM0500545-VMWARE-2_09_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block114545
+          from_module: 1
+          from_port: 45
+          to_module: 1
+          to_port: 45
+      - name: IntSel_1_47
+        description: A-RITM0500547-VMWARE-2_09_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block114747
+          from_module: 1
+          from_port: 47
+          to_module: 1
+          to_port: 47
+      - name: IntSel_1_91
+        description: A-RITM0501298-VMWARE-2_09_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block119191
+          from_module: 1
+          from_port: 91
+          to_module: 1
+          to_port: 91
+      - name: IntSel_1_25
+        description: A-RITM0559188-VMWARE-22-08-2023
+        policy_group: LS124_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block112525
+          from_module: 1
+          from_port: 25
+          to_module: 1
+          to_port: 25
+      - name: IntSel_1_24
+        description: A-RITM0559188-VMWARE-22-08-2023
+        policy_group: LS124_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block112424
+          from_module: 1
+          from_port: 24
+          to_module: 1
+          to_port: 24
+      - name: IntSel_1_32
+        description: A-RITM0559188-VMWARE-22-08-2023
+        policy_group: LS124_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block113232
+          from_module: 1
+          from_port: 32
+          to_module: 1
+          to_port: 32
+      - name: IntSel_1_53
+        description: A-RITM0500468-VMWARE-2_09_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block115353
+          from_module: 1
+          from_port: 53
+          to_module: 1
+          to_port: 53
+      - name: IntSel_1_9
+        description: A-RITM0544497-VMWARE-09_08_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block1199
+          from_module: 1
+          from_port: 9
+          to_module: 1
+          to_port: 9
+      - name: IntSel_1_1
+        description: A-RITM0544489-VMWARE-09_08_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block1111
+          from_module: 1
+          from_port: 1
+          to_module: 1
+          to_port: 1
+      - name: IntSel_1_30
+        description: A-RITM0559188-VMWARE-22-08-2023
+        policy_group: LS124_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block113030
+          from_module: 1
+          from_port: 30
+          to_module: 1
+          to_port: 30
+      - name: IntSel_1_5
+        description: A-RITM0544498-VMWARE-09_08_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block1155
+          from_module: 1
+          from_port: 5
+          to_module: 1
+          to_port: 5
+      - name: IntSel_1_13
+        description: A-RITM0544520-VMWARE-09_08_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block111313
+          from_module: 1
+          from_port: 13
+          to_module: 1
+          to_port: 13
+      - name: IntSel_1_15
+        description: A-RITM0544554-VMWARE-09_08_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block111515
+          from_module: 1
+          from_port: 15
+          to_module: 1
+          to_port: 15
+      - name: IntSel_1_3
+        description: A-RITM0544494-VMWARE-09_08_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block1133
+          from_module: 1
+          from_port: 3
+          to_module: 1
+          to_port: 3
+      - name: IntSel_1_11
+        description: A-RITM0544508-VMWARE-09_08_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block111111
+          from_module: 1
+          from_port: 11
+          to_module: 1
+          to_port: 11
+      - name: IntSel_1_17
+        description: A-RITM0544562-VMWARE-09_08_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block111717
+          from_module: 1
+          from_port: 17
+          to_module: 1
+          to_port: 17
+      - name: IntSel_1_49
+        description: A-RITM0500548-VMWARE-2_09_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block114949
+          from_module: 1
+          from_port: 49
+          to_module: 1
+          to_port: 49
+      - name: IntSel_1_61
+        description: A-RITM0500487-VMWARE-2_09_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block116161
+          from_module: 1
+          from_port: 61
+          to_module: 1
+          to_port: 61
+      - name: IntSel_1_51
+        description: A-RITM0500466-VMWARE-2_09_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block115151
+          from_module: 1
+          from_port: 51
+          to_module: 1
+          to_port: 51
+      - name: IntSel_1_83
+        description: A-RITM0500461-VMWARE-2_09_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block118383
+          from_module: 1
+          from_port: 83
+          to_module: 1
+          to_port: 83
+      - name: IntSel_1_57
+        description: A-RITM0500473-VMWARE-2_09_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block115757
+          from_module: 1
+          from_port: 57
+          to_module: 1
+          to_port: 57
+      - name: IntSel_1_65
+        description: A-RITM0500493-VMWARE-2_09_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block116565
+          from_module: 1
+          from_port: 65
+          to_module: 1
+          to_port: 65
+      - name: IntSel_1_26
+        description: A-RITM0559188-VMWARE-22-08-2023
+        policy_group: LS124_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block112626
+          from_module: 1
+          from_port: 26
+          to_module: 1
+          to_port: 26
+      - name: IntSel_1_23
+        description: A-RITM0559188-VMWARE-22-08-2023
+        policy_group: LS124_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block112323
+          from_module: 1
+          from_port: 23
+          to_module: 1
+          to_port: 23
+      - name: IntSel_1_22
+        description: A-RITM0559188-VMWARE-22-08-2023
+        policy_group: LS124_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block112222
+          from_module: 1
+          from_port: 22
+          to_module: 1
+          to_port: 22
+      - name: IntSel_1_21
+        description: A-RITM0559188-VMWARE-22-08-2023
+        policy_group: LS124_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block112121
+          from_module: 1
+          from_port: 21
+          to_module: 1
+          to_port: 21
+      - name: IntSel_1_55
+        description: A-RITM0500471-VMWARE-2_09_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block115555
+          from_module: 1
+          from_port: 55
+          to_module: 1
+          to_port: 55
+      - name: IntSel_1_59
+        description: A-RITM0500475-VMWARE-2_09_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block115959
+          from_module: 1
+          from_port: 59
+          to_module: 1
+          to_port: 59
+      - name: IntSel_1_19
+        description: A-RITM0544566-VMWARE-09_08_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block111919
+          from_module: 1
+          from_port: 19
+          to_module: 1
+          to_port: 19
+      - name: IntSel_1_7
+        description: A-RITM0544481-VMWARE-09_08_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block1177
+          from_module: 1
+          from_port: 7
+          to_module: 1
+          to_port: 7
+      - name: IntSel_1_28
+        description: A-RITM0559188-VMWARE-22-08-2023
+        policy_group: LS124_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block112828
+          from_module: 1
+          from_port: 28
+          to_module: 1
+          to_port: 28
+      - name: IntSel_1_43
+        description: A-RITM0500544-VMWARE-2_09_2023
+        policy_group: LS124_Mgmt_PolGrp1_25G
+        port_blocks:
+        - name: Block114343
+          from_module: 1
+          from_port: 43
+          to_module: 1
+          to_port: 43
+      - name: IntSel_1_29
+        description: A-RITM0559188-VMWARE-22-08-2023
+        policy_group: LS124_Back_Rep_PolGrp1_25G
+        port_blocks:
+        - name: Block112929
+          from_module: 1
+          from_port: 29
+          to_module: 1
+          to_port: 29
+    leaf_switch_profiles:
+    - name: LF101
+      interface_profiles:
+      - DPC101-32-33
+      - VY-LF-35-38
+      selectors:
+      - name: L101
+        node_blocks:
+        - name: bf715a2766b70614
+          from: 101
+          to: 101
+    - name: LF102
+      interface_profiles:
+      - INT_PROF_RTED
+      - VY-LF-35-38
+      selectors:
+      - name: L102
+        node_blocks:
+        - name: 3039d9b8bea2ef0a
+          from: 102
+          to: 102
+    - name: zzzps4021_leafs
+      interface_profiles:
+      - zzzps4021_ports
+      selectors:
+      - name: zzzps4021_leaf_101
+        node_blocks:
+        - name: zzzps4021_leaf_101_nodes
+          from: 101
+          to: 101
+    - name: LF101-102
+      interface_profiles:
+      - VPC-20
+      - INT_PROF_VPC_Prof
+      selectors:
+      - name: 101-102
+        node_blocks:
+        - name: cadf2a3a0f828914
+          from: 101
+          to: 102
+    - name: Leaf101
+      interface_profiles:
+      - Leaf101
+      selectors:
+      - name: Leaf101
+        node_blocks:
+        - name: 25e887e6f2a6cb36
+          from: 101
+          to: 101
+    - name: LEAF-201-202
+      interface_profiles:
+      - LEAF-201-202
+      selectors:
+      - name: LEAF-201-202
+        node_blocks:
+        - name: 3ce49bcd6e00dc63
+          from: 101
+          to: 102
+    - name: Test102
+      interface_profiles:
+      - Test102
+      selectors:
+      - name: Test102
+        node_blocks:
+        - name: ab0a6f34aeecc16c
+          from: 102
+          to: 102
+    - name: Test101
+      interface_profiles:
+      - Test101
+      selectors:
+      - name: Test101
+        node_blocks:
+        - name: 6dc44c015f363651
+          from: 101
+          to: 101
+    - name: leafs_1-2
+      interface_profiles:
+      - My_VPC_1_ports
+      selectors:
+      - name: leafs_1-2
+        node_blocks:
+        - name: leafs_1-2_nodes
+          from: 101
+          to: 102
+    interface_policies:
+      cdp_policies:
+      - name: default
+        admin_state: false
+      - name: EM-CDP-ON
+        admin_state: true
+      - name: Std-CDP-Disable
+        admin_state: false
+      - name: CDP-OFF
+        admin_state: false
+      - name: Std-CDP-Enable
+        admin_state: true
+      - name: CDP-ON
+        admin_state: true
+      lldp_policies:
+      - name: Std-LLDP-Disable
+        admin_rx_state: false
+        admin_tx_state: false
+      - name: default
+        admin_rx_state: true
+        admin_tx_state: true
+      - name: Std-LLDP-Enable
+        admin_rx_state: true
+        admin_tx_state: true
+      - name: LLDC-OFF
+        admin_rx_state: false
+        admin_tx_state: false
+      - name: EM-LLDP-ON
+        admin_rx_state: true
+        admin_tx_state: true
+      - name: RG_VMM_DOM_lldpIfPol
+        admin_rx_state: true
+        admin_tx_state: true
+      - name: LLDP-ON
+        admin_rx_state: true
+        admin_tx_state: true
+      link_level_policies:
+      - name: 10G
+        speed: 10G
+        auto: true
+        fec_mode: inherit
+        link_debounce_interval: 100
+      - name: 40G
+        speed: 40G
+        auto: true
+        fec_mode: inherit
+        link_debounce_interval: 100
+      - name: 1G
+        speed: 1G
+        auto: true
+        fec_mode: inherit
+        link_debounce_interval: 100
+      - name: default
+        speed: inherit
+        auto: true
+        fec_mode: inherit
+        link_debounce_interval: 100
+      - name: Std-10G-Auto
+        speed: inherit
+        auto: true
+        fec_mode: inherit
+        link_debounce_interval: 100
+      port_channel_policies:
+      - name: RG_VMM_DOM_lacpLagPol
+        mode: mac-pin-nicload
+        min_links: 1
+        max_links: 16
+        fast_select_standby: true
+        graceful_convergence: true
+        load_defer: false
+        suspend_individual: true
+        symmetric_hash: false
+      - name: LACP-ACTIVE
+        mode: active
+        min_links: 1
+        max_links: 16
+        fast_select_standby: true
+        graceful_convergence: true
+        load_defer: false
+        suspend_individual: true
+        symmetric_hash: false
+    mcp:
+      admin_state: false
+      per_vlan: false
+      initial_delay: 180
+      loop_detection: 3
+      action: true
+      frequency_sec: 2
+      frequency_msec: 0
+  node_policies:
+    nodes:
+    - id: 101
+      pod: 1
+      role: leaf
+      name: Leaf-101
+      serial_number: TEP-1-101
+    - id: 102
+      pod: 1
+      role: leaf
+      name: Leaf-102
+      serial_number: TEP-1-102
+    - id: 103
+      pod: 1
+      role: spine
+      name: Spine-201
+      serial_number: TEP-1-103
+    vpc_groups:
+      mode: explicit
+      groups:
+      - name: VPC-GROUP
+        id: 1
+        switch_1: 101
+        switch_2: 102
+        policy: default
+  pods:
+  - id: 1
+    tep_pool: 10.0.0.0/16
+  interface_policies:
+    nodes:
+    - id: 101
+      interfaces:
+      - module: 1
+        port: 1
+        policy_group: ESX-SRVR03
+      - module: 1
+        port: 2
+        policy_group: INT_VPC_RG
+      - module: 1
+        port: 5
+        policy_group: Std-Accessport-10G
+      - module: 1
+        port: 20
+        policy_group: PG-VPC-20
+      - module: 1
+        port: 25
+        policy_group: Test100
+      - module: 1
+        port: 27
+        policy_group: My_VPC_1
+      - module: 1
+        port: 28
+        policy_group: My_VPC_1
+      - module: 1
+        port: 29
+        policy_group: zzzps4021_PG
+      - module: 1
+        port: 32
+        policy_group: PC101-32-33
+      - module: 1
+        port: 33
+        policy_group: PC101-32-33
+      - module: 1
+        port: 35
+        policy_group: VY-A-35_38
+      - module: 1
+        port: 36
+        policy_group: VY-A-35_38
+      - module: 1
+        port: 37
+        policy_group: VY-A-35_38
+      - module: 1
+        port: 38
+        policy_group: VY-A-35_38
+    - id: 102
+      interfaces:
+      - module: 1
+        port: 1
+        policy_group: ESX-SRVR03
+      - module: 1
+        port: 2
+        policy_group: INT_VPC_RG
+      - module: 1
+        port: 20
+        policy_group: PG-VPC-20
+      - module: 1
+        port: 25
+        policy_group: Test100
+      - module: 1
+        port: 27
+        policy_group: My_VPC_1
+      - module: 1
+        port: 28
+        policy_group: My_VPC_1
+      - module: 1
+        port: 35
+        policy_group: VY-A-35_38
+      - module: 1
+        port: 36
+        policy_group: VY-A-35_38
+      - module: 1
+        port: 37
+        policy_group: VY-A-35_38
+      - module: 1
+        port: 38
+        policy_group: VY-A-35_38
+  tenants:
+  - name: common
+    vrfs:
+    - name: copy
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    - name: default
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: default
+      arp_flooding: false
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+    application_profiles:
+    - name: default
+    l3outs:
+    - name: default
+      export_route_control: true
+      import_route_control: false
+    contracts:
+    - name: default
+      scope: context
+      subjects:
+      - name: default
+        reverse_filter_ports: true
+        filters:
+        - filter: default
+          action: permit
+          log: false
+          no_stats: false
+    filters:
+    - name: icmp
+      entries:
+      - name: icmp
+        ethertype: ip
+        protocol: icmp
+    - name: arp
+      entries:
+      - name: arp
+        ethertype: arp
+    - name: est
+      entries:
+      - name: est
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 0
+        destination_to_port: 0
+        stateful: false
+    - name: default
+      entries:
+      - name: default
+        ethertype: unspecified
+  - name: infra
+    vrfs:
+    - name: ave-ctrl
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    - name: overlay-1
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: ave-ctrl
+      vrf: ave-ctrl
+      arp_flooding: false
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+    - name: default
+      vrf: overlay-1
+      arp_flooding: false
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.0.0.30/27
+        public: false
+        private: true
+        shared: false
+        primary_ip: true
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: true
+    application_profiles:
+    - name: access
+      endpoint_groups:
+      - name: default
+        bridge_domain: default
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+    - name: ave-ctrl
+      endpoint_groups:
+      - name: ave-ctrl
+        bridge_domain: ave-ctrl
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+  - name: mgmt
+    vrfs:
+    - name: inb
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    - name: oob
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: inb
+      vrf: inb
+      arp_flooding: false
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+  - name: billing-test-DPYD6hPFFmE9
+    description: Release test environment (Stack Automation)
+    vrfs:
+    - name: billing-test-DPYD6hPFFmE9-vrf
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: bd-vlan102
+      description: Project subnet for VLAN 102
+      vrf: billing-test-DPYD6hPFFmE9-vrf
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.102.0.1/24
+        public: true
+        private: false
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    application_profiles:
+    - name: billing-portal
+      endpoint_groups:
+      - name: testers
+        description: Where the portal is consumed from (192.168.0.0/16)
+        bridge_domain: bd-vlan102
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        contracts:
+          consumers:
+          - allow-portal
+      - name: db
+        description: PostgreSQL tier
+        bridge_domain: bd-vlan102
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        contracts:
+          providers:
+          - app-to-db
+      - name: app
+        description: Billing Portal application tier
+        bridge_domain: bd-vlan102
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        contracts:
+          providers:
+          - allow-portal
+          consumers:
+          - app-to-db
+    contracts:
+    - name: allow-portal
+      description: tcp/8080 from the testers to the app tier
+      scope: context
+      subjects:
+      - name: portal
+        reverse_filter_ports: true
+        filters:
+        - filter: portal-http
+          action: permit
+          log: false
+          no_stats: false
+    - name: app-to-db
+      description: tcp/5432 from the app tier to the database tier
+      scope: application-profile
+      subjects:
+      - name: postgres
+        reverse_filter_ports: true
+        filters:
+        - filter: postgres
+          action: permit
+          log: false
+          no_stats: false
+    filters:
+    - name: postgres
+      entries:
+      - name: tcp-5432
+        ethertype: ipv4
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 5432
+        destination_to_port: 5432
+        stateful: true
+    - name: portal-http
+      entries:
+      - name: tcp-8080
+        ethertype: ipv4
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 8080
+        destination_to_port: 8080
+        stateful: true
+  - name: Cursor_tenant1
+    description: Cursor tenant 1 - web tier via Add Tenant portal (NaC + Ansible)
+    vrfs:
+    - name: cursor_vrf
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: cursor_bd
+      vrf: cursor_vrf
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: flood
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.250.2.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    application_profiles:
+    - name: cursor_ap
+      endpoint_groups:
+      - name: web
+        bridge_domain: cursor_bd
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+  - name: Cursor_Tenant2
+    description: Cursor tenant 2 - web tier via NetBox-driven pipeline (NaC + Ansible)
+    vrfs:
+    - name: cursor2_vrf
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: cursor2_bd
+      vrf: cursor2_vrf
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: flood
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.250.3.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    application_profiles:
+    - name: cursor2_ap
+      endpoint_groups:
+      - name: web
+        bridge_domain: cursor2_bd
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+  - name: Cursor_Tenant3
+    description: Cursor tenant 3 - web tier via NetBox-driven pipeline (NaC + Ansible)
+    vrfs:
+    - name: cursor3_vrf
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: cursor3_bd
+      vrf: cursor3_vrf
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: flood
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.250.4.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    application_profiles:
+    - name: cursor3_ap
+      endpoint_groups:
+      - name: web
+        bridge_domain: cursor3_bd
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+  - name: Cursor_tenant5
+    description: Cursor tenant 5 - Web App DB tiers with firewall hops and DMZ L3Out via NetBox pipeline (NaC + Ansible)
+    vrfs:
+    - name: cursor5_vrf
+      description: Single VRF - zones isolated by whitelist, inter-zone only via FW service graph
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: cursor5_app_bd
+      description: App tier
+      vrf: cursor5_vrf
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: flood
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.250.52.1/24
+        description: App tier
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    - name: cursor5_db_bd
+      description: DB tier
+      vrf: cursor5_vrf
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: flood
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.250.53.1/24
+        description: DB tier
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    - name: cursor5_fw_app_bd
+      description: FW service leg App (PBR dest .34 active .35 standby)
+      vrf: cursor5_vrf
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: flood
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.250.59.33/28
+        description: FW service leg App (PBR dest .34 active .35 standby)
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    - name: cursor5_fw_db_bd
+      description: FW service leg DB (PBR dest .50 active .51 standby)
+      vrf: cursor5_vrf
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: flood
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.250.59.49/28
+        description: FW service leg DB (PBR dest .50 active .51 standby)
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    - name: cursor5_fw_dmz_bd
+      description: FW service leg DMZ side (PBR dest .2 active .3 standby)
+      vrf: cursor5_vrf
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: flood
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.250.59.1/28
+        description: FW service leg DMZ side (PBR dest .2 active .3 standby)
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    - name: cursor5_fw_web_bd
+      description: FW service leg Web (PBR dest .18 active .19 standby)
+      vrf: cursor5_vrf
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: flood
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.250.59.17/28
+        description: FW service leg Web (PBR dest .18 active .19 standby)
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    - name: cursor5_web_bd
+      description: Web tier (advertised to DMZ via L3Out)
+      vrf: cursor5_vrf
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: flood
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.250.51.1/24
+        description: Web tier (advertised to DMZ via L3Out)
+        public: true
+        private: false
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    application_profiles:
+    - name: cursor5_ap
+      description: Three-tier application (web app db)
+      endpoint_groups:
+      - name: app
+        description: App servers - reached from Web via FW
+        bridge_domain: cursor5_app_bd
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+      - name: db
+        description: DB servers - reached from App via FW
+        bridge_domain: cursor5_db_bd
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+      - name: web
+        description: Web servers - reached from DMZ via FW
+        bridge_domain: cursor5_web_bd
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+  - name: EM-LAB
+  - name: iTenant
+  - name: LAB-TENANT
+    vrfs:
+    - name: LAB-VRF
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: LAB-BD
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: true
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+    application_profiles:
+    - name: LAB-APP
+      endpoint_groups:
+      - name: WEB-EPG
+        description: a
+        bridge_domain: LAB-BD
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+        physical_domains:
+        - LAB-Server
+        static_ports:
+        - vlan: 100
+          deployment_immediacy: lazy
+          mode: regular
+          pod_id: 1
+          node_id: 101
+          module: 1
+          port: 5
+        contracts:
+          consumers:
+          - teste123
+    l3outs:
+    - name: L3OUT_TESTE
+      vrf: LAB-VRF
+      export_route_control: true
+      import_route_control: false
+      domain: test-L3DOMAIN
+      node_profiles:
+      - name: L3OUT_TESTE_nodeProfile
+        nodes:
+        - node_id: 102
+          router_id: 222.222.222.222
+          router_id_as_loopback: true
+        interface_profiles:
+        - name: L3OUT_TESTE_interfaceProfile
+          interfaces:
+          - ip: 2.2.2.2/30
+            mac: 00:22:BD:F8:19:FF
+            mtu: inherit
+            pod_id: 1
+            node_id: 102
+            module: 1
+            port: 4
+      external_endpoint_groups:
+      - name: EEPG_L3OUT
+        preferred_group: false
+        subnets:
+        - prefix: 0.0.0.0/0
+          export_route_control: false
+          import_route_control: false
+          import_security: true
+          shared_route_control: false
+          shared_security: false
+        contracts:
+          consumers:
+          - teste123
+    contracts:
+    - name: teste123
+      scope: application-profile
+  - name: MGMT_LAN
+    application_profiles:
+    - name: AP-MGMT
+  - name: mjay_dev
+    description: This tenant is created by terraform
+  - name: NZ-ACI-LAB
+    description: Cisco ACI Architecture Learning
+    vrfs:
+    - name: VRF-PROD
+      description: Production routing domain
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: BD-WEB
+      description: Web application network
+      vrf: VRF-PROD
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.10.10.1/24
+        description: Web network default gateway
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    - name: BD-APP
+      description: Application server network
+      vrf: VRF-PROD
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.10.20.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    - name: BD-DB
+      description: Database server network
+      vrf: VRF-PROD
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.10.30.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+  - name: oneaciapp
+    description: Try ACI tool demo at https://oneaciapp.talapupa.com
+  - name: RB-Tenant
+    vrfs:
+    - name: RB-VRF
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: RB-BD
+      vrf: RB-VRF
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: false
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.10.10.1/24
+        public: true
+        private: false
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    application_profiles:
+    - name: FTP
+      endpoint_groups:
+      - name: FTP-EPG
+        bridge_domain: default
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+        static_ports:
+        - vlan: 100
+          deployment_immediacy: lazy
+          mode: untagged
+          pod_id: 1
+          node_id: 101
+          module: 1
+          port: 1
+        - vlan: 101
+          deployment_immediacy: lazy
+          mode: untagged
+          pod_id: 1
+          node_id: 101
+          module: 1
+          port: 2
+        contracts:
+          providers:
+          - FTP
+          consumers:
+          - HTTPS
+    - name: WWW
+      endpoint_groups:
+      - name: WWW
+        bridge_domain: default
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+        contracts:
+          providers:
+          - HTTPS
+          consumers:
+          - FTP
+    contracts:
+    - name: HTTPS
+      scope: context
+    - name: FTP
+      scope: context
+    filters:
+    - name: https
+      entries:
+      - name: https
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 443
+        destination_to_port: 443
+        stateful: false
+    - name: FTP
+      entries:
+      - name: ftp
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 20
+        destination_to_port: 21
+        stateful: false
+  - name: Tenant-Ahmed
+    description: tenant ino saybkht s Ansible
+    vrfs:
+    - name: VRF-1
+      description: VRF using Ansible
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    application_profiles:
+    - name: App-X
+      description: App using Ansible
+  - name: tenant_mylab
+    description: Tenant Created Using Ansible
+    l3outs:
+    - name: ok
+      vrf: default
+      export_route_control: true
+      import_route_control: false
+      domain: test-L3DOMAIN
+      node_profiles:
+      - name: ok_nodeProfile
+        nodes:
+        - node_id: 101
+          router_id: 172.20.55.55
+          router_id_as_loopback: true
+        - node_id: 102
+          router_id: 172.20.44.44
+          router_id_as_loopback: true
+        interface_profiles:
+        - name: ok_interfaceProfile
+          interfaces:
+          - ip: 172.20.40.40/24
+            mac: 00:22:BD:F8:19:FF
+            mtu: inherit
+            pod_id: 1
+            node_id: 101
+            module: 1
+            port: 40
+      external_endpoint_groups:
+      - name: EEPG-gosote
+        preferred_group: false
+        subnets:
+        - prefix: 0.0.0.0/0
+          export_route_control: false
+          import_route_control: false
+          import_security: true
+          shared_route_control: false
+          shared_security: false
+        contracts:
+          providers:
+          - default
+          consumers:
+          - default
+  - name: Tenant_RG
+    vrfs:
+    - name: VRF_RG
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    - name: RG_EXT_VRF
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: L2_BD_RG
+      vrf: VRF_RG
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: false
+      unknown_unicast: flood
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+    - name: RG_BD_EXT_L2
+      vrf: RG_EXT_VRF
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: false
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+    application_profiles:
+    - name: EXTERNAL_L2_L3
+      endpoint_groups:
+      - name: EXT_L2
+        bridge_domain: RG_BD_EXT_L2
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        physical_domains:
+        - PHY_RG_ROUTED
+        static_ports:
+        - vlan: 1410
+          deployment_immediacy: lazy
+          mode: untagged
+          pod_id: 1
+          node_id: 101
+          module: 1
+          port: 4
+    l3outs:
+    - name: rg_l3_out_ext
+      vrf: RG_EXT_VRF
+      export_route_control: true
+      import_route_control: false
+      domain: RG_EXT_ROUTED
+      node_profiles:
+      - name: rg_l3_out_ext_nodeProfile
+        nodes:
+        - node_id: 102
+          router_id: 2.2.2.2
+          router_id_as_loopback: false
+        interface_profiles:
+        - name: rg_l3_out_ext_interfaceProfile
+          interfaces:
+          - ip: 192.168.32.9/28
+            mac: 00:22:BD:F8:19:FF
+            mtu: inherit
+            pod_id: 1
+            node_id: 102
+            module: 1
+            port: 38
+      external_endpoint_groups:
+      - name: epg_RG_EXT_ROUTED
+        preferred_group: false
+        subnets:
+        - prefix: 0.0.0.0/0
+          export_route_control: false
+          import_route_control: false
+          import_security: true
+          shared_route_control: false
+          shared_security: false
+  - name: Test100
+    vrfs:
+    - name: PROD
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    - name: DEV
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: PROD-DB
+      vrf: PROD
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 192.168.1.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    - name: PROD-APP
+      vrf: PROD
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 192.168.2.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    - name: DEV-APP
+      vrf: DEV
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 192.168.3.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    - name: DEV-DB
+      vrf: DEV
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 192.168.4.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    application_profiles:
+    - name: PROD
+      endpoint_groups:
+      - name: P-DB
+        bridge_domain: PROD-DB
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+      - name: P-APP
+        bridge_domain: PROD-APP
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+    - name: DEV
+      endpoint_groups:
+      - name: D-DB
+        bridge_domain: DEV-DB
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+      - name: D-APP
+        bridge_domain: DEV-APP
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+    l3outs:
+    - name: L3out
+      vrf: PROD
+      export_route_control: true
+      import_route_control: false
+      domain: test-L3DOMAIN
+      node_profiles:
+      - name: L3out_nodeProfile
+        nodes:
+        - node_id: 101
+          router_id: 1.1.1.1
+          router_id_as_loopback: true
+        interface_profiles:
+        - name: L3out_interfaceProfile
+          interfaces:
+          - ip: 172.16.1.1/30
+            mac: 00:22:BD:F8:19:FF
+            mtu: inherit
+            pod_id: 1
+            node_id: 101
+            module: 1
+            port: 12
+      external_endpoint_groups:
+      - name: EXT-EPG
+        preferred_group: false
+        subnets:
+        - prefix: 10.1.0.0/16
+          export_route_control: false
+          import_route_control: false
+          import_security: true
+          shared_route_control: false
+          shared_security: false
+        contracts:
+          providers:
+          - L3out
+    contracts:
+    - name: APP-to-DB
+      scope: application-profile
+      subjects:
+      - name: icmp
+        reverse_filter_ports: true
+        filters:
+        - filter: icmp
+          action: permit
+          log: false
+          no_stats: false
+    - name: L3out
+      scope: context
+      subjects:
+      - name: icmp
+        reverse_filter_ports: true
+        filters:
+        - filter: icmp
+          action: permit
+          log: false
+          no_stats: false
+    - name: ESG
+      scope: global
+      subjects:
+      - name: icmp
+        reverse_filter_ports: true
+        filters:
+        - filter: icmp
+          action: permit
+          log: false
+          no_stats: false
+  - name: Test_9112026
+    vrfs:
+    - name: IAAS-PSNXXX_VRF
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    - name: IAAS-STRE-SHRP01-PSN-COL_VRF
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    l3outs:
+    - name: IAAS1-PSNXXXX_L3Out
+      vrf: IAAS-PSNXXX_VRF
+      export_route_control: true
+      import_route_control: false
+      domain: test-L3DOMAIN
+      node_profiles:
+      - name: IAAS1-PSNXXXX_L3Out_nodeProfile
+        nodes:
+        - node_id: 101
+          router_id: 1.2.3.4
+          router_id_as_loopback: true
+        interface_profiles:
+        - name: IAAS1-PSNXXXX_L3Out_interfaceProfile
+          interfaces:
+          - ip: 192.168.103.254/28
+            mac: 00:22:BD:F8:19:FF
+            mtu: inherit
+            pod_id: 1
+            node_id: 101
+            module: 1
+            port: 11
+      external_endpoint_groups:
+      - name: IaaS_Ipv6_extEPG
+        preferred_group: false
+        subnets:
+        - prefix: fdfd:7680:412d:4::1/64
+          export_route_control: false
+          import_route_control: false
+          import_security: true
+          shared_route_control: true
+          shared_security: true
+        contracts:
+          consumers:
+          - inter-VRF_contract
+          - intra-VRF_contract
+    - name: IAAS-STRE-SHRP01-PSN-COLL_L3Out
+      vrf: IAAS-STRE-SHRP01-PSN-COL_VRF
+      export_route_control: true
+      import_route_control: false
+      domain: test-L3DOMAIN
+      node_profiles:
+      - name: IAAS-STRE-SHRP01-PSN-COLL_L3Out_nodeProfile
+        nodes:
+        - node_id: 101
+          router_id: 1.2.3.6
+          router_id_as_loopback: true
+        interface_profiles:
+        - name: IAAS-STRE-SHRP01-PSN-COLL_L3Out_interfaceProfile
+          interfaces:
+          - ip: 192.168.103.25/28
+            mac: 00:22:BD:F8:19:FF
+            mtu: inherit
+            pod_id: 1
+            node_id: 101
+            module: 1
+            port: 15
+      external_endpoint_groups:
+      - name: IAAS-STRE-SHRP01-PSN-COLL-IPv6_Ext
+        preferred_group: false
+        subnets:
+        - prefix: fdfd:7680:412d:4::5/64
+          export_route_control: false
+          import_route_control: false
+          import_security: true
+          shared_route_control: true
+          shared_security: true
+        contracts:
+          providers:
+          - inter-VRF_contract
+    - name: CSP-PSNXXXX_L3Out
+      vrf: IAAS-PSNXXX_VRF
+      export_route_control: true
+      import_route_control: false
+      domain: test-L3DOMAIN
+      node_profiles:
+      - name: CSP-PSNXXXX_L3Out_nodeProfile
+        nodes:
+        - node_id: 102
+          router_id: 1.2.3.5
+          router_id_as_loopback: true
+        interface_profiles:
+        - name: CSP-PSNXXXX_L3Out_interfaceProfile
+          interfaces:
+          - ip: 192.168.103.1/28
+            mac: 00:22:BD:F8:19:FF
+            mtu: inherit
+            pod_id: 1
+            node_id: 102
+            module: 1
+            port: 3
+        - name: IPv6_intProfile
+      external_endpoint_groups:
+      - name: CSP-L3out-extEPG
+        preferred_group: false
+        subnets:
+        - prefix: fdfd:7680:412d::10/64
+          export_route_control: false
+          import_route_control: false
+          import_security: true
+          shared_route_control: true
+          shared_security: true
+        contracts:
+          providers:
+          - intra-VRF_contract
+    contracts:
+    - name: inter-VRF_contract
+      scope: tenant
+    - name: intra-VRF_contract
+      scope: context
+  - name: TESTING123
+  - name: TN-LAB-ANS01
+    description: Audit policy WEB-APP
+    vrfs:
+    - name: VRF-LAB
+      description: VRF untuk praktikum DCACI Hari 1
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: BD-WEB
+      description: Bridge Domain untuk Web Server Lab
+      vrf: VRF-LAB
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.10.10.1/24
+        description: Subnet WEB DCACI Lab
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    - name: BD-APP
+      vrf: VRF-LAB
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.10.20.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    - name: BD-DB
+      vrf: VRF-LAB
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.10.30.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    application_profiles:
+    - name: AP-PORTAL
+      description: Application Profile untuk praktikum DCACI Portal WEB dan Database
+      endpoint_groups:
+      - name: EPG-WEB
+        bridge_domain: BD-WEB
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        contracts:
+          providers:
+          - CT-WEB-APP
+      - name: EPG-DB
+        bridge_domain: BD-DB
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+      - name: EPG-APP
+        bridge_domain: BD-APP
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+        contracts:
+          providers:
+          - CT-WEB-APP
+    contracts:
+    - name: CT-WEB-APP
+      scope: tenant
+      subjects:
+      - name: SUBJ-APP
+        reverse_filter_ports: true
+        filters:
+        - filter: FLT-APP
+          action: permit
+          log: false
+          no_stats: false
+    - name: CT-APP-DB
+      scope: tenant
+      subjects:
+      - name: SUBJ-DB
+        reverse_filter_ports: true
+        filters:
+        - filter: FLT-DB
+          action: permit
+          log: false
+          no_stats: false
+    filters:
+    - name: FLT-APP
+      entries:
+      - name: ENTRY-APP
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 8443
+        destination_to_port: 8443
+        stateful: false
+    - name: FLT-DB
+      entries:
+      - name: ENTRY-MYSQL
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 3306
+        destination_to_port: 3306
+        stateful: false
+  - name: TN-LAB-K01
+    vrfs:
+    - name: vrf-lab01
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: BD-WEB
+      vrf: vrf-lab01
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 192.168.10.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: true
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    - name: BD-APP
+      vrf: vrf-lab01
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 192.168.20.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: true
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    - name: BD-DB
+      vrf: vrf-lab01
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 192.168.30.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: true
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    application_profiles:
+    - name: AP-LAB01
+      endpoint_groups:
+      - name: EPG-APP
+        bridge_domain: BD-APP
+        flood_in_encap: false
+        intra_epg_isolation: true
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+        contracts:
+          providers:
+          - CT-WEB-APP
+          consumers:
+          - CT-APP-DB
+      - name: EPG-WEB
+        bridge_domain: BD-WEB
+        flood_in_encap: false
+        intra_epg_isolation: true
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+        contracts:
+          consumers:
+          - CT-WEB-APP
+          - CT-WEB-DB
+      - name: EPG-DB
+        bridge_domain: BD-DB
+        flood_in_encap: false
+        intra_epg_isolation: true
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+        contracts:
+          providers:
+          - CT-APP-DB
+          - CT-WEB-DB
+    contracts:
+    - name: CT-WEB-APP
+      scope: context
+      subjects:
+      - name: SUB-WEB-APP
+        reverse_filter_ports: true
+        filters:
+        - filter: FT-WEB-APP
+          action: permit
+          log: false
+          no_stats: false
+    - name: CT-WEB-DB
+      scope: context
+      subjects:
+      - name: SUB-WEB-DB
+        reverse_filter_ports: true
+        filters:
+        - filter: FT-WEB-DB-DENY
+          action: deny
+          log: false
+          no_stats: false
+    - name: CT-APP-DB
+      scope: context
+      subjects:
+      - name: SUB-APP-DB
+        reverse_filter_ports: true
+        filters:
+        - filter: FT-APP-DB
+          action: permit
+          log: false
+          no_stats: false
+        - filter: FT-APP-DB-DENY
+          action: deny
+          log: false
+          no_stats: false
+    filters:
+    - name: FT-WEB-APP
+      entries:
+      - name: TCP-8443
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 8443
+        destination_to_port: 8443
+        stateful: false
+    - name: FT-WEB-DB-DENY
+      entries:
+      - name: MYSQL-3306
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 3306
+        destination_to_port: 3306
+        stateful: false
+    - name: FT-APP-DB
+      entries:
+      - name: MYSQL-3306
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 3306
+        destination_to_port: 3306
+        stateful: false
+    - name: FT-APP-DB-DENY
+      entries:
+      - name: TCP-22
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 22
+        destination_to_port: 22
+        stateful: false
+  - name: TN-LAB-K02
+    vrfs:
+    - name: VRF-LAB
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: BD-WE
+      vrf: VRF-LAB
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.10.20.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    - name: BD-APP
+      vrf: VRF-LAB
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.10.10.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    - name: BD-DB
+      vrf: VRF-LAB
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.10.30.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    application_profiles:
+    - name: WEB-APP
+      endpoint_groups:
+      - name: EGP-WEB
+        bridge_domain: BD-WE
+        flood_in_encap: false
+        intra_epg_isolation: true
+        proxy_arp: false
+        preferred_group: false
+        contracts:
+          consumers:
+          - CT-WEB-APP
+      - name: EGP-APP
+        bridge_domain: BD-APP
+        flood_in_encap: false
+        intra_epg_isolation: true
+        proxy_arp: false
+        preferred_group: false
+        contracts:
+          providers:
+          - CT-WEB-APP
+      - name: EGP-DB
+        bridge_domain: BD-DB
+        flood_in_encap: false
+        intra_epg_isolation: true
+        proxy_arp: false
+        preferred_group: false
+        contracts:
+          providers:
+          - CT-APP-DB
+    contracts:
+    - name: CT-WEB-APP
+      scope: tenant
+      subjects:
+      - name: SUBJ-APP
+        reverse_filter_ports: true
+        filters:
+        - filter: TCP-8443
+          action: permit
+          log: false
+          no_stats: false
+    - name: CT-WEB-DB
+      scope: tenant
+      subjects:
+      - name: SUBJ-WEB-DB
+        reverse_filter_ports: true
+        filters:
+        - filter: WEB-DB
+          action: deny
+          log: false
+          no_stats: false
+    - name: CT-APP-DB
+      scope: tenant
+      subjects:
+      - name: SUBJ-APP-DB
+        reverse_filter_ports: true
+        filters:
+        - filter: APP-DB
+          action: deny
+          log: false
+          no_stats: false
+        - filter: FLT-DB
+          action: permit
+          log: false
+          no_stats: false
+    filters:
+    - name: TCP-8443
+      entries:
+      - name: '8443'
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 8443
+        destination_to_port: 8443
+        stateful: false
+    - name: FLT-DB
+      entries:
+      - name: FLT-DB
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 3306
+        destination_to_port: 3306
+        stateful: false
+    - name: WEB-DB
+      entries:
+      - name: WEB-DB
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 3306
+        destination_to_port: 3306
+        stateful: false
+    - name: APP-DB
+      entries:
+      - name: APP-DB
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 22
+        destination_to_port: 22
+        stateful: false
+  - name: tn_example_tenant
+    description: My Example Tenant
+    vrfs:
+    - name: my_example_vrf
+      description: My Example VRF
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: Production-BD
+      vrf: my_example_vrf
+      arp_flooding: false
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 192.0.2.1/29
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    application_profiles:
+    - name: app-profile
+    l3outs:
+    - name: my_first_l3out
+      description: This is My First L3Out
+      vrf: my_example_vrf
+      export_route_control: true
+      import_route_control: true
+      domain: my_L3_domain
+      node_profiles:
+      - name: fabric
+        nodes:
+        - node_id: 101
+          router_id: 10.255.255.1
+          router_id_as_loopback: true
+        - node_id: 102
+          router_id: 10.255.255.2
+          router_id_as_loopback: true
+        interface_profiles:
+        - name: My_Interface_Profile
+          interfaces:
+          - ip: 192.0.2.2/29
+            mac: 00:22:BD:F8:19:FF
+            mtu: 9000
+            pod_id: 1
+            node_id: 101
+            node2_id: 102
+            channel: My_VPC_1
+      external_endpoint_groups:
+      - name: my_first_epg_for_bgp
+        preferred_group: false
+        qos_class: level3
+        subnets:
+        - prefix: 0.0.0.0/0
+          export_route_control: false
+          import_route_control: false
+          import_security: true
+          shared_route_control: false
+          shared_security: false
+        contracts:
+          providers:
+          - out-contract
+          consumers:
+          - in-contract
+    contracts:
+    - name: in-contract
+      description: Inbound traffic contract - web, ssh and icmp only
+      scope: context
+      subjects:
+      - name: default
+        reverse_filter_ports: true
+        filters:
+        - filter: allow-https
+          action: permit
+          log: false
+          no_stats: false
+        - filter: allow-icmp
+          action: permit
+          log: false
+          no_stats: false
+        - filter: allow-ssh
+          action: permit
+          log: false
+          no_stats: false
+    - name: out-contract
+      description: Outbound traffic contract - any IP
+      scope: context
+      subjects:
+      - name: default
+        reverse_filter_ports: true
+        filters:
+        - filter: ip-any
+          action: permit
+          log: false
+          no_stats: false
+    filters:
+    - name: ip-any
+      description: Match any IP traffic
+      entries:
+      - name: any
+        ethertype: unspecified
+    - name: allow-https
+      description: TCP 443
+      entries:
+      - name: tcp-443
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 443
+        destination_to_port: 443
+        stateful: false
+    - name: allow-ssh
+      description: TCP 22
+      entries:
+      - name: tcp-22
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 22
+        destination_to_port: 22
+        stateful: false
+    - name: allow-icmp
+      description: ICMP (ping and error messages)
+      entries:
+      - name: icmp
+        ethertype: ip
+        protocol: icmp
+  - name: VY-TN
+    vrfs:
+    - name: VY-VRF
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    - name: VY-VRF03
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    - name: VY-VRF02
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: VY-BD
+      vrf: VY-VRF
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      ep_move_detection: true
+      subnets:
+      - ip: 10.2.2.254/24
+        public: true
+        private: false
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    - name: VY-BD03
+      vrf: VY-VRF03
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+    - name: VY-BD02
+      vrf: VY-VRF02
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+    application_profiles:
+    - name: VY-AP
+      endpoint_groups:
+      - name: VY-EPG
+        bridge_domain: VY-BD
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+        physical_domains:
+        - VY-PHY
+        static_ports:
+        - vlan: 150
+          deployment_immediacy: immediate
+          mode: regular
+          pod_id: 1
+          node_id: 101
+          channel: PC101-32-33
+        - vlan: 120
+          deployment_immediacy: immediate
+          mode: native
+          pod_id: 1
+          node_id: 101
+          node2_id: 102
+          channel: PG-VPC-20
+        - vlan: 121
+          deployment_immediacy: immediate
+          mode: native
+          pod_id: 1
+          node_id: 101
+          module: 1
+          port: 36
+        contracts:
+          providers:
+          - Contract1
+      - name: VY-EPG03
+        bridge_domain: VY-BD03
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+      - name: EPG2
+        bridge_domain: VY-BD
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+        contracts:
+          consumers:
+          - Contract1
+      - name: VY-EPG02
+        bridge_domain: VY-BD02
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+        physical_domains:
+        - VY-PHYS-TEST
+    l3outs:
+    - name: test-L3OUT
+      vrf: VY-VRF
+      export_route_control: true
+      import_route_control: false
+      domain: test-L3DOMAIN
+      node_profiles:
+      - name: test-L3OUT_nodeProfile
+        nodes:
+        - node_id: 102
+          router_id: 2.2.2.2
+          router_id_as_loopback: true
+        interface_profiles:
+        - name: test-L3OUT_interfaceProfile
+          interfaces:
+          - ip: 150.2.2.2/30
+            mac: 00:22:BD:F8:19:FF
+            mtu: inherit
+            pod_id: 1
+            node_id: 102
+            module: 1
+            port: 30
+      external_endpoint_groups:
+      - name: test-L3EPG
+        preferred_group: false
+        subnets:
+        - prefix: 0.0.0.0/0
+          export_route_control: false
+          import_route_control: false
+          import_security: true
+          shared_route_control: false
+          shared_security: false
+        contracts:
+          providers:
+          - Contract2
+    contracts:
+    - name: Contract1
+      scope: context
+      subjects:
+      - name: Subject1
+        reverse_filter_ports: true
+        filters:
+        - filter: Filter1
+          action: permit
+          log: false
+          no_stats: false
+    - name: Contract2
+      scope: context
+      subjects:
+      - name: test-Subject
+        reverse_filter_ports: true
+        filters:
+        - filter: icmp
+          action: permit
+          log: false
+          no_stats: false
+    filters:
+    - name: Filter1
+      entries:
+      - name: entry1
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 443
+        destination_to_port: 443
+        stateful: false
+  - name: Zangief
+    application_profiles:
+    - name: LEGACY-DIAG-APP
+  - name: zzzps4021
+    description: Round-trip test clone of Test100
+    vrfs:
+    - name: PROD
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    - name: DEV
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: PROD-DB
+      vrf: PROD
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 198.18.10.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    - name: PROD-APP
+      vrf: PROD
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 198.18.11.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    - name: DEV-APP
+      vrf: DEV
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 198.18.12.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    - name: DEV-DB
+      vrf: DEV
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 198.18.13.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    application_profiles:
+    - name: PROD
+      endpoint_groups:
+      - name: P-DB
+        bridge_domain: PROD-DB
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+      - name: P-APP
+        bridge_domain: PROD-APP
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+    - name: DEV
+      endpoint_groups:
+      - name: D-DB
+        bridge_domain: DEV-DB
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+      - name: D-APP
+        bridge_domain: DEV-APP
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+    l3outs:
+    - name: L3out
+      vrf: PROD
+      export_route_control: true
+      import_route_control: false
+      domain: zzzps4021_L3DOM
+      node_profiles:
+      - name: L3out_nodeProfile
+        nodes:
+        - node_id: 101
+          router_id: 198.18.255.1
+          router_id_as_loopback: true
+        interface_profiles:
+        - name: L3out_interfaceProfile
+          interfaces:
+          - ip: 198.18.20.1/30
+            mac: 00:22:BD:F8:19:FF
+            mtu: inherit
+            pod_id: 1
+            node_id: 101
+            module: 1
+            port: 29
+      external_endpoint_groups:
+      - name: EXT-EPG
+        preferred_group: false
+        qos_class: level3
+        subnets:
+        - prefix: 198.18.200.0/24
+          export_route_control: false
+          import_route_control: false
+          import_security: true
+          shared_route_control: false
+          shared_security: false
+        contracts:
+          providers:
+          - L3out
+    contracts:
+    - name: APP-to-DB
+      scope: application-profile
+      subjects:
+      - name: icmp
+        reverse_filter_ports: true
+        filters:
+        - filter: icmp
+          action: permit
+          log: false
+          no_stats: false
+    - name: L3out
+      scope: context
+      subjects:
+      - name: icmp
+        reverse_filter_ports: true
+        filters:
+        - filter: icmp
+          action: permit
+          log: false
+          no_stats: false
+    - name: ESG
+      scope: global
+      subjects:
+      - name: icmp
+        reverse_filter_ports: true
+        filters:
+        - filter: icmp
+          action: permit
+          log: false
+          no_stats: false
+    filters:
+    - name: icmp
+      entries:
+      - name: icmp
+        ethertype: ip
+        protocol: icmp
+  - name: zzzps4021_BGP
+    description: OSPF to BGP migration exercise
+    vrfs:
+    - name: VY-VRF
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    - name: VY-VRF03
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    - name: VY-VRF02
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: VY-BD
+      vrf: VY-VRF
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 198.18.30.1/24
+        public: true
+        private: false
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    - name: VY-BD03
+      vrf: VY-VRF03
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+    - name: VY-BD02
+      vrf: VY-VRF02
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+    application_profiles:
+    - name: VY-AP
+      endpoint_groups:
+      - name: VY-EPG
+        bridge_domain: VY-BD
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+        physical_domains:
+        - VY-PHY
+        contracts:
+          providers:
+          - Contract1
+      - name: VY-EPG03
+        bridge_domain: VY-BD03
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+      - name: EPG2
+        bridge_domain: VY-BD
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+        contracts:
+          consumers:
+          - Contract1
+      - name: VY-EPG02
+        bridge_domain: VY-BD02
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+        physical_domains:
+        - VY-PHYS-TEST
+    l3outs:
+    - name: test-L3OUT
+      vrf: VY-VRF
+      export_route_control: true
+      import_route_control: false
+      domain: RG_EXT_ROUTED
+      node_profiles:
+      - name: test-L3OUT_nodeProfile
+        nodes:
+        - node_id: 102
+          router_id: 198.18.31.254
+          router_id_as_loopback: true
+        interface_profiles:
+        - name: test-L3OUT_interfaceProfile
+          interfaces:
+          - ip: 198.18.31.1/30
+            mac: 00:22:BD:F8:19:FF
+            mtu: inherit
+            pod_id: 1
+            node_id: 102
+            channel: INT_VPC_RG
+      external_endpoint_groups:
+      - name: test-L3EPG
+        preferred_group: false
+        qos_class: level3
+        subnets:
+        - prefix: 0.0.0.0/0
+          export_route_control: false
+          import_route_control: false
+          import_security: true
+          shared_route_control: false
+          shared_security: false
+        contracts:
+          providers:
+          - Contract2
+    contracts:
+    - name: Contract1
+      scope: context
+      subjects:
+      - name: Subject1
+        reverse_filter_ports: true
+        filters:
+        - filter: Filter1
+          action: permit
+          log: false
+          no_stats: false
+    - name: Contract2
+      scope: context
+      subjects:
+      - name: test-Subject
+        reverse_filter_ports: true
+        filters:
+        - filter: icmp
+          action: permit
+          log: false
+          no_stats: false
+    filters:
+    - name: Filter1
+      entries:
+      - name: entry1
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 443
+        destination_to_port: 443
+        stateful: false
+    - name: icmp
+      entries:
+      - name: icmp
+        ethertype: ip
+        protocol: icmp
