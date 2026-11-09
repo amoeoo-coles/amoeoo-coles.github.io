@@ -99,53 +99,111 @@ Promise.all([fetch("/visitors/daily.json?"+Date.now()).then(function(r){return r
 
 
 
+
+
+
 <!--pagehist--><section id="pagehist" aria-label="Every page, day by day"><style>
 #pagehist table{border-collapse:collapse;width:100%;margin:6px 0 14px}#pagehist th,#pagehist td{border-bottom:1px solid #3334;padding:5px 8px;font-size:13px;text-align:left;vertical-align:middle}
 #pagehist th.n,#pagehist td.n{text-align:right;font-variant-numeric:tabular-nums}#pagehist td.z{color:#8888}#pagehist .sp{display:inline-block;vertical-align:middle}
-#pagehist input{padding:6px 9px;border-radius:6px;border:1px solid #8886;background:transparent;color:inherit;min-width:260px;margin:4px 0 6px}
+#pagehist input[type=search]{padding:6px 9px;border-radius:6px;border:1px solid #8886;background:transparent;color:inherit;min-width:260px;margin:4px 0 6px}
 #pagehist .vl{list-style:none;padding:0}#pagehist .vl>li{margin:6px 0;padding:8px 12px;border:1px solid #8884;border-left:5px solid #22c55e;border-radius:8px}
 #pagehist .vl summary{cursor:pointer}#pagehist .tag{display:inline-block;font-size:11px;padding:2px 7px;border-radius:10px;background:#2563eb;color:#fff;margin-left:6px}
 #pagehist th.n,#pagehist td.n,#pagehist td:nth-last-child(-n+3),#pagehist th:nth-last-child(-n+3){white-space:nowrap;width:1%}#pagehist .new{color:#16a34a;font-weight:600}#pagehist .wrapt{overflow-x:auto}
+#pagehist th.s{cursor:pointer;user-select:none;white-space:nowrap}#pagehist th.s:hover{color:#8cf}#pagehist th.s .ar{opacity:.45;font-size:11px;margin-left:3px}#pagehist th.s.on .ar{opacity:1;color:#8cf}
+#pagehist tr.gh td{background:#1b2330;font-weight:700;border-bottom:1px solid #3a4456;padding-top:10px;padding-bottom:8px}
+#pagehist .controls{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin:4px 0 8px}
+#pagehist .controls label{font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+#pagehist .trlink{font-size:13px}
 </style>
 <h2>Every page, day by day</h2>
-<p class="muted">Every page on the site is listed, including the main menu pages and the Infrastructure as Code sub pages, even when they have no visitors yet. Each column is one Melbourne day, newest first. The small bars show the daily trend from oldest to newest.</p>
+<p class="muted">Every page on the site is listed, including the main menu pages and the Infrastructure as Code sub pages, even when they have no visitors yet. Each column is one Melbourne day, newest first. The small bars show the daily trend from oldest to newest. Click a column header to sort (within each menu group when grouping is on).</p>
+<p class="trlink"><a href="/visitors/trends/">📈 Trends</a> — daily totals, per-group lines, risers and fallers, and per-page sparklines.</p>
+<div class="controls">
 <input id="ph-q" type="search" placeholder="Filter pages, e.g. report17 or iac" aria-label="Filter pages">
+<label><input type="checkbox" id="ph-grp" checked> Group by menu</label>
+</div>
 <div class="wrapt"><table id="ph-t"><thead></thead><tbody><tr><td class="muted">Loading…</td></tr></tbody></table></div>
 <h2>Daily snapshots (version history of visitor counts)</h2>
-<p class="muted">One version per day since tracking started on 7 Nov 2026. Each version lists the pages visited that day, the running total to that date, and any page seen for the first time. Open a version to see its full table.</p>
+<p class="muted">One version per day since tracking started on 7 Nov 2026. Each version lists the pages visited that day, the running total to that date, and any page seen for the first time. Open a version to see its full table. Column headers inside each version are sortable.</p>
 <ul class="vl" id="ph-v"><li class="muted">Loading…</li></ul>
 <script>(function(){
 var esc=function(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
 var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 function lab(d){var p=d.split('-');return +p[2]+' '+MON[+p[1]-1]}
 function lab2(d){var p=d.split('-');return +p[2]+' '+MON[+p[1]-1]+' '+p[0]}
-var KNOWN=[['/','Home'],['/tasks','Tasks'],['/tasks/netbox','NetBox tasks'],['/tasks/provisioning','Provisioning tasks'],['/tasks/monitoring','Monitoring tasks'],['/tasks/testing','Testing tasks'],['/report17-aoapic-monitoring/tenants','Tenants Detail'],['/netbox-aci-tenants','NetBox ACI Tenants'],['/netbox-aci-tenants/diagrams','Tenant Diagrams'],['/netbox-aci-objects','NB ACI Objects'],['/netbox-yaml-model','YAML Model'],['/report17-aoapic-monitoring/pending-provisioning','Pending Provisioning'],['/report17-aoapic-monitoring/universal-provisioning','Universal Provisioning'],['/report17-aoapic-monitoring/universal-provisioning/rma','Universal Provisioning RMA'],['/report17-aoapic-monitoring/objects','Object Drill-down'],['/report17-aoapic-monitoring','Report 17'],['/grafana-screenshots','Group 1'],['/grafana-screenshots-part2','Group 2'],['/aoapic-nac-test-status','nac-test Status'],['/roadmap','RoadMap'],['/mindmap','MindMap'],['/visitors','Visitors'],['/status','Status'],
+var GROUPS=[{"name":"Home","urls":["/"]},{"name":"NetBox","urls":["/tasks/netbox/","/netbox-aci-tenants/","/netbox-aci-tenants/diagrams/","/netbox-aci-objects/","/netbox-hw-inventory/","/netbox-yaml-model/"]},{"name":"Provisioning","urls":["/tasks/provisioning/","/report17-aoapic-monitoring/pending-provisioning/","/report17-aoapic-monitoring/universal-provisioning/"]},{"name":"Monitoring","urls":["/tasks/monitoring/","/report17-aoapic-monitoring/","/report17-aoapic-monitoring/tenants/","/report17-aoapic-monitoring/objects/","/grafana-screenshots/","/grafana-screenshots-part2/"]},{"name":"Testing","urls":["/tasks/testing/","/aoapic-nac-test-status/"]},{"name":"RoadMap","urls":["/roadmap/","/roadmap/","/mindmap/"]},{"name":"Visitors","urls":["/visitors/","/visitors/","/status/","/visitors/trends/"]}];
+var GROUP_ORDER=GROUPS.map(function(g){return g.name}).concat(['IaC','Other']);
+var KNOWN=[['/','Home'],['/tasks','Tasks'],['/tasks/netbox','NetBox tasks'],['/tasks/provisioning','Provisioning tasks'],['/tasks/monitoring','Monitoring tasks'],['/tasks/testing','Testing tasks'],['/report17-aoapic-monitoring/tenants','Tenants Detail'],['/netbox-aci-tenants','NetBox ACI Tenants'],['/netbox-aci-tenants/diagrams','Tenant Diagrams'],['/netbox-aci-objects','NB ACI Objects'],['/netbox-hw-inventory','NB HW Inventory'],['/netbox-yaml-model','YAML Model'],['/report17-aoapic-monitoring/pending-provisioning','Pending Provisioning'],['/report17-aoapic-monitoring/universal-provisioning','Universal Provisioning'],['/report17-aoapic-monitoring/universal-provisioning/rma','Universal Provisioning RMA'],['/report17-aoapic-monitoring/objects','Object Drill-down'],['/report17-aoapic-monitoring','Report 17'],['/grafana-screenshots','Group 1'],['/grafana-screenshots-part2','Group 2'],['/aoapic-nac-test-status','nac-test Status'],['/roadmap','RoadMap'],['/mindmap','MindMap'],['/visitors','Visitors'],['/visitors/trends','Visitor Trends'],['/status','Status'],
 ['/iac/form','IaC: Universal Provisioning Form'],['/iac/netbox','IaC: NetBox'],['/iac/super-portal','IaC: Super Portal Front End'],['/iac/pipeline','IaC: Pipeline'],['/iac/approval','IaC: Approval'],['/iac/dev-prod','IaC: Development and Production'],['/iac/aci','IaC: ACI'],['/iac/sda','IaC: SDA'],['/iac/sdwan','IaC: SD-WAN'],['/iac/vxlan-evpn','IaC: VXLAN EVPN'],['/iac/nexus-dashboard','IaC: Nexus Dashboard'],['/iac/meraki','IaC: Meraki'],['/iac/loadbalancer','IaC: Load Balancer'],['/iac/firewall','IaC: Firewall']];
 function norm(p){p=String(p||'').split('?')[0].replace(/\/index\.html$/,'').replace(/\/+$/,'');return p||'/'}
 function today(){return new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne'}).format(new Date())}
 function spark(vals){var w=Math.max(40,vals.length*7),h=18,m=Math.max.apply(null,vals.concat([1])),s='<svg class="sp" width="'+w+'" height="'+h+'">';
  vals.forEach(function(v,i){var bh=v?Math.max(2,v/m*h):1;s+='<rect x="'+(i*7)+'" y="'+(h-bh)+'" width="5" height="'+bh+'" fill="'+(v?'#22c55e':'#8886')+'"/>'});return s+'</svg>'}
+function slope7(vals){var a=vals.slice(-7),n=a.length;if(n<2)return 0;var sx=0,sy=0,sxy=0,sx2=0;for(var i=0;i<n;i++){sx+=i;sy+=a[i];sxy+=i*a[i];sx2+=i*i}var d=n*sx2-sx*sx;return d?(n*sxy-sx*sy)/d:0}
+function groupOf(path){var best=null,bl=-1;GROUPS.forEach(function(g){g.urls.forEach(function(u){var nu=norm(u);if(nu==='/'){if(path==='/'&&1>bl){bl=1;best=g.name}}else if(path===nu||path.indexOf(nu+'/')===0){if(nu.length>bl){bl=nu.length;best=g.name}}})});if(!best&&path.indexOf('/iac')===0)return 'IaC';return best||'Other'}
+var state={col:'total',dir:-1,group:true,q:''};
+function cmp(a,b,col,dir){
+ var av,bv;
+ if(col==='page'){av=(a.name||a.path).toLowerCase();bv=(b.name||b.path).toLowerCase();return av<bv?-dir:av>bv?dir:0}
+ if(col==='total'){av=a.total;bv=b.total;return av<bv?-dir:av>bv?dir:a.path.localeCompare(b.path)}
+ if(col==='trend'){av=a._slope;bv=b._slope;return av<bv?-dir:av>bv?dir:a.path.localeCompare(b.path)}
+ if(col==='first'){av=a.first||'9999';bv=b.first||'9999';return av<bv?-dir:av>bv?dir:0}
+ if(col==='last'){av=a.last||'';bv=b.last||'';return av<bv?-dir:av>bv?dir:0}
+ if(col.indexOf('day:')===0){var d=col.slice(4);av=a.days[d]||0;bv=b.days[d]||0;return av<bv?-dir:av>bv?dir:a.path.localeCompare(b.path)}
+ return a.path.localeCompare(b.path)
+}
+function th(label,key,cls){var on=state.col===key;var ar=on?(state.dir>0?'\u25B2':'\u25BC'):'\u2195';return '<th class="s '+(cls||'')+(on?' on':'')+'" data-k="'+esc(key)+'">'+label+'<span class="ar">'+ar+'</span></th>'}
 fetch('/data/visitors.json?'+Date.now()).then(function(r){return r.json()}).then(function(d){
  var M={};function get(p,t){p=norm(p);if(!M[p])M[p]={path:p,title:t||'',days:{},total:0};if(t&&!M[p].title)M[p].title=t;return M[p]}
  KNOWN.forEach(function(k){get(k[0],k[1]).name=k[1]});
  (d.pages||[]).forEach(function(x){var o=get(x.path,x.title);o.total+=(+x.count||0);var ds=x.days||{};for(var k in ds){o.days[k]=(o.days[k]||0)+(+ds[k]||0)}});
  var start=d.since||'2026-11-07',end=today(),days=[];var dt=new Date(start+'T00:00:00Z'),e=new Date(end+'T00:00:00Z');
  while(dt<=e){days.push(dt.toISOString().slice(0,10));dt.setUTCDate(dt.getUTCDate()+1)}
- var L=Object.keys(M).map(function(k){var o=M[k];o.first=null;o.last=null;days.forEach(function(x){if(o.days[x]){if(!o.first)o.first=x;o.last=x}});if(!o.total){days.forEach(function(x){o.total+=o.days[x]||0})}return o});
- L.sort(function(a,b){return b.total-a.total||a.path.localeCompare(b.path)});
+ var L=Object.keys(M).map(function(k){var o=M[k];o.first=null;o.last=null;days.forEach(function(x){if(o.days[x]){if(!o.first)o.first=x;o.last=x}});if(!o.total){days.forEach(function(x){o.total+=o.days[x]||0})}o._vals=days.map(function(x){return o.days[x]||0});o._slope=slope7(o._vals);o.group=groupOf(o.path);return o});
  var rd=days.slice().reverse();
- document.querySelector('#ph-t thead').innerHTML='<tr><th>#</th><th>Page</th><th class="n">Total</th>'+rd.map(function(x){return '<th class="n">'+lab(x)+'</th>'}).join('')+'<th>Trend</th><th>First visit</th><th>Last visit</th></tr>';
+ var ncols=6+rd.length;
  function link(o){var h=o.path==='/'?'/':o.path+'/';return '<a href="'+esc(h)+'">'+esc(o.name||o.path)+'</a>'+(o.name?'':' <span class="muted">'+esc(o.title)+'</span>')+(o.name?' <span class="muted">'+esc(o.path)+'</span>':'')}
- function draw(q){q=(q||'').toLowerCase();var rows=L.filter(function(o){return !q||(o.path+' '+(o.name||'')+' '+o.title).toLowerCase().indexOf(q)>=0});
-  document.querySelector('#ph-t tbody').innerHTML=rows.map(function(o,i){return '<tr><td>'+(i+1)+'</td><td>'+link(o)+'</td><td class="n"><b>'+o.total+'</b></td>'+rd.map(function(x){var v=o.days[x]||0;return '<td class="n'+(v?'':' z')+'">'+v+'</td>'}).join('')+'<td>'+spark(days.map(function(x){return o.days[x]||0}))+'</td><td>'+(o.first?lab(o.first):'<span class="muted">not yet</span>')+'</td><td>'+(o.last?lab(o.last):'<span class="muted">not yet</span>')+'</td></tr>'}).join('')||'<tr><td colspan="9" class="muted">No pages match.</td></tr>'}
- draw('');document.getElementById('ph-q').addEventListener('input',function(){draw(this.value)});
+ function head(){document.querySelector('#ph-t thead').innerHTML='<tr>'+th('#','total','n')+th('Page','page')+th('Total','total','n')+rd.map(function(x){return th(lab(x),'day:'+x,'n')}).join('')+th('Trend','trend')+th('First visit','first')+th('Last visit','last')+'</tr>';
+  document.querySelectorAll('#ph-t thead th.s').forEach(function(el){el.addEventListener('click',function(){var k=el.getAttribute('data-k');if(state.col===k)state.dir=-state.dir;else{state.col=k;state.dir=(k==='page'||k==='first')?1:-1}draw()})})}
+ function rowHtml(o,i){return '<tr data-path="'+esc(o.path)+'"><td class="n">'+(i+1)+'</td><td>'+link(o)+'</td><td class="n"><b>'+o.total+'</b></td>'+rd.map(function(x){var v=o.days[x]||0;return '<td class="n'+(v?'':' z')+'">'+v+'</td>'}).join('')+'<td>'+spark(o._vals)+'</td><td>'+(o.first?lab(o.first):'<span class="muted">not yet</span>')+'</td><td>'+(o.last?lab(o.last):'<span class="muted">not yet</span>')+'</td></tr>'}
+ function draw(){var q=(state.q||'').toLowerCase();var rows=L.filter(function(o){return !q||(o.path+' '+(o.name||'')+' '+o.title+' '+o.group).toLowerCase().indexOf(q)>=0});
+  head();
+  var html='';
+  if(!rows.length){document.querySelector('#ph-t tbody').innerHTML='<tr><td colspan="'+ncols+'" class="muted">No pages match.</td></tr>';return}
+  if(state.group){
+   var by={};rows.forEach(function(o){(by[o.group]=by[o.group]||[]).push(o)});
+   var n=0;
+   GROUP_ORDER.forEach(function(gn){var list=by[gn];if(!list||!list.length)return;
+    list=list.slice().sort(function(a,b){return cmp(a,b,state.col,state.dir)});
+    var gt=list.reduce(function(a,o){return a+o.total},0);
+    html+='<tr class="gh"><td colspan="'+ncols+'">'+esc(gn)+' <span class="muted">\u00b7 '+list.length+' page'+(list.length===1?'':'s')+' \u00b7 total '+gt+'</span></td></tr>';
+    list.forEach(function(o){n++;html+=rowHtml(o,n-1)});
+   });
+   Object.keys(by).forEach(function(gn){if(GROUP_ORDER.indexOf(gn)>=0)return;var list=by[gn].slice().sort(function(a,b){return cmp(a,b,state.col,state.dir)});var gt=list.reduce(function(a,o){return a+o.total},0);html+='<tr class="gh"><td colspan="'+ncols+'">'+esc(gn)+' <span class="muted">\u00b7 '+list.length+' \u00b7 total '+gt+'</span></td></tr>';list.forEach(function(o){n++;html+=rowHtml(o,n-1)})});
+  }else{
+   rows=rows.slice().sort(function(a,b){return cmp(a,b,state.col,state.dir)});
+   html=rows.map(function(o,i){return rowHtml(o,i)}).join('');
+  }
+  document.querySelector('#ph-t tbody').innerHTML=html}
+ draw();
+ document.getElementById('ph-q').addEventListener('input',function(){state.q=this.value;draw()});
+ document.getElementById('ph-grp').addEventListener('change',function(){state.group=!!this.checked;draw()});
  var seen={},cum=0,V=[];
  days.forEach(function(x,i){var ps=L.filter(function(o){return o.days[x]}).map(function(o){return {o:o,v:o.days[x]}}).sort(function(a,b){return b.v-a.v});
   var tot=ps.reduce(function(a,p){return a+p.v},0);cum+=tot;var nw=ps.filter(function(p){return !seen[p.o.path]});ps.forEach(function(p){seen[p.o.path]=1});
   V.push({n:i+1,day:x,tot:tot,cum:cum,ps:ps,nw:nw})});
- document.getElementById('ph-v').innerHTML=V.reverse().map(function(v,i){return '<li><details'+(i===0?' open':'')+'><summary><b>v'+v.n+'</b>'+(i===0?'<span class="tag">today, live</span>':'')+' · '+lab2(v.day)+' · <b>'+v.tot+'</b> visitors on '+v.ps.length+' page'+(v.ps.length===1?'':'s')+' · running total '+v.cum+(v.nw.length?' · <span class="new">'+v.nw.length+' new page'+(v.nw.length===1?'':'s')+'</span>':'')+'</summary>'+
-  (v.ps.length?'<table><thead><tr><th>#</th><th>Page</th><th class="n">Visitors that day</th><th class="n">Total to date</th></tr></thead><tbody>'+v.ps.map(function(p,j){var c=0;days.forEach(function(x){if(x<=v.day)c+=p.o.days[x]||0});return '<tr><td>'+(j+1)+'</td><td>'+link(p.o)+(v.nw.indexOf(p)>=0?' <span class="new">new</span>':'')+'</td><td class="n">'+p.v+'</td><td class="n">'+c+'</td></tr>'}).join('')+'</tbody></table>':'<p class="muted">No visits recorded that day.</p>')+'</details></li>'}).join('');
+ document.getElementById('ph-v').innerHTML=V.reverse().map(function(v,i){return '<li><details'+(i===0?' open':'')+'><summary><b>v'+v.n+'</b>'+(i===0?'<span class="tag">today, live</span>':'')+' \u00b7 '+lab2(v.day)+' \u00b7 <b>'+v.tot+'</b> visitors on '+v.ps.length+' page'+(v.ps.length===1?'':'s')+' \u00b7 running total '+v.cum+(v.nw.length?' \u00b7 <span class="new">'+v.nw.length+' new page'+(v.nw.length===1?'':'s')+'</span>':'')+'</summary>'+
+  (v.ps.length?'<table class="ph-snap"><thead><tr><th class="s" data-k="i">#</th><th class="s" data-k="p">Page</th><th class="s n" data-k="v">Visitors that day</th><th class="s n" data-k="c">Total to date</th></tr></thead><tbody>'+v.ps.map(function(p,j){var c=0;days.forEach(function(x){if(x<=v.day)c+=p.o.days[x]||0});return '<tr data-p="'+esc((p.o.name||p.o.path).toLowerCase())+'" data-v="'+p.v+'" data-c="'+c+'"><td>'+(j+1)+'</td><td>'+link(p.o)+(v.nw.indexOf(p)>=0?' <span class="new">new</span>':'')+'</td><td class="n">'+p.v+'</td><td class="n">'+c+'</td></tr>'}).join('')+'</tbody></table>':'<p class="muted">No visits recorded that day.</p>')+'</details></li>'}).join('');
+ document.getElementById('ph-v').addEventListener('click',function(ev){var th=ev.target.closest('th.s');if(!th)return;var table=th.closest('table');var k=th.getAttribute('data-k');var tb=table.querySelector('tbody');var rows=[].slice.call(tb.querySelectorAll('tr'));var dir=th.classList.contains('asc')?-1:1;table.querySelectorAll('th.s').forEach(function(x){x.classList.remove('asc','desc','on')});th.classList.add('on',dir>0?'asc':'desc');rows.sort(function(a,b){var av,bv;if(k==='p'){av=a.getAttribute('data-p');bv=b.getAttribute('data-p');return av<bv?-dir:av>bv?dir:0}av=+(k==='v'?a.getAttribute('data-v'):k==='c'?a.getAttribute('data-c'):a.cells[0].textContent);bv=+(k==='v'?b.getAttribute('data-v'):k==='c'?b.getAttribute('data-c'):b.cells[0].textContent);return av<bv?-dir:av>bv?dir:0});rows.forEach(function(r,i){r.cells[0].textContent=String(i+1);tb.appendChild(r)})});
 }).catch(function(){document.querySelector('#ph-t tbody').innerHTML='<tr><td class="muted">Page history will appear after the next refresh.</td></tr>'});
+
+function makeSortable(sel, numCols){
+ function attach(){var table=document.querySelector(sel);if(!table||table.dataset.sortReady)return;var thead=table.tHead;if(!thead)return;var ths=thead.querySelectorAll('th');if(!ths.length)return;table.dataset.sortReady='1';
+  ths.forEach(function(th,ci){th.classList.add('s');th.style.cursor='pointer';th.addEventListener('click',function(){var tb=table.tBodies[0];if(!tb)return;var rows=[].slice.call(tb.rows);if(!rows.length||(rows[0].cells.length===1&&rows[0].cells[0].colSpan>1))return;var dir=th.classList.contains('asc')?-1:1;ths.forEach(function(x){x.classList.remove('asc','desc','on');var ar=x.querySelector('.ar');if(ar)ar.textContent='\u2195'});th.classList.add('on',dir>0?'asc':'desc');var ar=th.querySelector('.ar');if(!ar){ar=document.createElement('span');ar.className='ar';ar.style.marginLeft='3px';ar.style.fontSize='11px';th.appendChild(ar)}ar.textContent=dir>0?'\u25B2':'\u25BC';
+   var isNum=numCols.indexOf(ci)>=0;rows.sort(function(a,b){var at=(a.cells[ci]?a.cells[ci].textContent:'').trim();var bt=(b.cells[ci]?b.cells[ci].textContent:'').trim();if(isNum){var an=parseFloat(at.replace(/[^0-9.-]/g,''))||0,bn=parseFloat(bt.replace(/[^0-9.-]/g,''))||0;return an<bn?-dir:an>bn?dir:0}at=at.toLowerCase();bt=bt.toLowerCase();return at<bt?-dir:at>bt?dir:0});rows.forEach(function(r,i){if(r.cells[0]&&numCols.indexOf(0)>=0)r.cells[0].textContent=String(i+1);tb.appendChild(r)})})})}
+ var tries=0;var t=setInterval(function(){attach();tries++;if(tries>40)clearInterval(t)},250)}
+ var st=document.createElement('style');st.textContent='#loc th.s,#pages th.s,#refs th.s{cursor:pointer;user-select:none}#loc th.s:hover,#pages th.s:hover,#refs th.s:hover{color:#8cf}#loc th.s .ar,#pages th.s .ar,#refs th.s .ar{opacity:.45;font-size:11px;margin-left:3px}#loc th.s.on .ar,#pages th.s.on .ar,#refs th.s.on .ar{opacity:1;color:#8cf}';document.head.appendChild(st);
+ makeSortable('#loc',[0,3]);makeSortable('#pages',[0,2]);makeSortable('#refs',[0,2]);
 })();</script></section><!--/pagehist-->
 <h2>Where visitors are</h2>
 <table id="loc"><thead><tr><th>#</th><th>Country</th><th>Regions</th><th class="n">Visitors</th></tr></thead><tbody><tr><td colspan="4" class="muted">Loading…</td></tr></tbody></table>
@@ -158,7 +216,7 @@ fetch('/data/visitors.json?'+Date.now()).then(function(r){return r.json()}).then
 <script>window.goatcounter={path:function(){return location.pathname.replace(/\/+$/,"")||"/"}}</script><script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <script>
 const GC='https://amoeoo-coles.goatcounter.com/counter/';
-const P=[['Home','/'],['Tenants Detail','/report17-aoapic-monitoring/tenants'],['NetBox ACI Tenants','/netbox-aci-tenants'],['Tenant Diagrams','/netbox-aci-tenants/diagrams'],['NB ACI Objects','/netbox-aci-objects'],['YAML Model','/netbox-yaml-model'],['Pending Provisioning','/report17-aoapic-monitoring/pending-provisioning'],['Universal Provisioning','/report17-aoapic-monitoring/universal-provisioning'],['Object Drill-down','/report17-aoapic-monitoring/objects'],['Report 17','/report17-aoapic-monitoring'],['Group 1','/grafana-screenshots'],['Group 2','/grafana-screenshots-part2'],['nac-test status','/aoapic-nac-test-status'],['RoadMap','/roadmap'],['MindMap','/mindmap'],['Visitors','/visitors'],['Status','/status']];
+const P=[['Home','/'],['Tenants Detail','/report17-aoapic-monitoring/tenants'],['NetBox ACI Tenants','/netbox-aci-tenants'],['Tenant Diagrams','/netbox-aci-tenants/diagrams'],['NB ACI Objects','/netbox-aci-objects'],['NB HW Inventory','/netbox-hw-inventory'],['YAML Model','/netbox-yaml-model'],['Pending Provisioning','/report17-aoapic-monitoring/pending-provisioning'],['Universal Provisioning','/report17-aoapic-monitoring/universal-provisioning'],['Object Drill-down','/report17-aoapic-monitoring/objects'],['Report 17','/report17-aoapic-monitoring'],['Group 1','/grafana-screenshots'],['Group 2','/grafana-screenshots-part2'],['nac-test status','/aoapic-nac-test-status'],['RoadMap','/roadmap'],['MindMap','/mindmap'],['Visitors','/visitors'],['Visitor Trends','/visitors/trends'],['Status','/status']];
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const k=document.getElementById('kpis');const B={};
 P.forEach(([n,p])=>{const d=document.createElement('div');d.className='kpi';d.innerHTML='<b>0</b><a href="'+(p==='/'?'/':p+'/')+'">'+n+'</a>';k.appendChild(d);B[p]=d.querySelector('b')});
@@ -187,11 +245,11 @@ nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
 </style>
 <script id="im-script">(function(){
 var G=[["Home","/","\uD83C\uDFE0",[]],
-["NetBox","/tasks/netbox/","\uD83D\uDDC4\uFE0F",[["NetBox ACI Tenants","/netbox-aci-tenants/","\uD83D\uDDC4\uFE0F"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","\uD83D\uDCD0"],["NB ACI Objects","/netbox-aci-objects/","\uD83E\uDDF1"],["YAML Model","/netbox-yaml-model/","\uD83D\uDCC4"]]],
+["NetBox","/tasks/netbox/","\uD83D\uDDC4\uFE0F",[["NetBox ACI Tenants","/netbox-aci-tenants/","\uD83D\uDDC4\uFE0F"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","\uD83D\uDCD0"],["NB ACI Objects","/netbox-aci-objects/","\uD83E\uDDF1"],["NB HW Inventory","/netbox-hw-inventory/","\uD83D\uDDA5\uFE0F"],["YAML Model","/netbox-yaml-model/","\uD83D\uDCC4"]]],
 ["Provisioning","/tasks/provisioning/","\u2699\uFE0F",[["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","\u23F3"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","\uD83E\uDDE9"]]],
 ["Monitoring","/tasks/monitoring/","\uD83D\uDCCA",[["Report 17","/report17-aoapic-monitoring/","\uD83D\uDCCA"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","\uD83C\uDFE2"],["Object Drill-down","/report17-aoapic-monitoring/objects/","\uD83D\uDD0D"],["Group 1","/grafana-screenshots/","\uD83D\uDCC8"],["Group 2","/grafana-screenshots-part2/","\uD83D\uDCC9"]]],
 ["Testing","/tasks/testing/","\uD83E\uDDEA",[["nac-test Status","/aoapic-nac-test-status/","\u2705"]]],
-["RoadMap","/roadmap/","\uD83D\uDDFA\uFE0F",[["RoadMap","/roadmap/","\uD83D\uDDFA\uFE0F"],["MindMap","/mindmap/","\uD83E\uDDE0"]]],["Visitors","/visitors/","\uD83D\uDC65",[["Visitors","/visitors/","\uD83D\uDC65"],["Status","/status/","\uD83D\uDEA6"]]]];
+["RoadMap","/roadmap/","\uD83D\uDDFA\uFE0F",[["RoadMap","/roadmap/","\uD83D\uDDFA\uFE0F"],["MindMap","/mindmap/","\uD83E\uDDE0"]]],["Visitors","/visitors/","\uD83D\uDC65",[["Visitors","/visitors/","\uD83D\uDC65"],["Status","/status/","\uD83D\uDEA6"],["Trends","/visitors/trends/","\uD83D\uDCC8"]]]];
 function mk(e,on,cls,n){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=e[0];var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);a.appendChild(document.createTextNode(e[0]));if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
 function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
 var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
