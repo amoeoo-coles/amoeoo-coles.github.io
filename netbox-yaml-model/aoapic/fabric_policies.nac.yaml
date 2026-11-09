@@ -1,0 +1,96 @@
+# Network-as-Code (nac-aci data model, apic: root)
+# Environment: AOAPIC — complete ACI model
+# Source: Live read-only collection from the Cisco DevNet Always-On APIC sandbox (sandboxapicdc.cisco.com)
+# Collected: 10 Nov 2026 05:31:58 AEDT
+# Method: read-only aaaLogin + GET class/mo queries + aaaLogout
+# Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.
+# SNMP communities and SNMPv3 users are omitted from the published files.
+---
+apic:
+  fabric_policies:
+    pod_policies:
+      date_time_policies:
+      - name: default
+        ntp_admin_state: true
+        ntp_auth_state: false
+        apic_ntp_server_state: false
+        apic_ntp_server_master_mode: false
+      snmp_policies:
+      - name: default
+        admin_state: false
+    date_time_format:
+      display_format: local
+      timezone: p0_UTC
+      show_offset: true
+    dns_policies:
+    - name: default
+    fabric_bgp_as: 65002
+    fabric_bgp_rr:
+    - id: 103
+      pod_id: 1
+    pod_profiles:
+    - name: default
+      selectors:
+      - name: default
+        type: all
+    pod_profile_name: default
+    config_exports:
+    - name: DailyAutoBackup
+      format: xml
+      snapshot: true
+      scheduler: EveryEightHours
+    - name: default
+      format: json
+      snapshot: false
+    schedulers:
+    - name: EveryEightHours
+      recurring_windows:
+      - name: first
+        day: every-day
+        hour: 1
+        minute: 0
+      - name: third
+        day: every-day
+        hour: 17
+        minute: 0
+      - name: second
+        day: every-day
+        hour: 9
+        minute: 0
+    coop_group_policy: compatible
+    ep_loop_protection:
+      action: port-disable
+      admin_state: false
+      detection_interval: 60
+      detection_multiplier: 4
+    global_settings:
+      domain_validation: false
+      enforce_subnet_check: true
+      opflex_authentication: true
+      disable_remote_endpoint_learn: false
+      overlapping_vlan_validation: false
+      remote_leaf_direct: true
+      reallocate_gipo: false
+    infra_dscp_translation_policy:
+      admin_state: false
+      control_plane: CS0
+      policy_plane: CS4
+      span: CS5
+      traceroute: CS6
+      level_1: CS1
+      level_2: CS2
+      level_3: CS3
+      level_4: AF11
+      level_5: AF21
+      level_6: AF31
+    ip_aging: true
+    fabric_isis_redistribute_metric: 32
+    port_tracking:
+      admin_state: false
+      delay: 120
+      min_links: 0
+    rogue_ep_control:
+      admin_state: false
+      hold_interval: 1800
+      detection_interval: 60
+      detection_multiplier: 6

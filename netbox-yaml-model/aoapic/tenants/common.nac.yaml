@@ -1,0 +1,78 @@
+# Network-as-Code (nac-aci data model, apic: root)
+# Environment: AOAPIC — complete ACI model
+# Source: Live read-only collection from the Cisco DevNet Always-On APIC sandbox (sandboxapicdc.cisco.com)
+# Collected: 10 Nov 2026 05:31:58 AEDT
+# Method: read-only aaaLogin + GET class/mo queries + aaaLogout
+# Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.
+# SNMP communities and SNMPv3 users are omitted from the published files.
+# system tenant
+---
+apic:
+  tenants:
+  - name: common
+    vrfs:
+    - name: copy
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    - name: default
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: default
+      arp_flooding: false
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+    application_profiles:
+    - name: default
+    l3outs:
+    - name: default
+      export_route_control: true
+      import_route_control: false
+    contracts:
+    - name: default
+      scope: context
+      subjects:
+      - name: default
+        reverse_filter_ports: true
+        filters:
+        - filter: default
+          action: permit
+          log: false
+          no_stats: false
+    filters:
+    - name: icmp
+      entries:
+      - name: icmp
+        ethertype: ip
+        protocol: icmp
+    - name: arp
+      entries:
+      - name: arp
+        ethertype: arp
+    - name: est
+      entries:
+      - name: est
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 0
+        destination_to_port: 0
+        stateful: false
+    - name: default
+      entries:
+      - name: default
+        ethertype: unspecified

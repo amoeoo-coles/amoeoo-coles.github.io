@@ -1,0 +1,166 @@
+# Network-as-Code (nac-aci data model, apic: root)
+# Environment: AOAPIC — complete ACI model
+# Source: Live read-only collection from the Cisco DevNet Always-On APIC sandbox (sandboxapicdc.cisco.com)
+# Collected: 10 Nov 2026 05:31:58 AEDT
+# Method: read-only aaaLogin + GET class/mo queries + aaaLogout
+# Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.
+# SNMP communities and SNMPv3 users are omitted from the published files.
+---
+apic:
+  tenants:
+  - name: TN-LAB-ANS01
+    description: Audit policy WEB-APP
+    vrfs:
+    - name: VRF-LAB
+      description: VRF untuk praktikum DCACI Hari 1
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: BD-WEB
+      description: Bridge Domain untuk Web Server Lab
+      vrf: VRF-LAB
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.10.10.1/24
+        description: Subnet WEB DCACI Lab
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    - name: BD-APP
+      vrf: VRF-LAB
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.10.20.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    - name: BD-DB
+      vrf: VRF-LAB
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.10.30.1/24
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    application_profiles:
+    - name: AP-PORTAL
+      description: Application Profile untuk praktikum DCACI Portal WEB dan Database
+      endpoint_groups:
+      - name: EPG-WEB
+        bridge_domain: BD-WEB
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        contracts:
+          providers:
+          - CT-WEB-APP
+      - name: EPG-DB
+        bridge_domain: BD-DB
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+      - name: EPG-APP
+        bridge_domain: BD-APP
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        qos_class: level3
+        contracts:
+          providers:
+          - CT-WEB-APP
+    contracts:
+    - name: CT-WEB-APP
+      scope: tenant
+      subjects:
+      - name: SUBJ-APP
+        reverse_filter_ports: true
+        filters:
+        - filter: FLT-APP
+          action: permit
+          log: false
+          no_stats: false
+    - name: CT-APP-DB
+      scope: tenant
+      subjects:
+      - name: SUBJ-DB
+        reverse_filter_ports: true
+        filters:
+        - filter: FLT-DB
+          action: permit
+          log: false
+          no_stats: false
+    filters:
+    - name: FLT-APP
+      entries:
+      - name: ENTRY-APP
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 8443
+        destination_to_port: 8443
+        stateful: false
+    - name: FLT-DB
+      entries:
+      - name: ENTRY-MYSQL
+        ethertype: ip
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 3306
+        destination_to_port: 3306
+        stateful: false

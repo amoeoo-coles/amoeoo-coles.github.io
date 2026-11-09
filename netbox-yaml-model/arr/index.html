@@ -1,0 +1,1613 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ARR (Simulator APIC)</title><style>body{font-family:system-ui,sans-serif;margin:20px;background:#111;color:#eee;line-height:1.5}main{max-width:1300px;margin:auto}a{color:#8cf}table{border-collapse:collapse;width:100%;background:#19212a}td,th{padding:8px;border-bottom:1px solid #444;text-align:left;vertical-align:top}th{color:#9ed}.scroll{overflow:auto}.note{padding:14px;background:#302d20;border-left:4px solid #fc6;margin:12px 0}nav{margin-bottom:20px}h1{font-size:clamp(22px,4vw,32px)}.pill{display:inline-block;background:#202832;border:1px solid #444;border-radius:12px;padding:2px 10px;margin:2px}.pill.sys{background:#3a2f12;border-color:#fc6}.kv{color:#bbb;font-size:13px;margin-left:6px}button{background:#202832;color:#eee;border:1px solid #555;border-radius:4px;padding:6px 12px;margin-right:6px;cursor:pointer}pre.y{background:#0d1117;border:1px solid #333;border-radius:6px;padding:12px;overflow:auto;font-size:13px;line-height:1.45;max-height:70vh}.yk{color:#79c0ff}.ys{color:#a5d6ff}.yb{color:#ff7b72}.yn{color:#f2cc60}.yc{color:#8b949e;font-style:italic}.yd{color:#ffa657}.tbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:16px 0}.card{background:#202832;border:1px solid #444;border-radius:8px;padding:16px;text-decoration:none;color:#eee;display:block}.card:hover{border-color:#8cf}.card b{font-size:26px;color:#9ed;display:block;margin:4px 0}.card .s{font-size:13px;color:#bbb}.bc{font-size:14px;color:#bbb;margin:0 0 8px}details.sec{background:#151b22;border:1px solid #333;border-radius:8px;padding:10px 14px;margin:14px 0}details.sec>summary{cursor:pointer;font-size:20px;font-weight:600}.st{border-radius:4px;padding:2px 8px;font-weight:600;font-size:13px}.st-ok{background:#198754;color:#fff}.st-part{background:#f0ad4e;color:#111}.st-miss{background:#c9302c;color:#fff}</style></head><body>
+<!-- theme-toggle v1 -->
+<style id="tt-style">
+html.tt-invert{filter:invert(1) hue-rotate(180deg)}
+nav.site{margin-right:110px!important}
+@media (min-width:721px){nav.site{margin-right:370px!important}}
+html.tt-invert img,html.tt-invert video,html.tt-invert picture,html.tt-invert iframe,html.tt-invert .tt-keep{filter:invert(1) hue-rotate(180deg)}
+#tt-wrap{position:fixed;top:6px;right:10px;z-index:2147483000;display:flex;gap:6px;align-items:center}
+#sg-link,#tt-btn{font:600 12px/1 system-ui,Arial,sans-serif;padding:6px 10px;border-radius:16px;border:1px solid #888;background:#222;color:#fff;cursor:pointer;opacity:.9;text-decoration:none;white-space:nowrap}
+#sg-link:hover,#tt-btn:hover{opacity:1}
+#sg-link .sg-short{display:none}
+@media (max-width:720px){#sg-link .sg-wide{display:none}#sg-link .sg-short{display:inline}}
+html.tt-invert #tt-wrap{filter:invert(1) hue-rotate(180deg)}
+</style>
+<script id="tt-script">(function(){
+function lum(c){var m=(c||'').match(/\d+(\.\d+)?/g);if(!m||(m.length>3&&+m[3]===0))return null;return (0.299*m[0]+0.587*m[1]+0.114*m[2])/255;}
+var b=document.body,h=document.documentElement;
+var l=lum(getComputedStyle(b).backgroundColor);if(l===null)l=lum(getComputedStyle(h).backgroundColor);if(l===null)l=1;
+var nativeMode=l<0.5?'dark':'light';var nbg=getComputedStyle(b).backgroundColor;if(lum(nbg)!==null)h.style.backgroundColor=nbg;
+function cur(){try{return localStorage.getItem('siteTheme')||nativeMode}catch(e){return nativeMode}}
+function apply(m){h.classList.toggle('tt-invert',m!==nativeMode);var btn=document.getElementById('tt-btn');if(btn)btn.textContent=(m==='dark'?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark');if(btn)btn.title='Switch to '+(m==='dark'?'white':'black')+' background';}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+b.insertBefore(wrap,b.firstChild);
+btn.onclick=function(){var m=cur()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(cur());
+})();</script>
+<main><nav class="site"><a href="/">Home</a></nav><p class="bc"><a href="/netbox-yaml-model/">YAML Model</a> › ARR</p><h1>ARR (Simulator APIC)</h1><p>Complete Network-as-Code (nac-aci) ACI model for this environment — fabric, access, nodes, pods, interfaces and every tenant, not only the NetBox-driven ones. Same <code>apic:</code> root schema as the aci-nac pipeline. Built-in <code>system-*</code> interface policies are left out; system tenants (common, infra, mgmt) are included and marked.</p><p class="note"><b>Data source:</b> Saved read-only export of the reservable DevNet APIC simulator (10.10.20.14) at /workspace/nac-test-private-run/baseline-2/raw. Live aaaLogin failed (no answer within 12 s); the DevNet reservation VPN is probably not connected.<br><b>Collected:</b> 2026-10-28 22:16 AEDT (Melbourne time)<br>This export is from 28 Oct 2026 22:16 AEDT, before Cursor_tenant5 was provisioned later that evening. A later pipeline snapshot at 28 Oct 2026 23:59 AEDT lists Cursor_tenant5 (1 VRF, 7 BDs, 7 subnets, 1 application profile, 3 EPGs) but is not a full nac-aci export, so those objects are not invented here. Heroes and SnV are present in this export.<br><b>Collection notes:</b> live login failed: no answer within 12 s</p><p class="tbar"><a href="apic.nac.yaml" download><b>Download complete model</b> (apic.nac.yaml)</a><a href="arr-nac-model.zip" download>Download zip of all files</a><button type="button" onclick="tog(true)">Expand all</button><button type="button" onclick="tog(false)">Collapse all</button></p><div class="cards"><a class="card" href="#fabric">Fabric<b>5</b><div class="s">NTP, DNS, SNMP, syslog, BGP RR, pod profiles</div></a><a class="card" href="#access">Access<b>38</b><div class="s">VLAN pools, domains, AAEPs, policies, profiles</div></a><a class="card" href="#nodes">Nodes<b>3</b><div class="s">1 vPC groups</div></a><a class="card" href="#pods">Pods<b>1</b><div class="s">TEP pools</div></a><a class="card" href="#interfaces">Interfaces<b>52</b><div class="s">Derived from access profiles</div></a><a class="card" href="#tenants">Tenants<b>8</b><div class="s">5 user · 3 system</div></a></div><h2>Files</h2><ul><li><a href="apic.nac.yaml" download>apic.nac.yaml</a> — complete model</li><li><a href="fabric_policies.nac.yaml" download>fabric_policies.nac.yaml</a> — fabric policies</li><li><a href="access_policies.nac.yaml" download>access_policies.nac.yaml</a> — access policies</li><li><a href="node_policies.nac.yaml" download>node_policies.nac.yaml</a> — node policies</li><li><a href="pods.nac.yaml" download>pods.nac.yaml</a> — pods / TEP pools</li><li><a href="interface_policies.nac.yaml" download>interface_policies.nac.yaml</a> — per-node interfaces</li><li><a href="arr-nac-model.zip" download>arr-nac-model.zip</a> — zip of every file</li><li>Per-tenant files under <code>tenants/</code></li></ul><details class="sec" id="fabric"><summary>Fabric policies <span class="kv">89 lines</span></summary><div class="tbar"><button type="button" onclick="ycp('yy-fabric',this)">Copy</button><a href="fabric_policies.nac.yaml" download>Download fabric_policies.nac.yaml</a></div><pre class="y" id="yy-fabric"><span class="yc"># Network-as-Code (nac-aci data model, apic: root)</span>
+<span class="yc"># Environment: ARR (Simulator APIC)</span>
+<span class="yc"># Source: Saved read-only export of the reservable DevNet APIC simulator (10.10.20.14) at /workspace/nac-test-private-run/baseline-2/raw. Live aaaLogin failed (no answer within 12 s); the DevNet reservation VPN is probably not connected.</span>
+<span class="yc"># Collected: 2026-10-28 22:16 AEDT</span>
+<span class="yc"># Method: converted from a saved read-only APIC export (live login was not available)</span>
+<span class="yc"># Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.</span>
+<span class="yc"># SNMP communities and SNMPv3 users are omitted from the published files.</span>
+<span class="ys">---</span>
+<span class="yk">apic</span>:
+  <span class="yk">fabric_policies</span>:
+    <span class="yk">pod_policies</span>:
+      <span class="yk">date_time_policies</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">default</span>
+        <span class="yk">ntp_admin_state</span>: <span class="yb">true</span>
+        <span class="yk">ntp_auth_state</span>: <span class="yb">false</span>
+        <span class="yk">apic_ntp_server_state</span>: <span class="yb">false</span>
+        <span class="yk">apic_ntp_server_master_mode</span>: <span class="yb">false</span>
+      <span class="yk">snmp_policies</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">default</span>
+        <span class="yk">admin_state</span>: <span class="yb">false</span>
+    <span class="yk">date_time_format</span>:
+      <span class="yk">display_format</span>: <span class="ys">local</span>
+      <span class="yk">timezone</span>: <span class="ys">p0_UTC</span>
+      <span class="yk">show_offset</span>: <span class="yb">true</span>
+    <span class="yk">dns_policies</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">default</span>
+    <span class="yk">pod_profiles</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">default</span>
+      <span class="yk">selectors</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">default</span>
+        <span class="yk">type</span>: <span class="ys">all</span>
+    <span class="yk">pod_profile_name</span>: <span class="ys">default</span>
+    <span class="yk">config_exports</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">DailyAutoBackup</span>
+      <span class="yk">format</span>: <span class="ys">json</span>
+      <span class="yk">snapshot</span>: <span class="yb">true</span>
+      <span class="yk">scheduler</span>: <span class="ys">EveryEightHours</span>
+    <span class="yk">schedulers</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">EveryEightHours</span>
+      <span class="yk">recurring_windows</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">first</span>
+        <span class="yk">day</span>: <span class="ys">every-day</span>
+        <span class="yk">hour</span>: <span class="yn">1</span>
+        <span class="yk">minute</span>: <span class="yn">0</span>
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">third</span>
+        <span class="yk">day</span>: <span class="ys">every-day</span>
+        <span class="yk">hour</span>: <span class="yn">17</span>
+        <span class="yk">minute</span>: <span class="yn">0</span>
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">second</span>
+        <span class="yk">day</span>: <span class="ys">every-day</span>
+        <span class="yk">hour</span>: <span class="yn">9</span>
+        <span class="yk">minute</span>: <span class="yn">0</span>
+    <span class="yk">coop_group_policy</span>: <span class="ys">compatible</span>
+    <span class="yk">ep_loop_protection</span>:
+      <span class="yk">action</span>: <span class="ys">port-disable</span>
+      <span class="yk">admin_state</span>: <span class="yb">false</span>
+      <span class="yk">detection_interval</span>: <span class="yn">60</span>
+      <span class="yk">detection_multiplier</span>: <span class="yn">4</span>
+    <span class="yk">global_settings</span>:
+      <span class="yk">domain_validation</span>: <span class="yb">false</span>
+      <span class="yk">enforce_subnet_check</span>: <span class="yb">true</span>
+      <span class="yk">opflex_authentication</span>: <span class="yb">true</span>
+      <span class="yk">disable_remote_endpoint_learn</span>: <span class="yb">false</span>
+      <span class="yk">overlapping_vlan_validation</span>: <span class="yb">false</span>
+      <span class="yk">remote_leaf_direct</span>: <span class="yb">true</span>
+      <span class="yk">reallocate_gipo</span>: <span class="yb">false</span>
+    <span class="yk">infra_dscp_translation_policy</span>:
+      <span class="yk">admin_state</span>: <span class="yb">false</span>
+      <span class="yk">control_plane</span>: <span class="ys">CS0</span>
+      <span class="yk">policy_plane</span>: <span class="ys">CS4</span>
+      <span class="yk">span</span>: <span class="ys">CS5</span>
+      <span class="yk">traceroute</span>: <span class="ys">CS6</span>
+      <span class="yk">level_1</span>: <span class="ys">CS1</span>
+      <span class="yk">level_2</span>: <span class="ys">CS2</span>
+      <span class="yk">level_3</span>: <span class="ys">CS3</span>
+      <span class="yk">level_4</span>: <span class="ys">AF11</span>
+      <span class="yk">level_5</span>: <span class="ys">AF21</span>
+      <span class="yk">level_6</span>: <span class="ys">AF31</span>
+    <span class="yk">ip_aging</span>: <span class="yb">false</span>
+    <span class="yk">fabric_isis_redistribute_metric</span>: <span class="yn">32</span>
+    <span class="yk">port_tracking</span>:
+      <span class="yk">admin_state</span>: <span class="yb">false</span>
+      <span class="yk">delay</span>: <span class="yn">120</span>
+      <span class="yk">min_links</span>: <span class="yn">0</span>
+    <span class="yk">rogue_ep_control</span>:
+      <span class="yk">admin_state</span>: <span class="yb">false</span>
+      <span class="yk">hold_interval</span>: <span class="yn">1800</span>
+      <span class="yk">detection_interval</span>: <span class="yn">60</span>
+      <span class="yk">detection_multiplier</span>: <span class="yn">6</span></pre></details><p class="kv">Breakdown: ntp 1, dns 1, snmp 1, syslog 0, bgp rr 0, pod policy groups 0, pod profiles 1, config exports 1</p><details class="sec" id="access"><summary>Access policies <span class="kv">274 lines</span></summary><div class="tbar"><button type="button" onclick="ycp('yy-access',this)">Copy</button><a href="access_policies.nac.yaml" download>Download access_policies.nac.yaml</a></div><pre class="y" id="yy-access"><span class="yc"># Network-as-Code (nac-aci data model, apic: root)</span>
+<span class="yc"># Environment: ARR (Simulator APIC)</span>
+<span class="yc"># Source: Saved read-only export of the reservable DevNet APIC simulator (10.10.20.14) at /workspace/nac-test-private-run/baseline-2/raw. Live aaaLogin failed (no answer within 12 s); the DevNet reservation VPN is probably not connected.</span>
+<span class="yc"># Collected: 2026-10-28 22:16 AEDT</span>
+<span class="yc"># Method: converted from a saved read-only APIC export (live login was not available)</span>
+<span class="yc"># Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.</span>
+<span class="yc"># SNMP communities and SNMPv3 users are omitted from the published files.</span>
+<span class="ys">---</span>
+<span class="yk">apic</span>:
+  <span class="yk">access_policies</span>:
+    <span class="yk">vlan_pools</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Heroes_general_pool</span>
+      <span class="yk">allocation</span>: <span class="ys">static</span>
+      <span class="yk">ranges</span>:
+      <span class="yd">- </span><span class="yk">from</span>: <span class="yn">200</span>
+        <span class="yk">to</span>: <span class="yn">299</span>
+        <span class="yk">allocation</span>: <span class="ys">inherit</span>
+        <span class="yk">role</span>: <span class="ys">external</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">SnV_general_pool</span>
+      <span class="yk">allocation</span>: <span class="ys">static</span>
+      <span class="yk">ranges</span>:
+      <span class="yd">- </span><span class="yk">from</span>: <span class="yn">100</span>
+        <span class="yk">to</span>: <span class="yn">199</span>
+        <span class="yk">allocation</span>: <span class="ys">inherit</span>
+        <span class="yk">role</span>: <span class="ys">external</span>
+    <span class="yk">physical_domains</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">SnV_phys</span>
+      <span class="yk">vlan_pool</span>: <span class="ys">SnV_general_pool</span>
+      <span class="yk">vlan_pool_allocation</span>: <span class="ys">static</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Heroes_phys</span>
+      <span class="yk">vlan_pool</span>: <span class="ys">Heroes_general_pool</span>
+      <span class="yk">vlan_pool_allocation</span>: <span class="ys">static</span>
+    <span class="yk">routed_domains</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">SnV_external_corporate</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Heroes_external_corporate</span>
+    <span class="yk">infra_vlan</span>: <span class="yn">4</span>
+    <span class="yk">aaeps</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">default</span>
+      <span class="yk">infra_vlan</span>: <span class="yb">true</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Heroes_phys</span>
+      <span class="yk">physical_domains</span>:
+      <span class="yd">- </span><span class="ys">Heroes_phys</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Heroes_corporate_external</span>
+      <span class="yk">routed_domains</span>:
+      <span class="yd">- </span><span class="ys">Heroes_external_corporate</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">SnV_corporate_external</span>
+      <span class="yk">routed_domains</span>:
+      <span class="yd">- </span><span class="ys">SnV_external_corporate</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">SnV_phys</span>
+      <span class="yk">physical_domains</span>:
+      <span class="yd">- </span><span class="ys">SnV_phys</span>
+    <span class="yk">leaf_interface_policy_groups</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Heroes_FI-2B</span>
+      <span class="yk">type</span>: <span class="ys">vpc</span>
+      <span class="yk">aaep</span>: <span class="ys">Heroes_phys</span>
+      <span class="yk">port_channel_policy</span>: <span class="ys">lacp_active</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">SnV_FI-1B</span>
+      <span class="yk">type</span>: <span class="ys">vpc</span>
+      <span class="yk">aaep</span>: <span class="ys">SnV_phys</span>
+      <span class="yk">port_channel_policy</span>: <span class="ys">lacp_active</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Heroes_FI-2A</span>
+      <span class="yk">type</span>: <span class="ys">vpc</span>
+      <span class="yk">aaep</span>: <span class="ys">Heroes_phys</span>
+      <span class="yk">port_channel_policy</span>: <span class="ys">lacp_active</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">SnV_FI-1A</span>
+      <span class="yk">type</span>: <span class="ys">vpc</span>
+      <span class="yk">aaep</span>: <span class="ys">SnV_phys</span>
+      <span class="yk">port_channel_policy</span>: <span class="ys">lacp_active</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Heroes_standard_access</span>
+      <span class="yk">type</span>: <span class="ys">access</span>
+      <span class="yk">aaep</span>: <span class="ys">Heroes_phys</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Heroes_corporate_external</span>
+      <span class="yk">type</span>: <span class="ys">access</span>
+      <span class="yk">aaep</span>: <span class="ys">Heroes_corporate_external</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">SnV_corporate_external</span>
+      <span class="yk">type</span>: <span class="ys">access</span>
+      <span class="yk">aaep</span>: <span class="ys">SnV_corporate_external</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">SnV_standard_access</span>
+      <span class="yk">type</span>: <span class="ys">access</span>
+      <span class="yk">aaep</span>: <span class="ys">SnV_phys</span>
+    <span class="yk">leaf_interface_profiles</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">SnV_FI-1A</span>
+      <span class="yk">selectors</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">ethernet1_5-8</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_FI-1A</span>
+        <span class="yk">port_blocks</span>:
+        <span class="yd">- </span><span class="yk">name</span>: <span class="ys">block2</span>
+          <span class="yk">from_module</span>: <span class="yn">1</span>
+          <span class="yk">from_port</span>: <span class="yn">5</span>
+          <span class="yk">to_module</span>: <span class="yn">1</span>
+          <span class="yk">to_port</span>: <span class="yn">8</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Heroes_server2</span>
+      <span class="yk">selectors</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">ethernet1_21</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_standard_access</span>
+        <span class="yk">port_blocks</span>:
+        <span class="yd">- </span><span class="yk">name</span>: <span class="ys">block2</span>
+          <span class="yk">from_module</span>: <span class="yn">1</span>
+          <span class="yk">from_port</span>: <span class="yn">21</span>
+          <span class="yk">to_module</span>: <span class="yn">1</span>
+          <span class="yk">to_port</span>: <span class="yn">21</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Heroes_phys_act_pass</span>
+      <span class="yk">selectors</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">ethernet1_22-24</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_standard_access</span>
+        <span class="yk">port_blocks</span>:
+        <span class="yd">- </span><span class="yk">name</span>: <span class="ys">block2</span>
+          <span class="yk">from_module</span>: <span class="yn">1</span>
+          <span class="yk">from_port</span>: <span class="yn">22</span>
+          <span class="yk">to_module</span>: <span class="yn">1</span>
+          <span class="yk">to_port</span>: <span class="yn">24</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">SnV_FI-1B</span>
+      <span class="yk">selectors</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">ethernet1_9-12</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_FI-1B</span>
+        <span class="yk">port_blocks</span>:
+        <span class="yd">- </span><span class="yk">name</span>: <span class="ys">block2</span>
+          <span class="yk">from_module</span>: <span class="yn">1</span>
+          <span class="yk">from_port</span>: <span class="yn">9</span>
+          <span class="yk">to_module</span>: <span class="yn">1</span>
+          <span class="yk">to_port</span>: <span class="yn">12</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">SnV_server2</span>
+      <span class="yk">selectors</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">ethernet1_1</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_standard_access</span>
+        <span class="yk">port_blocks</span>:
+        <span class="yd">- </span><span class="yk">name</span>: <span class="ys">block2</span>
+          <span class="yk">from_module</span>: <span class="yn">1</span>
+          <span class="yk">from_port</span>: <span class="yn">1</span>
+          <span class="yk">to_module</span>: <span class="yn">1</span>
+          <span class="yk">to_port</span>: <span class="yn">1</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">SnV_corporate_external</span>
+      <span class="yk">selectors</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">ethernet1_48</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_corporate_external</span>
+        <span class="yk">port_blocks</span>:
+        <span class="yd">- </span><span class="yk">name</span>: <span class="ys">block2</span>
+          <span class="yk">from_module</span>: <span class="yn">1</span>
+          <span class="yk">from_port</span>: <span class="yn">48</span>
+          <span class="yk">to_module</span>: <span class="yn">1</span>
+          <span class="yk">to_port</span>: <span class="yn">48</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Heroes_corporate_external</span>
+      <span class="yk">selectors</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">ethernet1_47</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_corporate_external</span>
+        <span class="yk">port_blocks</span>:
+        <span class="yd">- </span><span class="yk">name</span>: <span class="ys">block2</span>
+          <span class="yk">from_module</span>: <span class="yn">1</span>
+          <span class="yk">from_port</span>: <span class="yn">47</span>
+          <span class="yk">to_module</span>: <span class="yn">1</span>
+          <span class="yk">to_port</span>: <span class="yn">47</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Heroes_FI-2A</span>
+      <span class="yk">selectors</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">ethernet1_13-16</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_FI-2A</span>
+        <span class="yk">port_blocks</span>:
+        <span class="yd">- </span><span class="yk">name</span>: <span class="ys">block2</span>
+          <span class="yk">from_module</span>: <span class="yn">1</span>
+          <span class="yk">from_port</span>: <span class="yn">13</span>
+          <span class="yk">to_module</span>: <span class="yn">1</span>
+          <span class="yk">to_port</span>: <span class="yn">16</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Heroes_server1</span>
+      <span class="yk">selectors</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">ethernet1_21</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_standard_access</span>
+        <span class="yk">port_blocks</span>:
+        <span class="yd">- </span><span class="yk">name</span>: <span class="ys">block2</span>
+          <span class="yk">from_module</span>: <span class="yn">1</span>
+          <span class="yk">from_port</span>: <span class="yn">21</span>
+          <span class="yk">to_module</span>: <span class="yn">1</span>
+          <span class="yk">to_port</span>: <span class="yn">21</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Heroes_FI-2B</span>
+      <span class="yk">selectors</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">ethernet1_17-20</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_FI-2B</span>
+        <span class="yk">port_blocks</span>:
+        <span class="yd">- </span><span class="yk">name</span>: <span class="ys">block2</span>
+          <span class="yk">from_module</span>: <span class="yn">1</span>
+          <span class="yk">from_port</span>: <span class="yn">17</span>
+          <span class="yk">to_module</span>: <span class="yn">1</span>
+          <span class="yk">to_port</span>: <span class="yn">20</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">SnV_server1</span>
+      <span class="yk">selectors</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">ethernet1_1</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_standard_access</span>
+        <span class="yk">port_blocks</span>:
+        <span class="yd">- </span><span class="yk">name</span>: <span class="ys">block2</span>
+          <span class="yk">from_module</span>: <span class="yn">1</span>
+          <span class="yk">from_port</span>: <span class="yn">1</span>
+          <span class="yk">to_module</span>: <span class="yn">1</span>
+          <span class="yk">to_port</span>: <span class="yn">1</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">SnV_phys_act_pass</span>
+      <span class="yk">selectors</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">ethernet1_2-4</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_standard_access</span>
+        <span class="yk">port_blocks</span>:
+        <span class="yd">- </span><span class="yk">name</span>: <span class="ys">block2</span>
+          <span class="yk">from_module</span>: <span class="yn">1</span>
+          <span class="yk">from_port</span>: <span class="yn">2</span>
+          <span class="yk">to_module</span>: <span class="yn">1</span>
+          <span class="yk">to_port</span>: <span class="yn">4</span>
+    <span class="yk">leaf_switch_profiles</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">leaf_2</span>
+      <span class="yk">interface_profiles</span>:
+      <span class="yd">- </span><span class="ys">SnV_server2</span>
+      <span class="yd">- </span><span class="ys">Heroes_server2</span>
+      <span class="yk">selectors</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">leaf_2</span>
+        <span class="yk">node_blocks</span>:
+        <span class="yd">- </span><span class="yk">name</span>: <span class="ys">9ebfdd3979c07bcf</span>
+          <span class="yk">from</span>: <span class="yn">102</span>
+          <span class="yk">to</span>: <span class="yn">102</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">leaf_1</span>
+      <span class="yk">interface_profiles</span>:
+      <span class="yd">- </span><span class="ys">Heroes_server1</span>
+      <span class="yd">- </span><span class="ys">SnV_server1</span>
+      <span class="yk">selectors</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">leaf_1</span>
+        <span class="yk">node_blocks</span>:
+        <span class="yd">- </span><span class="yk">name</span>: <span class="ys">b235d75799f7d020</span>
+          <span class="yk">from</span>: <span class="yn">101</span>
+          <span class="yk">to</span>: <span class="yn">101</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">leafs_1-2</span>
+      <span class="yk">interface_profiles</span>:
+      <span class="yd">- </span><span class="ys">SnV_FI-1B</span>
+      <span class="yd">- </span><span class="ys">SnV_FI-1A</span>
+      <span class="yd">- </span><span class="ys">Heroes_FI-2B</span>
+      <span class="yd">- </span><span class="ys">Heroes_phys_act_pass</span>
+      <span class="yd">- </span><span class="ys">SnV_corporate_external</span>
+      <span class="yd">- </span><span class="ys">Heroes_FI-2A</span>
+      <span class="yd">- </span><span class="ys">SnV_phys_act_pass</span>
+      <span class="yd">- </span><span class="ys">Heroes_corporate_external</span>
+      <span class="yk">selectors</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">leafs_1-2</span>
+        <span class="yk">node_blocks</span>:
+        <span class="yd">- </span><span class="yk">name</span>: <span class="ys">50b60d7cf265710f</span>
+          <span class="yk">from</span>: <span class="yn">101</span>
+          <span class="yk">to</span>: <span class="yn">102</span>
+    <span class="yk">interface_policies</span>:
+      <span class="yk">cdp_policies</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">default</span>
+        <span class="yk">admin_state</span>: <span class="yb">false</span>
+      <span class="yk">lldp_policies</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">default</span>
+        <span class="yk">admin_rx_state</span>: <span class="yb">true</span>
+        <span class="yk">admin_tx_state</span>: <span class="yb">true</span>
+      <span class="yk">link_level_policies</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">default</span>
+        <span class="yk">speed</span>: <span class="ys">inherit</span>
+        <span class="yk">auto</span>: <span class="yb">true</span>
+        <span class="yk">fec_mode</span>: <span class="ys">inherit</span>
+        <span class="yk">link_debounce_interval</span>: <span class="yn">100</span>
+      <span class="yk">port_channel_policies</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">lacp_active</span>
+        <span class="yk">mode</span>: <span class="ys">active</span>
+        <span class="yk">min_links</span>: <span class="yn">1</span>
+        <span class="yk">max_links</span>: <span class="yn">16</span>
+        <span class="yk">fast_select_standby</span>: <span class="yb">true</span>
+        <span class="yk">graceful_convergence</span>: <span class="yb">true</span>
+        <span class="yk">load_defer</span>: <span class="yb">false</span>
+        <span class="yk">suspend_individual</span>: <span class="yb">true</span>
+        <span class="yk">symmetric_hash</span>: <span class="yb">false</span>
+    <span class="yk">switch_policies</span>:
+      <span class="yk">vpc_policies</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">leafs_1-2</span>
+        <span class="yk">peer_dead_interval</span>: <span class="yn">200</span>
+    <span class="yk">mcp</span>:
+      <span class="yk">admin_state</span>: <span class="yb">false</span>
+      <span class="yk">per_vlan</span>: <span class="yb">false</span>
+      <span class="yk">initial_delay</span>: <span class="yn">180</span>
+      <span class="yk">loop_detection</span>: <span class="yn">3</span>
+      <span class="yk">action</span>: <span class="yb">true</span>
+      <span class="yk">frequency_sec</span>: <span class="yn">2</span>
+      <span class="yk">frequency_msec</span>: <span class="yn">0</span></pre></details><p class="kv">Breakdown: vlan pools 2, physical domains 2, routed domains 2, aaeps 5, cdp 1, lldp 1, link level 1, port channel 1, leaf interface policy groups 8, leaf interface profiles 12, leaf switch profiles 3, spine switch profiles 0, spine interface profiles 0</p><details class="sec" id="nodes"><summary>Node policies <span class="kv">34 lines</span></summary><div class="tbar"><button type="button" onclick="ycp('yy-nodes',this)">Copy</button><a href="node_policies.nac.yaml" download>Download node_policies.nac.yaml</a></div><pre class="y" id="yy-nodes"><span class="yc"># Network-as-Code (nac-aci data model, apic: root)</span>
+<span class="yc"># Environment: ARR (Simulator APIC)</span>
+<span class="yc"># Source: Saved read-only export of the reservable DevNet APIC simulator (10.10.20.14) at /workspace/nac-test-private-run/baseline-2/raw. Live aaaLogin failed (no answer within 12 s); the DevNet reservation VPN is probably not connected.</span>
+<span class="yc"># Collected: 2026-10-28 22:16 AEDT</span>
+<span class="yc"># Method: converted from a saved read-only APIC export (live login was not available)</span>
+<span class="yc"># Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.</span>
+<span class="yc"># SNMP communities and SNMPv3 users are omitted from the published files.</span>
+<span class="ys">---</span>
+<span class="yk">apic</span>:
+  <span class="yk">node_policies</span>:
+    <span class="yk">nodes</span>:
+    <span class="yd">- </span><span class="yk">id</span>: <span class="yn">101</span>
+      <span class="yk">pod</span>: <span class="yn">1</span>
+      <span class="yk">role</span>: <span class="ys">leaf</span>
+      <span class="yk">name</span>: <span class="ys">leaf-1</span>
+      <span class="yk">serial_number</span>: <span class="ys">TEP-1-101</span>
+    <span class="yd">- </span><span class="yk">id</span>: <span class="yn">102</span>
+      <span class="yk">pod</span>: <span class="yn">1</span>
+      <span class="yk">role</span>: <span class="ys">leaf</span>
+      <span class="yk">name</span>: <span class="ys">leaf-2</span>
+      <span class="yk">serial_number</span>: <span class="ys">TEP-1-102</span>
+    <span class="yd">- </span><span class="yk">id</span>: <span class="yn">201</span>
+      <span class="yk">pod</span>: <span class="yn">1</span>
+      <span class="yk">role</span>: <span class="ys">spine</span>
+      <span class="yk">name</span>: <span class="ys">spine-1</span>
+      <span class="yk">serial_number</span>: <span class="ys">TEP-1-103</span>
+    <span class="yk">vpc_groups</span>:
+      <span class="yk">mode</span>: <span class="ys">explicit</span>
+      <span class="yk">groups</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">leafs_1-2</span>
+        <span class="yk">id</span>: <span class="yn">12</span>
+        <span class="yk">switch_1</span>: <span class="yn">101</span>
+        <span class="yk">switch_2</span>: <span class="yn">102</span>
+        <span class="yk">policy</span>: <span class="ys">leafs_1-2</span></pre></details><details class="sec" id="pods"><summary>Pods <span class="kv">12 lines</span></summary><div class="tbar"><button type="button" onclick="ycp('yy-pods',this)">Copy</button><a href="pods.nac.yaml" download>Download pods.nac.yaml</a></div><pre class="y" id="yy-pods"><span class="yc"># Network-as-Code (nac-aci data model, apic: root)</span>
+<span class="yc"># Environment: ARR (Simulator APIC)</span>
+<span class="yc"># Source: Saved read-only export of the reservable DevNet APIC simulator (10.10.20.14) at /workspace/nac-test-private-run/baseline-2/raw. Live aaaLogin failed (no answer within 12 s); the DevNet reservation VPN is probably not connected.</span>
+<span class="yc"># Collected: 2026-10-28 22:16 AEDT</span>
+<span class="yc"># Method: converted from a saved read-only APIC export (live login was not available)</span>
+<span class="yc"># Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.</span>
+<span class="yc"># SNMP communities and SNMPv3 users are omitted from the published files.</span>
+<span class="ys">---</span>
+<span class="yk">apic</span>:
+  <span class="yk">pods</span>:
+  <span class="yd">- </span><span class="yk">id</span>: <span class="yn">1</span>
+    <span class="yk">tep_pool</span>: <span class="ys">10.0.0.0/16</span></pre></details><details class="sec" id="interfaces"><summary>Interface policies (per-node, derived from leaf profiles and selectors) <span class="kv">171 lines</span></summary><div class="tbar"><button type="button" onclick="ycp('yy-interfaces',this)">Copy</button><a href="interface_policies.nac.yaml" download>Download interface_policies.nac.yaml</a></div><pre class="y" id="yy-interfaces"><span class="yc"># Network-as-Code (nac-aci data model, apic: root)</span>
+<span class="yc"># Environment: ARR (Simulator APIC)</span>
+<span class="yc"># Source: Saved read-only export of the reservable DevNet APIC simulator (10.10.20.14) at /workspace/nac-test-private-run/baseline-2/raw. Live aaaLogin failed (no answer within 12 s); the DevNet reservation VPN is probably not connected.</span>
+<span class="yc"># Collected: 2026-10-28 22:16 AEDT</span>
+<span class="yc"># Method: converted from a saved read-only APIC export (live login was not available)</span>
+<span class="yc"># Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.</span>
+<span class="yc"># SNMP communities and SNMPv3 users are omitted from the published files.</span>
+<span class="ys">---</span>
+<span class="yk">apic</span>:
+  <span class="yk">interface_policies</span>:
+    <span class="yk">nodes</span>:
+    <span class="yd">- </span><span class="yk">id</span>: <span class="yn">101</span>
+      <span class="yk">interfaces</span>:
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">1</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_standard_access</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">2</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_standard_access</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">3</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_standard_access</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">4</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_standard_access</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">5</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_FI-1A</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">6</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_FI-1A</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">7</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_FI-1A</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">8</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_FI-1A</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">9</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_FI-1B</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">10</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_FI-1B</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">11</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_FI-1B</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">12</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_FI-1B</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">13</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_FI-2A</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">14</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_FI-2A</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">15</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_FI-2A</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">16</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_FI-2A</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">17</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_FI-2B</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">18</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_FI-2B</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">19</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_FI-2B</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">20</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_FI-2B</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">21</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_standard_access</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">22</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_standard_access</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">23</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_standard_access</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">24</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_standard_access</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">47</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_corporate_external</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">48</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_corporate_external</span>
+    <span class="yd">- </span><span class="yk">id</span>: <span class="yn">102</span>
+      <span class="yk">interfaces</span>:
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">1</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_standard_access</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">2</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_standard_access</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">3</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_standard_access</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">4</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_standard_access</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">5</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_FI-1A</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">6</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_FI-1A</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">7</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_FI-1A</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">8</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_FI-1A</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">9</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_FI-1B</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">10</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_FI-1B</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">11</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_FI-1B</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">12</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_FI-1B</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">13</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_FI-2A</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">14</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_FI-2A</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">15</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_FI-2A</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">16</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_FI-2A</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">17</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_FI-2B</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">18</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_FI-2B</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">19</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_FI-2B</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">20</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_FI-2B</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">21</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_standard_access</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">22</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_standard_access</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">23</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_standard_access</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">24</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_standard_access</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">47</span>
+        <span class="yk">policy_group</span>: <span class="ys">Heroes_corporate_external</span>
+      <span class="yd">- </span><span class="yk">module</span>: <span class="yn">1</span>
+        <span class="yk">port</span>: <span class="yn">48</span>
+        <span class="yk">policy_group</span>: <span class="ys">SnV_corporate_external</span></pre></details><h2 id="tenants">Tenants</h2><div class="scroll"><table><thead><tr><th>Tenant</th><th></th><th>VRFs</th><th>BDs</th><th>EPGs</th><th>Contracts</th><th>Filters</th><th>L3Outs</th></tr></thead><tbody><tr><td><a href="#tenant-common">common</a></td><td> <span class="pill sys">system</span></td><td>2</td><td>1</td><td>0</td><td>4</td><td>9</td><td>1</td></tr><tr><td><a href="#tenant-infra">infra</a></td><td> <span class="pill sys">system</span></td><td>2</td><td>2</td><td>2</td><td>0</td><td>0</td><td>0</td></tr><tr><td><a href="#tenant-mgmt">mgmt</a></td><td> <span class="pill sys">system</span></td><td>2</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td><a href="#tenant-Cursor_tenant1">Cursor_tenant1</a></td><td></td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr><tr><td><a href="#tenant-Cursor_Tenant2">Cursor_Tenant2</a></td><td></td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr><tr><td><a href="#tenant-Cursor_Tenant3">Cursor_Tenant3</a></td><td></td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr><tr><td><a href="#tenant-Heroes">Heroes</a></td><td></td><td>1</td><td>1</td><td>3</td><td>0</td><td>0</td><td>1</td></tr><tr><td><a href="#tenant-SnV">SnV</a></td><td></td><td>1</td><td>1</td><td>8</td><td>2</td><td>2</td><td>0</td></tr></tbody></table></div><details class="sec" id="tenant-common"><summary>common.nac.yaml <span class="pill sys">system</span> <span class="kv">171 lines</span></summary><div class="tbar"><button type="button" onclick="ycp('yy-tenant-common',this)">Copy</button><a href="tenants/common.nac.yaml" download>Download common.nac.yaml</a></div><pre class="y" id="yy-tenant-common"><span class="yc"># Network-as-Code (nac-aci data model, apic: root)</span>
+<span class="yc"># Environment: ARR (Simulator APIC)</span>
+<span class="yc"># Source: Saved read-only export of the reservable DevNet APIC simulator (10.10.20.14) at /workspace/nac-test-private-run/baseline-2/raw. Live aaaLogin failed (no answer within 12 s); the DevNet reservation VPN is probably not connected.</span>
+<span class="yc"># Collected: 2026-10-28 22:16 AEDT</span>
+<span class="yc"># Method: converted from a saved read-only APIC export (live login was not available)</span>
+<span class="yc"># Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.</span>
+<span class="yc"># SNMP communities and SNMPv3 users are omitted from the published files.</span>
+<span class="yc"># system tenant</span>
+<span class="ys">---</span>
+<span class="yk">apic</span>:
+  <span class="yk">tenants</span>:
+  <span class="yd">- </span><span class="yk">name</span>: <span class="ys">common</span>
+    <span class="yk">vrfs</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">copy</span>
+      <span class="yk">data_plane_learning</span>: <span class="yb">true</span>
+      <span class="yk">enforcement_direction</span>: <span class="ys">ingress</span>
+      <span class="yk">enforcement_preference</span>: <span class="ys">enforced</span>
+      <span class="yk">preferred_group</span>: <span class="yb">false</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">default</span>
+      <span class="yk">data_plane_learning</span>: <span class="yb">true</span>
+      <span class="yk">enforcement_direction</span>: <span class="ys">ingress</span>
+      <span class="yk">enforcement_preference</span>: <span class="ys">enforced</span>
+      <span class="yk">preferred_group</span>: <span class="yb">false</span>
+    <span class="yk">bridge_domains</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">default</span>
+      <span class="yk">arp_flooding</span>: <span class="yb">false</span>
+      <span class="yk">advertise_host_routes</span>: <span class="yb">false</span>
+      <span class="yk">ip_dataplane_learning</span>: <span class="yb">true</span>
+      <span class="yk">limit_ip_learn_to_subnets</span>: <span class="yb">true</span>
+      <span class="yk">unicast_routing</span>: <span class="yb">true</span>
+      <span class="yk">unknown_unicast</span>: <span class="ys">proxy</span>
+      <span class="yk">unknown_ipv4_multicast</span>: <span class="ys">flood</span>
+      <span class="yk">unknown_ipv6_multicast</span>: <span class="ys">flood</span>
+      <span class="yk">l3_multicast</span>: <span class="yb">false</span>
+      <span class="yk">multi_destination_flooding</span>: <span class="ys">bd-flood</span>
+      <span class="yk">clear_remote_mac_entries</span>: <span class="yb">false</span>
+      <span class="yk">mac</span>: <span class="ys">00:22:BD:F8:19:FF</span>
+    <span class="yk">application_profiles</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">default</span>
+    <span class="yk">l3outs</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">default</span>
+      <span class="yk">export_route_control</span>: <span class="yb">true</span>
+      <span class="yk">import_route_control</span>: <span class="yb">false</span>
+    <span class="yk">contracts</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">default</span>
+      <span class="yk">scope</span>: <span class="ys">context</span>
+      <span class="yk">subjects</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">default</span>
+        <span class="yk">reverse_filter_ports</span>: <span class="yb">true</span>
+        <span class="yk">filters</span>:
+        <span class="yd">- </span><span class="yk">filter</span>: <span class="ys">default</span>
+          <span class="yk">action</span>: <span class="ys">permit</span>
+          <span class="yk">log</span>: <span class="yb">false</span>
+          <span class="yk">no_stats</span>: <span class="yb">false</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">sql</span>
+      <span class="yk">scope</span>: <span class="ys">application-profile</span>
+      <span class="yk">subjects</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">sql-browser</span>
+        <span class="yk">reverse_filter_ports</span>: <span class="yb">true</span>
+        <span class="yk">filters</span>:
+        <span class="yd">- </span><span class="yk">filter</span>: <span class="ys">sql_browser</span>
+          <span class="yk">action</span>: <span class="ys">permit</span>
+          <span class="yk">log</span>: <span class="yb">false</span>
+          <span class="yk">no_stats</span>: <span class="yb">false</span>
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">sql-server</span>
+        <span class="yk">reverse_filter_ports</span>: <span class="yb">true</span>
+        <span class="yk">filters</span>:
+        <span class="yd">- </span><span class="yk">filter</span>: <span class="ys">sql_server</span>
+          <span class="yk">action</span>: <span class="ys">permit</span>
+          <span class="yk">log</span>: <span class="yb">false</span>
+          <span class="yk">no_stats</span>: <span class="yb">false</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">power_up</span>
+      <span class="yk">scope</span>: <span class="ys">context</span>
+      <span class="yk">subjects</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">app_ports</span>
+        <span class="yk">reverse_filter_ports</span>: <span class="yb">true</span>
+        <span class="yk">filters</span>:
+        <span class="yd">- </span><span class="yk">filter</span>: <span class="ys">power_up</span>
+          <span class="yk">action</span>: <span class="ys">permit</span>
+          <span class="yk">log</span>: <span class="yb">false</span>
+          <span class="yk">no_stats</span>: <span class="yb">false</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">web</span>
+      <span class="yk">scope</span>: <span class="ys">context</span>
+      <span class="yk">subjects</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">https</span>
+        <span class="yk">reverse_filter_ports</span>: <span class="yb">true</span>
+        <span class="yk">filters</span>:
+        <span class="yd">- </span><span class="yk">filter</span>: <span class="ys">https</span>
+          <span class="yk">action</span>: <span class="ys">permit</span>
+          <span class="yk">log</span>: <span class="yb">false</span>
+          <span class="yk">no_stats</span>: <span class="yb">false</span>
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">http</span>
+        <span class="yk">reverse_filter_ports</span>: <span class="yb">true</span>
+        <span class="yk">filters</span>:
+        <span class="yd">- </span><span class="yk">filter</span>: <span class="ys">http</span>
+          <span class="yk">action</span>: <span class="ys">permit</span>
+          <span class="yk">log</span>: <span class="yb">false</span>
+          <span class="yk">no_stats</span>: <span class="yb">false</span>
+    <span class="yk">filters</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">icmp</span>
+      <span class="yk">entries</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">icmp</span>
+        <span class="yk">ethertype</span>: <span class="ys">ip</span>
+        <span class="yk">protocol</span>: <span class="ys">icmp</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">arp</span>
+      <span class="yk">entries</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">arp</span>
+        <span class="yk">ethertype</span>: <span class="ys">arp</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">http</span>
+      <span class="yk">entries</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">tcp-80</span>
+        <span class="yk">ethertype</span>: <span class="ys">ip</span>
+        <span class="yk">protocol</span>: <span class="ys">tcp</span>
+        <span class="yk">source_from_port</span>: <span class="yn">0</span>
+        <span class="yk">source_to_port</span>: <span class="yn">0</span>
+        <span class="yk">destination_from_port</span>: <span class="yn">80</span>
+        <span class="yk">destination_to_port</span>: <span class="yn">80</span>
+        <span class="yk">stateful</span>: <span class="yb">false</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">est</span>
+      <span class="yk">entries</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">est</span>
+        <span class="yk">ethertype</span>: <span class="ys">ip</span>
+        <span class="yk">protocol</span>: <span class="ys">tcp</span>
+        <span class="yk">source_from_port</span>: <span class="yn">0</span>
+        <span class="yk">source_to_port</span>: <span class="yn">0</span>
+        <span class="yk">destination_from_port</span>: <span class="yn">0</span>
+        <span class="yk">destination_to_port</span>: <span class="yn">0</span>
+        <span class="yk">stateful</span>: <span class="yb">false</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">default</span>
+      <span class="yk">entries</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">default</span>
+        <span class="yk">ethertype</span>: <span class="ys">unspecified</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">power_up</span>
+      <span class="yk">entries</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">tcp_9001-9002</span>
+        <span class="yk">ethertype</span>: <span class="ys">ip</span>
+        <span class="yk">protocol</span>: <span class="ys">tcp</span>
+        <span class="yk">source_from_port</span>: <span class="yn">0</span>
+        <span class="yk">source_to_port</span>: <span class="yn">0</span>
+        <span class="yk">destination_from_port</span>: <span class="yn">9001</span>
+        <span class="yk">destination_to_port</span>: <span class="yn">9002</span>
+        <span class="yk">stateful</span>: <span class="yb">false</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">https</span>
+      <span class="yk">entries</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">tcp-443</span>
+        <span class="yk">ethertype</span>: <span class="ys">ip</span>
+        <span class="yk">protocol</span>: <span class="ys">tcp</span>
+        <span class="yk">source_from_port</span>: <span class="yn">0</span>
+        <span class="yk">source_to_port</span>: <span class="yn">0</span>
+        <span class="yk">destination_from_port</span>: <span class="yn">443</span>
+        <span class="yk">destination_to_port</span>: <span class="yn">443</span>
+        <span class="yk">stateful</span>: <span class="yb">false</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">sql_server</span>
+      <span class="yk">entries</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">tcp-1433</span>
+        <span class="yk">ethertype</span>: <span class="ys">ip</span>
+        <span class="yk">protocol</span>: <span class="ys">tcp</span>
+        <span class="yk">source_from_port</span>: <span class="yn">0</span>
+        <span class="yk">source_to_port</span>: <span class="yn">0</span>
+        <span class="yk">destination_from_port</span>: <span class="yn">1433</span>
+        <span class="yk">destination_to_port</span>: <span class="yn">1433</span>
+        <span class="yk">stateful</span>: <span class="yb">false</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">sql_browser</span>
+      <span class="yk">entries</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">udp-1434</span>
+        <span class="yk">ethertype</span>: <span class="ys">ip</span>
+        <span class="yk">protocol</span>: <span class="ys">udp</span>
+        <span class="yk">source_from_port</span>: <span class="yn">0</span>
+        <span class="yk">source_to_port</span>: <span class="yn">0</span>
+        <span class="yk">destination_from_port</span>: <span class="yn">1434</span>
+        <span class="yk">destination_to_port</span>: <span class="yn">1434</span></pre></details><details class="sec" id="tenant-infra"><summary>infra.nac.yaml <span class="pill sys">system</span> <span class="kv">79 lines</span></summary><div class="tbar"><button type="button" onclick="ycp('yy-tenant-infra',this)">Copy</button><a href="tenants/infra.nac.yaml" download>Download infra.nac.yaml</a></div><pre class="y" id="yy-tenant-infra"><span class="yc"># Network-as-Code (nac-aci data model, apic: root)</span>
+<span class="yc"># Environment: ARR (Simulator APIC)</span>
+<span class="yc"># Source: Saved read-only export of the reservable DevNet APIC simulator (10.10.20.14) at /workspace/nac-test-private-run/baseline-2/raw. Live aaaLogin failed (no answer within 12 s); the DevNet reservation VPN is probably not connected.</span>
+<span class="yc"># Collected: 2026-10-28 22:16 AEDT</span>
+<span class="yc"># Method: converted from a saved read-only APIC export (live login was not available)</span>
+<span class="yc"># Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.</span>
+<span class="yc"># SNMP communities and SNMPv3 users are omitted from the published files.</span>
+<span class="yc"># system tenant</span>
+<span class="ys">---</span>
+<span class="yk">apic</span>:
+  <span class="yk">tenants</span>:
+  <span class="yd">- </span><span class="yk">name</span>: <span class="ys">infra</span>
+    <span class="yk">vrfs</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">ave-ctrl</span>
+      <span class="yk">data_plane_learning</span>: <span class="yb">true</span>
+      <span class="yk">enforcement_direction</span>: <span class="ys">ingress</span>
+      <span class="yk">enforcement_preference</span>: <span class="ys">enforced</span>
+      <span class="yk">preferred_group</span>: <span class="yb">false</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">overlay-1</span>
+      <span class="yk">data_plane_learning</span>: <span class="yb">true</span>
+      <span class="yk">enforcement_direction</span>: <span class="ys">ingress</span>
+      <span class="yk">enforcement_preference</span>: <span class="ys">enforced</span>
+      <span class="yk">preferred_group</span>: <span class="yb">false</span>
+    <span class="yk">bridge_domains</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">ave-ctrl</span>
+      <span class="yk">vrf</span>: <span class="ys">ave-ctrl</span>
+      <span class="yk">arp_flooding</span>: <span class="yb">false</span>
+      <span class="yk">advertise_host_routes</span>: <span class="yb">false</span>
+      <span class="yk">ip_dataplane_learning</span>: <span class="yb">true</span>
+      <span class="yk">limit_ip_learn_to_subnets</span>: <span class="yb">true</span>
+      <span class="yk">unicast_routing</span>: <span class="yb">true</span>
+      <span class="yk">unknown_unicast</span>: <span class="ys">proxy</span>
+      <span class="yk">unknown_ipv4_multicast</span>: <span class="ys">flood</span>
+      <span class="yk">unknown_ipv6_multicast</span>: <span class="ys">flood</span>
+      <span class="yk">l3_multicast</span>: <span class="yb">false</span>
+      <span class="yk">multi_destination_flooding</span>: <span class="ys">bd-flood</span>
+      <span class="yk">clear_remote_mac_entries</span>: <span class="yb">false</span>
+      <span class="yk">mac</span>: <span class="ys">00:22:BD:F8:19:FF</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">default</span>
+      <span class="yk">vrf</span>: <span class="ys">overlay-1</span>
+      <span class="yk">arp_flooding</span>: <span class="yb">false</span>
+      <span class="yk">advertise_host_routes</span>: <span class="yb">false</span>
+      <span class="yk">ip_dataplane_learning</span>: <span class="yb">true</span>
+      <span class="yk">limit_ip_learn_to_subnets</span>: <span class="yb">true</span>
+      <span class="yk">unicast_routing</span>: <span class="yb">true</span>
+      <span class="yk">unknown_unicast</span>: <span class="ys">proxy</span>
+      <span class="yk">unknown_ipv4_multicast</span>: <span class="ys">flood</span>
+      <span class="yk">unknown_ipv6_multicast</span>: <span class="ys">flood</span>
+      <span class="yk">l3_multicast</span>: <span class="yb">false</span>
+      <span class="yk">multi_destination_flooding</span>: <span class="ys">bd-flood</span>
+      <span class="yk">clear_remote_mac_entries</span>: <span class="yb">false</span>
+      <span class="yk">mac</span>: <span class="ys">00:22:BD:F8:19:FF</span>
+      <span class="yk">subnets</span>:
+      <span class="yd">- </span><span class="yk">ip</span>: <span class="ys">10.0.0.30/27</span>
+        <span class="yk">public</span>: <span class="yb">false</span>
+        <span class="yk">private</span>: <span class="yb">true</span>
+        <span class="yk">shared</span>: <span class="yb">false</span>
+        <span class="yk">primary_ip</span>: <span class="yb">true</span>
+        <span class="yk">virtual</span>: <span class="yb">false</span>
+        <span class="yk">nd_ra_prefix</span>: <span class="yb">true</span>
+        <span class="yk">no_default_gateway</span>: <span class="yb">false</span>
+        <span class="yk">igmp_querier</span>: <span class="yb">true</span>
+    <span class="yk">application_profiles</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">access</span>
+      <span class="yk">endpoint_groups</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">default</span>
+        <span class="yk">bridge_domain</span>: <span class="ys">default</span>
+        <span class="yk">flood_in_encap</span>: <span class="yb">false</span>
+        <span class="yk">intra_epg_isolation</span>: <span class="yb">false</span>
+        <span class="yk">proxy_arp</span>: <span class="yb">false</span>
+        <span class="yk">preferred_group</span>: <span class="yb">false</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">ave-ctrl</span>
+      <span class="yk">endpoint_groups</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">ave-ctrl</span>
+        <span class="yk">bridge_domain</span>: <span class="ys">ave-ctrl</span>
+        <span class="yk">flood_in_encap</span>: <span class="yb">false</span>
+        <span class="yk">intra_epg_isolation</span>: <span class="yb">false</span>
+        <span class="yk">proxy_arp</span>: <span class="yb">false</span>
+        <span class="yk">preferred_group</span>: <span class="yb">false</span></pre></details><details class="sec" id="tenant-mgmt"><summary>mgmt.nac.yaml <span class="pill sys">system</span> <span class="kv">38 lines</span></summary><div class="tbar"><button type="button" onclick="ycp('yy-tenant-mgmt',this)">Copy</button><a href="tenants/mgmt.nac.yaml" download>Download mgmt.nac.yaml</a></div><pre class="y" id="yy-tenant-mgmt"><span class="yc"># Network-as-Code (nac-aci data model, apic: root)</span>
+<span class="yc"># Environment: ARR (Simulator APIC)</span>
+<span class="yc"># Source: Saved read-only export of the reservable DevNet APIC simulator (10.10.20.14) at /workspace/nac-test-private-run/baseline-2/raw. Live aaaLogin failed (no answer within 12 s); the DevNet reservation VPN is probably not connected.</span>
+<span class="yc"># Collected: 2026-10-28 22:16 AEDT</span>
+<span class="yc"># Method: converted from a saved read-only APIC export (live login was not available)</span>
+<span class="yc"># Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.</span>
+<span class="yc"># SNMP communities and SNMPv3 users are omitted from the published files.</span>
+<span class="yc"># system tenant</span>
+<span class="ys">---</span>
+<span class="yk">apic</span>:
+  <span class="yk">tenants</span>:
+  <span class="yd">- </span><span class="yk">name</span>: <span class="ys">mgmt</span>
+    <span class="yk">vrfs</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">inb</span>
+      <span class="yk">data_plane_learning</span>: <span class="yb">true</span>
+      <span class="yk">enforcement_direction</span>: <span class="ys">ingress</span>
+      <span class="yk">enforcement_preference</span>: <span class="ys">enforced</span>
+      <span class="yk">preferred_group</span>: <span class="yb">false</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">oob</span>
+      <span class="yk">data_plane_learning</span>: <span class="yb">true</span>
+      <span class="yk">enforcement_direction</span>: <span class="ys">ingress</span>
+      <span class="yk">enforcement_preference</span>: <span class="ys">enforced</span>
+      <span class="yk">preferred_group</span>: <span class="yb">false</span>
+    <span class="yk">bridge_domains</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">inb</span>
+      <span class="yk">vrf</span>: <span class="ys">inb</span>
+      <span class="yk">arp_flooding</span>: <span class="yb">false</span>
+      <span class="yk">advertise_host_routes</span>: <span class="yb">false</span>
+      <span class="yk">ip_dataplane_learning</span>: <span class="yb">true</span>
+      <span class="yk">limit_ip_learn_to_subnets</span>: <span class="yb">true</span>
+      <span class="yk">unicast_routing</span>: <span class="yb">true</span>
+      <span class="yk">unknown_unicast</span>: <span class="ys">proxy</span>
+      <span class="yk">unknown_ipv4_multicast</span>: <span class="ys">flood</span>
+      <span class="yk">unknown_ipv6_multicast</span>: <span class="ys">flood</span>
+      <span class="yk">l3_multicast</span>: <span class="yb">false</span>
+      <span class="yk">multi_destination_flooding</span>: <span class="ys">bd-flood</span>
+      <span class="yk">clear_remote_mac_entries</span>: <span class="yb">false</span>
+      <span class="yk">mac</span>: <span class="ys">00:22:BD:F8:19:FF</span></pre></details><details class="sec" id="tenant-Cursor_tenant1"><summary>Cursor_tenant1.nac.yaml <span class="kv">52 lines</span></summary><div class="tbar"><button type="button" onclick="ycp('yy-tenant-Cursor_tenant1',this)">Copy</button><a href="tenants/Cursor_tenant1.nac.yaml" download>Download Cursor_tenant1.nac.yaml</a></div><pre class="y" id="yy-tenant-Cursor_tenant1"><span class="yc"># Network-as-Code (nac-aci data model, apic: root)</span>
+<span class="yc"># Environment: ARR (Simulator APIC)</span>
+<span class="yc"># Source: Saved read-only export of the reservable DevNet APIC simulator (10.10.20.14) at /workspace/nac-test-private-run/baseline-2/raw. Live aaaLogin failed (no answer within 12 s); the DevNet reservation VPN is probably not connected.</span>
+<span class="yc"># Collected: 2026-10-28 22:16 AEDT</span>
+<span class="yc"># Method: converted from a saved read-only APIC export (live login was not available)</span>
+<span class="yc"># Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.</span>
+<span class="yc"># SNMP communities and SNMPv3 users are omitted from the published files.</span>
+<span class="ys">---</span>
+<span class="yk">apic</span>:
+  <span class="yk">tenants</span>:
+  <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Cursor_tenant1</span>
+    <span class="yk">description</span>: <span class="ys">Cursor tenant 1 - web tier via Add Tenant portal (NaC + Ansible)</span>
+    <span class="yk">vrfs</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">cursor_vrf</span>
+      <span class="yk">data_plane_learning</span>: <span class="yb">true</span>
+      <span class="yk">enforcement_direction</span>: <span class="ys">ingress</span>
+      <span class="yk">enforcement_preference</span>: <span class="ys">enforced</span>
+      <span class="yk">preferred_group</span>: <span class="yb">false</span>
+    <span class="yk">bridge_domains</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">cursor_bd</span>
+      <span class="yk">vrf</span>: <span class="ys">cursor_vrf</span>
+      <span class="yk">arp_flooding</span>: <span class="yb">true</span>
+      <span class="yk">advertise_host_routes</span>: <span class="yb">false</span>
+      <span class="yk">ip_dataplane_learning</span>: <span class="yb">true</span>
+      <span class="yk">limit_ip_learn_to_subnets</span>: <span class="yb">true</span>
+      <span class="yk">unicast_routing</span>: <span class="yb">true</span>
+      <span class="yk">unknown_unicast</span>: <span class="ys">flood</span>
+      <span class="yk">unknown_ipv4_multicast</span>: <span class="ys">flood</span>
+      <span class="yk">unknown_ipv6_multicast</span>: <span class="ys">flood</span>
+      <span class="yk">l3_multicast</span>: <span class="yb">false</span>
+      <span class="yk">multi_destination_flooding</span>: <span class="ys">bd-flood</span>
+      <span class="yk">clear_remote_mac_entries</span>: <span class="yb">false</span>
+      <span class="yk">mac</span>: <span class="ys">00:22:BD:F8:19:FF</span>
+      <span class="yk">subnets</span>:
+      <span class="yd">- </span><span class="yk">ip</span>: <span class="ys">10.250.2.1/24</span>
+        <span class="yk">public</span>: <span class="yb">false</span>
+        <span class="yk">private</span>: <span class="yb">true</span>
+        <span class="yk">shared</span>: <span class="yb">false</span>
+        <span class="yk">primary_ip</span>: <span class="yb">false</span>
+        <span class="yk">virtual</span>: <span class="yb">false</span>
+        <span class="yk">nd_ra_prefix</span>: <span class="yb">true</span>
+        <span class="yk">no_default_gateway</span>: <span class="yb">false</span>
+        <span class="yk">igmp_querier</span>: <span class="yb">false</span>
+    <span class="yk">application_profiles</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">cursor_ap</span>
+      <span class="yk">endpoint_groups</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">web</span>
+        <span class="yk">bridge_domain</span>: <span class="ys">cursor_bd</span>
+        <span class="yk">flood_in_encap</span>: <span class="yb">false</span>
+        <span class="yk">intra_epg_isolation</span>: <span class="yb">false</span>
+        <span class="yk">proxy_arp</span>: <span class="yb">false</span>
+        <span class="yk">preferred_group</span>: <span class="yb">false</span></pre></details><details class="sec" id="tenant-Cursor_Tenant2"><summary>Cursor_Tenant2.nac.yaml <span class="kv">52 lines</span></summary><div class="tbar"><button type="button" onclick="ycp('yy-tenant-Cursor_Tenant2',this)">Copy</button><a href="tenants/Cursor_Tenant2.nac.yaml" download>Download Cursor_Tenant2.nac.yaml</a></div><pre class="y" id="yy-tenant-Cursor_Tenant2"><span class="yc"># Network-as-Code (nac-aci data model, apic: root)</span>
+<span class="yc"># Environment: ARR (Simulator APIC)</span>
+<span class="yc"># Source: Saved read-only export of the reservable DevNet APIC simulator (10.10.20.14) at /workspace/nac-test-private-run/baseline-2/raw. Live aaaLogin failed (no answer within 12 s); the DevNet reservation VPN is probably not connected.</span>
+<span class="yc"># Collected: 2026-10-28 22:16 AEDT</span>
+<span class="yc"># Method: converted from a saved read-only APIC export (live login was not available)</span>
+<span class="yc"># Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.</span>
+<span class="yc"># SNMP communities and SNMPv3 users are omitted from the published files.</span>
+<span class="ys">---</span>
+<span class="yk">apic</span>:
+  <span class="yk">tenants</span>:
+  <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Cursor_Tenant2</span>
+    <span class="yk">description</span>: <span class="ys">Cursor tenant 2 - web tier via NetBox-driven pipeline (NaC + Ansible)</span>
+    <span class="yk">vrfs</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">cursor2_vrf</span>
+      <span class="yk">data_plane_learning</span>: <span class="yb">true</span>
+      <span class="yk">enforcement_direction</span>: <span class="ys">ingress</span>
+      <span class="yk">enforcement_preference</span>: <span class="ys">enforced</span>
+      <span class="yk">preferred_group</span>: <span class="yb">false</span>
+    <span class="yk">bridge_domains</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">cursor2_bd</span>
+      <span class="yk">vrf</span>: <span class="ys">cursor2_vrf</span>
+      <span class="yk">arp_flooding</span>: <span class="yb">true</span>
+      <span class="yk">advertise_host_routes</span>: <span class="yb">false</span>
+      <span class="yk">ip_dataplane_learning</span>: <span class="yb">true</span>
+      <span class="yk">limit_ip_learn_to_subnets</span>: <span class="yb">true</span>
+      <span class="yk">unicast_routing</span>: <span class="yb">true</span>
+      <span class="yk">unknown_unicast</span>: <span class="ys">flood</span>
+      <span class="yk">unknown_ipv4_multicast</span>: <span class="ys">flood</span>
+      <span class="yk">unknown_ipv6_multicast</span>: <span class="ys">flood</span>
+      <span class="yk">l3_multicast</span>: <span class="yb">false</span>
+      <span class="yk">multi_destination_flooding</span>: <span class="ys">bd-flood</span>
+      <span class="yk">clear_remote_mac_entries</span>: <span class="yb">false</span>
+      <span class="yk">mac</span>: <span class="ys">00:22:BD:F8:19:FF</span>
+      <span class="yk">subnets</span>:
+      <span class="yd">- </span><span class="yk">ip</span>: <span class="ys">10.250.3.1/24</span>
+        <span class="yk">public</span>: <span class="yb">false</span>
+        <span class="yk">private</span>: <span class="yb">true</span>
+        <span class="yk">shared</span>: <span class="yb">false</span>
+        <span class="yk">primary_ip</span>: <span class="yb">false</span>
+        <span class="yk">virtual</span>: <span class="yb">false</span>
+        <span class="yk">nd_ra_prefix</span>: <span class="yb">true</span>
+        <span class="yk">no_default_gateway</span>: <span class="yb">false</span>
+        <span class="yk">igmp_querier</span>: <span class="yb">false</span>
+    <span class="yk">application_profiles</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">cursor2_ap</span>
+      <span class="yk">endpoint_groups</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">web</span>
+        <span class="yk">bridge_domain</span>: <span class="ys">cursor2_bd</span>
+        <span class="yk">flood_in_encap</span>: <span class="yb">false</span>
+        <span class="yk">intra_epg_isolation</span>: <span class="yb">false</span>
+        <span class="yk">proxy_arp</span>: <span class="yb">false</span>
+        <span class="yk">preferred_group</span>: <span class="yb">false</span></pre></details><details class="sec" id="tenant-Cursor_Tenant3"><summary>Cursor_Tenant3.nac.yaml <span class="kv">52 lines</span></summary><div class="tbar"><button type="button" onclick="ycp('yy-tenant-Cursor_Tenant3',this)">Copy</button><a href="tenants/Cursor_Tenant3.nac.yaml" download>Download Cursor_Tenant3.nac.yaml</a></div><pre class="y" id="yy-tenant-Cursor_Tenant3"><span class="yc"># Network-as-Code (nac-aci data model, apic: root)</span>
+<span class="yc"># Environment: ARR (Simulator APIC)</span>
+<span class="yc"># Source: Saved read-only export of the reservable DevNet APIC simulator (10.10.20.14) at /workspace/nac-test-private-run/baseline-2/raw. Live aaaLogin failed (no answer within 12 s); the DevNet reservation VPN is probably not connected.</span>
+<span class="yc"># Collected: 2026-10-28 22:16 AEDT</span>
+<span class="yc"># Method: converted from a saved read-only APIC export (live login was not available)</span>
+<span class="yc"># Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.</span>
+<span class="yc"># SNMP communities and SNMPv3 users are omitted from the published files.</span>
+<span class="ys">---</span>
+<span class="yk">apic</span>:
+  <span class="yk">tenants</span>:
+  <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Cursor_Tenant3</span>
+    <span class="yk">description</span>: <span class="ys">Cursor tenant 3 - web tier via NetBox-driven pipeline (NaC + Ansible)</span>
+    <span class="yk">vrfs</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">cursor3_vrf</span>
+      <span class="yk">data_plane_learning</span>: <span class="yb">true</span>
+      <span class="yk">enforcement_direction</span>: <span class="ys">ingress</span>
+      <span class="yk">enforcement_preference</span>: <span class="ys">enforced</span>
+      <span class="yk">preferred_group</span>: <span class="yb">false</span>
+    <span class="yk">bridge_domains</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">cursor3_bd</span>
+      <span class="yk">vrf</span>: <span class="ys">cursor3_vrf</span>
+      <span class="yk">arp_flooding</span>: <span class="yb">true</span>
+      <span class="yk">advertise_host_routes</span>: <span class="yb">false</span>
+      <span class="yk">ip_dataplane_learning</span>: <span class="yb">true</span>
+      <span class="yk">limit_ip_learn_to_subnets</span>: <span class="yb">true</span>
+      <span class="yk">unicast_routing</span>: <span class="yb">true</span>
+      <span class="yk">unknown_unicast</span>: <span class="ys">flood</span>
+      <span class="yk">unknown_ipv4_multicast</span>: <span class="ys">flood</span>
+      <span class="yk">unknown_ipv6_multicast</span>: <span class="ys">flood</span>
+      <span class="yk">l3_multicast</span>: <span class="yb">false</span>
+      <span class="yk">multi_destination_flooding</span>: <span class="ys">bd-flood</span>
+      <span class="yk">clear_remote_mac_entries</span>: <span class="yb">false</span>
+      <span class="yk">mac</span>: <span class="ys">00:22:BD:F8:19:FF</span>
+      <span class="yk">subnets</span>:
+      <span class="yd">- </span><span class="yk">ip</span>: <span class="ys">10.250.4.1/24</span>
+        <span class="yk">public</span>: <span class="yb">false</span>
+        <span class="yk">private</span>: <span class="yb">true</span>
+        <span class="yk">shared</span>: <span class="yb">false</span>
+        <span class="yk">primary_ip</span>: <span class="yb">false</span>
+        <span class="yk">virtual</span>: <span class="yb">false</span>
+        <span class="yk">nd_ra_prefix</span>: <span class="yb">true</span>
+        <span class="yk">no_default_gateway</span>: <span class="yb">false</span>
+        <span class="yk">igmp_querier</span>: <span class="yb">false</span>
+    <span class="yk">application_profiles</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">cursor3_ap</span>
+      <span class="yk">endpoint_groups</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">web</span>
+        <span class="yk">bridge_domain</span>: <span class="ys">cursor3_bd</span>
+        <span class="yk">flood_in_encap</span>: <span class="yb">false</span>
+        <span class="yk">intra_epg_isolation</span>: <span class="yb">false</span>
+        <span class="yk">proxy_arp</span>: <span class="yb">false</span>
+        <span class="yk">preferred_group</span>: <span class="yb">false</span></pre></details><details class="sec" id="tenant-Heroes"><summary>Heroes.nac.yaml <span class="kv">201 lines</span></summary><div class="tbar"><button type="button" onclick="ycp('yy-tenant-Heroes',this)">Copy</button><a href="tenants/Heroes.nac.yaml" download>Download Heroes.nac.yaml</a></div><pre class="y" id="yy-tenant-Heroes"><span class="yc"># Network-as-Code (nac-aci data model, apic: root)</span>
+<span class="yc"># Environment: ARR (Simulator APIC)</span>
+<span class="yc"># Source: Saved read-only export of the reservable DevNet APIC simulator (10.10.20.14) at /workspace/nac-test-private-run/baseline-2/raw. Live aaaLogin failed (no answer within 12 s); the DevNet reservation VPN is probably not connected.</span>
+<span class="yc"># Collected: 2026-10-28 22:16 AEDT</span>
+<span class="yc"># Method: converted from a saved read-only APIC export (live login was not available)</span>
+<span class="yc"># Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.</span>
+<span class="yc"># SNMP communities and SNMPv3 users are omitted from the published files.</span>
+<span class="ys">---</span>
+<span class="yk">apic</span>:
+  <span class="yk">tenants</span>:
+  <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Heroes</span>
+    <span class="yk">vrfs</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Heroes_Only</span>
+      <span class="yk">data_plane_learning</span>: <span class="yb">true</span>
+      <span class="yk">enforcement_direction</span>: <span class="ys">ingress</span>
+      <span class="yk">enforcement_preference</span>: <span class="ys">enforced</span>
+      <span class="yk">preferred_group</span>: <span class="yb">false</span>
+    <span class="yk">bridge_domains</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Hero_Land</span>
+      <span class="yk">vrf</span>: <span class="ys">Heroes_Only</span>
+      <span class="yk">arp_flooding</span>: <span class="yb">false</span>
+      <span class="yk">advertise_host_routes</span>: <span class="yb">false</span>
+      <span class="yk">ip_dataplane_learning</span>: <span class="yb">true</span>
+      <span class="yk">limit_ip_learn_to_subnets</span>: <span class="yb">true</span>
+      <span class="yk">unicast_routing</span>: <span class="yb">true</span>
+      <span class="yk">unknown_unicast</span>: <span class="ys">proxy</span>
+      <span class="yk">unknown_ipv4_multicast</span>: <span class="ys">flood</span>
+      <span class="yk">unknown_ipv6_multicast</span>: <span class="ys">flood</span>
+      <span class="yk">l3_multicast</span>: <span class="yb">false</span>
+      <span class="yk">multi_destination_flooding</span>: <span class="ys">bd-flood</span>
+      <span class="yk">clear_remote_mac_entries</span>: <span class="yb">false</span>
+      <span class="yk">mac</span>: <span class="ys">00:22:BD:F8:19:FF</span>
+      <span class="yk">subnets</span>:
+      <span class="yd">- </span><span class="yk">ip</span>: <span class="ys">10.1.120.1/22</span>
+        <span class="yk">public</span>: <span class="yb">true</span>
+        <span class="yk">private</span>: <span class="yb">false</span>
+        <span class="yk">shared</span>: <span class="yb">false</span>
+        <span class="yk">primary_ip</span>: <span class="yb">false</span>
+        <span class="yk">virtual</span>: <span class="yb">false</span>
+        <span class="yk">nd_ra_prefix</span>: <span class="yb">false</span>
+        <span class="yk">no_default_gateway</span>: <span class="yb">false</span>
+        <span class="yk">igmp_querier</span>: <span class="yb">false</span>
+      <span class="yd">- </span><span class="yk">ip</span>: <span class="ys">192.168.120.1/22</span>
+        <span class="yk">public</span>: <span class="yb">false</span>
+        <span class="yk">private</span>: <span class="yb">true</span>
+        <span class="yk">shared</span>: <span class="yb">false</span>
+        <span class="yk">primary_ip</span>: <span class="yb">false</span>
+        <span class="yk">virtual</span>: <span class="yb">false</span>
+        <span class="yk">nd_ra_prefix</span>: <span class="yb">false</span>
+        <span class="yk">no_default_gateway</span>: <span class="yb">false</span>
+        <span class="yk">igmp_querier</span>: <span class="yb">false</span>
+    <span class="yk">application_profiles</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Save_The_Planet</span>
+      <span class="yk">endpoint_groups</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">web</span>
+        <span class="yk">bridge_domain</span>: <span class="ys">Hero_Land</span>
+        <span class="yk">flood_in_encap</span>: <span class="yb">false</span>
+        <span class="yk">intra_epg_isolation</span>: <span class="yb">false</span>
+        <span class="yk">proxy_arp</span>: <span class="yb">false</span>
+        <span class="yk">preferred_group</span>: <span class="yb">false</span>
+        <span class="yk">physical_domains</span>:
+        <span class="yd">- </span><span class="ys">Heroes_phys</span>
+        <span class="yk">static_ports</span>:
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">200</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">Heroes_FI-2A</span>
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">200</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">Heroes_FI-2B</span>
+        <span class="yk">contracts</span>:
+          <span class="yk">providers</span>:
+          <span class="yd">- </span><span class="ys">web</span>
+          <span class="yk">consumers</span>:
+          <span class="yd">- </span><span class="ys">sql</span>
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">db</span>
+        <span class="yk">bridge_domain</span>: <span class="ys">Hero_Land</span>
+        <span class="yk">flood_in_encap</span>: <span class="yb">false</span>
+        <span class="yk">intra_epg_isolation</span>: <span class="yb">false</span>
+        <span class="yk">proxy_arp</span>: <span class="yb">false</span>
+        <span class="yk">preferred_group</span>: <span class="yb">false</span>
+        <span class="yk">physical_domains</span>:
+        <span class="yd">- </span><span class="ys">Heroes_phys</span>
+        <span class="yk">static_ports</span>:
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">202</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">Heroes_FI-2A</span>
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">202</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">Heroes_FI-2B</span>
+        <span class="yk">contracts</span>:
+          <span class="yk">providers</span>:
+          <span class="yd">- </span><span class="ys">sql</span>
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">app</span>
+        <span class="yk">bridge_domain</span>: <span class="ys">Hero_Land</span>
+        <span class="yk">flood_in_encap</span>: <span class="yb">false</span>
+        <span class="yk">intra_epg_isolation</span>: <span class="yb">false</span>
+        <span class="yk">proxy_arp</span>: <span class="yb">false</span>
+        <span class="yk">preferred_group</span>: <span class="yb">false</span>
+        <span class="yk">physical_domains</span>:
+        <span class="yd">- </span><span class="ys">Heroes_phys</span>
+        <span class="yk">static_ports</span>:
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">201</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">Heroes_FI-2B</span>
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">201</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">Heroes_FI-2A</span>
+        <span class="yk">contracts</span>:
+          <span class="yk">providers</span>:
+          <span class="yd">- </span><span class="ys">power_up</span>
+          <span class="yk">consumers</span>:
+          <span class="yd">- </span><span class="ys">sql</span>
+    <span class="yk">l3outs</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Heroes_external_corporate</span>
+      <span class="yk">vrf</span>: <span class="ys">Heroes_Only</span>
+      <span class="yk">export_route_control</span>: <span class="yb">true</span>
+      <span class="yk">import_route_control</span>: <span class="yb">false</span>
+      <span class="yk">domain</span>: <span class="ys">Heroes_external_corporate</span>
+      <span class="yk">node_profiles</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">borderleaf_1_corporate</span>
+        <span class="yk">nodes</span>:
+        <span class="yd">- </span><span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">router_id</span>: <span class="ys">10.1.100.1</span>
+          <span class="yk">router_id_as_loopback</span>: <span class="yb">true</span>
+          <span class="yk">static_routes</span>:
+          <span class="yd">- </span><span class="yk">prefix</span>: <span class="ys">0.0.0.0/0</span>
+            <span class="yk">preference</span>: <span class="yn">1</span>
+            <span class="yk">next_hops</span>:
+            <span class="yd">- </span><span class="yk">ip</span>: <span class="ys">10.1.200.0</span>
+              <span class="yk">type</span>: <span class="ys">prefix</span>
+              <span class="yk">preference</span>: <span class="yn">0</span>
+        <span class="yk">interface_profiles</span>:
+        <span class="yd">- </span><span class="yk">name</span>: <span class="ys">borderleaf_1</span>
+          <span class="yk">interfaces</span>:
+          <span class="yd">- </span><span class="yk">ip</span>: <span class="ys">10.1.200.1/31</span>
+            <span class="yk">mac</span>: <span class="ys">00:22:BD:F8:19:FF</span>
+            <span class="yk">mtu</span>: <span class="ys">inherit</span>
+            <span class="yk">pod_id</span>: <span class="yn">1</span>
+            <span class="yk">node_id</span>: <span class="yn">101</span>
+            <span class="yk">module</span>: <span class="yn">1</span>
+            <span class="yk">port</span>: <span class="yn">47</span>
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">borderleaf_2_corporate</span>
+        <span class="yk">nodes</span>:
+        <span class="yd">- </span><span class="yk">node_id</span>: <span class="yn">102</span>
+          <span class="yk">router_id</span>: <span class="ys">10.1.100.2</span>
+          <span class="yk">router_id_as_loopback</span>: <span class="yb">true</span>
+          <span class="yk">static_routes</span>:
+          <span class="yd">- </span><span class="yk">prefix</span>: <span class="ys">0.0.0.0/0</span>
+            <span class="yk">preference</span>: <span class="yn">1</span>
+            <span class="yk">next_hops</span>:
+            <span class="yd">- </span><span class="yk">ip</span>: <span class="ys">10.1.2.2</span>
+              <span class="yk">type</span>: <span class="ys">prefix</span>
+              <span class="yk">preference</span>: <span class="yn">0</span>
+        <span class="yk">interface_profiles</span>:
+        <span class="yd">- </span><span class="yk">name</span>: <span class="ys">borderleaf_2</span>
+          <span class="yk">interfaces</span>:
+          <span class="yd">- </span><span class="yk">ip</span>: <span class="ys">10.1.200.3/31</span>
+            <span class="yk">mac</span>: <span class="ys">00:22:BD:F8:19:FF</span>
+            <span class="yk">mtu</span>: <span class="ys">inherit</span>
+            <span class="yk">pod_id</span>: <span class="yn">1</span>
+            <span class="yk">node_id</span>: <span class="yn">102</span>
+            <span class="yk">module</span>: <span class="yn">1</span>
+            <span class="yk">port</span>: <span class="yn">47</span>
+      <span class="yk">external_endpoint_groups</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Heroes_default</span>
+        <span class="yk">preferred_group</span>: <span class="yb">false</span>
+        <span class="yk">subnets</span>:
+        <span class="yd">- </span><span class="yk">prefix</span>: <span class="ys">0.0.0.0/0</span>
+          <span class="yk">export_route_control</span>: <span class="yb">false</span>
+          <span class="yk">import_route_control</span>: <span class="yb">false</span>
+          <span class="yk">import_security</span>: <span class="yb">true</span>
+          <span class="yk">shared_route_control</span>: <span class="yb">false</span>
+          <span class="yk">shared_security</span>: <span class="yb">false</span>
+        <span class="yk">contracts</span>:
+          <span class="yk">consumers</span>:
+          <span class="yd">- </span><span class="ys">power_up</span>
+          <span class="yd">- </span><span class="ys">web</span></pre></details><details class="sec" id="tenant-SnV"><summary>SnV.nac.yaml <span class="kv">337 lines</span></summary><div class="tbar"><button type="button" onclick="ycp('yy-tenant-SnV',this)">Copy</button><a href="tenants/SnV.nac.yaml" download>Download SnV.nac.yaml</a></div><pre class="y" id="yy-tenant-SnV"><span class="yc"># Network-as-Code (nac-aci data model, apic: root)</span>
+<span class="yc"># Environment: ARR (Simulator APIC)</span>
+<span class="yc"># Source: Saved read-only export of the reservable DevNet APIC simulator (10.10.20.14) at /workspace/nac-test-private-run/baseline-2/raw. Live aaaLogin failed (no answer within 12 s); the DevNet reservation VPN is probably not connected.</span>
+<span class="yc"># Collected: 2026-10-28 22:16 AEDT</span>
+<span class="yc"># Method: converted from a saved read-only APIC export (live login was not available)</span>
+<span class="yc"># Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.</span>
+<span class="yc"># SNMP communities and SNMPv3 users are omitted from the published files.</span>
+<span class="ys">---</span>
+<span class="yk">apic</span>:
+  <span class="yk">tenants</span>:
+  <span class="yd">- </span><span class="yk">name</span>: <span class="ys">SnV</span>
+    <span class="yk">vrfs</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Superverse</span>
+      <span class="yk">data_plane_learning</span>: <span class="yb">true</span>
+      <span class="yk">enforcement_direction</span>: <span class="ys">ingress</span>
+      <span class="yk">enforcement_preference</span>: <span class="ys">enforced</span>
+      <span class="yk">preferred_group</span>: <span class="yb">false</span>
+    <span class="yk">bridge_domains</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">antigravity</span>
+      <span class="yk">vrf</span>: <span class="ys">Superverse</span>
+      <span class="yk">arp_flooding</span>: <span class="yb">false</span>
+      <span class="yk">advertise_host_routes</span>: <span class="yb">false</span>
+      <span class="yk">ip_dataplane_learning</span>: <span class="yb">true</span>
+      <span class="yk">limit_ip_learn_to_subnets</span>: <span class="yb">true</span>
+      <span class="yk">unicast_routing</span>: <span class="yb">true</span>
+      <span class="yk">unknown_unicast</span>: <span class="ys">proxy</span>
+      <span class="yk">unknown_ipv4_multicast</span>: <span class="ys">flood</span>
+      <span class="yk">unknown_ipv6_multicast</span>: <span class="ys">flood</span>
+      <span class="yk">l3_multicast</span>: <span class="yb">false</span>
+      <span class="yk">multi_destination_flooding</span>: <span class="ys">bd-flood</span>
+      <span class="yk">clear_remote_mac_entries</span>: <span class="yb">false</span>
+      <span class="yk">mac</span>: <span class="ys">00:22:BD:F8:19:FF</span>
+      <span class="yk">subnets</span>:
+      <span class="yd">- </span><span class="yk">ip</span>: <span class="ys">10.2.10.1/23</span>
+        <span class="yk">public</span>: <span class="yb">false</span>
+        <span class="yk">private</span>: <span class="yb">true</span>
+        <span class="yk">shared</span>: <span class="yb">false</span>
+        <span class="yk">primary_ip</span>: <span class="yb">false</span>
+        <span class="yk">virtual</span>: <span class="yb">false</span>
+        <span class="yk">nd_ra_prefix</span>: <span class="yb">true</span>
+        <span class="yk">no_default_gateway</span>: <span class="yb">false</span>
+        <span class="yk">igmp_querier</span>: <span class="yb">false</span>
+    <span class="yk">application_profiles</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Evolution_X</span>
+      <span class="yk">endpoint_groups</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Web</span>
+        <span class="yk">bridge_domain</span>: <span class="ys">antigravity</span>
+        <span class="yk">flood_in_encap</span>: <span class="yb">false</span>
+        <span class="yk">intra_epg_isolation</span>: <span class="yb">false</span>
+        <span class="yk">proxy_arp</span>: <span class="yb">false</span>
+        <span class="yk">preferred_group</span>: <span class="yb">false</span>
+        <span class="yk">physical_domains</span>:
+        <span class="yd">- </span><span class="ys">SnV_phys</span>
+        <span class="yk">static_ports</span>:
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">121</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">SnV_FI-1A</span>
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">121</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">SnV_FI-1B</span>
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">121</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">module</span>: <span class="yn">1</span>
+          <span class="yk">port</span>: <span class="yn">10</span>
+        <span class="yk">contracts</span>:
+          <span class="yk">providers</span>:
+          <span class="yd">- </span><span class="ys">web</span>
+          <span class="yk">consumers</span>:
+          <span class="yd">- </span><span class="ys">database</span>
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Database</span>
+        <span class="yk">bridge_domain</span>: <span class="ys">antigravity</span>
+        <span class="yk">flood_in_encap</span>: <span class="yb">false</span>
+        <span class="yk">intra_epg_isolation</span>: <span class="yb">false</span>
+        <span class="yk">proxy_arp</span>: <span class="yb">false</span>
+        <span class="yk">preferred_group</span>: <span class="yb">false</span>
+        <span class="yk">physical_domains</span>:
+        <span class="yd">- </span><span class="ys">SnV_phys</span>
+        <span class="yk">static_ports</span>:
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">122</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">SnV_FI-1A</span>
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">122</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">SnV_FI-1B</span>
+        <span class="yk">contracts</span>:
+          <span class="yk">providers</span>:
+          <span class="yd">- </span><span class="ys">database</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Power_Up</span>
+      <span class="yk">endpoint_groups</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Web</span>
+        <span class="yk">bridge_domain</span>: <span class="ys">antigravity</span>
+        <span class="yk">flood_in_encap</span>: <span class="yb">false</span>
+        <span class="yk">intra_epg_isolation</span>: <span class="yb">false</span>
+        <span class="yk">proxy_arp</span>: <span class="yb">false</span>
+        <span class="yk">preferred_group</span>: <span class="yb">false</span>
+        <span class="yk">physical_domains</span>:
+        <span class="yd">- </span><span class="ys">SnV_phys</span>
+        <span class="yk">static_ports</span>:
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">127</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">module</span>: <span class="yn">1</span>
+          <span class="yk">port</span>: <span class="yn">10</span>
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">127</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">SnV_FI-1B</span>
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">127</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">SnV_FI-1A</span>
+        <span class="yk">contracts</span>:
+          <span class="yk">providers</span>:
+          <span class="yd">- </span><span class="ys">web</span>
+          <span class="yk">consumers</span>:
+          <span class="yd">- </span><span class="ys">database</span>
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Database</span>
+        <span class="yk">bridge_domain</span>: <span class="ys">antigravity</span>
+        <span class="yk">flood_in_encap</span>: <span class="yb">false</span>
+        <span class="yk">intra_epg_isolation</span>: <span class="yb">false</span>
+        <span class="yk">proxy_arp</span>: <span class="yb">false</span>
+        <span class="yk">preferred_group</span>: <span class="yb">false</span>
+        <span class="yk">physical_domains</span>:
+        <span class="yd">- </span><span class="ys">SnV_phys</span>
+        <span class="yk">static_ports</span>:
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">128</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">SnV_FI-1A</span>
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">128</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">SnV_FI-1B</span>
+        <span class="yk">contracts</span>:
+          <span class="yk">providers</span>:
+          <span class="yd">- </span><span class="ys">database</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Rescue</span>
+      <span class="yk">endpoint_groups</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Web</span>
+        <span class="yk">bridge_domain</span>: <span class="ys">antigravity</span>
+        <span class="yk">flood_in_encap</span>: <span class="yb">false</span>
+        <span class="yk">intra_epg_isolation</span>: <span class="yb">false</span>
+        <span class="yk">proxy_arp</span>: <span class="yb">false</span>
+        <span class="yk">preferred_group</span>: <span class="yb">false</span>
+        <span class="yk">physical_domains</span>:
+        <span class="yd">- </span><span class="ys">SnV_phys</span>
+        <span class="yk">static_ports</span>:
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">123</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">SnV_FI-1A</span>
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">123</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">SnV_FI-1B</span>
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">123</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">module</span>: <span class="yn">1</span>
+          <span class="yk">port</span>: <span class="yn">10</span>
+        <span class="yk">contracts</span>:
+          <span class="yk">providers</span>:
+          <span class="yd">- </span><span class="ys">web</span>
+          <span class="yk">consumers</span>:
+          <span class="yd">- </span><span class="ys">database</span>
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Database</span>
+        <span class="yk">bridge_domain</span>: <span class="ys">antigravity</span>
+        <span class="yk">flood_in_encap</span>: <span class="yb">false</span>
+        <span class="yk">intra_epg_isolation</span>: <span class="yb">false</span>
+        <span class="yk">proxy_arp</span>: <span class="yb">false</span>
+        <span class="yk">preferred_group</span>: <span class="yb">false</span>
+        <span class="yk">physical_domains</span>:
+        <span class="yd">- </span><span class="ys">SnV_phys</span>
+        <span class="yk">static_ports</span>:
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">124</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">SnV_FI-1B</span>
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">124</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">SnV_FI-1A</span>
+        <span class="yk">contracts</span>:
+          <span class="yk">providers</span>:
+          <span class="yd">- </span><span class="ys">database</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Chaos</span>
+      <span class="yk">endpoint_groups</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Database</span>
+        <span class="yk">bridge_domain</span>: <span class="ys">antigravity</span>
+        <span class="yk">flood_in_encap</span>: <span class="yb">false</span>
+        <span class="yk">intra_epg_isolation</span>: <span class="yb">false</span>
+        <span class="yk">proxy_arp</span>: <span class="yb">false</span>
+        <span class="yk">preferred_group</span>: <span class="yb">false</span>
+        <span class="yk">physical_domains</span>:
+        <span class="yd">- </span><span class="ys">SnV_phys</span>
+        <span class="yk">static_ports</span>:
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">126</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">SnV_FI-1B</span>
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">126</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">SnV_FI-1A</span>
+        <span class="yk">contracts</span>:
+          <span class="yk">providers</span>:
+          <span class="yd">- </span><span class="ys">database</span>
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">Web</span>
+        <span class="yk">bridge_domain</span>: <span class="ys">antigravity</span>
+        <span class="yk">flood_in_encap</span>: <span class="yb">false</span>
+        <span class="yk">intra_epg_isolation</span>: <span class="yb">false</span>
+        <span class="yk">proxy_arp</span>: <span class="yb">false</span>
+        <span class="yk">preferred_group</span>: <span class="yb">false</span>
+        <span class="yk">physical_domains</span>:
+        <span class="yd">- </span><span class="ys">SnV_phys</span>
+        <span class="yk">static_ports</span>:
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">125</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">SnV_FI-1A</span>
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">125</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">node2_id</span>: <span class="yn">102</span>
+          <span class="yk">channel</span>: <span class="ys">SnV_FI-1B</span>
+        <span class="yd">- </span><span class="yk">vlan</span>: <span class="yn">125</span>
+          <span class="yk">deployment_immediacy</span>: <span class="ys">lazy</span>
+          <span class="yk">mode</span>: <span class="ys">regular</span>
+          <span class="yk">pod_id</span>: <span class="yn">1</span>
+          <span class="yk">node_id</span>: <span class="yn">101</span>
+          <span class="yk">module</span>: <span class="yn">1</span>
+          <span class="yk">port</span>: <span class="yn">10</span>
+        <span class="yk">contracts</span>:
+          <span class="yk">providers</span>:
+          <span class="yd">- </span><span class="ys">web</span>
+          <span class="yk">consumers</span>:
+          <span class="yd">- </span><span class="ys">database</span>
+    <span class="yk">contracts</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">web</span>
+      <span class="yk">scope</span>: <span class="ys">context</span>
+      <span class="yk">subjects</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">http</span>
+        <span class="yk">reverse_filter_ports</span>: <span class="yb">true</span>
+        <span class="yk">filters</span>:
+        <span class="yd">- </span><span class="yk">filter</span>: <span class="ys">http</span>
+          <span class="yk">action</span>: <span class="ys">permit</span>
+          <span class="yk">log</span>: <span class="yb">false</span>
+          <span class="yk">no_stats</span>: <span class="yb">false</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">database</span>
+      <span class="yk">scope</span>: <span class="ys">application-profile</span>
+      <span class="yk">subjects</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">sql</span>
+        <span class="yk">reverse_filter_ports</span>: <span class="yb">true</span>
+        <span class="yk">filters</span>:
+        <span class="yd">- </span><span class="yk">filter</span>: <span class="ys">sql</span>
+          <span class="yk">action</span>: <span class="ys">permit</span>
+          <span class="yk">log</span>: <span class="yb">false</span>
+          <span class="yk">no_stats</span>: <span class="yb">false</span>
+    <span class="yk">filters</span>:
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">http</span>
+      <span class="yk">entries</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">tcp-80</span>
+        <span class="yk">ethertype</span>: <span class="ys">ip</span>
+        <span class="yk">protocol</span>: <span class="ys">tcp</span>
+        <span class="yk">source_from_port</span>: <span class="yn">0</span>
+        <span class="yk">source_to_port</span>: <span class="yn">0</span>
+        <span class="yk">destination_from_port</span>: <span class="yn">80</span>
+        <span class="yk">destination_to_port</span>: <span class="yn">80</span>
+        <span class="yk">stateful</span>: <span class="yb">false</span>
+    <span class="yd">- </span><span class="yk">name</span>: <span class="ys">sql</span>
+      <span class="yk">entries</span>:
+      <span class="yd">- </span><span class="yk">name</span>: <span class="ys">tcp-1433</span>
+        <span class="yk">ethertype</span>: <span class="ys">ip</span>
+        <span class="yk">protocol</span>: <span class="ys">tcp</span>
+        <span class="yk">source_from_port</span>: <span class="yn">0</span>
+        <span class="yk">source_to_port</span>: <span class="yn">0</span>
+        <span class="yk">destination_from_port</span>: <span class="yn">1433</span>
+        <span class="yk">destination_to_port</span>: <span class="yn">1433</span>
+        <span class="yk">stateful</span>: <span class="yb">false</span></pre></details><p style="font-size:13px;color:#bbb">Generated by <code>/workspace/report17/nacfull.py</code>. See also the NetBox-driven tenant files on the <a href="/netbox-yaml-model/">YAML Model</a> page and the <a href="/netbox-yaml-model/models/">AOAPIC / ARR hub</a>.</p></main><script>function ycp(id,b){var t=document.getElementById(id).innerText;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Copied \u2713';setTimeout(function(){b.textContent='Copy'},1500)}).catch(function(){var r=document.createRange();r.selectNodeContents(document.getElementById(id));var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');b.textContent='Copied \u2713'})}function tog(on){document.querySelectorAll('details.sec').forEach(function(d){d.open=on})}</script><script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc)e.textContent=" (counts as of "+new Date(d.updated_utc).toLocaleString("en-AU",{timeZone:"Australia/Melbourne",day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})+")"})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script><!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:6px 0;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im a.mi{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:18px;border:1px solid #3a4456;background:#1b2330;color:#d6e9ff!important;text-decoration:none!important;transition:background .12s,transform .12s}
+nav.site.im a.mi:hover{background:#26344a;transform:translateY(-1px)}
+nav.site.im a.mi.on{background:#2563eb;border-color:#2563eb;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1}
+nav.site.im{flex-direction:column;align-items:flex-start}nav.site.im .im-main,nav.site.im .im-sub{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+nav.site.im .im-sub{margin-top:2px;padding:5px 8px;border-left:3px solid #2563eb;background:rgba(37,99,235,.08);border-radius:8px}
+nav.site.im a.mi.sm{padding:4px 9px;font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:#8ecbff!important;font-size:12px;margin-right:4px;text-decoration:none}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 5px;margin-left:2px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","\uD83C\uDFE0",[]],
+["NetBox","/tasks/netbox/","\uD83D\uDDC4\uFE0F",[["NetBox ACI Tenants","/netbox-aci-tenants/","\uD83D\uDDC4\uFE0F"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","\uD83D\uDCD0"],["NB ACI Objects","/netbox-aci-objects/","\uD83E\uDDF1"],["NB HW Inventory","/netbox-hw-inventory/","\uD83D\uDDA5\uFE0F"],["YAML Model","/netbox-yaml-model/","\uD83D\uDCC4"],["AOAPIC Model","/netbox-yaml-model/aoapic/","\uD83C\uDF10"],["ARR Model","/netbox-yaml-model/arr/","\uD83E\uDDEA"]]],
+["Provisioning","/tasks/provisioning/","\u2699\uFE0F",[["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","\u23F3"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","\uD83E\uDDE9"]]],
+["Monitoring","/tasks/monitoring/","\uD83D\uDCCA",[["Report 17","/report17-aoapic-monitoring/","\uD83D\uDCCA"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","\uD83C\uDFE2"],["Object Drill-down","/report17-aoapic-monitoring/objects/","\uD83D\uDD0D"],["Group 1","/grafana-screenshots/","\uD83D\uDCC8"],["Group 2","/grafana-screenshots-part2/","\uD83D\uDCC9"]]],
+["Testing","/tasks/testing/","\uD83E\uDDEA",[["nac-test Status","/aoapic-nac-test-status/","\u2705"]]],
+["RoadMap","/roadmap/","\uD83D\uDDFA\uFE0F",[["RoadMap","/roadmap/","\uD83D\uDDFA\uFE0F"],["MindMap","/mindmap/","\uD83E\uDDE0"]]],["Visitors","/visitors/","\uD83D\uDC65",[["Visitors","/visitors/","\uD83D\uDC65"],["Status","/status/","\uD83D\uDEA6"],["Trends","/visitors/trends/","\uD83D\uDCC8"]]]];
+function mk(e,on,cls,n){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=e[0];var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);a.appendChild(document.createTextNode(e[0]));if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);
+if(gi>=0&&G[gi][3].length){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks \u203A';r2.appendChild(t);
+G[gi][3].forEach(function(e,k){r2.appendChild(mk(e,k===si,'mi sm'))});n.appendChild(r2)}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
+})();</script>
+</body></html>

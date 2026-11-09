@@ -1,0 +1,132 @@
+# Network-as-Code (nac-aci data model, apic: root)
+# Environment: AOAPIC — complete ACI model
+# Source: Live read-only collection from the Cisco DevNet Always-On APIC sandbox (sandboxapicdc.cisco.com)
+# Collected: 10 Nov 2026 05:31:58 AEDT
+# Method: read-only aaaLogin + GET class/mo queries + aaaLogout
+# Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.
+# SNMP communities and SNMPv3 users are omitted from the published files.
+---
+apic:
+  tenants:
+  - name: Test_9112026
+    vrfs:
+    - name: IAAS-PSNXXX_VRF
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    - name: IAAS-STRE-SHRP01-PSN-COL_VRF
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    l3outs:
+    - name: IAAS1-PSNXXXX_L3Out
+      vrf: IAAS-PSNXXX_VRF
+      export_route_control: true
+      import_route_control: false
+      domain: test-L3DOMAIN
+      node_profiles:
+      - name: IAAS1-PSNXXXX_L3Out_nodeProfile
+        nodes:
+        - node_id: 101
+          router_id: 1.2.3.4
+          router_id_as_loopback: true
+        interface_profiles:
+        - name: IAAS1-PSNXXXX_L3Out_interfaceProfile
+          interfaces:
+          - ip: 192.168.103.254/28
+            mac: 00:22:BD:F8:19:FF
+            mtu: inherit
+            pod_id: 1
+            node_id: 101
+            module: 1
+            port: 11
+      external_endpoint_groups:
+      - name: IaaS_Ipv6_extEPG
+        preferred_group: false
+        subnets:
+        - prefix: fdfd:7680:412d:4::1/64
+          export_route_control: false
+          import_route_control: false
+          import_security: true
+          shared_route_control: true
+          shared_security: true
+        contracts:
+          consumers:
+          - inter-VRF_contract
+          - intra-VRF_contract
+    - name: IAAS-STRE-SHRP01-PSN-COLL_L3Out
+      vrf: IAAS-STRE-SHRP01-PSN-COL_VRF
+      export_route_control: true
+      import_route_control: false
+      domain: test-L3DOMAIN
+      node_profiles:
+      - name: IAAS-STRE-SHRP01-PSN-COLL_L3Out_nodeProfile
+        nodes:
+        - node_id: 101
+          router_id: 1.2.3.6
+          router_id_as_loopback: true
+        interface_profiles:
+        - name: IAAS-STRE-SHRP01-PSN-COLL_L3Out_interfaceProfile
+          interfaces:
+          - ip: 192.168.103.25/28
+            mac: 00:22:BD:F8:19:FF
+            mtu: inherit
+            pod_id: 1
+            node_id: 101
+            module: 1
+            port: 15
+      external_endpoint_groups:
+      - name: IAAS-STRE-SHRP01-PSN-COLL-IPv6_Ext
+        preferred_group: false
+        subnets:
+        - prefix: fdfd:7680:412d:4::5/64
+          export_route_control: false
+          import_route_control: false
+          import_security: true
+          shared_route_control: true
+          shared_security: true
+        contracts:
+          providers:
+          - inter-VRF_contract
+    - name: CSP-PSNXXXX_L3Out
+      vrf: IAAS-PSNXXX_VRF
+      export_route_control: true
+      import_route_control: false
+      domain: test-L3DOMAIN
+      node_profiles:
+      - name: CSP-PSNXXXX_L3Out_nodeProfile
+        nodes:
+        - node_id: 102
+          router_id: 1.2.3.5
+          router_id_as_loopback: true
+        interface_profiles:
+        - name: CSP-PSNXXXX_L3Out_interfaceProfile
+          interfaces:
+          - ip: 192.168.103.1/28
+            mac: 00:22:BD:F8:19:FF
+            mtu: inherit
+            pod_id: 1
+            node_id: 102
+            module: 1
+            port: 3
+        - name: IPv6_intProfile
+      external_endpoint_groups:
+      - name: CSP-L3out-extEPG
+        preferred_group: false
+        subnets:
+        - prefix: fdfd:7680:412d::10/64
+          export_route_control: false
+          import_route_control: false
+          import_security: true
+          shared_route_control: true
+          shared_security: true
+        contracts:
+          providers:
+          - intra-VRF_contract
+    contracts:
+    - name: inter-VRF_contract
+      scope: tenant
+    - name: intra-VRF_contract
+      scope: context

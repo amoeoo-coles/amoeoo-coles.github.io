@@ -1,0 +1,123 @@
+# Network-as-Code (nac-aci data model, apic: root)
+# Environment: AOAPIC — complete ACI model
+# Source: Live read-only collection from the Cisco DevNet Always-On APIC sandbox (sandboxapicdc.cisco.com)
+# Collected: 10 Nov 2026 05:31:58 AEDT
+# Method: read-only aaaLogin + GET class/mo queries + aaaLogout
+# Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.
+# SNMP communities and SNMPv3 users are omitted from the published files.
+---
+apic:
+  tenants:
+  - name: billing-test-DPYD6hPFFmE9
+    description: Release test environment (Stack Automation)
+    vrfs:
+    - name: billing-test-DPYD6hPFFmE9-vrf
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: bd-vlan102
+      description: Project subnet for VLAN 102
+      vrf: billing-test-DPYD6hPFFmE9-vrf
+      arp_flooding: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+      subnets:
+      - ip: 10.102.0.1/24
+        public: true
+        private: false
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: false
+        no_default_gateway: false
+        igmp_querier: false
+    application_profiles:
+    - name: billing-portal
+      endpoint_groups:
+      - name: testers
+        description: Where the portal is consumed from (192.168.0.0/16)
+        bridge_domain: bd-vlan102
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        contracts:
+          consumers:
+          - allow-portal
+      - name: db
+        description: PostgreSQL tier
+        bridge_domain: bd-vlan102
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        contracts:
+          providers:
+          - app-to-db
+      - name: app
+        description: Billing Portal application tier
+        bridge_domain: bd-vlan102
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+        contracts:
+          providers:
+          - allow-portal
+          consumers:
+          - app-to-db
+    contracts:
+    - name: allow-portal
+      description: tcp/8080 from the testers to the app tier
+      scope: context
+      subjects:
+      - name: portal
+        reverse_filter_ports: true
+        filters:
+        - filter: portal-http
+          action: permit
+          log: false
+          no_stats: false
+    - name: app-to-db
+      description: tcp/5432 from the app tier to the database tier
+      scope: application-profile
+      subjects:
+      - name: postgres
+        reverse_filter_ports: true
+        filters:
+        - filter: postgres
+          action: permit
+          log: false
+          no_stats: false
+    filters:
+    - name: postgres
+      entries:
+      - name: tcp-5432
+        ethertype: ipv4
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 5432
+        destination_to_port: 5432
+        stateful: true
+    - name: portal-http
+      entries:
+      - name: tcp-8080
+        ethertype: ipv4
+        protocol: tcp
+        source_from_port: 0
+        source_to_port: 0
+        destination_from_port: 8080
+        destination_to_port: 8080
+        stateful: true
