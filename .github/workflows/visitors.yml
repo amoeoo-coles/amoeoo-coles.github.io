@@ -41,7 +41,8 @@ jobs:
               return json.dumps(x, sort_keys=True)
           new_v, old_v = load("data/visitors.json"), load_head("data/visitors.json")
           new_d, old_d = load("visitors/daily.json"), load_head("visitors/daily.json")
-          data_changed = core(new_v) != core(old_v) or core(new_d) != core(old_d)
+          new_g, old_g = load("visitors/detail.json"), load_head("visitors/detail.json")
+          data_changed = core(new_v) != core(old_v) or core(new_d) != core(old_d) or core(new_g) != core(old_g)
           prev = old_v.get("updated_utc") or old_d.get("generated_utc") or ""
           stale = True
           if prev:
@@ -59,7 +60,7 @@ jobs:
           if [ -f /tmp/visitors-skip ]; then exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/visitors.json visitors/daily.json
+          git add data/visitors.json visitors/daily.json visitors/detail.json
           git diff --cached --quiet && echo "Nothing to commit" && exit 0
           git commit -m "Update visitor stats"
           git push
