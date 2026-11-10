@@ -1,0 +1,118 @@
+# Network-as-Code (nac-aci data model) converted from the Cisco white paper
+# "Microsoft Azure Local Connectivity to Cisco Nexus 9000 Series Switches
+# in Cisco NX-OS and Cisco ACI Mode", updated 12 December 2024.
+#
+# The paper shows APIC GUI steps, not YAML. This file restates those objects
+# in the public nac-aci schema:
+#   https://netascode.cisco.com/docs/data_models/apic/access_policies/ap_leaf_interface_policy_group/
+#   https://netascode.cisco.com/docs/data_models/apic/access_policies/qos/
+#   https://netascode.cisco.com/docs/data_models/apic/access_policies/lldp_policy/
+#
+# Example-only: names, node IDs, ports and the VLAN range are the paper's
+# Table 4 lab values (nodes 101-102, ethernet1/11-12, HCI_VLAN_pool 1600-1699).
+# Do not apply this file to a live fabric without replacing every value.
+#
+# Important design point from the paper: the two links between each Azure Local
+# server and the leaf pair are INDIVIDUAL connections, not a port-channel or vPC.
+# The interface policy group type is therefore "access", not "vpc".
+
+---
+apic:
+  access_policies:
+    vlan_pools:
+      - name: HCI_VLAN_pool
+        allocation: static
+        ranges:
+          - from: 1600
+            to: 1699
+            allocation: static
+
+    physical_domains:
+      - name: HCI_phys
+        vlan_pool: HCI_VLAN_pool
+
+    aaeps:
+      - name: HCI_AAEP
+        # Paper: uncheck Enable Infrastructure VLAN and Association to Interfaces
+        # when the AAEP is first created; associate interfaces later via the
+        # interface policy group.
+        infra_vlan: false
+        physical_domains:
+          - HCI_phys
+
+    interface_policies:
+      lldp_policies:
+        - name: HCI_LLDP
+          admin_rx_state: true
+          admin_tx_state: true
+          # Paper: "Select Enable for Transmit State" and
+          # "Select IEEE 802.1 for DCBXP Version."
+          dcbxp_version: IEEE
+      priority_flow_control_policies:
+        - name: PFC-Auto
+          # Paper: Create Priority Flow Control Policy named PFC-Auto and
+          # select Auto so the PFC state is advertised through DCBX.
+          admin_state: auto
+
+    leaf_interface_policy_groups:
+      - name: Individual-HCI
+        type: access
+        lldp_policy: HCI_LLDP
+        priority_flow_control_policy: PFC-Auto
+        aaep: HCI_AAEP
+
+    leaf_interface_profiles:
+      - name: HCI-servers
+        selectors:
+          - name: eth1-11-12
+            policy_group: Individual-HCI
+            port_blocks:
+              - name: ports-11-12
+                from_module: 1
+                from_port: 11
+                to_module: 1
+                to_port: 12
+
+    leaf_switch_profiles:
+      - name: leaf-101-102
+        interface_profiles:
+          - HCI-servers
+        selectors:
+          - name: nodes-101-102
+            node_blocks:
+              - name: leafs-101-102
+                from: 101
+                to: 102
+
+    qos:
+      qos_classes:
+        # Paper: Level1 for RDMA/storage, traffic marked Cos 4 by Azure Local.
+        - level: 1
+          scheduling: wrr
+          bandwidth_percent: 50
+          pfc_state: true
+          no_drop_cos: cos4
+          pfc_scope: fabric
+        # Paper: Level2 for cluster communication, traffic marked Cos 5
+        # by Azure Local in the Cisco ACI example (UCS C240 M6 CVD values).
+        # Microsoft Learn instead recommends Priority 7 for cluster heartbeats.
+        - level: 2
+          scheduling: wrr
+          bandwidth_percent: 1
+          pfc_state: false
+        # Paper: Level3 (default) for VM and management traffic, 49%.
+        - level: 3
+          scheduling: wrr
+          bandwidth_percent: 49
+          pfc_state: false
+
+# Fabric-wide optional LLDP TLVs (DCBX, Port Link Aggregation, Port Maximum
+# Frame Size, Port VLAN Name) are set in the paper under
+# Fabric > Fabric Policies > Policies > Global > LLDP policy by default.
+# "Port VLAN" is always enabled regardless of that policy.
+# I did not find a published nac-aci field for those optional TLVs, so they
+# stay as a GUI step on the Deployment page.
+#
+# The paper says ToR switches are configured for an MTU of 9216 bytes, and
+# that the endpoints control the packet MTU. Link-level policy in nac-aci
+# exposes speed/auto/FEC, not MTU, so 9216 is not encoded as a YAML field here.

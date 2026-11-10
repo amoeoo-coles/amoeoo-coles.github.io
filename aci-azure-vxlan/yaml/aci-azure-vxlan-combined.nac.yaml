@@ -1,0 +1,271 @@
+# Combined NaC file for the ACI Azure VXLAN lab design.
+# Merges 01-access-policies, 02-tenant and 03-border-gateway into one
+# apic: document (HCI_tenant1 VRF/BD stretch is merged onto the tenant).
+# Review every value before use. Example-only throughout.
+
+apic:
+  access_policies:
+    vlan_pools:
+    - name: HCI_VLAN_pool
+      allocation: static
+      ranges:
+      - from: 1600
+        to: 1699
+        allocation: static
+    physical_domains:
+    - name: HCI_phys
+      vlan_pool: HCI_VLAN_pool
+    aaeps:
+    - name: HCI_AAEP
+      infra_vlan: false
+      physical_domains:
+      - HCI_phys
+    interface_policies:
+      lldp_policies:
+      - name: HCI_LLDP
+        admin_rx_state: true
+        admin_tx_state: true
+        dcbxp_version: IEEE
+      priority_flow_control_policies:
+      - name: PFC-Auto
+        admin_state: auto
+    leaf_interface_policy_groups:
+    - name: Individual-HCI
+      type: access
+      lldp_policy: HCI_LLDP
+      priority_flow_control_policy: PFC-Auto
+      aaep: HCI_AAEP
+    leaf_interface_profiles:
+    - name: HCI-servers
+      selectors:
+      - name: eth1-11-12
+        policy_group: Individual-HCI
+        port_blocks:
+        - name: ports-11-12
+          from_module: 1
+          from_port: 11
+          to_module: 1
+          to_port: 12
+    leaf_switch_profiles:
+    - name: leaf-101-102
+      interface_profiles:
+      - HCI-servers
+      selectors:
+      - name: nodes-101-102
+        node_blocks:
+        - name: leafs-101-102
+          from: 101
+          to: 102
+    qos:
+      qos_classes:
+      - level: 1
+        scheduling: wrr
+        bandwidth_percent: 50
+        pfc_state: true
+        no_drop_cos: cos4
+        pfc_scope: fabric
+      - level: 2
+        scheduling: wrr
+        bandwidth_percent: 1
+        pfc_state: false
+      - level: 3
+        scheduling: wrr
+        bandwidth_percent: 49
+        pfc_state: false
+  tenants:
+  - name: common
+    vrfs:
+    - name: common_VRF
+    policies:
+      qos:
+      - name: Storage_and_Cluster
+        dot1p_classifiers:
+        - priority: level1
+          dot1p_from: 4
+          dot1p_to: 4
+        - priority: level2
+          dot1p_from: 5
+          dot1p_to: 5
+    bridge_domains:
+    - name: Storage-A
+      vrf: common_VRF
+      unicast_routing: false
+      l2_unknown_unicast: flood
+    - name: Storage-B
+      vrf: common_VRF
+      unicast_routing: false
+      l2_unknown_unicast: flood
+    - name: Mgmt
+      vrf: common_VRF
+      subnets:
+      - ip: 10.1.1.254/24
+    application_profiles:
+    - name: HCI-common
+      endpoint_groups:
+      - name: Mgmt
+        bridge_domain: Mgmt
+        qos_class: level3
+        physical_domains:
+        - HCI_phys
+        static_ports:
+        - pod_id: 1
+          node_id: 101
+          module: 1
+          port: 11
+          vlan: 1600
+          mode: native
+        - pod_id: 1
+          node_id: 101
+          module: 1
+          port: 12
+          vlan: 1600
+          mode: native
+        - pod_id: 1
+          node_id: 102
+          module: 1
+          port: 11
+          vlan: 1600
+          mode: native
+        - pod_id: 1
+          node_id: 102
+          module: 1
+          port: 12
+          vlan: 1600
+          mode: native
+        contracts:
+          consumers:
+          - Allow-Shared-L3Out
+      - name: Storage-A
+        bridge_domain: Storage-A
+        custom_qos_policy: Storage_and_Cluster
+        physical_domains:
+        - HCI_phys
+        static_ports:
+        - pod_id: 1
+          node_id: 101
+          module: 1
+          port: 11
+          vlan: 1601
+          mode: regular
+        - pod_id: 1
+          node_id: 102
+          module: 1
+          port: 11
+          vlan: 1601
+          mode: regular
+      - name: Storage-B
+        bridge_domain: Storage-B
+        custom_qos_policy: Storage_and_Cluster
+        physical_domains:
+        - HCI_phys
+        static_ports:
+        - pod_id: 1
+          node_id: 101
+          module: 1
+          port: 12
+          vlan: 1602
+          mode: regular
+        - pod_id: 1
+          node_id: 102
+          module: 1
+          port: 12
+          vlan: 1602
+          mode: regular
+    contracts:
+    - name: Allow-Shared-L3Out
+      scope: global
+      subjects:
+      - name: Subject1
+        filters: []
+  - name: HCI_tenant1
+    vrfs:
+    - name: VRF1
+      vxlan_stretch:
+        border_gateway_set_policy: BGW-set-1
+        normalized_vni: 50001
+    bridge_domains:
+    - name: BD1
+      vrf: VRF1
+      subnets:
+      - ip: 192.168.1.254/24
+      vxlan_stretch:
+        border_gateway_set_policy: BGW-set-1
+        normalized_vni: 50111
+    application_profiles:
+    - name: AP1
+      endpoint_groups:
+      - name: Web
+        bridge_domain: BD1
+        qos_class: level3
+        physical_domains:
+        - HCI_phys
+        static_ports:
+        - pod_id: 1
+          node_id: 101
+          port: 11
+          vlan: 1611
+          mode: regular
+        - pod_id: 1
+          node_id: 101
+          port: 12
+          vlan: 1611
+          mode: regular
+        - pod_id: 1
+          node_id: 102
+          port: 11
+          vlan: 1611
+          mode: regular
+        - pod_id: 1
+          node_id: 102
+          port: 12
+          vlan: 1611
+          mode: regular
+        contracts:
+          consumers:
+          - Web-to-App
+          - Allow-Shared-L3Out
+      - name: App
+        bridge_domain: BD1
+        qos_class: level3
+        physical_domains:
+        - HCI_phys
+        static_ports:
+        - pod_id: 1
+          node_id: 101
+          port: 11
+          vlan: 1612
+          mode: regular
+        - pod_id: 1
+          node_id: 101
+          port: 12
+          vlan: 1612
+          mode: regular
+        - pod_id: 1
+          node_id: 102
+          port: 11
+          vlan: 1612
+          mode: regular
+        - pod_id: 1
+          node_id: 102
+          port: 12
+          vlan: 1612
+          mode: regular
+        contracts:
+          providers:
+          - Web-to-App
+          consumers:
+          - Allow-Shared-L3Out
+    contracts:
+    - name: Web-to-App
+      scope: context
+      subjects:
+      - name: Subject1
+        filters: []
+  - name: infra
+    policies:
+      border_gateway_sets:
+      - name: BGW-set-1
+        vxlan_site_id: 100
+        external_data_plane_ips:
+        - pod_id: 1
+          ip: 10.0.255.1
