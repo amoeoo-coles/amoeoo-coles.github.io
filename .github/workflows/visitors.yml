@@ -1,7 +1,11 @@
 name: Update visitor stats
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    # GitHub can delay or skip scheduled jobs by hours, especially on public
+    # repos. Two off-peak offsets give a second chance in the same hour; an
+    # explicit dispatch covers a missed run. This is still best-effort hourly.
+    - cron: "7 * * * *"
+    - cron: "37 * * * *"
   workflow_dispatch: {}
 permissions:
   contents: write
@@ -18,14 +22,44 @@ jobs:
       - name: Commit if changed
         run: |
           python3 - <<'PY'
-          import json;d=json.load(open('data/visitors.json'));d.pop('updated_utc',None);json.dump(d,open('/tmp/new.json','w'),sort_keys=True)
+          import json, datetime as dt, subprocess, pathlib
+          def load_head(path):
+              try:
+                  raw = subprocess.check_output(["git", "show", "HEAD:" + path], stderr=subprocess.DEVNULL)
+                  return json.loads(raw)
+              except Exception:
+                  return {}
+          def load(path):
+              try:
+                  return json.loads(pathlib.Path(path).read_text())
+              except Exception:
+                  return {}
+          def core(d):
+              x = dict(d)
+              for k in ("updated_utc", "as_of_aedt", "generated_utc"):
+                  x.pop(k, None)
+              return json.dumps(x, sort_keys=True)
+          new_v, old_v = load("data/visitors.json"), load_head("data/visitors.json")
+          new_d, old_d = load("visitors/daily.json"), load_head("visitors/daily.json")
+          data_changed = core(new_v) != core(old_v) or core(new_d) != core(old_d)
+          prev = old_v.get("updated_utc") or old_d.get("generated_utc") or ""
+          stale = True
+          if prev:
+              try:
+                  t = dt.datetime.strptime(prev, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=dt.timezone.utc)
+                  stale = (dt.datetime.now(dt.timezone.utc) - t) > dt.timedelta(minutes=55)
+              except ValueError:
+                  stale = True
+          if not data_changed and not stale:
+              print("No change")
+              pathlib.Path("/tmp/visitors-skip").write_text("1")
+          else:
+              print("commit", "data_changed" if data_changed else "stamp refresh")
           PY
-          if git show HEAD:data/visitors.json > /tmp/old_raw.json 2>/dev/null; then
-            python3 -c "import json;d=json.load(open('/tmp/old_raw.json'));d.pop('updated_utc',None);json.dump(d,open('/tmp/old.json','w'),sort_keys=True)"
-            if cmp -s /tmp/new.json /tmp/old.json; then echo "No change"; exit 0; fi
-          fi
+          if [ -f /tmp/visitors-skip ]; then exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/visitors.json
+          git add data/visitors.json visitors/daily.json
+          git diff --cached --quiet && echo "Nothing to commit" && exit 0
           git commit -m "Update visitor stats"
           git push
