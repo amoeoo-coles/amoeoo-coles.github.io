@@ -1,0 +1,296 @@
+# Illustrative Network-as-Code model for Cisco Live LTRDCN-2143 pod1.
+# Merged from the ACI Lab Guide step snippets on this site.
+# Generated 10 Nov 2026, 11:58 PM Australia/Melbourne. Placeholders only — no lab passwords.
+# Documentation only; do not push this file to a fabric from this page.
+apic:
+  access_policies:
+    vlan_pools:
+    - name: aci_p01_static_vlanpool
+      allocation: static
+      ranges:
+      - from: 100
+        to: 149
+        allocation: static
+    - name: aci_p01_dynamic_vlanpool
+      allocation: dynamic
+      ranges:
+      - from: 150
+        to: 199
+        allocation: dynamic
+    physical_domains:
+    - name: aci_p01_physdom
+      vlan_pool: aci_p01_static_vlanpool
+      vlan_pool_allocation: static
+    routed_domains:
+    - name: aci_p01_extrtdom
+    aaeps:
+    - name: aci_p01_l2_aep
+      physical_domains:
+      - aci_p01_physdom
+      infra_vlan: false
+    - name: aci_p01_l3_aep
+      routed_domains:
+      - aci_p01_extrtdom
+      infra_vlan: false
+    - name: aci_p01_vmm_aep
+      infra_vlan: false
+    leaf_interface_policy_groups:
+    - name: aci_p01_intpolg_access
+      type: access
+      aaep: aci_p01_l3_aep
+      link_level_policy: aci_lab_10G
+      cdp_policy: aci_lab_cdp
+      lldp_policy: aci_lab_lldp
+      mcp_policy: aci_lab_mcp
+      l2_interface_policy: aci_lab_l2global
+    - name: aci_p01_intpolg_pc
+      type: pc
+      aaep: aci_p01_l2_aep
+      link_level_policy: aci_lab_10G
+      cdp_policy: aci_lab_cdp
+      lldp_policy: aci_lab_lldp
+      port_channel_policy: aci_lab_lacp
+      l2_interface_policy: aci_lab_l2global
+      mcp_policy: aci_lab_mcp
+    - name: aci_p01_intpolg_vpc
+      type: vpc
+      aaep: aci_p01_vmm_aep
+      link_level_policy: aci_lab_10G
+      cdp_policy: aci_lab_cdp
+      lldp_policy: aci_lab_lldp
+      port_channel_policy: aci_lab_lacp
+      l2_interface_policy: aci_lab_l2global
+      mcp_policy: aci_lab_mcp
+    leaf_interface_profiles:
+    - name: leaf203_access_intprof
+      selectors:
+      - name: eth1-1
+        policy_group: aci_p01_intpolg_access
+        port_blocks:
+        - from_card: 1
+          from_port: 1
+          to_port: 1
+    - name: leaf205_pc_intprof
+      selectors:
+      - name: eth1-1-2
+        policy_group: aci_p01_intpolg_pc
+        port_blocks:
+        - from_card: 1
+          from_port: 1
+          to_port: 2
+    - name: vpc_207_208_intprof
+      selectors:
+      - name: eth1-1
+        policy_group: aci_p01_intpolg_vpc
+        port_blocks:
+        - from_card: 1
+          from_port: 1
+          to_port: 1
+    leaf_switch_profiles:
+    - name: leaf203
+      selectors:
+      - name: leaf203
+        node_blocks:
+        - from: 203
+          to: 203
+      interface_profiles:
+      - leaf203_access_intprof
+    - name: leaf205
+      selectors:
+      - name: leaf205
+        node_blocks:
+        - from: 205
+          to: 205
+      interface_profiles:
+      - leaf205_pc_intprof
+    - name: vpc_207_208
+      selectors:
+      - name: leaves_207_208
+        node_blocks:
+        - from: 207
+          to: 208
+      interface_profiles:
+      - vpc_207_208_intprof
+  fabric_policies:
+    vmware_vmm_domains:
+    - name: aci_p01_dc3_vds
+      access_mode: read-write
+      delimiter: '|'
+      vlan_pool: aci_p01_dynamic_vlanpool
+      vlan_pool_allocation: dynamic
+      aaep: aci_p01_vmm_aep
+      vswitch_cdp_policy: aci_lab_cdp
+      vswitch_port_channel_mode: active
+      credential_profiles:
+      - name: aci_p01_credentials
+        username: <placeholder — see original lab guide>
+        password: <placeholder>
+      controllers:
+      - name: acilab_vcenter
+        hostname: 10.0.226.193
+        datacenter: dc_pod01
+        credentials: aci_p01_credentials
+      enhanced_lags:
+      - name: lag1
+        mode: active
+        lb_mode: src-dst-ip-l4port
+  tenants:
+  - name: aci_p01_tenant
+    vrfs:
+    - name: aci_p01_vrf
+    l3outs:
+    - name: aci_p01_L3out
+      vrf: aci_p01_vrf
+      l3_domain: aci_p01_extrtdom
+      ospf:
+        enabled: true
+        area: 0.0.0.1
+        area_type: regular
+      node_profiles:
+      - name: node203
+        nodes:
+        - node_id: 203
+          router_id: 10.0.0.1
+        interface_profiles:
+        - name: eth1-1
+          interfaces:
+          - path: 203/1/1
+            ip: 10.0.1.0/31
+            mtu: 1500
+      external_epgs:
+      - name: aci_p01_l3outepg
+        contracts:
+          consumed:
+          - common/web-ltraci-2143
+    bridge_domains:
+    - name: aci_p01_bd_web
+      vrf: aci_p01_vrf
+      unicast_routing: true
+      subnets:
+      - ip: 10.0.144.1/29
+        public: true
+        private: false
+        shared: false
+      l3outs:
+      - aci_p01_L3out
+    - name: aci_p01_bd_app
+      vrf: aci_p01_vrf
+      unicast_routing: true
+      subnets:
+      - ip: 172.16.1.1/24
+        public: false
+        private: true
+        shared: false
+    - name: aci_p01_bd_mgmt
+      vrf: k8s_vrf
+      unicast_routing: true
+      subnets:
+      - ip: 10.0.145.1/29
+        public: true
+        private: false
+      l3outs:
+      - k8s
+      dhcp_relay_labels:
+      - scope: tenant
+        policy: aci_p01_dhcp
+    - name: aci_p01_bd_l2
+      vrf: aci_p01_vrf
+      unicast_routing: false
+      arp_flooding: true
+      unknown_unicast: flood
+    dhcp_relay_policies:
+    - name: aci_p01_dhcp
+      providers:
+      - epg_type: l3out
+        tenant: common
+        l3out: k8s
+        external_epg: k8s-epg
+        dhcp_server: 10.0.226.7
+    application_profiles:
+    - name: aci_p01_ap_mgmt
+      endpoint_groups:
+      - name: aci_p01_epg_mgmt
+        bridge_domain: aci_p01_bd_mgmt
+        vmware_vmm_domains:
+        - name: aci_p01_dc3_vds
+        contracts:
+          providers:
+          - common/mgmt-ltraci-2143
+    - name: aci_p01_ap
+      endpoint_groups:
+      - name: aci_p01_epg_web
+        bridge_domain: aci_p01_bd_web
+        vmware_vmm_domains:
+        - name: aci_p01_dc3_vds
+          allow_micro_segmentation: true
+        contracts:
+          providers:
+          - common/web-ltraci-2143
+          consumers:
+          - aci_p01_con
+        intra_epg_isolation: unenforced
+      - name: aci_p01_epg_app
+        bridge_domain: aci_p01_bd_app
+        vmware_vmm_domains:
+        - name: aci_p01_dc3_vds
+        contracts:
+          providers:
+          - aci_p01_con
+      endpoint_security_groups:
+      - name: aci_p01_esg
+        vrf: aci_p01_vrf
+        selectors:
+        - type: ip
+          ip: 10.0.144.1/29
+        - type: ip
+          ip: 172.16.1.1/24
+      useg_epgs:
+      - name: aci_p01_useg_web
+        bridge_domain: aci_p01_bd_web
+        vmware_vmm_domains:
+        - name: aci_p01_dc3_vds
+          deployment_immediacy: immediate
+        attributes:
+        - type: vm-name
+          operator: contains
+          value: '02'
+    - name: aci_p01_ap_L2
+      endpoint_groups:
+      - name: aci_p01_epg_L2
+        bridge_domain: aci_p01_bd_l2
+        physical_domains:
+        - aci_p01_physdom
+        static_ports:
+        - path_type: pc
+          path: aci_p01_intpolg_pc
+          encap: vlan-100
+    filters:
+    - name: aci_p01_fil
+      entries:
+      - name: icmp
+        ethertype: ip
+        protocol: icmp
+      - name: ssh
+        ethertype: ip
+        protocol: tcp
+        destination_from: 22
+        destination_to: 22
+    contracts:
+    - name: aci_p01_con
+      subjects:
+      - name: aci_p01_sub
+        filters:
+        - aci_p01_fil
+  - name: msite_p01_tenant
+    vrfs:
+    - name: msite_p01_vrf
+    bridge_domains:
+    - name: msite_p01_bd
+      vrf: msite_p01_vrf
+      subnets:
+      - ip: 192.168.101.1/24
+    application_profiles:
+    - name: msite_p01_ap
+      endpoint_groups:
+      - name: msite_p01_epg
+        bridge_domain: msite_p01_bd
