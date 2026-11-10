@@ -18,6 +18,7 @@ jobs:
       - name: Fetch GoatCounter stats
         env:
           GOATCOUNTER_TOKEN: ${{ secrets.GOATCOUNTER_TOKEN }}
+          GOATCOUNTER_EXPORT_TOKEN: ${{ secrets.GOATCOUNTER_EXPORT_TOKEN }}
         run: python3 scripts/fetch_visitors.py
       - name: Commit if changed
         run: |
@@ -60,7 +61,7 @@ jobs:
           if [ -f /tmp/visitors-skip ]; then exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/visitors.json visitors/daily.json visitors/detail.json
+          git add data/visitors.json visitors/daily.json visitors/detail.json visitors/export_state.json
           git diff --cached --quiet && echo "Nothing to commit" && exit 0
           git commit -m "Update visitor stats"
           git push

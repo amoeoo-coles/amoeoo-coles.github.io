@@ -18,6 +18,20 @@ function tzName(d){
 }
 function hourLabel(day,h){return lab(day)+' '+String(h).padStart(2,'0')+':00\u2013'+String((h+1)%24).padStart(2,'0')+':00'}
 function dayRec(day){return ((GEO.detail&&GEO.detail.days)||[]).find(function(x){return x.day===day})||null}
+function hourRec(day,h){return ((GEO.detail&&GEO.detail.hours)||{})[day+'|'+h]||null}
+function hasHourlyCountries(){
+  var hours=(GEO.detail&&GEO.detail.hours)||{};
+  for(var k in hours){if(hours[k]&&(hours[k].countries||[]).length) return true}
+  return false;
+}
+function countryHourly(id){
+  var hours=(GEO.detail&&GEO.detail.hours)||{};
+  var keys=Object.keys(hours).sort();
+  return keys.map(function(k){
+    var p=k.split('|'), rec=hours[k]||{}, row=(rec.countries||[]).find(function(c){return c.id===id});
+    return {day:p[0], h:+p[1], count:row?+row.count||0:0, visitors:+rec.visitors||0};
+  });
+}
 function sum(rows){return (rows||[]).reduce(function(a,x){return a+(+x.count||0)},0)}
 function pct(n,t){return t?((100*n)/t).toFixed(1)+'%':'0%'}
 function hourVisitors(day,h){
@@ -111,7 +125,10 @@ function noteFor(days, period){
     if(hv && !(d.countries||[]).length) lag.push(lab(d.day)+' ('+hv+' hourly visitors, country data not in yet)');
   });
   var p=period==='h48'?'last 48 hours':period==='d7'?'last 7 days':period==='d30'?'last 30 days':'since 7 Nov 2026';
-  var s='Country counts are per Melbourne day (GoatCounter does not publish per-hour locations on the statistics API). This '+p+' view sums '+labels+'.';
+  var hasHour=hasHourlyCountries();
+  var s=hasHour
+    ?('Country counts in an hour panel are for that Melbourne hour when a CSV export of individual pageviews is available. This '+p+' totals view still sums '+labels+' (unique visitors by location per day).')
+    :('Country counts are per Melbourne day. GoatCounter\'s CSV export of individual pageviews is empty (that setting is off, so per-hit locations are not stored); the JSON export\'s location stats are also daily. This '+p+' view sums '+labels+'. Hourly page and referrer counts in the hour panel are exact for that hour.');
   if(lag.length) s+=' Missing country data: '+lag.join('; ')+'.';
   s+=' Country totals are unique visitors by location and will not match the summed hourly page counts.';
   return s;
@@ -136,25 +153,44 @@ function openHour(day,h){
   var el=ensurePanel();
   var v=hourVisitors(day,h);
   var rec=dayRec(day);
-  var pages=((GEO.detail&&GEO.detail.hour_pages)||{})[day+'|'+h]||[];
+  var hr=hourRec(day,h);
+  var pages=(hr&&hr.pages&&hr.pages.length)?hr.pages:(((GEO.detail&&GEO.detail.hour_pages)||{})[day+'|'+h]||[]);
   var tz=tzName();
+  var hourCountries=hr&&(hr.countries||[]).length;
+  var hourRefs=hr&&(hr.refs||[]).length;
+  var hourBrowsers=hr&&(hr.browsers||[]).length;
+  var hourSystems=hr&&(hr.systems||[]).length;
+  var hourSizes=hr&&(hr.sizes||[]).length;
   var html='<div class="hd-box"><div class="hd-top"><h3>Hour detail \u00b7 '+esc(hourLabel(day,h))+' '+esc(tz)+'</h3>';
   html+='<button type="button" class="hd-close" id="hd-close">Close</button></div>';
   html+='<p class="hd-count"><b>'+v+'</b> visitors this hour</p>';
   html+='<h4>Top pages this hour</h4>';
-  html+=pages.length?pageRows(pages)+'<p class="muted">Top '+pages.length+' pages for this hour from GoatCounter /stats/hits. Listed counts can be less than the hour total when many pages were visited.</p>':'<p class="muted">No per-page breakdown is stored for this hour (it had '+v+' visitors, or this hour is still filling).</p>';
-  html+='<h4>Countries on '+esc(lab(day))+' (this Melbourne day, not this hour)</h4>';
-  html+='<p class="muted">GoatCounter records countries once per day. This site\'s API token can read statistics but cannot download the per-visit export, so a true per-hour country split is not available. These figures are for the whole of '+esc(lab(day))+'.</p>';
-  if(rec&&(rec.countries||[]).length) html+=countryRows(rec.countries);
-  else html+='<p class="muted">No country breakdown for '+esc(lab(day))+' yet.'+(v?' Hourly totals for this day are already in; location stats can lag.':'')+'</p>';
-  if(rec){
-    html+='<div class="hd-grid">';
-    html+='<div><h4>Referrers on '+esc(lab(day))+'</h4>'+simpleRows(rec.refs,'Source','No referrers for this day.')+'</div>';
-    html+='<div><h4>Browsers on '+esc(lab(day))+'</h4>'+simpleRows(rec.browsers,'Browser','No browser data for this day.')+'</div>';
-    html+='<div><h4>Operating systems on '+esc(lab(day))+'</h4>'+simpleRows(rec.systems,'System','No OS data for this day.')+'</div>';
-    html+='<div><h4>Screen size on '+esc(lab(day))+'</h4>'+simpleRows(rec.sizes,'Size','No screen-size data for this day.')+'</div>';
-    html+='</div>';
+  if(pages.length){
+    var n=hr&&hr.pages_total?hr.pages_total:pages.length;
+    html+=pageRows(pages)+'<p class="muted">Top '+pages.length+' of '+n+' pages for this hour. Listed counts can be less than the hour total when many pages were visited.</p>';
+  } else {
+    html+='<p class="muted">No per-page breakdown is stored for this hour (it had '+v+' visitors, or this hour is still filling).</p>';
   }
+  if(hourCountries){
+    html+='<h4>Countries this hour</h4>';
+    html+='<p class="muted">These country counts are for this Melbourne hour, from the per-visit CSV export.</p>';
+    html+=countryRows(hr.countries);
+  } else {
+    html+='<h4>Countries on '+esc(lab(day))+' (this Melbourne day, not this hour)</h4>';
+    html+='<p class="muted">A true per-hour country split needs GoatCounter\'s CSV of individual pageviews. That export is currently empty (the Individual pageviews setting is off, so per-hit locations are not stored). These figures are for the whole of '+esc(lab(day))+'. Pages and referrers below are for this hour.</p>';
+    if(rec&&(rec.countries||[]).length) html+=countryRows(rec.countries);
+    else html+='<p class="muted">No country breakdown for '+esc(lab(day))+' yet.'+(v?' Hourly totals for this day are already in; location stats can lag.':'')+'</p>';
+  }
+  html+='<div class="hd-grid">';
+  if(hourRefs) html+='<div><h4>Referrers this hour</h4>'+simpleRows(hr.refs,'Source','No referrers for this hour.')+'</div>';
+  else if(rec) html+='<div><h4>Referrers on '+esc(lab(day))+'</h4>'+simpleRows(rec.refs,'Source','No referrers for this day.')+'</div>';
+  if(hourBrowsers) html+='<div><h4>Browsers this hour</h4>'+simpleRows(hr.browsers,'Browser','No browser data for this hour.')+'</div>';
+  else if(rec) html+='<div><h4>Browsers on '+esc(lab(day))+'</h4>'+simpleRows(rec.browsers,'Browser','No browser data for this day.')+'</div>';
+  if(hourSystems) html+='<div><h4>Operating systems this hour</h4>'+simpleRows(hr.systems,'System','No OS data for this hour.')+'</div>';
+  else if(rec) html+='<div><h4>Operating systems on '+esc(lab(day))+'</h4>'+simpleRows(rec.systems,'System','No OS data for this day.')+'</div>';
+  if(hourSizes) html+='<div><h4>Screen size this hour</h4>'+simpleRows(hr.sizes,'Size','No screen-size data for this hour.')+'</div>';
+  else if(rec) html+='<div><h4>Screen size on '+esc(lab(day))+'</h4>'+simpleRows(rec.sizes,'Size','No screen-size data for this day.')+'</div>';
+  html+='</div>';
   html+='</div>';
   el.innerHTML=html;
   el.hidden=false;
@@ -225,18 +261,29 @@ function paintCountries(){
     var series=countryDaily(GEO.filter);
     var name=(rows.find(function(r){return r.id===GEO.filter})||{}).name||GEO.filter;
     var present=series.filter(function(x){return x.count});
-    box.innerHTML='<h3>'+esc(flag(GEO.filter)+' '+name)+' \u00b7 daily counts</h3>'+
-      listTable(series.map(function(x){return {name:lab(x.day),count:x.count,id:x.day}}),[
-        {t:'Day', f:function(r){return esc(r.name)}},
+    var hourSeries=hasHourlyCountries()?countryHourly(GEO.filter):[];
+    var hourPresent=hourSeries.filter(function(x){return x.count});
+    var html='<h3>'+esc(flag(GEO.filter)+' '+name)+' \u00b7 '+(hourPresent.length?'hourly and daily counts':'daily counts')+'</h3>';
+    if(hourPresent.length){
+      html+=listTable(hourSeries.filter(function(x){return x.count}).map(function(x){return {name:lab(x.day)+' '+String(x.h).padStart(2,'0')+':00',count:x.count}}),[
+        {t:'Hour', f:function(r){return esc(r.name)}},
         {t:'Visitors', n:1, f:function(r){return r.count}},
         {t:'%', n:1, f:function(r,i,t){return pct(r.count,t)}}
-      ], 'No daily counts for this country.')+
-      (present.length?'':'<p class="muted">This country has no visits in the stored daily location stats.</p>')+
-      '<p><button type="button" id="geo-clear">Clear country filter</button></p>'+
-      '<p class="muted">The hourly chart stays site-wide: GoatCounter does not provide per-hour countries, so it cannot be filtered by country.</p>';
+      ], 'No hourly counts for this country.');
+      html+='<p class="muted">Hourly figures are this country only, from the per-visit export. The site-wide hourly chart above is unchanged.</p>';
+    }
+    html+=listTable(series.map(function(x){return {name:lab(x.day),count:x.count,id:x.day}}),[
+      {t:'Day', f:function(r){return esc(r.name)}},
+      {t:'Visitors', n:1, f:function(r){return r.count}},
+      {t:'%', n:1, f:function(r,i,t){return pct(r.count,t)}}
+    ], 'No daily counts for this country.');
+    if(!present.length) html+='<p class="muted">This country has no visits in the stored daily location stats.</p>';
+    html+='<p><button type="button" id="geo-clear">Clear country filter</button></p>';
+    if(!hourPresent.length) html+='<p class="muted">The hourly chart stays site-wide until a per-visit CSV export is available (Individual pageviews is currently off, so per-hour countries are not stored).</p>';
+    box.innerHTML=html;
     var cl=document.getElementById('geo-clear'); if(cl) cl.onclick=function(){GEO.filter=null;paintCountries()};
   } else {
-    box.innerHTML='<p class="muted">Click a country to see its daily counts. The hourly chart cannot be filtered by country because location stats are daily.</p>';
+    box.innerHTML='<p class="muted">Click a country to see its daily counts'+(hasHourlyCountries()?' and, when present, its hourly series':'')+'.</p>';
   }
 }
 
