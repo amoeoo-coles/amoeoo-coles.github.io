@@ -1,0 +1,54 @@
+# Optional ACI Border Gateway (BGW) objects for interconnecting this ACI
+# fabric with a standalone Cisco NX-OS VXLAN EVPN site.
+#
+# This is NOT part of the Azure Local white paper. Azure Local servers
+# attach to regular leaf nodes (Table 4: node-101 and node-102). BGW nodes
+# must be dedicated leaves and cannot also be tenant L3Out border leaves
+# (Cisco APIC L3 guide 6.2(x), Guidelines and limitations).
+#
+# Every address, node ID, site ID and normalized VNI below is an EXAMPLE
+# for this lab page. The BGW chapters document the objects but do not
+# publish a ready-to-use addressing plan for Azure Local.
+#
+# Beginning with ACI 6.1(4), a normalized VNI translates the VNID that
+# APIC assigned locally to the VNID used in the remote EVPN domain.
+# Before 6.1(4), VNIs had to be symmetrical across the two fabrics.
+#
+# Schema:
+#   https://netascode.cisco.com/docs/data_models/apic/tenants/border_gateway_set_policy/
+#   https://netascode.cisco.com/docs/data_models/apic/tenants/vxlan_vrf_stretch/
+#
+# Related GUI steps that I did not encode, because the sources do not give
+# lab values for them: register the leaf as a BGW node type; configure the
+# VXLAN Infra L3Out (eBGP underlay toward the intersite network); configure
+# the remote VXLAN fabric (remote BGW loopback). Back-to-back connections
+# between an ACI BGW and an NX-OS BGW are not supported.
+
+---
+apic:
+  tenants:
+    - name: infra
+      policies:
+        border_gateway_sets:
+          - name: BGW-set-1
+            # EXAMPLE site ID. From APIC 6.1(2) a unique vxlanSiteId is required
+            # before you can create the border gateway set.
+            vxlan_site_id: 100
+            external_data_plane_ips:
+              - pod_id: 1
+                # EXAMPLE external anycast data-plane TEP for pod 1.
+                ip: 10.0.255.1
+
+    - name: HCI_tenant1
+      vrfs:
+        - name: VRF1
+          vxlan_stretch:
+            border_gateway_set_policy: BGW-set-1
+            # EXAMPLE normalized VNI for the remote EVPN namespace.
+            normalized_vni: 50001
+      bridge_domains:
+        - name: BD1
+          vxlan_stretch:
+            border_gateway_set_policy: BGW-set-1
+            # EXAMPLE normalized VNI for the stretched bridge domain.
+            normalized_vni: 50111

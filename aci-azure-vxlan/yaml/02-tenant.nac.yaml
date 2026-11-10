@@ -1,0 +1,221 @@
+# Network-as-Code tenant objects converted from Tables 5 and 6 and the
+# "Configure EPGs" / "Configure Custom QoS Policy" GUI steps in the Cisco
+# Azure Local / Nexus 9000 white paper (updated 12 December 2024).
+#
+# Schema references:
+#   https://netascode.cisco.com/docs/data_models/apic/tenants/endpoint_group/
+#   https://netascode.cisco.com/docs/data_models/apic/tenants/qos_policy/
+#
+# Example-only: every name, VLAN and subnet is the paper's lab example.
+# Do not apply this file without replacing the values.
+
+---
+apic:
+  tenants:
+    - name: common
+      vrfs:
+        - name: common_VRF
+      policies:
+        qos:
+          - name: Storage_and_Cluster
+            # Mapping used here matches the paper's QoS class section:
+            # Level1 = storage (Cos 4, PFC), Level2 = cluster (Cos 5, no PFC).
+            # The later "Create Custom QoS Policy" GUI steps swap those level
+            # labels (level2 with Dot1P 4 for storage, level1 with 5 for
+            # cluster). Treat that as a documentation inconsistency and keep
+            # the classes aligned with the PFC-enabled Level1 definition.
+            dot1p_classifiers:
+              - priority: level1
+                dot1p_from: 4
+                dot1p_to: 4
+              - priority: level2
+                dot1p_from: 5
+                dot1p_to: 5
+      bridge_domains:
+        - name: Storage-A
+          vrf: common_VRF
+          # Paper: Forwarding = Custom, L2 Unknown Unicast = Flood,
+          # Unicast Routing unchecked. No subnet — storage is L2 only.
+          unicast_routing: false
+          l2_unknown_unicast: flood
+        - name: Storage-B
+          vrf: common_VRF
+          unicast_routing: false
+          l2_unknown_unicast: flood
+        - name: Mgmt
+          vrf: common_VRF
+          subnets:
+            - ip: 10.1.1.254/24
+      application_profiles:
+        # The paper says "select an existing Application Profile (or create
+        # a new one)" in common and does not publish its name. HCI-common
+        # is an example name for this conversion.
+        - name: HCI-common
+          endpoint_groups:
+            - name: Mgmt
+              bridge_domain: Mgmt
+              qos_class: level3
+              physical_domains:
+                - HCI_phys
+              # Table 5: VLAN 1600. Mode can be native if the management
+              # network is untagged (the paper prefers native VLAN).
+              static_ports:
+                - pod_id: 1
+                  node_id: 101
+                  module: 1
+                  port: 11
+                  vlan: 1600
+                  mode: native
+                - pod_id: 1
+                  node_id: 101
+                  module: 1
+                  port: 12
+                  vlan: 1600
+                  mode: native
+                - pod_id: 1
+                  node_id: 102
+                  module: 1
+                  port: 11
+                  vlan: 1600
+                  mode: native
+                - pod_id: 1
+                  node_id: 102
+                  module: 1
+                  port: 12
+                  vlan: 1600
+                  mode: native
+              contracts:
+                consumers:
+                  - Allow-Shared-L3Out
+            - name: Storage-A
+              bridge_domain: Storage-A
+              custom_qos_policy: Storage_and_Cluster
+              physical_domains:
+                - HCI_phys
+              # VLAN: Table 5 lists 1601 (fits HCI_VLAN_pool 1600-1699).
+              # The later GUI procedure uses vlan-107 on Node-101/eth1/11
+              # and Node-102/eth1/11. This file follows Table 5.
+              # Paths below are the procedure's node/port pairs.
+              static_ports:
+                - pod_id: 1
+                  node_id: 101
+                  module: 1
+                  port: 11
+                  vlan: 1601
+                  mode: regular
+                - pod_id: 1
+                  node_id: 102
+                  module: 1
+                  port: 11
+                  vlan: 1601
+                  mode: regular
+            - name: Storage-B
+              bridge_domain: Storage-B
+              custom_qos_policy: Storage_and_Cluster
+              physical_domains:
+                - HCI_phys
+              # Table 5: VLAN 1602. Procedure uses vlan-207 on eth1/12 of
+              # Node-101 and Node-102.
+              static_ports:
+                - pod_id: 1
+                  node_id: 101
+                  module: 1
+                  port: 12
+                  vlan: 1602
+                  mode: regular
+                - pod_id: 1
+                  node_id: 102
+                  module: 1
+                  port: 12
+                  vlan: 1602
+                  mode: regular
+      contracts:
+        # Table 5: Allow-Shared-L3Out provided by common. The Shared L3Out
+        # itself is not configured in the paper.
+        - name: Allow-Shared-L3Out
+          scope: global
+          subjects:
+            - name: Subject1
+              # The paper does not publish filter entries.
+              filters: []
+
+    - name: HCI_tenant1
+      vrfs:
+        - name: VRF1
+      bridge_domains:
+        - name: BD1
+          vrf: VRF1
+          subnets:
+            - ip: 192.168.1.254/24
+      application_profiles:
+        - name: AP1
+          endpoint_groups:
+            - name: Web
+              bridge_domain: BD1
+              qos_class: level3
+              physical_domains:
+                - HCI_phys
+              static_ports:
+                - pod_id: 1
+                  node_id: 101
+                  port: 11
+                  vlan: 1611
+                  mode: regular
+                - pod_id: 1
+                  node_id: 101
+                  port: 12
+                  vlan: 1611
+                  mode: regular
+                - pod_id: 1
+                  node_id: 102
+                  port: 11
+                  vlan: 1611
+                  mode: regular
+                - pod_id: 1
+                  node_id: 102
+                  port: 12
+                  vlan: 1611
+                  mode: regular
+              contracts:
+                consumers:
+                  - Web-to-App
+                  - Allow-Shared-L3Out
+            - name: App
+              bridge_domain: BD1
+              qos_class: level3
+              physical_domains:
+                - HCI_phys
+              static_ports:
+                - pod_id: 1
+                  node_id: 101
+                  port: 11
+                  vlan: 1612
+                  mode: regular
+                - pod_id: 1
+                  node_id: 101
+                  port: 12
+                  vlan: 1612
+                  mode: regular
+                - pod_id: 1
+                  node_id: 102
+                  port: 11
+                  vlan: 1612
+                  mode: regular
+                - pod_id: 1
+                  node_id: 102
+                  port: 12
+                  vlan: 1612
+                  mode: regular
+              contracts:
+                providers:
+                  - Web-to-App
+                consumers:
+                  - Allow-Shared-L3Out
+      contracts:
+        - name: Web-to-App
+          scope: context
+          subjects:
+            - name: Subject1
+              # Paper: "choose an existing filter (or create a new filter)".
+              # No filter name or entries are published.
+              filters: []
