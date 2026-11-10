@@ -94,6 +94,127 @@ def write_daily(total, source, now_utc, now_mel):
     )
 
 
+SIZE_NAMES = {
+    "phone": "Phone",
+    "tablet": "Tablet",
+    "desktop": "Desktop",
+    "desktophd": "Desktop HD",
+    "unknown": "Unknown",
+}
+DETAIL_SRC = (
+    "GoatCounter API /api/v0/stats/* (read-only). "
+    "Hourly visitor totals and top pages come from /stats/total and /stats/hits (true per Melbourne hour). "
+    "Country, referrer, browser, system and screen-size counts come from the matching dimension endpoints, "
+    "which GoatCounter records once per Melbourne day — not per hour. "
+    "A per-hit CSV export would give true hourly countries, but this site's API token is read-statistics only "
+    "and cannot start an export."
+)
+
+
+def _clean_ref(name):
+    n = (name or "").strip()
+    return n if n else "(direct)"
+
+
+def _dim(path, **q):
+    rows = []
+    try:
+        for x in get(path, limit=100, **q).get("stats", []):
+            item = {"name": x.get("name") or x.get("id") or "", "count": int(x.get("count") or 0)}
+            if x.get("id"):
+                item["id"] = x.get("id")
+            if path.endswith("/sizes"):
+                item["name"] = SIZE_NAMES.get(str(x.get("id") or ""), x.get("name") or str(x.get("id") or "Unknown"))
+            if path.endswith("/toprefs"):
+                item["name"] = _clean_ref(x.get("name"))
+            if item["count"]:
+                rows.append(item)
+    except Exception:
+        return None
+    return rows
+
+
+def write_detail(page_rows, now_utc, now_mel, prev):
+    """Write visitors/detail.json (aggregated counts only)."""
+    prev_d = load_prev("visitors/detail.json") or (prev.get("detail") if isinstance(prev, dict) else {}) or {}
+    today = now_mel.date()
+    start_d = dt.date.fromisoformat(SINCE)
+    days = []
+    errors = []
+    d = start_d
+    while d <= today:
+        start = dt.datetime(d.year, d.month, d.day, tzinfo=MEL)
+        end = start + dt.timedelta(days=1)
+        q = dict(start=start.isoformat(), end=end.isoformat())
+        rec = {"day": d.isoformat()}
+        for key, path in (
+            ("countries", "/stats/locations"),
+            ("refs", "/stats/toprefs"),
+            ("browsers", "/stats/browsers"),
+            ("systems", "/stats/systems"),
+            ("sizes", "/stats/sizes"),
+        ):
+            rows = _dim(path, **q)
+            if rows is None:
+                errors.append(path + " " + d.isoformat())
+                # keep previous day's rows if we already had them
+                old = next((x for x in (prev_d.get("days") or []) if x.get("day") == d.isoformat()), None)
+                rec[key] = (old or {}).get(key) or []
+            else:
+                rec[key] = rows
+            time.sleep(0.12)
+        days.append(rec)
+        d += dt.timedelta(days=1)
+
+    # Last 72 Melbourne hours of top pages (covers the 48-hour chart with a buffer).
+    cutoff = now_mel.replace(minute=0, second=0, microsecond=0) - dt.timedelta(hours=72)
+    buckets = {}
+    for p in page_rows or []:
+        path, title = p.get("path") or "/", p.get("title") or ""
+        for day, hour, count in p.get("_hourly") or []:
+            try:
+                when = dt.datetime.strptime(day, "%Y-%m-%d").replace(tzinfo=MEL) + dt.timedelta(hours=int(hour))
+            except ValueError:
+                continue
+            if when < cutoff:
+                continue
+            key = day + "|" + str(int(hour))
+            buckets.setdefault(key, []).append({"path": path, "title": title, "count": int(count)})
+    hour_pages = {}
+    for key, rows in buckets.items():
+        rows.sort(key=lambda x: (-x["count"], x["path"] or ""))
+        hour_pages[key] = rows[:15]
+    if not hour_pages and (prev_d.get("hour_pages") or {}):
+        hour_pages = prev_d["hour_pages"]
+
+    out = {
+        "source": DETAIL_SRC,
+        "site": SITE,
+        "generated_utc": now_utc.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "as_of_aedt": now_mel.strftime("%Y-%m-%d %H:%M %Z"),
+        "timezone": "Australia/Melbourne",
+        "since": SINCE,
+        "days": days,
+        "hour_pages": hour_pages,
+    }
+    if errors:
+        out["errors"] = errors[:20]
+    os.makedirs("visitors", exist_ok=True)
+    with open("visitors/detail.json", "w") as f:
+        json.dump(out, f, indent=1)
+        f.write("\n")
+    print(
+        "detail.json",
+        "days",
+        len(days),
+        "hours_with_pages",
+        len(hour_pages),
+        "errors",
+        len(errors),
+    )
+
+
+
 def main():
     now_utc = dt.datetime.now(dt.timezone.utc)
     now_mel = now_utc.astimezone(MEL)
@@ -141,6 +262,13 @@ def main():
                         for st in (x.get("stats") or [])
                         if st.get("daily")
                     },
+                    "_hourly": [
+                        (st.get("day"), i, v)
+                        for st in (x.get("stats") or [])
+                        if st.get("day")
+                        for i, v in enumerate(st.get("hourly") or [])
+                        if v
+                    ],
                 }
                 for x in hits
             ]
@@ -181,6 +309,13 @@ def main():
                 out[k + "_error"] = str(e) + " (kept previous)"
             else:
                 out[k + "_error"] = str(e)
+    # Compact public detail file: per-day countries/refs/devices, and per-hour top pages.
+    # Never write IPs, sessions, or raw user agents. Strip _hourly from pages first.
+    hour_src = out.get("pages") or []
+    write_detail(hour_src, now_utc, now_mel, prev)
+    for p in out.get("pages") or []:
+        p.pop("_hourly", None)
+
     os.makedirs("data", exist_ok=True)
     with open("data/visitors.json", "w") as f:
         json.dump(out, f, indent=1)

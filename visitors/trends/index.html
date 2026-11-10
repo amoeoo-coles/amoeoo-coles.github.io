@@ -428,10 +428,6 @@ html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5
 
 </style>
 
-
-
-
-
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Visitor Trends - ACI Always on APIC Monitoring</title>
 <style>
@@ -468,8 +464,12 @@ th.s{cursor:pointer;user-select:none}th.s:hover{color:#8cf}th.s .ar{opacity:.45;
 .kpi b{display:block;font-size:22px;color:#6c6}
 .asof{font-weight:600;color:#d6e9ff}
 .ht{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 10px;margin:8px 0 4px;font:12px/1.35 system-ui,Arial,sans-serif}
-.ht div{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid #2a3446;padding:2px 0}
+.ht button.hr{display:flex;justify-content:space-between;gap:8px;width:100%;border:0;border-bottom:1px solid var(--line,#2a3446);padding:4px 0;background:transparent;color:inherit;font:inherit;cursor:pointer;text-align:left}
+.ht button.hr:hover{background:rgba(37,99,235,.18)}
 .ht b{font-variant-numeric:tabular-nums}
+html[data-theme="light"] body{background:var(--bg,#f8fafc);color:var(--ink,#0f172a)}
+html[data-theme="light"] .card,html[data-theme="light"] .spark,html[data-theme="light"] .kpi{background:var(--card,#fff);border-color:var(--line,#e2e8f0);color:var(--ink,#0f172a)}
+html[data-theme="light"] .muted{color:var(--muted,#475569)}
 </style></head><body>
 <!-- theme-toggle v2 -->
 <script id="tt-script">(function(){
@@ -504,14 +504,10 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
 })();</script>
 
 
-
-
-
-
 <main>
 <nav class="site"><a href="/">Home</a></nav>
 <h1><span class="tt-keep">📈</span> Visitor Trends</h1>
-<p class="muted">Hourly totals for the last 48 Melbourne hours (every hour labelled, zeros filled), daily totals, menu-group lines, risers and fallers, and per-page sparklines. Counts are unique visitors per page per Melbourne day (GoatCounter). Charts update from <code>/data/visitors.json</code> and <code>/visitors/daily.json</code>.</p>
+<p class="muted">Hourly totals for the last 48 Melbourne hours (every hour labelled, zeros filled), daily totals, menu-group lines, risers and fallers, and per-page sparklines. Counts are unique visitors per page per Melbourne day (GoatCounter). Click an hour for its pages and for that Melbourne day's countries. Country totals are daily (GoatCounter does not provide per-hour locations on the statistics API). Charts update from <code>/data/visitors.json</code>, <code>/visitors/daily.json</code> and <code>/visitors/detail.json</code>.</p>
 <p class="muted"><a href="/visitors/">← Back to Visitors</a></p>
 <div class="controls" id="period" role="group" aria-label="Period">
 <button type="button" data-p="7">7 days</button>
@@ -520,7 +516,8 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
 <button type="button" data-p="0" class="on">All</button>
 </div>
 <div class="kpis" id="kpis"></div>
-<div class="card"><h3>Hourly visitors · last 48 hours (Australia/Melbourne)</h3><div class="chart" id="hourly"><p class="muted">Loading…</p></div><div id="hourly-table"></div></div>
+<div class="card"><h3>Hourly visitors · last 48 hours (Australia/Melbourne)</h3><div class="chart" id="hourly"><p class="muted">Loading…</p></div><div id="hourly-table"></div><div id="hour-detail" class="hour-detail" hidden></div></div>
+<section id="geo" aria-label="Visitors by country"><h2>Visitors by country</h2><p class="muted" id="geo-note"></p><div class="controls" id="geo-periods" role="group" aria-label="Country period"></div><div id="geo-chart" class="chart"></div><div id="geo-table"></div><div id="geo-filter"></div></section>
 <div class="card"><h3>Daily total and 7-day moving average</h3><div class="chart" id="daily"><p class="muted">Loading…</p></div></div>
 <div class="card"><h3>By menu group</h3><div class="chart" id="bygroup"><p class="muted">Loading…</p></div></div>
 <h2>Top risers and fallers</h2>
@@ -532,6 +529,7 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
 <p class="muted" id="src"></p>
 </main>
 <script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc){const pt=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Melbourne",hour:"2-digit",minute:"2-digit",hour12:false,hourCycle:"h23",timeZoneName:"short"}).formatToParts(new Date(d.updated_utc));const g=t=>(pt.find(x=>x.type===t)||{}).value||"";const tz=(g("timeZoneName")||"AEDT").replace("GMT+11","AEDT").replace("GMT+10","AEST");e.textContent=" (data as of "+g("hour")+":"+g("minute")+" "+tz+")"}})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script>
+<script src="/visitors/geo.js" defer></script>
 <script>
 (function(){
 var GROUPS=[{"name":"Home","urls":["/"]},{"name":"NetBox","urls":["/tasks/netbox/","/netbox-aci-tenants/","/netbox-aci-tenants/diagrams/","/netbox-aci-objects/","/netbox-hw-inventory/","/netbox-yaml-model/","/netbox-yaml-model/aoapic/","/netbox-yaml-model/arr/"]},{"name":"Provisioning","urls":["/tasks/provisioning/","/report17-aoapic-monitoring/pending-provisioning/","/report17-aoapic-monitoring/universal-provisioning/"]},{"name":"Monitoring","urls":["/tasks/monitoring/","/report17-aoapic-monitoring/","/report17-aoapic-monitoring/tenants/","/report17-aoapic-monitoring/objects/","/grafana-screenshots/","/grafana-screenshots-part2/"]},{"name":"Testing","urls":["/tasks/testing/","/aoapic-nac-test-status/","/testing/aoapic-defaults/","/testing/arr-defaults/","/testing/defaults-compare/"]},{"name":"ACI Policy","urls":["/aci-policy/","/aci-policy/","/aci-policy/policy-universe/","/aci-policy/tenants/","/aci-policy/policy-tenant/","/aci-policy/aci-lab-guide-policy/","/aci-policy/fabric-access-inventory/","/aci-policy/pod-policy-group/"]},{"name":"ACI Lab Guide","urls":["/aci-lab-guide/","/aci-lab-guide/","/aci-lab-guide/introduction/","/aci-lab-guide/aci-basics/","/aci-lab-guide/access-policies/","/aci-lab-guide/vmm/","/aci-lab-guide/tenants/","/aci-lab-guide/day2/","/aci-lab-guide/esg/","/aci-lab-guide/segmentation/","/aci-lab-guide/nexus-dashboard/","/aci-lab-guide/orchestrator/","/aci-lab-guide/insights/","/aci-lab-guide/conclusion/","/aci-lab-guide/references/"]},{"name":"MCP Servers","urls":["/mcp-servers/","/mcp-servers/","/mcp-servers/aci/","/mcp-servers/nexus-dashboard/","/mcp-servers/dna/"]},{"name":"ITIL","urls":["/tasks/itil/","/itil/aoapic/","/itil/arr/","/itil/wiki/"]},{"name":"RoadMap","urls":["/roadmap/","/roadmap/","/mindmap/"]},{"name":"Visitors","urls":["/visitors/","/visitors/","/status/","/visitors/trends/"]}];
@@ -603,6 +601,7 @@ function lineChart(opts){
   if(ser.area&&vals.length){area='M'+X(0)+' '+Y(0);vals.forEach(function(v,i){area+=' L'+X(i)+' '+Y(v||0)});area+=' L'+X(n-1)+' '+Y(0)+' Z';s+='<path d="'+area+'" class="area" style="fill:'+ser.color+';stroke:'+ser.color+'"/>'}
   if(pts.length){s+='<polyline class="line" points="'+pts.join(' ')+'" style="stroke:'+ser.color+(ser.dashed?';stroke-dasharray:4 3':'')+'"/>'}
  });
+ (opts.hours||[]).forEach(function(p,i){if(!p||p.day==null)return;var x0=i===0?L:(X(i-1)+X(i))/2,x1=i===n-1?(L+w):(X(i)+X(i+1))/2;s+='<rect class="hit" data-day="'+esc(p.day)+'" data-h="'+p.h+'" x="'+x0+'" y="'+T+'" width="'+Math.max(2,x1-x0)+'" height="'+h+'" fill="transparent" style="cursor:pointer"><title>'+esc(p.x||'')+': '+p.v+' visitors. Click for details.</title></rect>'});
  s+='</svg>';
  return s;
 }
@@ -706,10 +705,10 @@ function render(d, daily){
   if(!hrs.length){el.innerHTML='<p class="muted">No hourly data yet.</p>';if(tbl)tbl.innerHTML='';return;}
   var labels=hrs.map(function(x){return x.x});
   var vals=hrs.map(function(x){return x.v});
-  el.innerHTML=lineChart({title:'Hourly visitors',labels:labels,series:[{name:'Visitors',color:'#22c55e',vals:vals,area:true}],height:260})+
-   '<div class="legend"><span class="asof">'+esc(asOfLabel(asOf))+'</span><span>Last '+hrs.length+' hours, every Melbourne hour shown, zeros filled. Hours after the stamp are omitted.</span></div>';
+  el.innerHTML=lineChart({title:'Hourly visitors',labels:labels,series:[{name:'Visitors',color:'#22c55e',vals:vals,area:true}],hours:hrs,height:260})+
+   '<div class="legend"><span class="asof">'+esc(asOfLabel(asOf))+'</span><span>Last '+hrs.length+' hours, every Melbourne hour shown, zeros filled. Hours after the stamp are omitted. Click a bar or a row for that hour\'s pages and that day\'s countries.</span></div>';
   if(tbl){
-   tbl.innerHTML='<div class="ht">'+hrs.map(function(x){return '<div><span>'+esc((x.h===0?lab(x.day)+' ':'')+String(x.h).padStart(2,'0')+':00')+'</span><b>'+x.v+'</b></div>'}).join('')+'</div>';
+   tbl.innerHTML='<div class="ht">'+hrs.map(function(x){return '<button type="button" class="hr" data-day="'+esc(x.day)+'" data-h="'+x.h+'"><span>'+esc((x.h===0?lab(x.day)+' ':'')+String(x.h).padStart(2,'0')+':00')+'</span><b>'+x.v+'</b></button>'}).join('')+'</div>';
   }
  }
 
