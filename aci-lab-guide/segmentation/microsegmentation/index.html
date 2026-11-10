@@ -1,6 +1,333 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel). */
+nav.site,
+nav.site.im{
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+}
+nav.site{margin-right:110px!important}
+@media (min-width:721px){nav.site{margin-right:370px!important}}
+nav.site.im a.mi{
+  background:var(--menu-pill)!important;
+  border-color:var(--menu-pill-bd)!important;
+  color:var(--menu-pill-fg)!important;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im .im-sub{
+  background:var(--menu-sub)!important;
+  border-left-color:var(--menu-on)!important;
+}
+nav.site.im a.sl{color:var(--link)!important}
+nav.site.im a.mi .im-n{background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+
+/* Toggle + Suggest stay readable on both themes and are not inverted. */
+#tt-wrap{position:fixed;top:6px;right:10px;z-index:2147483000;display:flex;gap:6px;align-items:center}
+#sg-link,#tt-btn{
+  font:600 12px/1 system-ui,Arial,sans-serif;padding:6px 10px;border-radius:16px;
+  border:1px solid var(--btn-bd);background:var(--btn-bg);color:var(--btn-fg);
+  cursor:pointer;opacity:.92;text-decoration:none;white-space:nowrap;
+}
+#sg-link:hover,#tt-btn:hover{opacity:1}
+#sg-link .sg-short{display:none}
+@media (max-width:720px){#sg-link .sg-wide{display:none}#sg-link .sg-short{display:inline}}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ACI MicroSegmentation — amoeoo-coles</title>
@@ -127,26 +454,23 @@ a.dn-chip:hover{background:#dbeafe;color:#1d4ed8}
 </style>
 </head>
 <body>
-<!-- theme-toggle v1 -->
-<style id="tt-style">
-html.tt-invert{filter:invert(1) hue-rotate(180deg)}
-nav.site{margin-right:110px!important}
-@media (min-width:721px){nav.site{margin-right:370px!important}}
-html.tt-invert img,html.tt-invert video,html.tt-invert picture,html.tt-invert iframe,html.tt-invert .tt-keep{filter:invert(1) hue-rotate(180deg)}
-#tt-wrap{position:fixed;top:6px;right:10px;z-index:2147483000;display:flex;gap:6px;align-items:center}
-#sg-link,#tt-btn{font:600 12px/1 system-ui,Arial,sans-serif;padding:6px 10px;border-radius:16px;border:1px solid #888;background:#222;color:#fff;cursor:pointer;opacity:.9;text-decoration:none;white-space:nowrap}
-#sg-link:hover,#tt-btn:hover{opacity:1}
-#sg-link .sg-short{display:none}
-@media (max-width:720px){#sg-link .sg-wide{display:none}#sg-link .sg-short{display:inline}}
-html.tt-invert #tt-wrap{filter:invert(1) hue-rotate(180deg)}
-</style>
+<!-- theme-toggle v2 -->
 <script id="tt-script">(function(){
-function lum(c){var m=(c||'').match(/\d+(\.\d+)?/g);if(!m||(m.length>3&&+m[3]===0))return null;return (0.299*m[0]+0.587*m[1]+0.114*m[2])/255;}
-var b=document.body,h=document.documentElement;
-var l=lum(getComputedStyle(b).backgroundColor);if(l===null)l=lum(getComputedStyle(h).backgroundColor);if(l===null)l=1;
-var nativeMode=l<0.5?'dark':'light';var nbg=getComputedStyle(b).backgroundColor;if(lum(nbg)!==null)h.style.backgroundColor=nbg;
-function cur(){try{return localStorage.getItem('siteTheme')||nativeMode}catch(e){return nativeMode}}
-function apply(m){h.classList.toggle('tt-invert',m!==nativeMode);var btn=document.getElementById('tt-btn');if(btn)btn.textContent=(m==='dark'?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark');if(btn)btn.title='Switch to '+(m==='dark'?'white':'black')+' background';}
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
 var wrap=document.createElement('div');wrap.id='tt-wrap';
 var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
 sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
@@ -154,10 +478,14 @@ sg.title='Have an idea? Suggest on GitHub';
 sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
 wrap.appendChild(sg);
 var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
-b.insertBefore(wrap,b.firstChild);
-btn.onclick=function(){var m=cur()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
-apply(cur());
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
 })();</script>
+
+
+
 <!-- site-menu v1 --><nav class="site" style="padding:8px 12px;font:14px system-ui,Arial,sans-serif;background:#111;color:#bbb;border-bottom:1px solid #333"><a style="color:#8ecbff" href="/">Home</a> | <a style="color:#8ecbff" href="/report17-aoapic-monitoring/tenants/">Tenants Detail</a> | <a style="color:#8ecbff" href="/netbox-aci-tenants/">NetBox ACI Tenants</a> | <a style="color:#8ecbff" href="/netbox-aci-tenants/diagrams/">Tenant Diagrams</a> | <a style="color:#8ecbff" href="/netbox-aci-objects/">NB ACI Objects</a> | <a style="color:#8ecbff" href="/netbox-yaml-model/">YAML Model</a> | <a style="color:#8ecbff" href="/netbox-yaml-model/aoapic/">AOAPIC Model</a> | <a style="color:#8ecbff" href="/netbox-yaml-model/arr/">ARR Model</a> | <a style="color:#8ecbff" href="/report17-aoapic-monitoring/pending-provisioning/">Pending Provisioning</a> | <a style="color:#8ecbff" href="/report17-aoapic-monitoring/universal-provisioning/">Universal Provisioning</a> | <a style="color:#8ecbff" href="/report17-aoapic-monitoring/objects/">Object Drill-down</a> | <a style="color:#8ecbff" href="/report17-aoapic-monitoring/">Report 17</a> | <a style="color:#8ecbff" href="/grafana-screenshots/">Group 1</a> | <a style="color:#8ecbff" href="/grafana-screenshots-part2/">Group 2</a> | <a style="color:#8ecbff" href="/visitors/">Visitors</a> | <a style="color:#8ecbff" href="https://amoeoo-coles.github.io/aoapic-nac-test-status/">nac-test Status</a></nav>
 
 <main>
@@ -282,15 +610,15 @@ function aciCopyText(btn, text){
 <script>window.goatcounter={path:function(){return location.pathname.replace(/\/+$/,"")||"/"}}</script><script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc)e.textContent=" (counts as of "+new Date(d.updated_utc).toLocaleString("en-AU",{timeZone:"Australia/Melbourne",day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})+")"})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script>
 <!-- icon-menu v1 -->
 <style id="im-style">
-nav.site.im{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:6px 0;font:600 12.5px/1 system-ui,Arial,sans-serif}
-nav.site.im a.mi{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:18px;border:1px solid #3a4456;background:#1b2330;color:#d6e9ff!important;text-decoration:none!important;transition:background .12s,transform .12s}
-nav.site.im a.mi:hover{background:#26344a;transform:translateY(-1px)}
-nav.site.im a.mi.on{background:#2563eb;border-color:#2563eb;color:#fff!important}
+nav.site.im{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:6px 0;font:600 12.5px/1 system-ui,Arial,sans-serif;flex-direction:column;align-items:flex-start}
+nav.site.im a.mi{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important;transition:background .12s,transform .12s}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a);transform:translateY(-1px)}
+nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
 nav.site.im a.mi .ic{font-size:15px;line-height:1}
-nav.site.im{flex-direction:column;align-items:flex-start}nav.site.im .im-main,nav.site.im .im-sub{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-nav.site.im .im-sub{margin-top:2px;padding:5px 8px;border-left:3px solid #2563eb;background:rgba(37,99,235,.08);border-radius:8px}
+nav.site.im .im-main,nav.site.im .im-sub{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+nav.site.im .im-sub{margin-top:2px;padding:5px 8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
 nav.site.im a.mi.sm{padding:4px 9px;font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
-nav.site.im a.sl{color:#8ecbff!important;font-size:12px;margin-right:4px;text-decoration:none}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;margin-right:4px;text-decoration:none}
 nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 5px;margin-left:2px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
 nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
 </style>
