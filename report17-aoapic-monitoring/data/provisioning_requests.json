@@ -2,6 +2,225 @@
  "note": "Provisioning requests shown on Report 17. Set deployment_evidence {target, run_id, verified_at} only after a target-specific verified deployment; otherwise the request stays Pending.",
  "requests": [
   {
+   "name": "Cursor_tenant5 – DMZ L3Out + contracts",
+   "origin": "cursor-tenant5-dmz-contracts-prepare",
+   "netbox_tenant": "Cursor_tenant5",
+   "kind": "ACI tenant enhancement (DMZ L3Out, contracts, unknown_unicast=proxy)",
+   "source": "Prepared from NetBox GET + AOAPIC read-only GET; NaC YAML in /workspace/aci-nac/approvals/Cursor_tenant5-dmz-contracts-20261110-1058",
+   "requested_at": "2026-11-10T10:58:00+11:00",
+   "target": "AOAPIC (sandboxapicdc.cisco.com)",
+   "status": "Pending — awaiting Aung's explicit APIC/NetBox write approval: 7 BD modifications (flood→proxy), 16 new objects (filters/contracts/bindings/L3Out). Placeholders must be confirmed. Not applied.",
+   "deployment_evidence": null,
+   "preflight": null,
+   "note": "PREPARE ONLY. Chat intent 10 Nov 2026: DMZ L3Out, contracts between web/app/db, unknown_unicast=proxy. No live write until Aung names the objects and approves.",
+   "history_note": "Approvals package /workspace/aci-nac/approvals/Cursor_tenant5-dmz-contracts-20261110-1058: plan.md + Cursor_tenant5.nac.yaml. Dry-run = APIC GET diff + nac_tenant lookup (ansible tenant.yml cannot create filters/contracts/L3Out).",
+   "planned_structure": {
+    "label": "Proposed NaC intent (not on AOAPIC yet for new objects; BDs differ)",
+    "source": "/workspace/aci-nac/approvals/Cursor_tenant5-dmz-contracts-20261110-1058",
+    "generated": "2026-11-10T10:58:00+11:00",
+    "object_counts": {
+     "total": 23,
+     "modify_bd": 7,
+     "create": 16
+    },
+    "vni_note": "Existing BD/EPG VNIs unchanged; new objects get IDs on deploy.",
+    "not_in_scope": "FW service-graph / PBR not included; L3Out peer/routing protocol placeholders; NetBox plugin does not model contracts/L3Outs.",
+    "tenant": {
+     "name": "Cursor_tenant5"
+    }
+   },
+   "planned_objects": {
+    "title": "Objects (23) — 7 differing BDs, 16 missing",
+    "source": "AOAPIC read-only + proposed NaC YAML 20261110-1058 AEDT",
+    "objects": [
+     {
+      "type": "Bridge domain",
+      "class": "fvBD",
+      "name": "cursor5_app_bd",
+      "dn": "uni/tn-Cursor_tenant5/BD-cursor5_app_bd",
+      "vni": "n/a",
+      "status": "on AOAPIC — differs: unknown unicast desired proxy / AOAPIC flood"
+     },
+     {
+      "type": "Bridge domain",
+      "class": "fvBD",
+      "name": "cursor5_db_bd",
+      "dn": "uni/tn-Cursor_tenant5/BD-cursor5_db_bd",
+      "vni": "n/a",
+      "status": "on AOAPIC — differs: unknown unicast desired proxy / AOAPIC flood"
+     },
+     {
+      "type": "Bridge domain",
+      "class": "fvBD",
+      "name": "cursor5_fw_app_bd",
+      "dn": "uni/tn-Cursor_tenant5/BD-cursor5_fw_app_bd",
+      "vni": "n/a",
+      "status": "on AOAPIC — differs: unknown unicast desired proxy / AOAPIC flood"
+     },
+     {
+      "type": "Bridge domain",
+      "class": "fvBD",
+      "name": "cursor5_fw_db_bd",
+      "dn": "uni/tn-Cursor_tenant5/BD-cursor5_fw_db_bd",
+      "vni": "n/a",
+      "status": "on AOAPIC — differs: unknown unicast desired proxy / AOAPIC flood"
+     },
+     {
+      "type": "Bridge domain",
+      "class": "fvBD",
+      "name": "cursor5_fw_dmz_bd",
+      "dn": "uni/tn-Cursor_tenant5/BD-cursor5_fw_dmz_bd",
+      "vni": "n/a",
+      "status": "on AOAPIC — differs: unknown unicast desired proxy / AOAPIC flood"
+     },
+     {
+      "type": "Bridge domain",
+      "class": "fvBD",
+      "name": "cursor5_fw_web_bd",
+      "dn": "uni/tn-Cursor_tenant5/BD-cursor5_fw_web_bd",
+      "vni": "n/a",
+      "status": "on AOAPIC — differs: unknown unicast desired proxy / AOAPIC flood"
+     },
+     {
+      "type": "Bridge domain",
+      "class": "fvBD",
+      "name": "cursor5_web_bd",
+      "dn": "uni/tn-Cursor_tenant5/BD-cursor5_web_bd",
+      "vni": "n/a",
+      "status": "on AOAPIC — differs: unknown unicast desired proxy / AOAPIC flood"
+     },
+     {
+      "type": "Filter",
+      "class": "vzFilter",
+      "name": "flt-http-https (tcp/80,443)",
+      "dn": "uni/tn-Cursor_tenant5/flt-flt-http-https",
+      "vni": "n/a",
+      "status": "missing on AOAPIC"
+     },
+     {
+      "type": "Filter",
+      "class": "vzFilter",
+      "name": "flt-web-to-app (tcp/8080,443)",
+      "dn": "uni/tn-Cursor_tenant5/flt-flt-web-to-app",
+      "vni": "n/a",
+      "status": "missing on AOAPIC"
+     },
+     {
+      "type": "Filter",
+      "class": "vzFilter",
+      "name": "flt-app-to-db (tcp/1433,3306,5432)",
+      "dn": "uni/tn-Cursor_tenant5/flt-flt-app-to-db",
+      "vni": "n/a",
+      "status": "missing on AOAPIC"
+     },
+     {
+      "type": "Contract",
+      "class": "vzBrCP",
+      "name": "dmz-to-web",
+      "dn": "uni/tn-Cursor_tenant5/brc-dmz-to-web",
+      "vni": "n/a",
+      "status": "missing on AOAPIC"
+     },
+     {
+      "type": "Contract",
+      "class": "vzBrCP",
+      "name": "web-to-app",
+      "dn": "uni/tn-Cursor_tenant5/brc-web-to-app",
+      "vni": "n/a",
+      "status": "missing on AOAPIC"
+     },
+     {
+      "type": "Contract",
+      "class": "vzBrCP",
+      "name": "app-to-db",
+      "dn": "uni/tn-Cursor_tenant5/brc-app-to-db",
+      "vni": "n/a",
+      "status": "missing on AOAPIC"
+     },
+     {
+      "type": "Contract binding",
+      "class": "fvRsProv",
+      "name": "cursor5_ap/web provider dmz-to-web",
+      "dn": "uni/tn-Cursor_tenant5/ap-cursor5_ap/epg-web/rsprov-dmz-to-web",
+      "vni": "n/a",
+      "status": "missing on AOAPIC"
+     },
+     {
+      "type": "Contract binding",
+      "class": "fvRsCons",
+      "name": "cursor5_ap/web consumer web-to-app",
+      "dn": "uni/tn-Cursor_tenant5/ap-cursor5_ap/epg-web/rscons-web-to-app",
+      "vni": "n/a",
+      "status": "missing on AOAPIC"
+     },
+     {
+      "type": "Contract binding",
+      "class": "fvRsProv",
+      "name": "cursor5_ap/app provider web-to-app",
+      "dn": "uni/tn-Cursor_tenant5/ap-cursor5_ap/epg-app/rsprov-web-to-app",
+      "vni": "n/a",
+      "status": "missing on AOAPIC"
+     },
+     {
+      "type": "Contract binding",
+      "class": "fvRsCons",
+      "name": "cursor5_ap/app consumer app-to-db",
+      "dn": "uni/tn-Cursor_tenant5/ap-cursor5_ap/epg-app/rscons-app-to-db",
+      "vni": "n/a",
+      "status": "missing on AOAPIC"
+     },
+     {
+      "type": "Contract binding",
+      "class": "fvRsProv",
+      "name": "cursor5_ap/db provider app-to-db",
+      "dn": "uni/tn-Cursor_tenant5/ap-cursor5_ap/epg-db/rsprov-app-to-db",
+      "vni": "n/a",
+      "status": "missing on AOAPIC"
+     },
+     {
+      "type": "Contract binding",
+      "class": "fvRsCons",
+      "name": "DMZ_ExtEPG consumer dmz-to-web",
+      "dn": "uni/tn-Cursor_tenant5/out-DMZ_L3Out/instP-DMZ_ExtEPG/rscons-dmz-to-web",
+      "vni": "n/a",
+      "status": "missing on AOAPIC"
+     },
+     {
+      "type": "L3Out",
+      "class": "l3extOut",
+      "name": "DMZ_L3Out",
+      "dn": "uni/tn-Cursor_tenant5/out-DMZ_L3Out",
+      "vni": "n/a",
+      "status": "missing on AOAPIC — PLACEHOLDER wiring"
+     },
+     {
+      "type": "L3Out node profile",
+      "class": "l3extLNodeP",
+      "name": "DMZ_L3Out_nodeProfile (node 101, router_id PLACEHOLDER)",
+      "dn": "uni/tn-Cursor_tenant5/out-DMZ_L3Out/lnodep-DMZ_L3Out_nodeProfile",
+      "vni": "n/a",
+      "status": "missing on AOAPIC"
+     },
+     {
+      "type": "L3Out interface",
+      "class": "l3extRsPathL3OutAtt",
+      "name": "Leaf-101 eth1/20 PLACEHOLDER 10.250.50.1/30",
+      "dn": "uni/tn-Cursor_tenant5/out-DMZ_L3Out/lnodep-DMZ_L3Out_nodeProfile/lifp-DMZ_L3Out_interfaceProfile/rspathL3OutAtt-[topology/pod-1/paths-101/pathep-[eth1/20]]",
+      "vni": "n/a",
+      "status": "missing on AOAPIC"
+     },
+     {
+      "type": "External EPG",
+      "class": "l3extInstP",
+      "name": "DMZ_ExtEPG (0.0.0.0/0 PLACEHOLDER)",
+      "dn": "uni/tn-Cursor_tenant5/out-DMZ_L3Out/instP-DMZ_ExtEPG",
+      "vni": "n/a",
+      "status": "missing on AOAPIC"
+     }
+    ]
+   }
+  },
+  {
    "name": "Cursor_tenant5",
    "kind": "ACI tenant",
    "source": "NetBox provisioning process",
@@ -878,9 +1097,9 @@
    "target": "AOAPIC (sandboxapicdc.cisco.com)",
    "status": "Pending — awaiting Aung's decision: 0 missing, 3 differing objects on AOAPIC. Not applied.",
    "deployment_evidence": null,
-   "note": "Applying needs Aung's explicit approval. Compared object by object with a fresh read-only AOAPIC read at 2026-11-08 23:35 AEDT.",
+   "note": "Aung chose unknown_unicast=proxy on 10 Nov 2026. See also pending request \"Cursor_tenant5 – DMZ L3Out + contracts\" for the full prepare package. Not applied.",
    "preflight": null,
-   "history_note": "No fresh preflight has been run for this request. Differences: cursor5_app_bd: unknown unicast NetBox proxy / AOAPIC flood; cursor5_db_bd: unknown unicast NetBox proxy / AOAPIC flood; cursor5_web_bd: unknown unicast NetBox proxy / AOAPIC flood.",
+   "history_note": "No fresh preflight has been run for this request. Differences: cursor5_app_bd: unknown unicast NetBox proxy / AOAPIC flood; cursor5_db_bd: unknown unicast NetBox proxy / AOAPIC flood; cursor5_web_bd: unknown unicast NetBox proxy / AOAPIC flood. Superseded in scope by prepare package /workspace/aci-nac/approvals/Cursor_tenant5-dmz-contracts-20261110-1058 (Aung chose proxy; also adding DMZ L3Out + contracts). Drift request kept for history until the new request is applied.",
    "planned_structure": {
     "label": "NetBox intent (differences flagged in the Objects table)",
     "source": "NetBox ACI plugin (restored from the 29 Oct 2026 07:39 backup on 8 Nov 2026 ~23:34 AEDT)",
