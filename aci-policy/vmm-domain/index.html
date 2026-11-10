@@ -345,11 +345,12 @@ nav.site.im a.mi .im-n{
 }
 nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
 
-/* Suggest + Dark sit in the last cell of the main grid, not a fixed corner. */
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
 #tt-wrap{
   position:static!important;
   z-index:auto;
   display:flex;
+  flex-wrap:nowrap;
   gap:6px;
   align-items:center;
   justify-content:flex-end;
@@ -357,14 +358,16 @@ nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
   width:100%;
   height:36px;
   padding:0;
+  flex:none;
 }
 #sg-link,#tt-btn{
   font:600 12px/1 system-ui,Arial,sans-serif;
   display:inline-flex;
   align-items:center;
-  height:32px;
-  padding:0 10px;
-  border-radius:16px;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
   border:1px solid var(--btn-bd);
   background:var(--btn-bg);
   color:var(--btn-fg);
@@ -372,6 +375,7 @@ nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
   opacity:.92;
   text-decoration:none;
   white-space:nowrap;
+  flex:none;
 }
 #sg-link:hover,#tt-btn:hover{opacity:1}
 #sg-link .sg-short{display:none}
@@ -382,8 +386,10 @@ nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
 @media (max-width:720px){
   nav.site.im .im-main,
   nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
   #sg-link .sg-wide{display:none}
   #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn{height:36px;padding:0 10px}
 }
 
 /* SVG labels on themed canvases: dark text on light, light text on dark.
@@ -429,6 +435,8 @@ html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5
 
 
 
+
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="refresh" content="0;url=/aci-policy/vm-domains/">
@@ -463,9 +471,11 @@ var b=document.body;
 if(b){b.insertBefore(wrap,b.firstChild)}
 btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
 apply(preferred());
-function place(){var row=document.querySelector('nav.site .im-main');var w=document.getElementById('tt-wrap');if(row&&w&&w.parentNode!==row)row.appendChild(w)}
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
 place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
 })();</script>
+
+
 
 
 
@@ -490,19 +500,19 @@ nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
 nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
 nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
 nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
-#tt-wrap{position:static!important;display:flex;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px;flex:none}#sg-link,#tt-btn{height:36px;border-radius:18px}
 @media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 <script id="im-script">(function(){
 var G=[["Home", "/", "🏠", []], ["NetBox", "/tasks/netbox/", "🗄️", [["NetBox ACI Tenants", "/netbox-aci-tenants/", "🗄️"], ["Tenant Diagrams", "/netbox-aci-tenants/diagrams/", "📐"], ["NB ACI Objects", "/netbox-aci-objects/", "🧱"], ["NB HW Inventory", "/netbox-hw-inventory/", "🖥️"], ["YAML Model", "/netbox-yaml-model/", "📄"], ["AOAPIC Model", "/netbox-yaml-model/aoapic/", "🌐"], ["ARR Model", "/netbox-yaml-model/arr/", "🧪"]]], ["Provisioning", "/tasks/provisioning/", "⚙️", [["Pending Provisioning", "/report17-aoapic-monitoring/pending-provisioning/", "⏳"], ["Universal Provisioning", "/report17-aoapic-monitoring/universal-provisioning/", "🧩"]]], ["Monitoring", "/tasks/monitoring/", "📊", [["Report 17", "/report17-aoapic-monitoring/", "📊"], ["Tenants Detail", "/report17-aoapic-monitoring/tenants/", "🏢"], ["Object Drill-down", "/report17-aoapic-monitoring/objects/", "🔍"], ["Group 1", "/grafana-screenshots/", "📈"], ["Group 2", "/grafana-screenshots-part2/", "📉"]]], ["Testing", "/tasks/testing/", "🧪", [["nac-test Status", "/aoapic-nac-test-status/", "✅"], ["AOAPIC defaults", "/testing/aoapic-defaults/", "📄"], ["ARR defaults", "/testing/arr-defaults/", "🧪"], ["Defaults compare", "/testing/defaults-compare/", "⚖️"]]], ["ACI Policy", "/aci-policy/", "🧭", [["ACI Policy", "/aci-policy/", "🧭"], ["Policy Universe", "/aci-policy/policy-universe/", "🌌"], ["Tenants", "/aci-policy/tenants/", "🏢"], ["Policy Tenant", "/aci-policy/policy-tenant/", "🧱"], ["ACI Lab Guide Policy", "/aci-policy/aci-lab-guide-policy/", "📘"], ["Fabric, Access, Inventory", "/aci-policy/fabric-access-inventory/", "🕸️"], ["Pod Policy Group", "/aci-policy/pod-policy-group/", "🕒"]]], ["ACI Lab Guide", "/aci-lab-guide/", "🧪", [["ACI Lab Guide", "/aci-lab-guide/", "🧪"], ["Introduction", "/aci-lab-guide/introduction/", "👋"], ["ACI Basics", "/aci-lab-guide/aci-basics/", "📘"], ["Access Policies", "/aci-lab-guide/access-policies/", "🔗"], ["VMM Integration", "/aci-lab-guide/vmm/", "💻"], ["Tenants", "/aci-lab-guide/tenants/", "🏢"], ["Day 2 Operations", "/aci-lab-guide/day2/", "🩺"], ["Endpoint Security Group", "/aci-lab-guide/esg/", "🛡️"], ["ACI Segmentation", "/aci-lab-guide/segmentation/", "✂️"], ["Nexus Dashboard", "/aci-lab-guide/nexus-dashboard/", "🟩"], ["Orchestrator", "/aci-lab-guide/orchestrator/", "🌐"], ["Insights", "/aci-lab-guide/insights/", "💡"], ["Conclusion", "/aci-lab-guide/conclusion/", "✅"], ["References", "/aci-lab-guide/references/", "📚"]]], ["MCP Servers", "/mcp-servers/", "🔌", [["MCP Servers", "/mcp-servers/", "🔌"], ["MCP for ACI", "/mcp-servers/aci/", "🟦"], ["MCP for Nexus Dashboard", "/mcp-servers/nexus-dashboard/", "🟩"], ["MCP for DNA", "/mcp-servers/dna/", "🟧"]]], ["ITIL", "/tasks/itil/", "📋", [["AOAPIC ITIL", "/itil/aoapic/", "🌐"], ["ARR ITIL", "/itil/arr/", "🧪"], ["Site Wiki", "/itil/wiki/", "📖"]]], ["RoadMap", "/roadmap/", "🗺️", [["RoadMap", "/roadmap/", "🗺️"], ["MindMap", "/mindmap/", "🧠"]]], ["Visitors", "/visitors/", "👥", [["Visitors", "/visitors/", "👥"], ["Status", "/status/", "🚦"], ["Trends", "/visitors/trends/", "📈"]]]];
 function mk(e,on,cls,n){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=e[0];var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
-function placeWrap(row){var w=document.getElementById('tt-wrap');if(w&&row&&w.parentNode!==row)row.appendChild(w)}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
 function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
 var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
 G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
-navs.forEach(function(n){if(n.classList.contains('im'))return;n.classList.add('im');n.innerHTML='';
-var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});placeWrap(r1);n.appendChild(r1);
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);placeWrap(n);
 if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks \u203A';r2.appendChild(t);
 var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm'))});r2.appendChild(pills);n.appendChild(r2)}}});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
