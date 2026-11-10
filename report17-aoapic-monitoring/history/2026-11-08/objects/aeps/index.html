@@ -247,19 +247,67 @@ html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-c
 html[data-theme="light"] .kicker,
 html[data-theme="dark"] .kicker{color:#fff}
 
-/* Menu follows the same theme (overrides the old inline #111 panel). */
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
 nav.site,
 nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
   background:var(--menu-bg)!important;
   color:var(--menu-fg)!important;
   border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
 }
-nav.site{margin-right:110px!important}
-@media (min-width:721px){nav.site{margin-right:370px!important}}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
 nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  min-width:0;
+  padding:0 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
   background:var(--menu-pill)!important;
-  border-color:var(--menu-pill-bd)!important;
   color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
 }
 nav.site.im a.mi:hover{background:var(--menu-hover)!important}
 nav.site.im a.mi.on{
@@ -267,25 +315,75 @@ nav.site.im a.mi.on{
   border-color:var(--menu-on)!important;
   color:var(--menu-on-fg)!important;
 }
+nav.site.im a.mi.sm{font-size:12px;height:36px}
 nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
-nav.site.im .im-sub{
-  background:var(--menu-sub)!important;
-  border-left-color:var(--menu-on)!important;
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  text-align:left;
 }
-nav.site.im a.sl{color:var(--link)!important}
-nav.site.im a.mi .im-n{background:#93c5fd;color:#0f172a}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
 nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
 
-/* Toggle + Suggest stay readable on both themes and are not inverted. */
-#tt-wrap{position:fixed;top:6px;right:10px;z-index:2147483000;display:flex;gap:6px;align-items:center}
+/* Suggest + Dark sit in the last cell of the main grid, not a fixed corner. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+}
 #sg-link,#tt-btn{
-  font:600 12px/1 system-ui,Arial,sans-serif;padding:6px 10px;border-radius:16px;
-  border:1px solid var(--btn-bd);background:var(--btn-bg);color:var(--btn-fg);
-  cursor:pointer;opacity:.92;text-decoration:none;white-space:nowrap;
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  height:32px;
+  padding:0 10px;
+  border-radius:16px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
 }
 #sg-link:hover,#tt-btn:hover{opacity:1}
 #sg-link .sg-short{display:none}
-@media (max-width:720px){#sg-link .sg-wide{display:none}#sg-link .sg-short{display:inline}}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+}
 
 /* SVG labels on themed canvases: dark text on light, light text on dark.
    Coloured strokes/fills on the boxes themselves are left alone. */
@@ -325,6 +423,10 @@ html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5
 </style>
 
 
+
+
+
+
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Report 17 – AEPs</title><style>body{font-family:system-ui,sans-serif;margin:20px;background:#111;color:#eee;line-height:1.5}main{max-width:1300px;margin:auto}a{color:#8cf}table{border-collapse:collapse;width:100%;background:#19212a}td,th{padding:8px;border-bottom:1px solid #444;text-align:left;vertical-align:top}td.dn{font-family:ui-monospace,monospace;font-size:12px;word-break:break-all}th{color:#9ed}.scroll{overflow:auto}.note{padding:14px;background:#302d20;border-left:4px solid #fc6}.add{border-left:4px solid #5c5;padding-left:10px}.rem{border-left:4px solid #e66;padding-left:10px}nav{margin-bottom:20px}h1{font-size:clamp(22px,4vw,32px)}input{background:#19212a;color:#eee;border:1px solid #555;padding:6px;border-radius:4px;width:min(400px,100%)}.pill{display:inline-block;background:#202832;border:1px solid #444;border-radius:12px;padding:2px 10px;margin:2px}</style></head><body>
 <!-- theme-toggle v2 -->
 <script id="tt-script">(function(){
@@ -354,34 +456,45 @@ var b=document.body;
 if(b){b.insertBefore(wrap,b.firstChild)}
 btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
 apply(preferred());
+function place(){var row=document.querySelector('nav.site .im-main');var w=document.getElementById('tt-wrap');if(row&&w&&w.parentNode!==row)row.appendChild(w)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
 })();</script>
 
 
 
-<main><div class="topbar" style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-bottom:16px"><nav class="site" style="margin:0"><a href="/">Home</a> | <a href="/report17-aoapic-monitoring/tenants/">Tenants Detail</a> | <a href="/netbox-aci-tenants/">NetBox ACI Tenants</a> | <a href="/netbox-aci-tenants/diagrams/">Tenant Diagrams</a> | <a href="/netbox-aci-objects/">NB ACI Objects</a> | <a href="/netbox-yaml-model/">YAML Model</a> | <a href="/report17-aoapic-monitoring/pending-provisioning/">Pending Provisioning</a> | <a href="/report17-aoapic-monitoring/universal-provisioning/">Universal Provisioning</a> | <a href="/report17-aoapic-monitoring/objects/">Object Drill-down</a> | <a href="/report17-aoapic-monitoring/">Report 17</a> | <a href="/grafana-screenshots/">Group 1</a> | <a href="/grafana-screenshots-part2/">Group 2</a> | <a href="/visitors/">Visitors</a> | <a href="https://amoeoo-coles.github.io/aoapic-nac-test-status/">nac-test Status</a></nav><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:#bbb">Updated 08 Nov 2026 23:59:47 AEDT (Melbourne time)<span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span><span class="uvt" style="font-size:11px;color:#888"></span></div></div><p><a href="../../">← Back to Report 17 (version 2026-11-08)</a></p><h1>AEPs <small>(infraAttEntityP)</small></h1><p>Archived daily version 2026-11-08 (Melbourne date); not live status.</p><p><b>4</b> objects. Source: live read-only APIC collection at 09 Nov 2026 00:00:05 AEDT (Melbourne time).</p><h2 id="changes">Changes since previous version</h2><p>Count change (the Change column on the report): <b>+1</b> — 3 → 4, vs first full run of the day, 08 Nov 2026 07:31 (no earlier-day live run exists).</p><p class="note">That count baseline did not save object lists, so the object-level diff below is against the previous archived version 2026-11-07 instead. From the next daily version on, both use the previous day's version.</p><p class="note" id="added">Diff unavailable: the previous archived version 2026-11-07 did not capture a infraAttEntityP object list, so added/removed objects cannot be computed.</p><span id="removed"></span><h2 id="all">All objects (4)</h2><p><input id="q17" placeholder="Filter rows…" oninput="f17(this)"></p><div class="scroll"><table id="all"><thead><tr><th>AEP</th><th>Domains</th><th>Description</th><th>DN</th></tr></thead><tbody><tr><td>AEP_RG_ROUTED</td><td>uni/phys-PHY_RG_ROUTED, uni/l3dom-RG_EXT_ROUTED</td><td>–</td><td class="dn">uni/infra/attentp-AEP_RG_ROUTED</td></tr><tr><td>LAB-AAEP</td><td>uni/phys-LAB-Server</td><td>–</td><td class="dn">uni/infra/attentp-LAB-AAEP</td></tr><tr><td>VY-AEP</td><td>uni/phys-VY-PHY</td><td>–</td><td class="dn">uni/infra/attentp-VY-AEP</td></tr><tr><td>default</td><td>–</td><td>–</td><td class="dn">uni/infra/attentp-default</td></tr></tbody></table></div><p><a href="../../objects.json">Download this version's object lists (JSON)</a></p></main><script>function f17(i){var q=i.value.toLowerCase();document.querySelectorAll("#all tbody tr").forEach(function(r){r.style.display=r.textContent.toLowerCase().indexOf(q)<0?"none":""})}(function(){var q=new URLSearchParams(location.search).get("q");var i=document.getElementById("q17");if(q&&i){i.value=q;f17(i)}})()</script><script>window.goatcounter={path:function(){return location.pathname.replace(/\/+$/,"")||"/"}}</script><script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc)e.textContent=" (counts as of "+new Date(d.updated_utc).toLocaleString("en-AU",{timeZone:"Australia/Melbourne",day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})+")"})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script><!-- icon-menu v1 -->
+
+
+
+
+<main><div class="topbar" style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-bottom:16px"><nav class="site" style="margin:0"><a href="/">Home</a> | <a href="/report17-aoapic-monitoring/tenants/">Tenants Detail</a> | <a href="/netbox-aci-tenants/">NetBox ACI Tenants</a> | <a href="/netbox-aci-tenants/diagrams/">Tenant Diagrams</a> | <a href="/netbox-aci-objects/">NB ACI Objects</a> | <a href="/netbox-yaml-model/">YAML Model</a> | <a href="/report17-aoapic-monitoring/pending-provisioning/">Pending Provisioning</a> | <a href="/report17-aoapic-monitoring/universal-provisioning/">Universal Provisioning</a> | <a href="/report17-aoapic-monitoring/objects/">Object Drill-down</a> | <a href="/report17-aoapic-monitoring/">Report 17</a> | <a href="/grafana-screenshots/">Group 1</a> | <a href="/grafana-screenshots-part2/">Group 2</a> | <a href="/visitors/">Visitors</a> | <a href="https://amoeoo-coles.github.io/aoapic-nac-test-status/">nac-test Status</a></nav><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:#bbb">Updated 08 Nov 2026 23:59:47 AEDT (Melbourne time)<span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span><span class="uvt" style="font-size:11px;color:#888"></span></div></div><p><a href="../../">← Back to Report 17 (version 2026-11-08)</a></p><h1>AEPs <small>(infraAttEntityP)</small></h1><p>Archived daily version 2026-11-08 (Melbourne date); not live status.</p><p><b>4</b> objects. Source: live read-only APIC collection at 09 Nov 2026 00:00:05 AEDT (Melbourne time).</p><h2 id="changes">Changes since previous version</h2><p>Count change (the Change column on the report): <b>+1</b> — 3 → 4, vs first full run of the day, 08 Nov 2026 07:31 (no earlier-day live run exists).</p><p class="note">That count baseline did not save object lists, so the object-level diff below is against the previous archived version 2026-11-07 instead. From the next daily version on, both use the previous day's version.</p><p class="note" id="added">Diff unavailable: the previous archived version 2026-11-07 did not capture a infraAttEntityP object list, so added/removed objects cannot be computed.</p><span id="removed"></span><h2 id="all">All objects (4)</h2><p><input id="q17" placeholder="Filter rows…" oninput="f17(this)"></p><div class="scroll"><table id="all"><thead><tr><th>AEP</th><th>Domains</th><th>Description</th><th>DN</th></tr></thead><tbody><tr><td>AEP_RG_ROUTED</td><td>uni/phys-PHY_RG_ROUTED, uni/l3dom-RG_EXT_ROUTED</td><td>–</td><td class="dn">uni/infra/attentp-AEP_RG_ROUTED</td></tr><tr><td>LAB-AAEP</td><td>uni/phys-LAB-Server</td><td>–</td><td class="dn">uni/infra/attentp-LAB-AAEP</td></tr><tr><td>VY-AEP</td><td>uni/phys-VY-PHY</td><td>–</td><td class="dn">uni/infra/attentp-VY-AEP</td></tr><tr><td>default</td><td>–</td><td>–</td><td class="dn">uni/infra/attentp-default</td></tr></tbody></table></div><p><a href="../../objects.json">Download this version's object lists (JSON)</a></p></main><script>function f17(i){var q=i.value.toLowerCase();document.querySelectorAll("#all tbody tr").forEach(function(r){r.style.display=r.textContent.toLowerCase().indexOf(q)<0?"none":""})}(function(){var q=new URLSearchParams(location.search).get("q");var i=document.getElementById("q17");if(q&&i){i.value=q;f17(i)}})()</script><script>window.goatcounter={path:function(){return location.pathname.replace(/\/+$/,"")||"/"}}</script><script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc){const pt=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Melbourne",hour:"2-digit",minute:"2-digit",hour12:false,hourCycle:"h23",timeZoneName:"short"}).formatToParts(new Date(d.updated_utc));const g=t=>(pt.find(x=>x.type===t)||{}).value||"";const tz=(g("timeZoneName")||"AEDT").replace("GMT+11","AEDT").replace("GMT+10","AEST");e.textContent=" (data as of "+g("hour")+":"+g("minute")+" "+tz+")"}})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script><!-- icon-menu v1 -->
 <style id="im-style">
-nav.site.im{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:6px 0;font:600 12.5px/1 system-ui,Arial,sans-serif;flex-direction:column;align-items:flex-start}
-nav.site.im a.mi{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important;transition:background .12s,transform .12s}
-nav.site.im a.mi:hover{background:var(--menu-hover,#26344a);transform:translateY(-1px)}
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;padding:8px 12px 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:6px;margin:0;padding:8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
+nav.site.im a.mi{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:36px;min-width:0;padding:0 10px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a)}
 nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
-nav.site.im a.mi .ic{font-size:15px;line-height:1}
-nav.site.im .im-main,nav.site.im .im-sub{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-nav.site.im .im-sub{margin-top:2px;padding:5px 8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
-nav.site.im a.mi.sm{padding:4px 9px;font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
-nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;margin-right:4px;text-decoration:none}
-nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 5px;margin-left:2px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
+nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
 nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+#tt-wrap{position:static!important;display:flex;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 <script id="im-script">(function(){
 var G=[["Home", "/", "🏠", []], ["NetBox", "/tasks/netbox/", "🗄️", [["NetBox ACI Tenants", "/netbox-aci-tenants/", "🗄️"], ["Tenant Diagrams", "/netbox-aci-tenants/diagrams/", "📐"], ["NB ACI Objects", "/netbox-aci-objects/", "🧱"], ["NB HW Inventory", "/netbox-hw-inventory/", "🖥️"], ["YAML Model", "/netbox-yaml-model/", "📄"], ["AOAPIC Model", "/netbox-yaml-model/aoapic/", "🌐"], ["ARR Model", "/netbox-yaml-model/arr/", "🧪"]]], ["Provisioning", "/tasks/provisioning/", "⚙️", [["Pending Provisioning", "/report17-aoapic-monitoring/pending-provisioning/", "⏳"], ["Universal Provisioning", "/report17-aoapic-monitoring/universal-provisioning/", "🧩"]]], ["Monitoring", "/tasks/monitoring/", "📊", [["Report 17", "/report17-aoapic-monitoring/", "📊"], ["Tenants Detail", "/report17-aoapic-monitoring/tenants/", "🏢"], ["Object Drill-down", "/report17-aoapic-monitoring/objects/", "🔍"], ["Group 1", "/grafana-screenshots/", "📈"], ["Group 2", "/grafana-screenshots-part2/", "📉"]]], ["Testing", "/tasks/testing/", "🧪", [["nac-test Status", "/aoapic-nac-test-status/", "✅"], ["AOAPIC defaults", "/testing/aoapic-defaults/", "📄"], ["ARR defaults", "/testing/arr-defaults/", "🧪"], ["Defaults compare", "/testing/defaults-compare/", "⚖️"]]], ["ACI Policy", "/aci-policy/", "🧭", [["ACI Policy", "/aci-policy/", "🧭"], ["Policy Universe", "/aci-policy/policy-universe/", "🌌"], ["Tenants", "/aci-policy/tenants/", "🏢"], ["Policy Tenant", "/aci-policy/policy-tenant/", "🧱"], ["ACI Lab Guide Policy", "/aci-policy/aci-lab-guide-policy/", "📘"], ["Fabric, Access, Inventory", "/aci-policy/fabric-access-inventory/", "🕸️"], ["Pod Policy Group", "/aci-policy/pod-policy-group/", "🕒"]]], ["ACI Lab Guide", "/aci-lab-guide/", "🧪", [["ACI Lab Guide", "/aci-lab-guide/", "🧪"], ["Introduction", "/aci-lab-guide/introduction/", "👋"], ["ACI Basics", "/aci-lab-guide/aci-basics/", "📘"], ["Access Policies", "/aci-lab-guide/access-policies/", "🔗"], ["VMM Integration", "/aci-lab-guide/vmm/", "💻"], ["Tenants", "/aci-lab-guide/tenants/", "🏢"], ["Day 2 Operations", "/aci-lab-guide/day2/", "🩺"], ["Endpoint Security Group", "/aci-lab-guide/esg/", "🛡️"], ["ACI Segmentation", "/aci-lab-guide/segmentation/", "✂️"], ["Nexus Dashboard", "/aci-lab-guide/nexus-dashboard/", "🟩"], ["Orchestrator", "/aci-lab-guide/orchestrator/", "🌐"], ["Insights", "/aci-lab-guide/insights/", "💡"], ["Conclusion", "/aci-lab-guide/conclusion/", "✅"], ["References", "/aci-lab-guide/references/", "📚"]]], ["MCP Servers", "/mcp-servers/", "🔌", [["MCP Servers", "/mcp-servers/", "🔌"], ["MCP for ACI", "/mcp-servers/aci/", "🟦"], ["MCP for Nexus Dashboard", "/mcp-servers/nexus-dashboard/", "🟩"], ["MCP for DNA", "/mcp-servers/dna/", "🟧"]]], ["ITIL", "/tasks/itil/", "📋", [["AOAPIC ITIL", "/itil/aoapic/", "🌐"], ["ARR ITIL", "/itil/arr/", "🧪"], ["Site Wiki", "/itil/wiki/", "📖"]]], ["RoadMap", "/roadmap/", "🗺️", [["RoadMap", "/roadmap/", "🗺️"], ["MindMap", "/mindmap/", "🧠"]]], ["Visitors", "/visitors/", "👥", [["Visitors", "/visitors/", "👥"], ["Status", "/status/", "🚦"], ["Trends", "/visitors/trends/", "📈"]]]];
-function mk(e,on,cls,n){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=e[0];var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);a.appendChild(document.createTextNode(e[0]));if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function mk(e,on,cls,n){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=e[0];var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function placeWrap(row){var w=document.getElementById('tt-wrap');if(w&&row&&w.parentNode!==row)row.appendChild(w)}
 function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
 var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
 G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
 navs.forEach(function(n){if(n.classList.contains('im'))return;n.classList.add('im');n.innerHTML='';
-var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});placeWrap(r1);n.appendChild(r1);
 if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks \u203A';r2.appendChild(t);
-G[gi][3].forEach(function(e,k){r2.appendChild(mk(e,k===si,'mi sm'))});n.appendChild(r2)}}});}
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm'))});r2.appendChild(pills);n.appendChild(r2)}}});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
 })();</script>
 </body></html>
