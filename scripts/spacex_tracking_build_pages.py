@@ -8,6 +8,7 @@ spacex-tracking/ — see SKIP_PATH_PREFIXES.
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
@@ -161,43 +162,33 @@ PAGES = [
 ]
 
 
+def menu_g_snippet() -> str | None:
+    """Icon menu line from data/site-menu.json (same source as site_menu_sync.py)."""
+    menu_path = ROOT / "data" / "site-menu.json"
+    if not menu_path.is_file():
+        return None
+    items = json.loads(menu_path.read_text(encoding="utf-8")).get("items")
+    if not items:
+        return None
+    body = json.dumps(items, ensure_ascii=False, separators=(",", ": "))
+    return f"var G={body}];"
+
+
 def sync_menu_g(html: str) -> str:
-    """Keep icon-menu G array in sync with site home."""
-    main_g = re.search(r"var G=\[.*?\]\];", (ROOT / "index.html").read_text(encoding="utf-8"), re.S)
-    if not main_g:
+    """Keep icon-menu G array in sync with data/site-menu.json."""
+    snippet = menu_g_snippet()
+    if not snippet:
+        main_g = re.search(r"var G=\[.*?\]\];", (ROOT / "index.html").read_text(encoding="utf-8"), re.S)
+        snippet = main_g.group(0) if main_g else None
+    if not snippet:
         return html
-    return re.sub(r"var G=\[.*?\]\];", main_g.group(0), html, count=1, flags=re.S)
-
-
-def patch_spacex_menu(html: str) -> str:
-    """Ensure SpaceX Tracking menu exists with Sites sub-page."""
-    spacex = (
-        '["SpaceX Tracking", "/spacex-tracking/", "🚀", '
-        '[["Overview", "/spacex-tracking/", "🚀"], '
-        '["Boosters", "/spacex-tracking/boosters/", "🔥"], '
-        '["Ships", "/spacex-tracking/ships/", "🛸"], '
-        '["Sites", "/spacex-tracking/sites/", "📍"]]], '
-    )
-    if '["SpaceX Tracking", "/spacex-tracking/"' in html:
-        return re.sub(
-            r'\["SpaceX Tracking", "/spacex-tracking/", "🚀", \[\[.*?\]\]\], ',
-            spacex,
-            html,
-            count=1,
-            flags=re.S,
-        )
-    return html.replace(
-        '["Visitors", "/visitors/", "👥"',
-        spacex + '["Visitors", "/visitors/", "👥"',
-        1,
-    )
+    return re.sub(r"var G=\[.*?\]\];", snippet, html, count=1, flags=re.S)
 
 
 def run() -> None:
     for path, title, body, tail in PAGES:
         html = build_page(title, body.strip(), tail)
         html = sync_menu_g(html)
-        html = patch_spacex_menu(html)
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(html, encoding="utf-8")
         print(f"Wrote {path.relative_to(ROOT)}")
