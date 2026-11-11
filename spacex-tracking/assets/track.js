@@ -541,19 +541,48 @@
     };
   }
 
+  function boosterOutcomeScore(outcome) {
+    if (outcome === "catch") return 3;
+    if (outcome === "controlled_splashdown" || outcome === "catch_aborted") return 2;
+    if (outcome === "lost" || outcome === "precluded") return 0;
+    return 1;
+  }
+
+  function shipOutcomeScore(outcome) {
+    if (outcome === "orbit_and_deploy") return 3;
+    if (outcome === "controlled_splashdown") return 2;
+    if (outcome === "lost" || outcome === "precluded") return 0;
+    return 1;
+  }
+
+  function outcomeChartLegend() {
+    return (
+      '<p class="sxt-chart-legend" aria-hidden="false">Score scale: ' +
+      '<span class="sxt-lg sxt-lg-0">0</span> lost / precluded · ' +
+      '<span class="sxt-lg sxt-lg-1">1</span> partial / other · ' +
+      '<span class="sxt-lg sxt-lg-2">2</span> controlled splashdown · ' +
+      '<span class="sxt-lg sxt-lg-3">3</span> catch or orbit+deploy</p>'
+    );
+  }
+
   function barChart(title, labels, values, colors) {
     var max = Math.max.apply(null, values.concat([1]));
-    var h = 140;
-    var w = Math.max(320, labels.length * 48);
+    var padTop = 26;
+    var barH = 112;
+    var barBottom = padTop + barH;
+    var h = barBottom + 38;
+    var w = Math.max(320, 40 + labels.length * 44);
     var bars = labels
       .map(function (lb, i) {
-        var bh = Math.round((values[i] / max) * (h - 30));
+        var bh = Math.round((values[i] / max) * barH);
         var x = 36 + i * 44;
+        var barTop = barBottom - bh;
+        var valY = Math.max(padTop + 14, barTop - 6);
         return (
           '<rect x="' +
           x +
           '" y="' +
-          (h - 10 - bh) +
+          barTop +
           '" width="28" height="' +
           bh +
           '" fill="' +
@@ -562,14 +591,14 @@
           '<text x="' +
           (x + 14) +
           '" y="' +
-          (h - 14 - bh) +
+          valY +
           '" text-anchor="middle" font-size="14" fill="var(--ink)">' +
           values[i] +
           "</text>" +
           '<text x="' +
           (x + 14) +
           '" y="' +
-          (h + 4) +
+          (barBottom + 22) +
           '" text-anchor="middle" font-size="13" fill="var(--muted)">F' +
           lb +
           "</text>"
@@ -580,7 +609,11 @@
       '<svg xmlns="http://www.w3.org/2000/svg" width="' +
       w +
       '" height="' +
-      (h + 24) +
+      h +
+      '" viewBox="0 0 ' +
+      w +
+      " " +
+      h +
       '" role="img" aria-label="' +
       esc(title) +
       '">' +
@@ -591,31 +624,38 @@
 
   function rateBars(title, groups) {
     var keys = Object.keys(groups);
-    var h = 120;
+    var padTop = 30;
+    var barH = 84;
+    var barBottom = padTop + barH;
+    var h = barBottom + 36;
     var w = Math.max(280, keys.length * 80);
     var bars = keys
       .map(function (k, i) {
         var pct = groups[k];
-        var bh = Math.round((pct / 100) * 80);
+        var bh = Math.round((pct / 100) * barH);
         var x = 30 + i * 72;
+        var barTop = barBottom - bh;
+        var valY = Math.max(padTop + 14, barTop - 6);
         return (
           '<rect x="' +
           x +
           '" y="' +
-          (90 - bh) +
+          barTop +
           '" width="48" height="' +
           bh +
           '" fill="var(--sxt-accent)" rx="4"/>' +
           '<text x="' +
           (x + 24) +
           '" y="' +
-          (84 - bh) +
-          '" text-anchor="middle" font-size="14">' +
+          valY +
+          '" text-anchor="middle" font-size="14" fill="var(--ink)">' +
           pct +
           "%</text>" +
           '<text x="' +
           (x + 24) +
-          '" y="108" text-anchor="middle" font-size="13" fill="var(--muted)">' +
+          '" y="' +
+          (barBottom + 22) +
+          '" text-anchor="middle" font-size="13" fill="var(--muted)">' +
           esc(k) +
           "</text>"
         );
@@ -626,12 +666,32 @@
       w +
       '" height="' +
       h +
+      '" viewBox="0 0 ' +
+      w +
+      " " +
+      h +
       '" role="img" aria-label="' +
       esc(title) +
       '">' +
       bars +
       "</svg>"
     );
+  }
+
+  function scoreBarColor(score, outcome) {
+    if (outcome === "precluded") return "#64748b";
+    if (score === 3) return "#166534";
+    if (score === 2) return "#2563eb";
+    if (score === 0) return "#991b1b";
+    return "#ca8a04";
+  }
+
+  function shipScoreBarColor(score, outcome) {
+    if (outcome === "precluded") return "#64748b";
+    if (score === 3) return "#6b21a8";
+    if (score === 2) return "#2563eb";
+    if (score === 0) return "#991b1b";
+    return "#ca8a04";
   }
 
   function initPreviousAnalysis(opts) {
@@ -692,9 +752,11 @@
         if (learn && data.learnings) {
           learn.innerHTML =
             "<h2>What we learned</h2><ul>" +
-            data.learnings.map(function (b) {
-              return "<li>" + esc(b) + "</li>";
-            }) +
+            data.learnings
+              .map(function (b) {
+                return "<li>" + esc(b) + "</li>";
+              })
+              .join("") +
             "</ul>";
         }
         var tbody = document.getElementById("sxt-prev-rows");
@@ -751,39 +813,39 @@
           return f.flight_number;
         });
         var bScore = flights.map(function (f) {
-          return f.booster_outcome === "catch"
-            ? 3
-            : f.booster_outcome === "controlled_splashdown" ||
-              f.booster_outcome === "catch_aborted"
-            ? 2
-            : f.booster_outcome === "lost"
-            ? 0
-            : 1;
+          return boosterOutcomeScore(f.booster_outcome);
         });
         var sScore = flights.map(function (f) {
-          return f.ship_outcome === "orbit_and_deploy"
-            ? 3
-            : f.ship_outcome === "controlled_splashdown"
-            ? 2
-            : f.ship_outcome === "lost"
-            ? 0
-            : 1;
+          return shipOutcomeScore(f.ship_outcome);
         });
+        var legend = outcomeChartLegend();
         var chB = document.getElementById("sxt-chart-booster");
         if (chB) {
           chB.innerHTML =
             "<h3>Booster outcome by flight (taller = better)</h3>" +
-            barChart("Booster", nums, bScore, bScore.map(function (v) {
-              return v === 3 ? "#166534" : v === 2 ? "#2563eb" : v === 0 ? "#991b1b" : "#64748b";
-            }));
+            barChart(
+              "Booster",
+              nums,
+              bScore,
+              flights.map(function (f, i) {
+                return scoreBarColor(bScore[i], f.booster_outcome);
+              })
+            ) +
+            legend;
         }
         var chS = document.getElementById("sxt-chart-ship");
         if (chS) {
           chS.innerHTML =
             "<h3>Ship outcome by flight (taller = better)</h3>" +
-            barChart("Ship", nums, sScore, sScore.map(function (v) {
-              return v === 3 ? "#6b21a8" : v === 2 ? "#2563eb" : v === 0 ? "#991b1b" : "#64748b";
-            }));
+            barChart(
+              "Ship",
+              nums,
+              sScore,
+              flights.map(function (f, i) {
+                return shipScoreBarColor(sScore[i], f.ship_outcome);
+              })
+            ) +
+            legend;
         }
         var byBlock = { "Block 1": { ok: 0, n: 0 }, "Block 2": { ok: 0, n: 0 }, "Block 3": { ok: 0, n: 0 } };
         flights.forEach(function (f) {
