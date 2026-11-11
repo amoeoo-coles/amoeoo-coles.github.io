@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:auto;
+  min-height:44px;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:auto;min-height:44px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:visible;
+  text-overflow:unset;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.25;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:22px;
+  height:22px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:16px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:#1d4ed8!important;
+}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+
+
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Underlay Unicast Routing — amoeoo-coles</title>
+<style>
+:root{--ink:#0f172a;--muted:#475569;--line:#e2e8f0;--bg:#f8fafc;--card:#fff;--code:#0b1220}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,Segoe UI,Arial,sans-serif}
+main{max-width:1120px;margin:0 auto;padding:18px 18px 64px}
+.tr17{color:#475569!important}
+#version-history{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line)}
+#version-history ul{padding-left:1.2rem}#version-history a{color:#1d4ed8}
+#version-history code{font-size:12.5px}
+.crumb{font-size:13px;color:var(--muted);margin:0 0 12px}
+.crumb a{color:#1d4ed8;text-decoration:none}
+.crumb a:hover{text-decoration:underline}
+h1{font-size:1.7rem;line-height:1.25;margin:0 0 8px}
+h2{font-size:1.2rem;margin:1.6rem 0 .6rem;padding-top:.2rem}
+h3{font-size:1.02rem;margin:1.15rem 0 .4rem}
+p,li{color:#1e293b}
+.lede{font-size:1.02rem;color:var(--muted);margin:0 0 1.1rem;max-width:70ch}
+.note,.warn,.example-flag{border-radius:10px;padding:10px 12px;margin:12px 0;border:1px solid var(--line);background:#fff}
+.note{border-left:4px solid #2563eb;background:#eff6ff}
+.warn{border-left:4px solid #d97706;background:#fffbeb}
+.example-flag{border-left:4px solid #dc2626;background:#fef2f2;font-size:13.5px}
+.kicker{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;color:#fff;margin:0 6px 8px 0}
+.dn{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;background:#e2e8f0;padding:1px 6px;border-radius:5px;word-break:break-all}
+.meta{display:flex;flex-wrap:wrap;gap:8px 14px;margin:8px 0 16px;font-size:13px;color:var(--muted)}
+.grid{display:grid;gap:12px}
+@media(min-width:760px){.grid.cols-2{grid-template-columns:1fr 1fr}.grid.cols-3{grid-template-columns:repeat(3,1fr)}}
+.pbox{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;box-shadow:0 1px 2px rgba(15,23,42,.04);border-top:5px solid var(--c,#2563eb);transition:transform .12s,box-shadow .12s}
+.pbox:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,23,42,.08)}
+.pbox h3{margin:0 0 4px;font-size:1.02rem}
+.pbox p{margin:0;color:var(--muted);font-size:13.5px}
+.pbox .klass{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;color:#64748b;margin-top:6px}
+.group{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:0 0 16px}
+.group h2{margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.kids{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+.codebox{position:relative;background:var(--code);color:#e2e8f0;border-radius:12px;margin:10px 0 16px;overflow:auto}
+.codebox pre{margin:0;padding:36px 14px 14px;font:12.5px/1.45 ui-monospace,Menlo,Consolas,monospace;white-space:pre}
+.codebox .copy{position:absolute;top:8px;right:8px;background:#1e293b;color:#fff;border:1px solid #334155;border-radius:8px;padding:4px 9px;font:600 11px system-ui;cursor:pointer}
+.codebox .copy:hover{background:#334155}
+.codebox .tag{position:absolute;top:8px;left:8px;font:600 10px system-ui;color:#93c5fd;letter-spacing:.04em;text-transform:uppercase}
+.related{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
+.related a{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);text-decoration:none;color:var(--ink);font-size:13px}
+.related a:hover{border-color:#94a3b8}
+.related a i{width:8px;height:8px;border-radius:50%;background:var(--c,#2563eb);display:inline-block}
+/* APIC form replica */
+.apic{max-width:640px;background:#fff;border:1px solid #c5cdd8;border-radius:4px;box-shadow:0 8px 24px rgba(15,23,42,.12);margin:12px 0 18px;font:13px/1.4 Tahoma,Segoe UI,Arial,sans-serif;color:#222}
+.apic .hd{background:linear-gradient(#3d6ba8,#2b4f86);color:#fff;padding:8px 12px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.apic .hd .x{opacity:.8}
+.apic .bd{padding:12px 14px 8px}
+.apic .sec{font-weight:700;margin:0 0 10px;color:#1e3a5f}
+.apic .row{display:grid;grid-template-columns:170px 1fr;gap:8px;align-items:center;margin:0 0 10px}
+@media(max-width:560px){.apic .row{grid-template-columns:1fr}}
+.apic label{color:#333}
+.apic .req{color:#c00}
+.apic input,.apic select,.apic .fake-input{width:100%;border:1px solid #8aa0b8;border-radius:2px;padding:4px 6px;background:#fff;font:inherit}
+.apic .fake-input{min-height:24px;color:#444;background:#f7f9fc}
+.apic .dd{border:1px solid #8aa0b8;background:#fff;margin-top:-6px;margin-bottom:10px;box-shadow:0 4px 10px rgba(0,0,0,.12)}
+.apic .dd div{padding:4px 8px}
+.apic .dd div.on{background:#1e4b8f;color:#fff}
+.apic .dd div.hint{color:#1e4b8f}
+.apic .ft{display:flex;justify-content:flex-end;gap:8px;padding:8px 12px 12px;border-top:1px solid #e5e7eb}
+.apic .btn{border-radius:3px;padding:4px 16px;font:600 13px system-ui;border:1px solid #8aa0b8;background:#f3f4f6;color:#222}
+.apic .btn.pri{background:#2b4f86;border-color:#2b4f86;color:#fff}
+.wizard{display:flex;gap:0;margin:0 0 14px;border-bottom:2px solid #dbe3ee}
+.wizard span{flex:1;text-align:center;padding:8px 4px;font-size:12px;color:#64748b;position:relative}
+.wizard span em{display:inline-block;width:20px;height:20px;border-radius:50%;background:#cbd5e1;color:#fff;font-style:normal;font-weight:700;font-size:11px;line-height:20px;margin-right:4px}
+.wizard span.on{color:#1e3a5f;font-weight:700;border-bottom:2px solid #2b4f86;margin-bottom:-2px}
+.wizard span.on em{background:#2b4f86}
+.field-help{font-size:13.5px;color:var(--muted);margin:-4px 0 12px}
+table.tree{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13.5px}
+table.tree th,table.tree td{border-bottom:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+table.tree th{background:#e2e8f0;font-size:12px;letter-spacing:.02em}
+table.tree tr:hover td{background:#f1f5f9}
+.filter{width:100%;max-width:360px;padding:7px 10px;border:1px solid #94a3b8;border-radius:8px;margin:0 0 10px;font:inherit}
+/* Policy tenant layers */
+.layers{display:flex;flex-direction:column;gap:8px;margin:12px 0 18px}
+.band{position:relative;border:2px dashed var(--c,#94a3b8);border-radius:14px;padding:12px 108px 12px 12px;background:color-mix(in srgb, var(--c) 10%, #fff)}
+.band .lab{position:absolute;right:8px;top:50%;transform:translateY(-50%);writing-mode:vertical-rl;transform:translateY(-50%) rotate(180deg);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--c);max-height:90%}
+@media(max-width:700px){.band{padding:28px 10px 10px}.band .lab{writing-mode:horizontal-tb;transform:none;top:6px;right:10px;left:10px;text-align:right}}
+.rowboxes{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-around}
+.tbox{display:inline-block;text-decoration:none;color:#0f172a;background:#fff;border:2px solid var(--c,#2563eb);border-radius:8px;padding:8px 12px;font-weight:700;font-size:13px;min-width:88px;text-align:center;box-shadow:0 1px 2px rgba(15,23,42,.06)}
+.tbox small{display:block;font-weight:500;color:var(--muted);font-size:11px}
+.col{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;min-width:140px}
+.clines{display:block;width:100%;height:28px}
+svg.contracts{width:100%;height:36px;display:block}
+
+main.wide{max-width:1240px}
+.treewrap{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;margin:12px 0 20px}
+.treewrap svg{min-width:1280px;width:100%;height:auto;display:block}
+.treewrap a:hover rect.box{filter:brightness(1.06);stroke-width:2.8}
+.shot{display:block;max-width:640px;margin:8px 0 16px;text-decoration:none;color:inherit}
+.shot img{width:100%;cursor:zoom-in;border:1px solid var(--line);border-radius:10px;background:#fff}
+.shot .caption{margin:6px 0 0;font-size:13px;color:var(--muted)}
+#lightbox{display:none;position:fixed;inset:0;background:rgba(15,23,42,.82);z-index:2147483001;align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
+#lightbox.on{display:flex}
+#lightbox img{max-width:96%;max-height:96%;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.4)}
+.hl{outline:2px solid #dc2626;outline-offset:2px;border-radius:3px}
+.chk{display:inline-flex;align-items:center;gap:6px;margin:2px 0}
+.chk i{width:14px;height:14px;border:1px solid #5b6b7b;border-radius:2px;background:#fff;display:inline-block;position:relative}
+.chk i.on{background:#1e4b8f;border-color:#1e4b8f}
+.chk i.on::after{content:"";position:absolute;left:3px;top:0;width:6px;height:9px;border:2px solid #fff;border-top:0;border-left:0;transform:rotate(45deg)}
+.tog{display:inline-flex;border:1px solid #2b6cb0;border-radius:999px;overflow:hidden;font-size:12px;font-weight:700}
+.tog span{padding:3px 12px;color:#2b6cb0;background:#fff}
+.tog span.on{background:#2b6cb0;color:#fff}
+.apic .row.top{align-items:start}
+.apic .muted-field{opacity:.55;pointer-events:none}
+
+
+.apic-chips{display:flex;flex-direction:column;align-items:flex-start;gap:6px;max-width:100%;overflow-x:auto}
+.apic-chip{display:inline-flex;align-items:center;gap:6px;max-width:100%}
+.dn-chip{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;background:#e2e8f0;padding:2px 8px;border-radius:6px;white-space:nowrap;text-decoration:none;color:#0f172a;display:inline-block}
+a.dn-chip:hover{background:#dbeafe;color:#1d4ed8}
+.copy-dn{flex:none;background:#fff;color:#334155;border:1px solid #cbd5e1;border-radius:6px;padding:1px 7px;font:600 11px system-ui;cursor:pointer}
+.copy-dn:hover{background:#f1f5f9}
+.apic-empty{color:#64748b}
+.gui-path{display:inline;line-height:1.7}
+.gui-path .gui-seg{white-space:nowrap}
+.gui-path .gui-sep{margin:0 .35em;color:#94a3b8}
+.meta-row{display:grid;grid-template-columns:160px 1fr;gap:8px 12px;margin:8px 0 16px;font-size:14.5px}
+.meta-row dt{color:#64748b;margin:0;padding-top:4px}
+.meta-row dd{margin:0;min-width:0}
+</style>
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+
+
+
+<!-- site-menu v1 --><nav class="site" style="padding:8px 12px;font:14px system-ui,Arial,sans-serif"><a href="/" style="color:#8ecbff">Home</a> | <a href="/report17-aoapic-monitoring/tenants/" style="color:#8ecbff">Tenants Detail</a> | <a href="/netbox-aci-tenants/" style="color:#8ecbff">NetBox ACI Tenants</a> | <a href="/netbox-aci-tenants/diagrams/" style="color:#8ecbff">Tenant Diagrams</a> | <a href="/netbox-aci-objects/" style="color:#8ecbff">NB ACI Objects</a> | <a href="/netbox-yaml-model/" style="color:#8ecbff">YAML Model</a> | <a href="/netbox-yaml-model/aoapic/" style="color:#8ecbff">AOAPIC Model</a> | <a href="/netbox-yaml-model/arr/" style="color:#8ecbff">ARR Model</a> | <a href="/report17-aoapic-monitoring/pending-provisioning/" style="color:#8ecbff">Pending Provisioning</a> | <a href="/report17-aoapic-monitoring/universal-provisioning/" style="color:#8ecbff">Universal Provisioning</a> | <a href="/report17-aoapic-monitoring/objects/" style="color:#8ecbff">Object Drill-down</a> | <a href="/report17-aoapic-monitoring/" style="color:#8ecbff">Report 17</a> | <a href="/grafana-screenshots/" style="color:#8ecbff">Group 1</a> | <a href="/grafana-screenshots-part2/" style="color:#8ecbff">Group 2</a> | <a href="/visitors/" style="color:#8ecbff">Visitors</a> | <a href="https://amoeoo-coles.github.io/aoapic-nac-test-status/" style="color:#8ecbff">nac-test Status</a></nav>
+<main>
+<div class="tr17" style="text-align:right;font-size:13px;color:#475569;margin:0 0 10px">Page updated 12 Nov 2026 00:17 AEDT (Melbourne time)<span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span><span class="uvt" style="font-size:11px;color:#888"></span></div>
+<nav class="crumb"><a href="/">Home</a> › <a href="/demo-ai-pod/">Demo AI Pod</a> › <a href="/demo-ai-pod/vxlan-evpn/">VXLAN EVPN</a> › Underlay Unicast Routing</nav>
+<style>
+.lab-flow{display:flex;flex-direction:column;gap:18px;margin:12px 0 28px}
+.lab-sec{border:1px solid #e2e8f0;border-radius:14px;background:#fff;overflow:hidden}
+.lab-sec > header{display:flex;align-items:center;gap:10px;padding:10px 14px;color:#fff!important}
+html[data-theme="light"] .lab-sec > header,
+html[data-theme="dark"] .lab-sec > header{color:#fff!important}
+.lab-sec > header a,
+.lab-sec > header a:link,
+.lab-sec > header a:visited,
+.lab-sec > header a:hover,
+.lab-sec > header a:active{color:#fff!important;text-decoration:none;font-weight:750}
+html[data-theme="light"] .lab-sec > header a,
+html[data-theme="light"] .lab-sec > header a:link,
+html[data-theme="light"] .lab-sec > header a:visited,
+html[data-theme="light"] .lab-sec > header a:hover,
+html[data-theme="light"] .lab-sec > header a:active,
+html[data-theme="dark"] .lab-sec > header a,
+html[data-theme="dark"] .lab-sec > header a:link,
+html[data-theme="dark"] .lab-sec > header a:visited,
+html[data-theme="dark"] .lab-sec > header a:hover,
+html[data-theme="dark"] .lab-sec > header a:active{color:#fff!important;text-decoration:none}
+.lab-sec > header .n{display:inline-flex;align-items:center;justify-content:center;min-width:1.6rem;height:1.6rem;border-radius:999px;background:rgba(255,255,255,.2);font-weight:800;font-size:13px;color:#fff!important}
+.lab-sec ol{list-style:none;margin:0;padding:8px 10px 12px;counter-reset:s}
+.lab-sec ol li{counter-increment:s;margin:0;padding:6px 8px 6px 2.4rem;position:relative;border-bottom:1px solid #f1f5f9}
+.lab-sec ol li:last-child{border-bottom:0}
+.lab-sec ol li::before{content:counter(s);position:absolute;left:8px;top:6px;color:#64748b;font-weight:700;font-size:13px;min-width:1.4rem;text-align:right}
+.lab-sec ol a{font-weight:650;text-decoration:none;color:#0f172a}
+.lab-sec ol a:hover{text-decoration:underline}
+.lab-sec .added{display:inline-block;margin-left:6px;font-size:11px;font-weight:700;color:#9d174d;background:#fce7f3;border-radius:999px;padding:1px 7px;vertical-align:middle}
+.pn{display:flex;justify-content:space-between;gap:12px;margin:28px 0 8px;flex-wrap:wrap}
+.pn a{display:inline-block;border:1px solid #e2e8f0;border-radius:10px;padding:8px 12px;text-decoration:none;color:#0f172a;background:#fff;max-width:48%}
+.pn a:hover{border-color:#94a3b8}
+.pn .dir{display:block;font-size:11px;color:#64748b;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.values{width:100%;border-collapse:collapse;margin:8px 0 18px;background:#fff}
+.values th,.values td{border:1px solid #e2e8f0;padding:7px 10px;text-align:left;vertical-align:top}
+.values th{background:#f8fafc;font-size:13px}
+.values code{font-size:13px}
+.meta-row{display:grid;grid-template-columns:160px 1fr;gap:4px 12px;margin:8px 0 16px;font-size:14.5px}
+.meta-row dt{color:#64748b;margin:0}
+.meta-row dd{margin:0}
+.orig{display:inline-block;margin:8px 0 16px;padding:8px 12px;border-radius:10px;background:#eff6ff;border:1px solid #bfdbfe}
+.orig a{font-weight:650}
+.nxos{margin:12px 0 18px;padding:10px 12px;border-left:4px solid #1b8a2d;background:#f0fdf4;border-radius:0 10px 10px 0}
+.nxos pre{margin:6px 0 0;white-space:pre-wrap;font-size:13px}
+.note{background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:10px 12px;margin:10px 0 16px}
+.warn{background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:10px 12px;margin:10px 0 16px}
+.chain-wrap{overflow-x:auto;margin:8px 0 18px;padding:4px 0}
+.chain-caption{font-size:13px;color:#64748b;margin:4px 0 16px}
+.shot-wide{display:block;max-width:100%;margin:8px 0 8px}
+.shot-wide img{width:100%;max-width:920px;cursor:zoom-in;border:1px solid #e2e8f0;border-radius:10px;background:#fff}
+.sort th{cursor:pointer;user-select:none}
+.sort th.on{background:#e2e8f0}
+.sort .ar{margin-left:4px;color:#64748b;font-size:11px}
+.sev-c{color:#dc2626;font-weight:700}
+.sev-m{color:#ea580c;font-weight:700}
+.sev-n{color:#ca8a04;font-weight:700}
+.sev-w{color:#0d9488;font-weight:700}
+.credit{font-size:13.5px;color:#475569;margin:0 0 16px}
+</style>
+<span class="kicker" style="background:#1e40af">VXLAN EVPN</span>
+<h1>Underlay Unicast Routing</h1>
+<p class="lede">Fabric links, vPC, the distributed anycast gateway, IP addressing, and IGP versus eBGP.</p>
+<p class="credit">Companion to the Cisco document <em>Cisco Nexus 9000 VXLAN BGP EVPN Data Center Fabrics Fundamental Design and Implementation Guide</em> (&copy; 2024). Visible “lab” wording is renamed to “demo”. Source page-footer markings are omitted.</p>
+<h2>What the underlay must provide</h2>
+<p>The underlay network in a VXLAN BGP EVPN fabric is an IP-configured routed network that provides connectivity between the VTEPs so unicast traffic can be forwarded between them in VXLAN tunnels. Routing-protocol implementation requires IP addresses first, applied according to an addressing scheme for the physical and logical interfaces on the leaf and spine nodes. Once the routing protocols are up, they provide connectivity between VTEP logical interfaces, such as the loopbacks used as source and destination interfaces for VXLAN tunnels.</p>
+<p>Underlay unicast routing design requires decisions on the network’s physical topology, the IP addressing scheme, and the routing protocol to run in the underlay.</p>
+<p>Questions for physical topology include how many super-spine, spine, and leaf nodes are required; how many uplinks from each leaf to the spine and from the spine to the super-spine; and whether endpoints need to be multi-homed to VTEPs using vPC.</p>
+<p>Questions for the IP addressing scheme include whether fabric interfaces will have numbered or unnumbered IP addresses; how many leaf nodes, vPC-domain switches, and spine nodes there are in total; how many VLANs are acting as default gateways; how many VRFs there are and whether you need to route between them; what network services such as DHCP or VXLAN OAM the VTEPs will require; and what roles the spine nodes will support (route reflector, rendezvous point, border spine, or border-gateway spine).</p>
+<p>Questions for the underlay routing protocol include whether there is a preference to run a protocol already in production; whether introducing it will require staff training; whether multi-vendor or multi-platform support is required; whether dual-stack IPv4 and IPv6 support is required; whether fast convergence and maximum scale are required; and whether the protocol is easy to configure, operate, and troubleshoot.</p>
+<p>Design decisions always involve trade-offs. Architects should prioritize each requirement documented during requirements gathering and develop a proposal that addresses as many as possible. High-priority requirements are mandatory for the applications hosted on the network and for operating the network.</p>
+<p>In a Clos fabric every leaf is fully meshed to all spine nodes in a single site. Each leaf-to-spine link is a fabric interface. Links on VTEPs facing attached endpoints are host interfaces. Links attached to external devices such as edge routers and firewalls are external or service interfaces. Host, external, or service interfaces can be single-homed to one VTEP or multi-homed to two VTEPs in a vPC configuration.</p>
+<figure class="shot-wide"><a class="shot" href="/demo-ai-pod/vxlan-evpn/img/fig07-fabric-link-types.jpg" onclick="aciZoom(this.href);return false;"><img alt="Figure 7. Fabric link types" class="tt-keep" src="/demo-ai-pod/vxlan-evpn/img/fig07-fabric-link-types.jpg"/></a><figcaption class="chain-caption">Figure 7. Fabric link types. Click to enlarge.</figcaption></figure>
+
+<h2>Virtual Port Channel (vPC)</h2>
+<p>The data center hosts applications that need to be always available to users. Cisco Virtual Port-Channel (vPC) is a Layer 2 port-channel that allows endpoints to attach to two VTEP switches (multi-chassis) with both links in an active forwarding state. It was first introduced on Nexus 5000/7000 platforms and continues on Nexus 9000. The Nexus 9000 platform has two variations: standard vPC with a physical peer link, and vPC Fabric Peering (vPC without a physical peer link).</p>
+<p>A VXLAN BGP fabric is a routed fabric. The underlay fabric interfaces between leaf and spine provide Layer 3 equal-cost multipath (ECMP) from a source to a destination IP address. In the data plane, vPC member switches behave like a single switch to endpoints attached to the vPC interfaces. To remote leaf switches sending traffic to an endpoint connected to a vPC member, the members are also seen as a single next hop using a common IP address called a vPC Virtual IP (VIP). The VIP is an anycast IP address configured on both vPC member leaf switches.</p>
+<p>Each leaf is also a VTEP. Each VTEP’s tunnel interface is a Network Virtualization Edge (NVE) interface, bound to a dedicated loopback separate from the loopback used for the routing-protocol router ID. The NVE interface IP is the next hop to reach all tenant endpoints and networks attached to that VTEP. The NVE loopback is assigned a primary IP (PIP), unique to each vPC member, and a secondary IP that is the vPC VIP, an anycast address common to the members. The vPC VIP encapsulates all VXLAN traffic, including unicast and multicast. Cisco documentation commonly uses Loopback1 as the loopback bound to the NVE interface, but another loopback number can be used.</p>
+<figure class="shot-wide"><a class="shot" href="/demo-ai-pod/vxlan-evpn/img/fig08-vpc-ip-addresses.jpg" onclick="aciZoom(this.href);return false;"><img alt="Figure 8. vPC IP addresses" class="tt-keep" src="/demo-ai-pod/vxlan-evpn/img/fig08-vpc-ip-addresses.jpg"/></a><figcaption class="chain-caption">Figure 8. vPC IP addresses. Click to enlarge.</figcaption></figure>
+<p>The following table summarizes when the vPC VIP is used as the next hop for host and prefix routes.</p>
+<table class="values"><thead><tr><th>EVPN route type</th><th>Attachment</th><th>Next-hop</th></tr></thead><tbody><tr><td>Type 2 (host routes)</td><td>vPC</td><td>advertised by VIP</td></tr><tr><td>Type 2 (host routes)</td><td>Orphan port</td><td>advertised by VIP</td></tr><tr><td>Type 5 (IP prefix routes)</td><td>vPC</td><td>advertised by VIP</td></tr><tr><td>Type 5 (IP prefix routes)</td><td>Orphan</td><td>advertised by VIP</td></tr></tbody></table>
+<p>Loopback 0 is commonly used as the router-ID IP for underlay routing protocols such as OSPF and IS-IS. Those protocols automatically select a loopback as a router ID, but it is best practice to set the underlay IGP router ID manually to the loopback assigned for that purpose. The 32-bit router ID is usually set manually under the BGP process.</p>
+<p>Separating the underlay-routing loopback from the VTEP NVE loopback provides stability during failure. The vPC consistency checker validates that both members have the same vPC-related configuration. Devices connected to the members receive the same LACP system ID when negotiating the vPC port-channel. If the checker shuts down the NVE interface by shutting down the NVE tunnel source, and the underlay routing protocol shares that same loopback, both the NVE interface and the underlay protocol go down. A data-plane configuration issue in the vPC system would then impact the underlay control plane. Separate the loopbacks by function to avoid this shared fate.</p>
+<p>Each vPC leaf needs three IP addresses for these loopbacks: a unique IP for the underlay routing-protocol router ID, a unique primary IP for the NVE interface, and an anycast secondary IP for the NVE interface vPC VIP.</p>
+<p>If the fabric interface between a leaf and one of the spines fails, traffic hashed to that leaf should have a path across the vPC peer-link to the peer switch so it can use that peer’s uplink. The vPC peer-link is a Layer 2 port-channel. An SVI is created on the members inside a VLAN that acts as a backup SVI for traffic redirection. That backup SVI extends the underlay between the members. Underlay unicast routing protocols such as IS-IS, OSPF, or eBGP must establish peering on the backup SVI. For BUM traffic and multicast routing, PIM sparse mode is enabled in the underlay. The underlay network is in the default VRF table.</p>
+<p>The following image shows a configuration example of a backup SVI in VLAN 3999, with OSPF and PIM in the underlay. The vPC peer-link must allow VLAN 3999 on the port-channel trunk.</p>
+<figure class="shot-wide"><a class="shot" href="/demo-ai-pod/vxlan-evpn/img/fig09-vpc-backup-svi.jpg" onclick="aciZoom(this.href);return false;"><img alt="Figure 9. vPC backup SVI" class="tt-keep" src="/demo-ai-pod/vxlan-evpn/img/fig09-vpc-backup-svi.jpg"/></a><figcaption class="chain-caption">Figure 9. vPC backup SVI. Click to enlarge.</figcaption></figure>
+<p class="note">The vPC peer-gateway feature must be enabled on both peers to facilitate NVE RMAC/VMAC programming on both peers. For peer-gateway functionality, at least one backup routing SVI must be enabled across the peer-link and configured with PIM. This provides a backup routing path when a VTEP loses complete connectivity to the spine. Remote peer reachability is then rerouted over the peer-link.</p>
+<p>Backup SVI VLANs are infrastructure VLANs: they are not mapped to VXLAN L2 VNIs. Define them with:</p>
+<div class="nxos"><pre>exus(config)# system nve infra-vlans &lt;1-3967&gt;</pre></div>
+<p>A separate Layer 3 routed interface between vPC member switches as a backup path is also supported. The underlay is extended on that routed interface.</p>
+<figure class="shot-wide"><a class="shot" href="/demo-ai-pod/vxlan-evpn/img/fig10-l3-backup-path.jpg" onclick="aciZoom(this.href);return false;"><img alt="Figure 10. Layer 3 routed-interface backup path" class="tt-keep" src="/demo-ai-pod/vxlan-evpn/img/fig10-l3-backup-path.jpg"/></a><figcaption class="chain-caption">Figure 10. Layer 3 routed-interface backup path. Click to enlarge.</figcaption></figure>
+<p>The first advantage of a separate Layer 3 backup path is redundancy and fault isolation: a failure of the vPC peer-link will not impact backup-path traffic. Another advantage is that backup traffic does not compete with regular VXLAN or vPC synchronization traffic on the peer-link, so there is no risk of congestion from sharing that path. The disadvantage is that it consumes one extra physical interface.</p>
+<p>Both architectures are supported. Key considerations include traffic engineering (routing policies or metrics so the backup path is used only during a failure, by adjusting OSPF, IS-IS, or eBGP); redundancy and failure detection (BFD or other mechanisms can help ensure quick failover); and operational complexity. A backup SVI over the vPC peer-link is simpler but might offer different fault tolerance and flexibility than a separate Layer 3 routed backup path. The latter might be more complex but is often preferred in large-scale, high-availability environments where traffic resilience and fault isolation are critical.</p>
+
+<h2>Distributed anycast gateway</h2>
+<p>In a VXLAN EVPN fabric, every VTEP is assigned the same MAC address for every L2 VNI SVI that acts as a default gateway. A common gateway MAC assigned across all VTEPs for all networks is a Distributed Anycast Gateway (DAG).</p>
+<figure class="shot-wide"><a class="shot" href="/demo-ai-pod/vxlan-evpn/img/fig11-distributed-anycast-gw.jpg" onclick="aciZoom(this.href);return false;"><img alt="Figure 11. Distributed anycast gateway" class="tt-keep" src="/demo-ai-pod/vxlan-evpn/img/fig11-distributed-anycast-gw.jpg"/></a><figcaption class="chain-caption">Figure 11. Distributed anycast gateway. Click to enlarge.</figcaption></figure>
+<p>The DAG is a pervasive-gateway approach. A network shares the same gateway IP and the globally assigned DAG MAC address. In the figure, the VLAN 10 gateway IP and MAC are the same on leaf 1, leaf 2, leaf 4, and leaf 5. The DAG aligns with the peer-gateway capability in vPC, providing active/active forwarding without First Hop Redundancy Protocols (FHRP) such as HSRP or VRRP. Peer-gateway allows both vPC members to act as gateways for connected endpoints destined to the router MAC of the vPC switch, without sending the packet across the peer-link to the primary.</p>
+<p>VLANs that leverage DAG are usually extended across VTEPs, allowing virtual-machine mobility. As an endpoint moves from one VTEP to another, the ARP entry for the gateway MAC does not need to be resolved again: the gateway MAC and IP remain consistent across VTEPs provisioned with the same VLAN.</p>
+<p>In infrastructure IP planning, VLANs that require Layer 2 extension need a single shared gateway IP per VLAN and a common anycast gateway MAC across all VLANs. VLANs do not need to be connected to every VTEP. Place them on switches based on security, scale, traffic pattern, and application requirements.</p>
+<p>The following guidelines must be followed when implementing vPC VTEPs in VXLAN fabrics:</p>
+<ul>
+<li>Bind NVE to a loopback address separate from other loopbacks required by Layer 3 protocols. A best practice is a dedicated loopback for VXLAN and a separate loopback for Layer 3 underlay protocols.</li>
+<li>The loopback used by NVE needs a primary IP address and a secondary IP address. The secondary IP is used for all VXLAN-encapsulated traffic, including multicast and unicast.</li>
+<li>The primary IP is unique. The secondary IP on the loopback is necessary because interface NVE uses it for the VTEP IP address, and it must be the same on both vPC peers.</li>
+<li>vPC peers must have identical VLAN-to-vn-segment mapping, NVE1 binding to the same loopback interface, the same secondary IP address, different primary IP addresses, and consistent VNI-to-group mapping.</li>
+</ul>
+<p>If those configurations are inconsistent between the vPC members, the NVE loopback interface will be shut down administratively on the vPC secondary VTEP.</p>
+
+<h2>vPC Fabric Peering</h2>
+<p>Traditional vPC multihoming requires a physical peer-link between the members. A VXLAN BGP EVPN Clos fabric already gives each leaf a fully meshed connection through the spines, so if a leaf in a vPC has two spines it already has two physical paths to its vPC peer. The physical peer-link can be removed. In vPC Fabric Peering the peer-link becomes a logical vPC virtual peer-link. Two tunnels are created: a data-plane tunnel that carries VXLAN traffic, and a control-plane tunnel that syncs data-plane state such as ARP, MAC, and IGMP between the vPC leafs using Cisco Fabric Services over IP (CFSoIP). Traditional vPC with a physical peer-link uses CFS over Ethernet (CFSoE).</p>
+<p>The virtual peer-link requires a source and terminating interface. A loopback is also required. That loopback cannot be the same as the peer keepalive or the loopback used for the VTEP IP address. The underlay unicast routing-protocol loopback (OSPF or BGP router ID) can be used, but the best-practice recommendation is a dedicated loopback for the virtual peer-link, for fault isolation. Keepalive can be out-of-band (mgmt0 or a dedicated interface) or in-band (a dedicated loopback over the fabric).</p>
+<figure class="shot-wide"><a class="shot" href="/demo-ai-pod/vxlan-evpn/img/fig12-vpc-fabric-peering.jpg" onclick="aciZoom(this.href);return false;"><img alt="Figure 12. vPC Fabric Peering architecture" class="tt-keep" src="/demo-ai-pod/vxlan-evpn/img/fig12-vpc-fabric-peering.jpg"/></a><figcaption class="chain-caption">Figure 12. vPC Fabric Peering architecture. Click to enlarge.</figcaption></figure>
+<p>Control-plane requirements change slightly compared with traditional vPC:</p>
+<ul>
+<li>The advertise-PIP and RMAC configurations are mandatory in vPC Fabric Peering if EVPN Type 5 is used with this feature. vPC and orphan Type 5 routes will be advertised with (PIP, RMAC).</li>
+<li>An orphan Type-2 host is advertised using PIP and RMAC. A vPC Type-2 host is advertised using vPC VIP and VMAC.</li>
+<li>Some platforms may require TCAM carving of the region <code>ing-flow-redirect</code> before configuring vPC Fabric Peering. TCAM carving requires saving the configuration and reloading the switch. Confirm the platform steps from the Nexus 9000 NX-OS VXLAN configuration guide.</li>
+</ul>
+<p>The steps to configure vPC Fabric Peering on the vPC leafs are: define the vPC domain, then define the uplinks to the spine.</p>
+<h3>Step 1. Define the vPC domain</h3>
+<div class="nxos"><pre>vpc domain 1
+  peer-switch
+  peer-keepalive destination 10.10.10.82 source 10.10.10.81
+  virtual peer-link destination 10.44.0.4 source 10.44.0.3 dscp 56
+  delay restore 150
+  peer-gateway
+  auto-recovery reload-delay 360
+  ipv6 nd synchronize
+  ip arp synchronize
+
+interface port-channel1500
+  description &quot;vpc-peer-link&quot;
+  switchport
+  switchport mode trunk
+  spanning-tree port type network
+  vpc peer-link</pre></div>
+<h3>Step 2. Define the uplinks to the spine</h3>
+<div class="nxos"><pre>interface Ethernet1/49
+  mtu 9216
+  port-type fabric
+  ip address 10.144.0.41/30
+  ip ospf network point-to-point
+  ip router ospf UNDERLAY area 0.0.0.0
+  ip pim sparse-mode
+  no shutdown
+
+interface Ethernet1/50
+  mtu 9216
+  port-type fabric
+  ip address 10.144.0.29/30
+  ip ospf network point-to-point
+  ip router ospf UNDERLAY area 0.0.0.0
+  ip pim sparse-mode
+  no shutdow</pre></div>
+<p>When defining the virtual peer-link, DSCP 56 is also applied for virtual peer-link traffic. The virtual peer-link synchronizes data-plane state; it is a control-plane tunnel and must be treated as high priority. The spine nodes must match this peer-link traffic and allocate it to the strict-priority queue during congestion:</p>
+<div class="nxos"><pre>//Classify traffic by matching the DSCP value (DSCP 56 is the default value).
+class-map type qos match-all CFS
+   match dscp 56
+
+//Set traffic to the qos-group that corresponds with the strict priority queue for the
+appropriate spine switch.
+policy-map type qos CFS
+   class CFS
+      Set qos-group 7
+
+//Assign a classification service policy to all interfaces toward the VTEP (the leaf layer
+of the network).
+interface Ethernet 1/1
+   service-policy type qos input CFS</pre></div>
+
+<h2>IP address design</h2>
+<p>Poor IP address design can cause control-plane scale challenges from a lack of summarization, risk of overlap and exhaustion from a lack of scheme, and poor allocation practice. A good scheme helps you understand the logical topology and troubleshoot quickly. Before defining a scheme, understand all the roles, places in the network, and protocols and services required on each device. Calculate the maximum IP addresses required per device role, leaving room for endpoint and node growth.</p>
+<p>A leaf with endpoints attached needs the following for unicast routing:</p>
+<ul>
+<li><strong>Fabric-interface IP.</strong> Assigned as a point-to-point /30 or /31 on the physical interface, or as IP unnumbered borrowing from another interface such as a loopback. In VXLAN BGP EVPN fabrics, fabric interfaces borrow from the loopback allocated for the underlay IGP, commonly loopback 0. Unnumbered interfaces are best practice because they reduce the number of transit IP addresses between leaf and spine and simplify automation and allocation management.</li>
+<li><strong>Loopback interface IP.</strong> At least one loopback for Layer 3 underlay routing and one for the NVE interface. vPC and vPC Fabric Peering have additional requirements: Fabric Peering may need a unique loopback for the virtual peer-link or peer keepalive.</li>
+<li><strong>L2 VNI gateway IP.</strong> Every L2 VNI needs an SVI IP for the VLAN mapped to that VNI. That SVI IP is the gateway for hosts attached to the network.</li>
+<li><strong>Network infrastructure services.</strong> DHCP relay and VXLAN OAM are commonly used on VTEPs. Each VTEP needs a unique loopback in a VRF to identify the leaf for DHCP and OAM packet forwarding and receiving. SVI gateway IPs cannot be used because they are shared across all VTEPs by the distributed anycast gateway.</li>
+</ul>
+<p class="note">Border leaf or border-gateway devices need additional IP addresses to support their role. For those use cases, reference the Nexus 9000 NX-OS VXLAN configuration guide on cisco.com, particularly the chapters on Multisite VXLAN BGP EVPN and External VRF Connectivity.</p>
+<p>A spine used only for unicast routing needs fabric-interface IPs (point-to-point /30 or /31, or unnumbered from loopback 0 — unnumbered is again best practice) and at least one loopback for Layer 3 underlay routing. If the spine is overloaded with border-gateway or border-spine functions, more IP addresses are required.</p>
+
+<h2>IGP versus eBGP underlay</h2>
+<p>VXLAN is the data-plane protocol that works with the MP-BGP EVPN control plane. MP-BGP has been used with Multiprotocol Label Switching (MPLS) for two decades, and the latest evolution of MPLS with Segment Routing continues to use MP-BGP. In MPLS networks, MP-BGP signals the exchange of VPN or overlay routing information. The largest MPLS networks use IGPs such as OSPF or IS-IS in the underlay for provider-edge connectivity through the core. The IGP’s function is fast ingress-PE to egress-PE connectivity. Core routers had no overlay routes unless they had a route-reflector or route-server role. That history is one argument for using an IGP as the underlay in a VXLAN BGP EVPN network as well.</p>
+<p>Informational RFC 7938, “Use of BGP for Routing in Large-Scale Data Centers,” proposed using eBGP in a Clos fabric, with optimizations such as <code>maximum-paths</code> for ECMP and lowering Minimum Route Advertisement Interval (MRAI) timers so BGP behaves like an IGP. It is possible to create a very large-scale data-center fabric using eBGP. Whether it is worth tweaking BGP to behave like an IGP depends on the operational model. Some industries simplify systems by removing as many features as possible to avoid defects and reduce security attack vectors. Those reasons are valid but specific to the industry and operational goals; they do not apply to all sectors.</p>
+<p>A vital concluding point on RFC 7938 is that it does not discuss or propose using eBGP as an underlay in a VXLAN BGP EVPN fabric, or any overlay running in the data center. Referencing that RFC is not a strong argument for using eBGP as an underlay in VXLAN BGP EVPN fabrics.</p>
+<p>A fundamental design principle for any complex system is to break it into smaller functions. Overloading a single protocol like BGP to do underlay and overlay routing adds technical debt. Separating IGP for underlay and BGP for overlay allocates specialized functions to each protocol.</p>
+<p>Cisco Nexus 9000 NX-OS fully supports VXLAN BGP EVPN fabrics with IGP and eBGP underlays. Cisco’s best practice is to use an IGP, such as OSPF or IS-IS, in the underlay with an iBGP EVPN overlay. Some industries prefer eBGP; NX-OS fully supports that as well.</p>
+<table class="values"><thead><tr><th>Feature</th><th>IGP</th><th>eBGP</th></tr></thead><tbody><tr><td>Extensibility</td><td>IS-IS and OSPFv3 are multi-protocol. OSPFv2 only routes IPv4 prefixes.</td><td>BGP supports multiple address families including L2VPN, L3VPN, Flowspec, and others.</td></tr><tr><td>ECMP</td><td>IGPs support it natively.</td><td>BGP requires the maximum-path knob and must meet certain BGP best-path decision criteria.</td></tr><tr><td>Unnumbered interfaces</td><td>Supported.</td><td>Need an IPv6 underlay with LLA peering. An IPv4 underlay requires point-to-point routed interfaces with IP addresses.</td></tr><tr><td>Training / knowledge</td><td>IGPs have been well known by data-center engineers for decades, commonly deployed between distribution and core layers or even in routed-access networks down to the access layer.</td><td>MP-BGP is a relatively new technology in the data center. Data centers have predominantly been 3-tier access/distribution/core networks. BGP was between distribution and the firewall or core and WAN router. FabricPath, OTV, and TRILL were also Layer 2 overlays with IS-IS underlays.</td></tr><tr><td>Troubleshooting</td><td>Multiple protocols to monitor and troubleshoot: IGP plus MP-BGP.</td><td>A single protocol to configure, monitor, and troubleshoot.</td></tr><tr><td>Fault tolerance</td><td>Underlay and overlay are decoupled. Each protocol maps to a function.</td><td>An eBGP failure can bring down overlay and underlay.</td></tr><tr><td>Open standards</td><td>IS-IS, OSPFv2, and OSPFv3 are all open standards.</td><td>BGP is an open standard.</td></tr></tbody></table>
+
+<nav class="pn"><a href="/demo-ai-pod/vxlan-evpn/ndfc/"><span class="dir">Previous</span>Nexus Dashboard Fabric Controller</a><a href="/demo-ai-pod/vxlan-evpn/ospf/"><span class="dir">Next</span>OSPF Underlay</a></nav><!--vh--><section aria-label="Version history" id="version-history"><h2>Version history</h2><p>1 version: 0 committed versions from git history of <code>demo-ai-pod/vxlan-evpn/underlay-unicast/index.html</code> plus the current one. Each entry is a real commit of this page (summary = commit message, with the page size at that commit). Archived snapshots are recovered from git and are not live.</p><ul><li><b>v1 (current)</b> · 12 Nov 2026 02:05 AEDT (Melbourne time) · Add VXLAN BGP EVPN Design Guide subpages from the 2024 Cisco Nexus 9000 fundamental design and implementation guide, with lab renamed to demo · <a href="./">this page</a></li></ul></section><!--/vh--></main>
+<script>
+function aciCopy(btn){
+  var pre=btn.parentElement.querySelector('pre');
+  var t=pre?pre.textContent:'';
+  if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1400)});}
+  else{var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();btn.textContent='Copied';}
+}
+function aciFilter(q, table){
+  q=(q||'').toLowerCase();
+  table.querySelectorAll('tbody tr').forEach(function(tr){
+    tr.style.display=tr.textContent.toLowerCase().indexOf(q)>=0?'':'none';
+  });
+}
+function aciSort(table, col){
+  var tb=table.tBodies[0], rows=[].slice.call(tb.rows), ths=table.tHead.rows[0].cells;
+  var dir=table.getAttribute('data-dir')==='asc'&&table.getAttribute('data-col')==String(col)?'desc':'asc';
+  rows.sort(function(a,b){
+    var x=(a.cells[col]||{}).textContent.trim().toLowerCase();
+    var y=(b.cells[col]||{}).textContent.trim().toLowerCase();
+    if(x<y) return dir==='asc'?-1:1; if(x>y) return dir==='asc'?1:-1; return 0;
+  });
+  rows.forEach(function(r){tb.appendChild(r)});
+  table.setAttribute('data-dir',dir); table.setAttribute('data-col',col);
+  for(var i=0;i<ths.length;i++){ths[i].textContent=ths[i].textContent.replace(/[▲▼]\s*$/,''); if(i===col) ths[i].textContent+=' '+(dir==='asc'?'▲':'▼');}
+}
+function aciCsv(table, name){
+  var rows=[].slice.call(table.querySelectorAll('tr')).map(function(tr){
+    return [].slice.call(tr.cells).map(function(td){var t=td.innerText.replace(/"/g,'""');return '"'+t+'"'}).join(',');
+  });
+  var blob=new Blob([rows.join('\n')],{type:'text/csv'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name||'table.csv';a.click();
+}
+function aciZoom(src){
+  var b=document.getElementById('lightbox');
+  if(!b){b=document.createElement('div');b.id='lightbox';b.onclick=function(){b.classList.remove('on')};var i=document.createElement('img');i.className='tt-keep';b.appendChild(i);document.body.appendChild(b);}
+  b.querySelector('img').src=src;b.classList.add('on');
+}
+
+function aciCopyText(btn, text){
+  var t=text||'';
+  var done=function(){var o=btn.textContent;btn.textContent='Copied';setTimeout(function(){btn.textContent=o||'Copy'},1400)};
+  if(navigator.clipboard){navigator.clipboard.writeText(t).then(done).catch(done);}
+  else{var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();done();}
+}
+
+</script>
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/+$/,"")||"/"}}</script><script async="" data-goatcounter="https://amoeoo-coles.goatcounter.com/count" src="//gc.zgo.at/count.js"></script><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc){const pt=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Melbourne",hour:"2-digit",minute:"2-digit",hour12:false,hourCycle:"h23",timeZoneName:"short"}).formatToParts(new Date(d.updated_utc));const g=t=>(pt.find(x=>x.type===t)||{}).value||"";const tz=(g("timeZoneName")||"AEDT").replace("GMT+11","AEDT").replace("GMT+10","AEST");e.textContent=" (data as of "+g("hour")+":"+g("minute")+" "+tz+")"}})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script>
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:8px 0 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:6px;margin:0;padding:8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
+nav.site.im a.mi{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:auto;min-height:44px;min-width:0;padding:8px 10px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a)}
+nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:visible;text-overflow:unset;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.25;text-align:left}
+nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:22px;height:22px;padding:0 5px;border-radius:999px;font-size:16px;font-weight:800;line-height:1;background:#0f172a;color:#fff}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc;color:#0f172a}
+nav.site.im a.mi.on .im-seq{background:#fff;color:#1d4ed8}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px;flex:none}#sg-link,#tt-btn,#mm-link{height:36px;border-radius:18px}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["ARR Model","/netbox-yaml-model/arr/","🧪"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"],["Pod Policy Group","/aci-policy/pod-policy-group/","🕒"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["MCP Servers","/mcp-servers/","🔌",[["MCP Servers","/mcp-servers/","🔌"],["MCP for ACI","/mcp-servers/aci/","🟦"],["MCP for Nexus Dashboard","/mcp-servers/nexus-dashboard/","🟩"],["MCP for DNA","/mcp-servers/dna/","🟧"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"]]],["SpaceX Tracking","/spacex-tracking/","🚀",[["Overview","/spacex-tracking/","🚀"],["Boosters","/spacex-tracking/boosters/","🔥"],["Previous Starships analysis","/spacex-tracking/boosters/previous/","📊"],["Ships","/spacex-tracking/ships/","🛸"],["Launch & landing sites","/spacex-tracking/sites/","📍"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=(seq?String(seq)+'. ':'')+e[0];if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks \u203A';r2.appendChild(t);
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1))});r2.appendChild(pills);n.appendChild(r2)}}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+</body>
+</html>
