@@ -1,0 +1,751 @@
+<!doctype html><html lang="en"><head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  min-width:0;
+  padding:0 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:36px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover{opacity:1}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ACI Lab Guide Policy — Deployment status</title><style>body{margin:0;background:#0f141c;color:#e6edf3;font:15px/1.5 system-ui,Arial,sans-serif}main{max-width:1100px;margin:0 auto;padding:16px 20px 40px}a{color:#8ecbff}h1{margin:14px 0 6px}.lead{color:#c3cfdc}.cards{display:flex;flex-wrap:wrap;gap:14px;margin:18px 0}.card{flex:1 1 calc(33% - 14px);min-width:240px;box-sizing:border-box;background:#161d29;border:1px solid #2a3446;border-top:4px solid var(--c);border-radius:10px;padding:14px 16px;text-decoration:none!important;color:#e6edf3!important;transition:transform .12s,background .12s}.card:hover{background:#1c2636;transform:translateY(-2px)}.card .ic{font-size:26px}.card b{display:block;font-size:17px;margin:4px 0}.card span.d{font-size:13.5px;color:#aab6c4}.card .go{display:block;margin-top:8px;font-size:13px;color:#8ecbff}h2{border-left:6px solid var(--c);padding-left:10px;margin-top:28px}
+h1{margin:14px 0 6px}
+.lead{color:var(--muted,#c3cfdc);margin:0 0 12px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin:8px 0 16px;font-size:14px}
+.meta b{font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin:8px 0 14px;font-size:13px;color:var(--muted,#c3cfdc)}
+.legend .sw{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:16px;height:14px;border-radius:3px;flex:none}
+.legend .lg-done{background:#16a34a}
+.legend .lg-failed{background:#dc2626}
+.legend .lg-pending{background:#64748b}
+.legend .lg-running{background:#64748b;box-shadow:0 0 0 2px #f59e0b}
+h2.dep{border-left:6px solid #f59e0b;padding-left:10px;margin:22px 0 10px;font-size:20px}
+.topmeta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin:0 0 8px;font-size:13px;color:var(--muted,#94a3b8)}
+.uv{margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap}
+.chev-rows{display:flex;flex-direction:column;gap:8px;margin:8px 0 16px;width:100%}
+.chev-row{display:flex;width:100%;min-width:0}
+.chev{position:relative;flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:54px;padding:7px 16px 7px 22px;margin-left:-10px;color:#fff;text-align:center;font:700 11px/1.15 system-ui,Arial,sans-serif;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%,12px 50%);z-index:1}
+.chev.row-start{margin-left:0;padding-left:12px;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%);border-radius:8px 0 0 8px}
+.chev .n{font-size:10px;font-weight:800;opacity:.9}
+.chev .nm{font-size:11px;font-weight:700;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chev.done{background:#16a34a;z-index:2}
+.chev.failed{background:#dc2626;z-index:3}
+.chev.pending{background:#64748b}
+.chev.running{background:#64748b;box-shadow:inset 0 0 0 2px #f59e0b,0 0 0 1px #f59e0b;z-index:4;animation:chev-pulse 1.4s ease-in-out infinite}
+@keyframes chev-pulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25)}}
+.tblwrap{max-width:100%;overflow-x:auto;border:1px solid var(--line,#2a3446);border-radius:10px;background:var(--card,#161d29)}
+table.steps{width:100%;border-collapse:collapse;font-size:13.5px}
+table.steps th,table.steps td{padding:8px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line,#2a3446)}
+table.steps th{background:var(--th-bg,#1b2838);font-weight:700;white-space:nowrap}
+table.steps tbody tr:last-child td{border-bottom:0}
+table.steps td.t{white-space:nowrap}
+.st-pill{display:inline-block;padding:2px 8px;border-radius:999px;color:#fff;font-weight:700;font-size:12px;letter-spacing:.02em}
+.st-pill.done{background:#16a34a}
+.st-pill.failed{background:#dc2626}
+.st-pill.pending{background:#64748b}
+.st-pill.running{background:#64748b;box-shadow:0 0 0 2px #f59e0b}
+.note{font-size:13px;color:var(--muted,#94a3b8);margin-top:14px}
+@media (max-width:900px){
+  .chev-rows{gap:6px}
+  .chev{min-height:48px;padding:6px 14px 6px 18px;font-size:10px}
+  .chev .nm{white-space:normal}
+}
+@media (max-width:700px){
+  .chev-row{flex-wrap:wrap;gap:6px 0}
+  .chev{flex:1 1 calc(50% - 4px);margin-left:0;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%);border-radius:6px;margin:2px}
+  .chev.row-start{border-radius:6px}
+}
+</style></head><body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+
+
+
+
+
+
+
+
+
+
+
+
+<main>
+<nav class="site"><a href="/">Home</a></nav>
+<div class="topmeta">Updated <b id="updated-at">11 Nov 2026 23:10 AEDT</b> (Melbourne time)<span class="uv">Unique visitors (this page): <b class="uvc">…</b></span><span class="uvt"></span></div>
+<h1><span class="tt-keep">🚀</span> ACI Lab Guide Policy</h1>
+<p class="lead">Provisioning the lab-guide policy model to AOAPIC using the normal NetBox provision flow. Nothing is applied, merged or pushed until Aung’s emailed APPROVE arrives. <a href="/tasks/provisioning/">Provisioning tasks ›</a></p>
+<div class="meta">
+  <div><b>Source</b> · <a href="https://amoeoo-coles.github.io/aci-policy/aci-lab-guide-policy/">https://amoeoo-coles.github.io/aci-policy/aci-lab-guide-policy/</a></div>
+  <div><b>Target</b> · AOAPIC (https://sandboxapicdc.cisco.com)</div>
+  <div><b>Current step</b> · <span id="current-step">Build model (Running)</span></div>
+  <div><b>Progress</b> · <span id="progress">1 done · 1 running · 0 failed · 12 pending</span></div>
+</div>
+<h2 class="dep">Deployment status</h2>
+<div class="legend" id="legend">
+  <span class="sw"><i class="lg-done"></i> Green = done</span>
+  <span class="sw"><i class="lg-failed"></i> Red = failed</span>
+  <span class="sw"><i class="lg-pending"></i> Grey = pending</span>
+  <span class="sw"><i class="lg-running"></i> Grey + amber outline = running</span>
+</div>
+<div class="chev-rows" id="chevron-bar"><div class="chev-row"><div class="chev done row-start" data-id="fetch" title="Fetch source config — Done"><span class="n">1</span><span class="nm">Fetch source</span></div><div class="chev running" data-id="build-model" title="Build model — Running"><span class="n">2</span><span class="nm">Build model</span></div><div class="chev pending" data-id="validate" title="Validate model — Pending"><span class="n">3</span><span class="nm">Validate</span></div><div class="chev pending" data-id="netbox-branch" title="NetBox branch created — Pending"><span class="n">4</span><span class="nm">NetBox branch</span></div><div class="chev pending" data-id="precheck" title="Pre-check — Pending"><span class="n">5</span><span class="nm">Pre-check</span></div><div class="chev pending" data-id="drift" title="Drift check — Pending"><span class="n">6</span><span class="nm">Drift check</span></div><div class="chev pending" data-id="approval-email" title="Approval email sent — Pending"><span class="n">7</span><span class="nm">Approval email</span></div></div><div class="chev-row"><div class="chev pending row-start" data-id="aung-approval" title="Aung approval (Gmail) — Pending"><span class="n">8</span><span class="nm">Aung approval</span></div><div class="chev pending" data-id="apply" title="Apply to APIC — Pending"><span class="n">9</span><span class="nm">Apply to APIC</span></div><div class="chev pending" data-id="postcheck" title="Post-check — Pending"><span class="n">10</span><span class="nm">Post-check</span></div><div class="chev pending" data-id="post-backup" title="Post-change backup — Pending"><span class="n">11</span><span class="nm">Post backup</span></div><div class="chev pending" data-id="netbox-merge" title="NetBox branch merged — Pending"><span class="n">12</span><span class="nm">NetBox merge</span></div><div class="chev pending" data-id="post-email" title="Post email — Pending"><span class="n">13</span><span class="nm">Post email</span></div><div class="chev pending" data-id="push-origin" title="Push to Origin — Pending"><span class="n">14</span><span class="nm">Push to Origin</span></div></div></div>
+<div class="tblwrap"><table class="steps" id="steps-table"><thead><tr><th>#</th><th>Step</th><th>State</th><th>Time (AEDT)</th><th>Details</th></tr></thead><tbody><tr><td>1</td><td>Fetch source config</td><td><span class="st-pill done">Done</span></td><td class="t">11 Nov 2026 23:10 AEDT</td><td>Fetched ACI Demo Guide Policy page and aci-lab-guide-pod1-20261110-2356.nac.yaml (Cisco Live LTRDCN-2143 pod1 model; 2 tenants plus access/VMM/L3Out).</td></tr><tr><td>2</td><td>Build model</td><td><span class="st-pill running">Running</span></td><td class="t">11 Nov 2026 23:10 AEDT</td><td>Inspecting prior tenant provision flow and playbook capabilities before writing NaC files.</td></tr><tr><td>3</td><td>Validate model</td><td><span class="st-pill pending">Pending</span></td><td class="t">—</td><td>—</td></tr><tr><td>4</td><td>NetBox branch created</td><td><span class="st-pill pending">Pending</span></td><td class="t">—</td><td>—</td></tr><tr><td>5</td><td>Pre-check</td><td><span class="st-pill pending">Pending</span></td><td class="t">—</td><td>—</td></tr><tr><td>6</td><td>Drift check</td><td><span class="st-pill pending">Pending</span></td><td class="t">—</td><td>—</td></tr><tr><td>7</td><td>Approval email sent</td><td><span class="st-pill pending">Pending</span></td><td class="t">—</td><td>—</td></tr><tr><td>8</td><td>Aung approval (Gmail)</td><td><span class="st-pill pending">Pending</span></td><td class="t">—</td><td>Waiting for Aung's emailed APPROVE; not started.</td></tr><tr><td>9</td><td>Apply to APIC</td><td><span class="st-pill pending">Pending</span></td><td class="t">—</td><td>Blocked until Aung's emailed APPROVE.</td></tr><tr><td>10</td><td>Post-check</td><td><span class="st-pill pending">Pending</span></td><td class="t">—</td><td>—</td></tr><tr><td>11</td><td>Post-change backup</td><td><span class="st-pill pending">Pending</span></td><td class="t">—</td><td>—</td></tr><tr><td>12</td><td>NetBox branch merged</td><td><span class="st-pill pending">Pending</span></td><td class="t">—</td><td>Will not merge without approval.</td></tr><tr><td>13</td><td>Post email</td><td><span class="st-pill pending">Pending</span></td><td class="t">—</td><td>—</td></tr><tr><td>14</td><td>Push to Origin</td><td><span class="st-pill pending">Pending</span></td><td class="t">—</td><td>Needs separate approval; will not push.</td></tr></tbody></table></div>
+<p class="note">Times are shown in Australia/Melbourne (AEDT). The bar loads <code>status.json</code> next to this page when available, and falls back to the data baked in at last publish. This page has no credentials or secrets.</p>
+</main>
+<script id="status-fallback" type="application/json">{"task": "aci-lab-guide-policy", "source": "https://amoeoo-coles.github.io/aci-policy/aci-lab-guide-policy/", "target": "AOAPIC (https://sandboxapicdc.cisco.com)", "updated": "2026-11-11T23:10:39+11:00", "steps": [{"id": "fetch", "name": "Fetch source config", "state": "done", "time": "2026-11-11T23:10:39+11:00", "detail": "Fetched ACI Demo Guide Policy page and aci-lab-guide-pod1-20261110-2356.nac.yaml (Cisco Live LTRDCN-2143 pod1 model; 2 tenants plus access/VMM/L3Out).", "_n": 1}, {"id": "build-model", "name": "Build model", "state": "running", "time": "2026-11-11T23:10:39+11:00", "detail": "Inspecting prior tenant provision flow and playbook capabilities before writing NaC files.", "_n": 2}, {"id": "validate", "name": "Validate model", "state": "pending", "time": null, "detail": "", "_n": 3}, {"id": "netbox-branch", "name": "NetBox branch created", "state": "pending", "time": null, "detail": "", "_n": 4}, {"id": "precheck", "name": "Pre-check", "state": "pending", "time": null, "detail": "", "_n": 5}, {"id": "drift", "name": "Drift check", "state": "pending", "time": null, "detail": "", "_n": 6}, {"id": "approval-email", "name": "Approval email sent", "state": "pending", "time": null, "detail": "", "_n": 7}, {"id": "aung-approval", "name": "Aung approval (Gmail)", "state": "pending", "time": null, "detail": "Waiting for Aung's emailed APPROVE; not started.", "_n": 8}, {"id": "apply", "name": "Apply to APIC", "state": "pending", "time": null, "detail": "Blocked until Aung's emailed APPROVE.", "_n": 9}, {"id": "postcheck", "name": "Post-check", "state": "pending", "time": null, "detail": "", "_n": 10}, {"id": "post-backup", "name": "Post-change backup", "state": "pending", "time": null, "detail": "", "_n": 11}, {"id": "netbox-merge", "name": "NetBox branch merged", "state": "pending", "time": null, "detail": "Will not merge without approval.", "_n": 12}, {"id": "post-email", "name": "Post email", "state": "pending", "time": null, "detail": "", "_n": 13}, {"id": "push-origin", "name": "Push to Origin", "state": "pending", "time": null, "detail": "Needs separate approval; will not push.", "_n": 14}]}</script>
+<script>
+(function(){
+  var SHORT={"fetch":"Fetch source","build-model":"Build model","validate":"Validate","netbox-branch":"NetBox branch","precheck":"Pre-check","drift":"Drift check","approval-email":"Approval email","aung-approval":"Aung approval","apply":"Apply to APIC","postcheck":"Post-check","post-backup":"Post backup","netbox-merge":"NetBox merge","post-email":"Post email","push-origin":"Push to Origin"};
+  var LABEL={done:"Done",failed:"Failed",pending:"Pending",running:"Running"};
+  function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+  function fmt(t){
+    if(!t) return "—";
+    var d=new Date(t);
+    if(isNaN(d)) return "—";
+    var pt=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Melbourne",day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",hour12:false,hourCycle:"h23",timeZoneName:"short"}).formatToParts(d);
+    var g=function(k){return (pt.find(function(x){return x.type===k})||{}).value||""};
+    var tz=(g("timeZoneName")||"AEDT").replace("GMT+11","AEDT").replace("GMT+10","AEST").replace("UTC+11","AEDT").replace("UTC+10","AEST");
+    return g("day")+" "+g("month")+" "+g("year")+" "+g("hour")+":"+g("minute")+" "+tz;
+  }
+  function counts(steps){
+    var c={done:0,failed:0,pending:0,running:0};
+    steps.forEach(function(s){var k=s.state||"pending";c[k]=(c[k]||0)+1});
+    return c;
+  }
+  function current(steps){
+    return steps.find(function(s){return s.state==="running"})||
+           steps.find(function(s){return s.state==="failed"})||
+           steps.find(function(s){return s.state!=="done"})||
+           steps[steps.length-1];
+  }
+  function render(data){
+    var steps=data.steps||[];
+    var c=counts(steps);
+    var cur=current(steps);
+    var bar=document.getElementById("chevron-bar");
+    if(bar){
+      var html="";
+      for(var r=0;r<steps.length;r+=7){
+        var row=steps.slice(r,r+7);
+        html+='<div class="chev-row">';
+        row.forEach(function(st,i){
+          var state=st.state||"pending";
+          var n=r+i+1;
+          var name=SHORT[st.id]||st.name||"";
+          html+='<div class="chev '+esc(state)+(i===0?" row-start":"")+'" data-id="'+esc(st.id||"")+'" title="'+esc((st.name||"")+" — "+(LABEL[state]||state))+'"><span class="n">'+n+'</span><span class="nm">'+esc(name)+'</span></div>';
+        });
+        html+="</div>";
+      }
+      bar.innerHTML=html;
+    }
+    var tb=document.querySelector("#steps-table tbody");
+    if(tb){
+      tb.innerHTML=steps.map(function(st,i){
+        var state=st.state||"pending";
+        return "<tr><td>"+(i+1)+"</td><td>"+esc(st.name||"")+'</td><td><span class="st-pill '+esc(state)+'">'+esc(LABEL[state]||state)+"</span></td><td class=\"t\">"+esc(fmt(st.time))+"</td><td>"+esc(st.detail||"—")+"</td></tr>";
+      }).join("");
+    }
+    var ua=document.getElementById("updated-at");
+    if(ua) ua.textContent=fmt(data.updated);
+    var cs=document.getElementById("current-step");
+    if(cs&&cur) cs.textContent=(cur.name||"—")+" ("+(LABEL[cur.state]||cur.state)+")";
+    var pr=document.getElementById("progress");
+    if(pr) pr.textContent=c.done+" done · "+c.running+" running · "+c.failed+" failed · "+c.pending+" pending";
+  }
+  function fallback(){
+    try{return JSON.parse(document.getElementById("status-fallback").textContent)}catch(e){return null}
+  }
+  function load(){
+    fetch("status.json?t="+Date.now(),{cache:"no-store"}).then(function(r){
+      if(!r.ok) throw new Error("status "+r.status);
+      return r.json();
+    }).then(render).catch(function(){
+      var data=fallback();
+      if(data) render(data);
+    });
+  }
+  load();
+})();
+</script>
+<script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc){const pt=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Melbourne",hour:"2-digit",minute:"2-digit",hour12:false,hourCycle:"h23",timeZoneName:"short"}).formatToParts(new Date(d.updated_utc));const g=t=>(pt.find(x=>x.type===t)||{}).value||"";const tz=(g("timeZoneName")||"AEDT").replace("GMT+11","AEDT").replace("GMT+10","AEST");e.textContent=" (data as of "+g("hour")+":"+g("minute")+" "+tz+")"}})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script><!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:8px 0 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:6px;margin:0;padding:8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
+nav.site.im a.mi{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:36px;min-width:0;padding:0 10px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a)}
+nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
+nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px;flex:none}#sg-link,#tt-btn{height:36px;border-radius:18px}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="im-script">(function(){
+var G=[["Home", "/", "🏠", []], ["NETBOX", "/tasks/netbox/", "🗄️", [["NetBox ACI Tenants", "/netbox-aci-tenants/", "🗄️"], ["Tenant Diagrams", "/netbox-aci-tenants/diagrams/", "📐"], ["NB ACI Objects", "/netbox-aci-objects/", "🧱"], ["NB HW Inventory", "/netbox-hw-inventory/", "🖥️"], ["YAML Model", "/netbox-yaml-model/", "📄"], ["AOAPIC Model", "/netbox-yaml-model/aoapic/", "🌐"], ["ARR Model", "/netbox-yaml-model/arr/", "🧪"]]], ["PROVISIONING", "/tasks/provisioning/", "⚙️", [["Pending Provisioning", "/report17-aoapic-monitoring/pending-provisioning/", "⏳"], ["Universal Provisioning", "/report17-aoapic-monitoring/universal-provisioning/", "🧩"]]], ["MONITORING", "/tasks/monitoring/", "📊", [["Report 17", "/report17-aoapic-monitoring/", "📊"], ["Tenants Detail", "/report17-aoapic-monitoring/tenants/", "🏢"], ["Object Drill-down", "/report17-aoapic-monitoring/objects/", "🔍"], ["AOAPIC Faults", "/tasks/monitoring/aoapic/", "🌐"], ["ARR Faults", "/tasks/monitoring/arr/", "🗄️"], ["Group 1", "/grafana-screenshots/", "📈"], ["Group 2", "/grafana-screenshots-part2/", "📉"]]], ["TESTING", "/tasks/testing/", "🧪", [["nac-test Status", "/aoapic-nac-test-status/", "✅"], ["AOAPIC defaults", "/testing/aoapic-defaults/", "📄"], ["ARR defaults", "/testing/arr-defaults/", "🧪"], ["Defaults compare", "/testing/defaults-compare/", "⚖️"]]], ["ACI Policy", "/aci-policy/", "🧭", [["ACI Policy", "/aci-policy/", "🧭"], ["Policy Universe", "/aci-policy/policy-universe/", "🌌"], ["Tenants", "/aci-policy/tenants/", "🏢"], ["Policy Tenant", "/aci-policy/policy-tenant/", "🧱"], ["ACI Lab Guide Policy", "/aci-policy/aci-lab-guide-policy/", "📘"], ["Lab Guide Diagrams", "/aci-policy/aci-lab-guide-policy/diagrams/", "🗺️"], ["Fabric, Access, Inventory", "/aci-policy/fabric-access-inventory/", "🕸️"], ["Pod Policy Group", "/aci-policy/pod-policy-group/", "🕒"]]], ["ACI Multi-Pod", "/aci-multipod/", "🔗", [["ACI Multi-Pod", "/aci-multipod/", "🔗"], ["Overview", "/aci-multipod/overview/", "📘"], ["Planning", "/aci-multipod/planning/", "📋"], ["Design", "/aci-multipod/design/", "📐"], ["Migration", "/aci-multipod/migration/", "↪️"], ["Deployment", "/aci-multipod/deployment/", "🛠️"], ["Operations", "/aci-multipod/operations/", "🩺"], ["NaC YAML", "/aci-multipod/yaml/", "📄"]]], ["ACI Azure VXLAN", "/aci-azure-vxlan/", "☁️", [["ACI Azure VXLAN", "/aci-azure-vxlan/", "☁️"], ["Physical Rack", "/aci-azure-vxlan/physical-rack/", "🗄️"], ["Logical Topology", "/aci-azure-vxlan/logical/", "🔀"], ["Tenant Diagram", "/aci-azure-vxlan/tenant-diagram/", "🗺️"], ["YAML Files", "/aci-azure-vxlan/yaml/", "📄"], ["Deployment", "/aci-azure-vxlan/deployment/", "🛠️"]]], ["Firewall Domain", "/firewall-domain/", "🛡️", [["Firewall Domain", "/firewall-domain/", "🛡️"], ["Cisco FMT", "/firewall-domain/cisco-fmt/", "🔄"], ["Palo Alto", "/firewall-domain/palo-alto/", "🟧"], ["Other tools", "/firewall-domain/other/", "🧰"], ["ASA build", "/firewall-domain/asa-build/", "📄"]]], ["ACI Lab Guide", "/aci-lab-guide/", "🧪", [["ACI Lab Guide", "/aci-lab-guide/", "🧪"], ["Introduction", "/aci-lab-guide/introduction/", "👋"], ["ACI Basics", "/aci-lab-guide/aci-basics/", "📘"], ["Access Policies", "/aci-lab-guide/access-policies/", "🔗"], ["VMM Integration", "/aci-lab-guide/vmm/", "💻"], ["Tenants", "/aci-lab-guide/tenants/", "🏢"], ["Day 2 Operations", "/aci-lab-guide/day2/", "🩺"], ["Endpoint Security Group", "/aci-lab-guide/esg/", "🛡️"], ["ACI Segmentation", "/aci-lab-guide/segmentation/", "✂️"], ["Nexus Dashboard", "/aci-lab-guide/nexus-dashboard/", "🟩"], ["Orchestrator", "/aci-lab-guide/orchestrator/", "🌐"], ["Insights", "/aci-lab-guide/insights/", "💡"], ["Conclusion", "/aci-lab-guide/conclusion/", "✅"], ["References", "/aci-lab-guide/references/", "📚"]]], ["MCP Servers", "/mcp-servers/", "🔌", [["MCP Servers", "/mcp-servers/", "🔌"], ["MCP for ACI", "/mcp-servers/aci/", "🟦"], ["MCP for Nexus Dashboard", "/mcp-servers/nexus-dashboard/", "🟩"], ["MCP for DNA", "/mcp-servers/dna/", "🟧"]]], ["ITIL", "/tasks/itil/", "📋", [["AOAPIC ITIL", "/itil/aoapic/", "🌐"], ["ARR ITIL", "/itil/arr/", "🧪"], ["Site Wiki", "/itil/wiki/", "📖"]]], ["RoadMap", "/roadmap/", "🗺️", [["RoadMap", "/roadmap/", "🗺️"], ["MindMap", "/mindmap/", "🧠"]]], ["Visitors", "/visitors/", "👥", [["Visitors", "/visitors/", "👥"], ["Status", "/status/", "🚦"], ["Trends", "/visitors/trends/", "📈"], ["Countries", "/visitors/countries/", "🌍"]]]];
+function mk(e,on,cls,n){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=e[0];var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks \u203A';r2.appendChild(t);
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm'))});r2.appendChild(pills);n.appendChild(r2)}}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
+})();</script>
+</body></html>
