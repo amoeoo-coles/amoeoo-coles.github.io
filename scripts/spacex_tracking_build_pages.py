@@ -23,6 +23,25 @@ CHROME_FOOT_SOURCE = ROOT / "status" / "index.html"
 MARKER = "<!-- spacex-tracking-generated v1 -->"
 
 
+def sxt_nav(active: str) -> str:
+    tabs = [
+        ("overview", "/spacex-tracking/", "Overview"),
+        ("boosters", "/spacex-tracking/boosters/", "Super Heavy boosters"),
+        ("previous", "/spacex-tracking/boosters/previous/", "Previous Starships analysis"),
+        ("ships", "/spacex-tracking/ships/", "Starship ships"),
+        ("sites", "/spacex-tracking/sites/", "Launch &amp; landing sites"),
+    ]
+    parts = []
+    for key, href, label in tabs:
+        cls = ' class="on"' if key == active else ""
+        parts.append(f"<a{cls} href=\"{href}\">{label}</a>")
+    return (
+        '<nav class="sxt-nav" aria-label="SpaceX tracking sections">\n'
+        + "\n".join(parts)
+        + "\n</nav>"
+    )
+
+
 def load_chrome() -> tuple[str, str, str]:
     """Return (head_through_tt_script, topbar, footer_from_goatcounter)."""
     src = CHROME_HEAD_SOURCE.read_text(encoding="utf-8")
@@ -86,12 +105,7 @@ LANDING_BODY = """
   <p class="sxt-meta" id="sxt-avid-credit"></p>
 </div>
 <div id="sxt-next-flight" aria-live="polite"><p class="sxt-meta">Loading next flight…</p></div>
-<nav class="sxt-nav" aria-label="SpaceX tracking sections">
-  <a class="on" href="/spacex-tracking/">Overview</a>
-  <a href="/spacex-tracking/boosters/">Super Heavy boosters</a>
-  <a href="/spacex-tracking/ships/">Starship ships</a>
-  <a href="/spacex-tracking/sites/">Launch &amp; landing sites</a>
-</nav>
+""" + sxt_nav("overview") + """
 <h2>Launch &amp; landing sites (summary)</h2>
 <div id="sxt-sites-summary"><p class="sxt-meta">Loading sites…</p></div>
 <h2>Vehicle preview</h2>
@@ -111,10 +125,8 @@ BOOSTERS_BODY = """
 <div class="sxt-hero"><h1><span class="tt-keep">🔥</span> Super Heavy boosters</h1>
 <p>Megabay 1. Confirmed cryo/static-fire counts; AVID graphic notes where stale.</p>
 <p class="sxt-meta" id="sxt-list-meta">Loading…</p></div>
-<nav class="sxt-nav" aria-label="SpaceX tracking sections">
-<a href="/spacex-tracking/">Overview</a><a class="on" href="/spacex-tracking/boosters/">Super Heavy boosters</a>
-<a href="/spacex-tracking/ships/">Starship ships</a>
-<a href="/spacex-tracking/sites/">Launch &amp; landing sites</a></nav>
+""" + sxt_nav("boosters") + """
+<p class="sxt-meta"><a href="/spacex-tracking/boosters/previous/">Previous Starships analysis →</a></p>
 <div id="sxt-grid"><p class="sxt-meta">Loading…</p></div>
 <p class="sxt-meta"><a href="/spacex-tracking/data/boosters.json">boosters.json</a></p>
 """
@@ -126,10 +138,7 @@ SHIPS_BODY = """
 <div class="sxt-stars" aria-hidden="true"></div>
 <div class="sxt-hero"><h1><span class="tt-keep">🛸</span> Starship ships</h1>
 <p>Megabay 2 upper stages.</p><p class="sxt-meta" id="sxt-list-meta">Loading…</p></div>
-<nav class="sxt-nav" aria-label="SpaceX tracking sections">
-<a href="/spacex-tracking/">Overview</a><a href="/spacex-tracking/boosters/">Super Heavy boosters</a>
-<a class="on" href="/spacex-tracking/ships/">Starship ships</a>
-<a href="/spacex-tracking/sites/">Launch &amp; landing sites</a></nav>
+""" + sxt_nav("ships") + """
 <div id="sxt-grid"><p class="sxt-meta">Loading…</p></div>
 <p class="sxt-meta"><a href="/spacex-tracking/data/ships.json">ships.json</a></p>
 """
@@ -142,10 +151,7 @@ SITES_BODY = """
 <div class="sxt-hero"><h1><span class="tt-keep">📍</span> Launch &amp; landing sites</h1>
 <p>Starbase pads, Florida Starship complexes, and Louisiana/Gulf context — from public sources only.</p>
 <p class="sxt-meta" id="sxt-list-meta">Loading…</p></div>
-<nav class="sxt-nav" aria-label="SpaceX tracking sections">
-<a href="/spacex-tracking/">Overview</a><a href="/spacex-tracking/boosters/">Super Heavy boosters</a>
-<a href="/spacex-tracking/ships/">Starship ships</a>
-<a class="on" href="/spacex-tracking/sites/">Launch &amp; landing sites</a></nav>
+""" + sxt_nav("sites") + """
 <div id="sxt-sites"><p class="sxt-meta">Loading…</p></div>
 <p class="sxt-meta"><a href="/spacex-tracking/data/sites.json">sites.json</a></p>
 """
@@ -153,10 +159,49 @@ SITES_BODY = """
 SITES_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
 <script>SpaceXTrack.initSites({dataUrl:"/spacex-tracking/data/sites.json",gridId:"sxt-sites",metaUrl:"/spacex-tracking/data/meta.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
 
+PREVIOUS_BODY = """
+<div class="sxt-stars" aria-hidden="true"></div>
+<div class="sxt-hero sxt-hero-lg">
+  <h1><span class="tt-keep">📊</span> Previous Starships analysis</h1>
+  <p>Integrated flight tests from Flight 1 (20 Apr 2023) through the latest flown mission. Times are Australia/Melbourne unless UTC is shown in the table. Data from public sources only.</p>
+  <p class="sxt-meta" id="sxt-list-meta">Loading…</p>
+</div>
+""" + sxt_nav("previous") + """
+<div class="sxt-prev-page">
+<div class="sxt-prev-kpis" id="sxt-prev-kpis"><p class="sxt-meta">Loading summary…</p></div>
+<div class="sxt-prev-learn" id="sxt-prev-learn"></div>
+<h2>Charts</h2>
+<div class="sxt-prev-charts">
+  <div class="sxt-prev-chart" id="sxt-chart-booster"></div>
+  <div class="sxt-prev-chart" id="sxt-chart-ship"></div>
+  <div class="sxt-prev-chart" id="sxt-chart-rate"></div>
+</div>
+<h2>Flight table</h2>
+<div class="sxt-prev-table-wrap">
+<table class="sxt-prev-table">
+<thead><tr>
+<th>Flight</th><th>Date</th><th>Pad</th><th>Booster</th><th>Ship</th>
+<th>Booster outcome</th><th>Ship outcome</th><th>Engines</th><th>FAA mishap</th><th>Sources</th>
+</tr></thead>
+<tbody id="sxt-prev-rows"><tr><td colspan="10">Loading…</td></tr></tbody>
+</table>
+</div>
+<h2>Previous boosters</h2>
+<div id="sxt-prev-boosters"><p class="sxt-meta">Loading…</p></div>
+<h2>Previous ships</h2>
+<div id="sxt-prev-ships"><p class="sxt-meta">Loading…</p></div>
+<p class="sxt-meta"><a href="/spacex-tracking/data/previous_flights.json">previous_flights.json</a></p>
+</div>
+"""
+
+PREVIOUS_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
+<script>SpaceXTrack.initPreviousAnalysis({dataUrl:"/spacex-tracking/data/previous_flights.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
+
 
 PAGES = [
     (TRACK / "index.html", "SpaceX Tracking — Starship production", LANDING_BODY, LANDING_TAIL),
     (TRACK / "boosters" / "index.html", "SpaceX Tracking — Super Heavy boosters", BOOSTERS_BODY, BOOSTERS_TAIL),
+    (TRACK / "boosters" / "previous" / "index.html", "SpaceX Tracking — Previous Starships analysis", PREVIOUS_BODY, PREVIOUS_TAIL),
     (TRACK / "ships" / "index.html", "SpaceX Tracking — Starship ships", SHIPS_BODY, SHIPS_TAIL),
     (TRACK / "sites" / "index.html", "SpaceX Tracking — Launch & landing sites", SITES_BODY, SITES_TAIL),
 ]
