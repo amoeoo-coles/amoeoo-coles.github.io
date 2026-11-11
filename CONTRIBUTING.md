@@ -32,4 +32,6 @@ Regenerate tracker HTML (chrome + menu) with:
 python3 scripts/spacex_tracking_build_pages.py
 ```
 
+Historical flight table data lives in `spacex-tracking/data/previous_flights.json` (included in `spacex_tracking_snapshot.py`).
+
 Paths under `spacex-tracking/` are skipped by other HTML publish scripts; see `scripts/site_html_guards.py`.

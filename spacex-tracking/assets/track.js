@@ -9,7 +9,13 @@
     "static fire": 78,
     "ready": 92,
     "flown": 100,
-    "lost/retired": 100
+    "lost/retired": 100,
+    catch: 100,
+    controlled_splashdown: 100,
+    catch_aborted: 100,
+    lost: 100,
+    precluded: 100,
+    orbit_and_deploy: 100
   };
 
   function progressForVehicle(v) {
@@ -494,12 +500,344 @@
       });
   }
 
+  function badgeForBooster(outcome) {
+    var map = {
+      catch: ["catch", "sxt-badge-ok"],
+      controlled_splashdown: ["controlled splashdown", "sxt-badge-mid"],
+      catch_aborted: ["catch aborted → Gulf", "sxt-badge-warn"],
+      lost: ["lost", "sxt-badge-bad"],
+      precluded: ["precluded", "sxt-badge-muted"]
+    };
+    var m = map[outcome] || [outcome || "unknown", "sxt-badge-muted"];
+    return '<span class="sxt-badge ' + m[1] + '">' + esc(m[0]) + "</span>";
+  }
+
+  function badgeForShip(outcome) {
+    var map = {
+      orbit_and_deploy: ["orbit + deploy", "sxt-badge-orbit"],
+      controlled_splashdown: ["controlled splashdown", "sxt-badge-mid"],
+      lost: ["lost", "sxt-badge-bad"],
+      precluded: ["precluded", "sxt-badge-muted"]
+    };
+    var m = map[outcome] || [outcome || "unknown", "sxt-badge-muted"];
+    return '<span class="sxt-badge ' + m[1] + '">' + esc(m[0]) + "</span>";
+  }
+
+  function flownCardFromFlight(f, kind) {
+    var veh = kind === "booster" ? f.booster : f.ship;
+    var out = kind === "booster" ? f.booster_outcome : f.ship_outcome;
+    return {
+      id: veh.id,
+      name: veh.label,
+      build_site: "Flown · " + f.launch_pad,
+      stage: out,
+      cryo_test_count: null,
+      static_fire_count: null,
+      assigned_flight: "Flight " + f.flight_number,
+      assignment_status: "official",
+      latest_note: f.summary_line,
+      last_verified: "2026-11-11",
+      source: (f.sources && f.sources[0]) || { title: "unknown", url: "#" }
+    };
+  }
+
+  function barChart(title, labels, values, colors) {
+    var max = Math.max.apply(null, values.concat([1]));
+    var h = 140;
+    var w = Math.max(320, labels.length * 48);
+    var bars = labels
+      .map(function (lb, i) {
+        var bh = Math.round((values[i] / max) * (h - 30));
+        var x = 36 + i * 44;
+        return (
+          '<rect x="' +
+          x +
+          '" y="' +
+          (h - 10 - bh) +
+          '" width="28" height="' +
+          bh +
+          '" fill="' +
+          (colors[i] || "var(--sxt-accent)") +
+          '" rx="3"/>' +
+          '<text x="' +
+          (x + 14) +
+          '" y="' +
+          (h - 14 - bh) +
+          '" text-anchor="middle" font-size="14" fill="var(--ink)">' +
+          values[i] +
+          "</text>" +
+          '<text x="' +
+          (x + 14) +
+          '" y="' +
+          (h + 4) +
+          '" text-anchor="middle" font-size="13" fill="var(--muted)">F' +
+          lb +
+          "</text>"
+        );
+      })
+      .join("");
+    return (
+      '<svg xmlns="http://www.w3.org/2000/svg" width="' +
+      w +
+      '" height="' +
+      (h + 24) +
+      '" role="img" aria-label="' +
+      esc(title) +
+      '">' +
+      bars +
+      "</svg>"
+    );
+  }
+
+  function rateBars(title, groups) {
+    var keys = Object.keys(groups);
+    var h = 120;
+    var w = Math.max(280, keys.length * 80);
+    var bars = keys
+      .map(function (k, i) {
+        var pct = groups[k];
+        var bh = Math.round((pct / 100) * 80);
+        var x = 30 + i * 72;
+        return (
+          '<rect x="' +
+          x +
+          '" y="' +
+          (90 - bh) +
+          '" width="48" height="' +
+          bh +
+          '" fill="var(--sxt-accent)" rx="4"/>' +
+          '<text x="' +
+          (x + 24) +
+          '" y="' +
+          (84 - bh) +
+          '" text-anchor="middle" font-size="14">' +
+          pct +
+          "%</text>" +
+          '<text x="' +
+          (x + 24) +
+          '" y="108" text-anchor="middle" font-size="13" fill="var(--muted)">' +
+          esc(k) +
+          "</text>"
+        );
+      })
+      .join("");
+    return (
+      '<svg xmlns="http://www.w3.org/2000/svg" width="' +
+      w +
+      '" height="' +
+      h +
+      '" role="img" aria-label="' +
+      esc(title) +
+      '">' +
+      bars +
+      "</svg>"
+    );
+  }
+
+  function initPreviousAnalysis(opts) {
+    var dataUrl = opts.dataUrl;
+    return loadJson(dataUrl)
+      .then(function (data) {
+        var flights = data.flights || [];
+        var metaEl = opts.metaEl;
+        if (metaEl) {
+          metaEl.textContent =
+            "Public-source flight history · verified " + (data.last_verified || "unknown");
+        }
+        var catches = flights.filter(function (f) {
+          return f.booster_outcome === "catch";
+        }).length;
+        var boosterLost = flights.filter(function (f) {
+          return f.booster_outcome === "lost";
+        }).length;
+        var shipSoft = flights.filter(function (f) {
+          return (
+            f.ship_outcome === "controlled_splashdown" || f.ship_outcome === "orbit_and_deploy"
+          );
+        }).length;
+        var shipLost = flights.filter(function (f) {
+          return f.ship_outcome === "lost";
+        }).length;
+        var v1 = flights.filter(function (f) {
+          return f.ship.block === "Block 1";
+        }).length;
+        var v2 = flights.filter(function (f) {
+          return f.ship.block === "Block 2";
+        }).length;
+        var v3 = flights.filter(function (f) {
+          return f.ship.block === "Block 3";
+        }).length;
+        var kpi = document.getElementById("sxt-prev-kpis");
+        if (kpi) {
+          kpi.innerHTML = [
+            ["Flights", flights.length],
+            ["Booster catches", catches],
+            ["Booster losses", boosterLost],
+            ["Ships soft / orbit OK", shipSoft],
+            ["Ships lost", shipLost],
+            ["V1 / V2 / V3 flights", v1 + " / " + v2 + " / " + v3]
+          ]
+            .map(function (row) {
+              return (
+                '<div class="sxt-prev-kpi"><span class="v">' +
+                row[1] +
+                '</span><span class="l">' +
+                row[0] +
+                "</span></div>"
+              );
+            })
+            .join("");
+        }
+        var learn = document.getElementById("sxt-prev-learn");
+        if (learn && data.learnings) {
+          learn.innerHTML =
+            "<h2>What we learned</h2><ul>" +
+            data.learnings.map(function (b) {
+              return "<li>" + esc(b) + "</li>";
+            }) +
+            "</ul>";
+        }
+        var tbody = document.getElementById("sxt-prev-rows");
+        if (tbody) {
+          tbody.innerHTML = flights
+            .map(function (f) {
+              return (
+                "<tr><td><strong>Flight " +
+                f.flight_number +
+                "</strong></td><td>" +
+                melbourneLabel(f.date_utc) +
+                "<br/><span class=\"sxt-dim\">" +
+                esc(f.date_utc) +
+                "</span></td><td>" +
+                esc(f.launch_pad) +
+                "</td><td>" +
+                esc(f.booster.label) +
+                "<br/><span class=\"sxt-dim\">" +
+                esc(f.booster.block) +
+                "</span></td><td>" +
+                esc(f.ship.label) +
+                "<br/><span class=\"sxt-dim\">" +
+                esc(f.ship.block) +
+                "</span></td><td>" +
+                badgeForBooster(f.booster_outcome) +
+                "<br/><span class=\"sxt-dim\">" +
+                esc(f.booster_failure_stage) +
+                "</span></td><td>" +
+                badgeForShip(f.ship_outcome) +
+                "<br/><span class=\"sxt-dim\">" +
+                esc(f.ship_failure_stage) +
+                "</span></td><td>" +
+                esc(f.engines_note) +
+                "</td><td>" +
+                esc(f.faa_mishap) +
+                "</td><td>" +
+                (f.sources || [])
+                  .map(function (s) {
+                    return (
+                      '<a href="' +
+                      esc(s.url) +
+                      '" target="_blank" rel="noopener">' +
+                      esc(s.title) +
+                      "</a>"
+                    );
+                  })
+                  .join("<br/>") +
+                "</td></tr>"
+              );
+            })
+            .join("");
+        }
+        var nums = flights.map(function (f) {
+          return f.flight_number;
+        });
+        var bScore = flights.map(function (f) {
+          return f.booster_outcome === "catch"
+            ? 3
+            : f.booster_outcome === "controlled_splashdown" ||
+              f.booster_outcome === "catch_aborted"
+            ? 2
+            : f.booster_outcome === "lost"
+            ? 0
+            : 1;
+        });
+        var sScore = flights.map(function (f) {
+          return f.ship_outcome === "orbit_and_deploy"
+            ? 3
+            : f.ship_outcome === "controlled_splashdown"
+            ? 2
+            : f.ship_outcome === "lost"
+            ? 0
+            : 1;
+        });
+        var chB = document.getElementById("sxt-chart-booster");
+        if (chB) {
+          chB.innerHTML =
+            "<h3>Booster outcome by flight (taller = better)</h3>" +
+            barChart("Booster", nums, bScore, bScore.map(function (v) {
+              return v === 3 ? "#166534" : v === 2 ? "#2563eb" : v === 0 ? "#991b1b" : "#64748b";
+            }));
+        }
+        var chS = document.getElementById("sxt-chart-ship");
+        if (chS) {
+          chS.innerHTML =
+            "<h3>Ship outcome by flight (taller = better)</h3>" +
+            barChart("Ship", nums, sScore, sScore.map(function (v) {
+              return v === 3 ? "#6b21a8" : v === 2 ? "#2563eb" : v === 0 ? "#991b1b" : "#64748b";
+            }));
+        }
+        var byBlock = { "Block 1": { ok: 0, n: 0 }, "Block 2": { ok: 0, n: 0 }, "Block 3": { ok: 0, n: 0 } };
+        flights.forEach(function (f) {
+          var b = f.ship.block;
+          if (!byBlock[b]) return;
+          byBlock[b].n++;
+          if (f.mission_success === "success") byBlock[b].ok++;
+        });
+        var rates = {};
+        Object.keys(byBlock).forEach(function (k) {
+          rates[k] =
+            byBlock[k].n > 0 ? Math.round((byBlock[k].ok / byBlock[k].n) * 100) : 0;
+        });
+        var chR = document.getElementById("sxt-chart-rate");
+        if (chR) {
+          chR.innerHTML =
+            "<h3>Mission success rate by ship block (%)</h3>" +
+            rateBars("Rate", rates);
+        }
+        var uniqBoosters = [];
+        var seenB = {};
+        flights.forEach(function (f) {
+          if (!seenB[f.booster.id]) {
+            seenB[f.booster.id] = true;
+            uniqBoosters.push(flownCardFromFlight(f, "booster"));
+          }
+        });
+        var uniqShips = [];
+        var seenS = {};
+        flights.forEach(function (f) {
+          if (!seenS[f.ship.id]) {
+            seenS[f.ship.id] = true;
+            uniqShips.push(flownCardFromFlight(f, "ship"));
+          }
+        });
+        renderGrid(uniqBoosters, document.getElementById("sxt-prev-boosters"));
+        renderGrid(uniqShips, document.getElementById("sxt-prev-ships"));
+      })
+      .catch(function (err) {
+        var el = document.getElementById("sxt-prev-rows");
+        if (el) {
+          el.innerHTML =
+            '<tr><td colspan="10" class="sxt-err">' + esc(err.message) + "</td></tr>";
+        }
+      });
+  }
+
   global.SpaceXTrack = {
     renderGrid: renderGrid,
     renderSitesByGroup: renderSitesByGroup,
     initListing: initListing,
     initLanding: initLanding,
     initSites: initSites,
+    initPreviousAnalysis: initPreviousAnalysis,
     progressForVehicle: progressForVehicle
   };
 })(window);

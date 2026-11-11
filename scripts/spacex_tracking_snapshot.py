@@ -19,7 +19,7 @@ TRACK = ROOT / "spacex-tracking"
 DATA = TRACK / "data"
 HISTORY = TRACK / "history"
 META = DATA / "meta.json"
-SNAPSHOT_FILES = ("boosters.json", "ships.json", "sites.json", "meta.json")
+SNAPSHOT_FILES = ("boosters.json", "ships.json", "sites.json", "previous_flights.json", "meta.json")
 
 
 def melbourne_now() -> datetime:
