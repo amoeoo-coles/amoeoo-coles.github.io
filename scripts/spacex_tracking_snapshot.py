@@ -2,6 +2,7 @@
 """Copy current SpaceX tracking JSON into history/YYYY-MM-DD/ and refresh version list.
 
 HTML for this section is rebuilt only via spacex_tracking_build_pages.py (never from /status/).
+raptor.json is snapshotted with other data; update it manually when public Raptor specs change.
 """
 
 from __future__ import annotations
@@ -19,7 +20,14 @@ TRACK = ROOT / "spacex-tracking"
 DATA = TRACK / "data"
 HISTORY = TRACK / "history"
 META = DATA / "meta.json"
-SNAPSHOT_FILES = ("boosters.json", "ships.json", "sites.json", "previous_flights.json", "meta.json")
+SNAPSHOT_FILES = (
+    "boosters.json",
+    "ships.json",
+    "sites.json",
+    "previous_flights.json",
+    "raptor.json",
+    "meta.json",
+)
 
 
 def melbourne_now() -> datetime:

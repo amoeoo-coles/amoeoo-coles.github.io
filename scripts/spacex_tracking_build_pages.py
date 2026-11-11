@@ -31,6 +31,8 @@ def sxt_nav(active: str) -> str:
         ("boosters", "/spacex-tracking/boosters/", "Boosters"),
         ("sites", "/spacex-tracking/sites/", "Launch &amp; landing sites"),
         ("previous", "/spacex-tracking/boosters/previous/", "Previous Starships analysis"),
+        ("raptor", "/spacex-tracking/raptor/", "Raptor production"),
+        ("control", "/spacex-tracking/control-center/", "SpaceX control center"),
     ]
     parts = []
     for key, href, label in tabs:
@@ -198,6 +200,51 @@ PREVIOUS_BODY = """
 PREVIOUS_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
 <script>SpaceXTrack.initPreviousAnalysis({dataUrl:"/spacex-tracking/data/previous_flights.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
 
+RAPTOR_BODY = """
+<div class="sxt-stars" aria-hidden="true"></div>
+<div class="sxt-hero sxt-hero-lg">
+  <h1><span class="tt-keep">⚙️</span> Raptor production</h1>
+  <p>Public specifications, build/test sites, and flight engine-out notes for the Starship methane engine family.</p>
+  <p class="sxt-meta" id="sxt-list-meta">Loading…</p>
+</div>
+""" + sxt_nav("raptor") + """
+<div class="sxt-raptor-page sxt-prev-page">
+<div id="sxt-raptor-layout"></div>
+<h2>Per-flight engine notes</h2>
+<div id="sxt-raptor-events"></div>
+<p class="sxt-meta"><a href="/spacex-tracking/data/raptor.json">raptor.json</a></p>
+</div>
+"""
+
+RAPTOR_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
+<script>SpaceXTrack.initRaptor({dataUrl:"/spacex-tracking/data/raptor.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
+
+CONTROL_BODY = """
+<div class="sxt-stars" aria-hidden="true"></div>
+<div class="sxt-hero sxt-cc-hero">
+  <h1><span class="tt-keep">🛰️</span> SpaceX control center</h1>
+  <p>Mission-style dashboard from local JSON only — no live SpaceX API calls.</p>
+  <p class="sxt-meta" id="sxt-cc-updated">Loading…</p>
+</div>
+""" + sxt_nav("control") + """
+<div class="sxt-cc-grid">
+<section class="sxt-cc-panel sxt-cc-countdown" aria-live="polite">
+  <h2>Next launch countdown</h2>
+  <p class="sxt-cc-big" id="sxt-cc-countdown">Loading…</p>
+  <p class="sxt-meta" id="sxt-cc-countdown-sub"></p>
+</section>
+<section class="sxt-cc-panel" id="sxt-cc-next"></section>
+<section class="sxt-cc-panel" id="sxt-cc-latest"></section>
+<section class="sxt-cc-panel" id="sxt-cc-fleet"></section>
+<section class="sxt-cc-panel" id="sxt-cc-pads"></section>
+<section class="sxt-cc-panel" id="sxt-cc-raptor"></section>
+<section class="sxt-cc-panel sxt-cc-links" id="sxt-cc-links"></section>
+</div>
+"""
+
+CONTROL_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
+<script>SpaceXTrack.initControlCenter({metaUrl:"/spacex-tracking/data/meta.json",shipsUrl:"/spacex-tracking/data/ships.json",boostersUrl:"/spacex-tracking/data/boosters.json",sitesUrl:"/spacex-tracking/data/sites.json",raptorUrl:"/spacex-tracking/data/raptor.json",previousUrl:"/spacex-tracking/data/previous_flights.json",updatedEl:document.getElementById("sxt-cc-updated")});</script>"""
+
 
 PAGES = [
     (TRACK / "index.html", "SpaceX Tracking — Starship production", LANDING_BODY, LANDING_TAIL),
@@ -205,6 +252,8 @@ PAGES = [
     (TRACK / "boosters" / "previous" / "index.html", "SpaceX Tracking — Previous Starships analysis", PREVIOUS_BODY, PREVIOUS_TAIL),
     (TRACK / "ships" / "index.html", "SpaceX Tracking — Starship ships", SHIPS_BODY, SHIPS_TAIL),
     (TRACK / "sites" / "index.html", "SpaceX Tracking — Launch & landing sites", SITES_BODY, SITES_TAIL),
+    (TRACK / "raptor" / "index.html", "SpaceX Tracking — Raptor production", RAPTOR_BODY, RAPTOR_TAIL),
+    (TRACK / "control-center" / "index.html", "SpaceX Tracking — Control center", CONTROL_BODY, CONTROL_TAIL),
 ]
 
 
