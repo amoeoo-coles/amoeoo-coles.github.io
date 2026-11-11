@@ -24,12 +24,13 @@ MARKER = "<!-- spacex-tracking-generated v1 -->"
 
 
 def sxt_nav(active: str) -> str:
+    """Tab order matches data/site-menu.json SpaceX Tracking sub-items."""
     tabs = [
         ("overview", "/spacex-tracking/", "Overview"),
-        ("boosters", "/spacex-tracking/boosters/", "Super Heavy boosters"),
-        ("previous", "/spacex-tracking/boosters/previous/", "Previous Starships analysis"),
-        ("ships", "/spacex-tracking/ships/", "Starship ships"),
+        ("ships", "/spacex-tracking/ships/", "Ships"),
+        ("boosters", "/spacex-tracking/boosters/", "Boosters"),
         ("sites", "/spacex-tracking/sites/", "Launch &amp; landing sites"),
+        ("previous", "/spacex-tracking/boosters/previous/", "Previous Starships analysis"),
     ]
     parts = []
     for key, href, label in tabs:
