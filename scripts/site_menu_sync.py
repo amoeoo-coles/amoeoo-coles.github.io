@@ -22,7 +22,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 MENU_JSON = ROOT / "data" / "site-menu.json"
-G_RE = re.compile(r"var G=\[.*?\]\];", re.S)
+G_RE = re.compile(r"var G=\[.*?\];\n(?=var MM_EXTRA)", re.S)
 
 
 def load_items() -> list:
@@ -35,14 +35,14 @@ def load_items() -> list:
 
 def g_js_snippet(items: list) -> str:
     body = json.dumps(items, ensure_ascii=False, separators=(",", ": "))
-    return f"var G={body}];"
+    return f"var G={body};\n"
 
 
 def iter_menu_html_files() -> list[Path]:
     paths: list[Path] = []
     for path in ROOT.rglob("*.html"):
         text = path.read_text(encoding="utf-8", errors="replace")
-        if 'id="im-script"' in text and G_RE.search(text):
+        if 'id="im-script"' in text and "var G=" in text and "var MM_EXTRA" in text:
             paths.append(path)
     return sorted(paths)
 
