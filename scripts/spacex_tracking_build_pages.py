@@ -33,6 +33,9 @@ def sxt_nav(active: str) -> str:
         ("previous", "/spacex-tracking/boosters/previous/", "Previous Starships analysis"),
         ("raptor", "/spacex-tracking/raptor/", "Raptor production"),
         ("control", "/spacex-tracking/control-center/", "SpaceX control center"),
+        ("sequence", "/spacex-tracking/launch-sequence/", "Launch sequence"),
+        ("preparation", "/spacex-tracking/launch-preparation/", "Launch preparation"),
+        ("monitoring", "/spacex-tracking/launch-monitoring/", "Launch monitoring"),
     ]
     parts = []
     for key, href, label in tabs:
@@ -245,6 +248,68 @@ CONTROL_BODY = """
 CONTROL_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
 <script>SpaceXTrack.initControlCenter({metaUrl:"/spacex-tracking/data/meta.json",shipsUrl:"/spacex-tracking/data/ships.json",boostersUrl:"/spacex-tracking/data/boosters.json",sitesUrl:"/spacex-tracking/data/sites.json",raptorUrl:"/spacex-tracking/data/raptor.json",previousUrl:"/spacex-tracking/data/previous_flights.json",updatedEl:document.getElementById("sxt-cc-updated")});</script>"""
 
+SEQUENCE_BODY = """
+<div class="sxt-stars" aria-hidden="true"></div>
+<div class="sxt-hero sxt-hero-lg">
+  <h1><span class="tt-keep">⏱️</span> Launch sequence</h1>
+  <p>Published SpaceX countdown and flight timelines — times relative to liftoff (T+0).</p>
+  <p class="sxt-meta" id="sxt-list-meta">Loading…</p>
+</div>
+""" + sxt_nav("sequence") + """
+<div class="sxt-prev-page">
+<label class="sxt-meta" for="sxt-seq-select">Flight profile</label>
+<select id="sxt-seq-select" class="sxt-seq-select" aria-label="Select flight timeline"></select>
+<div id="sxt-seq-timeline" class="sxt-seq-timeline"><p class="sxt-meta">Loading…</p></div>
+<p class="sxt-meta"><a href="/spacex-tracking/data/launch_sequence.json">launch_sequence.json</a></p>
+</div>
+"""
+
+SEQUENCE_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
+<script>SpaceXTrack.initLaunchSequence({dataUrl:"/spacex-tracking/data/launch_sequence.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
+
+PREPARATION_BODY = """
+<div class="sxt-stars" aria-hidden="true"></div>
+<div class="sxt-hero sxt-hero-lg">
+  <h1><span class="tt-keep">🛠️</span> Launch preparation</h1>
+  <p>Readiness checklist for the next integrated flight from public sources.</p>
+  <p class="sxt-meta" id="sxt-list-meta">Loading…</p>
+</div>
+""" + sxt_nav("preparation") + """
+<div class="sxt-prev-page" id="sxt-prep-list"><p class="sxt-meta">Loading…</p></div>
+<p class="sxt-meta"><a href="/spacex-tracking/data/launch_prep.json">launch_prep.json</a></p>
+"""
+
+PREPARATION_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
+<script>SpaceXTrack.initLaunchPreparation({dataUrl:"/spacex-tracking/data/launch_prep.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
+
+MONITORING_BODY = """
+<div class="sxt-stars" aria-hidden="true"></div>
+<div class="sxt-hero sxt-cc-hero">
+  <h1><span class="tt-keep">📡</span> Launch monitoring</h1>
+  <p>Launch-day view from local JSON — countdown, phase estimate, and official links.</p>
+  <p class="sxt-meta" id="sxt-lm-meta">Loading…</p>
+</div>
+""" + sxt_nav("monitoring") + """
+<div class="sxt-cc-grid">
+<section class="sxt-cc-panel sxt-cc-countdown">
+  <h2>Window countdown</h2>
+  <p class="sxt-cc-big" id="sxt-lm-countdown">Loading…</p>
+  <p class="sxt-meta" id="sxt-lm-countdown-sub"></p>
+</section>
+<section class="sxt-cc-panel">
+  <h2>Current phase (estimated)</h2>
+  <p class="sxt-cc-big" id="sxt-lm-phase" style="font-size:1.5rem">—</p>
+  <p class="sxt-meta" id="sxt-lm-phase-note"></p>
+</section>
+<section class="sxt-cc-panel" id="sxt-lm-weather"></section>
+<section class="sxt-cc-panel" id="sxt-lm-links"></section>
+<section class="sxt-cc-panel" id="sxt-lm-results"></section>
+</div>
+"""
+
+MONITORING_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
+<script>SpaceXTrack.initLaunchMonitoring({metaUrl:"/spacex-tracking/data/meta.json",sequenceUrl:"/spacex-tracking/data/launch_sequence.json",previousUrl:"/spacex-tracking/data/previous_flights.json",metaEl:document.getElementById("sxt-lm-meta")});</script>"""
+
 
 PAGES = [
     (TRACK / "index.html", "SpaceX Tracking — Starship production", LANDING_BODY, LANDING_TAIL),
@@ -254,6 +319,9 @@ PAGES = [
     (TRACK / "sites" / "index.html", "SpaceX Tracking — Launch & landing sites", SITES_BODY, SITES_TAIL),
     (TRACK / "raptor" / "index.html", "SpaceX Tracking — Raptor production", RAPTOR_BODY, RAPTOR_TAIL),
     (TRACK / "control-center" / "index.html", "SpaceX Tracking — Control center", CONTROL_BODY, CONTROL_TAIL),
+    (TRACK / "launch-sequence" / "index.html", "SpaceX Tracking — Launch sequence", SEQUENCE_BODY, SEQUENCE_TAIL),
+    (TRACK / "launch-preparation" / "index.html", "SpaceX Tracking — Launch preparation", PREPARATION_BODY, PREPARATION_TAIL),
+    (TRACK / "launch-monitoring" / "index.html", "SpaceX Tracking — Launch monitoring", MONITORING_BODY, MONITORING_TAIL),
 ]
 
 

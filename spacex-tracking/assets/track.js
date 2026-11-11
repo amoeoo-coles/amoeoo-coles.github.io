@@ -1242,6 +1242,265 @@
       });
   }
 
+  function formatOffsetSec(sec) {
+    var sign = sec < 0 ? "T−" : "T+";
+    var s = Math.abs(sec);
+    var h = Math.floor(s / 3600);
+    var m = Math.floor((s % 3600) / 60);
+    var r = s % 60;
+    var body =
+      (h ? String(h).padStart(2, "0") + ":" : "") +
+      String(m).padStart(2, "0") +
+      ":" +
+      String(r).padStart(2, "0");
+    return sign + body;
+  }
+
+  function resolveSequenceFlight(data, flight) {
+    if (flight.events && flight.events.length) return flight.events;
+    if (flight.inherit_events_from) {
+      var base = (data.flights || []).find(function (f) {
+        return f.id === flight.inherit_events_from;
+      });
+      return base && base.events ? base.events : [];
+    }
+    return [];
+  }
+
+  function renderSequenceTimeline(events) {
+    var byPhase = {};
+    events.forEach(function (ev) {
+      var p = ev.phase || "Other";
+      if (!byPhase[p]) byPhase[p] = [];
+      byPhase[p].push(ev);
+    });
+    return Object.keys(byPhase)
+      .map(function (phase) {
+        return (
+          '<section class="sxt-seq-phase-wrap"><h3 class="sxt-seq-phase">' +
+          esc(phase) +
+          "</h3>" +
+          byPhase[phase]
+            .map(function (ev) {
+              return (
+                '<div class="sxt-seq-event"><div class="sxt-seq-time">' +
+                esc(formatOffsetSec(ev.offset_sec)) +
+                '</div><div class="sxt-seq-label">' +
+                esc(ev.label) +
+                "</div></div>"
+              );
+            })
+            .join("") +
+          "</section>"
+        );
+      })
+      .join("");
+  }
+
+  function initLaunchSequence(opts) {
+    return loadJson(opts.dataUrl)
+      .then(function (data) {
+        if (opts.metaEl) {
+          opts.metaEl.textContent = "As of " + esc(data.as_of || "unknown");
+        }
+        var sel = document.getElementById("sxt-seq-select");
+        var tl = document.getElementById("sxt-seq-timeline");
+        var flights = data.flights || [];
+        if (sel) {
+          sel.innerHTML = flights
+            .map(function (f) {
+              return (
+                '<option value="' +
+                esc(f.id) +
+                '">' +
+                esc(f.label) +
+                (f.status === "expected" ? " (expected)" : "") +
+                "</option>"
+              );
+            })
+            .join("");
+          if (data.default_flight_id) sel.value = data.default_flight_id;
+        }
+        function paint() {
+          var id = sel ? sel.value : data.default_flight_id;
+          var flight = flights.find(function (f) {
+            return f.id === id;
+          });
+          if (!tl || !flight) return;
+          var events = resolveSequenceFlight(data, flight);
+          var note = flight.note
+            ? '<p class="sxt-note">' + esc(flight.note) + "</p>"
+            : "";
+          var src = flight.source
+            ? '<p class="sxt-src">Source: ' + linkSrc(flight.source) + "</p>"
+            : "";
+          tl.innerHTML = note + renderSequenceTimeline(events) + src;
+        }
+        if (sel) sel.addEventListener("change", paint);
+        paint();
+      })
+      .catch(function (err) {
+        var tl = document.getElementById("sxt-seq-timeline");
+        if (tl) tl.innerHTML = '<p class="sxt-err">' + esc(err.message) + "</p>";
+      });
+  }
+
+  function prepStatusClass(st) {
+    var map = {
+      done: "sxt-prep-done",
+      "in progress": "sxt-prep-progress",
+      "in_progress": "sxt-prep-progress",
+      pending: "sxt-prep-pending",
+      unknown: "sxt-prep-unknown"
+    };
+    return map[st] || "sxt-prep-unknown";
+  }
+
+  function initLaunchPreparation(opts) {
+    return loadJson(opts.dataUrl)
+      .then(function (data) {
+        if (opts.metaEl) {
+          opts.metaEl.textContent =
+            esc(data.flight_id || "") +
+            " · as of " +
+            esc(data.as_of || "unknown");
+        }
+        var el = document.getElementById("sxt-prep-list");
+        if (!el) return;
+        el.innerHTML =
+          "<h2>" +
+          esc(data.flight_id || "Next flight") +
+          "</h2><p class=\"sxt-meta\">" +
+          esc(data.vehicles && data.vehicles.booster) +
+          " · " +
+          esc(data.vehicles && data.vehicles.ship) +
+          " · " +
+          esc(data.launch_site || "") +
+          "</p>" +
+          (data.items || [])
+            .map(function (it) {
+              return (
+                '<article class="sxt-prep-row"><p><strong>' +
+                esc(it.title) +
+                '</strong><span class="sxt-prep-status ' +
+                prepStatusClass(it.status) +
+                '">' +
+                esc(it.status) +
+                "</span></p><p class=\"sxt-dim\">" +
+                esc(it.category) +
+                (it.date && it.date !== "unknown" ? " · " + esc(it.date) : "") +
+                "</p><p>" +
+                esc(it.detail || "") +
+                "</p><p class=\"sxt-src\">" +
+                linkSrc(it.source) +
+                "</p></article>"
+              );
+            })
+            .join("");
+      })
+      .catch(function (err) {
+        var el = document.getElementById("sxt-prep-list");
+        if (el) el.innerHTML = '<p class="sxt-err">' + esc(err.message) + "</p>";
+      });
+  }
+
+  var lmTimer = null;
+
+  function phaseFromEvents(events, elapsedSec) {
+    if (elapsedSec < 0) return "Pre-launch (countdown)";
+    var phase = "Ascent";
+    events.forEach(function (ev) {
+      if (ev.offset_sec <= elapsedSec) phase = ev.phase;
+    });
+    return phase;
+  }
+
+  function initLaunchMonitoring(opts) {
+    return Promise.all([
+      loadJson(opts.metaUrl),
+      loadJson(opts.sequenceUrl),
+      loadJson(opts.previousUrl)
+    ])
+      .then(function (parts) {
+        var meta = parts[0];
+        var seqData = parts[1];
+        var prev = parts[2];
+        if (opts.metaEl) {
+          opts.metaEl.textContent =
+            "Tracker · " + (meta.last_updated_label || "");
+        }
+        var nf = meta.next_flight || {};
+        var cd = document.getElementById("sxt-lm-countdown");
+        var cds = document.getElementById("sxt-lm-countdown-sub");
+        var flight15 = (seqData.flights || []).find(function (f) {
+          return f.id === "flight-15-expected";
+        });
+        var events = flight15
+          ? resolveSequenceFlight(seqData, flight15)
+          : resolveSequenceFlight(seqData, (seqData.flights || [])[0] || {});
+        var phaseEl = document.getElementById("sxt-lm-phase");
+        var phaseNote = document.getElementById("sxt-lm-phase-note");
+        if (lmTimer) clearInterval(lmTimer);
+        function tick() {
+          if (!nf.countdown_target_utc) {
+            if (cd) cd.textContent = "No countdown target";
+            return;
+          }
+          var target = new Date(nf.countdown_target_utc).getTime();
+          var ms = target - Date.now();
+          if (cd) cd.textContent = formatCountdown(ms);
+          if (cds) {
+            cds.innerHTML =
+              "Melbourne: " +
+              esc(nf.window_melbourne || "") +
+              "<br/>UTC: " +
+              esc(nf.countdown_target_utc);
+          }
+          var elapsed = Math.floor((Date.now() - target) / 1000);
+          if (phaseEl) phaseEl.textContent = phaseFromEvents(events, elapsed);
+          if (phaseNote) {
+            phaseNote.textContent =
+              elapsed < 0
+                ? "Before liftoff — phase from published countdown."
+                : "After liftoff — phase estimated from Flight 14 published timeline.";
+          }
+        }
+        tick();
+        lmTimer = setInterval(tick, 1000);
+        var wx = document.getElementById("sxt-lm-weather");
+        if (wx) {
+          wx.innerHTML =
+            "<h2>Weather / window</h2><p>No live weather feed on this page. Check the official SpaceX launch page and FAA/NOTAM notices for go/no-go and recovery weather.</p><p class=\"sxt-src\"><a href=\"" +
+            esc((nf.sources && nf.sources[0] && nf.sources[0].url) || "https://www.spacex.com/launches") +
+            '" target="_blank" rel="noopener">SpaceX launch info</a></p>';
+        }
+        var links = document.getElementById("sxt-lm-links");
+        if (links) {
+          links.innerHTML =
+            "<h2>Official links</h2><ul>" +
+            '<li><a href="https://www.spacex.com/launches" target="_blank" rel="noopener">SpaceX launches / webcast</a></li>' +
+            '<li><a href="https://x.com/SpaceX" target="_blank" rel="noopener">SpaceX on X</a></li>' +
+            '<li><a href="/spacex-tracking/launch-sequence/">Launch sequence</a></li>' +
+            '<li><a href="/spacex-tracking/launch-preparation/">Launch preparation</a></li>' +
+            "</ul>";
+        }
+        var res = document.getElementById("sxt-lm-results");
+        if (res && prev && prev.flights) {
+          var last = prev.flights[prev.flights.length - 1];
+          res.innerHTML =
+            "<h2>Last flown results</h2><p><strong>Flight " +
+            last.flight_number +
+            "</strong>: " +
+            esc(last.summary_line || "") +
+            '</p><p class="sxt-meta">Post-flight data from previous_flights.json. Flight 15 results appear here after it flies.</p>';
+        }
+      })
+      .catch(function (err) {
+        var cd = document.getElementById("sxt-lm-countdown");
+        if (cd) cd.textContent = err.message;
+      });
+  }
+
   global.SpaceXTrack = {
     renderGrid: renderGrid,
     renderSitesByGroup: renderSitesByGroup,
@@ -1251,6 +1510,9 @@
     initPreviousAnalysis: initPreviousAnalysis,
     initRaptor: initRaptor,
     initControlCenter: initControlCenter,
+    initLaunchSequence: initLaunchSequence,
+    initLaunchPreparation: initLaunchPreparation,
+    initLaunchMonitoring: initLaunchMonitoring,
     progressForVehicle: progressForVehicle
   };
 })(window);
