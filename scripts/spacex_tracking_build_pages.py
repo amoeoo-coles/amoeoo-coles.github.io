@@ -171,18 +171,28 @@ def menu_g_snippet() -> str | None:
     if not items:
         return None
     body = json.dumps(items, ensure_ascii=False, separators=(",", ": "))
-    return f"var G={body}];"
+    return f"var G={body};\n"
 
 
 def sync_menu_g(html: str) -> str:
     """Keep icon-menu G array in sync with data/site-menu.json."""
     snippet = menu_g_snippet()
     if not snippet:
-        main_g = re.search(r"var G=\[.*?\]\];", (ROOT / "index.html").read_text(encoding="utf-8"), re.S)
+        main_g = re.search(
+            r"var G=\[.*?\];\n(?=var MM_EXTRA)",
+            (ROOT / "index.html").read_text(encoding="utf-8"),
+            re.S,
+        )
         snippet = main_g.group(0) if main_g else None
     if not snippet:
         return html
-    return re.sub(r"var G=\[.*?\]\];", snippet, html, count=1, flags=re.S)
+    return re.sub(
+        r"var G=\[.*?\];\n(?=var MM_EXTRA)",
+        snippet,
+        html,
+        count=1,
+        flags=re.S,
+    )
 
 
 def run() -> None:
