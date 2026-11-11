@@ -1,0 +1,708 @@
+<!doctype html><html lang="en"><head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  min-width:0;
+  padding:0 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:36px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover{opacity:1}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="robots" content="noindex"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MindMap</title><style>body{margin:0;background:#0f141c;color:#e6edf3;font:15px/1.5 system-ui,Arial,sans-serif}main{max-width:1200px;margin:0 auto;padding:16px 20px 40px}a{color:#8ecbff}h1{margin:14px 0 6px}.lead{color:#c3cfdc}.wrap{background:#161d29;border:1px solid #2a3446;border-radius:12px;padding:10px 6px 4px;margin:14px 0;overflow:auto}#mm{display:block;min-width:900px}#mm a{cursor:pointer}#mm text{pointer-events:none}#mm a:hover rect{filter:brightness(1.2)}.hint{font-size:13px;color:#aab6c4;margin:0 0 8px}.fb{margin-top:22px}.fb ul{margin:6px 0 6px 18px}.fb li{margin:3px 0}.leg{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 0}.leg span{font-size:12.5px;padding:3px 10px;border-radius:12px;border:1px solid #2a3446;background:#0b1220}.leg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}</style></head><body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div style="background:#302d20;border-left:4px solid #fc6;color:#eee;padding:10px 14px;margin:0 0 14px;font:14px system-ui,sans-serif"><b>Archived version v12</b> of /mindmap/ — commit <a style="color:#8cf" href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/453dd8a9ab9778eb71113d881176d1910eb1496c">453dd8a</a>, 10 Nov 2026 18:14 AEDT (Melbourne time). Not live. Recovered from git; links, images and downloads open the current files. <a style="color:#8cf" href="/mindmap/">Latest version →</a></div>
+<main><nav class="site"><a href="/">Home</a></nav><h1><span class="tt-keep">🧠</span> MindMap</h1><p class="lead">A map of the Universal Provisioning Infrastructure as Code demo. The centre is the demo itself; each coloured branch is a menu group or a flow area, and the outer nodes are the pages. Click a node to open that page. Use the coloured − / + on a branch to collapse or expand its pages. Menu groups come from the live site menu so this map stays in sync.</p><p class="hint">Tip: the light/dark toggle in the top-right inverts the page; the map stays readable in both themes.</p><div class="wrap"><svg id="mm" viewBox="0 0 1280 980" width="100%" role="img" aria-label="Mind map of the Universal Provisioning IaC demo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs><filter id="glow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+<circle cx="640.0" cy="490.0" r="230" fill="none" stroke="#1f2937" stroke-width="1" stroke-dasharray="4 6"/>
+<circle cx="640.0" cy="490.0" r="380" fill="none" stroke="#1f2937" stroke-width="1" stroke-dasharray="2 8"/>
+<a href="/" class="mm-c"><rect x="500.5" y="464.0" width="279" height="52" rx="14" fill="#2563eb" stroke="#93c5fd" stroke-width="2" filter="url(#glow)"/><text x="640.0" y="484.0" text-anchor="middle" fill="#fff" font-size="12" font-family="system-ui,Arial,sans-serif" font-weight="700">Universal Provisioning</text><text x="640.0" y="502.0" text-anchor="middle" fill="#dbeafe" font-size="11" font-family="system-ui,Arial,sans-serif">IaC Demo</text></a>
+<path class="mm-link" data-b="0" d="M 640.0 490.0 C 670.0 450.0, 660.0 300.0, 640.0 260.0" fill="none" stroke="#3b82f6" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="0"><a href="/"><rect x="603.5" y="243.0" width="73" height="34" rx="10" fill="#161d29" stroke="#3b82f6" stroke-width="2"/><text x="640.0" y="265.0" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">🏠</tspan> Home</text></a><g class="mm-tog" data-b="0" style="cursor:pointer"><circle cx="674.5" cy="245.0" r="9" fill="#3b82f6" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="0" x="674.5" y="249.0" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-link" data-b="1" d="M 640.0 490.0 C 687.8 475.3, 767.9 348.0, 775.2 303.9" fill="none" stroke="#22c55e" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="1"><a href="/tasks/netbox/"><rect x="727.6906080272688" y="286.92609129376206" width="95" height="34" rx="10" fill="#161d29" stroke="#22c55e" stroke-width="2"/><text x="775.1906080272688" y="308.92609129376206" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">🗄️</tspan> NetBox</text></a><g class="mm-tog" data-b="1" style="cursor:pointer"><circle cx="820.6906080272688" cy="288.92609129376206" r="9" fill="#22c55e" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="1" x="820.6906080272688" y="292.92609129376206" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="1" d="M 775.2 303.9 Q 699.1 234.0, 548.6 102.6" fill="none" stroke="#22c55e" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="1"><a href="/netbox-aci-tenants/"><rect x="461.6134725359965" y="88.63389074665952" width="174" height="28" rx="8" fill="#0b1220" stroke="#22c55e" stroke-width="1.5" opacity="0.95"/><text x="548.6134725359965" y="106.63389074665952" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🗄️</tspan> NetBox ACI Tenants</text></a></g>
+<path class="mm-leaf-link" data-b="1" d="M 775.2 303.9 Q 744.6 226.0, 662.4 82.6" fill="none" stroke="#22c55e" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="1"><a href="/netbox-aci-tenants/diagrams/"><rect x="589.4226578739052" y="68.61661249644726" width="146" height="28" rx="8" fill="#0b1220" stroke="#22c55e" stroke-width="1.5" opacity="0.95"/><text x="662.4226578739052" y="86.61661249644726" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📐</tspan> Tenant Diagrams</text></a></g>
+<path class="mm-leaf-link" data-b="1" d="M 775.2 303.9 Q 789.0 238.9, 773.3 115.0" fill="none" stroke="#22c55e" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="1"><a href="/netbox-aci-objects/"><rect x="703.847487717337" y="101.00340332281058" width="139" height="28" rx="8" fill="#0b1220" stroke="#22c55e" stroke-width="1.5" opacity="0.95"/><text x="773.347487717337" y="119.00340332281058" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🧱</tspan> NB ACI Objects</text></a></g>
+<path class="mm-leaf-link" data-b="1" d="M 775.2 303.9 Q 831.6 256.9, 879.8 159.9" fill="none" stroke="#22c55e" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="1"><a href="/netbox-hw-inventory/"><rect x="803.3163829353291" y="145.9210662950215" width="153" height="28" rx="8" fill="#0b1220" stroke="#22c55e" stroke-width="1.5" opacity="0.95"/><text x="879.8163829353291" y="163.9210662950215" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🖥️</tspan> NB HW Inventory</text></a></g>
+<path class="mm-leaf-link" data-b="1" d="M 775.2 303.9 Q 861.9 291.9, 955.4 247.3" fill="none" stroke="#22c55e" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="1"><a href="/netbox-yaml-model/"><rect x="899.936316996485" y="233.2986816688193" width="111" height="28" rx="8" fill="#0b1220" stroke="#22c55e" stroke-width="1.5" opacity="0.95"/><text x="955.436316996485" y="251.2986816688193" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📄</tspan> YAML Model</text></a></g>
+<path class="mm-leaf-link" data-b="1" d="M 775.2 303.9 Q 887.9 330.1, 1020.5 342.8" fill="none" stroke="#22c55e" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="1"><a href="/netbox-yaml-model/aoapic/"><rect x="958.0156429735555" y="328.78639515173336" width="125" height="28" rx="8" fill="#0b1220" stroke="#22c55e" stroke-width="1.5" opacity="0.95"/><text x="1020.5156429735555" y="346.78639515173336" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🌐</tspan> AOAPIC Model</text></a></g>
+<path class="mm-leaf-link" data-b="1" d="M 775.2 303.9 Q 894.3 375.8, 1036.6 457.2" fill="none" stroke="#22c55e" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="1"><a href="/netbox-yaml-model/arr/"><rect x="984.64705244058" y="443.21104164204195" width="104" height="28" rx="8" fill="#0b1220" stroke="#22c55e" stroke-width="1.5" opacity="0.95"/><text x="1036.64705244058" y="461.21104164204195" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🧪</tspan> ARR Model</text></a></g>
+<path class="mm-link" data-b="2" d="M 640.0 490.0 C 687.3 506.2, 826.9 450.3, 858.7 418.9" fill="none" stroke="#f59e0b" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="2"><a href="/tasks/provisioning/"><rect x="788.2429987478853" y="401.9260912937621" width="141" height="34" rx="10" fill="#161d29" stroke="#f59e0b" stroke-width="2"/><text x="858.7429987478853" y="423.9260912937621" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">⚙️</tspan> Provisioning</text></a><g class="mm-tog" data-b="2" style="cursor:pointer"><circle cx="927.2429987478853" cy="403.9260912937621" r="9" fill="#f59e0b" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="2" x="927.2429987478853" y="407.9260912937621" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="2" d="M 858.7 418.9 Q 900.1 375.6, 948.4 267.9" fill="none" stroke="#f59e0b" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="2"><a href="/report17-aoapic-monitoring/pending-provisioning/"><rect x="857.8528028661332" y="253.92220064896264" width="181" height="28" rx="8" fill="#0b1220" stroke="#f59e0b" stroke-width="1.5" opacity="0.95"/><text x="948.3528028661332" y="271.92220064896264" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">⏳</tspan> Pending Provisioning</text></a></g>
+<path class="mm-leaf-link" data-b="2" d="M 858.7 418.9 Q 932.8 463.8, 1030.0 488.4" fill="none" stroke="#f59e0b" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="2"><a href="/report17-aoapic-monitoring/universal-provisioning/"><rect x="932.4966266046395" y="474.37789118694957" width="195" height="28" rx="8" fill="#0b1220" stroke="#f59e0b" stroke-width="1.5" opacity="0.95"/><text x="1029.9966266046395" y="492.37789118694957" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🧩</tspan> Universal Provisioning</text></a></g>
+<path class="mm-link" data-b="3" d="M 640.0 490.0 C 668.8 530.9, 814.5 567.7, 858.7 561.1" fill="none" stroke="#a855f7" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="3"><a href="/tasks/monitoring/"><rect x="799.7429987478853" y="544.073908706238" width="118" height="34" rx="10" fill="#161d29" stroke="#a855f7" stroke-width="2"/><text x="858.7429987478853" y="566.073908706238" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">📊</tspan> Monitoring</text></a><g class="mm-tog" data-b="3" style="cursor:pointer"><circle cx="915.7429987478853" cy="546.073908706238" r="9" fill="#a855f7" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="3" x="915.7429987478853" y="550.073908706238" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="3" d="M 858.7 561.1 Q 916.5 498.8, 1017.1 362.6" fill="none" stroke="#a855f7" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="3"><a href="/report17-aoapic-monitoring/"><rect x="965.0580111539675" y="348.5980525085489" width="104" height="28" rx="8" fill="#0b1220" stroke="#a855f7" stroke-width="1.5" opacity="0.95"/><text x="1017.0580111539675" y="366.5980525085489" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📊</tspan> Report 17</text></a></g>
+<path class="mm-leaf-link" data-b="3" d="M 858.7 561.1 Q 928.9 548.8, 1048.0 487.6" fill="none" stroke="#a855f7" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="3"><a href="/report17-aoapic-monitoring/tenants/"><rect x="978.4930407268303" y="473.61699381556826" width="139" height="28" rx="8" fill="#0b1220" stroke="#a855f7" stroke-width="1.5" opacity="0.95"/><text x="1047.9930407268303" y="491.61699381556826" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🏢</tspan> Tenants Detail</text></a></g>
+<path class="mm-leaf-link" data-b="3" d="M 858.7 561.1 Q 917.1 599.0, 1018.5 613.0" fill="none" stroke="#a855f7" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="3"><a href="/report17-aoapic-monitoring/objects/"><rect x="938.5204934854711" y="598.988763761229" width="160" height="28" rx="8" fill="#0b1220" stroke="#a855f7" stroke-width="1.5" opacity="0.95"/><text x="1018.5204934854711" y="616.988763761229" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🔍</tspan> Object Drill-down</text></a></g>
+<path class="mm-leaf-link" data-b="3" d="M 858.7 561.1 Q 897.2 646.5, 968.7 731.7" fill="none" stroke="#a855f7" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="3"><a href="/grafana-screenshots/"><rect x="923.6726076433849" y="717.7401848780991" width="90" height="28" rx="8" fill="#0b1220" stroke="#a855f7" stroke-width="1.5" opacity="0.95"/><text x="968.6726076433849" y="735.7401848780991" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📈</tspan> Group 1</text></a></g>
+<path class="mm-leaf-link" data-b="3" d="M 858.7 561.1 Q 857.7 679.6, 870.2 814.7" fill="none" stroke="#a855f7" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="3"><a href="/grafana-screenshots-part2/"><rect x="825.1613530399632" y="800.6994788520817" width="90" height="28" rx="8" fill="#0b1220" stroke="#a855f7" stroke-width="1.5" opacity="0.95"/><text x="870.1613530399632" y="818.6994788520817" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📉</tspan> Group 2</text></a></g>
+<path class="mm-link" data-b="4" d="M 640.0 490.0 C 639.2 540.0, 735.5 655.5, 775.2 676.1" fill="none" stroke="#06b6d4" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="4"><a href="/tasks/testing/"><rect x="727.6906080272688" y="659.073908706238" width="95" height="34" rx="10" fill="#161d29" stroke="#06b6d4" stroke-width="2"/><text x="775.1906080272688" y="681.073908706238" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">🧪</tspan> Testing</text></a><g class="mm-tog" data-b="4" style="cursor:pointer"><circle cx="820.6906080272688" cy="661.073908706238" r="9" fill="#06b6d4" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="4" x="820.6906080272688" y="665.073908706238" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="4" d="M 775.2 676.1 Q 845.8 673.2, 988.1 642.3" fill="none" stroke="#06b6d4" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="4"><a href="/aoapic-nac-test-status/"><rect x="915.129527634445" y="628.3346053561638" width="146" height="28" rx="8" fill="#0b1220" stroke="#06b6d4" stroke-width="1.5" opacity="0.95"/><text x="988.129527634445" y="646.3346053561638" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">✅</tspan> nac-test Status</text></a></g>
+<path class="mm-leaf-link" data-b="4" d="M 775.2 676.1 Q 819.0 720.4, 921.1 760.3" fill="none" stroke="#06b6d4" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="4"><a href="/testing/aoapic-defaults/"><rect x="848.1199493938298" y="746.3175429986197" width="146" height="28" rx="8" fill="#0b1220" stroke="#06b6d4" stroke-width="1.5" opacity="0.95"/><text x="921.1199493938298" y="764.3175429986197" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📄</tspan> AOAPIC defaults</text></a></g>
+<path class="mm-leaf-link" data-b="4" d="M 775.2 676.1 Q 772.9 749.0, 805.9 831.9" fill="none" stroke="#06b6d4" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="4"><a href="/testing/arr-defaults/"><rect x="743.3518953552343" y="817.8964006933627" width="125" height="28" rx="8" fill="#0b1220" stroke="#06b6d4" stroke-width="1.5" opacity="0.95"/><text x="805.8518953552343" y="835.8964006933627" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🧪</tspan> ARR defaults</text></a></g>
+<path class="mm-leaf-link" data-b="4" d="M 775.2 676.1 Q 721.9 767.5, 678.3 878.1" fill="none" stroke="#06b6d4" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="4"><a href="/testing/defaults-compare/"><rect x="598.2824808721076" y="864.1165439121047" width="160" height="28" rx="8" fill="#0b1220" stroke="#06b6d4" stroke-width="1.5" opacity="0.95"/><text x="678.2824808721076" y="882.1165439121047" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">⚖️</tspan> Defaults compare</text></a></g>
+<path class="mm-link" data-b="5" d="M 640.0 490.0 C 610.0 530.0, 620.0 680.0, 640.0 720.0" fill="none" stroke="#ef4444" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="5"><a href="/tasks/itil/"><rect x="603.5" y="703.0" width="73" height="34" rx="10" fill="#161d29" stroke="#ef4444" stroke-width="2"/><text x="640.0" y="725.0" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">📋</tspan> ITIL</text></a><g class="mm-tog" data-b="5" style="cursor:pointer"><circle cx="674.5" cy="705.0" r="9" fill="#ef4444" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="5" x="674.5" y="709.0" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="5" d="M 640.0 720.0 Q 684.0 766.8, 794.9 837.0" fill="none" stroke="#ef4444" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="5"><a href="/itil/aoapic/"><rect x="735.9489721626367" y="822.9737973186772" width="118" height="28" rx="8" fill="#0b1220" stroke="#ef4444" stroke-width="1.5" opacity="0.95"/><text x="794.9489721626367" y="840.9737973186772" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🌐</tspan> AOAPIC ITIL</text></a></g>
+<path class="mm-leaf-link" data-b="5" d="M 640.0 720.0 Q 622.0 784.0, 640.0 880.0" fill="none" stroke="#ef4444" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="5"><a href="/itil/arr/"><rect x="591.5" y="866.0" width="97" height="28" rx="8" fill="#0b1220" stroke="#ef4444" stroke-width="1.5" opacity="0.95"/><text x="640.0" y="884.0" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🧪</tspan> ARR ITIL</text></a></g>
+<path class="mm-leaf-link" data-b="5" d="M 640.0 720.0 Q 560.0 766.8, 485.1 837.0" fill="none" stroke="#ef4444" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="5"><a href="/itil/wiki/"><rect x="433.05102783736334" y="822.9737973186772" width="104" height="28" rx="8" fill="#0b1220" stroke="#ef4444" stroke-width="1.5" opacity="0.95"/><text x="485.05102783736334" y="840.9737973186772" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📖</tspan> Site Wiki</text></a></g>
+<path class="mm-link" data-b="6" d="M 640.0 490.0 C 592.2 504.7, 512.1 632.0, 504.8 676.1" fill="none" stroke="#ec4899" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="6"><a href="/roadmap/"><rect x="453.3093919727312" y="659.073908706238" width="103" height="34" rx="10" fill="#161d29" stroke="#ec4899" stroke-width="2"/><text x="504.8093919727312" y="681.073908706238" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">🗺️</tspan> RoadMap</text></a><g class="mm-tog" data-b="6" style="cursor:pointer"><circle cx="554.3093919727312" cy="661.073908706238" r="9" fill="#ec4899" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="6" x="554.3093919727312" y="665.073908706238" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="6" d="M 504.8 676.1 Q 496.8 735.4, 521.1 850.9" fill="none" stroke="#ec4899" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="6"><a href="/roadmap/"><rect x="472.571397538257" y="836.9099437761402" width="97" height="28" rx="8" fill="#0b1220" stroke="#ec4899" stroke-width="1.5" opacity="0.95"/><text x="521.071397538257" y="854.9099437761402" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🗺️</tspan> RoadMap</text></a></g>
+<path class="mm-leaf-link" data-b="6" d="M 504.8 676.1 Q 418.5 683.3, 325.4 720.5" fill="none" stroke="#ec4899" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="6"><a href="/mindmap/"><rect x="280.4395529658706" y="706.5465791585046" width="90" height="28" rx="8" fill="#0b1220" stroke="#ec4899" stroke-width="1.5" opacity="0.95"/><text x="325.4395529658706" y="724.5465791585046" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🧠</tspan> MindMap</text></a></g>
+<path class="mm-link" data-b="7" d="M 640.0 490.0 C 592.7 473.8, 453.1 529.7, 421.3 561.1" fill="none" stroke="#84cc16" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="7"><a href="/visitors/"><rect x="369.7570012521147" y="544.073908706238" width="103" height="34" rx="10" fill="#161d29" stroke="#84cc16" stroke-width="2"/><text x="421.2570012521147" y="566.073908706238" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">👥</tspan> Visitors</text></a><g class="mm-tog" data-b="7" style="cursor:pointer"><circle cx="470.7570012521147" cy="546.073908706238" r="9" fill="#84cc16" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="7" x="470.7570012521147" y="550.073908706238" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="7" d="M 421.3 561.1 Q 390.3 617.4, 357.9 744.6" fill="none" stroke="#84cc16" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="7"><a href="/visitors/"><rect x="309.3901747355836" y="730.5860296427918" width="97" height="28" rx="8" fill="#0b1220" stroke="#84cc16" stroke-width="1.5" opacity="0.95"/><text x="357.8901747355836" y="748.5860296427918" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">👥</tspan> Visitors</text></a></g>
+<path class="mm-leaf-link" data-b="7" d="M 421.3 561.1 Q 354.8 563.7, 269.1 610.5" fill="none" stroke="#84cc16" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="7"><a href="/status/"><rect x="227.58795864489014" y="596.5166278062295" width="83" height="28" rx="8" fill="#0b1220" stroke="#84cc16" stroke-width="1.5" opacity="0.95"/><text x="269.08795864489014" y="614.5166278062295" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🚦</tspan> Status</text></a></g>
+<path class="mm-leaf-link" data-b="7" d="M 421.3 561.1 Q 352.0 499.5, 262.1 449.9" fill="none" stroke="#84cc16" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="7"><a href="/visitors/trends/"><rect x="220.62644341721284" y="435.8555703057679" width="83" height="28" rx="8" fill="#0b1220" stroke="#84cc16" stroke-width="1.5" opacity="0.95"/><text x="262.12644341721284" y="453.8555703057679" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📈</tspan> Trends</text></a></g>
+<path class="mm-link" data-b="8" d="M 640.0 490.0 C 611.2 449.1, 465.5 412.3, 421.3 418.9" fill="none" stroke="#14b8a6" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="8"><a href="/iac/form/"><rect x="369.75700125211466" y="401.9260912937621" width="103" height="34" rx="10" fill="#161d29" stroke="#14b8a6" stroke-width="2"/><text x="421.25700125211466" y="423.9260912937621" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">🔄</tspan> IaC flow</text></a><g class="mm-tog" data-b="8" style="cursor:pointer"><circle cx="470.75700125211466" cy="403.9260912937621" r="9" fill="#14b8a6" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="8" x="470.75700125211466" y="407.9260912937621" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="8" d="M 421.3 418.9 Q 370.0 497.4, 279.2 658.0" fill="none" stroke="#14b8a6" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="8"><a href="/iac/form/"><rect x="244.70685984904821" y="644.0247303822139" width="69" height="28" rx="8" fill="#0b1220" stroke="#14b8a6" stroke-width="1.5" opacity="0.95"/><text x="279.2068598490482" y="662.0247303822139" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📝</tspan> Form</text></a></g>
+<path class="mm-leaf-link" data-b="8" d="M 421.3 418.9 Q 352.6 452.3, 235.8 545.3" fill="none" stroke="#14b8a6" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="8"><a href="/iac/netbox/"><rect x="190.75856687802582" y="531.2527261543942" width="90" height="28" rx="8" fill="#0b1220" stroke="#14b8a6" stroke-width="1.5" opacity="0.95"/><text x="235.75856687802582" y="549.2527261543942" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🗄️</tspan> NetBox</text></a></g>
+<path class="mm-leaf-link" data-b="8" d="M 421.3 418.9 Q 357.3 404.2, 247.4 425.0" fill="none" stroke="#14b8a6" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="8"><a href="/iac/super-portal/"><rect x="146.35067246377326" y="410.95766313124227" width="202" height="28" rx="8" fill="#0b1220" stroke="#14b8a6" stroke-width="1.5" opacity="0.95"/><text x="247.35067246377326" y="428.95766313124227" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🖥️</tspan> Super Portal Front End</text></a></g>
+<path class="mm-leaf-link" data-b="8" d="M 421.3 418.9 Q 368.4 357.2, 275.2 307.4" fill="none" stroke="#14b8a6" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="8"><a href="/iac/pipeline/"><rect x="223.16711226467015" y="293.35016006932767" width="104" height="28" rx="8" fill="#0b1220" stroke="#14b8a6" stroke-width="1.5" opacity="0.95"/><text x="275.16711226467015" y="311.35016006932767" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">⚙️</tspan> Pipeline</text></a></g>
+<path class="mm-leaf-link" data-b="8" d="M 421.3 418.9 Q 399.4 320.1, 352.7 214.6" fill="none" stroke="#14b8a6" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="8"><a href="/iac/approval/"><rect x="304.15819177898516" y="200.61175542830892" width="97" height="28" rx="8" fill="#0b1220" stroke="#14b8a6" stroke-width="1.5" opacity="0.95"/><text x="352.65819177898516" y="218.61175542830892" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">✅</tspan> Approval</text></a></g>
+<path class="mm-leaf-link" data-b="8" d="M 421.3 418.9 Q 435.1 287.5, 442.0 133.3" fill="none" stroke="#14b8a6" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="8"><a href="/iac/dev-prod/"><rect x="379.52228164535006" y="119.25243794093433" width="125" height="28" rx="8" fill="#0b1220" stroke="#14b8a6" stroke-width="1.5" opacity="0.95"/><text x="442.02228164535006" y="137.25243794093433" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🚀</tspan> Dev and Prod</text></a></g>
+<path class="mm-link" data-b="9" d="M 640.0 490.0 C 640.8 440.0, 544.5 324.5, 504.8 303.9" fill="none" stroke="#3b82f6" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="9"><a href="/iac/aci/"><rect x="438.3093919727312" y="286.9260912937621" width="133" height="34" rx="10" fill="#161d29" stroke="#3b82f6" stroke-width="2"/><text x="504.8093919727312" y="308.9260912937621" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">🌐</tspan> Environments</text></a><g class="mm-tog" data-b="9" style="cursor:pointer"><circle cx="569.3093919727312" cy="288.9260912937621" r="9" fill="#3b82f6" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="9" x="569.3093919727312" y="292.9260912937621" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="9" d="M 504.8 303.9 Q 421.5 320.4, 260.1 371.4" fill="none" stroke="#3b82f6" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="9"><a href="/iac/aci/"><rect x="229.0686752624067" y="357.4412024220158" width="62" height="28" rx="8" fill="#0b1220" stroke="#3b82f6" stroke-width="1.5" opacity="0.95"/><text x="260.0686752624067" y="375.4412024220158" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🔌</tspan> ACI</text></a></g>
+<path class="mm-leaf-link" data-b="9" d="M 504.8 303.9 Q 440.9 272.6, 308.5 252.1" fill="none" stroke="#3b82f6" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="9"><a href="/iac/sda/"><rect x="277.5260005739534" y="238.11560012371282" width="62" height="28" rx="8" fill="#0b1220" stroke="#3b82f6" stroke-width="1.5" opacity="0.95"/><text x="308.5260005739534" y="256.11560012371285" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📡</tspan> SDA</text></a></g>
+<path class="mm-leaf-link" data-b="9" d="M 504.8 303.9 Q 479.9 239.0, 406.1 168.0" fill="none" stroke="#3b82f6" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="9"><a href="/iac/sdwan/"><rect x="364.56146958759564" y="154.01123623877095" width="83" height="28" rx="8" fill="#0b1220" stroke="#3b82f6" stroke-width="1.5" opacity="0.95"/><text x="406.06146958759564" y="172.01123623877095" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🌍</tspan> SD-WAN</text></a></g>
+<path class="mm-leaf-link" data-b="9" d="M 504.8 303.9 Q 523.9 212.3, 516.2 101.2" fill="none" stroke="#3b82f6" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="9"><a href="/iac/vxlan-evpn/"><rect x="460.68959038877495" y="87.23917060498411" width="111" height="28" rx="8" fill="#0b1220" stroke="#3b82f6" stroke-width="1.5" opacity="0.95"/><text x="516.189590388775" y="105.23917060498411" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🔀</tspan> VXLAN EVPN</text></a></g>
+<path class="mm-leaf-link" data-b="9" d="M 504.8 303.9 Q 575.3 208.6, 644.6 92.0" fill="none" stroke="#3b82f6" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="9"><a href="/iac/nexus-dashboard/"><rect x="571.6491190386429" y="78.02715457940536" width="146" height="28" rx="8" fill="#0b1220" stroke="#3b82f6" stroke-width="1.5" opacity="0.95"/><text x="644.6491190386429" y="96.02715457940536" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📊</tspan> Nexus Dashboard</text></a></g>
+</svg></div><div class="leg"><span><i style="background:#3b82f6"></i>Home</span><span><i style="background:#22c55e"></i>NetBox</span><span><i style="background:#f59e0b"></i>Provisioning</span><span><i style="background:#a855f7"></i>Monitoring</span><span><i style="background:#06b6d4"></i>Testing</span><span><i style="background:#ef4444"></i>ITIL</span><span><i style="background:#ec4899"></i>RoadMap</span><span><i style="background:#84cc16"></i>Visitors</span><span><i style="background:#14b8a6"></i>IaC flow</span><span><i style="background:#3b82f6"></i>Environments</span></div><div class="fb"><h2>Tree Index</h2><p class="lead" style="margin-top:0">Same structure as the map, for screen readers and when the SVG is hard to read.</p><ul><li><a href="/"><b>Universal Provisioning IaC Demo</b></a> (centre)<ul><li><span class="tt-keep">🏠</span> <a href="/"><b>Home</b></a></li><li><span class="tt-keep">🗄️</span> <a href="/tasks/netbox/"><b>NetBox</b></a><ul><li><span class="tt-keep">🗄️</span> <a href="/netbox-aci-tenants/">NetBox ACI Tenants</a></li><li><span class="tt-keep">📐</span> <a href="/netbox-aci-tenants/diagrams/">Tenant Diagrams</a></li><li><span class="tt-keep">🧱</span> <a href="/netbox-aci-objects/">NB ACI Objects</a></li><li><span class="tt-keep">🖥️</span> <a href="/netbox-hw-inventory/">NB HW Inventory</a></li><li><span class="tt-keep">📄</span> <a href="/netbox-yaml-model/">YAML Model</a></li><li><span class="tt-keep">🌐</span> <a href="/netbox-yaml-model/aoapic/">AOAPIC Model</a></li><li><span class="tt-keep">🧪</span> <a href="/netbox-yaml-model/arr/">ARR Model</a></li></ul></li><li><span class="tt-keep">⚙️</span> <a href="/tasks/provisioning/"><b>Provisioning</b></a><ul><li><span class="tt-keep">⏳</span> <a href="/report17-aoapic-monitoring/pending-provisioning/">Pending Provisioning</a></li><li><span class="tt-keep">🧩</span> <a href="/report17-aoapic-monitoring/universal-provisioning/">Universal Provisioning</a></li></ul></li><li><span class="tt-keep">📊</span> <a href="/tasks/monitoring/"><b>Monitoring</b></a><ul><li><span class="tt-keep">📊</span> <a href="/report17-aoapic-monitoring/">Report 17</a></li><li><span class="tt-keep">🏢</span> <a href="/report17-aoapic-monitoring/tenants/">Tenants Detail</a></li><li><span class="tt-keep">🔍</span> <a href="/report17-aoapic-monitoring/objects/">Object Drill-down</a></li><li><span class="tt-keep">📈</span> <a href="/grafana-screenshots/">Group 1</a></li><li><span class="tt-keep">📉</span> <a href="/grafana-screenshots-part2/">Group 2</a></li></ul></li><li><span class="tt-keep">🧪</span> <a href="/tasks/testing/"><b>Testing</b></a><ul><li><span class="tt-keep">✅</span> <a href="/aoapic-nac-test-status/">nac-test Status</a></li><li><span class="tt-keep">📄</span> <a href="/testing/aoapic-defaults/">AOAPIC defaults</a></li><li><span class="tt-keep">🧪</span> <a href="/testing/arr-defaults/">ARR defaults</a></li><li><span class="tt-keep">⚖️</span> <a href="/testing/defaults-compare/">Defaults compare</a></li></ul></li><li><span class="tt-keep">📋</span> <a href="/tasks/itil/"><b>ITIL</b></a><ul><li><span class="tt-keep">🌐</span> <a href="/itil/aoapic/">AOAPIC ITIL</a></li><li><span class="tt-keep">🧪</span> <a href="/itil/arr/">ARR ITIL</a></li><li><span class="tt-keep">📖</span> <a href="/itil/wiki/">Site Wiki</a></li></ul></li><li><span class="tt-keep">🗺️</span> <a href="/roadmap/"><b>RoadMap</b></a><ul><li><span class="tt-keep">🗺️</span> <a href="/roadmap/">RoadMap</a></li><li><span class="tt-keep">🧠</span> <a href="/mindmap/">MindMap</a></li></ul></li><li><span class="tt-keep">👥</span> <a href="/visitors/"><b>Visitors</b></a><ul><li><span class="tt-keep">👥</span> <a href="/visitors/">Visitors</a></li><li><span class="tt-keep">🚦</span> <a href="/status/">Status</a></li><li><span class="tt-keep">📈</span> <a href="/visitors/trends/">Trends</a></li></ul></li><li><span class="tt-keep">🔄</span> <a href="/iac/form/"><b>IaC flow</b></a><ul><li><span class="tt-keep">📝</span> <a href="/iac/form/">Form</a></li><li><span class="tt-keep">🗄️</span> <a href="/iac/netbox/">NetBox</a></li><li><span class="tt-keep">🖥️</span> <a href="/iac/super-portal/">Super Portal Front End</a></li><li><span class="tt-keep">⚙️</span> <a href="/iac/pipeline/">Pipeline</a></li><li><span class="tt-keep">✅</span> <a href="/iac/approval/">Approval</a></li><li><span class="tt-keep">🚀</span> <a href="/iac/dev-prod/">Dev and Prod</a></li></ul></li><li><span class="tt-keep">🌐</span> <a href="/iac/aci/"><b>Environments</b></a><ul><li><span class="tt-keep">🔌</span> <a href="/iac/aci/">ACI</a></li><li><span class="tt-keep">📡</span> <a href="/iac/sda/">SDA</a></li><li><span class="tt-keep">🌍</span> <a href="/iac/sdwan/">SD-WAN</a></li><li><span class="tt-keep">🔀</span> <a href="/iac/vxlan-evpn/">VXLAN EVPN</a></li><li><span class="tt-keep">📊</span> <a href="/iac/nexus-dashboard/">Nexus Dashboard</a></li></ul></li></ul></li></ul></div><script>(function(){function set(b,open){document.querySelectorAll('.mm-leaf[data-b="'+b+'"],.mm-leaf-link[data-b="'+b+'"]').forEach(function(e){e.style.display=open?"":"none"});var t=document.querySelector('.mm-tog-t[data-b="'+b+'"]');if(t)t.textContent=open?"\u2212":"+";}document.querySelectorAll(".mm-tog").forEach(function(g){g.addEventListener("click",function(ev){ev.preventDefault();ev.stopPropagation();var b=g.getAttribute("data-b");var sample=document.querySelector('.mm-leaf[data-b="'+b+'"]');var open=!sample||sample.style.display==="none";set(b,open);});});})();</script></main><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc)e.textContent=" (counts as of "+new Date(d.updated_utc).toLocaleString("en-AU",{timeZone:"Australia/Melbourne",day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})+")"})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script><!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:8px 0 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:6px;margin:0;padding:8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
+nav.site.im a.mi{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:36px;min-width:0;padding:0 10px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a)}
+nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
+nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px;flex:none}#sg-link,#tt-btn{height:36px;border-radius:18px}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="im-script">(function(){
+var G=[["Home", "/", "🏠", []], ["NETBOX", "/tasks/netbox/", "🗄️", [["NetBox ACI Tenants", "/netbox-aci-tenants/", "🗄️"], ["Tenant Diagrams", "/netbox-aci-tenants/diagrams/", "📐"], ["NB ACI Objects", "/netbox-aci-objects/", "🧱"], ["NB HW Inventory", "/netbox-hw-inventory/", "🖥️"], ["YAML Model", "/netbox-yaml-model/", "📄"], ["AOAPIC Model", "/netbox-yaml-model/aoapic/", "🌐"], ["ARR Model", "/netbox-yaml-model/arr/", "🧪"]]], ["PROVISIONING", "/tasks/provisioning/", "⚙️", [["Pending Provisioning", "/report17-aoapic-monitoring/pending-provisioning/", "⏳"], ["Universal Provisioning", "/report17-aoapic-monitoring/universal-provisioning/", "🧩"]]], ["MONITORING", "/tasks/monitoring/", "📊", [["Report 17", "/report17-aoapic-monitoring/", "📊"], ["Tenants Detail", "/report17-aoapic-monitoring/tenants/", "🏢"], ["Object Drill-down", "/report17-aoapic-monitoring/objects/", "🔍"], ["AOAPIC Faults", "/tasks/monitoring/aoapic/", "🌐"], ["ARR Faults", "/tasks/monitoring/arr/", "🗄️"], ["Group 1", "/grafana-screenshots/", "📈"], ["Group 2", "/grafana-screenshots-part2/", "📉"]]], ["TESTING", "/tasks/testing/", "🧪", [["nac-test Status", "/aoapic-nac-test-status/", "✅"], ["AOAPIC defaults", "/testing/aoapic-defaults/", "📄"], ["ARR defaults", "/testing/arr-defaults/", "🧪"], ["Defaults compare", "/testing/defaults-compare/", "⚖️"]]], ["ACI Policy", "/aci-policy/", "🧭", [["ACI Policy", "/aci-policy/", "🧭"], ["Policy Universe", "/aci-policy/policy-universe/", "🌌"], ["Tenants", "/aci-policy/tenants/", "🏢"], ["Policy Tenant", "/aci-policy/policy-tenant/", "🧱"], ["ACI Lab Guide Policy", "/aci-policy/aci-lab-guide-policy/", "📘"], ["Lab Guide Diagrams", "/aci-policy/aci-lab-guide-policy/diagrams/", "🗺️"], ["Fabric, Access, Inventory", "/aci-policy/fabric-access-inventory/", "🕸️"], ["Pod Policy Group", "/aci-policy/pod-policy-group/", "🕒"]]], ["ACI Multi-Pod", "/aci-multipod/", "🔗", [["ACI Multi-Pod", "/aci-multipod/", "🔗"], ["Overview", "/aci-multipod/overview/", "📘"], ["Planning", "/aci-multipod/planning/", "📋"], ["Design", "/aci-multipod/design/", "📐"], ["Migration", "/aci-multipod/migration/", "↪️"], ["Deployment", "/aci-multipod/deployment/", "🛠️"], ["Operations", "/aci-multipod/operations/", "🩺"], ["NaC YAML", "/aci-multipod/yaml/", "📄"]]], ["ACI Azure VXLAN", "/aci-azure-vxlan/", "☁️", [["ACI Azure VXLAN", "/aci-azure-vxlan/", "☁️"], ["Physical Rack", "/aci-azure-vxlan/physical-rack/", "🗄️"], ["Logical Topology", "/aci-azure-vxlan/logical/", "🔀"], ["Tenant Diagram", "/aci-azure-vxlan/tenant-diagram/", "🗺️"], ["YAML Files", "/aci-azure-vxlan/yaml/", "📄"], ["Deployment", "/aci-azure-vxlan/deployment/", "🛠️"]]], ["Firewall Domain", "/firewall-domain/", "🛡️", [["Firewall Domain", "/firewall-domain/", "🛡️"], ["Cisco FMT", "/firewall-domain/cisco-fmt/", "🔄"], ["Palo Alto", "/firewall-domain/palo-alto/", "🟧"], ["Other tools", "/firewall-domain/other/", "🧰"], ["ASA build", "/firewall-domain/asa-build/", "📄"]]], ["ACI Lab Guide", "/aci-lab-guide/", "🧪", [["ACI Lab Guide", "/aci-lab-guide/", "🧪"], ["Introduction", "/aci-lab-guide/introduction/", "👋"], ["ACI Basics", "/aci-lab-guide/aci-basics/", "📘"], ["Access Policies", "/aci-lab-guide/access-policies/", "🔗"], ["VMM Integration", "/aci-lab-guide/vmm/", "💻"], ["Tenants", "/aci-lab-guide/tenants/", "🏢"], ["Day 2 Operations", "/aci-lab-guide/day2/", "🩺"], ["Endpoint Security Group", "/aci-lab-guide/esg/", "🛡️"], ["ACI Segmentation", "/aci-lab-guide/segmentation/", "✂️"], ["Nexus Dashboard", "/aci-lab-guide/nexus-dashboard/", "🟩"], ["Orchestrator", "/aci-lab-guide/orchestrator/", "🌐"], ["Insights", "/aci-lab-guide/insights/", "💡"], ["Conclusion", "/aci-lab-guide/conclusion/", "✅"], ["References", "/aci-lab-guide/references/", "📚"]]], ["MCP Servers", "/mcp-servers/", "🔌", [["MCP Servers", "/mcp-servers/", "🔌"], ["MCP for ACI", "/mcp-servers/aci/", "🟦"], ["MCP for Nexus Dashboard", "/mcp-servers/nexus-dashboard/", "🟩"], ["MCP for DNA", "/mcp-servers/dna/", "🟧"]]], ["ITIL", "/tasks/itil/", "📋", [["AOAPIC ITIL", "/itil/aoapic/", "🌐"], ["ARR ITIL", "/itil/arr/", "🧪"], ["Site Wiki", "/itil/wiki/", "📖"]]], ["RoadMap", "/roadmap/", "🗺️", [["RoadMap", "/roadmap/", "🗺️"], ["MindMap", "/mindmap/", "🧠"]]], ["Visitors", "/visitors/", "👥", [["Visitors", "/visitors/", "👥"], ["Status", "/status/", "🚦"], ["Trends", "/visitors/trends/", "📈"], ["Countries", "/visitors/countries/", "🌍"]]]];
+function mk(e,on,cls,n){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=e[0];var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks \u203A';r2.appendChild(t);
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm'))});r2.appendChild(pills);n.appendChild(r2)}}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
+})();</script>
+</body></html>

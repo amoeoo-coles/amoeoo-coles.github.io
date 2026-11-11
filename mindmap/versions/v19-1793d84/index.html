@@ -1,0 +1,778 @@
+<!doctype html><html lang="en"><head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  min-width:0;
+  padding:0 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:36px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover{opacity:1}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="robots" content="noindex">
+
+
+
+
+
+
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MindMap</title><style>body{margin:0;background:#0f141c;color:#e6edf3;font:15px/1.5 system-ui,Arial,sans-serif}main{max-width:1200px;margin:0 auto;padding:16px 20px 40px}a{color:#8ecbff}h1{margin:14px 0 6px}.lead{color:#c3cfdc}.wrap{background:#161d29;border:1px solid #2a3446;border-radius:12px;padding:10px 6px 4px;margin:14px 0;overflow:auto}#mm{display:block;min-width:900px}#mm a{cursor:pointer}#mm text{pointer-events:none}#mm a:hover rect{filter:brightness(1.2)}.hint{font-size:13px;color:#aab6c4;margin:0 0 8px}.fb{margin-top:22px}.fb ul{margin:6px 0 6px 18px}.fb li{margin:3px 0}.leg{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 0}.leg span{font-size:12.5px;padding:3px 10px;border-radius:12px;border:1px solid #2a3446;background:#0b1220}.leg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}</style></head><body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div style="background:#302d20;border-left:4px solid #fc6;color:#eee;padding:10px 14px;margin:0 0 14px;font:14px system-ui,sans-serif"><b>Archived version v19</b> of /mindmap/ — commit <a style="color:#8cf" href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/1793d846a2ea71f6af2c3f745eb675cdc8abe782">1793d84</a>, 11 Nov 2026 00:20 AEDT (Melbourne time). Not live. Recovered from git; links, images and downloads open the current files. <a style="color:#8cf" href="/mindmap/">Latest version →</a></div>
+
+
+
+
+
+
+
+<main><nav class="site"><a href="/">Home</a></nav><h1><span class="tt-keep">🧠</span> MindMap</h1><p class="lead">A map of the Universal Provisioning Infrastructure as Code demo. The centre is the demo itself; each coloured branch is a menu group or a flow area, and the outer nodes are the pages. Click a node to open that page. Use the coloured − / + on a branch to collapse or expand its pages. Menu groups come from the live site menu so this map stays in sync.</p><p class="hint">Tip: the light/dark toggle in the top-right inverts the page; the map stays readable in both themes.</p><div class="wrap"><svg id="mm" viewBox="0 0 1280 980" width="100%" role="img" aria-label="Mind map of the Universal Provisioning IaC demo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs><filter id="glow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+<circle cx="640.0" cy="490.0" r="230" fill="none" stroke="#1f2937" stroke-width="1" stroke-dasharray="4 6"/>
+<circle cx="640.0" cy="490.0" r="380" fill="none" stroke="#1f2937" stroke-width="1" stroke-dasharray="2 8"/>
+<a href="/" class="mm-c"><rect x="500.5" y="464.0" width="279" height="52" rx="14" fill="#2563eb" stroke="#93c5fd" stroke-width="2" filter="url(#glow)"/><text x="640.0" y="484.0" text-anchor="middle" fill="#fff" font-size="12" font-family="system-ui,Arial,sans-serif" font-weight="700">Universal Provisioning</text><text x="640.0" y="502.0" text-anchor="middle" fill="#dbeafe" font-size="11" font-family="system-ui,Arial,sans-serif">IaC Demo</text></a>
+<path class="mm-link" data-b="0" d="M 640.0 490.0 C 670.0 450.0, 660.0 300.0, 640.0 260.0" fill="none" stroke="#3b82f6" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="0"><a href="/"><rect x="603.5" y="243.0" width="73" height="34" rx="10" fill="#161d29" stroke="#3b82f6" stroke-width="2"/><text x="640.0" y="265.0" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">🏠</tspan> Home</text></a><g class="mm-tog" data-b="0" style="cursor:pointer"><circle cx="674.5" cy="245.0" r="9" fill="#3b82f6" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="0" x="674.5" y="249.0" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-link" data-b="1" d="M 640.0 490.0 C 685.2 468.5, 746.0 331.1, 746.9 286.3" fill="none" stroke="#22c55e" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="1"><a href="/tasks/netbox/"><rect x="699.3863295700668" y="269.34511409976176" width="95" height="34" rx="10" fill="#161d29" stroke="#22c55e" stroke-width="2"/><text x="746.8863295700668" y="291.34511409976176" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">🗄️</tspan> NetBox</text></a><g class="mm-tog" data-b="1" style="cursor:pointer"><circle cx="792.3863295700668" cy="271.34511409976176" r="9" fill="#22c55e" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="1" x="792.3863295700668" y="275.34511409976176" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="1" d="M 746.9 286.3 Q 661.5 228.1, 493.6 119.9" fill="none" stroke="#22c55e" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="1"><a href="/netbox-aci-tenants/"><rect x="406.60228528941695" y="105.90310846006997" width="174" height="28" rx="8" fill="#0b1220" stroke="#22c55e" stroke-width="1.5" opacity="0.95"/><text x="493.60228528941695" y="123.90310846006997" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🗄️</tspan> NetBox ACI Tenants</text></a></g>
+<path class="mm-leaf-link" data-b="1" d="M 746.9 286.3 Q 705.4 213.6, 603.3 83.7" fill="none" stroke="#22c55e" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="1"><a href="/netbox-aci-tenants/diagrams/"><rect x="530.3249249882526" y="69.65170251017082" width="146" height="28" rx="8" fill="#0b1220" stroke="#22c55e" stroke-width="1.5" opacity="0.95"/><text x="603.3249249882526" y="87.65170251017082" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📐</tspan> Tenant Diagrams</text></a></g>
+<path class="mm-leaf-link" data-b="1" d="M 746.9 286.3 Q 751.2 220.0, 717.8 99.7" fill="none" stroke="#22c55e" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="1"><a href="/netbox-aci-objects/"><rect x="648.2652906014457" y="85.6712160528349" width="139" height="28" rx="8" fill="#0b1220" stroke="#22c55e" stroke-width="1.5" opacity="0.95"/><text x="717.7652906014457" y="103.6712160528349" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🧱</tspan> NB ACI Objects</text></a></g>
+<path class="mm-leaf-link" data-b="1" d="M 746.9 286.3 Q 795.9 231.7, 829.6 128.7" fill="none" stroke="#22c55e" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="1"><a href="/netbox-hw-inventory/"><rect x="753.1070541938576" y="114.73394153349034" width="153" height="28" rx="8" fill="#0b1220" stroke="#22c55e" stroke-width="1.5" opacity="0.95"/><text x="829.6070541938576" y="132.73394153349034" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🖥️</tspan> NB HW Inventory</text></a></g>
+<path class="mm-leaf-link" data-b="1" d="M 746.9 286.3 Q 830.9 261.9, 917.1 204.3" fill="none" stroke="#22c55e" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="1"><a href="/netbox-yaml-model/"><rect x="861.5585714724228" y="190.2683987136523" width="111" height="28" rx="8" fill="#0b1220" stroke="#22c55e" stroke-width="1.5" opacity="0.95"/><text x="917.0585714724228" y="208.2683987136523" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📄</tspan> YAML Model</text></a></g>
+<path class="mm-leaf-link" data-b="1" d="M 746.9 286.3 Q 862.2 295.9, 995.3 289.4" fill="none" stroke="#22c55e" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="1"><a href="/netbox-yaml-model/aoapic/"><rect x="932.7519099653796" y="275.35085231691164" width="125" height="28" rx="8" fill="#0b1220" stroke="#22c55e" stroke-width="1.5" opacity="0.95"/><text x="995.2519099653796" y="293.35085231691164" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🌐</tspan> AOAPIC Model</text></a></g>
+<path class="mm-leaf-link" data-b="1" d="M 746.9 286.3 Q 875.2 340.3, 1027.7 400.2" fill="none" stroke="#22c55e" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="1"><a href="/netbox-yaml-model/arr/"><rect x="975.7471512838442" y="386.243960251894" width="104" height="28" rx="8" fill="#0b1220" stroke="#22c55e" stroke-width="1.5" opacity="0.95"/><text x="1027.7471512838442" y="404.243960251894" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🧪</tspan> ARR Model</text></a></g>
+<path class="mm-link" data-b="2" d="M 640.0 490.0 C 690.0 492.0, 807.7 398.5, 829.3 359.3" fill="none" stroke="#f59e0b" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="2"><a href="/tasks/provisioning/"><rect x="758.786289155541" y="342.3451082518342" width="141" height="34" rx="10" fill="#161d29" stroke="#f59e0b" stroke-width="2"/><text x="829.286289155541" y="364.3451082518342" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">⚙️</tspan> Provisioning</text></a><g class="mm-tog" data-b="2" style="cursor:pointer"><circle cx="897.786289155541" cy="344.3451082518342" r="9" fill="#f59e0b" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="2" x="897.786289155541" y="348.3451082518342" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="2" d="M 829.3 359.3 Q 856.6 306.0, 872.0 189.0" fill="none" stroke="#f59e0b" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="2"><a href="/report17-aoapic-monitoring/pending-provisioning/"><rect x="781.4756002478728" y="175.02272363243242" width="181" height="28" rx="8" fill="#0b1220" stroke="#f59e0b" stroke-width="1.5" opacity="0.95"/><text x="871.9756002478728" y="193.02272363243242" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">⏳</tspan> Pending Provisioning</text></a></g>
+<path class="mm-leaf-link" data-b="2" d="M 829.3 359.3 Q 913.1 381.2, 1013.2 376.9" fill="none" stroke="#f59e0b" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="2"><a href="/report17-aoapic-monitoring/universal-provisioning/"><rect x="915.7488058055565" y="362.92777102786926" width="195" height="28" rx="8" fill="#0b1220" stroke="#f59e0b" stroke-width="1.5" opacity="0.95"/><text x="1013.2488058055565" y="380.92777102786926" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🧩</tspan> Universal Provisioning</text></a></g>
+<path class="mm-link" data-b="3" d="M 640.0 490.0 C 683.3 515.0, 831.0 487.0, 868.3 462.3" fill="none" stroke="#a855f7" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="3"><a href="/tasks/monitoring/"><rect x="809.3230410425524" y="445.2765635412757" width="118" height="34" rx="10" fill="#161d29" stroke="#a855f7" stroke-width="2"/><text x="868.3230410425524" y="467.2765635412757" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">📊</tspan> Monitoring</text></a><g class="mm-tog" data-b="3" style="cursor:pointer"><circle cx="925.3230410425524" cy="447.2765635412757" r="9" fill="#a855f7" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="3" x="925.3230410425524" y="451.2765635412757" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="3" d="M 868.3 462.3 Q 894.5 381.5, 928.3 215.6" fill="none" stroke="#a855f7" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="3"><a href="/report17-aoapic-monitoring/"><rect x="876.2569210635571" y="201.569776702787" width="104" height="28" rx="8" fill="#0b1220" stroke="#a855f7" stroke-width="1.5" opacity="0.95"/><text x="928.2569210635571" y="219.569776702787" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📊</tspan> Report 17</text></a></g>
+<path class="mm-leaf-link" data-b="3" d="M 868.3 462.3 Q 926.8 421.6, 1009.0 315.9" fill="none" stroke="#a855f7" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="3"><a href="/report17-aoapic-monitoring/tenants/"><rect x="939.4942265946664" y="301.91019346382177" width="139" height="28" rx="8" fill="#0b1220" stroke="#a855f7" stroke-width="1.5" opacity="0.95"/><text x="1008.9942265946664" y="319.91019346382177" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🏢</tspan> Tenants Detail</text></a></g>
+<path class="mm-leaf-link" data-b="3" d="M 868.3 462.3 Q 937.2 472.0, 1035.1 442.0" fill="none" stroke="#a855f7" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="3"><a href="/report17-aoapic-monitoring/objects/"><rect x="955.0981318910256" y="428.0264012583815" width="160" height="28" rx="8" fill="#0b1220" stroke="#a855f7" stroke-width="1.5" opacity="0.95"/><text x="1035.0981318910256" y="446.0264012583815" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🔍</tspan> Object Drill-down</text></a></g>
+<path class="mm-leaf-link" data-b="3" d="M 868.3 462.3 Q 939.1 523.5, 1039.9 570.7" fill="none" stroke="#a855f7" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="3"><a href="/grafana-screenshots/"><rect x="994.9343426864439" y="556.7249746978106" width="90" height="28" rx="8" fill="#0b1220" stroke="#a855f7" stroke-width="1.5" opacity="0.95"/><text x="1039.9343426864439" y="574.7249746978106" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📈</tspan> Group 1</text></a></g>
+<path class="mm-leaf-link" data-b="3" d="M 868.3 462.3 Q 917.4 570.2, 985.6 687.5" fill="none" stroke="#a855f7" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="3"><a href="/grafana-screenshots-part2/"><rect x="940.5561500120434" y="673.4713832150221" width="90" height="28" rx="8" fill="#0b1220" stroke="#a855f7" stroke-width="1.5" opacity="0.95"/><text x="985.5561500120434" y="691.4713832150221" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📉</tspan> Group 2</text></a></g>
+<path class="mm-link" data-b="4" d="M 640.0 490.0 C 666.8 532.2, 810.6 576.1, 855.1 571.6" fill="none" stroke="#06b6d4" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="4"><a href="/tasks/testing/"><rect x="807.5537358176455" y="554.5591240197832" width="95" height="34" rx="10" fill="#161d29" stroke="#06b6d4" stroke-width="2"/><text x="855.0537358176455" y="576.5591240197832" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">🧪</tspan> Testing</text></a><g class="mm-tog" data-b="4" style="cursor:pointer"><circle cx="900.5537358176455" cy="556.5591240197832" r="9" fill="#06b6d4" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="4" x="900.5537358176455" y="560.5591240197832" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="4" d="M 855.1 571.6 Q 912.5 530.4, 1014.7 426.6" fill="none" stroke="#06b6d4" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="4"><a href="/aoapic-nac-test-status/"><rect x="941.6812230639348" y="412.6440130428546" width="146" height="28" rx="8" fill="#0b1220" stroke="#06b6d4" stroke-width="1.5" opacity="0.95"/><text x="1014.6812230639348" y="430.6440130428546" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">✅</tspan> nac-test Status</text></a></g>
+<path class="mm-leaf-link" data-b="4" d="M 855.1 571.6 Q 916.0 584.6, 1023.3 562.1" fill="none" stroke="#06b6d4" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="4"><a href="/testing/aoapic-defaults/"><rect x="950.2858373875122" y="548.0553041639103" width="146" height="28" rx="8" fill="#0b1220" stroke="#06b6d4" stroke-width="1.5" opacity="0.95"/><text x="1023.2858373875122" y="566.0553041639103" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📄</tspan> AOAPIC defaults</text></a></g>
+<path class="mm-leaf-link" data-b="4" d="M 855.1 571.6 Q 893.1 633.8, 966.1 685.1" fill="none" stroke="#06b6d4" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="4"><a href="/testing/arr-defaults/"><rect x="903.5936615965571" y="671.0972164500306" width="125" height="28" rx="8" fill="#0b1220" stroke="#06b6d4" stroke-width="1.5" opacity="0.95"/><text x="966.0936615965571" y="689.0972164500306" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🧪</tspan> ARR defaults</text></a></g>
+<path class="mm-leaf-link" data-b="4" d="M 855.1 571.6 Q 860.5 677.2, 884.7 793.7" fill="none" stroke="#06b6d4" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="4"><a href="/testing/defaults-compare/"><rect x="804.714872433567" y="779.6686207197296" width="160" height="28" rx="8" fill="#0b1220" stroke="#06b6d4" stroke-width="1.5" opacity="0.95"/><text x="884.714872433567" y="797.6686207197296" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">⚖️</tspan> Defaults compare</text></a></g>
+<path class="mm-link" data-b="5" d="M 640.0 490.0 C 644.1 539.8, 751.0 645.5, 792.5 662.2" fill="none" stroke="#ef4444" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="5"><a href="/aci-policy/"><rect x="733.5182113953829" y="645.1574720793533" width="118" height="34" rx="10" fill="#161d29" stroke="#ef4444" stroke-width="2"/><text x="792.5182113953829" y="667.1574720793533" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">🧭</tspan> ACI Policy</text></a><g class="mm-tog" data-b="5" style="cursor:pointer"><circle cx="849.5182113953829" cy="647.1574720793533" r="9" fill="#ef4444" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="5" x="849.5182113953829" y="651.1574720793533" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="5" d="M 792.5 662.2 Q 877.2 603.0, 1038.0 484.4" fill="none" stroke="#ef4444" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="5"><a href="/aci-policy/"><rect x="982.4599500454485" y="470.3539252728898" width="111" height="28" rx="8" fill="#0b1220" stroke="#ef4444" stroke-width="1.5" opacity="0.95"/><text x="1037.9599500454485" y="488.3539252728898" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🧭</tspan> ACI Policy</text></a></g>
+<path class="mm-leaf-link" data-b="5" d="M 792.5 662.2 Q 875.2 649.2, 1032.9 599.8" fill="none" stroke="#ef4444" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="5"><a href="/aci-policy/policy-universe/"><rect x="959.9474191723725" y="585.8013012936178" width="146" height="28" rx="8" fill="#0b1220" stroke="#ef4444" stroke-width="1.5" opacity="0.95"/><text x="1032.9474191723725" y="603.8013012936178" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🌌</tspan> Policy Universe</text></a></g>
+<path class="mm-leaf-link" data-b="5" d="M 792.5 662.2 Q 853.0 689.7, 977.4 701.1" fill="none" stroke="#ef4444" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="5"><a href="/aci-policy/tenants/"><rect x="932.3878008886898" y="687.1243041705379" width="90" height="28" rx="8" fill="#0b1220" stroke="#ef4444" stroke-width="1.5" opacity="0.95"/><text x="977.3878008886898" y="705.1243041705379" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🏢</tspan> Tenants</text></a></g>
+<path class="mm-leaf-link" data-b="5" d="M 792.5 662.2 Q 826.3 727.4, 910.6 795.4" fill="none" stroke="#ef4444" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="5"><a href="/aci-policy/policy-tenant/"><rect x="844.5540445622444" y="781.3923852538093" width="132" height="28" rx="8" fill="#0b1220" stroke="#ef4444" stroke-width="1.5" opacity="0.95"/><text x="910.5540445622444" y="799.3923852538093" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🧱</tspan> Policy Tenant</text></a></g>
+<path class="mm-leaf-link" data-b="5" d="M 792.5 662.2 Q 785.6 749.4, 808.9 850.4" fill="none" stroke="#ef4444" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="5"><a href="/aci-policy/aci-lab-guide-policy/"><rect x="718.4173648101031" y="836.3760867005615" width="181" height="28" rx="8" fill="#0b1220" stroke="#ef4444" stroke-width="1.5" opacity="0.95"/><text x="808.9173648101031" y="854.3760867005615" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📘</tspan> ACI Lab Guide Policy</text></a></g>
+<path class="mm-leaf-link" data-b="5" d="M 792.5 662.2 Q 742.7 766.6, 701.6 893.3" fill="none" stroke="#ef4444" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="5"><a href="/aci-policy/fabric-access-inventory/"><rect x="590.6361487597537" y="879.3174744119891" width="222" height="28" rx="8" fill="#0b1220" stroke="#ef4444" stroke-width="1.5" opacity="0.95"/><text x="701.6361487597537" y="897.3174744119891" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🕸️</tspan> Fabric, Access, Inventory</text></a></g>
+<path class="mm-leaf-link" data-b="5" d="M 792.5 662.2 Q 696.6 763.0, 586.4 884.4" fill="none" stroke="#ef4444" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="5"><a href="/aci-policy/pod-policy-group/"><rect x="509.9263202615243" y="870.3778148416557" width="153" height="28" rx="8" fill="#0b1220" stroke="#ef4444" stroke-width="1.5" opacity="0.95"/><text x="586.4263202615243" y="888.3778148416557" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🕒</tspan> Pod Policy Group</text></a></g>
+<path class="mm-link" data-b="6" d="M 640.0 490.0 C 620.4 536.0, 666.1 679.3, 695.0 713.3" fill="none" stroke="#ec4899" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="6"><a href="/aci-lab-guide/"><rect x="624.5426027861382" y="696.316618007992" width="141" height="34" rx="10" fill="#161d29" stroke="#ec4899" stroke-width="2"/><text x="695.0426027861382" y="718.316618007992" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">🧪</tspan> ACI Lab Guide</text></a><g class="mm-tog" data-b="6" style="cursor:pointer"><circle cx="763.5426027861382" cy="698.316618007992" r="9" fill="#ec4899" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="6" x="763.5426027861382" y="702.316618007992" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="6" d="M 695.0 713.3 Q 804.8 683.7, 1013.1 628.4" fill="none" stroke="#ec4899" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="6"><a href="/aci-lab-guide/"><rect x="947.1498642140419" y="614.4311339151785" width="132" height="28" rx="8" fill="#0b1220" stroke="#ec4899" stroke-width="1.5" opacity="0.95"/><text x="1013.1498642140419" y="632.4311339151785" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🧪</tspan> ACI Lab Guide</text></a></g>
+<path class="mm-leaf-link" data-b="6" d="M 695.0 713.3 Q 798.4 707.3, 997.1 687.4" fill="none" stroke="#ec4899" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="6"><a href="/aci-lab-guide/introduction/"><rect x="934.5570839914005" y="673.4189422815296" width="125" height="28" rx="8" fill="#0b1220" stroke="#ec4899" stroke-width="1.5" opacity="0.95"/><text x="997.0570839914005" y="691.4189422815296" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">👋</tspan> Introduction</text></a></g>
+<path class="mm-leaf-link" data-b="6" d="M 695.0 713.3 Q 781.8 725.3, 955.7 732.4" fill="none" stroke="#ec4899" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="6"><a href="/aci-lab-guide/aci-basics/"><rect x="900.157018287279" y="718.4142050416692" width="111" height="28" rx="8" fill="#0b1220" stroke="#ec4899" stroke-width="1.5" opacity="0.95"/><text x="955.657018287279" y="736.4142050416692" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📘</tspan> ACI Basics</text></a></g>
+<path class="mm-leaf-link" data-b="6" d="M 695.0 713.3 Q 768.7 745.9, 922.9 784.0" fill="none" stroke="#ec4899" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="6"><a href="/aci-lab-guide/access-policies/"><rect x="849.8684741281718" y="770.0228330324021" width="146" height="28" rx="8" fill="#0b1220" stroke="#ec4899" stroke-width="1.5" opacity="0.95"/><text x="922.8684741281718" y="788.0228330324021" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🔗</tspan> Access Policies</text></a></g>
+<path class="mm-leaf-link" data-b="6" d="M 695.0 713.3 Q 747.6 758.2, 870.0 814.8" fill="none" stroke="#ec4899" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="6"><a href="/aci-lab-guide/vmm/"><rect x="797.0309418676416" y="800.7918807228496" width="146" height="28" rx="8" fill="#0b1220" stroke="#ec4899" stroke-width="1.5" opacity="0.95"/><text x="870.0309418676416" y="818.7918807228496" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">💻</tspan> VMM Integration</text></a></g>
+<path class="mm-leaf-link" data-b="6" d="M 695.0 713.3 Q 728.9 774.1, 823.5 854.4" fill="none" stroke="#ec4899" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="6"><a href="/aci-lab-guide/tenants/"><rect x="778.4689438013496" y="840.4216605258491" width="90" height="28" rx="8" fill="#0b1220" stroke="#ec4899" stroke-width="1.5" opacity="0.95"/><text x="823.4689438013496" y="858.4216605258491" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🏢</tspan> Tenants</text></a></g>
+<path class="mm-leaf-link" data-b="6" d="M 695.0 713.3 Q 705.1 779.6, 763.9 868.2" fill="none" stroke="#ec4899" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="6"><a href="/aci-lab-guide/day2/"><rect x="687.4031400526078" y="854.2221726513451" width="153" height="28" rx="8" fill="#0b1220" stroke="#ec4899" stroke-width="1.5" opacity="0.95"/><text x="763.9031400526078" y="872.2221726513451" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🩺</tspan> Day 2 Operations</text></a></g>
+<path class="mm-leaf-link" data-b="6" d="M 695.0 713.3 Q 682.6 789.2, 707.7 892.3" fill="none" stroke="#ec4899" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="6"><a href="/aci-lab-guide/esg/"><rect x="603.7175702230968" y="878.3410626360178" width="208" height="28" rx="8" fill="#0b1220" stroke="#ec4899" stroke-width="1.5" opacity="0.95"/><text x="707.7175702230968" y="896.3410626360178" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🛡️</tspan> Endpoint Security Group</text></a></g>
+<path class="mm-leaf-link" data-b="6" d="M 695.0 713.3 Q 658.2 787.5, 646.7 887.9" fill="none" stroke="#ec4899" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="6"><a href="/aci-lab-guide/segmentation/"><rect x="566.7323536183678" y="873.9430554925632" width="160" height="28" rx="8" fill="#0b1220" stroke="#ec4899" stroke-width="1.5" opacity="0.95"/><text x="646.7323536183678" y="891.9430554925632" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">✂️</tspan> ACI Segmentation</text></a></g>
+<path class="mm-leaf-link" data-b="6" d="M 695.0 713.3 Q 633.9 790.1, 585.9 894.4" fill="none" stroke="#ec4899" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="6"><a href="/aci-lab-guide/nexus-dashboard/"><rect x="512.9308041107552" y="880.4014367628909" width="146" height="28" rx="8" fill="#0b1220" stroke="#ec4899" stroke-width="1.5" opacity="0.95"/><text x="585.9308041107552" y="898.4014367628909" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🟩</tspan> Nexus Dashboard</text></a></g>
+<path class="mm-leaf-link" data-b="6" d="M 695.0 713.3 Q 611.1 781.2, 529.0 872.2" fill="none" stroke="#ec4899" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="6"><a href="/aci-lab-guide/orchestrator/"><rect x="466.4615397963868" y="858.1968868994234" width="125" height="28" rx="8" fill="#0b1220" stroke="#ec4899" stroke-width="1.5" opacity="0.95"/><text x="528.9615397963868" y="876.1968868994234" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🌐</tspan> Orchestrator</text></a></g>
+<path class="mm-leaf-link" data-b="6" d="M 695.0 713.3 Q 587.1 776.5, 469.0 860.4" fill="none" stroke="#ec4899" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="6"><a href="/aci-lab-guide/insights/"><rect x="420.4630062531668" y="846.4191501124716" width="97" height="28" rx="8" fill="#0b1220" stroke="#ec4899" stroke-width="1.5" opacity="0.95"/><text x="468.9630062531668" y="864.4191501124716" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">💡</tspan> Insights</text></a></g>
+<path class="mm-leaf-link" data-b="6" d="M 695.0 713.3 Q 568.0 761.3, 421.1 822.4" fill="none" stroke="#ec4899" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="6"><a href="/aci-lab-guide/conclusion/"><rect x="365.5871338269281" y="808.3870590499737" width="111" height="28" rx="8" fill="#0b1220" stroke="#ec4899" stroke-width="1.5" opacity="0.95"/><text x="421.0871338269281" y="826.3870590499737" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">✅</tspan> Conclusion</text></a></g>
+<path class="mm-leaf-link" data-b="6" d="M 695.0 713.3 Q 546.4 749.7, 367.2 793.4" fill="none" stroke="#ec4899" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="6"><a href="/aci-lab-guide/references/"><rect x="311.73904233279444" y="779.422906143338" width="111" height="28" rx="8" fill="#0b1220" stroke="#ec4899" stroke-width="1.5" opacity="0.95"/><text x="367.23904233279444" y="797.422906143338" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📚</tspan> References</text></a></g>
+<path class="mm-link" data-b="7" d="M 640.0 490.0 C 601.3 521.7, 575.1 669.7, 585.0 713.3" fill="none" stroke="#84cc16" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="7"><a href="/mcp-servers/"><rect x="521.9573972138618" y="696.316618007992" width="126" height="34" rx="10" fill="#161d29" stroke="#84cc16" stroke-width="2"/><text x="584.9573972138618" y="718.316618007992" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">🔌</tspan> MCP Servers</text></a><g class="mm-tog" data-b="7" style="cursor:pointer"><circle cx="645.9573972138618" cy="698.316618007992" r="9" fill="#84cc16" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="7" x="645.9573972138618" y="702.316618007992" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="7" d="M 585.0 713.3 Q 632.7 765.4, 748.1 854.3" fill="none" stroke="#84cc16" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="7"><a href="/mcp-servers/"><rect x="689.0568812617297" y="840.3126547513666" width="118" height="28" rx="8" fill="#0b1220" stroke="#84cc16" stroke-width="1.5" opacity="0.95"/><text x="748.0568812617297" y="858.3126547513666" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🔌</tspan> MCP Servers</text></a></g>
+<path class="mm-leaf-link" data-b="7" d="M 585.0 713.3 Q 579.4 775.4, 614.7 879.2" fill="none" stroke="#84cc16" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="7"><a href="/mcp-servers/aci/"><rect x="555.6700625582241" y="865.1765592493923" width="118" height="28" rx="8" fill="#0b1220" stroke="#84cc16" stroke-width="1.5" opacity="0.95"/><text x="614.6700625582241" y="883.1765592493923" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🟦</tspan> MCP for ACI</text></a></g>
+<path class="mm-leaf-link" data-b="7" d="M 585.0 713.3 Q 527.8 758.6, 485.6 837.2" fill="none" stroke="#84cc16" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="7"><a href="/mcp-servers/nexus-dashboard/"><rect x="384.63150933937754" y="823.2324424519709" width="202" height="28" rx="8" fill="#0b1220" stroke="#84cc16" stroke-width="1.5" opacity="0.95"/><text x="485.63150933937754" y="841.2324424519709" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🟩</tspan> MCP for Nexus Dashboard</text></a></g>
+<path class="mm-leaf-link" data-b="7" d="M 585.0 713.3 Q 480.7 731.5, 368.0 769.5" fill="none" stroke="#84cc16" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="7"><a href="/mcp-servers/dna/"><rect x="309.04258375865527" y="755.5338329278443" width="118" height="28" rx="8" fill="#0b1220" stroke="#84cc16" stroke-width="1.5" opacity="0.95"/><text x="368.04258375865527" y="773.5338329278443" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🟧</tspan> MCP for DNA</text></a></g>
+<path class="mm-link" data-b="8" d="M 640.0 490.0 C 591.0 500.0, 499.0 619.0, 487.5 662.2" fill="none" stroke="#14b8a6" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="8"><a href="/tasks/itil/"><rect x="450.9817886046171" y="645.1574720793533" width="73" height="34" rx="10" fill="#161d29" stroke="#14b8a6" stroke-width="2"/><text x="487.4817886046171" y="667.1574720793533" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">📋</tspan> ITIL</text></a><g class="mm-tog" data-b="8" style="cursor:pointer"><circle cx="521.9817886046171" cy="647.1574720793533" r="9" fill="#14b8a6" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="8" x="521.9817886046171" y="651.1574720793533" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="8" d="M 487.5 662.2 Q 489.4 726.3, 525.9 852.5" fill="none" stroke="#14b8a6" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="8"><a href="/itil/aoapic/"><rect x="466.8947842639343" y="838.4637909389376" width="118" height="28" rx="8" fill="#0b1220" stroke="#14b8a6" stroke-width="1.5" opacity="0.95"/><text x="525.8947842639343" y="856.4637909389376" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🌐</tspan> AOAPIC ITIL</text></a></g>
+<path class="mm-leaf-link" data-b="8" d="M 487.5 662.2 Q 431.6 698.1, 381.4 781.9" fill="none" stroke="#14b8a6" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="8"><a href="/itil/arr/"><rect x="332.88216328608996" y="767.9191917867295" width="97" height="28" rx="8" fill="#0b1220" stroke="#14b8a6" stroke-width="1.5" opacity="0.95"/><text x="381.38216328608996" y="785.9191917867295" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🧪</tspan> ARR ITIL</text></a></g>
+<path class="mm-leaf-link" data-b="8" d="M 487.5 662.2 Q 396.6 644.1, 293.9 647.0" fill="none" stroke="#14b8a6" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="8"><a href="/itil/wiki/"><rect x="241.9328421003376" y="632.9634423146044" width="104" height="28" rx="8" fill="#0b1220" stroke="#14b8a6" stroke-width="1.5" opacity="0.95"/><text x="293.9328421003376" y="650.9634423146044" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📖</tspan> Site Wiki</text></a></g>
+<path class="mm-link" data-b="9" d="M 640.0 490.0 C 592.0 476.1, 455.3 538.7, 424.9 571.6" fill="none" stroke="#3b82f6" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="9"><a href="/roadmap/"><rect x="373.44626418235464" y="554.5591240197832" width="103" height="34" rx="10" fill="#161d29" stroke="#3b82f6" stroke-width="2"/><text x="424.94626418235464" y="576.5591240197832" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">🗺️</tspan> RoadMap</text></a><g class="mm-tog" data-b="9" style="cursor:pointer"><circle cx="474.44626418235464" cy="556.5591240197832" r="9" fill="#3b82f6" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="9" x="474.44626418235464" y="560.5591240197832" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="9" d="M 424.9 571.6 Q 385.7 616.8, 342.7 726.7" fill="none" stroke="#3b82f6" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="9"><a href="/roadmap/"><rect x="294.2366122674669" y="712.7160288484447" width="97" height="28" rx="8" fill="#0b1220" stroke="#3b82f6" stroke-width="1.5" opacity="0.95"/><text x="342.7366122674669" y="730.7160288484447" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🗺️</tspan> RoadMap</text></a></g>
+<path class="mm-leaf-link" data-b="9" d="M 424.9 571.6 Q 348.8 530.3, 250.5 510.5" fill="none" stroke="#3b82f6" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="9"><a href="/mindmap/"><rect x="205.53717055010907" y="496.462269592721" width="90" height="28" rx="8" fill="#0b1220" stroke="#3b82f6" stroke-width="1.5" opacity="0.95"/><text x="250.53717055010907" y="514.462269592721" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🧠</tspan> MindMap</text></a></g>
+<path class="mm-link" data-b="10" d="M 640.0 490.0 C 603.9 455.4, 453.8 447.2, 411.7 462.3" fill="none" stroke="#22c55e" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="10"><a href="/visitors/"><rect x="360.1769589574476" y="445.27656354127566" width="103" height="34" rx="10" fill="#161d29" stroke="#22c55e" stroke-width="2"/><text x="411.6769589574476" y="467.27656354127566" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">👥</tspan> Visitors</text></a><g class="mm-tog" data-b="10" style="cursor:pointer"><circle cx="461.1769589574476" cy="447.27656354127566" r="9" fill="#22c55e" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="10" x="461.1769589574476" y="451.27656354127566" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="10" d="M 411.7 462.3 Q 359.9 500.3, 276.9 602.0" fill="none" stroke="#22c55e" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="10"><a href="/visitors/"><rect x="228.37899760879094" y="587.996150033845" width="97" height="28" rx="8" fill="#0b1220" stroke="#22c55e" stroke-width="1.5" opacity="0.95"/><text x="276.87899760879094" y="605.996150033845" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">👥</tspan> Visitors</text></a></g>
+<path class="mm-leaf-link" data-b="10" d="M 411.7 462.3 Q 350.3 436.7, 252.8 443.0" fill="none" stroke="#22c55e" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="10"><a href="/status/"><rect x="211.34353910175895" y="428.99069470042394" width="83" height="28" rx="8" fill="#0b1220" stroke="#22c55e" stroke-width="1.5" opacity="0.95"/><text x="252.84353910175895" y="446.99069470042394" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🚦</tspan> Status</text></a></g>
+<path class="mm-leaf-link" data-b="10" d="M 411.7 462.3 Q 374.9 377.2, 314.2 294.4" fill="none" stroke="#22c55e" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="10"><a href="/visitors/trends/"><rect x="272.73306703570836" y="280.3577106374015" width="83" height="28" rx="8" fill="#0b1220" stroke="#22c55e" stroke-width="1.5" opacity="0.95"/><text x="314.23306703570836" y="298.3577106374015" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📈</tspan> Trends</text></a></g>
+<path class="mm-link" data-b="11" d="M 640.0 490.0 C 624.1 442.6, 495.0 365.6, 450.7 359.3" fill="none" stroke="#f59e0b" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="11"><a href="/iac/form/"><rect x="399.2137108444589" y="342.3451082518344" width="103" height="34" rx="10" fill="#161d29" stroke="#f59e0b" stroke-width="2"/><text x="450.7137108444589" y="364.3451082518344" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">🔄</tspan> IaC flow</text></a><g class="mm-tog" data-b="11" style="cursor:pointer"><circle cx="500.2137108444589" cy="344.3451082518344" r="9" fill="#f59e0b" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="11" x="500.2137108444589" y="348.3451082518344" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="11" d="M 450.7 359.3 Q 379.1 419.9, 246.2 547.8" fill="none" stroke="#f59e0b" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="11"><a href="/iac/form/"><rect x="211.7255327622526" y="533.8417578538917" width="69" height="28" rx="8" fill="#0b1220" stroke="#f59e0b" stroke-width="1.5" opacity="0.95"/><text x="246.2255327622526" y="551.8417578538917" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📝</tspan> Form</text></a></g>
+<path class="mm-leaf-link" data-b="11" d="M 450.7 359.3 Q 375.4 371.7, 236.8 427.4" fill="none" stroke="#f59e0b" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="11"><a href="/iac/netbox/"><rect x="191.83805449416093" y="413.35460355343827" width="90" height="28" rx="8" fill="#0b1220" stroke="#f59e0b" stroke-width="1.5" opacity="0.95"/><text x="236.83805449416093" y="431.35460355343827" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🗄️</tspan> NetBox</text></a></g>
+<path class="mm-leaf-link" data-b="11" d="M 450.7 359.3 Q 393.6 327.0, 282.3 315.4" fill="none" stroke="#f59e0b" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="11"><a href="/iac/super-portal/"><rect x="181.34399472646476" y="301.39707364486446" width="202" height="28" rx="8" fill="#0b1220" stroke="#f59e0b" stroke-width="1.5" opacity="0.95"/><text x="282.34399472646476" y="319.39707364486446" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🖥️</tspan> Super Portal Front End</text></a></g>
+<path class="mm-leaf-link" data-b="11" d="M 450.7 359.3 Q 417.7 285.1, 342.6 210.7" fill="none" stroke="#f59e0b" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="11"><a href="/iac/pipeline/"><rect x="290.6283393941553" y="196.65416511334496" width="104" height="28" rx="8" fill="#0b1220" stroke="#f59e0b" stroke-width="1.5" opacity="0.95"/><text x="342.6283393941553" y="214.65416511334496" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">⚙️</tspan> Pipeline</text></a></g>
+<path class="mm-leaf-link" data-b="11" d="M 450.7 359.3 Q 458.0 258.4, 443.4 143.9" fill="none" stroke="#f59e0b" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="11"><a href="/iac/approval/"><rect x="394.9019891606026" y="129.94621496941812" width="97" height="28" rx="8" fill="#0b1220" stroke="#f59e0b" stroke-width="1.5" opacity="0.95"/><text x="443.4019891606026" y="147.94621496941812" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">✅</tspan> Approval</text></a></g>
+<path class="mm-leaf-link" data-b="11" d="M 450.7 359.3 Q 501.6 237.4, 552.3 91.5" fill="none" stroke="#f59e0b" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="11"><a href="/iac/dev-prod/"><rect x="489.7991007801651" y="77.537263629292" width="125" height="28" rx="8" fill="#0b1220" stroke="#f59e0b" stroke-width="1.5" opacity="0.95"/><text x="552.2991007801651" y="95.537263629292" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🚀</tspan> Dev and Prod</text></a></g>
+<path class="mm-link" data-b="12" d="M 640.0 490.0 C 648.0 440.6, 569.4 312.5, 533.1 286.3" fill="none" stroke="#a855f7" stroke-width="2.2" opacity="0.85"/>
+<g class="mm-hub" data-b="12"><a href="/iac/aci/"><rect x="466.61367042993334" y="269.3451140997617" width="133" height="34" rx="10" fill="#161d29" stroke="#a855f7" stroke-width="2"/><text x="533.1136704299333" y="291.3451140997617" text-anchor="middle" fill="#e6edf3" font-size="13" font-family="system-ui,Arial,sans-serif" font-weight="700"><tspan class="tt-keep">🌐</tspan> Environments</text></a><g class="mm-tog" data-b="12" style="cursor:pointer"><circle cx="597.6136704299333" cy="271.3451140997617" r="9" fill="#a855f7" stroke="#0f141c" stroke-width="1.5"/><text class="mm-tog-t" data-b="12" x="597.6136704299333" y="275.3451140997617" text-anchor="middle" fill="#0b1220" font-size="12" font-weight="700">−</text></g></g>
+<path class="mm-leaf-link" data-b="12" d="M 533.1 286.3 Q 448.3 290.6, 281.2 317.8" fill="none" stroke="#a855f7" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="12"><a href="/iac/aci/"><rect x="250.18597080034874" y="303.78939507245263" width="62" height="28" rx="8" fill="#0b1220" stroke="#a855f7" stroke-width="1.5" opacity="0.95"/><text x="281.18597080034874" y="321.78939507245263" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🔌</tspan> ACI</text></a></g>
+<path class="mm-leaf-link" data-b="12" d="M 533.1 286.3 Q 474.4 246.1, 346.4 206.7" fill="none" stroke="#a855f7" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="12"><a href="/iac/sda/"><rect x="315.37604716176236" y="192.71750085886288" width="62" height="28" rx="8" fill="#0b1220" stroke="#a855f7" stroke-width="1.5" opacity="0.95"/><text x="346.37604716176236" y="210.71750085886288" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📡</tspan> SDA</text></a></g>
+<path class="mm-leaf-link" data-b="12" d="M 533.1 286.3 Q 517.8 218.5, 455.0 137.6" fill="none" stroke="#a855f7" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="12"><a href="/iac/sdwan/"><rect x="413.54017752658024" y="123.5885017900224" width="83" height="28" rx="8" fill="#0b1220" stroke="#a855f7" stroke-width="1.5" opacity="0.95"/><text x="455.04017752658024" y="141.5885017900224" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🌍</tspan> SD-WAN</text></a></g>
+<path class="mm-leaf-link" data-b="12" d="M 533.1 286.3 Q 565.3 198.4, 573.7 87.4" fill="none" stroke="#a855f7" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="12"><a href="/iac/vxlan-evpn/"><rect x="518.1604901200651" y="73.42942304623153" width="111" height="28" rx="8" fill="#0b1220" stroke="#a855f7" stroke-width="1.5" opacity="0.95"/><text x="573.6604901200651" y="91.42942304623153" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">🔀</tspan> VXLAN EVPN</text></a></g>
+<path class="mm-leaf-link" data-b="12" d="M 533.1 286.3 Q 616.6 202.2, 702.1 96.9" fill="none" stroke="#a855f7" stroke-width="1.4" opacity="0.7"/>
+<g class="mm-leaf" data-b="12"><a href="/iac/nexus-dashboard/"><rect x="629.1030512297274" y="82.87506943980537" width="146" height="28" rx="8" fill="#0b1220" stroke="#a855f7" stroke-width="1.5" opacity="0.95"/><text x="702.1030512297274" y="100.87506943980537" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="system-ui,Arial,sans-serif"><tspan class="tt-keep">📊</tspan> Nexus Dashboard</text></a></g>
+</svg></div><div class="leg"><span><i style="background:#3b82f6"></i>Home</span><span><i style="background:#22c55e"></i>NetBox</span><span><i style="background:#f59e0b"></i>Provisioning</span><span><i style="background:#a855f7"></i>Monitoring</span><span><i style="background:#06b6d4"></i>Testing</span><span><i style="background:#ef4444"></i>ACI Policy</span><span><i style="background:#ec4899"></i>ACI Lab Guide</span><span><i style="background:#84cc16"></i>MCP Servers</span><span><i style="background:#14b8a6"></i>ITIL</span><span><i style="background:#3b82f6"></i>RoadMap</span><span><i style="background:#22c55e"></i>Visitors</span><span><i style="background:#f59e0b"></i>IaC flow</span><span><i style="background:#a855f7"></i>Environments</span></div><div class="fb"><h2>Tree Index</h2><p class="lead" style="margin-top:0">Same structure as the map, for screen readers and when the SVG is hard to read.</p><ul><li><a href="/"><b>Universal Provisioning IaC Demo</b></a> (centre)<ul><li><span class="tt-keep">🏠</span> <a href="/"><b>Home</b></a></li><li><span class="tt-keep">🗄️</span> <a href="/tasks/netbox/"><b>NetBox</b></a><ul><li><span class="tt-keep">🗄️</span> <a href="/netbox-aci-tenants/">NetBox ACI Tenants</a></li><li><span class="tt-keep">📐</span> <a href="/netbox-aci-tenants/diagrams/">Tenant Diagrams</a></li><li><span class="tt-keep">🧱</span> <a href="/netbox-aci-objects/">NB ACI Objects</a></li><li><span class="tt-keep">🖥️</span> <a href="/netbox-hw-inventory/">NB HW Inventory</a></li><li><span class="tt-keep">📄</span> <a href="/netbox-yaml-model/">YAML Model</a></li><li><span class="tt-keep">🌐</span> <a href="/netbox-yaml-model/aoapic/">AOAPIC Model</a></li><li><span class="tt-keep">🧪</span> <a href="/netbox-yaml-model/arr/">ARR Model</a></li></ul></li><li><span class="tt-keep">⚙️</span> <a href="/tasks/provisioning/"><b>Provisioning</b></a><ul><li><span class="tt-keep">⏳</span> <a href="/report17-aoapic-monitoring/pending-provisioning/">Pending Provisioning</a></li><li><span class="tt-keep">🧩</span> <a href="/report17-aoapic-monitoring/universal-provisioning/">Universal Provisioning</a></li></ul></li><li><span class="tt-keep">📊</span> <a href="/tasks/monitoring/"><b>Monitoring</b></a><ul><li><span class="tt-keep">📊</span> <a href="/report17-aoapic-monitoring/">Report 17</a></li><li><span class="tt-keep">🏢</span> <a href="/report17-aoapic-monitoring/tenants/">Tenants Detail</a></li><li><span class="tt-keep">🔍</span> <a href="/report17-aoapic-monitoring/objects/">Object Drill-down</a></li><li><span class="tt-keep">📈</span> <a href="/grafana-screenshots/">Group 1</a></li><li><span class="tt-keep">📉</span> <a href="/grafana-screenshots-part2/">Group 2</a></li></ul></li><li><span class="tt-keep">🧪</span> <a href="/tasks/testing/"><b>Testing</b></a><ul><li><span class="tt-keep">✅</span> <a href="/aoapic-nac-test-status/">nac-test Status</a></li><li><span class="tt-keep">📄</span> <a href="/testing/aoapic-defaults/">AOAPIC defaults</a></li><li><span class="tt-keep">🧪</span> <a href="/testing/arr-defaults/">ARR defaults</a></li><li><span class="tt-keep">⚖️</span> <a href="/testing/defaults-compare/">Defaults compare</a></li></ul></li><li><span class="tt-keep">🧭</span> <a href="/aci-policy/"><b>ACI Policy</b></a><ul><li><span class="tt-keep">🧭</span> <a href="/aci-policy/">ACI Policy</a></li><li><span class="tt-keep">🌌</span> <a href="/aci-policy/policy-universe/">Policy Universe</a></li><li><span class="tt-keep">🏢</span> <a href="/aci-policy/tenants/">Tenants</a></li><li><span class="tt-keep">🧱</span> <a href="/aci-policy/policy-tenant/">Policy Tenant</a></li><li><span class="tt-keep">📘</span> <a href="/aci-policy/aci-lab-guide-policy/">ACI Lab Guide Policy</a></li><li><span class="tt-keep">🕸️</span> <a href="/aci-policy/fabric-access-inventory/">Fabric, Access, Inventory</a></li><li><span class="tt-keep">🕒</span> <a href="/aci-policy/pod-policy-group/">Pod Policy Group</a></li></ul></li><li><span class="tt-keep">🧪</span> <a href="/aci-lab-guide/"><b>ACI Lab Guide</b></a><ul><li><span class="tt-keep">🧪</span> <a href="/aci-lab-guide/">ACI Lab Guide</a></li><li><span class="tt-keep">👋</span> <a href="/aci-lab-guide/introduction/">Introduction</a></li><li><span class="tt-keep">📘</span> <a href="/aci-lab-guide/aci-basics/">ACI Basics</a></li><li><span class="tt-keep">🔗</span> <a href="/aci-lab-guide/access-policies/">Access Policies</a></li><li><span class="tt-keep">💻</span> <a href="/aci-lab-guide/vmm/">VMM Integration</a></li><li><span class="tt-keep">🏢</span> <a href="/aci-lab-guide/tenants/">Tenants</a></li><li><span class="tt-keep">🩺</span> <a href="/aci-lab-guide/day2/">Day 2 Operations</a></li><li><span class="tt-keep">🛡️</span> <a href="/aci-lab-guide/esg/">Endpoint Security Group</a></li><li><span class="tt-keep">✂️</span> <a href="/aci-lab-guide/segmentation/">ACI Segmentation</a></li><li><span class="tt-keep">🟩</span> <a href="/aci-lab-guide/nexus-dashboard/">Nexus Dashboard</a></li><li><span class="tt-keep">🌐</span> <a href="/aci-lab-guide/orchestrator/">Orchestrator</a></li><li><span class="tt-keep">💡</span> <a href="/aci-lab-guide/insights/">Insights</a></li><li><span class="tt-keep">✅</span> <a href="/aci-lab-guide/conclusion/">Conclusion</a></li><li><span class="tt-keep">📚</span> <a href="/aci-lab-guide/references/">References</a></li></ul></li><li><span class="tt-keep">🔌</span> <a href="/mcp-servers/"><b>MCP Servers</b></a><ul><li><span class="tt-keep">🔌</span> <a href="/mcp-servers/">MCP Servers</a></li><li><span class="tt-keep">🟦</span> <a href="/mcp-servers/aci/">MCP for ACI</a></li><li><span class="tt-keep">🟩</span> <a href="/mcp-servers/nexus-dashboard/">MCP for Nexus Dashboard</a></li><li><span class="tt-keep">🟧</span> <a href="/mcp-servers/dna/">MCP for DNA</a></li></ul></li><li><span class="tt-keep">📋</span> <a href="/tasks/itil/"><b>ITIL</b></a><ul><li><span class="tt-keep">🌐</span> <a href="/itil/aoapic/">AOAPIC ITIL</a></li><li><span class="tt-keep">🧪</span> <a href="/itil/arr/">ARR ITIL</a></li><li><span class="tt-keep">📖</span> <a href="/itil/wiki/">Site Wiki</a></li></ul></li><li><span class="tt-keep">🗺️</span> <a href="/roadmap/"><b>RoadMap</b></a><ul><li><span class="tt-keep">🗺️</span> <a href="/roadmap/">RoadMap</a></li><li><span class="tt-keep">🧠</span> <a href="/mindmap/">MindMap</a></li></ul></li><li><span class="tt-keep">👥</span> <a href="/visitors/"><b>Visitors</b></a><ul><li><span class="tt-keep">👥</span> <a href="/visitors/">Visitors</a></li><li><span class="tt-keep">🚦</span> <a href="/status/">Status</a></li><li><span class="tt-keep">📈</span> <a href="/visitors/trends/">Trends</a></li></ul></li><li><span class="tt-keep">🔄</span> <a href="/iac/form/"><b>IaC flow</b></a><ul><li><span class="tt-keep">📝</span> <a href="/iac/form/">Form</a></li><li><span class="tt-keep">🗄️</span> <a href="/iac/netbox/">NetBox</a></li><li><span class="tt-keep">🖥️</span> <a href="/iac/super-portal/">Super Portal Front End</a></li><li><span class="tt-keep">⚙️</span> <a href="/iac/pipeline/">Pipeline</a></li><li><span class="tt-keep">✅</span> <a href="/iac/approval/">Approval</a></li><li><span class="tt-keep">🚀</span> <a href="/iac/dev-prod/">Dev and Prod</a></li></ul></li><li><span class="tt-keep">🌐</span> <a href="/iac/aci/"><b>Environments</b></a><ul><li><span class="tt-keep">🔌</span> <a href="/iac/aci/">ACI</a></li><li><span class="tt-keep">📡</span> <a href="/iac/sda/">SDA</a></li><li><span class="tt-keep">🌍</span> <a href="/iac/sdwan/">SD-WAN</a></li><li><span class="tt-keep">🔀</span> <a href="/iac/vxlan-evpn/">VXLAN EVPN</a></li><li><span class="tt-keep">📊</span> <a href="/iac/nexus-dashboard/">Nexus Dashboard</a></li></ul></li></ul></li></ul></div><script>(function(){function set(b,open){document.querySelectorAll('.mm-leaf[data-b="'+b+'"],.mm-leaf-link[data-b="'+b+'"]').forEach(function(e){e.style.display=open?"":"none"});var t=document.querySelector('.mm-tog-t[data-b="'+b+'"]');if(t)t.textContent=open?"\u2212":"+";}document.querySelectorAll(".mm-tog").forEach(function(g){g.addEventListener("click",function(ev){ev.preventDefault();ev.stopPropagation();var b=g.getAttribute("data-b");var sample=document.querySelector('.mm-leaf[data-b="'+b+'"]');var open=!sample||sample.style.display==="none";set(b,open);});});})();</script></main><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc){const pt=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Melbourne",hour:"2-digit",minute:"2-digit",hour12:false,hourCycle:"h23",timeZoneName:"short"}).formatToParts(new Date(d.updated_utc));const g=t=>(pt.find(x=>x.type===t)||{}).value||"";const tz=(g("timeZoneName")||"AEDT").replace("GMT+11","AEDT").replace("GMT+10","AEST");e.textContent=" (data as of "+g("hour")+":"+g("minute")+" "+tz+")"}})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script><!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:8px 0 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:6px;margin:0;padding:8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
+nav.site.im a.mi{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:36px;min-width:0;padding:0 10px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a)}
+nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
+nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px;flex:none}#sg-link,#tt-btn{height:36px;border-radius:18px}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="im-script">(function(){
+var G=[["Home", "/", "🏠", []], ["NETBOX", "/tasks/netbox/", "🗄️", [["NetBox ACI Tenants", "/netbox-aci-tenants/", "🗄️"], ["Tenant Diagrams", "/netbox-aci-tenants/diagrams/", "📐"], ["NB ACI Objects", "/netbox-aci-objects/", "🧱"], ["NB HW Inventory", "/netbox-hw-inventory/", "🖥️"], ["YAML Model", "/netbox-yaml-model/", "📄"], ["AOAPIC Model", "/netbox-yaml-model/aoapic/", "🌐"], ["ARR Model", "/netbox-yaml-model/arr/", "🧪"]]], ["PROVISIONING", "/tasks/provisioning/", "⚙️", [["Pending Provisioning", "/report17-aoapic-monitoring/pending-provisioning/", "⏳"], ["Universal Provisioning", "/report17-aoapic-monitoring/universal-provisioning/", "🧩"]]], ["MONITORING", "/tasks/monitoring/", "📊", [["Report 17", "/report17-aoapic-monitoring/", "📊"], ["Tenants Detail", "/report17-aoapic-monitoring/tenants/", "🏢"], ["Object Drill-down", "/report17-aoapic-monitoring/objects/", "🔍"], ["AOAPIC Faults", "/tasks/monitoring/aoapic/", "🌐"], ["ARR Faults", "/tasks/monitoring/arr/", "🗄️"], ["Group 1", "/grafana-screenshots/", "📈"], ["Group 2", "/grafana-screenshots-part2/", "📉"]]], ["TESTING", "/tasks/testing/", "🧪", [["nac-test Status", "/aoapic-nac-test-status/", "✅"], ["AOAPIC defaults", "/testing/aoapic-defaults/", "📄"], ["ARR defaults", "/testing/arr-defaults/", "🧪"], ["Defaults compare", "/testing/defaults-compare/", "⚖️"]]], ["ACI Policy", "/aci-policy/", "🧭", [["ACI Policy", "/aci-policy/", "🧭"], ["Policy Universe", "/aci-policy/policy-universe/", "🌌"], ["Tenants", "/aci-policy/tenants/", "🏢"], ["Policy Tenant", "/aci-policy/policy-tenant/", "🧱"], ["ACI Lab Guide Policy", "/aci-policy/aci-lab-guide-policy/", "📘"], ["Lab Guide Diagrams", "/aci-policy/aci-lab-guide-policy/diagrams/", "🗺️"], ["Fabric, Access, Inventory", "/aci-policy/fabric-access-inventory/", "🕸️"], ["Pod Policy Group", "/aci-policy/pod-policy-group/", "🕒"]]], ["ACI Multi-Pod", "/aci-multipod/", "🔗", [["ACI Multi-Pod", "/aci-multipod/", "🔗"], ["Overview", "/aci-multipod/overview/", "📘"], ["Planning", "/aci-multipod/planning/", "📋"], ["Design", "/aci-multipod/design/", "📐"], ["Migration", "/aci-multipod/migration/", "↪️"], ["Deployment", "/aci-multipod/deployment/", "🛠️"], ["Operations", "/aci-multipod/operations/", "🩺"], ["NaC YAML", "/aci-multipod/yaml/", "📄"]]], ["ACI Azure VXLAN", "/aci-azure-vxlan/", "☁️", [["ACI Azure VXLAN", "/aci-azure-vxlan/", "☁️"], ["Physical Rack", "/aci-azure-vxlan/physical-rack/", "🗄️"], ["Logical Topology", "/aci-azure-vxlan/logical/", "🔀"], ["Tenant Diagram", "/aci-azure-vxlan/tenant-diagram/", "🗺️"], ["YAML Files", "/aci-azure-vxlan/yaml/", "📄"], ["Deployment", "/aci-azure-vxlan/deployment/", "🛠️"]]], ["Firewall Domain", "/firewall-domain/", "🛡️", [["Firewall Domain", "/firewall-domain/", "🛡️"], ["Cisco FMT", "/firewall-domain/cisco-fmt/", "🔄"], ["Palo Alto", "/firewall-domain/palo-alto/", "🟧"], ["Other tools", "/firewall-domain/other/", "🧰"], ["ASA build", "/firewall-domain/asa-build/", "📄"]]], ["ACI Lab Guide", "/aci-lab-guide/", "🧪", [["ACI Lab Guide", "/aci-lab-guide/", "🧪"], ["Introduction", "/aci-lab-guide/introduction/", "👋"], ["ACI Basics", "/aci-lab-guide/aci-basics/", "📘"], ["Access Policies", "/aci-lab-guide/access-policies/", "🔗"], ["VMM Integration", "/aci-lab-guide/vmm/", "💻"], ["Tenants", "/aci-lab-guide/tenants/", "🏢"], ["Day 2 Operations", "/aci-lab-guide/day2/", "🩺"], ["Endpoint Security Group", "/aci-lab-guide/esg/", "🛡️"], ["ACI Segmentation", "/aci-lab-guide/segmentation/", "✂️"], ["Nexus Dashboard", "/aci-lab-guide/nexus-dashboard/", "🟩"], ["Orchestrator", "/aci-lab-guide/orchestrator/", "🌐"], ["Insights", "/aci-lab-guide/insights/", "💡"], ["Conclusion", "/aci-lab-guide/conclusion/", "✅"], ["References", "/aci-lab-guide/references/", "📚"]]], ["MCP Servers", "/mcp-servers/", "🔌", [["MCP Servers", "/mcp-servers/", "🔌"], ["MCP for ACI", "/mcp-servers/aci/", "🟦"], ["MCP for Nexus Dashboard", "/mcp-servers/nexus-dashboard/", "🟩"], ["MCP for DNA", "/mcp-servers/dna/", "🟧"]]], ["ITIL", "/tasks/itil/", "📋", [["AOAPIC ITIL", "/itil/aoapic/", "🌐"], ["ARR ITIL", "/itil/arr/", "🧪"], ["Site Wiki", "/itil/wiki/", "📖"]]], ["RoadMap", "/roadmap/", "🗺️", [["RoadMap", "/roadmap/", "🗺️"], ["MindMap", "/mindmap/", "🧠"]]], ["Visitors", "/visitors/", "👥", [["Visitors", "/visitors/", "👥"], ["Status", "/status/", "🚦"], ["Trends", "/visitors/trends/", "📈"], ["Countries", "/visitors/countries/", "🌍"]]]];
+function mk(e,on,cls,n){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=e[0];var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks \u203A';r2.appendChild(t);
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm'))});r2.appendChild(pills);n.appendChild(r2)}}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
+})();</script>
+</body></html>
