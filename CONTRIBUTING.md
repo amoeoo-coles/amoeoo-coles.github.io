@@ -14,6 +14,16 @@ There is **no** single template at publish time. Automated jobs (for example “
 
 Optional CI check: `python3 scripts/site_menu_sync.py --check` exits non-zero when any page is out of date.
 
+## Git Tracking page
+
+Regenerate branch/history JSON after notable repo activity:
+
+```bash
+python3 scripts/git_tracking_build.py
+```
+
+Static page: `/visitors/git-tracking/` (add menu entry via `site-menu.json` + sync).
+
 ## SpaceX Tracking pages
 
 Regenerate tracker HTML (chrome + menu) with:
