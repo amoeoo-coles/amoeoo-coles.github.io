@@ -428,16 +428,70 @@ def build() -> dict:
     }
 
 
-def main(argv: list[str]) -> int:
-    OUT_JSON.parent.mkdir(parents=True, exist_ok=True)
-    payload = build()
-    OUT_JSON.write_text(
-        json.dumps(payload, indent=2, ensure_ascii=False) + "\n",
-        encoding="utf-8",
+NETBOX_NAME_RE = re.compile(r"netbox|(?:^|/)nb-", re.I)
+
+
+def is_netbox_branch(name: str) -> bool:
+    """True when a branch name is NetBox-scoped (netbox or a nb- path segment)."""
+    return bool(NETBOX_NAME_RE.search(name or ""))
+
+
+def filter_payload(payload: dict, scope: str) -> dict:
+    if scope != "netbox":
+        return payload
+    payload = json.loads(json.dumps(payload))
+    branches = [b for b in payload.get("branches") or [] if is_netbox_branch(b.get("name") or "")]
+    merged_n = sum(1 for b in branches if b.get("merged"))
+    payload["branches"] = branches
+    summary = dict(payload.get("summary") or {})
+    summary["total_branches"] = len(branches)
+    summary["merged_branches"] = merged_n
+    summary["unmerged_branches"] = len(branches) - merged_n
+    summary["scope"] = "netbox"
+    summary["scope_note"] = (
+        "Site repo amoeoo-coles/amoeoo-coles.github.io: the main line plus branches "
+        "whose names contain 'netbox' or a 'nb-' segment. There is no separate NetBox "
+        "application git checkout on the builder host."
     )
-    print(f"Wrote {OUT_JSON.relative_to(ROOT)}")
+    payload["summary"] = summary
+    meta = dict(payload.get("meta") or {})
+    meta["scope"] = "netbox"
+    meta["filter"] = "name matches /netbox|(?:^|/)nb-/i"
+    payload["meta"] = meta
+    payload.pop("incident_nov12", None)
+    return payload
+
+
+def main(argv: list[str]) -> int:
+    import argparse
+
+    ap = argparse.ArgumentParser(description="Build git-history.json from this repo's git refs.")
+    ap.add_argument("--scope", choices=["all", "netbox"], default="all")
+    ap.add_argument("--out", type=Path, default=None, help="Output JSON path (default: visitors/git-tracking/data/git-history.json)")
+    ap.add_argument(
+        "--from-json",
+        type=Path,
+        default=None,
+        help="Reuse an existing git-history.json instead of walking git again",
+    )
+    args = ap.parse_args(argv[1:])
+    if args.from_json:
+        payload = json.loads(args.from_json.read_text(encoding="utf-8"))
+    else:
+        payload = build()
+    payload = filter_payload(payload, args.scope)
+    out = args.out if args.out is not None else OUT_JSON
+    if not out.is_absolute():
+        out = ROOT / out
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    try:
+        rel = out.relative_to(ROOT)
+    except ValueError:
+        rel = out
+    print(f"Wrote {rel}")
     print(json.dumps(payload["summary"], indent=2))
-    merged_unique = len({b["merged_utc"] for b in payload["branches"] if b["merged_utc"]})
+    merged_unique = len({b.get("merged_utc") for b in payload["branches"] if b.get("merged_utc")})
     print(f"distinct merged_utc values: {merged_unique}")
     return 0
 

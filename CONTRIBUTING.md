@@ -24,6 +24,21 @@ python3 scripts/git_tracking_build.py
 
 Static page: `/visitors/git-tracking/` (add menu entry via `site-menu.json` + sync).
 
+```
+
+NetBox-scoped subset (used by `/tasks/netbox/history/`):
+
+```bash
+python3 scripts/git_tracking_build.py --from-json visitors/git-tracking/data/git-history.json --scope netbox --out tasks/netbox/history/data/git-history.json
+```
+
+Or rebuild both from git in one go:
+
+```bash
+python3 scripts/git_tracking_build.py
+python3 scripts/git_tracking_build.py --from-json visitors/git-tracking/data/git-history.json --scope netbox --out tasks/netbox/history/data/git-history.json
+```
+
 ## SpaceX Tracking pages
 
 Regenerate tracker HTML (chrome + menu) with:
