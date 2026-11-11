@@ -87,7 +87,7 @@
       f16html =
         '<div class="sxt-next-sub"><h3>Flight 16 (beyond next)</h3><p>' +
         esc(f16.schedule_note || "") +
-        "</p><p class="sxt-meta">Expected stack: " +
+        '</p><p class="sxt-meta">Expected stack: ' +
         esc((f16.expected_vehicles && f16.expected_vehicles.ship) || "unknown") +
         " + " +
         esc((f16.expected_vehicles && f16.expected_vehicles.booster) || "unknown") +

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Copy current SpaceX tracking JSON into history/YYYY-MM-DD/ and refresh version list."""
+"""Copy current SpaceX tracking JSON into history/YYYY-MM-DD/ and refresh version list.
+
+HTML for this section is rebuilt only via spacex_tracking_build_pages.py (never from /status/).
+"""
 
 from __future__ import annotations
 
