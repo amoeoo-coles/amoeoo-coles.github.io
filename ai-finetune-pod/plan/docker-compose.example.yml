@@ -1,0 +1,49 @@
+# EXAMPLE ONLY - docker-compose.yml for the AI FineTune Pod.
+# Replace every <REPLACE> value. Pin image tags you have tested; do not run :latest in production.
+# Requires: NVIDIA driver + NVIDIA Container Toolkit configured for Docker (nvidia-ctk runtime configure --runtime=docker).
+name: ai-finetune-pod
+
+x-gpu: &gpu
+  deploy:
+    resources:
+      reservations:
+        devices:
+          - driver: nvidia
+            count: 1
+            capabilities: [gpu]
+
+services:
+  trainer:
+    <<: *gpu
+    image: nvcr.io/nvidia/pytorch:<YY.MM>-py3     # NGC PyTorch; or unsloth/unsloth:<tag>
+    ipc: host                                    # NGC docs: raise shared memory (--ipc=host or --shm-size)
+    working_dir: /workspace
+    volumes:
+      - ./data:/data:ro                          # prepared JSONL datasets (read-only)
+      - ./models:/models                         # base models + merged outputs
+      - ./ckpt:/ckpt                             # checkpoints and LoRA adapters
+      - ./configs:/configs:ro
+    environment:
+      HF_HOME: /models/hf-cache
+      HF_TOKEN: ${HF_TOKEN:-}                    # only for gated models; keep in .env, never commit
+    command: ["bash", "-lc", "pip install -q peft trl bitsandbytes datasets && python /configs/train.py --config /configs/qlora-train.example.yaml"]
+    profiles: ["train"]
+
+  serve:
+    <<: *gpu
+    image: vllm/vllm-openai:<tag>
+    ipc: host
+    volumes:
+      - ./models:/models:ro
+    command: ["--model", "/models/merged/<REPLACE-model-dir>", "--max-model-len", "4096", "--gpu-memory-utilization", "0.85"]
+    ports:
+      - "127.0.0.1:8000:8000"                    # local only; put a reverse proxy + auth in front if shared
+    profiles: ["serve"]
+
+  dcgm-exporter:
+    <<: *gpu
+    image: nvcr.io/nvidia/k8s/dcgm-exporter:<DCGM_EXPORTER_TAG>
+    cap_add: ["SYS_ADMIN"]                       # per NVIDIA DCGM Exporter install docs
+    ports:
+      - "9400:9400"                              # Prometheus scrape target for the existing Grafana
+    restart: unless-stopped
