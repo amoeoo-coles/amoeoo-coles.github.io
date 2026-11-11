@@ -6,7 +6,8 @@ from pathlib import Path
 
 # Do not rewrite these prefixes when bulk-updating static HTML from /status/ or similar.
 # Includes generated tracker pages: overview, ships, boosters, sites, boosters/previous/,
-# raptor/, control-center/ (see scripts/spacex_tracking_build_pages.py).
+# raptor/, control-center/, launch-sequence/, launch-preparation/, launch-monitoring/
+# (see scripts/spacex_tracking_build_pages.py).
 SKIP_HTML_PUBLISH_PREFIXES = (
     "spacex-tracking/",
 )

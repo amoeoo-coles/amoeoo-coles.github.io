@@ -2,7 +2,8 @@
 """Copy current SpaceX tracking JSON into history/YYYY-MM-DD/ and refresh version list.
 
 HTML for this section is rebuilt only via spacex_tracking_build_pages.py (never from /status/).
-raptor.json is snapshotted with other data; update it manually when public Raptor specs change.
+raptor.json, launch_sequence.json, and launch_prep.json are snapshotted with other data;
+update them manually when public specs or readiness milestones change.
 """
 
 from __future__ import annotations
@@ -26,6 +27,8 @@ SNAPSHOT_FILES = (
     "sites.json",
     "previous_flights.json",
     "raptor.json",
+    "launch_sequence.json",
+    "launch_prep.json",
     "meta.json",
 )
 

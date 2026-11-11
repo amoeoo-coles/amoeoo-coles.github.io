@@ -50,3 +50,15 @@ python3 scripts/spacex_tracking_build_pages.py
 Historical flight table data lives in `spacex-tracking/data/previous_flights.json` (included in `spacex_tracking_snapshot.py`).
 
 Paths under `spacex-tracking/` are skipped by other HTML publish scripts; see `scripts/site_html_guards.py`.
+
+## Demo AI Pod pages
+
+After publishing or bulk-editing HTML under `demo-ai-pod/`, refresh the shared menu from canonical JSON:
+
+```bash
+python3 scripts/demo_ai_pod_apply_menu.py
+# or site-wide:
+python3 scripts/site_menu_sync.py
+```
+
+Do **not** hand-copy `var G` from another page — that is what caused stale SpaceX Tracking badge counts.
