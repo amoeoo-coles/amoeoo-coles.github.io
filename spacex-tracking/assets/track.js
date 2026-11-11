@@ -893,6 +893,355 @@
       });
   }
 
+  function specCell(val) {
+    if (val === null || val === undefined || val === "" || val === "unknown") {
+      return displayUnknown("not public");
+    }
+    return esc(String(val));
+  }
+
+  function linkSrc(s) {
+    if (!s || !s.url) return "";
+    return (
+      '<a href="' +
+      esc(s.url) +
+      '" target="_blank" rel="noopener">' +
+      esc(s.title || "source") +
+      "</a>"
+    );
+  }
+
+  function initRaptor(opts) {
+    return loadJson(opts.dataUrl)
+      .then(function (data) {
+        if (opts.metaEl) {
+          opts.metaEl.textContent = "As of " + esc(data.as_of_label || data.as_of || "unknown");
+        }
+        var lay = document.getElementById("sxt-raptor-layout");
+        if (!lay) return;
+        var layout = data.vehicle_engine_layout || {};
+        var vrows = (data.versions || [])
+          .map(function (v) {
+            return (
+              '<article class="sxt-raptor-spec"><h3>' +
+              esc(v.name) +
+              "</h3><p class=\"sxt-meta\">" +
+              esc(v.status || "") +
+              " · as of " +
+              esc(v.as_of || data.as_of) +
+              '</p><table class="sxt-raptor-table"><tbody>' +
+              "<tr><th>Thrust SL</th><td>" +
+              specCell(v.thrust_sea_level_tf != null ? v.thrust_sea_level_tf + " tf" : null) +
+              "</td></tr>" +
+              "<tr><th>Thrust vac</th><td>" +
+              specCell(v.thrust_vacuum_tf != null ? v.thrust_vacuum_tf + " tf" : null) +
+              "</td></tr>" +
+              "<tr><th>Chamber pressure</th><td>" +
+              specCell(v.chamber_pressure_bar) +
+              (v.chamber_pressure_note
+                ? '<br/><span class="sxt-dim">' + esc(v.chamber_pressure_note) + "</span>"
+                : "") +
+              "</td></tr>" +
+              "<tr><th>Isp (sea)</th><td>" +
+              specCell(v.specific_impulse_sea_s) +
+              "</td></tr>" +
+              "<tr><th>Engine mass</th><td>" +
+              specCell(v.engine_mass_kg != null ? v.engine_mass_kg + " kg" : null) +
+              "</td></tr>" +
+              "<tr><th>Installed mass</th><td>" +
+              specCell(v.installed_mass_kg != null ? v.installed_mass_kg + " kg" : null) +
+              "</td></tr></tbody></table><p class=\"sxt-src\">" +
+              (v.sources || []).map(linkSrc).join(" · ") +
+              "</p></article>"
+            );
+          })
+          .join("");
+        var fac = (data.facilities || [])
+          .map(function (f) {
+            return (
+              "<li><strong>" +
+              esc(f.name) +
+              "</strong> — " +
+              esc(f.role) +
+              " · " +
+              linkSrc(f.source) +
+              "</li>"
+            );
+          })
+          .join("");
+        var miles = (data.production_milestones || [])
+          .map(function (m) {
+            return (
+              "<li><strong>" +
+              esc(m.date) +
+              "</strong>: " +
+              esc(m.text) +
+              " · " +
+              linkSrc(m.source) +
+              "</li>"
+            );
+          })
+          .join("");
+        lay.innerHTML =
+          "<h2>Vehicle layout</h2><p>" +
+          esc((layout.super_heavy && layout.super_heavy.note) || "") +
+          " <span class=\"sxt-dim\">(" +
+          (layout.super_heavy && layout.super_heavy.sea_level_raptor_count) +
+          " SL on booster)</span></p><p>" +
+          esc((layout.starship && layout.starship.note) || "") +
+          "</p><p class=\"sxt-src\">" +
+          linkSrc(layout.super_heavy && layout.super_heavy.source) +
+          "</p>" +
+          "<h2>Versions</h2>" +
+          vrows +
+          "<h2>Build &amp; test sites</h2><ul>" +
+          fac +
+          "</ul><h2>Production milestones (public)</h2><ul>" +
+          miles +
+          "</ul>";
+        var ev = document.getElementById("sxt-raptor-events");
+        if (ev) {
+          ev.innerHTML =
+            "<ul>" +
+            (data.flight_engine_events || [])
+              .map(function (e) {
+                return (
+                  "<li><strong>Flight " +
+                  e.flight +
+                  "</strong>: " +
+                  esc(e.summary) +
+                  " · " +
+                  linkSrc(e.source) +
+                  "</li>"
+                );
+              })
+              .join("") +
+            "</ul>";
+        }
+      })
+      .catch(function (err) {
+        var lay = document.getElementById("sxt-raptor-layout");
+        if (lay) {
+          lay.innerHTML = '<p class="sxt-err">' + esc(err.message) + "</p>";
+        }
+      });
+  }
+
+  var ccTimer = null;
+
+  function formatCountdown(ms) {
+    if (ms <= 0) return "Window target time passed";
+    var s = Math.floor(ms / 1000);
+    var d = Math.floor(s / 86400);
+    s -= d * 86400;
+    var h = Math.floor(s / 3600);
+    s -= h * 3600;
+    var m = Math.floor(s / 60);
+    s -= m * 60;
+    return d + "d " + h + "h " + m + "m " + s + "s";
+  }
+
+  function startCountdown(targetIso, el, subEl, nf) {
+    if (ccTimer) {
+      clearInterval(ccTimer);
+      ccTimer = null;
+    }
+    var target = new Date(targetIso).getTime();
+    if (isNaN(target)) {
+      el.textContent = "Countdown unavailable";
+      if (subEl) subEl.textContent = "No parseable countdown_target_utc in meta.json";
+      return;
+    }
+    function tick() {
+      var ms = target - Date.now();
+      el.textContent = formatCountdown(ms);
+      if (subEl && nf) {
+        subEl.innerHTML =
+          "Melbourne: " +
+          esc(nf.window_melbourne || "unknown") +
+          "<br/>UTC target: " +
+          esc(targetIso) +
+          (nf.countdown_target_note
+            ? '<br/><span class="sxt-dim">' + esc(nf.countdown_target_note) + "</span>"
+            : "");
+      }
+    }
+    tick();
+    ccTimer = setInterval(tick, 1000);
+  }
+
+  function countByStage(vehicles) {
+    var out = {};
+    (vehicles || []).forEach(function (v) {
+      var st = v.stage || "unknown";
+      out[st] = (out[st] || 0) + 1;
+    });
+    return out;
+  }
+
+  function initControlCenter(opts) {
+    var loads = [
+      loadJson(opts.metaUrl),
+      loadJson(opts.shipsUrl),
+      loadJson(opts.boostersUrl),
+      loadJson(opts.sitesUrl),
+      loadJson(opts.raptorUrl),
+      loadJson(opts.previousUrl)
+    ];
+    return Promise.all(loads)
+      .then(function (parts) {
+        var meta = parts[0];
+        var ships = parts[1].vehicles || [];
+        var boosters = parts[2].vehicles || [];
+        var sites = parts[3].sites || [];
+        var raptor = parts[4];
+        var prev = parts[5];
+        if (opts.updatedEl) {
+          opts.updatedEl.textContent =
+            "Tracker data · " + (meta.last_updated_label || melbourneLabel(meta.last_updated));
+        }
+        var nf = meta.next_flight || {};
+        var cd = document.getElementById("sxt-cc-countdown");
+        var cds = document.getElementById("sxt-cc-countdown-sub");
+        if (cd && nf.countdown_target_utc) {
+          startCountdown(nf.countdown_target_utc, cd, cds, nf);
+        }
+        var nx = document.getElementById("sxt-cc-next");
+        if (nx) {
+          var srcs = (nf.sources || [])
+            .map(function (s, i) {
+              return (
+                '<a href="' +
+                esc(s.url) +
+                '" target="_blank" rel="noopener">' +
+                esc(s.title || "Source " + (i + 1)) +
+                "</a>"
+              );
+            })
+            .join(" · ");
+          nx.innerHTML =
+            "<h2>Next flight</h2><p><strong>" +
+            esc(nf.id || "unknown") +
+            "</strong> · " +
+            esc(nf.status || "") +
+            "</p><p>" +
+            esc(nf.launch_site || "") +
+            "</p><p>" +
+            esc((nf.vehicles && nf.vehicles.booster) || "") +
+            " · " +
+            esc((nf.vehicles && nf.vehicles.ship) || "") +
+            '</p><p class="sxt-note">' +
+            esc(nf.mission_notes || "") +
+            "</p>" +
+            (srcs ? '<p class="sxt-src">Sources: ' + srcs + "</p>" : "");
+        }
+        var latest = document.getElementById("sxt-cc-latest");
+        if (latest && prev && prev.flights && prev.flights.length) {
+          var lf = prev.flights[prev.flights.length - 1];
+          latest.innerHTML =
+            "<h2>Latest flown</h2><p><strong>Flight " +
+            lf.flight_number +
+            "</strong> · " +
+            melbourneLabel(lf.date_utc) +
+            "</p><p>" +
+            esc(lf.summary_line || "") +
+            '</p><p class="sxt-meta"><a href="/spacex-tracking/boosters/previous/">Full flight history →</a></p>';
+        }
+        var fleet = document.getElementById("sxt-cc-fleet");
+        if (fleet) {
+          var sb = countByStage(boosters);
+          var ss = countByStage(ships);
+          function chips(map, label) {
+            return (
+              "<h3>" +
+              label +
+              ' (' +
+              (Object.keys(map).reduce(function (a, k) {
+                return a + map[k];
+              }, 0) ||
+                0) +
+              ")</h3><div class=\"sxt-cc-stat-row\">" +
+              Object.keys(map)
+                .map(function (k) {
+                  return '<span class="sxt-cc-chip">' + esc(k) + ": " + map[k] + "</span>";
+                })
+                .join("") +
+              "</div>"
+            );
+          }
+          fleet.innerHTML =
+            "<h2>Fleet summary</h2>" + chips(sb, "Boosters") + chips(ss, "Ships");
+        }
+        var pads = document.getElementById("sxt-cc-pads");
+        if (pads) {
+          pads.innerHTML =
+            "<h2>Pad status</h2><ul class=\"sxt-site-sum-list\">" +
+            sites
+              .filter(function (s) {
+                var g = s.group || "";
+                var id = s.id || "";
+                return g === "starbase_tx" || id.indexOf("starbase") === 0;
+              })
+              .map(function (s) {
+                return (
+                  "<li><strong>" +
+                  esc(s.name) +
+                  "</strong>: " +
+                  esc(s.status_label || s.status) +
+                  "</li>"
+                );
+              })
+              .join("") +
+            '</ul><p class="sxt-meta"><a href="/spacex-tracking/sites/">All sites →</a></p>';
+        }
+        var rap = document.getElementById("sxt-cc-raptor");
+        if (rap && raptor) {
+          rap.innerHTML =
+            "<h2>Raptor summary</h2><p>" +
+            esc(raptor.summary || "") +
+            '</p><ul class="sxt-site-sum-list">' +
+            (raptor.versions || [])
+              .map(function (v) {
+                return (
+                  "<li><strong>" +
+                  esc(v.name) +
+                  "</strong>: " +
+                  specCell(
+                    v.thrust_sea_level_tf != null ? v.thrust_sea_level_tf + " tf SL" : null
+                  ) +
+                  " · as of " +
+                  esc(v.as_of) +
+                  "</li>"
+                );
+              })
+              .join("") +
+            '</ul><p class="sxt-meta"><a href="/spacex-tracking/raptor/">Raptor production →</a></p>';
+        }
+        var links = document.getElementById("sxt-cc-links");
+        if (links) {
+          var ext = (raptor.quick_links || [])
+            .map(function (l) {
+              return '<li><a href="' + esc(l.url) + '" target="_blank" rel="noopener">' + esc(l.title) + "</a></li>";
+            })
+            .join("");
+          links.innerHTML =
+            "<h2>Quick links</h2><ul>" +
+            ext +
+            "<li><a href=\"/spacex-tracking/\">Overview</a></li>" +
+            "<li><a href=\"/spacex-tracking/ships/\">Ships</a></li>" +
+            "<li><a href=\"/spacex-tracking/boosters/\">Boosters</a></li>" +
+            "<li><a href=\"/spacex-tracking/sites/\">Launch &amp; landing sites</a></li>" +
+            "<li><a href=\"/spacex-tracking/boosters/previous/\">Previous Starships analysis</a></li>" +
+            "</ul>";
+        }
+      })
+      .catch(function (err) {
+        var cd = document.getElementById("sxt-cc-countdown");
+        if (cd) cd.textContent = "Error loading dashboard";
+        if (opts.updatedEl) opts.updatedEl.textContent = err.message;
+      });
+  }
+
   global.SpaceXTrack = {
     renderGrid: renderGrid,
     renderSitesByGroup: renderSitesByGroup,
@@ -900,6 +1249,8 @@
     initLanding: initLanding,
     initSites: initSites,
     initPreviousAnalysis: initPreviousAnalysis,
+    initRaptor: initRaptor,
+    initControlCenter: initControlCenter,
     progressForVehicle: progressForVehicle
   };
 })(window);
