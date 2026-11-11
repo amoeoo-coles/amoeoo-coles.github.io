@@ -89,7 +89,10 @@ LANDING_BODY = """
   <a class="on" href="/spacex-tracking/">Overview</a>
   <a href="/spacex-tracking/boosters/">Super Heavy boosters</a>
   <a href="/spacex-tracking/ships/">Starship ships</a>
+  <a href="/spacex-tracking/sites/">Launch &amp; landing sites</a>
 </nav>
+<h2>Launch &amp; landing sites (summary)</h2>
+<div id="sxt-sites-summary"><p class="sxt-meta">Loading sites…</p></div>
 <h2>Vehicle preview</h2>
 <div id="sxt-preview"><p class="sxt-meta">Loading vehicles…</p></div>
 <section class="sxt-vhist" aria-labelledby="vh-title">
@@ -100,7 +103,7 @@ LANDING_BODY = """
 """
 
 LANDING_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
-<script>SpaceXTrack.initLanding({metaUrl:"/spacex-tracking/data/meta.json",shipsUrl:"/spacex-tracking/data/ships.json",boostersUrl:"/spacex-tracking/data/boosters.json"});</script>"""
+<script>SpaceXTrack.initLanding({metaUrl:"/spacex-tracking/data/meta.json",shipsUrl:"/spacex-tracking/data/ships.json",boostersUrl:"/spacex-tracking/data/boosters.json",sitesUrl:"/spacex-tracking/data/sites.json"});</script>"""
 
 BOOSTERS_BODY = """
 <div class="sxt-stars" aria-hidden="true"></div>
@@ -109,7 +112,8 @@ BOOSTERS_BODY = """
 <p class="sxt-meta" id="sxt-list-meta">Loading…</p></div>
 <nav class="sxt-nav" aria-label="SpaceX tracking sections">
 <a href="/spacex-tracking/">Overview</a><a class="on" href="/spacex-tracking/boosters/">Super Heavy boosters</a>
-<a href="/spacex-tracking/ships/">Starship ships</a></nav>
+<a href="/spacex-tracking/ships/">Starship ships</a>
+<a href="/spacex-tracking/sites/">Launch &amp; landing sites</a></nav>
 <div id="sxt-grid"><p class="sxt-meta">Loading…</p></div>
 <p class="sxt-meta"><a href="/spacex-tracking/data/boosters.json">boosters.json</a></p>
 """
@@ -123,7 +127,8 @@ SHIPS_BODY = """
 <p>Megabay 2 upper stages.</p><p class="sxt-meta" id="sxt-list-meta">Loading…</p></div>
 <nav class="sxt-nav" aria-label="SpaceX tracking sections">
 <a href="/spacex-tracking/">Overview</a><a href="/spacex-tracking/boosters/">Super Heavy boosters</a>
-<a class="on" href="/spacex-tracking/ships/">Starship ships</a></nav>
+<a class="on" href="/spacex-tracking/ships/">Starship ships</a>
+<a href="/spacex-tracking/sites/">Launch &amp; landing sites</a></nav>
 <div id="sxt-grid"><p class="sxt-meta">Loading…</p></div>
 <p class="sxt-meta"><a href="/spacex-tracking/data/ships.json">ships.json</a></p>
 """
@@ -131,11 +136,28 @@ SHIPS_BODY = """
 SHIPS_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
 <script>SpaceXTrack.initListing({dataUrl:"/spacex-tracking/data/ships.json",gridId:"sxt-grid",metaUrl:"/spacex-tracking/data/meta.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
 
+SITES_BODY = """
+<div class="sxt-stars" aria-hidden="true"></div>
+<div class="sxt-hero"><h1><span class="tt-keep">📍</span> Launch &amp; landing sites</h1>
+<p>Starbase pads, Florida Starship complexes, and Louisiana/Gulf context — from public sources only.</p>
+<p class="sxt-meta" id="sxt-list-meta">Loading…</p></div>
+<nav class="sxt-nav" aria-label="SpaceX tracking sections">
+<a href="/spacex-tracking/">Overview</a><a href="/spacex-tracking/boosters/">Super Heavy boosters</a>
+<a href="/spacex-tracking/ships/">Starship ships</a>
+<a class="on" href="/spacex-tracking/sites/">Launch &amp; landing sites</a></nav>
+<div id="sxt-sites"><p class="sxt-meta">Loading…</p></div>
+<p class="sxt-meta"><a href="/spacex-tracking/data/sites.json">sites.json</a></p>
+"""
+
+SITES_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
+<script>SpaceXTrack.initSites({dataUrl:"/spacex-tracking/data/sites.json",gridId:"sxt-sites",metaUrl:"/spacex-tracking/data/meta.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
+
 
 PAGES = [
     (TRACK / "index.html", "SpaceX Tracking — Starship production", LANDING_BODY, LANDING_TAIL),
     (TRACK / "boosters" / "index.html", "SpaceX Tracking — Super Heavy boosters", BOOSTERS_BODY, BOOSTERS_TAIL),
     (TRACK / "ships" / "index.html", "SpaceX Tracking — Starship ships", SHIPS_BODY, SHIPS_TAIL),
+    (TRACK / "sites" / "index.html", "SpaceX Tracking — Launch & landing sites", SITES_BODY, SITES_TAIL),
 ]
 
 
@@ -147,10 +169,35 @@ def sync_menu_g(html: str) -> str:
     return re.sub(r"var G=\[.*?\]\];", main_g.group(0), html, count=1, flags=re.S)
 
 
+def patch_spacex_menu(html: str) -> str:
+    """Ensure SpaceX Tracking menu exists with Sites sub-page."""
+    spacex = (
+        '["SpaceX Tracking", "/spacex-tracking/", "🚀", '
+        '[["Overview", "/spacex-tracking/", "🚀"], '
+        '["Boosters", "/spacex-tracking/boosters/", "🔥"], '
+        '["Ships", "/spacex-tracking/ships/", "🛸"], '
+        '["Sites", "/spacex-tracking/sites/", "📍"]]], '
+    )
+    if '["SpaceX Tracking", "/spacex-tracking/"' in html:
+        return re.sub(
+            r'\["SpaceX Tracking", "/spacex-tracking/", "🚀", \[\[.*?\]\]\], ',
+            spacex,
+            html,
+            count=1,
+            flags=re.S,
+        )
+    return html.replace(
+        '["Visitors", "/visitors/", "👥"',
+        spacex + '["Visitors", "/visitors/", "👥"',
+        1,
+    )
+
+
 def run() -> None:
     for path, title, body, tail in PAGES:
         html = build_page(title, body.strip(), tail)
         html = sync_menu_g(html)
+        html = patch_spacex_menu(html)
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(html, encoding="utf-8")
         print(f"Wrote {path.relative_to(ROOT)}")

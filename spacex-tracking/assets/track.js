@@ -200,6 +200,121 @@
     );
   }
 
+  var SITE_PROGRESS = {
+    active: 95,
+    rebuild: 45,
+    activation_testing: 75,
+    under_construction: 40,
+    early_construction: 25,
+    none_operational: 5,
+    planned: 15
+  };
+
+  function siteProgress(site) {
+    return SITE_PROGRESS[site.status] || 30;
+  }
+
+  function renderSiteCard(site) {
+    var pct = siteProgress(site);
+    var srcs = (site.sources || [])
+      .map(function (s, i) {
+        return (
+          '<a href="' +
+          esc(s.url) +
+          '" rel="noopener noreferrer" target="_blank">' +
+          esc(s.title || "Source " + (i + 1)) +
+          "</a>"
+        );
+      })
+      .join(" · ");
+    var primary = (site.sources && site.sources[0]) || {};
+    return (
+      '<article class="sxt-card sxt-site-card" data-site-id="' +
+      esc(site.id) +
+      '">' +
+      "<h2>" +
+      esc(site.name) +
+      "</h2>" +
+      '<div class="site">' +
+      esc(site.location) +
+      (site.state ? " · " + esc(site.state) : "") +
+      "</div>" +
+      '<span class="sxt-stage">' +
+      esc(site.status_label || site.status || "unknown") +
+      "</span>" +
+      '<div class="sxt-progress" aria-hidden="true">' +
+      '<div class="sxt-progress-label"><span>Site readiness</span><span>' +
+      pct +
+      "%</span></div>" +
+      '<div class="sxt-progress-track"><div class="sxt-progress-fill" style="width:' +
+      pct +
+      '%"></div></div>' +
+      "</div>" +
+      '<dl class="sxt-stats">' +
+      "<dt>Role</dt><dd>" +
+      esc(site.role || "unknown") +
+      "</dd>" +
+      "<dt>Last activity</dt><dd>" +
+      displayUnknown(site.last_activity) +
+      "</dd>" +
+      "<dt>Last verified</dt><dd>" +
+      esc(site.last_verified || "unknown") +
+      "</dd>" +
+      "</dl>" +
+      '<p class="sxt-note">' +
+      esc(site.notes || "") +
+      "</p>" +
+      '<div class="sxt-src">Primary: <a href="' +
+      esc(primary.url || "#") +
+      '" rel="noopener noreferrer" target="_blank">' +
+      esc(primary.title || "unknown") +
+      "</a>" +
+      (srcs ? "<br/>Sources: " + srcs : "") +
+      "</div>" +
+      "</article>"
+    );
+  }
+
+  function renderSitesByGroup(data, el) {
+    if (!el) return;
+    var sites = data.sites || [];
+    var groups = data.groups || [];
+    if (!sites.length) {
+      el.innerHTML = '<p class="sxt-meta">No sites in data.</p>';
+      return;
+    }
+    var byGroup = {};
+    sites.forEach(function (s) {
+      var g = s.group || "other";
+      if (!byGroup[g]) byGroup[g] = [];
+      byGroup[g].push(s);
+    });
+    var order = groups.length
+      ? groups
+      : Object.keys(byGroup).map(function (id) {
+          return { id: id, title: id };
+        });
+    el.innerHTML = order
+      .map(function (g) {
+        var list = byGroup[g.id] || [];
+        if (!list.length) return "";
+        return (
+          '<section class="sxt-site-group" aria-labelledby="grp-' +
+          esc(g.id) +
+          '">' +
+          '<h2 id="grp-' +
+          esc(g.id) +
+          '">' +
+          esc(g.title) +
+          "</h2>" +
+          '<div class="sxt-grid">' +
+          list.map(renderSiteCard).join("") +
+          "</div></section>"
+        );
+      })
+      .join("");
+  }
+
   function renderGrid(vehicles, el) {
     if (!el) return;
     if (!vehicles || !vehicles.length) {
@@ -300,10 +415,14 @@
             })
             .join("");
         }
-        return Promise.all([
+        var loads = [
           loadJson(opts.shipsUrl),
           loadJson(opts.boostersUrl)
-        ]).then(function (parts) {
+        ];
+        if (opts.sitesUrl) {
+          loads.push(loadJson(opts.sitesUrl));
+        }
+        return Promise.all(loads).then(function (parts) {
           var ships = parts[0].vehicles || [];
           var boosters = parts[1].vehicles || [];
           var all = ships.concat(boosters);
@@ -312,6 +431,30 @@
           if (counts) {
             counts.textContent =
               ships.length + " ships · " + boosters.length + " boosters tracked";
+          }
+          if (opts.sitesUrl && parts[2]) {
+            var sum = document.getElementById("sxt-sites-summary");
+            if (sum) {
+              var sites = parts[2].sites || [];
+              var lines = sites.slice(0, 4).map(function (s) {
+                var p = (s.sources && s.sources[0]) || {};
+                return (
+                  "<li><strong>" +
+                  esc(s.name) +
+                  "</strong>: " +
+                  esc(s.status_label || s.status) +
+                  ' — <a href="' +
+                  esc(p.url || "#") +
+                  '" target="_blank" rel="noopener">' +
+                  esc(p.title || "source") +
+                  "</a></li>"
+                );
+              });
+              sum.innerHTML =
+                '<ul class="sxt-site-sum-list">' +
+                lines.join("") +
+                '</ul><p class="sxt-meta"><a href="/spacex-tracking/sites/">All launch &amp; landing sites →</a></p>';
+            }
           }
         });
       })
@@ -326,10 +469,37 @@
       });
   }
 
+  function initSites(opts) {
+    var gridId = opts.gridId || "sxt-sites";
+    var metaEl = opts.metaEl;
+    return loadJson(opts.dataUrl)
+      .then(function (data) {
+        renderSitesByGroup(data, document.getElementById(gridId));
+        if (metaEl && opts.metaUrl) {
+          return loadJson(opts.metaUrl).then(function (meta) {
+            metaEl.textContent =
+              "Data last updated " +
+              (meta.last_updated_label || melbourneLabel(meta.last_updated));
+          });
+        }
+      })
+      .catch(function (err) {
+        var el = document.getElementById(gridId);
+        if (el) {
+          el.innerHTML =
+            '<p class="sxt-err">Could not load sites data: ' +
+            esc(err.message) +
+            "</p>";
+        }
+      });
+  }
+
   global.SpaceXTrack = {
     renderGrid: renderGrid,
+    renderSitesByGroup: renderSitesByGroup,
     initListing: initListing,
     initLanding: initLanding,
+    initSites: initSites,
     progressForVehicle: progressForVehicle
   };
 })(window);
