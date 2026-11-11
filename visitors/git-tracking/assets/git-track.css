@@ -1,4 +1,4 @@
-/* Git Tracking — large-print “old man visual guide” */
+/* Git Tracking — large-print “old man visual guide” + zoomable timeline */
 .gt-page {
   font-size: 20px;
   line-height: 1.55;
@@ -83,38 +83,103 @@ html[data-theme="dark"] .gt-incident {
   margin: 0.5rem 0;
   font-size: 1.05rem;
 }
-.gt-graph-wrap {
-  border: 2px solid var(--line);
-  border-radius: 14px;
-  background: var(--card);
-  overflow-x: auto;
-  overflow-y: hidden;
-  margin: 1.25rem 0;
-  padding: 0.5rem;
-  -webkit-overflow-scrolling: touch;
+.gt-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin: 12px 0 14px;
 }
-.gt-graph-wrap svg {
-  display: block;
-  min-height: 420px;
-  height: auto;
+.gt-toolbar .gt-group,
+.gt-sorts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.gt-toolbar button,
+.gt-legend button,
+.gt-sorts button {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 2px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1.2;
+}
+.gt-toolbar button.on,
+.gt-legend button.on,
+.gt-sorts button.on {
+  border-color: var(--accent, #1d4ed8);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent, #1d4ed8) 35%, transparent);
+}
+.gt-toolbar button:focus-visible,
+.gt-legend button:focus-visible,
+.gt-sorts button:focus-visible {
+  outline: 3px solid var(--accent, #1d4ed8);
+  outline-offset: 2px;
 }
 .gt-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem 1.25rem;
+  gap: 8px;
   margin: 0.75rem 0 1.25rem;
   font-size: 1.05rem;
 }
-.gt-legend span {
+.gt-leg-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 8px;
+  white-space: normal;
+  text-align: left;
+  max-width: 100%;
 }
+.gt-leg-chip:not(.on) { opacity: 0.45; }
 .gt-swatch {
   width: 1.25rem;
   height: 1.25rem;
   border-radius: 4px;
   display: inline-block;
+  flex: 0 0 auto;
+}
+.gt-leg-n { font-size: 14px; color: var(--muted); }
+.gt-graph-wrap {
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  overflow: auto;
+  margin: 1.25rem 0;
+  padding: 0.5rem;
+  -webkit-overflow-scrolling: touch;
+  touch-action: none;
+  cursor: grab;
+  outline: none;
+  min-height: 220px;
+}
+.gt-graph-wrap:active { cursor: grabbing; }
+.gt-graph-wrap svg {
+  display: block;
+  height: auto;
+}
+.gt-graph-label,
+.gt-axis-label {
+  font-size: 16px;
+  font-weight: 500;
+  fill: var(--ink);
+  font-family: system-ui, sans-serif;
+}
+.gt-axis-label { fill: var(--muted); }
+html[data-theme="dark"] .gt-graph-label {
+  fill: var(--ink);
+}
+.gt-main-line {
+  stroke: var(--ink);
+  opacity: 0.85;
 }
 .gt-tblwrap {
   overflow-x: auto;
@@ -133,6 +198,7 @@ html[data-theme="dark"] .gt-incident {
   padding: 0.85rem 1rem;
   text-align: left;
   border-bottom: 1px solid var(--line);
+  vertical-align: top;
 }
 .gt-tblwrap th {
   background: var(--th-bg);
@@ -149,15 +215,9 @@ html[data-theme="dark"] .gt-incident {
 .gt-back {
   font-size: 1.15rem;
 }
-.gt-graph-label {
-  font-size: 16px;
-  font-weight: 500;
-  fill: var(--ink);
-}
-html[data-theme="dark"] .gt-graph-label {
-  fill: var(--ink);
-}
-.gt-main-line {
-  stroke: var(--ink);
-  opacity: 0.85;
+#gt-meta, #gt-load-err { font-size: 1rem; }
+#gt-load-err { color: #dc2626; font-weight: 700; }
+@media (max-width: 700px) {
+  .gt-page { font-size: 18px; }
+  .gt-page h1 { font-size: 1.85rem; }
 }
