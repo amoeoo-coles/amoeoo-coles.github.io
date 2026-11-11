@@ -7,15 +7,16 @@ import json
 import re
 import subprocess
 import sys
-from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT_JSON = ROOT / "visitors" / "git-tracking" / "data" / "git-history.json"
 REPO_SLUG = "amoeoo-coles/amoeoo-coles.github.io"
 MAIN_REF = "origin/main"
 TZ = "Australia/Melbourne"
+MEL = ZoneInfo(TZ)
 
 GROUP_PREFIXES = ("report17/", "page/", "ui/", "site/", "cursor/")
 GROUP_COLORS = {
@@ -36,6 +37,31 @@ def git(*args: str) -> str:
 def git_lines(*args: str) -> list[str]:
     out = git(*args)
     return out.splitlines() if out else []
+
+
+def git_ok(*args: str) -> bool:
+    return (
+        subprocess.call(
+            ["git", *args],
+            cwd=ROOT,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        == 0
+    )
+
+
+def ensure_full_history() -> None:
+    try:
+        if git("rev-parse", "--is-shallow-repository") == "true":
+            subprocess.run(
+                ["git", "fetch", "--unshallow", "--all"],
+                cwd=ROOT,
+                check=False,
+            )
+    except subprocess.CalledProcessError:
+        pass
+    subprocess.run(["git", "fetch", "--all", "--prune"], cwd=ROOT, check=False)
 
 
 def branch_group(name: str) -> str:
@@ -62,62 +88,16 @@ def to_utc_iso(dt: datetime) -> str:
     return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def find_merge_into_main(branch_ref: str, tip: str, fork: str) -> str | None:
-    """Return merge commit ISO date on main that integrated branch, if any."""
-    if not fork:
-        return None
-    try:
-        lines = git_lines(
-            "log",
-            MAIN_REF,
-            "--merges",
-            "--date-order",
-            f"--ancestry-path={fork}..{MAIN_REF}",
-            "--format=%H|%P|%cI",
-        )
-    except subprocess.CalledProcessError:
-        lines = []
-    for line in reversed(lines):
-        sha, parents_s, date = line.split("|", 2)
-        parents = parents_s.split()
-        if len(parents) < 2:
-            continue
-        try:
-            if subprocess.call(
-                ["git", "merge-base", "--is-ancestor", tip, sha],
-                cwd=ROOT,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            ) == 0:
-                return to_utc_iso(parse_iso(date))
-        except Exception:
-            continue
-    # Squash/rebase: use ancestry of tip on main
-    try:
-        md = git("log", MAIN_REF, "--format=%cI", "--date-order", "-1", tip)
-        return to_utc_iso(parse_iso(md))
-    except subprocess.CalledProcessError:
-        return None
-
-
-def pr_url_for_branch(name: str) -> str | None:
-    """Best-effort PR link via merge commit message."""
-    try:
-        subj = git(
-            "log",
-            MAIN_REF,
-            "--grep",
-            name,
-            "--merges",
-            "-1",
-            "--format=%s",
-        )
-    except subprocess.CalledProcessError:
-        return None
-    m = re.search(r"\(#(\d+)\)", subj)
-    if m:
-        return f"https://github.com/{REPO_SLUG}/pull/{m.group(1)}"
-    return None
+def melbourne_label(utc_iso: str) -> str:
+    dt = parse_iso(utc_iso)
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    loc = dt.astimezone(MEL)
+    day = str(loc.day)
+    hour = loc.strftime("%I").lstrip("0") or "12"
+    minute = loc.strftime("%M")
+    ampm = loc.strftime("%p").lower()
+    return f"{day} {loc.strftime('%b %Y')}, {hour}:{minute} {ampm}"
 
 
 def load_main_commits() -> list[dict]:
@@ -142,6 +122,84 @@ def load_main_commits() -> list[dict]:
     return rows
 
 
+def load_merge_commits() -> list[dict]:
+    rows: list[dict] = []
+    for line in git_lines(
+        "log",
+        MAIN_REF,
+        "--merges",
+        "--reverse",
+        "--date-order",
+        "--format=%H|%P|%cI|%s",
+    ):
+        parts = line.split("|", 3)
+        if len(parts) < 4:
+            continue
+        sha, parents, date, subject = parts
+        rows.append(
+            {
+                "sha": sha,
+                "parents": parents.split(),
+                "date_utc": to_utc_iso(parse_iso(date)),
+                "subject": subject,
+            }
+        )
+    return rows
+
+
+def find_merge_utc(
+    tip: str,
+    name: str,
+    merges: list[dict],
+    main_by_sha: dict[str, dict],
+) -> str | None:
+    short = name.split("/")[-1]
+    slug = name.replace("_", "-")
+    for m in merges:
+        subj = m["subject"]
+        if (
+            name in subj
+            or short in subj
+            or slug in subj
+            or f"/{name}" in subj
+            or f"/{short}" in subj
+        ):
+            return m["date_utc"]
+        parents = m["parents"]
+        if len(parents) < 2:
+            continue
+        first, second = parents[0], parents[1]
+        if tip == second:
+            return m["date_utc"]
+        if git_ok("merge-base", "--is-ancestor", tip, second) and not git_ok(
+            "merge-base", "--is-ancestor", tip, first
+        ):
+            return m["date_utc"]
+    if tip in main_by_sha:
+        return main_by_sha[tip]["date_utc"]
+    if git_ok("merge-base", "--is-ancestor", tip, MAIN_REF):
+        try:
+            iso = git(
+                "log",
+                MAIN_REF,
+                "--first-parent",
+                "--reverse",
+                "--format=%cI",
+                f"{tip}..{MAIN_REF}",
+            )
+            if iso:
+                first = iso.splitlines()[0]
+                return to_utc_iso(parse_iso(first))
+        except subprocess.CalledProcessError:
+            pass
+        try:
+            iso = git("log", MAIN_REF, "-1", "--format=%cI", tip)
+            return to_utc_iso(parse_iso(iso))
+        except subprocess.CalledProcessError:
+            pass
+    return None
+
+
 def load_all_refs() -> list[str]:
     refs = []
     for r in git_lines("for-each-ref", "--format=%(refname:short)", "refs/remotes/origin"):
@@ -153,7 +211,7 @@ def load_all_refs() -> list[str]:
     return sorted(refs)
 
 
-def branch_rows() -> list[dict]:
+def branch_rows(main_by_sha: dict[str, dict], merges: list[dict]) -> list[dict]:
     unmerged_set = {ln.strip() for ln in git_lines("branch", "-r", "--no-merged", MAIN_REF)}
     out: list[dict] = []
     for ref in load_all_refs():
@@ -176,19 +234,28 @@ def branch_rows() -> list[dict]:
             branch_commits.append(
                 {"sha": csha, "short": csha[:7], "date_utc": to_utc_iso(parse_iso(cdate))}
             )
-        created = branch_commits[0]["date_utc"] if branch_commits else None
-        if not created:
+        if branch_commits:
+            created = branch_commits[0]["date_utc"]
+        else:
             try:
-                created = to_utc_iso(
-                    parse_iso(git("log", "-1", "--format=%cI", ref))
+                lines = git_lines(
+                    "log",
+                    f"{fork}..{ref}",
+                    "--reverse",
+                    "--format=%cI",
+                )
+                created = (
+                    to_utc_iso(parse_iso(lines[0]))
+                    if lines
+                    else to_utc_iso(parse_iso(git("log", "-1", "--format=%cI", fork)))
                 )
             except subprocess.CalledProcessError:
-                created = to_utc_iso(datetime.now(timezone.utc))
-        merged_utc = find_merge_into_main(ref, tip, fork) if merged else None
+                created = to_utc_iso(parse_iso(git("log", "-1", "--format=%cI", fork)))
         try:
             fork_date = to_utc_iso(parse_iso(git("log", "-1", "--format=%cI", fork)))
         except subprocess.CalledProcessError:
             fork_date = created
+        merged_utc = find_merge_utc(tip, name, merges, main_by_sha) if merged else None
         out.append(
             {
                 "name": name,
@@ -208,8 +275,26 @@ def branch_rows() -> list[dict]:
     return out
 
 
+def pr_url_for_branch(name: str) -> str | None:
+    try:
+        subj = git(
+            "log",
+            MAIN_REF,
+            "--grep",
+            name,
+            "--merges",
+            "-1",
+            "--format=%s",
+        )
+    except subprocess.CalledProcessError:
+        return None
+    m = re.search(r"\(#(\d+)\)", subj)
+    if m:
+        return f"https://github.com/{REPO_SLUG}/pull/{m.group(1)}"
+    return None
+
+
 def load_graph_commits() -> list[dict]:
-    """All commits with parents in date order (for lane rendering)."""
     seen: set[str] = set()
     rows: list[dict] = []
     for line in git_lines(
@@ -234,9 +319,76 @@ def load_graph_commits() -> list[dict]:
     return rows
 
 
+def incident_events_from_git() -> list[dict]:
+    """Incident timeline with UTC sourced from merge commits where possible."""
+    specs = [
+        (8, "PR #8 — SpaceX tracker + menu entry"),
+        (None, "Merge page/demo-ai-pod — rewrote shared menu on every page; SpaceX entry dropped"),
+        (9, "PR #9 — tracker JS / Status bleed fix"),
+        (10, "PR #10 — Launch & landing sites"),
+        (None, "Mind map merge (large-print / readable updates)"),
+        (11, "PR #11 — canonical site-menu.json + SpaceX menu restore"),
+        (12, "PR #12 — var G menu syntax fix"),
+        (13, "PR #13 — Git Tracking page"),
+    ]
+    pr_dates: dict[int, str] = {}
+    for line in git_lines(
+        "log",
+        MAIN_REF,
+        "--merges",
+        "--format=%cI|%s",
+    ):
+        date, subj = line.split("|", 1)
+        m = re.search(r"#(\d+)\b", subj)
+        if m:
+            n = int(m.group(1))
+            if n not in pr_dates:
+                pr_dates[n] = to_utc_iso(parse_iso(date))
+
+    def merge_when(needles: tuple[str, ...]) -> str | None:
+        for line in git_lines(
+            "log", MAIN_REF, "--merges", "--reverse", "--date-order", "--format=%cI|%s"
+        ):
+            date, subj = line.split("|", 1)
+            low = subj.lower()
+            if any(n.lower() in low for n in needles):
+                return to_utc_iso(parse_iso(date))
+        return None
+
+    demo_iso = merge_when(("Add Demo AI Pod to the shared site menu",)) or merge_when(
+        ("page/demo-ai-pod-20261112-0012",)
+    )
+    mindmap_iso = merge_when(
+        ("page/mindmap-readable-20261112-0108", "mindmap-readable", "mind map")
+    )
+
+    events: list[dict] = []
+    for pr_num, label in specs:
+        utc = None
+        if pr_num and pr_num in pr_dates:
+            utc = pr_dates[pr_num]
+        elif "demo-ai-pod" in label:
+            utc = demo_iso
+        elif "Mind map" in label:
+            utc = mindmap_iso
+        if not utc and pr_num == 8:
+            utc = pr_dates.get(8)
+        events.append(
+            {
+                "label": label,
+                "time_utc": utc,
+                "time_melbourne": melbourne_label(utc) if utc else "—",
+            }
+        )
+    return events
+
+
 def build() -> dict:
+    ensure_full_history()
     main_commits = load_main_commits()
-    branches = branch_rows()
+    main_by_sha = {c["sha"]: c for c in main_commits}
+    merges = load_merge_commits()
+    branches = branch_rows(main_by_sha, merges)
     all_commits = load_graph_commits()
     all_shas = {c["sha"] for c in all_commits}
     merged_n = sum(1 for b in branches if b["merged"])
@@ -266,32 +418,7 @@ def build() -> dict:
         "commits": all_commits,
         "incident_nov12": {
             "title": "What went wrong on 12 Nov",
-            "events": [
-                {
-                    "time_melbourne": "11 Nov 2026, 11:40 PM",
-                    "label": "PR #8 — SpaceX tracker + menu entry",
-                },
-                {
-                    "time_melbourne": "12 Nov 2026, 12:20 AM – 12:24 AM",
-                    "label": "Merge page/demo-ai-pod — rewrote shared menu on every page; SpaceX entry dropped",
-                },
-                {
-                    "time_melbourne": "12 Nov 2026, 12:59 AM",
-                    "label": "PR #9 — tracker JS / Status bleed fix",
-                },
-                {
-                    "time_melbourne": "12 Nov 2026, 1:08 AM",
-                    "label": "PR #10 — Launch & landing sites",
-                },
-                {
-                    "time_melbourne": "12 Nov 2026, 1:09 AM",
-                    "label": "Mind map merge",
-                },
-                {
-                    "time_melbourne": "12 Nov 2026, after 2:00 PM",
-                    "label": "PR #11 / #12 — canonical site-menu.json + menu sync fix",
-                },
-            ],
+            "events": incident_events_from_git(),
             "why_no_conflict": (
                 "Each HTML page keeps its own copy of the menu list. The Demo AI Pod update replaced "
                 "that whole list everywhere. Git did not show a conflict because those were separate "
@@ -310,6 +437,8 @@ def main(argv: list[str]) -> int:
     )
     print(f"Wrote {OUT_JSON.relative_to(ROOT)}")
     print(json.dumps(payload["summary"], indent=2))
+    merged_unique = len({b["merged_utc"] for b in payload["branches"] if b["merged_utc"]})
+    print(f"distinct merged_utc values: {merged_unique}")
     return 0
 
 
