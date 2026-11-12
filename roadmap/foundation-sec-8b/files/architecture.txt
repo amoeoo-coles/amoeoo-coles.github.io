@@ -1,0 +1,75 @@
+# Cloud-Native Architecture with Trust Boundaries
+
+## User Access Layer
+- User interacts with Angular frontend hosted on CloudFront
+- Authentication occurs via Okta
+- Google Analytics, Split.io integrated in frontend
+- User → [TRUST BOUNDARY] → CloudFront → API Gateway
+
+## API Management Layer
+- CloudFront serves as CDN for frontend applications
+- API Gateway handles all external API requests
+- [TRUST BOUNDARY] between external users and internal services
+
+## Microservice Domains (4 separate service clusters)
+1. Admin Panel:
+   - ElasticSearch for data indexing
+   - EKS cluster for containerized services
+   - Lambda functions for processing
+   - Data flows: EKS ↔ ElasticSearch
+
+2. Inventory Service:
+   - ECS containers
+   - EKS cluster
+   - Glue ETL processes
+   - MySQL Aurora database
+   - Data flows: EKS → Aurora, Glue → Aurora
+
+3. Capabilities Service:
+   - ECS containers
+   - Lambda functions
+   - Aurora databases
+   - Data flows: Lambda ⟷ Aurora, ECS ⟷ Aurora
+
+4. Authorization Service:
+   - Lambda functions
+   - ECS containers
+   - Aurora database
+   - S3 storage
+   - Data flows: Lambda → S3, Lambda ⟷ Aurora
+
+## Agent Cloud Layer
+- Agent Gateway (EKS)
+- SQS for message queuing
+- IoT Core for device communications
+- Kafka for event streaming
+- S3 for data storage
+- Lambda functions for processing
+- [TRUST BOUNDARY] between cloud and agent networks
+- Data flows: Agent Gateway → IoT Core → Lambda → Kafka → SQS
+
+## User Network / Edge Agents
+- Agent software with multiple components:
+  - Connection management
+  - System management
+  - Registration services
+  - Syslog handling
+  - Collection services
+- Local PostgreSQL database
+- [TRUST BOUNDARY] between user network and agent cloud
+- Data flows: Agent components ⟷ PostgreSQL, Agent → HTTPS → Agent Cloud
+
+## Data Lake
+- S3 as central data repository
+- EventBridge for event routing
+- Step Functions for workflow orchestration
+- Glue for ETL processing
+- Lambda for data processing
+- Data flows: ECS → S3, ECS → EventBridge → Step Functions → Glue → Lambda → DynamoDB
+- S3 ↔ Snowflake (bidirectional data exchange)
+
+## Data Consumption
+- DynamoDB for application data access
+- Lambda functions for data processing
+- ECS containers for service access
+- Data flows: Lambda ⟷ DynamoDB
