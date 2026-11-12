@@ -1,0 +1,2074 @@
+<!doctype html><html lang="en"><head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:auto;
+  min-height:44px;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:auto;min-height:44px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:visible;
+  text-overflow:unset;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.25;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:22px;
+  height:22px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:16px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:#1d4ed8!important;
+}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+<meta name="robots" content="noindex"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MindMap</title><style>
+body{margin:0;background:#0f141c;color:#e6edf3;font:16px/1.5 system-ui,Arial,sans-serif}
+main{max-width:min(1680px,calc(100vw - 24px));margin:0 auto;padding:12px 16px 36px}
+a{color:#8ecbff}h1{margin:10px 0 6px;font-size:1.7rem}.lead{color:#c3cfdc;font-size:16px}
+.hint{font-size:15px;color:#aab6c4;margin:0 0 8px}
+.fb{margin-top:22px}.fb ul{margin:6px 0 6px 18px}.fb li{margin:3px 0}
+.leg{display:flex;flex-wrap:nowrap;gap:8px;margin:10px 0 0;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+.leg-chip{font:700 16px/1.3 system-ui,Arial,sans-serif;color:#f8fafc;padding:8px 14px;border-radius:16px;
+  border:2px solid #3b4a63;background:#0b1220;cursor:pointer;display:inline-flex;align-items:center;
+  min-height:44px;box-sizing:border-box;flex:0 0 auto;white-space:nowrap}
+.leg-chip:hover{filter:brightness(1.12);border-color:#64748b}
+.leg-chip:focus-visible{outline:3px solid #93c5fd;outline-offset:2px}
+.leg-chip.on{border-color:#93c5fd;background:#1e3a5f;box-shadow:0 0 0 1px #93c5fd;font-weight:800}
+.leg-chip i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:8px;flex:0 0 auto}
+.mm-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0 0}
+.mm-toolbar button,.mm-toolbar input[type=search]{
+  background:#161d29;color:#f8fafc;border:2px solid #3b4a63;border-radius:10px;
+  padding:10px 14px;font:700 16px system-ui,Arial,sans-serif;min-height:44px;box-sizing:border-box}
+.mm-toolbar button{cursor:pointer}
+.mm-toolbar button:hover{filter:brightness(1.12)}
+.mm-toolbar button:disabled{opacity:.4;cursor:default;filter:none}
+.mm-type{display:inline-flex;gap:6px;align-items:center}
+.mm-type button{min-width:44px;padding:8px 10px}
+#mm-type-down{font-size:15px}
+#mm-type-up{font-size:20px;line-height:1}
+.mm-check{display:flex;align-items:center;gap:6px;font-size:16px;color:#e2e8f0;user-select:none}
+.mm-search-wrap{position:relative;flex:1 1 220px;min-width:180px}
+#mm-q{width:100%;box-sizing:border-box;font-weight:500}
+.mm-hits{position:absolute;left:0;right:0;top:calc(100% + 4px);background:#161d29;border:2px solid #3b4a63;
+  border-radius:8px;max-height:280px;overflow:auto;z-index:8;display:none;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.mm-hits button{display:block;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid #2a3446;
+  color:#f8fafc;padding:10px 12px;font:16px system-ui;cursor:pointer;min-height:44px}
+.mm-hits button:hover{background:#26344a}
+.mm-bc{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:16px;min-height:24px}
+.mm-bc button{background:none;border:0;color:#93c5fd;cursor:pointer;padding:4px 0;font:inherit;min-height:44px}
+.mm-bc button:hover{text-decoration:underline}
+.mm-bc .here{color:#f8fafc;font-weight:800}
+.mm-bc .mm-sep{color:#94a3b8}
+.mm-stage{position:relative;background:var(--mm-stage,#0b1220);border:2px solid #334155;border-radius:12px;
+  overflow:hidden;height:70vh;min-height:360px;touch-action:none;cursor:grab;margin:10px 0 0}
+.mm-stage:active{cursor:grabbing}
+#mm{display:block;width:100%;height:100%;background:transparent}
+#mm text{pointer-events:none;-webkit-user-select:none;user-select:none}
+.mm-tip{position:absolute;pointer-events:none;background:#0f172a;color:#f8fafc;border:2px solid #334155;
+  border-radius:8px;padding:8px 12px;font-size:16px;transform:translate(-50%,-140%);white-space:nowrap;
+  display:none;z-index:5;box-shadow:0 8px 24px rgba(0,0,0,.35);max-width:90%;overflow:hidden;text-overflow:ellipsis}
+.mm-pulse{animation:mm-pulse .9s ease-in-out 2}
+@keyframes mm-pulse{0%,100%{filter:none}50%{filter:url(#mm-glow) brightness(1.35)}}
+html,html[data-theme="light"],html[data-theme="dark"]{--site-content-max:min(1680px,calc(100vw - 8px));--mm-stage:#0b1220;--mm-node:#1e293b;--mm-leaf:#162032;--mm-text:#f8fafc}
+html[data-theme="dark"]{--mm-stage:#0b1220;--mm-node:#1e293b;--mm-leaf:#162032;--mm-text:#f8fafc}
+html[data-theme="light"]{--mm-stage:#e8eef7;--mm-node:#ffffff;--mm-leaf:#ffffff;--mm-text:#0f172a}
+html[data-theme="light"] body{background:var(--bg,#f8fafc);color:var(--ink,#0f172a)}
+html[data-theme="light"] .mm-toolbar button,html[data-theme="light"] .mm-toolbar input[type=search],
+html[data-theme="light"] .mm-hits{background:#fff;color:#0f172a;border-color:#94a3b8}
+html[data-theme="light"] .leg-chip{background:#fff;border-color:#94a3b8;color:#0f172a}
+html[data-theme="light"] .leg-chip:hover{background:#f1f5f9;filter:none}
+html[data-theme="light"] .leg-chip.on{background:#dbeafe;border-color:#1d4ed8;box-shadow:0 0 0 1px #1d4ed8}
+html[data-theme="light"] .mm-bc .here{color:#0f172a}
+html[data-theme="light"] .mm-check{color:#0f172a}
+html[data-theme="light"] .mm-hits button{color:#0f172a}
+@media (max-height:900px){
+  .lead,.hint{display:none}
+  h1{margin:6px 0 6px;font-size:1.45rem}
+  main{padding-top:6px;padding-bottom:12px}
+  nav.site.im a.mi{height:auto;min-height:36px}
+  nav.site.im{padding:4px 0 6px;gap:4px}
+}
+@media (max-width:700px),(max-height:760px){
+  .lead,.hint{display:none}
+  h1{margin:6px 0 6px;font-size:1.35rem}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+  nav.site.im a.mi{height:auto;min-height:44px;padding:8px}
+  nav.site.im{padding:4px 0 6px;gap:4px}
+  .mm-toolbar{margin:6px 0 0}
+  .mm-bc,.mm-check{display:none}
+  .mm-stage{min-height:300px}
+  .mm-toolbar button{padding:10px 12px}
+  #mm-q{font-size:16px}
+}
+</style></head><body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+<div style="background:#302d20;border-left:4px solid #fc6;color:#eee;padding:10px 14px;margin:0 0 14px;font:14px system-ui,sans-serif"><b>Archived version v52</b> of /mindmap/ — commit <a style="color:#8cf" href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/83da387a6f6ec899de124a3a14911369c6ef41c1">83da387</a>, 12 Nov 2026 02:34 AEDT (Melbourne time). Not live. Recovered from git; links, images and downloads open the current files. <a style="color:#8cf" href="/mindmap/">Latest version →</a></div><main><nav class="site"><a href="/">Home</a></nav><h1><span class="tt-keep">🧠</span> MindMap</h1><p class="lead">A map of the Universal Provisioning Infrastructure as Code demo. Click a coloured branch to zoom in; click a page name to open it.</p><p class="hint">Tip: drag to pan, scroll or pinch to zoom, use Back or Esc to zoom out, and press / to search. The coloured chips under the map jump to that branch; click the active chip or Home to return to the overview. Use Zoom in, Zoom out and Fit to screen, or A− and A+ to change text size. The ↗ on a branch opens that page without zooming in. The light/dark toggle in the top-right inverts the page; the map stays readable in both themes.</p><div class="mm-toolbar"><button type="button" id="mm-back">← Back</button><nav class="mm-bc" id="mm-bc" aria-label="Mind map location"></nav><div class="mm-search-wrap"><input id="mm-q" type="search" placeholder="Search pages…" autocomplete="off" aria-label="Search mind map"><div class="mm-hits" id="mm-hits" role="listbox"></div></div><label class="mm-check"><input type="checkbox" id="mm-labels"> Label all pages</label><div class="mm-type" role="group" aria-label="Map zoom"><button type="button" id="mm-zoom-in" aria-label="Zoom in">Zoom in</button><button type="button" id="mm-zoom-out" aria-label="Zoom out">Zoom out</button><button type="button" id="mm-fit" aria-label="Fit to screen">Fit to screen</button></div><div class="mm-type" role="group" aria-label="Text size"><button type="button" id="mm-type-down" title="Smaller text" aria-label="Smaller text">A−</button><button type="button" id="mm-type-up" title="Larger text" aria-label="Larger text">A+</button></div><button type="button" id="mm-reset">Reset view</button></div><div class="mm-stage" id="mm-stage" data-focus="root" role="application" aria-label="Interactive mind map"><div class="mm-tip" id="mm-tip"></div><svg id="mm" viewBox="0 0 1700 1300" width="100%" height="100%" role="img" aria-label="Mind map of the Universal Provisioning IaC demo" xmlns="http://www.w3.org/2000/svg"><defs><filter id="mm-glow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g id="mm-cam"><ellipse id="mm-ring1" cx="850" cy="650" rx="300" ry="220" fill="none" stroke="#334155" stroke-width="2" stroke-dasharray="6 8"/><ellipse id="mm-ring2" cx="850" cy="650" rx="520" ry="380" fill="none" stroke="#334155" stroke-width="2" stroke-dasharray="4 10"/><g id="mm-links"></g><g id="mm-nodes"></g></g></svg></div><div class="leg" role="toolbar" aria-label="Mind map branches"><button type="button" class="leg-chip" data-id="b-0" aria-pressed="false"><i style="background:#3b82f6"></i>Home</button><button type="button" class="leg-chip" data-id="b-1" aria-pressed="false"><i style="background:#22c55e"></i>NETBOX</button><button type="button" class="leg-chip" data-id="b-2" aria-pressed="false"><i style="background:#f59e0b"></i>PROVISIONING</button><button type="button" class="leg-chip" data-id="b-3" aria-pressed="false"><i style="background:#a855f7"></i>MONITORING</button><button type="button" class="leg-chip" data-id="b-4" aria-pressed="false"><i style="background:#06b6d4"></i>TESTING</button><button type="button" class="leg-chip" data-id="b-5" aria-pressed="false"><i style="background:#ef4444"></i>ACI Policy</button><button type="button" class="leg-chip" data-id="b-6" aria-pressed="false"><i style="background:#ec4899"></i>ACI Multi-Pod</button><button type="button" class="leg-chip" data-id="b-7" aria-pressed="false"><i style="background:#84cc16"></i>ACI Azure VXLAN</button><button type="button" class="leg-chip" data-id="b-8" aria-pressed="false"><i style="background:#14b8a6"></i>Firewall Domain</button><button type="button" class="leg-chip" data-id="b-9" aria-pressed="false"><i style="background:#3b82f6"></i>ACI Demo Guide</button><button type="button" class="leg-chip" data-id="b-10" aria-pressed="false"><i style="background:#22c55e"></i>Demo AI Pod</button><button type="button" class="leg-chip" data-id="b-11" aria-pressed="false"><i style="background:#f59e0b"></i>MCP Servers</button><button type="button" class="leg-chip" data-id="b-12" aria-pressed="false"><i style="background:#a855f7"></i>ITIL</button><button type="button" class="leg-chip" data-id="b-13" aria-pressed="false"><i style="background:#06b6d4"></i>RoadMap</button><button type="button" class="leg-chip" data-id="b-14" aria-pressed="false"><i style="background:#ef4444"></i>SpaceX Tracking</button><button type="button" class="leg-chip" data-id="b-15" aria-pressed="false"><i style="background:#ec4899"></i>Visitors</button><button type="button" class="leg-chip" data-id="b-16" aria-pressed="false"><i style="background:#84cc16"></i>IaC flow</button><button type="button" class="leg-chip" data-id="b-17" aria-pressed="false"><i style="background:#14b8a6"></i>Environments</button></div><div class="fb"><h2>Tree Index</h2><p class="lead" style="margin-top:0">Same structure as the map, for screen readers and when the SVG is hard to read.</p><ul><li><a href="/"><b>Universal Provisioning IaC Demo</b></a> (centre)<ul><li><span class="tt-keep">🏠</span> <a href="/"><b>Home</b></a></li><li><span class="tt-keep">🗄️</span> <a href="/tasks/netbox/"><b>NETBOX</b></a><ul><li><b>1.</b> <span class="tt-keep">🗄️</span> <a href="/netbox-aci-tenants/">NetBox ACI Tenants</a></li><li><b>2.</b> <span class="tt-keep">📐</span> <a href="/netbox-aci-tenants/diagrams/">Tenant Diagrams</a></li><li><b>3.</b> <span class="tt-keep">🧱</span> <a href="/netbox-aci-objects/">NB ACI Objects</a></li><li><b>4.</b> <span class="tt-keep">🖥️</span> <a href="/netbox-hw-inventory/">NB HW Inventory</a></li><li><b>5.</b> <span class="tt-keep">📄</span> <a href="/netbox-yaml-model/">YAML Model</a></li><li><b>6.</b> <span class="tt-keep">🌐</span> <a href="/netbox-yaml-model/aoapic/">AOAPIC Model</a></li><li><b>7.</b> <span class="tt-keep">🧪</span> <a href="/netbox-yaml-model/arr/">ARR Model</a></li><li><b>8.</b> <span class="tt-keep">🔀</span> <a href="/tasks/netbox/history/">NetBox History</a></li></ul></li><li><span class="tt-keep">⚙️</span> <a href="/tasks/provisioning/"><b>PROVISIONING</b></a><ul><li><b>1.</b> <span class="tt-keep">⏳</span> <a href="/report17-aoapic-monitoring/pending-provisioning/">Pending Provisioning</a></li><li><b>2.</b> <span class="tt-keep">🧩</span> <a href="/report17-aoapic-monitoring/universal-provisioning/">Universal Provisioning</a></li><li><b>3.</b> <span class="tt-keep">🚀</span> <a href="/tasks/provisioning/aci-lab-guide-policy/">ACI Demo Guide Policy</a></li></ul></li><li><span class="tt-keep">📊</span> <a href="/tasks/monitoring/"><b>MONITORING</b></a><ul><li><b>1.</b> <span class="tt-keep">📊</span> <a href="/report17-aoapic-monitoring/">Report 17</a></li><li><b>2.</b> <span class="tt-keep">🏢</span> <a href="/report17-aoapic-monitoring/tenants/">Tenants Detail</a></li><li><b>3.</b> <span class="tt-keep">🔍</span> <a href="/report17-aoapic-monitoring/objects/">Object Drill-down</a></li><li><b>4.</b> <span class="tt-keep">🌐</span> <a href="/tasks/monitoring/aoapic/">AOAPIC Faults</a></li><li><b>5.</b> <span class="tt-keep">🗄️</span> <a href="/tasks/monitoring/arr/">ARR Faults</a></li><li><b>6.</b> <span class="tt-keep">📈</span> <a href="/grafana-screenshots/">Group 1</a></li><li><b>7.</b> <span class="tt-keep">📉</span> <a href="/grafana-screenshots-part2/">Group 2</a></li></ul></li><li><span class="tt-keep">🧪</span> <a href="/tasks/testing/"><b>TESTING</b></a><ul><li><b>1.</b> <span class="tt-keep">✅</span> <a href="/aoapic-nac-test-status/">nac-test Status</a></li><li><b>2.</b> <span class="tt-keep">📄</span> <a href="/testing/aoapic-defaults/">AOAPIC defaults</a></li><li><b>3.</b> <span class="tt-keep">🧪</span> <a href="/testing/arr-defaults/">ARR defaults</a></li><li><b>4.</b> <span class="tt-keep">⚖️</span> <a href="/testing/defaults-compare/">Defaults compare</a></li></ul></li><li><span class="tt-keep">🧭</span> <a href="/aci-policy/"><b>ACI Policy</b></a><ul><li><b>1.</b> <span class="tt-keep">🧭</span> <a href="/aci-policy/">ACI Policy</a></li><li><b>2.</b> <span class="tt-keep">🌌</span> <a href="/aci-policy/policy-universe/">Policy Universe</a></li><li><b>3.</b> <span class="tt-keep">🏢</span> <a href="/aci-policy/tenants/">Tenants</a></li><li><b>4.</b> <span class="tt-keep">🧱</span> <a href="/aci-policy/policy-tenant/">Policy Tenant</a></li><li><b>5.</b> <span class="tt-keep">📘</span> <a href="/aci-policy/aci-lab-guide-policy/">ACI Demo Guide Policy</a></li><li><b>6.</b> <span class="tt-keep">🗺️</span> <a href="/aci-policy/aci-lab-guide-policy/diagrams/">Demo Guide Diagrams</a></li><li><b>7.</b> <span class="tt-keep">🕸️</span> <a href="/aci-policy/fabric-access-inventory/">Fabric, Access, Inventory</a></li><li><b>8.</b> <span class="tt-keep">🕒</span> <a href="/aci-policy/pod-policy-group/">Pod Policy Group</a></li></ul></li><li><span class="tt-keep">🔗</span> <a href="/aci-multipod/"><b>ACI Multi-Pod</b></a><ul><li><b>1.</b> <span class="tt-keep">🔗</span> <a href="/aci-multipod/">ACI Multi-Pod</a></li><li><b>2.</b> <span class="tt-keep">📘</span> <a href="/aci-multipod/overview/">Overview</a></li><li><b>3.</b> <span class="tt-keep">📋</span> <a href="/aci-multipod/planning/">Planning</a></li><li><b>4.</b> <span class="tt-keep">📐</span> <a href="/aci-multipod/design/">Design</a></li><li><b>5.</b> <span class="tt-keep">↪️</span> <a href="/aci-multipod/migration/">Migration</a></li><li><b>6.</b> <span class="tt-keep">🛠️</span> <a href="/aci-multipod/deployment/">Deployment</a></li><li><b>7.</b> <span class="tt-keep">🩺</span> <a href="/aci-multipod/operations/">Operations</a></li><li><b>8.</b> <span class="tt-keep">📄</span> <a href="/aci-multipod/yaml/">NaC YAML</a></li></ul></li><li><span class="tt-keep">☁️</span> <a href="/aci-azure-vxlan/"><b>ACI Azure VXLAN</b></a><ul><li><b>1.</b> <span class="tt-keep">☁️</span> <a href="/aci-azure-vxlan/">ACI Azure VXLAN</a></li><li><b>2.</b> <span class="tt-keep">🗄️</span> <a href="/aci-azure-vxlan/physical-rack/">Physical Rack</a></li><li><b>3.</b> <span class="tt-keep">🔀</span> <a href="/aci-azure-vxlan/logical/">Logical Topology</a></li><li><b>4.</b> <span class="tt-keep">🗺️</span> <a href="/aci-azure-vxlan/tenant-diagram/">Tenant Diagram</a></li><li><b>5.</b> <span class="tt-keep">📄</span> <a href="/aci-azure-vxlan/yaml/">YAML Files</a></li><li><b>6.</b> <span class="tt-keep">🛠️</span> <a href="/aci-azure-vxlan/deployment/">Deployment</a></li></ul></li><li><span class="tt-keep">🛡️</span> <a href="/firewall-domain/"><b>Firewall Domain</b></a><ul><li><b>1.</b> <span class="tt-keep">🛡️</span> <a href="/firewall-domain/">Firewall Domain</a></li><li><b>2.</b> <span class="tt-keep">🔄</span> <a href="/firewall-domain/cisco-fmt/">Cisco FMT</a></li><li><b>3.</b> <span class="tt-keep">🟧</span> <a href="/firewall-domain/palo-alto/">Palo Alto</a></li><li><b>4.</b> <span class="tt-keep">🧰</span> <a href="/firewall-domain/other/">Other tools</a></li><li><b>5.</b> <span class="tt-keep">📄</span> <a href="/firewall-domain/asa-build/">ASA build</a></li></ul></li><li><span class="tt-keep">🧪</span> <a href="/aci-lab-guide/"><b>ACI Demo Guide</b></a><ul><li><b>1.</b> <span class="tt-keep">🧪</span> <a href="/aci-lab-guide/">ACI Demo Guide</a></li><li><b>2.</b> <span class="tt-keep">👋</span> <a href="/aci-lab-guide/introduction/">Introduction</a></li><li><b>3.</b> <span class="tt-keep">📘</span> <a href="/aci-lab-guide/aci-basics/">ACI Basics</a></li><li><b>4.</b> <span class="tt-keep">🔗</span> <a href="/aci-lab-guide/access-policies/">Access Policies</a></li><li><b>5.</b> <span class="tt-keep">💻</span> <a href="/aci-lab-guide/vmm/">VMM Integration</a></li><li><b>6.</b> <span class="tt-keep">🏢</span> <a href="/aci-lab-guide/tenants/">Tenants</a></li><li><b>7.</b> <span class="tt-keep">🩺</span> <a href="/aci-lab-guide/day2/">Day 2 Operations</a></li><li><b>8.</b> <span class="tt-keep">🛡️</span> <a href="/aci-lab-guide/esg/">Endpoint Security Group</a></li><li><b>9.</b> <span class="tt-keep">✂️</span> <a href="/aci-lab-guide/segmentation/">ACI Segmentation</a></li><li><b>10.</b> <span class="tt-keep">🟩</span> <a href="/aci-lab-guide/nexus-dashboard/">Nexus Dashboard</a></li><li><b>11.</b> <span class="tt-keep">🌐</span> <a href="/aci-lab-guide/orchestrator/">Orchestrator</a></li><li><b>12.</b> <span class="tt-keep">💡</span> <a href="/aci-lab-guide/insights/">Insights</a></li><li><b>13.</b> <span class="tt-keep">✅</span> <a href="/aci-lab-guide/conclusion/">Conclusion</a></li><li><b>14.</b> <span class="tt-keep">📚</span> <a href="/aci-lab-guide/references/">References</a></li></ul></li><li><span class="tt-keep">🤖</span> <a href="/demo-ai-pod/"><b>Demo AI Pod</b></a><ul><li><b>1.</b> <span class="tt-keep">🤖</span> <a href="/demo-ai-pod/">Demo AI Pod</a></li><li><b>2.</b> <span class="tt-keep">🎯</span> <a href="/demo-ai-pod/learning-objectives/">Learning Objectives</a></li><li><b>3.</b> <span class="tt-keep">🚀</span> <a href="/demo-ai-pod/get-started/">Get Started</a></li><li><b>4.</b> <span class="tt-keep">🗺️</span> <a href="/demo-ai-pod/network-diagram/">Network Diagram</a></li><li><b>5.</b> <span class="tt-keep">🖥️</span> <a href="/demo-ai-pod/task-1/">Task 1: Environment</a></li><li><b>6.</b> <span class="tt-keep">📚</span> <a href="/demo-ai-pod/task-2/">Task 2: RAG</a></li><li><b>7.</b> <span class="tt-keep">⚡</span> <a href="/demo-ai-pod/task-3/">Task 3: vLLM</a></li><li><b>8.</b> <span class="tt-keep">👁️</span> <a href="/demo-ai-pod/task-4/">Task 4: Vision</a></li><li><b>9.</b> <span class="tt-keep">🔬</span> <a href="/demo-ai-pod/task-5/">Task 5: Explore Further</a></li><li><b>10.</b> <span class="tt-keep">✅</span> <a href="/demo-ai-pod/wrap-up/">What We Have Shown</a></li><li><b>11.</b> <span class="tt-keep">ℹ️</span> <a href="/demo-ai-pod/addendum/">About Cisco AI PODs</a></li><li><b>12.</b> <span class="tt-keep">📘</span> <a href="/demo-ai-pod/training-fine-tuning/">Training &amp; Fine-Tuning</a></li></ul></li><li><span class="tt-keep">🔌</span> <a href="/mcp-servers/"><b>MCP Servers</b></a><ul><li><b>1.</b> <span class="tt-keep">🔌</span> <a href="/mcp-servers/">MCP Servers</a></li><li><b>2.</b> <span class="tt-keep">🟦</span> <a href="/mcp-servers/aci/">MCP for ACI</a></li><li><b>3.</b> <span class="tt-keep">🟩</span> <a href="/mcp-servers/nexus-dashboard/">MCP for Nexus Dashboard</a></li><li><b>4.</b> <span class="tt-keep">🟧</span> <a href="/mcp-servers/dna/">MCP for DNA</a></li></ul></li><li><span class="tt-keep">📋</span> <a href="/tasks/itil/"><b>ITIL</b></a><ul><li><b>1.</b> <span class="tt-keep">🌐</span> <a href="/itil/aoapic/">AOAPIC ITIL</a></li><li><b>2.</b> <span class="tt-keep">🧪</span> <a href="/itil/arr/">ARR ITIL</a></li><li><b>3.</b> <span class="tt-keep">📖</span> <a href="/itil/wiki/">Site Wiki</a></li></ul></li><li><span class="tt-keep">🗺️</span> <a href="/roadmap/"><b>RoadMap</b></a><ul><li><b>1.</b> <span class="tt-keep">🗺️</span> <a href="/roadmap/">RoadMap</a></li><li><b>2.</b> <span class="tt-keep">🧠</span> <a href="/mindmap/">MindMap</a></li></ul></li><li><span class="tt-keep">🚀</span> <a href="/spacex-tracking/"><b>SpaceX Tracking</b></a><ul><li><b>1.</b> <span class="tt-keep">🚀</span> <a href="/spacex-tracking/">Overview</a></li><li><b>2.</b> <span class="tt-keep">🔥</span> <a href="/spacex-tracking/boosters/">Boosters</a></li><li><b>3.</b> <span class="tt-keep">📊</span> <a href="/spacex-tracking/boosters/previous/">Previous Starships analysis</a></li><li><b>4.</b> <span class="tt-keep">🛸</span> <a href="/spacex-tracking/ships/">Ships</a></li><li><b>5.</b> <span class="tt-keep">📍</span> <a href="/spacex-tracking/sites/">Launch &amp; landing sites</a></li></ul></li><li><span class="tt-keep">👥</span> <a href="/visitors/"><b>Visitors</b></a><ul><li><b>1.</b> <span class="tt-keep">👥</span> <a href="/visitors/">Visitors</a></li><li><b>2.</b> <span class="tt-keep">🚦</span> <a href="/status/">Status</a></li><li><b>3.</b> <span class="tt-keep">📈</span> <a href="/visitors/trends/">Trends</a></li><li><b>4.</b> <span class="tt-keep">🌍</span> <a href="/visitors/countries/">Countries</a></li><li><b>5.</b> <span class="tt-keep">🔀</span> <a href="/visitors/git-tracking/">Git Tracking</a></li></ul></li><li><span class="tt-keep">🔄</span> <a href="/iac/form/"><b>IaC flow</b></a><ul><li><b>1.</b> <span class="tt-keep">📝</span> <a href="/iac/form/">Form</a></li><li><b>2.</b> <span class="tt-keep">🗄️</span> <a href="/iac/netbox/">NetBox</a></li><li><b>3.</b> <span class="tt-keep">🖥️</span> <a href="/iac/super-portal/">Super Portal Front End</a></li><li><b>4.</b> <span class="tt-keep">⚙️</span> <a href="/iac/pipeline/">Pipeline</a></li><li><b>5.</b> <span class="tt-keep">✅</span> <a href="/iac/approval/">Approval</a></li><li><b>6.</b> <span class="tt-keep">🚀</span> <a href="/iac/dev-prod/">Dev and Prod</a></li></ul></li><li><span class="tt-keep">🌐</span> <a href="/iac/aci/"><b>Environments</b></a><ul><li><b>1.</b> <span class="tt-keep">🔌</span> <a href="/iac/aci/">ACI</a></li><li><b>2.</b> <span class="tt-keep">📡</span> <a href="/iac/sda/">SDA</a></li><li><b>3.</b> <span class="tt-keep">🌍</span> <a href="/iac/sdwan/">SD-WAN</a></li><li><b>4.</b> <span class="tt-keep">🔀</span> <a href="/iac/vxlan-evpn/">VXLAN EVPN</a></li><li><b>5.</b> <span class="tt-keep">📊</span> <a href="/iac/nexus-dashboard/">Nexus Dashboard</a></li></ul></li></ul></li></ul></div><script>window.MM_TREE={"id": "root", "label": "Universal Provisioning", "sublabel": "IaC Demo", "icon": "", "url": "/", "color": "#2563eb", "children": [{"id": "b-0", "label": "Home", "icon": "🏠", "url": "/", "color": "#3b82f6", "children": []}, {"id": "b-1", "label": "NETBOX", "icon": "🗄️", "url": "/tasks/netbox/", "color": "#22c55e", "children": [{"id": "b-1-l-0", "label": "NetBox ACI Tenants", "icon": "🗄️", "url": "/netbox-aci-tenants/", "color": "#22c55e", "children": []}, {"id": "b-1-l-1", "label": "Tenant Diagrams", "icon": "📐", "url": "/netbox-aci-tenants/diagrams/", "color": "#22c55e", "children": []}, {"id": "b-1-l-2", "label": "NB ACI Objects", "icon": "🧱", "url": "/netbox-aci-objects/", "color": "#22c55e", "children": []}, {"id": "b-1-l-3", "label": "NB HW Inventory", "icon": "🖥️", "url": "/netbox-hw-inventory/", "color": "#22c55e", "children": []}, {"id": "b-1-l-4", "label": "YAML Model", "icon": "📄", "url": "/netbox-yaml-model/", "color": "#22c55e", "children": []}, {"id": "b-1-l-5", "label": "AOAPIC Model", "icon": "🌐", "url": "/netbox-yaml-model/aoapic/", "color": "#22c55e", "children": []}, {"id": "b-1-l-6", "label": "ARR Model", "icon": "🧪", "url": "/netbox-yaml-model/arr/", "color": "#22c55e", "children": []}, {"id": "b-1-l-7", "label": "NetBox History", "icon": "🔀", "url": "/tasks/netbox/history/", "color": "#22c55e", "children": []}]}, {"id": "b-2", "label": "PROVISIONING", "icon": "⚙️", "url": "/tasks/provisioning/", "color": "#f59e0b", "children": [{"id": "b-2-l-0", "label": "Pending Provisioning", "icon": "⏳", "url": "/report17-aoapic-monitoring/pending-provisioning/", "color": "#f59e0b", "children": []}, {"id": "b-2-l-1", "label": "Universal Provisioning", "icon": "🧩", "url": "/report17-aoapic-monitoring/universal-provisioning/", "color": "#f59e0b", "children": []}, {"id": "b-2-l-2", "label": "ACI Demo Guide Policy", "icon": "🚀", "url": "/tasks/provisioning/aci-lab-guide-policy/", "color": "#f59e0b", "children": []}]}, {"id": "b-3", "label": "MONITORING", "icon": "📊", "url": "/tasks/monitoring/", "color": "#a855f7", "children": [{"id": "b-3-l-0", "label": "Report 17", "icon": "📊", "url": "/report17-aoapic-monitoring/", "color": "#a855f7", "children": []}, {"id": "b-3-l-1", "label": "Tenants Detail", "icon": "🏢", "url": "/report17-aoapic-monitoring/tenants/", "color": "#a855f7", "children": []}, {"id": "b-3-l-2", "label": "Object Drill-down", "icon": "🔍", "url": "/report17-aoapic-monitoring/objects/", "color": "#a855f7", "children": []}, {"id": "b-3-l-3", "label": "AOAPIC Faults", "icon": "🌐", "url": "/tasks/monitoring/aoapic/", "color": "#a855f7", "children": []}, {"id": "b-3-l-4", "label": "ARR Faults", "icon": "🗄️", "url": "/tasks/monitoring/arr/", "color": "#a855f7", "children": []}, {"id": "b-3-l-5", "label": "Group 1", "icon": "📈", "url": "/grafana-screenshots/", "color": "#a855f7", "children": []}, {"id": "b-3-l-6", "label": "Group 2", "icon": "📉", "url": "/grafana-screenshots-part2/", "color": "#a855f7", "children": []}]}, {"id": "b-4", "label": "TESTING", "icon": "🧪", "url": "/tasks/testing/", "color": "#06b6d4", "children": [{"id": "b-4-l-0", "label": "nac-test Status", "icon": "✅", "url": "/aoapic-nac-test-status/", "color": "#06b6d4", "children": []}, {"id": "b-4-l-1", "label": "AOAPIC defaults", "icon": "📄", "url": "/testing/aoapic-defaults/", "color": "#06b6d4", "children": []}, {"id": "b-4-l-2", "label": "ARR defaults", "icon": "🧪", "url": "/testing/arr-defaults/", "color": "#06b6d4", "children": []}, {"id": "b-4-l-3", "label": "Defaults compare", "icon": "⚖️", "url": "/testing/defaults-compare/", "color": "#06b6d4", "children": []}]}, {"id": "b-5", "label": "ACI Policy", "icon": "🧭", "url": "/aci-policy/", "color": "#ef4444", "children": [{"id": "b-5-l-0", "label": "ACI Policy", "icon": "🧭", "url": "/aci-policy/", "color": "#ef4444", "children": []}, {"id": "b-5-l-1", "label": "Policy Universe", "icon": "🌌", "url": "/aci-policy/policy-universe/", "color": "#ef4444", "children": []}, {"id": "b-5-l-2", "label": "Tenants", "icon": "🏢", "url": "/aci-policy/tenants/", "color": "#ef4444", "children": []}, {"id": "b-5-l-3", "label": "Policy Tenant", "icon": "🧱", "url": "/aci-policy/policy-tenant/", "color": "#ef4444", "children": []}, {"id": "b-5-l-4", "label": "ACI Demo Guide Policy", "icon": "📘", "url": "/aci-policy/aci-lab-guide-policy/", "color": "#ef4444", "children": []}, {"id": "b-5-l-5", "label": "Demo Guide Diagrams", "icon": "🗺️", "url": "/aci-policy/aci-lab-guide-policy/diagrams/", "color": "#ef4444", "children": []}, {"id": "b-5-l-6", "label": "Fabric, Access, Inventory", "icon": "🕸️", "url": "/aci-policy/fabric-access-inventory/", "color": "#ef4444", "children": []}, {"id": "b-5-l-7", "label": "Pod Policy Group", "icon": "🕒", "url": "/aci-policy/pod-policy-group/", "color": "#ef4444", "children": []}]}, {"id": "b-6", "label": "ACI Multi-Pod", "icon": "🔗", "url": "/aci-multipod/", "color": "#ec4899", "children": [{"id": "b-6-l-0", "label": "ACI Multi-Pod", "icon": "🔗", "url": "/aci-multipod/", "color": "#ec4899", "children": []}, {"id": "b-6-l-1", "label": "Overview", "icon": "📘", "url": "/aci-multipod/overview/", "color": "#ec4899", "children": []}, {"id": "b-6-l-2", "label": "Planning", "icon": "📋", "url": "/aci-multipod/planning/", "color": "#ec4899", "children": []}, {"id": "b-6-l-3", "label": "Design", "icon": "📐", "url": "/aci-multipod/design/", "color": "#ec4899", "children": []}, {"id": "b-6-l-4", "label": "Migration", "icon": "↪️", "url": "/aci-multipod/migration/", "color": "#ec4899", "children": []}, {"id": "b-6-l-5", "label": "Deployment", "icon": "🛠️", "url": "/aci-multipod/deployment/", "color": "#ec4899", "children": []}, {"id": "b-6-l-6", "label": "Operations", "icon": "🩺", "url": "/aci-multipod/operations/", "color": "#ec4899", "children": []}, {"id": "b-6-l-7", "label": "NaC YAML", "icon": "📄", "url": "/aci-multipod/yaml/", "color": "#ec4899", "children": []}]}, {"id": "b-7", "label": "ACI Azure VXLAN", "icon": "☁️", "url": "/aci-azure-vxlan/", "color": "#84cc16", "children": [{"id": "b-7-l-0", "label": "ACI Azure VXLAN", "icon": "☁️", "url": "/aci-azure-vxlan/", "color": "#84cc16", "children": []}, {"id": "b-7-l-1", "label": "Physical Rack", "icon": "🗄️", "url": "/aci-azure-vxlan/physical-rack/", "color": "#84cc16", "children": []}, {"id": "b-7-l-2", "label": "Logical Topology", "icon": "🔀", "url": "/aci-azure-vxlan/logical/", "color": "#84cc16", "children": []}, {"id": "b-7-l-3", "label": "Tenant Diagram", "icon": "🗺️", "url": "/aci-azure-vxlan/tenant-diagram/", "color": "#84cc16", "children": []}, {"id": "b-7-l-4", "label": "YAML Files", "icon": "📄", "url": "/aci-azure-vxlan/yaml/", "color": "#84cc16", "children": []}, {"id": "b-7-l-5", "label": "Deployment", "icon": "🛠️", "url": "/aci-azure-vxlan/deployment/", "color": "#84cc16", "children": []}]}, {"id": "b-8", "label": "Firewall Domain", "icon": "🛡️", "url": "/firewall-domain/", "color": "#14b8a6", "children": [{"id": "b-8-l-0", "label": "Firewall Domain", "icon": "🛡️", "url": "/firewall-domain/", "color": "#14b8a6", "children": []}, {"id": "b-8-l-1", "label": "Cisco FMT", "icon": "🔄", "url": "/firewall-domain/cisco-fmt/", "color": "#14b8a6", "children": []}, {"id": "b-8-l-2", "label": "Palo Alto", "icon": "🟧", "url": "/firewall-domain/palo-alto/", "color": "#14b8a6", "children": []}, {"id": "b-8-l-3", "label": "Other tools", "icon": "🧰", "url": "/firewall-domain/other/", "color": "#14b8a6", "children": []}, {"id": "b-8-l-4", "label": "ASA build", "icon": "📄", "url": "/firewall-domain/asa-build/", "color": "#14b8a6", "children": []}]}, {"id": "b-9", "label": "ACI Demo Guide", "icon": "🧪", "url": "/aci-lab-guide/", "color": "#3b82f6", "children": [{"id": "b-9-l-0", "label": "ACI Demo Guide", "icon": "🧪", "url": "/aci-lab-guide/", "color": "#3b82f6", "children": []}, {"id": "b-9-l-1", "label": "Introduction", "icon": "👋", "url": "/aci-lab-guide/introduction/", "color": "#3b82f6", "children": []}, {"id": "b-9-l-2", "label": "ACI Basics", "icon": "📘", "url": "/aci-lab-guide/aci-basics/", "color": "#3b82f6", "children": []}, {"id": "b-9-l-3", "label": "Access Policies", "icon": "🔗", "url": "/aci-lab-guide/access-policies/", "color": "#3b82f6", "children": []}, {"id": "b-9-l-4", "label": "VMM Integration", "icon": "💻", "url": "/aci-lab-guide/vmm/", "color": "#3b82f6", "children": []}, {"id": "b-9-l-5", "label": "Tenants", "icon": "🏢", "url": "/aci-lab-guide/tenants/", "color": "#3b82f6", "children": []}, {"id": "b-9-l-6", "label": "Day 2 Operations", "icon": "🩺", "url": "/aci-lab-guide/day2/", "color": "#3b82f6", "children": []}, {"id": "b-9-l-7", "label": "Endpoint Security Group", "icon": "🛡️", "url": "/aci-lab-guide/esg/", "color": "#3b82f6", "children": []}, {"id": "b-9-l-8", "label": "ACI Segmentation", "icon": "✂️", "url": "/aci-lab-guide/segmentation/", "color": "#3b82f6", "children": []}, {"id": "b-9-l-9", "label": "Nexus Dashboard", "icon": "🟩", "url": "/aci-lab-guide/nexus-dashboard/", "color": "#3b82f6", "children": []}, {"id": "b-9-l-10", "label": "Orchestrator", "icon": "🌐", "url": "/aci-lab-guide/orchestrator/", "color": "#3b82f6", "children": []}, {"id": "b-9-l-11", "label": "Insights", "icon": "💡", "url": "/aci-lab-guide/insights/", "color": "#3b82f6", "children": []}, {"id": "b-9-l-12", "label": "Conclusion", "icon": "✅", "url": "/aci-lab-guide/conclusion/", "color": "#3b82f6", "children": []}, {"id": "b-9-l-13", "label": "References", "icon": "📚", "url": "/aci-lab-guide/references/", "color": "#3b82f6", "children": []}]}, {"id": "b-10", "label": "Demo AI Pod", "icon": "🤖", "url": "/demo-ai-pod/", "color": "#22c55e", "children": [{"id": "b-10-l-0", "label": "Demo AI Pod", "icon": "🤖", "url": "/demo-ai-pod/", "color": "#22c55e", "children": []}, {"id": "b-10-l-1", "label": "Learning Objectives", "icon": "🎯", "url": "/demo-ai-pod/learning-objectives/", "color": "#22c55e", "children": []}, {"id": "b-10-l-2", "label": "Get Started", "icon": "🚀", "url": "/demo-ai-pod/get-started/", "color": "#22c55e", "children": []}, {"id": "b-10-l-3", "label": "Network Diagram", "icon": "🗺️", "url": "/demo-ai-pod/network-diagram/", "color": "#22c55e", "children": []}, {"id": "b-10-l-4", "label": "Task 1: Environment", "icon": "🖥️", "url": "/demo-ai-pod/task-1/", "color": "#22c55e", "children": []}, {"id": "b-10-l-5", "label": "Task 2: RAG", "icon": "📚", "url": "/demo-ai-pod/task-2/", "color": "#22c55e", "children": []}, {"id": "b-10-l-6", "label": "Task 3: vLLM", "icon": "⚡", "url": "/demo-ai-pod/task-3/", "color": "#22c55e", "children": []}, {"id": "b-10-l-7", "label": "Task 4: Vision", "icon": "👁️", "url": "/demo-ai-pod/task-4/", "color": "#22c55e", "children": []}, {"id": "b-10-l-8", "label": "Task 5: Explore Further", "icon": "🔬", "url": "/demo-ai-pod/task-5/", "color": "#22c55e", "children": []}, {"id": "b-10-l-9", "label": "What We Have Shown", "icon": "✅", "url": "/demo-ai-pod/wrap-up/", "color": "#22c55e", "children": []}, {"id": "b-10-l-10", "label": "About Cisco AI PODs", "icon": "ℹ️", "url": "/demo-ai-pod/addendum/", "color": "#22c55e", "children": []}, {"id": "b-10-l-11", "label": "Training & Fine-Tuning", "icon": "📘", "url": "/demo-ai-pod/training-fine-tuning/", "color": "#22c55e", "children": []}]}, {"id": "b-11", "label": "MCP Servers", "icon": "🔌", "url": "/mcp-servers/", "color": "#f59e0b", "children": [{"id": "b-11-l-0", "label": "MCP Servers", "icon": "🔌", "url": "/mcp-servers/", "color": "#f59e0b", "children": []}, {"id": "b-11-l-1", "label": "MCP for ACI", "icon": "🟦", "url": "/mcp-servers/aci/", "color": "#f59e0b", "children": []}, {"id": "b-11-l-2", "label": "MCP for Nexus Dashboard", "icon": "🟩", "url": "/mcp-servers/nexus-dashboard/", "color": "#f59e0b", "children": []}, {"id": "b-11-l-3", "label": "MCP for DNA", "icon": "🟧", "url": "/mcp-servers/dna/", "color": "#f59e0b", "children": []}]}, {"id": "b-12", "label": "ITIL", "icon": "📋", "url": "/tasks/itil/", "color": "#a855f7", "children": [{"id": "b-12-l-0", "label": "AOAPIC ITIL", "icon": "🌐", "url": "/itil/aoapic/", "color": "#a855f7", "children": []}, {"id": "b-12-l-1", "label": "ARR ITIL", "icon": "🧪", "url": "/itil/arr/", "color": "#a855f7", "children": []}, {"id": "b-12-l-2", "label": "Site Wiki", "icon": "📖", "url": "/itil/wiki/", "color": "#a855f7", "children": []}]}, {"id": "b-13", "label": "RoadMap", "icon": "🗺️", "url": "/roadmap/", "color": "#06b6d4", "children": [{"id": "b-13-l-0", "label": "RoadMap", "icon": "🗺️", "url": "/roadmap/", "color": "#06b6d4", "children": []}, {"id": "b-13-l-1", "label": "MindMap", "icon": "🧠", "url": "/mindmap/", "color": "#06b6d4", "children": []}]}, {"id": "b-14", "label": "SpaceX Tracking", "icon": "🚀", "url": "/spacex-tracking/", "color": "#ef4444", "children": [{"id": "b-14-l-0", "label": "Overview", "icon": "🚀", "url": "/spacex-tracking/", "color": "#ef4444", "children": []}, {"id": "b-14-l-1", "label": "Boosters", "icon": "🔥", "url": "/spacex-tracking/boosters/", "color": "#ef4444", "children": []}, {"id": "b-14-l-2", "label": "Previous Starships analysis", "icon": "📊", "url": "/spacex-tracking/boosters/previous/", "color": "#ef4444", "children": []}, {"id": "b-14-l-3", "label": "Ships", "icon": "🛸", "url": "/spacex-tracking/ships/", "color": "#ef4444", "children": []}, {"id": "b-14-l-4", "label": "Launch & landing sites", "icon": "📍", "url": "/spacex-tracking/sites/", "color": "#ef4444", "children": []}]}, {"id": "b-15", "label": "Visitors", "icon": "👥", "url": "/visitors/", "color": "#ec4899", "children": [{"id": "b-15-l-0", "label": "Visitors", "icon": "👥", "url": "/visitors/", "color": "#ec4899", "children": []}, {"id": "b-15-l-1", "label": "Status", "icon": "🚦", "url": "/status/", "color": "#ec4899", "children": []}, {"id": "b-15-l-2", "label": "Trends", "icon": "📈", "url": "/visitors/trends/", "color": "#ec4899", "children": []}, {"id": "b-15-l-3", "label": "Countries", "icon": "🌍", "url": "/visitors/countries/", "color": "#ec4899", "children": []}, {"id": "b-15-l-4", "label": "Git Tracking", "icon": "🔀", "url": "/visitors/git-tracking/", "color": "#ec4899", "children": []}]}, {"id": "b-16", "label": "IaC flow", "icon": "🔄", "url": "/iac/form/", "color": "#84cc16", "children": [{"id": "b-16-l-0", "label": "Form", "icon": "📝", "url": "/iac/form/", "color": "#84cc16", "children": []}, {"id": "b-16-l-1", "label": "NetBox", "icon": "🗄️", "url": "/iac/netbox/", "color": "#84cc16", "children": []}, {"id": "b-16-l-2", "label": "Super Portal Front End", "icon": "🖥️", "url": "/iac/super-portal/", "color": "#84cc16", "children": []}, {"id": "b-16-l-3", "label": "Pipeline", "icon": "⚙️", "url": "/iac/pipeline/", "color": "#84cc16", "children": []}, {"id": "b-16-l-4", "label": "Approval", "icon": "✅", "url": "/iac/approval/", "color": "#84cc16", "children": []}, {"id": "b-16-l-5", "label": "Dev and Prod", "icon": "🚀", "url": "/iac/dev-prod/", "color": "#84cc16", "children": []}]}, {"id": "b-17", "label": "Environments", "icon": "🌐", "url": "/iac/aci/", "color": "#14b8a6", "children": [{"id": "b-17-l-0", "label": "ACI", "icon": "🔌", "url": "/iac/aci/", "color": "#14b8a6", "children": []}, {"id": "b-17-l-1", "label": "SDA", "icon": "📡", "url": "/iac/sda/", "color": "#14b8a6", "children": []}, {"id": "b-17-l-2", "label": "SD-WAN", "icon": "🌍", "url": "/iac/sdwan/", "color": "#14b8a6", "children": []}, {"id": "b-17-l-3", "label": "VXLAN EVPN", "icon": "🔀", "url": "/iac/vxlan-evpn/", "color": "#14b8a6", "children": []}, {"id": "b-17-l-4", "label": "Nexus Dashboard", "icon": "📊", "url": "/iac/nexus-dashboard/", "color": "#14b8a6", "children": []}]}]};</script><script>/* Interactive Universal Provisioning mind map. Expects window.MM_TREE. */
+(function () {
+  "use strict";
+  var TREE = window.MM_TREE;
+  if (!TREE) return;
+
+  var W = 1700, H = 1300, CX = W / 2, CY = H / 2;
+  var svg = document.getElementById("mm");
+  var cameraEl = document.getElementById("mm-cam");
+  var linksEl = document.getElementById("mm-links");
+  var nodesEl = document.getElementById("mm-nodes");
+  var stage = document.getElementById("mm-stage");
+  var tip = document.getElementById("mm-tip");
+  var bcEl = document.getElementById("mm-bc");
+  var backBtn = document.getElementById("mm-back");
+  var resetBtn = document.getElementById("mm-reset");
+  var labelToggle = document.getElementById("mm-labels");
+  var searchInp = document.getElementById("mm-q");
+  var searchHits = document.getElementById("mm-hits");
+
+  function walk(n, fn, parent) {
+    fn(n, parent);
+    (n.children || []).forEach(function (c) { walk(c, fn, n); });
+  }
+
+  var byId = {};
+  walk(TREE, function (n, p) {
+    n.parent = p || null;
+    byId[n.id] = n;
+  });
+
+  function slug(s) {
+    return String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "node";
+  }
+  function pathOf(n) {
+    var parts = [];
+    var x = n;
+    while (x && x.id !== "root") {
+      parts.unshift(slug(x.label));
+      x = x.parent;
+    }
+    return parts.join("/");
+  }
+  function nodeFromPath(p) {
+    if (!p) return TREE;
+    var parts = p.split("/").filter(Boolean);
+    var n = TREE;
+    for (var i = 0; i < parts.length; i++) {
+      var kids = n.children || [];
+      var hit = null;
+      for (var j = 0; j < kids.length; j++) {
+        if (slug(kids[j].label) === parts[i]) { hit = kids[j]; break; }
+      }
+      if (!hit) return n;
+      n = hit;
+    }
+    return n;
+  }
+
+  function textW(s, size) {
+    var t = String(s || "");
+    var w = 0;
+    for (var i = 0; i < t.length; i++) {
+      var c = t.charCodeAt(i);
+      w += c > 255 ? 0.95 : (c > 127 ? 0.7 : 0.58);
+    }
+    return Math.max(52, Math.round(w * size) + 28);
+  }
+
+  function siblingIndex(n) {
+    if (!n || !n.parent || n.parent.id === "root") return 0;
+    var kids = n.parent.children || [];
+    for (var i = 0; i < kids.length; i++) {
+      if (kids[i].id === n.id) return i + 1;
+    }
+    return 0;
+  }
+
+  function labelOf(n, withIcon) {
+    if (n.id === "root") return n.label;
+    var seq = siblingIndex(n);
+    var head = seq ? (String(seq) + ".\u00a0") : "";
+    return head + (withIcon && n.icon ? n.icon + "\u00a0" : "") + n.label;
+  }
+
+  var TYPE_LEVELS = ["md", "lg", "xl"];
+  var typeIdx = 1;
+  try {
+    var savedType = localStorage.getItem("mmTypeScale");
+    var savedI = TYPE_LEVELS.indexOf(savedType);
+    if (savedI >= 0) typeIdx = savedI;
+  } catch (e) {}
+
+  function typeSpec() {
+    var steps = [
+      { hub: 16, leaf: 16, center: 22, sub: 14, badge: 13, line: 1.28, padX: 16, padY: 10, stroke: 2.6, link: 2.3, badgeR: 13 },
+      { hub: 19, leaf: 18, center: 26, sub: 16, badge: 15, line: 1.28, padX: 18, padY: 12, stroke: 3.1, link: 2.9, badgeR: 15 },
+      { hub: 22, leaf: 21, center: 30, sub: 18, badge: 16, line: 1.28, padX: 20, padY: 14, stroke: 3.5, link: 3.3, badgeR: 16 }
+    ];
+    return steps[typeIdx] || steps[1];
+  }
+
+  var measureCtx = null;
+  function measure(text, size, weight) {
+    if (!measureCtx) {
+      var c = document.createElement("canvas");
+      measureCtx = c.getContext("2d");
+    }
+    measureCtx.font = (weight || 700) + " " + size + "px system-ui,Arial,sans-serif";
+    return measureCtx.measureText(String(text || "")).width;
+  }
+
+  function wrapLabel(text, fontSize, weight, maxW) {
+    text = String(text || "").replace(/\s+/g, " ").trim();
+    if (!text) return { lines: [""], width: 0 };
+    var raw = measure(text, fontSize, weight);
+    if (raw <= maxW) return { lines: [text], width: raw };
+    var words = text.split(" ");
+    var lines = [];
+    var cur = "";
+    words.forEach(function (w) {
+      var trial = cur ? cur + " " + w : w;
+      if (!cur || measure(trial, fontSize, weight) <= maxW) cur = trial;
+      else { lines.push(cur); cur = w; }
+    });
+    if (cur) lines.push(cur);
+    if (lines.length > 2) {
+      var mid = Math.ceil(words.length / 2);
+      lines = [words.slice(0, mid).join(" "), words.slice(mid).join(" ")];
+    }
+    var width = 0;
+    lines.forEach(function (ln) { width = Math.max(width, measure(ln, fontSize, weight)); });
+    return { lines: lines, width: width };
+  }
+
+  function nodeBox(text, fontSize, weight, extraW, maxWOpt) {
+    var S = typeSpec();
+    var maxW = maxWOpt != null ? maxWOpt : Math.max(120, Math.min(210, W * 0.2));
+    var wrapped = wrapLabel(text, fontSize, weight, maxW);
+    return {
+      w: Math.max(44, Math.ceil(wrapped.width + S.padX * 2 + (extraW || 0))),
+      h: Math.max(44, Math.ceil(wrapped.lines.length * fontSize * S.line + S.padY * 2)),
+      lines: wrapped.lines,
+      fontSize: fontSize,
+      fontWeight: weight
+    };
+  }
+
+  function ellipseArcPoints(n, rx, ry, start) {
+    start = start == null ? -Math.PI / 2 : start;
+    if (n <= 0) return [];
+    if (n === 1) return [{ x: CX + rx * Math.cos(start), y: CY + ry * Math.sin(start), ang: start }];
+    var steps = 720;
+    var acc = [0];
+    var total = 0;
+    var prevx = rx * Math.cos(start), prevy = ry * Math.sin(start);
+    var i, th, x, y, d;
+    for (i = 1; i <= steps; i++) {
+      th = start + (2 * Math.PI * i) / steps;
+      x = rx * Math.cos(th); y = ry * Math.sin(th);
+      d = Math.hypot(x - prevx, y - prevy);
+      total += d;
+      acc.push(total);
+      prevx = x; prevy = y;
+    }
+    var out = [];
+    for (var j = 0; j < n; j++) {
+      var target = (total * j) / n;
+      var lo = 0, hi = steps;
+      while (lo < hi) {
+        var mid = (lo + hi) >> 1;
+        if (acc[mid] < target) lo = mid + 1;
+        else hi = mid;
+      }
+      th = start + (2 * Math.PI * lo) / steps;
+      out.push({ x: CX + rx * Math.cos(th), y: CY + ry * Math.sin(th), ang: th });
+    }
+    return out;
+  }
+
+  var lastOrbit = { rx: 300, ry: 220 };
+
+  function sizeStage() {
+    if (!stage) return;
+    var legend = document.querySelector(".leg");
+    var top = stage.getBoundingClientRect().top;
+    var extra = legend ? (legend.getBoundingClientRect().height + 12) : 64;
+    var avail = Math.floor(window.innerHeight - top - extra);
+    stage.style.height = Math.max(280, avail) + "px";
+    stage.style.overflow = "hidden";
+    var r = stage.getBoundingClientRect();
+    W = Math.max(300, Math.round(r.width));
+    H = Math.max(280, Math.round(r.height));
+    CX = W / 2;
+    CY = H / 2;
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    svg.setAttribute("width", String(W));
+    svg.setAttribute("height", String(H));
+  }
+
+  var focus = TREE;
+  var showAllLabels = false;
+  var hoverId = null;
+  var pulseId = null;
+  var positions = {};
+  var els = { nodes: {}, links: {} };
+  var cam = { x: 0, y: 0, k: 1 };
+  var anim = null;
+
+  function applyCam() {
+    cameraEl.setAttribute("transform", "translate(" + cam.x + " " + cam.y + ") scale(" + cam.k + ")");
+  }
+
+  function clientToView(cx, cy) {
+    var pt = svg.createSVGPoint();
+    pt.x = cx;
+    pt.y = cy;
+    var ctm = svg.getScreenCTM();
+    if (!ctm) return { x: CX, y: CY };
+    return pt.matrixTransform(ctm.inverse());
+  }
+
+  function zoomAt(cx, cy, factor) {
+    var p = clientToView(cx, cy);
+    var wx = (p.x - cam.x) / cam.k;
+    var wy = (p.y - cam.y) / cam.k;
+    var nk = Math.max(0.35, Math.min(3.6, cam.k * factor));
+    cam.k = nk;
+    cam.x = p.x - wx * nk;
+    cam.y = p.y - wy * nk;
+    applyCam();
+  }
+
+  function resetCam() {
+    cam.x = 0;
+    cam.y = 0;
+    cam.k = 1;
+    applyCam();
+  }
+
+  function fitFrom(pos) {
+    var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity, found = false;
+    Object.keys(pos).forEach(function (id) {
+      var p = pos[id];
+      if (!p || !p.visible || (p.opacity || 0) < 0.05) return;
+      found = true;
+      var hw = Math.max(22, (p.w || 44) / 2) + 4;
+      var hh = Math.max(22, (p.h || 44) / 2) + 4;
+      minX = Math.min(minX, p.x - hw);
+      maxX = Math.max(maxX, p.x + hw);
+      minY = Math.min(minY, p.y - hh);
+      maxY = Math.max(maxY, p.y + hh);
+    });
+    if (!found) return { x: 0, y: 0, k: 1 };
+    var pad = 10;
+    minX -= pad; maxX += pad; minY -= pad; maxY += pad;
+    var bw = Math.max(160, maxX - minX);
+    var bh = Math.max(160, maxY - minY);
+    var k = Math.min(W / bw, H / bh, 1.08);
+    k = Math.max(0.72, k);
+    var bx = (minX + maxX) / 2;
+    var by = (minY + maxY) / 2;
+    return { k: k, x: CX - bx * k, y: CY - by * k };
+  }
+
+  function setCam(c) {
+    cam.x = c.x; cam.y = c.y; cam.k = c.k;
+    applyCam();
+  }
+
+  function boxesOverlap(a, b, pad) {
+    return Math.abs(a.x - b.x) < (a.w + b.w) / 2 + pad &&
+           Math.abs(a.y - b.y) < (a.h + b.h) / 2 + pad;
+  }
+
+  function resolveCollisions(pos) {
+    var items = [];
+    var center = null;
+    Object.keys(pos).forEach(function (id) {
+      var p = pos[id];
+      if (!p || !p.visible) return;
+      if (p.kind === "center") center = p;
+      else if (p.kind !== "dot") items.push(p);
+    });
+    var iter, i, j, a, b, dx, dy, pw, ph, ox, oy, px, py, am, bm;
+    function clampPos(p) {
+      var hw = Math.max(20, (p.w || 44) / 2);
+      var hh = Math.max(20, (p.h || 44) / 2);
+      p.x = Math.max(hw + 6, Math.min(W - hw - 6, p.x));
+      p.y = Math.max(hh + 6, Math.min(H - hh - 6, p.y));
+    }
+    for (iter = 0; iter < 40; iter++) {
+      for (i = 0; i < items.length; i++) {
+        for (j = i + 1; j < items.length; j++) {
+          a = items[i];
+          b = items[j];
+          pw = (a.w + b.w) / 2 + 8;
+          ph = (a.h + b.h) / 2 + 6;
+          dx = b.x - a.x;
+          dy = b.y - a.y;
+          if (Math.abs(dx) >= pw || Math.abs(dy) >= ph) continue;
+          ox = pw - Math.abs(dx);
+          oy = ph - Math.abs(dy);
+          if (ox < oy) {
+            px = (dx === 0 ? 1 : (dx < 0 ? -1 : 1)) * ox * 0.55;
+            py = 0;
+          } else {
+            px = 0;
+            py = (dy === 0 ? 1 : (dy < 0 ? -1 : 1)) * oy * 0.55;
+          }
+          am = a.kind === "leaf";
+          bm = b.kind === "leaf";
+          if (am && bm) {
+            a.x -= px / 2; a.y -= py / 2;
+            b.x += px / 2; b.y += py / 2;
+          } else if (am) {
+            a.x -= px; a.y -= py;
+          } else if (bm) {
+            b.x += px; b.y += py;
+          } else {
+            a.x -= px / 2; a.y -= py / 2;
+            b.x += px / 2; b.y += py / 2;
+          }
+        }
+      }
+      if (center) {
+        for (i = 0; i < items.length; i++) {
+          a = items[i];
+          pw = (a.w + center.w) / 2 + 12;
+          ph = (a.h + center.h) / 2 + 12;
+          dx = a.x - center.x;
+          dy = a.y - center.y;
+          if (Math.abs(dx) >= pw || Math.abs(dy) >= ph) continue;
+          ox = pw - Math.abs(dx);
+          oy = ph - Math.abs(dy);
+          if (ox < oy) a.x += (dx === 0 ? 1 : (dx < 0 ? -1 : 1)) * ox;
+          else a.y += (dy === 0 ? 1 : (dy < 0 ? -1 : 1)) * oy;
+        }
+      }
+      if (iter % 4 === 3) items.forEach(clampPos);
+    }
+    items.forEach(clampPos);
+  }
+
+  function radiusForCount(n, halfW) {
+    if (n <= 1) return 240;
+    var r = (halfW + 18) / Math.tan(Math.PI / n);
+    return Math.max(230, r);
+  }
+
+  function placeDots(hx, hy, ang, leaves, pos) {
+    var n = leaves.length;
+    if (!n) return;
+    function arc(list, r, spreadScale) {
+      var m = list.length;
+      var spread = Math.min(Math.PI * 0.85, Math.max(0.28, (0.26 * m)) * spreadScale);
+      list.forEach(function (lf, j) {
+        var la = m === 1 ? ang : ang - spread / 2 + spread * j / Math.max(1, m - 1);
+        pos[lf.id] = {
+          x: hx + r * Math.cos(la),
+          y: hy + r * Math.sin(la),
+          w: 14, h: 14, visible: true, opacity: 1, kind: "dot", ang: la
+        };
+      });
+    }
+    if (n <= 8) {
+      arc(leaves, 50, 1);
+    } else {
+      var mid = Math.ceil(n / 2);
+      arc(leaves.slice(0, mid), 46, 1);
+      arc(leaves.slice(mid), 68, 1.05);
+    }
+  }
+
+  function wantsGrid(kidCount) {
+    return W < 720 && kidCount > 8;
+  }
+
+  function layoutGrid(focusNode, pos, isRoot) {
+    var S = typeSpec();
+    var kids = focusNode.children || [];
+    var pad = 8;
+    var gapX = 8;
+    var gapY = 6;
+    var cols = W >= 680 ? 3 : (W >= 340 ? 2 : 1);
+    var colW = (W - pad * 2 - gapX * (cols - 1)) / cols;
+    var textMax = Math.max(72, colW - 22);
+    var boxes = kids.map(function (k) {
+      var kind = (k.children && k.children.length) ? "hub" : (isRoot ? "hub" : "leaf");
+      var fs = kind === "leaf" ? S.leaf : S.hub;
+      var label = labelOf(k, true).replace(/\u00a0/g, " ");
+      var b = nodeBox(label, fs, 700, 0, textMax);
+      b.kind = kind;
+      b.node = k;
+      b.w = Math.min(colW, Math.max(44, b.w));
+      return b;
+    });
+
+    var c = pos[focusNode.id];
+    var c1 = isRoot ? focusNode.label : labelOf(focusNode, true).replace(/\u00a0/g, " ");
+    var c2 = isRoot ? (focusNode.sublabel || "IaC Demo") : "";
+    var cWrap = wrapLabel(c1, S.center, 800, Math.max(140, W - 36));
+    c.lines = c2 ? cWrap.lines.concat([c2]) : cWrap.lines;
+    c.w = Math.min(W - 16, Math.max(88, Math.ceil(cWrap.width + 28)));
+    c.h = Math.max(48, Math.ceil(cWrap.lines.length * S.center * 1.2 + (c2 ? S.sub * 1.15 : 0) + 16));
+    c.x = CX;
+    c.y = pad + c.h / 2;
+
+    var startY = pad + c.h + gapY + 4;
+    var rowH = [];
+    boxes.forEach(function (b, i) {
+      var row = Math.floor(i / cols);
+      rowH[row] = Math.max(rowH[row] || 0, Math.max(44, b.h));
+    });
+    boxes.forEach(function (b, i) {
+      var row = Math.floor(i / cols);
+      var col = i % cols;
+      var x = pad + col * (colW + gapX) + colW / 2;
+      var cellY = startY;
+      for (var r = 0; r < row; r++) cellY += rowH[r] + gapY;
+      pos[b.node.id] = {
+        x: x,
+        y: cellY + rowH[row] / 2,
+        w: b.w,
+        h: Math.max(44, b.h),
+        visible: true,
+        opacity: 1,
+        kind: b.kind,
+        lines: b.lines,
+        fontSize: b.fontSize,
+        fontWeight: b.fontWeight
+      };
+    });
+    var contentH = startY;
+    rowH.forEach(function (h) { contentH += h + gapY; });
+    contentH += pad;
+    lastOrbit = { rx: 0, ry: 0, grid: true, contentH: contentH };
+    return pos;
+  }
+
+  function layout(focusNode) {
+    var S = typeSpec();
+    var pos = {};
+    walk(TREE, function (n) {
+      pos[n.id] = { x: CX, y: CY, w: 0, h: 0, visible: false, opacity: 0, kind: "hidden" };
+    });
+
+    var isRoot = focusNode.id === "root";
+    var kids = focusNode.children || [];
+    var c1 = isRoot ? focusNode.label : labelOf(focusNode, true);
+    var c2 = isRoot ? (focusNode.sublabel || "IaC Demo") : "";
+    var cWrap = wrapLabel(c1, S.center, 800, Math.max(140, Math.min(220, W * 0.28)));
+    var cW = Math.max(cWrap.width, c2 ? measure(c2, S.sub, 650) : 0);
+    var cH = cWrap.lines.length * S.center * S.line + (c2 ? S.sub * S.line + 4 : 0) + S.padY * 2;
+    pos[focusNode.id] = {
+      x: CX, y: CY,
+      w: Math.max(88, Math.ceil(cW + S.padX * 2)),
+      h: Math.max(56, Math.ceil(cH)),
+      visible: true, opacity: 1, kind: "center",
+      lines: c2 ? cWrap.lines.concat([c2]) : cWrap.lines,
+      fontSize: S.center,
+      fontWeight: 800,
+      subSize: S.sub
+    };
+
+    if (!kids.length) return pos;
+
+    if (wantsGrid(kids.length)) {
+      return layoutGrid(focusNode, pos, isRoot);
+    }
+
+    var boxes = kids.map(function (k) {
+      var kind = (k.children && k.children.length) ? "hub" : (isRoot ? "hub" : "leaf");
+      var fs = kind === "leaf" ? S.leaf : S.hub;
+      var extra = (k.children && k.children.length) ? S.badgeR + 4 : 0;
+      var b = nodeBox(labelOf(k, true), fs, 700, extra);
+      b.kind = kind;
+      b.node = k;
+      return b;
+    });
+
+    var maxHW = 40, maxHH = 22;
+    boxes.forEach(function (b) {
+      maxHW = Math.max(maxHW, b.w / 2);
+      maxHH = Math.max(maxHH, b.h / 2);
+    });
+    var rx = Math.max(90, CX - maxHW - 14);
+    var ry = Math.max(80, CY - maxHH - 14);
+    lastOrbit = { rx: rx, ry: ry };
+    function placeOnEllipse(list, erx, ery, start) {
+      var epts = ellipseArcPoints(list.length, erx, ery, start);
+      list.forEach(function (b, i) {
+        pos[b.node.id] = {
+          x: epts[i].x, y: epts[i].y, w: b.w, h: b.h,
+          visible: true, opacity: 1, kind: b.kind, ang: epts[i].ang,
+          lines: b.lines, fontSize: b.fontSize, fontWeight: b.fontWeight
+        };
+      });
+    }
+    if (boxes.length >= 12 && !(isRoot && showAllLabels)) {
+      var innerN = Math.min(6, Math.max(4, Math.round(boxes.length * 0.35)));
+      var used = {};
+      var ii;
+      for (ii = 0; ii < innerN; ii++) {
+        var idx = Math.round(ii * boxes.length / innerN) % boxes.length;
+        while (used[idx]) idx = (idx + 1) % boxes.length;
+        used[idx] = true;
+      }
+      var inner = [], outer = [];
+      boxes.forEach(function (b, i) {
+        if (used[i]) inner.push(b);
+        else outer.push(b);
+      });
+      var cBox = pos[focusNode.id];
+      var innerRx = (cBox.w || 80) / 2 + maxHW + 28;
+      var innerRy = (cBox.h || 56) / 2 + maxHH + 26;
+      innerRx = Math.min(innerRx, rx - maxHW - 20);
+      innerRy = Math.min(innerRy, ry - maxHH - 18);
+      innerRx = Math.max(90, innerRx);
+      innerRy = Math.max(70, innerRy);
+      placeOnEllipse(outer, rx, ry, -Math.PI / 2);
+      placeOnEllipse(inner, innerRx, innerRy, -Math.PI / 2 + Math.PI / inner.length);
+    } else {
+      placeOnEllipse(boxes, rx, ry, -Math.PI / 2);
+    }
+
+    if (isRoot && showAllLabels) {
+      kids.forEach(function (k, i) {
+        var leaves = k.children || [];
+        if (!leaves.length) return;
+        var hub = pos[k.id];
+        var outerRx = rx + Math.max(70, maxHW * 0.4);
+        var outerRy = ry + Math.max(56, maxHH * 0.5);
+        var spread = Math.min(Math.PI * 0.7, Math.max(0.22, 0.18 * leaves.length));
+        leaves.forEach(function (lf, j) {
+          var la = leaves.length === 1 ? hub.ang : hub.ang - spread / 2 + spread * j / Math.max(1, leaves.length - 1);
+          var b = nodeBox(labelOf(lf, true), S.leaf, 650, 0);
+          pos[lf.id] = {
+            x: CX + outerRx * Math.cos(la),
+            y: CY + outerRy * Math.sin(la),
+            w: b.w, h: b.h, visible: true, opacity: 1, kind: "leaf", ang: la,
+            lines: b.lines, fontSize: b.fontSize, fontWeight: b.fontWeight
+          };
+        });
+      });
+    }
+
+    resolveCollisions(pos);
+    return pos;
+  }
+
+  function lineageIds(n) {
+    var s = {};
+    while (n) {
+      s[n.id] = true;
+      n = n.parent;
+    }
+    return s;
+  }
+
+  function childIdSet(n) {
+    var s = {};
+    (n.children || []).forEach(function (c) { s[c.id] = true; });
+    return s;
+  }
+
+  function dimFor(id) {
+    if (!hoverId) return 1;
+    var h = byId[hoverId];
+    if (!h) return 1;
+    var lin = lineageIds(h);
+    var kids = childIdSet(h);
+    if (lin[id] || kids[id] || id === hoverId) return 1;
+    if (h.parent && id === h.parent.id) return 1;
+    return 0.22;
+  }
+
+  function curve(x1, y1, x2, y2) {
+    var mx = (x1 + x2) / 2;
+    var my = (y1 + y2) / 2;
+    var dx = x2 - x1, dy = y2 - y1;
+    var nx = -dy * 0.18, ny = dx * 0.18;
+    return "M " + x1.toFixed(1) + " " + y1.toFixed(1) +
+           " Q " + (mx + nx).toFixed(1) + " " + (my + ny).toFixed(1) +
+           " " + x2.toFixed(1) + " " + y2.toFixed(1);
+  }
+
+  function ensureLink(id, parentId) {
+    if (els.links[id]) return els.links[id];
+    var p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    p.setAttribute("fill", "none");
+    p.setAttribute("class", "mm-link");
+    p.dataset.id = id;
+    p.dataset.parent = parentId;
+    linksEl.appendChild(p);
+    els.links[id] = p;
+    return p;
+  }
+
+  function ensureNode(n) {
+    if (els.nodes[n.id]) return els.nodes[n.id];
+    var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("class", "mm-item");
+    g.dataset.id = n.id;
+    g.style.cursor = "pointer";
+
+    var shape = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    shape.setAttribute("class", "mm-shape");
+    shape.setAttribute("rx", "10");
+    g.appendChild(shape);
+
+    var t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    t.setAttribute("class", "mm-label");
+    t.setAttribute("text-anchor", "middle");
+    t.setAttribute("dominant-baseline", "middle");
+    t.setAttribute("font-family", "system-ui,Arial,sans-serif");
+    g.appendChild(t);
+
+    var sub = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    sub.setAttribute("class", "mm-sub");
+    sub.setAttribute("text-anchor", "middle");
+    sub.setAttribute("font-family", "system-ui,Arial,sans-serif");
+    g.appendChild(sub);
+
+    var badge = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    badge.setAttribute("class", "mm-badge");
+    var bc = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    bc.setAttribute("r", "9");
+    var bt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    bt.setAttribute("text-anchor", "middle");
+    bt.setAttribute("dominant-baseline", "middle");
+    bt.setAttribute("font-size", "10");
+    bt.setAttribute("font-weight", "700");
+    bt.setAttribute("fill", "#0b1220");
+    badge.appendChild(bc);
+    badge.appendChild(bt);
+    g.appendChild(badge);
+
+    var open = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    open.setAttribute("class", "mm-open");
+    var oc = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    oc.setAttribute("r", "9");
+    oc.setAttribute("fill", "#0b1220");
+    oc.setAttribute("stroke-width", "1.4");
+    var ot = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    ot.setAttribute("text-anchor", "middle");
+    ot.setAttribute("dominant-baseline", "middle");
+    ot.setAttribute("font-size", "11");
+    ot.setAttribute("fill", "#e6edf3");
+    ot.textContent = "↗";
+    open.appendChild(oc);
+    open.appendChild(ot);
+    open.style.cursor = "pointer";
+    g.appendChild(open);
+
+    nodesEl.appendChild(g);
+    els.nodes[n.id] = g;
+
+    g.addEventListener("pointerenter", function () {
+      hoverId = n.id;
+      showTip(n);
+      paint(positions);
+    });
+    g.addEventListener("pointerleave", function () {
+      if (hoverId === n.id) hoverId = null;
+      hideTip();
+      paint(positions);
+    });
+    open.addEventListener("pointerdown", function (ev) {
+      ev.stopPropagation();
+    });
+    open.addEventListener("click", function (ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      if (n.url) window.location.href = n.url;
+    });
+    return g;
+  }
+
+  function showTip(n) {
+    if (!tip) return;
+    var extra = (n.children && n.children.length)
+      ? " · click to zoom into " + n.children.length + " page" + (n.children.length === 1 ? "" : "s")
+      : (n.url ? " · click to open" : "");
+    tip.textContent = (n.icon ? n.icon + " " : "") + (n.id === "root" ? (n.label + " — " + (n.sublabel || "")) : n.label) + extra;
+    tip.style.display = "block";
+  }
+  function hideTip() {
+    if (tip) tip.style.display = "none";
+  }
+  function moveTip(ev) {
+    if (!tip || tip.style.display === "none") return;
+    var r = stage.getBoundingClientRect();
+    tip.style.left = (ev.clientX - r.left) + "px";
+    tip.style.top = (ev.clientY - r.top) + "px";
+  }
+
+  function paint(pos) {
+    walk(TREE, function (n) {
+      var p = pos[n.id] || { x: CX, y: CY, w: 0, h: 0, visible: false, opacity: 0 };
+      var g = ensureNode(n);
+      var shape = g.querySelector(".mm-shape");
+      var t = g.querySelector(".mm-label");
+      var sub = g.querySelector(".mm-sub");
+      var badge = g.querySelector(".mm-badge");
+      var open = g.querySelector(".mm-open");
+      var isDot = p.kind === "dot";
+      var vis = p.visible && p.opacity > 0.02;
+      var dim = dimFor(n.id);
+      var op = (p.opacity || 0) * dim;
+      g.setAttribute("transform", "translate(" + p.x + " " + p.y + ")");
+      g.setAttribute("opacity", op.toFixed(3));
+      g.style.pointerEvents = vis ? "auto" : "none";
+      g.style.display = vis ? "" : "none";
+      g.dataset.kind = p.kind || "";
+      g.classList.toggle("mm-pulse", pulseId === n.id);
+
+      if (isDot) {
+        if (shape.tagName !== "circle") {
+          var c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          c.setAttribute("class", "mm-shape");
+          g.replaceChild(c, shape);
+          shape = c;
+        }
+        shape.setAttribute("r", hoverId === n.id ? "8" : "6");
+        shape.setAttribute("fill", n.color || "#94a3b8");
+        shape.setAttribute("stroke", "#0b1220");
+        shape.setAttribute("stroke-width", "1.2");
+        t.textContent = "";
+        sub.textContent = "";
+        badge.style.display = "none";
+        open.style.display = "none";
+      } else {
+        if (shape.tagName !== "rect") {
+          var r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          r.setAttribute("class", "mm-shape");
+          r.setAttribute("rx", "10");
+          g.replaceChild(r, shape);
+          shape = r;
+        }
+        var S = typeSpec();
+        var w = Math.max(44, p.w || 80), h = Math.max(44, p.h || 44);
+        shape.setAttribute("x", String(-w / 2));
+        shape.setAttribute("y", String(-h / 2));
+        shape.setAttribute("width", String(w));
+        shape.setAttribute("height", String(h));
+        shape.setAttribute("rx", p.kind === "center" ? "16" : "12");
+        if (p.kind === "center") {
+          shape.setAttribute("fill", n.color || "#2563eb");
+          shape.setAttribute("stroke", "#dbeafe");
+          shape.setAttribute("stroke-width", String(S.stroke + 0.4));
+          shape.setAttribute("filter", "url(#mm-glow)");
+        } else {
+          shape.setAttribute("fill", p.kind === "leaf" ? "var(--mm-leaf,#162032)" : "var(--mm-node,#1e293b)");
+          shape.setAttribute("stroke", n.color || "#64748b");
+          shape.setAttribute("stroke-width", String(p.kind === "hub" ? S.stroke : Math.max(2.4, S.stroke - 0.4)));
+          shape.removeAttribute("filter");
+        }
+        var lines = p.lines && p.lines.length ? p.lines : [p.kind === "center" && n.id === "root" ? n.label : labelOf(n, true)];
+        var fsz = p.fontSize || (p.kind === "center" ? S.center : (p.kind === "leaf" ? S.leaf : S.hub));
+        var fwt = p.fontWeight || (p.kind === "leaf" ? 650 : 800);
+        while (t.firstChild) t.removeChild(t.firstChild);
+        t.setAttribute("fill", p.kind === "center" ? "#ffffff" : "var(--mm-text,#f8fafc)");
+        t.setAttribute("font-size", String(fsz));
+        t.setAttribute("font-weight", String(fwt));
+        var lh = fsz * (S.line || 1.28);
+        if (p.kind === "center" && n.sublabel) {
+          var titleLines = (lines && lines.length) ? lines.slice() : [n.label];
+          if (titleLines.length && titleLines[titleLines.length - 1] === n.sublabel) {
+            titleLines = titleLines.slice(0, -1);
+          }
+          if (!titleLines.length) titleLines = [n.label];
+          var tLH = fsz * (S.line || 1.28);
+          var titleH = titleLines.length * tLH;
+          var blockH = titleH + S.sub * 1.2;
+          var startY = -blockH / 2 + fsz * 0.42;
+          titleLines.forEach(function (line, i) {
+            var ts0 = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+            ts0.setAttribute("x", "0");
+            ts0.setAttribute("y", String(startY + i * tLH));
+            ts0.textContent = line;
+            t.appendChild(ts0);
+          });
+          while (sub.firstChild) sub.removeChild(sub.firstChild);
+          sub.setAttribute("x", "0");
+          sub.setAttribute("y", String(startY + titleH + S.sub * 0.15));
+          sub.setAttribute("text-anchor", "middle");
+          sub.setAttribute("fill", "#eff6ff");
+          sub.setAttribute("font-size", String(p.subSize || S.sub));
+          sub.setAttribute("font-weight", "650");
+          sub.textContent = n.sublabel;
+        } else {
+          lines.forEach(function (line, i) {
+            var ts = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+            ts.setAttribute("x", "0");
+            ts.setAttribute("y", String((i - (lines.length - 1) / 2) * lh));
+            ts.textContent = line;
+            t.appendChild(ts);
+          });
+          sub.textContent = "";
+        }
+        var nKids = (n.children || []).length;
+        if (p.kind === "hub" && nKids) {
+          badge.style.display = "";
+          var br = S.badgeR;
+          var bc = badge.querySelector("circle");
+          var bt = badge.querySelector("text");
+          bc.setAttribute("r", String(br));
+          bc.setAttribute("fill", n.color || "#94a3b8");
+          bc.setAttribute("stroke", "var(--mm-node,#1e293b)");
+          bc.setAttribute("stroke-width", "2");
+          bc.setAttribute("cx", String(w / 2 - 2));
+          bc.setAttribute("cy", String(-h / 2 + 2));
+          bt.setAttribute("x", String(w / 2 - 2));
+          bt.setAttribute("y", String(-h / 2 + 3));
+          bt.setAttribute("font-size", String(S.badge));
+          bt.setAttribute("font-weight", "800");
+          bt.setAttribute("fill", "#0f172a");
+          bt.textContent = String(nKids);
+        } else {
+          badge.style.display = "none";
+        }
+        if (n.url && (p.kind === "hub" || p.kind === "center") && hoverId === n.id) {
+          open.style.display = "";
+          open.querySelector("circle").setAttribute("r", "12");
+          open.querySelector("circle").setAttribute("stroke", n.color || "#93c5fd");
+          open.querySelector("text").setAttribute("font-size", "13");
+          open.setAttribute("transform", "translate(" + (w / 2 - 4) + " " + (h / 2 - 4) + ")");
+        } else {
+          open.style.display = "none";
+        }
+      }
+
+      if (n.parent) {
+        var lp = pos[n.parent.id];
+        var link = ensureLink(n.id, n.parent.id);
+        var parentVis = lp && lp.visible && lp.opacity > 0.02;
+        if (parentVis && vis) {
+          link.setAttribute("d", curve(lp.x, lp.y, p.x, p.y));
+          link.setAttribute("stroke", n.color || "#64748b");
+          link.setAttribute("stroke-width", isDot ? "1.6" : String(typeSpec().link));
+          link.setAttribute("opacity", String(Math.max(0.15, op * 0.8)));
+          link.style.display = "";
+        } else {
+          link.style.display = "none";
+        }
+      }
+    });
+    if (stage) stage.dataset.focus = focus.id;
+    if (stage) stage.dataset.focusLabel = focus.label;
+    var ring1 = document.getElementById("mm-ring1");
+    var ring2 = document.getElementById("mm-ring2");
+    [ring1, ring2].forEach(function (ring, i) {
+      if (!ring) return;
+      ring.style.display = (focus.id === "root" && lastOrbit && lastOrbit.rx) ? "" : "none";
+      ring.setAttribute("cx", String(CX));
+      ring.setAttribute("cy", String(CY));
+      var k = i === 0 ? 0.52 : 0.92;
+      ring.setAttribute("rx", String(lastOrbit.rx * k));
+      ring.setAttribute("ry", String(lastOrbit.ry * k));
+    });
+  }
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+
+  function mixPos(a, b, t) {
+    var out = {};
+    var ids = {};
+    Object.keys(a).forEach(function (k) { ids[k] = true; });
+    Object.keys(b).forEach(function (k) { ids[k] = true; });
+    Object.keys(ids).forEach(function (id) {
+      var pa = a[id] || { x: CX, y: CY, w: 80, h: 34, visible: false, opacity: 0, kind: (b[id] || {}).kind };
+      var pb = b[id] || { x: CX, y: CY, w: 80, h: 34, visible: false, opacity: 0, kind: pa.kind };
+      out[id] = {
+        x: lerp(pa.x, pb.x, t),
+        y: lerp(pa.y, pb.y, t),
+        w: lerp(pa.w || 0, pb.w || 0, t),
+        h: lerp(pa.h || 0, pb.h || 0, t),
+        visible: pa.visible || pb.visible,
+        opacity: lerp(pa.opacity || 0, pb.opacity || 0, t),
+        kind: t < 0.5 ? (pb.visible ? pb.kind : pa.kind) : pb.kind,
+        lines: pb.lines || pa.lines,
+        fontSize: pb.fontSize || pa.fontSize,
+        fontWeight: pb.fontWeight || pa.fontWeight,
+        subSize: pb.subSize || pa.subSize
+      };
+    });
+    return out;
+  }
+
+  function applyGridViewport() {
+    if (lastOrbit && lastOrbit.grid && lastOrbit.contentH && lastOrbit.contentH > H + 2) {
+      svg.setAttribute("viewBox", "0 0 " + W + " " + Math.ceil(lastOrbit.contentH));
+      svg.setAttribute("height", String(Math.ceil(lastOrbit.contentH)));
+      if (stage) stage.style.overflowY = "auto";
+    } else if (stage) {
+      stage.style.overflowY = "hidden";
+    }
+  }
+
+  function camFor(pos) {
+    if (lastOrbit && lastOrbit.grid) return { x: 0, y: 0, k: 1 };
+    return fitFrom(pos);
+  }
+
+  function renderNow() {
+    positions = layout(focus);
+    applyGridViewport();
+    setCam(camFor(positions));
+    paint(positions);
+    updateChrome();
+  }
+
+  function transitionTo(nextFocus, instant) {
+    if (anim) {
+      cancelAnimationFrame(anim);
+      anim = null;
+    }
+    var dest = layout(nextFocus);
+    applyGridViewport();
+    var startCam = { x: cam.x, y: cam.y, k: cam.k };
+    var endCam = camFor(dest);
+    if (instant) {
+      focus = nextFocus;
+      positions = dest;
+      setCam(endCam);
+      paint(positions);
+      updateChrome();
+      return;
+    }
+    var start = positions;
+    var t0 = performance.now();
+    var dur = 460;
+    focus = nextFocus;
+    updateChrome();
+    function frame(now) {
+      var t = Math.min(1, (now - t0) / dur);
+      var e = ease(t);
+      positions = mixPos(start, dest, e);
+      cam.x = lerp(startCam.x, endCam.x, e);
+      cam.y = lerp(startCam.y, endCam.y, e);
+      cam.k = lerp(startCam.k, endCam.k, e);
+      applyCam();
+      paint(positions);
+      if (t < 1) anim = requestAnimationFrame(frame);
+      else {
+        anim = null;
+        positions = dest;
+        setCam(endCam);
+        paint(positions);
+      }
+    }
+    anim = requestAnimationFrame(frame);
+  }
+
+  function crumbs(n) {
+    var a = [];
+    while (n) {
+      a.unshift(n);
+      n = n.parent;
+    }
+    return a;
+  }
+
+  function updateChrome() {
+    if (backBtn) backBtn.disabled = focus.id === "root";
+    if (bcEl) {
+      bcEl.innerHTML = "";
+      var list = crumbs(focus);
+      list.forEach(function (n, i) {
+        if (i) {
+          var sep = document.createElement("span");
+          sep.className = "mm-sep";
+          sep.textContent = "›";
+          bcEl.appendChild(sep);
+        }
+        var last = i === list.length - 1;
+        if (last) {
+          var here = document.createElement("span");
+          here.className = "here";
+          here.textContent = n.id === "root" ? "Universal Provisioning" : n.label;
+          bcEl.appendChild(here);
+        } else {
+          var btn = document.createElement("button");
+          btn.type = "button";
+          btn.textContent = n.id === "root" ? "Universal Provisioning" : n.label;
+          btn.addEventListener("click", function () { drill(n); });
+          bcEl.appendChild(btn);
+        }
+      });
+    }
+    var path = pathOf(focus);
+    try {
+      var cur = location.hash.replace(/^#/, "");
+      var keep = !!(path && (cur === path || cur.indexOf(path + "/") === 0));
+      if (!keep && cur !== path) {
+        var next = path ? ("#" + path) : (location.pathname + location.search);
+        history.replaceState(null, "", next);
+      }
+    } catch (e) {}
+    document.querySelectorAll(".leg-chip").forEach(function (btn) {
+      var id = btn.getAttribute("data-id");
+      var on = !!(id && focus.id !== "root" && lineageIds(focus)[id]);
+      btn.classList.toggle("on", on);
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+  }
+
+  function onLegendActivate(btn) {
+    var id = btn.getAttribute("data-id");
+    var n = id && byId[id];
+    if (!n) return;
+    var isHome = n.label === "Home";
+    var isActive = focus.id !== "root" && !!lineageIds(focus)[n.id];
+    if (isHome || isActive) {
+      drill(TREE);
+      return;
+    }
+    if (n.children && n.children.length) {
+      drill(n);
+      return;
+    }
+    drill(TREE);
+  }
+
+  function drill(n) {
+    if (!n) return;
+    pulseId = null;
+    transitionTo(n);
+  }
+
+  function goBack() {
+    if (focus.parent) drill(focus.parent);
+  }
+
+  function onNodeActivate(n) {
+    if (n.id === focus.id) {
+      if (n.id === "root") {
+        if (n.url) window.location.href = n.url;
+        return;
+      }
+      goBack();
+      return;
+    }
+    if (n.children && n.children.length) {
+      drill(n);
+      return;
+    }
+    if (n.url) window.location.href = n.url;
+  }
+
+  var ptr = { down: false, id: null, x: 0, y: 0, camX: 0, camY: 0, moved: 0, onId: null };
+  var pinch = null;
+
+  function nodeFromEvent(ev) {
+    var el = ev.target;
+    while (el && el !== svg) {
+      if (el.dataset && el.dataset.id && el.classList && el.classList.contains("mm-item")) {
+        return byId[el.dataset.id];
+      }
+      if (el.classList && el.classList.contains("mm-open")) return null;
+      el = el.parentNode;
+    }
+    return null;
+  }
+
+  stage.addEventListener("pointermove", moveTip);
+
+  stage.addEventListener("pointerdown", function (ev) {
+    if (ev.button !== undefined && ev.button !== 0) return;
+    if (ev.target && ev.target.closest && ev.target.closest(".mm-open")) return;
+    stage.setPointerCapture(ev.pointerId);
+    var n = nodeFromEvent(ev);
+    if (ptr.down && ptr.id !== ev.pointerId) {
+      var a = { x: ptr.x, y: ptr.y };
+      var b = { x: ev.clientX, y: ev.clientY };
+      pinch = {
+        id1: ptr.id, id2: ev.pointerId,
+        d: Math.hypot(a.x - b.x, a.y - b.y) || 1,
+        k: cam.k,
+        mx: (a.x + b.x) / 2,
+        my: (a.y + b.y) / 2
+      };
+      return;
+    }
+    ptr.down = true;
+    ptr.id = ev.pointerId;
+    ptr.x = ev.clientX;
+    ptr.y = ev.clientY;
+    ptr.camX = cam.x;
+    ptr.camY = cam.y;
+    ptr.moved = 0;
+    ptr.onId = n ? n.id : null;
+  });
+
+  stage.addEventListener("pointermove", function (ev) {
+    if (pinch) {
+      var other = ev.pointerId === pinch.id1 ? { x: ptr.x, y: ptr.y } : null;
+      if (ev.pointerId === pinch.id1) { ptr.x = ev.clientX; ptr.y = ev.clientY; }
+      return;
+    }
+    if (!ptr.down || ev.pointerId !== ptr.id) return;
+    var dx = ev.clientX - ptr.x;
+    var dy = ev.clientY - ptr.y;
+    ptr.moved = Math.max(ptr.moved, Math.hypot(dx, dy));
+    if (ptr.moved > 5) {
+      var scale = svg.viewBox.baseVal.width / Math.max(1, svg.getBoundingClientRect().width);
+      cam.x = ptr.camX + dx * scale;
+      cam.y = ptr.camY + dy * scale;
+      applyCam();
+    }
+  });
+
+  function endPtr(ev) {
+    if (pinch && (ev.pointerId === pinch.id1 || ev.pointerId === pinch.id2)) {
+      pinch = null;
+      ptr.down = false;
+      return;
+    }
+    if (!ptr.down || ev.pointerId !== ptr.id) return;
+    var moved = ptr.moved;
+    var onId = ptr.onId;
+    ptr.down = false;
+    if (moved <= 6 && onId) {
+      var n = byId[onId];
+      if (n) onNodeActivate(n);
+    }
+  }
+  stage.addEventListener("pointerup", endPtr);
+  stage.addEventListener("pointercancel", endPtr);
+
+  stage.addEventListener("pointermove", function (ev) {
+    if (!pinch) return;
+    if (ev.pointerId !== pinch.id1 && ev.pointerId !== pinch.id2) return;
+    /* keep pinch mid/distance from this + stored pointer */
+  });
+
+  var pinchPts = {};
+  stage.addEventListener("pointerdown", function (ev) {
+    pinchPts[ev.pointerId] = { x: ev.clientX, y: ev.clientY };
+  }, true);
+  stage.addEventListener("pointermove", function (ev) {
+    if (pinchPts[ev.pointerId]) pinchPts[ev.pointerId] = { x: ev.clientX, y: ev.clientY };
+    var ids = Object.keys(pinchPts);
+    if (ids.length >= 2) {
+      var p1 = pinchPts[ids[0]], p2 = pinchPts[ids[1]];
+      var d = Math.hypot(p1.x - p2.x, p1.y - p2.y) || 1;
+      if (!pinch) {
+        pinch = { d: d, k: cam.k, mx: (p1.x + p2.x) / 2, my: (p1.y + p2.y) / 2 };
+      } else {
+        zoomAt(pinch.mx, pinch.my, (d / pinch.d) / (cam.k / pinch.k) * (d / pinch.d) ? (d / pinch.d) * (pinch.k / cam.k) : 1);
+        /* simpler: set scale from original */
+        var factor = d / pinch.d;
+        var target = Math.max(0.35, Math.min(3.6, pinch.k * factor));
+        var view = clientToView(pinch.mx, pinch.my);
+        var wx = (view.x - cam.x) / cam.k;
+        var wy = (view.y - cam.y) / cam.k;
+        cam.k = target;
+        cam.x = view.x - wx * cam.k;
+        cam.y = view.y - wy * cam.k;
+        applyCam();
+      }
+    }
+  }, true);
+  function dropPinchPt(ev) {
+    delete pinchPts[ev.pointerId];
+    if (Object.keys(pinchPts).length < 2) pinch = null;
+  }
+  stage.addEventListener("pointerup", dropPinchPt, true);
+  stage.addEventListener("pointercancel", dropPinchPt, true);
+
+  stage.addEventListener("wheel", function (ev) {
+    ev.preventDefault();
+    var factor = ev.deltaY < 0 ? 1.09 : 0.91;
+    zoomAt(ev.clientX, ev.clientY, factor);
+  }, { passive: false });
+
+  document.addEventListener("keydown", function (ev) {
+    if (ev.key === "Escape") {
+      if (document.activeElement === searchInp) {
+        searchInp.blur();
+        hideHits();
+        return;
+      }
+      goBack();
+    }
+    if (ev.key === "/" && document.activeElement !== searchInp && !(ev.ctrlKey || ev.metaKey || ev.altKey)) {
+      ev.preventDefault();
+      if (searchInp) searchInp.focus();
+    }
+  });
+
+  function zoomFromCenter(factor) {
+    var r = svg.getBoundingClientRect();
+    zoomAt(r.left + r.width / 2, r.top + r.height / 2, factor);
+  }
+  var zoomInBtn = document.getElementById("mm-zoom-in");
+  var zoomOutBtn = document.getElementById("mm-zoom-out");
+  var fitBtn = document.getElementById("mm-fit");
+  if (zoomInBtn) zoomInBtn.addEventListener("click", function () { zoomFromCenter(1.25); });
+  if (zoomOutBtn) zoomOutBtn.addEventListener("click", function () { zoomFromCenter(1 / 1.25); });
+  if (fitBtn) fitBtn.addEventListener("click", function () {
+    if (positions) setCam(camFor(positions));
+    else resetCam();
+  });
+  if (backBtn) backBtn.addEventListener("click", goBack);
+  if (resetBtn) resetBtn.addEventListener("click", function () {
+    resetCam();
+    drill(TREE);
+  });
+  document.querySelectorAll(".leg-chip").forEach(function (btn) {
+    btn.addEventListener("click", function () { onLegendActivate(btn); });
+  });
+  function persistType() {
+    try { localStorage.setItem("mmTypeScale", TYPE_LEVELS[typeIdx]); } catch (e) {}
+    var down = document.getElementById("mm-type-down");
+    var up = document.getElementById("mm-type-up");
+    if (down) down.disabled = typeIdx <= 0;
+    if (up) up.disabled = typeIdx >= TYPE_LEVELS.length - 1;
+  }
+  var typeDown = document.getElementById("mm-type-down");
+  var typeUp = document.getElementById("mm-type-up");
+  if (typeDown) typeDown.addEventListener("click", function () {
+    if (typeIdx > 0) { typeIdx -= 1; persistType(); renderNow(); }
+  });
+  if (typeUp) typeUp.addEventListener("click", function () {
+    if (typeIdx < TYPE_LEVELS.length - 1) { typeIdx += 1; persistType(); renderNow(); }
+  });
+  persistType();
+  var sizing = false;
+  function relayout() {
+    if (sizing) return;
+    sizing = true;
+    var oldW = W, oldH = H;
+    sizeStage();
+    if (oldW !== W || oldH !== H) renderNow();
+    sizing = false;
+  }
+  window.addEventListener("resize", relayout);
+  function openFromHash(raw, immediate) {
+    var n = nodeFromPath(decodeURIComponent((raw || "").replace(/^#/, "")));
+    if (!n || n.id === "root") {
+      if (immediate) return n || TREE;
+      drill(TREE);
+      return TREE;
+    }
+    if (n.children && n.children.length) {
+      if (immediate) return n;
+      if (n.id !== focus.id) drill(n);
+      return n;
+    }
+    var parent = n.parent || TREE;
+    pulseId = n.id;
+    if (immediate) return parent;
+    if (focus.id !== parent.id) drill(parent);
+    setTimeout(function () { pulseId = n.id; paint(positions); }, 450);
+    return parent;
+  }
+  window.addEventListener("hashchange", function () {
+    openFromHash(location.hash, false);
+  });
+  if (labelToggle) {
+    labelToggle.checked = showAllLabels;
+    labelToggle.addEventListener("change", function () {
+      showAllLabels = !!labelToggle.checked;
+      transitionTo(focus, true);
+    });
+  }
+
+  var allNodes = [];
+  walk(TREE, function (n) { allNodes.push(n); });
+
+  function hideHits() {
+    if (searchHits) searchHits.style.display = "none";
+  }
+  function jumpTo(n) {
+    hideHits();
+    pulseId = n.id;
+    if (n.children && n.children.length) {
+      drill(n);
+    } else if (n.parent) {
+      transitionTo(n.parent);
+    } else {
+      drill(TREE);
+    }
+    setTimeout(function () {
+      pulseId = n.id;
+      paint(positions);
+    }, 450);
+  }
+
+  function renderHits(q) {
+    if (!searchHits) return;
+    q = String(q || "").trim().toLowerCase();
+    searchHits.innerHTML = "";
+    if (!q) { hideHits(); return; }
+    var hits = allNodes.filter(function (n) {
+      return (n.label || "").toLowerCase().indexOf(q) !== -1 ||
+             (n.icon || "").indexOf(q) !== -1;
+    }).slice(0, 12);
+    if (!hits.length) { hideHits(); return; }
+    hits.forEach(function (n) {
+      var b = document.createElement("button");
+      b.type = "button";
+      var trail = crumbs(n).map(function (x) {
+        return x.id === "root" ? "Universal Provisioning" : x.label;
+      }).join(" › ");
+      b.textContent = (n.icon ? n.icon + " " : "") + trail;
+      b.addEventListener("click", function () { jumpTo(n); });
+      searchHits.appendChild(b);
+    });
+    searchHits.style.display = "block";
+  }
+
+  if (searchInp) {
+    searchInp.addEventListener("input", function () { renderHits(searchInp.value); });
+    searchInp.addEventListener("focus", function () { renderHits(searchInp.value); });
+    searchInp.addEventListener("keydown", function (ev) {
+      if (ev.key === "Enter") {
+        ev.preventDefault();
+        var q = searchInp.value.trim().toLowerCase();
+        var hit = allNodes.find(function (n) {
+          return (n.label || "").toLowerCase() === q;
+        }) || allNodes.find(function (n) {
+          return (n.label || "").toLowerCase().indexOf(q) !== -1;
+        });
+        if (hit) jumpTo(hit);
+      }
+    });
+    document.addEventListener("click", function (ev) {
+      if (!ev.target.closest(".mm-search-wrap")) hideHits();
+    });
+  }
+
+  var start = TREE;
+  var hashPulse = null;
+  if (location.hash && location.hash.length > 1) {
+    var hashed = nodeFromPath(decodeURIComponent(location.hash.slice(1)));
+    if (hashed && hashed.children && hashed.children.length) {
+      start = hashed;
+    } else if (hashed && hashed.parent) {
+      start = hashed.parent;
+      hashPulse = hashed.id;
+    } else if (hashed) {
+      start = hashed;
+    }
+  }
+  focus = start;
+  sizeStage();
+  resetCam();
+  renderNow();
+  setTimeout(relayout, 80);
+  setTimeout(relayout, 400);
+  if (hashPulse) {
+    pulseId = hashPulse;
+    setTimeout(function () { pulseId = hashPulse; paint(positions); }, 80);
+  }
+})();
+</script></main><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc){const pt=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Melbourne",hour:"2-digit",minute:"2-digit",hour12:false,hourCycle:"h23",timeZoneName:"short"}).formatToParts(new Date(d.updated_utc));const g=t=>(pt.find(x=>x.type===t)||{}).value||"";const tz=(g("timeZoneName")||"AEDT").replace("GMT+11","AEDT").replace("GMT+10","AEST");e.textContent=" (data as of "+g("hour")+":"+g("minute")+" "+tz+")"}})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script><!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:8px 0 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:6px;margin:0;padding:8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
+nav.site.im a.mi{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:auto;min-height:44px;min-width:0;padding:8px 10px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a)}
+nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:visible;text-overflow:unset;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.25;text-align:left}
+nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:22px;height:22px;padding:0 5px;border-radius:999px;font-size:16px;font-weight:800;line-height:1;background:#0f172a;color:#fff}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc;color:#0f172a}
+nav.site.im a.mi.on .im-seq{background:#fff;color:#1d4ed8}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px;flex:none}#sg-link,#tt-btn,#mm-link{height:36px;border-radius:18px}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["ARR Model","/netbox-yaml-model/arr/","🧪"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"],["Pod Policy Group","/aci-policy/pod-policy-group/","🕒"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["AI FineTune Pod","/ai-finetune-pod/","🎛️",[["AI FineTune Pod","/ai-finetune-pod/","🎛️"],["Plan","/ai-finetune-pod/plan/","📋"],["Checklist","/ai-finetune-pod/checklist/","✅"],["Showcase","/ai-finetune-pod/showcase/","🏆"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["MCP Servers","/mcp-servers/","🔌",[["MCP Servers","/mcp-servers/","🔌"],["MCP for ACI","/mcp-servers/aci/","🟦"],["MCP for Nexus Dashboard","/mcp-servers/nexus-dashboard/","🟩"],["MCP for DNA","/mcp-servers/dna/","🟧"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"],["Notebooks","/roadmap/notebooks/","📓"],["RAG documents","/roadmap/rag-documents/","📚"],["Foundation-Sec-8B","/roadmap/foundation-sec-8b/","🛡️"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["SpaceX Tracking","/spacex-tracking/","🚀",[["Overview","/spacex-tracking/","🚀"],["Ships","/spacex-tracking/ships/","🛸"],["Boosters","/spacex-tracking/boosters/","🔥"],["Launch & landing sites","/spacex-tracking/sites/","📍"],["Previous Starships analysis","/spacex-tracking/boosters/previous/","📊"],["Raptor production","/spacex-tracking/raptor/","⚙️"],["SpaceX control center","/spacex-tracking/control-center/","🛰️"],["Launch sequence","/spacex-tracking/launch-sequence/","⏱️"],["Launch preparation","/spacex-tracking/launch-preparation/","🛠️"],["Launch monitoring","/spacex-tracking/launch-monitoring/","📡"]]],["CyberCab","/cybercab/","🚕",[["CyberCab","/cybercab/","🚕"],["Production","/cybercab/production/","🏭"],["Taxi Fleet","/cybercab/taxi-fleet/","🚖"],["City Info","/cybercab/city-info/","🏙️"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"],["ACI GUI Forms","/visitors/aci-gui-forms/","📝"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=(seq?String(seq)+'. ':'')+e[0];if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks ›';r2.appendChild(t);
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1))});r2.appendChild(pills);n.appendChild(r2)}}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+</body></html>
