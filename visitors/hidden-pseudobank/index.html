@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- site-hidden-page: no menu, noindex, skip inject -->
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PseudoBank — Core Banking API (hidden review)</title>
+<meta name="description" content="Hidden review of the PseudoBank Core Banking API demo. Not linked from the public site.">
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --ok:#166534;
+  --ok-bg:#dcfce7;
+  --hi:#991b1b;
+  --hi-bg:#fee2e2;
+  --md:#9a3412;
+  --md-bg:#ffedd5;
+  --lo:#854d0e;
+  --lo-bg:#fef9c3;
+  --inf:#1e40af;
+  --inf-bg:#dbeafe;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0; --muted:#94a3b8; --line:#334155; --bg:#0f172a; --card:#1e293b;
+    --code:#020617; --code-fg:#e2e8f0; --link:#93c5fd; --th-bg:#163056; --chip:#334155;
+    --btn-bg:#1e293b; --btn-fg:#e2e8f0; --btn-bd:#475569;
+    --ok:#86efac; --ok-bg:#14532d; --hi:#fecaca; --hi-bg:#7f1d1d;
+    --md:#fdba74; --md-bg:#7c2d12; --lo:#fde68a; --lo-bg:#713f12;
+    --inf:#93c5fd; --inf-bg:#1e3a8a;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0; --muted:#94a3b8; --line:#334155; --bg:#0f172a; --card:#1e293b;
+  --code:#020617; --code-fg:#e2e8f0; --link:#93c5fd; --th-bg:#163056; --chip:#334155;
+  --btn-bg:#1e293b; --btn-fg:#e2e8f0; --btn-bd:#475569;
+  --ok:#86efac; --ok-bg:#14532d; --hi:#fecaca; --hi-bg:#7f1d1d;
+  --md:#fdba74; --md-bg:#7c2d12; --lo:#fde68a; --lo-bg:#713f12;
+  --inf:#93c5fd; --inf-bg:#1e3a8a;
+}
+html{overflow-x:hidden}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin:0 auto !important;
+  padding:20px var(--site-content-pad) 48px !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+  background:var(--bg);
+  color:var(--ink);
+  font:16px/1.55 system-ui,Segoe UI,Roboto,Arial,sans-serif;
+}
+h1{font-size:1.7rem;line-height:1.25;margin:0 0 8px}
+h2{font-size:1.25rem;margin:28px 0 10px}
+h3{font-size:1.05rem;margin:18px 0 8px}
+p{margin:0 0 12px}
+p.tight{margin:8px 0 0}
+.muted{color:var(--muted)}
+.hidden-banner{
+  display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;
+  background:var(--inf-bg);color:var(--inf);
+  border:1px solid var(--line);border-radius:10px;
+  padding:10px 14px;margin:0 0 18px;font-size:14px;
+}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:14px}
+button.theme{
+  background:var(--btn-bg);color:var(--btn-fg);border:1px solid var(--btn-bd);
+  border-radius:8px;padding:6px 12px;cursor:pointer;font-weight:600;
+}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:12px 0 18px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:12px 14px;min-width:0;
+}
+.card .n{font-size:1.6rem;font-weight:700}
+.card .l{color:var(--muted);font-size:13px}
+.scroll{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:520px;background:var(--card);font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--th-bg);position:sticky;top:0;cursor:pointer;user-select:none;white-space:nowrap}
+th.sort-asc::after{content:" ▲";font-size:10px}
+th.sort-desc::after{content:" ▼";font-size:10px}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+code{background:var(--chip);padding:1px 5px;border-radius:4px;font-size:0.9em;word-break:break-all}
+pre{
+  background:var(--code);color:var(--code-fg);border-radius:10px;
+  padding:12px 14px;overflow-x:auto;max-width:100%;
+  font-size:13px;line-height:1.45;margin:0 0 14px;
+}
+ul,ol{margin:0 0 12px;padding-left:1.3em}
+li{margin:0 0 6px}
+.sev{display:inline-block;border-radius:999px;padding:1px 8px;font-size:12px;font-weight:700}
+.sev-h{background:var(--hi-bg);color:var(--hi)}
+.sev-m{background:var(--md-bg);color:var(--md)}
+.sev-l{background:var(--lo-bg);color:var(--lo)}
+.sev-i{background:var(--inf-bg);color:var(--inf)}
+.pass{background:var(--ok-bg);color:var(--ok);border-radius:999px;padding:1px 8px;font-weight:700;font-size:12px}
+.toc a{color:var(--link);margin-right:12px;display:inline-block;margin-bottom:4px}
+footer{margin-top:32px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:12px}
+@media (max-width:390px){
+  body{padding-left:12px !important;padding-right:12px !important}
+  h1{font-size:1.4rem}
+  table{font-size:13px;min-width:480px}
+}
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="hidden-banner" role="note">
+    <strong>Hidden page.</strong>
+    <span>noindex, nofollow. Not in the site menu and not linked from Visitors or any other public page. Path: <code>/visitors/hidden-pseudobank/</code></span>
+  </div>
+  <button type="button" class="theme" id="theme-toggle" aria-label="Toggle colour theme">Theme</button>
+</div>
+<header>
+  <h1>PseudoBank — Core Banking API</h1>
+  <p class="muted">Hidden review of the uploaded demo microservice (Flask + gunicorn on OpenShift). Generated 2026-11-12 00:51 UTC. Source: the PseudoBank zip unpacked under <code>src/pseudobank/</code>. Review is of that tree only; the running OpenShift app was not called. No secrets are shown. Maintainer email in the Dockerfile is masked.</p>
+</header>
+
+<nav class="toc" aria-label="On this page">
+  <a href="#overview">Overview</a>
+  <a href="#architecture">Architecture</a>
+  <a href="#api">API</a>
+  <a href="#model">Data model</a>
+  <a href="#accounts">Demo accounts</a>
+  <a href="#errors">Error mapping</a>
+  <a href="#tests">Test results</a>
+  <a href="#findings">Findings</a>
+  <a href="#fixes">Recommended fixes</a>
+  <a href="#files">Files</a>
+  <a href="#snippets">Snippets</a>
+</nav>
+
+<div class="cards">
+  <div class="card"><div class="n">4</div><div class="l">High findings</div></div>
+  <div class="card"><div class="n">3</div><div class="l">Medium findings</div></div>
+  <div class="card"><div class="n">6</div><div class="l">Low findings</div></div>
+  <div class="card"><div class="n">3</div><div class="l">Info notes</div></div>
+  <div class="card"><div class="n">14</div><div class="l">pytest passed</div></div>
+  <div class="card"><div class="n">0</div><div class="l">ruff issues</div></div>
+</div>
+
+<h2 id="overview">Overview</h2>
+<div class="card">
+<p>PseudoBank is a small retail-banking HTTP API used as a reference workload for CI/CD and GitOps on Red Hat OpenShift. The README describes it as internal demonstration material, not for production use. The image path in the Deployment points at the OpenShift namespace <code>sng669995</code>, which matches the AI Pod / OpenShift demo project.</p>
+<p>The HTTP layer is Flask 3.0.3 behind gunicorn 22.0.0 (two sync workers). Domain logic lives in an in-memory <code>Ledger</code> that uses <code>decimal.Decimal</code>, enforces an overdraft floor, and writes a journal. Seed data is four fictitious sterling accounts. The OpenShift set is a Deployment (two replicas), a Service, and a Route with edge TLS and HTTP-to-HTTPS redirect.</p>
+<p>The code is generally tidy for a demo: money is not stored as float, overdraft is honoured, and ledger exceptions are mapped to HTTP status codes. The serious problems are a server-side request forgery hook, unauthenticated transfers (including a cookie-as-IBAN shortcut), and four split in-memory ledgers once the documented gunicorn worker count and Deployment replica count are combined.</p>
+</div>
+
+<h2 id="architecture">Architecture</h2>
+<div class="card scroll">
+<svg class="arch" viewBox="0 0 1120 220" width="1120" height="220" role="img" aria-labelledby="arch-title arch-desc">
+  <title id="arch-title">PseudoBank OpenShift request path</title>
+  <desc id="arch-desc">TLS Route to Service to a Deployment with two replicas, each running gunicorn with two workers, each worker holding its own Flask app and in-memory Ledger.</desc>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#2563eb"/>
+    </marker>
+  </defs>
+  <rect x="8" y="70" width="150" height="70" rx="10" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="83" y="100" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">Route</text>
+  <text x="83" y="118" text-anchor="middle" font-size="10" fill="#1e3a8a">edge TLS, redirect</text>
+  <line x1="158" y1="105" x2="198" y2="105" stroke="#2563eb" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="200" y="70" width="150" height="70" rx="10" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="275" y="100" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">Service</text>
+  <text x="275" y="118" text-anchor="middle" font-size="10" fill="#1e3a8a">port 8080</text>
+  <line x1="350" y1="105" x2="390" y2="105" stroke="#2563eb" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="392" y="44" width="210" height="122" rx="10" fill="#e0e7ff" stroke="#3730a3" stroke-width="1.5"/>
+  <text x="497" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">Deployment</text>
+  <text x="497" y="84" text-anchor="middle" font-size="10" fill="#1e3a8a">replicas: 2</text>
+  <rect x="410" y="96" width="80" height="50" rx="6" fill="#fff" stroke="#4338ca"/>
+  <text x="450" y="126" text-anchor="middle" font-size="11" fill="#0f172a">pod A</text>
+  <rect x="506" y="96" width="80" height="50" rx="6" fill="#fff" stroke="#4338ca"/>
+  <text x="546" y="126" text-anchor="middle" font-size="11" fill="#0f172a">pod B</text>
+  <line x1="602" y1="105" x2="642" y2="105" stroke="#2563eb" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="644" y="44" width="210" height="122" rx="10" fill="#fef3c7" stroke="#b45309" stroke-width="1.5"/>
+  <text x="749" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">gunicorn</text>
+  <text x="749" y="84" text-anchor="middle" font-size="10" fill="#92400e">--workers 2 (per pod)</text>
+  <rect x="662" y="96" width="80" height="50" rx="6" fill="#fff" stroke="#b45309"/>
+  <text x="702" y="126" text-anchor="middle" font-size="11" fill="#0f172a">worker 1</text>
+  <rect x="758" y="96" width="80" height="50" rx="6" fill="#fff" stroke="#b45309"/>
+  <text x="798" y="126" text-anchor="middle" font-size="11" fill="#0f172a">worker 2</text>
+  <line x1="854" y1="105" x2="894" y2="105" stroke="#2563eb" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="896" y="36" width="216" height="138" rx="10" fill="#dcfce7" stroke="#15803d" stroke-width="1.5"/>
+  <text x="1004" y="62" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">Flask app</text>
+  <text x="1004" y="80" text-anchor="middle" font-size="10" fill="#166534">app.py - per worker</text>
+  <rect x="916" y="96" width="176" height="58" rx="6" fill="#fff" stroke="#15803d"/>
+  <text x="1004" y="122" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">in-memory Ledger</text>
+  <text x="1004" y="140" text-anchor="middle" font-size="10" fill="#166534">accounts + journal</text>
+</svg>
+<p class="muted tight">Four independent ledgers in this layout: 2 replicas x 2 workers. There is no shared store.</p>
+</div>
+
+<h2 id="api">API</h2>
+<p class="muted">README paths were compared with the Flask route map from a local import of <code>app.py</code> (no network calls).</p>
+<div class='scroll'><table class='sort' id='api-tbl'><thead><tr><th data-col='0'>Method</th><th data-col='1'>Path</th><th data-col='2'>Description</th><th data-col='3'>Documented</th></tr></thead><tbody><tr><td>GET</td><td><code>/healthz</code></td><td>Liveness probe. Returns status, version, environment.</td><td>README</td></tr><tr><td>GET</td><td><code>/readyz</code></td><td>Readiness probe. Returns the in-process account count.</td><td>README</td></tr><tr><td>GET</td><td><code>/api/v1/accounts</code></td><td>List all accounts, including balances.</td><td>README</td></tr><tr><td>GET</td><td><code>/api/v1/accounts/&lt;iban&gt;</code></td><td>One account. Unknown IBAN maps to HTTP 404.</td><td>README</td></tr><tr><td>GET</td><td><code>/api/v1/accounts/&lt;iban&gt;/balance</code></td><td>Current balance and currency.</td><td>README</td></tr><tr><td>POST</td><td><code>/api/v1/transfers</code></td><td>Move funds between two accounts. No authentication.</td><td>README</td></tr><tr><td>GET</td><td><code>/api/v1/transfers</code></td><td>In-process transaction journal.</td><td>README</td></tr><tr><td>POST</td><td><code>/api/v1/webhooks/verify</code></td><td>Fetches a caller-supplied <code>callbackUrl</code> with <code>requests.get</code>. Server-side request forgery risk.</td><td><strong>Not in README</strong></td></tr><tr><td>POST</td><td><code>/api/v1/transfers/quick</code></td><td>Repeats a transfer using cookie <code>pseudobank_session</code> as the source IBAN.</td><td><strong>Not in README</strong></td></tr></tbody></table></div>
+
+<h2 id="model">Data model</h2>
+<div class='scroll'><table class='sort' id='model-tbl'><thead><tr><th data-col='0'>Type</th><th data-col='1'>Fields</th><th data-col='2'>Notes</th></tr></thead><tbody><tr><td>Account</td><td><code>iban</code>, <code>holder</code>, <code>currency</code>, <code>balance</code>, <code>overdraft_limit</code></td><td>Stored in an in-process dict keyed by IBAN. <code>as_dict()</code> emits camelCase <code>overdraftLimit</code>.</td></tr><tr><td>Transfer</td><td><code>source</code>, <code>target</code>, <code>amount</code>, <code>currency</code>, <code>reference</code>, <code>booked_at</code></td><td>Appended to an in-process journal. JSON uses <code>from</code>/<code>to</code>/<code>bookedAt</code>.</td></tr><tr><td>Ledger</td><td><code>accounts</code>, <code>journal</code></td><td>Module-level singleton created with <code>Ledger.with_demo_data()</code> at import.</td></tr><tr><td>Money</td><td><code>decimal.Decimal</code>, quantize to 0.01</td><td>Good: not float. Default rounding is ROUND_HALF_EVEN, and extra fractional digits are dropped silently.</td></tr></tbody></table></div>
+
+<h2 id="accounts">Demo accounts</h2>
+<p class="muted">Fictitious demo data from <code>Ledger.with_demo_data()</code>. These IBANs and holder names are hard-coded in the uploaded source. They are not production customer records.</p>
+<div class='scroll'><table class='sort' id='acct-tbl'><thead><tr><th data-col='0'>IBAN</th><th data-col='1'>Holder</th><th data-col='2'>Currency</th><th data-col='3'>Opening balance</th><th data-col='4'>Overdraft limit</th></tr></thead><tbody><tr><td><code>GB29PSEU60161331926819</code></td><td>R. Whitfield</td><td>GBP</td><td>4820.55</td><td>500.00</td></tr><tr><td><code>GB94PSEU60161331926820</code></td><td>Pseudoco Trading Ltd</td><td>GBP</td><td>128400.00</td><td>0.00</td></tr><tr><td><code>GB18PSEU60161331926821</code></td><td>A. Nakamura</td><td>GBP</td><td>312.40</td><td>0.00</td></tr><tr><td><code>GB55PSEU60161331926822</code></td><td>Pseudoco Payroll</td><td>GBP</td><td>76500.10</td><td>0.00</td></tr></tbody></table></div>
+
+<h2 id="errors">Error mapping</h2>
+<p>Ledger exceptions are mapped to HTTP codes in <code>app.py</code>. A local Flask test client call (no network) to <code>GET /api/v1/accounts/GB00NOPE00000000000000</code> and the matching balance path both returned <code>404</code> with <code>account_not_found</code>. The unknown-account transfer path is also covered by <code>test_unknown_account_returns_404</code>.</p>
+<div class='scroll'><table class='sort' id='err-tbl'><thead><tr><th data-col='0'>Exception / case</th><th data-col='1'>HTTP</th><th data-col='2'>JSON error</th><th data-col='3'>When</th></tr></thead><tbody><tr><td><code>AccountNotFound</code></td><td>404</td><td><code>account_not_found</code></td><td>GET account, GET balance, and transfers for an unknown IBAN. Confirmed with the Flask test client.</td></tr><tr><td><code>InsufficientFunds</code></td><td>422</td><td><code>insufficient_funds</code></td><td>Debit would go below <code>-overdraft_limit</code>.</td></tr><tr><td><code>InvalidAmount</code></td><td>400</td><td><code>invalid_amount</code></td><td>Zero, negative, or unparseable amount.</td></tr><tr><td><code>LedgerError</code> (base)</td><td>400</td><td><code>ledger_error</code></td><td>Other ledger failures, including cross-currency transfers.</td></tr><tr><td>Missing JSON fields</td><td>400</td><td><code>missing_fields</code></td><td>POST /transfers without <code>from</code>, <code>to</code> or <code>amount</code>.</td></tr></tbody></table></div>
+
+<h2 id="tests">Test results</h2>
+<div class="card">
+<p>Run on this computer on 12 Nov 2026 in a fresh virtualenv, Python 3.13.5, from the unpacked tree. Dependencies were installed from <code>requirements-dev.txt</code> (which pulls <code>requirements.txt</code>). Nothing in this run was pointed at a network service; pytest used Flask’s test client and in-process ledger objects only.</p>
+<ul>
+  <li><code>ruff check .</code> — <span class="pass">All checks passed</span> (ruff 0.5.0).</li>
+  <li><code>python -m pytest -q</code> and <code>PYTHONPATH=. pytest -q</code> — <span class="pass">14 passed</span> in about 0.2s (pytest 8.2.2). Five tests in <code>tests/test_api.py</code>, nine in <code>tests/test_ledger.py</code> (including four parametrized invalid amounts).</li>
+</ul>
+<p>The suite does not cover the undocumented webhook or quick-transfer routes, GET account/balance 404, <code>/readyz</code>, list transfers, same-account transfers, or multi-worker behaviour. API tests share the module-level ledger, so a successful POST in one test mutates balances seen by later tests in the same process.</p>
+</div>
+
+<h2 id="findings">Review findings</h2>
+<p class="muted">Click a column header to sort. Severity sorts as High, Medium, Low, then Info.</p>
+<div class='scroll'><table class='sort' id='find-tbl'><thead><tr><th data-col='0'>Severity</th><th data-col='1'>Finding</th><th data-col='2'>Why it matters</th><th data-col='3'>Recommended fix</th></tr></thead><tbody><tr><td data-sk='1'><span class='sev sev-h'>High</span></td><td data-sk='1 SSRF on &lt;code&gt;POST /api/v1/webhooks/verify&lt;/code&gt;'>SSRF on <code>POST /api/v1/webhooks/verify</code></td><td data-sk='The handler calls &lt;code&gt;requests.get(callbackUrl, timeout=5)&lt;/code&gt; on a caller-supplied URL with no scheme or host allowlist and no block of private, link-local or metadata addresses. From an OpenShift pod this can probe in-cluster services and, on some platforms, cloud metadata. This is the only use of the &lt;code&gt;requests&lt;/code&gt; import. The route is not in the README.'>The handler calls <code>requests.get(callbackUrl, timeout=5)</code> on a caller-supplied URL with no scheme or host allowlist and no block of private, link-local or metadata addresses. From an OpenShift pod this can probe in-cluster services and, on some platforms, cloud metadata. This is the only use of the <code>requests</code> import. The route is not in the README.</td><td data-sk='Remove the route, or allowlist destinations, deny private/metadata ranges, disable redirects, and do not follow user URLs from the cluster network.'>Remove the route, or allowlist destinations, deny private/metadata ranges, disable redirects, and do not follow user URLs from the cluster network.</td></tr><tr><td data-sk='2'><span class='sev sev-h'>High</span></td><td data-sk='2 No authentication on &lt;code&gt;POST /api/v1/transfers&lt;/code&gt;'>No authentication on <code>POST /api/v1/transfers</code></td><td data-sk='Anyone who can reach the OpenShift route can move funds between any seeded accounts and read balances and the journal. The README presents this as a core-banking API; the licence says it is demonstration material, but the Route still exposes it.'>Anyone who can reach the OpenShift route can move funds between any seeded accounts and read balances and the journal. The README presents this as a core-banking API; the licence says it is demonstration material, but the Route still exposes it.</td><td data-sk='Put the route on a private network, or add real authentication and authorisation (and CSRF protection) before it is reachable.'>Put the route on a private network, or add real authentication and authorisation (and CSRF protection) before it is reachable.</td></tr><tr><td data-sk='3'><span class='sev sev-h'>High</span></td><td data-sk='3 Cookie value used as the source IBAN on &lt;code&gt;/transfers/quick&lt;/code&gt;'>Cookie value used as the source IBAN on <code>/transfers/quick</code></td><td data-sk='&lt;code&gt;request.cookies.get(&quot;pseudobank_session&quot;)&lt;/code&gt; is passed straight to &lt;code&gt;ledger.transfer&lt;/code&gt; as the debit account. Setting that cookie to another holder&amp;rsquo;s IBAN debits their account. The endpoint accepts form posts and has no CSRF token, so a third-party page can drive it in a browser. Also absent from the README.'><code>request.cookies.get("pseudobank_session")</code> is passed straight to <code>ledger.transfer</code> as the debit account. Setting that cookie to another holder&rsquo;s IBAN debits their account. The endpoint accepts form posts and has no CSRF token, so a third-party page can drive it in a browser. Also absent from the README.</td><td data-sk='Do not treat a cookie as an IBAN. Require a real session or identity, bind the debit account to that identity, and add a CSRF token &amp;mdash; or delete the route.'>Do not treat a cookie as an IBAN. Require a real session or identity, bind the debit account to that identity, and add a CSRF token &mdash; or delete the route.</td></tr><tr><td data-sk='4'><span class='sev sev-h'>High</span></td><td data-sk='4 In-memory ledger with 2 gunicorn workers and 2 replicas'>In-memory ledger with 2 gunicorn workers and 2 replicas</td><td data-sk='Each worker process has its own &lt;code&gt;Ledger&lt;/code&gt; created at import. Two replicas times two workers is four independent ledgers. Balances and the journal diverge; a transfer can succeed on one worker and be invisible on the next request. &lt;code&gt;/readyz&lt;/code&gt; only reports the in-process account count.'>Each worker process has its own <code>Ledger</code> created at import. Two replicas times two workers is four independent ledgers. Balances and the journal diverge; a transfer can succeed on one worker and be invisible on the next request. <code>/readyz</code> only reports the in-process account count.</td><td data-sk='Use a shared store (for example PostgreSQL) with a transactional debit/credit, or run a single replica and a single worker if the ledger must stay in memory. Add a lock around &lt;code&gt;transfer&lt;/code&gt; inside a process.'>Use a shared store (for example PostgreSQL) with a transactional debit/credit, or run a single replica and a single worker if the ledger must stay in memory. Add a lock around <code>transfer</code> inside a process.</td></tr><tr><td data-sk='5'><span class='sev sev-m'>Med</span></td><td data-sk='5 Two routes are defined after &lt;code&gt;app.run()&lt;/code&gt;'>Two routes are defined after <code>app.run()</code></td><td data-sk='In &lt;code&gt;app.py&lt;/code&gt;, &lt;code&gt;if __name__ == &quot;__main__&quot;: app.run(...)&lt;/code&gt; sits above the webhook and quick-transfer view functions. Under &lt;code&gt;make run&lt;/code&gt; / &lt;code&gt;python app.py&lt;/code&gt; those functions are not registered until the server exits. Gunicorn imports the module and does register them. Local and production attack surface therefore differ.'>In <code>app.py</code>, <code>if __name__ == "__main__": app.run(...)</code> sits above the webhook and quick-transfer view functions. Under <code>make run</code> / <code>python app.py</code> those functions are not registered until the server exits. Gunicorn imports the module and does register them. Local and production attack surface therefore differ.</td><td data-sk='Move every route decorator above the &lt;code&gt;__main__&lt;/code&gt; block.'>Move every route decorator above the <code>__main__</code> block.</td></tr><tr><td data-sk='6'><span class='sev sev-m'>Med</span></td><td data-sk='6 &lt;code&gt;requests==2.32.3&lt;/code&gt; is affected by CVE-2024-47081'><code>requests==2.32.3</code> is affected by CVE-2024-47081</td><td data-sk='Versions before 2.32.4 can leak &lt;code&gt;.netrc&lt;/code&gt; credentials to a third party for a crafted URL. The official fix is 2.32.4. Because this app already fetches a caller-supplied URL, the CVE is more relevant here than in a typical requests user, even if a UBI image may not ship a &lt;code&gt;.netrc&lt;/code&gt;.'>Versions before 2.32.4 can leak <code>.netrc</code> credentials to a third party for a crafted URL. The official fix is 2.32.4. Because this app already fetches a caller-supplied URL, the CVE is more relevant here than in a typical requests user, even if a UBI image may not ship a <code>.netrc</code>.</td><td data-sk='Upgrade to &lt;code&gt;requests&amp;gt;=2.32.4&lt;/code&gt;, set &lt;code&gt;trust_env=False&lt;/code&gt;, and fix or remove the SSRF route.'>Upgrade to <code>requests&gt;=2.32.4</code>, set <code>trust_env=False</code>, and fix or remove the SSRF route.</td></tr><tr><td data-sk='7'><span class='sev sev-m'>Med</span></td><td data-sk='7 Unpinned &lt;code&gt;:latest&lt;/code&gt; image tags'>Unpinned <code>:latest</code> image tags</td><td data-sk='The Dockerfile is &lt;code&gt;registry.access.redhat.com/ubi9/python-311:latest&lt;/code&gt;. The Deployment pulls &lt;code&gt;image-registry.openshift-image-registry.svc:5000/sng669995/pseudobank:latest&lt;/code&gt;. Builds and rollouts are not reproducible, and a bad build can be served without a tag change.'>The Dockerfile is <code>registry.access.redhat.com/ubi9/python-311:latest</code>. The Deployment pulls <code>image-registry.openshift-image-registry.svc:5000/sng669995/pseudobank:latest</code>. Builds and rollouts are not reproducible, and a bad build can be served without a tag change.</td><td data-sk='Pin the base image to a digest (or a dated tag) and deploy an immutable app image tag or digest.'>Pin the base image to a digest (or a dated tag) and deploy an immutable app image tag or digest.</td></tr><tr><td data-sk='8'><span class='sev sev-l'>Low</span></td><td data-sk='8 &lt;code&gt;Flask==3.0.3&lt;/code&gt; is affected by CVE-2026-27205'><code>Flask==3.0.3</code> is affected by CVE-2026-27205</td><td data-sk='Flask before 3.1.3 can omit the &lt;code&gt;Vary: Cookie&lt;/code&gt; header for some session-access paths, which can let a poorly configured cache store a user-specific response. This app does not use Flask&amp;rsquo;s &lt;code&gt;session&lt;/code&gt; object, so practical risk is low. CVE-2025-47278 (fallback signing key) does not affect 3.0.3; it only affects 3.1.0.'>Flask before 3.1.3 can omit the <code>Vary: Cookie</code> header for some session-access paths, which can let a poorly configured cache store a user-specific response. This app does not use Flask&rsquo;s <code>session</code> object, so practical risk is low. CVE-2025-47278 (fallback signing key) does not affect 3.0.3; it only affects 3.1.0.</td><td data-sk='Upgrade to Flask 3.1.3 or later.'>Upgrade to Flask 3.1.3 or later.</td></tr><tr><td data-sk='9'><span class='sev sev-l'>Low</span></td><td data-sk='9 Same-account transfers are accepted'>Same-account transfers are accepted</td><td data-sk='A local check with the ledger showed &lt;code&gt;transfer(src, src, &quot;10.00&quot;)&lt;/code&gt; journals a 10.00 payment and leaves the balance unchanged. That can pad a journal or confuse a reconciliation demo.'>A local check with the ledger showed <code>transfer(src, src, "10.00")</code> journals a 10.00 payment and leaves the balance unchanged. That can pad a journal or confuse a reconciliation demo.</td><td data-sk='Reject &lt;code&gt;source == target&lt;/code&gt; with &lt;code&gt;LedgerError&lt;/code&gt; / HTTP 400.'>Reject <code>source == target</code> with <code>LedgerError</code> / HTTP 400.</td></tr><tr><td data-sk='10'><span class='sev sev-l'>Low</span></td><td data-sk='10 Amounts are silently quantized to 0.01'>Amounts are silently quantized to 0.01</td><td data-sk='&lt;code&gt;_parse&lt;/code&gt; uses &lt;code&gt;quantize(Decimal(&quot;0.01&quot;))&lt;/code&gt; with the default ROUND_HALF_EVEN. A local check showed &lt;code&gt;1.005&lt;/code&gt; becomes &lt;code&gt;1.00&lt;/code&gt; and &lt;code&gt;1.015&lt;/code&gt; becomes &lt;code&gt;1.02&lt;/code&gt;. Extra precision is not rejected.'><code>_parse</code> uses <code>quantize(Decimal("0.01"))</code> with the default ROUND_HALF_EVEN. A local check showed <code>1.005</code> becomes <code>1.00</code> and <code>1.015</code> becomes <code>1.02</code>. Extra precision is not rejected.</td><td data-sk='Reject amounts that are not already two decimal places, or document the rounding and return the booked amount clearly.'>Reject amounts that are not already two decimal places, or document the rounding and return the booked amount clearly.</td></tr><tr><td data-sk='11'><span class='sev sev-l'>Low</span></td><td data-sk='11 No IBAN format or checksum check'>No IBAN format or checksum check</td><td data-sk='Any string can be used as an account key. Fine for a four-account demo; misleading if the API is reused.'>Any string can be used as an account key. Fine for a four-account demo; misleading if the API is reused.</td><td data-sk='Validate IBAN structure, or clearly treat the values as opaque demo identifiers.'>Validate IBAN structure, or clearly treat the values as opaque demo identifiers.</td></tr><tr><td data-sk='12'><span class='sev sev-l'>Low</span></td><td data-sk='12 Test gaps, and a shared module-level ledger in the API tests'>Test gaps, and a shared module-level ledger in the API tests</td><td data-sk='The 14 tests cover health, list accounts, a happy transfer, missing fields, unknown-account transfers, overdraft, and invalid amounts. They do not cover GET account/balance 404, list transfers, &lt;code&gt;/readyz&lt;/code&gt;, the two extra routes, same-account transfers, or concurrency. API tests import the process-wide ledger, so they mutate one shared book.'>The 14 tests cover health, list accounts, a happy transfer, missing fields, unknown-account transfers, overdraft, and invalid amounts. They do not cover GET account/balance 404, list transfers, <code>/readyz</code>, the two extra routes, same-account transfers, or concurrency. API tests import the process-wide ledger, so they mutate one shared book.</td><td data-sk='Reset the ledger per test. Add tests for the undocumented routes (without making outbound HTTP calls), GET 404s, and same-account transfers. A &lt;code&gt;pytest.ini&lt;/code&gt; with &lt;code&gt;pythonpath = .&lt;/code&gt; makes collection robust.'>Reset the ledger per test. Add tests for the undocumented routes (without making outbound HTTP calls), GET 404s, and same-account transfers. A <code>pytest.ini</code> with <code>pythonpath = .</code> makes collection robust.</td></tr><tr><td data-sk='13'><span class='sev sev-l'>Low</span></td><td data-sk='13 Unbounded in-memory journal'>Unbounded in-memory journal</td><td data-sk='Every transfer is appended to a list in the worker and never trimmed. A noisy client can grow memory until the pod is evicted.'>Every transfer is appended to a list in the worker and never trimmed. A noisy client can grow memory until the pod is evicted.</td><td data-sk='Cap or persist the journal.'>Cap or persist the journal.</td></tr><tr><td data-sk='14'><span class='sev sev-i'>Info</span></td><td data-sk='14 gunicorn 22.0.0 request-smuggling status'>gunicorn 22.0.0 request-smuggling status</td><td data-sk='22.0.0 includes the official fixes for CVE-2024-1135 and CVE-2024-6827 (versions before 22.0.0). Snyk still lists 22.0.0 as affected and recommends 23.0.0; GitHub and the maintainers treat 22.0.0 as sufficient and describe CVE-2024-6827 as a duplicate. No confirmed open advisory against 22.0.0 in those official sources. Current gunicorn release at review time was 27.0.0.'>22.0.0 includes the official fixes for CVE-2024-1135 and CVE-2024-6827 (versions before 22.0.0). Snyk still lists 22.0.0 as affected and recommends 23.0.0; GitHub and the maintainers treat 22.0.0 as sufficient and describe CVE-2024-6827 as a duplicate. No confirmed open advisory against 22.0.0 in those official sources. Current gunicorn release at review time was 27.0.0.</td><td data-sk='Optional: bump to a current gunicorn release (23 or later) and keep it pinned.'>Optional: bump to a current gunicorn release (23 or later) and keep it pinned.</td></tr><tr><td data-sk='15'><span class='sev sev-i'>Info</span></td><td data-sk='15 Container and OpenShift hardening that already looks good'>Container and OpenShift hardening that already looks good</td><td data-sk='Dockerfile runs as USER 1001. The Deployment sets &lt;code&gt;allowPrivilegeEscalation: false&lt;/code&gt;, drops all capabilities, &lt;code&gt;runAsNonRoot: true&lt;/code&gt;, and &lt;code&gt;seccompProfile: RuntimeDefault&lt;/code&gt;. CPU/memory requests and limits, &lt;code&gt;/readyz&lt;/code&gt; and &lt;code&gt;/healthz&lt;/code&gt; probes, and a Route with edge TLS plus &lt;code&gt;insecureEdgeTerminationPolicy: Redirect&lt;/code&gt; are all present.'>Dockerfile runs as USER 1001. The Deployment sets <code>allowPrivilegeEscalation: false</code>, drops all capabilities, <code>runAsNonRoot: true</code>, and <code>seccompProfile: RuntimeDefault</code>. CPU/memory requests and limits, <code>/readyz</code> and <code>/healthz</code> probes, and a Route with edge TLS plus <code>insecureEdgeTerminationPolicy: Redirect</code> are all present.</td><td data-sk='Keep these controls when the image tag and ledger storage are tightened.'>Keep these controls when the image tag and ledger storage are tightened.</td></tr><tr><td data-sk='16'><span class='sev sev-i'>Info</span></td><td data-sk='16 README and .gitignore nits'>README and .gitignore nits</td><td data-sk='The README omits the webhook and quick-transfer routes. &lt;code&gt;.gitignore&lt;/code&gt; includes &lt;code&gt;.antares-data/&lt;/code&gt;, which is not referenced in the rest of this tree and looks like leftover tooling. Manifests have no namespace; they rely on the current project (the image path uses &lt;code&gt;sng669995&lt;/code&gt;).'>The README omits the webhook and quick-transfer routes. <code>.gitignore</code> includes <code>.antares-data/</code>, which is not referenced in the rest of this tree and looks like leftover tooling. Manifests have no namespace; they rely on the current project (the image path uses <code>sng669995</code>).</td><td data-sk='Document every route, or delete the extra ones. Review whether &lt;code&gt;.antares-data/&lt;/code&gt; still belongs in the ignore list.'>Document every route, or delete the extra ones. Review whether <code>.antares-data/</code> still belongs in the ignore list.</td></tr></tbody></table></div>
+
+<h2 id="fixes">Recommended fixes</h2>
+<div class="card">
+<ol>
+  <li>Remove <code>POST /api/v1/webhooks/verify</code>, or put a strict allowlist in front of any outbound fetch. Do not let the app request arbitrary URLs from inside the cluster.</li>
+  <li>Remove <code>POST /api/v1/transfers/quick</code>, or replace the cookie-as-IBAN pattern with a real authenticated session and a CSRF token.</li>
+  <li>Do not leave <code>POST /api/v1/transfers</code> open on a public Route without authentication.</li>
+  <li>Give the ledger a shared, transactional store, or run a single worker and a single replica while it stays in memory.</li>
+  <li>Move the two trailing route definitions above <code>if __name__ == "__main__"</code>.</li>
+  <li>Pin the UBI base image and the app image to a digest or a dated tag, not <code>:latest</code>.</li>
+  <li>Upgrade <code>requests</code> to 2.32.4 or later, and Flask to 3.1.3 or later. Optionally move gunicorn forward from 22.0.0 to a current pinned release.</li>
+  <li>Reject same-account transfers, and reject (or clearly round and return) amounts with more than two decimal places.</li>
+  <li>Reset the ledger per API test, add coverage for the extra routes without making outbound HTTP calls, and add a <code>pytest.ini</code> with <code>pythonpath = .</code>.</li>
+  <li>Document every route in the README, or delete the routes the README does not mention.</li>
+</ol>
+</div>
+
+<h2 id="files">File listing</h2>
+<p class="muted">486 lines across 13 files in the unpacked tree (excluding directories).</p>
+<div class='scroll'><table class='sort' id='file-tbl'><thead><tr><th data-col='0'>File</th><th data-col='1'>Lines</th><th data-col='2'>Role</th></tr></thead><tbody><tr><td data-sk='.gitignore'><code>.gitignore</code></td><td data-sk='0013'>13</td><td data-sk='Ignore rules, including &lt;code&gt;.env&lt;/code&gt; and &lt;code&gt;.antares-data/&lt;/code&gt;'>Ignore rules, including <code>.env</code> and <code>.antares-data/</code></td></tr><tr><td data-sk='Dockerfile'><code>Dockerfile</code></td><td data-sk='0022'>22</td><td data-sk='UBI9 Python 3.11 image, gunicorn, USER 1001'>UBI9 Python 3.11 image, gunicorn, USER 1001</td></tr><tr><td data-sk='Makefile'><code>Makefile</code></td><td data-sk='0025'>25</td><td data-sk='venv, test, lint, run, image, clean'>venv, test, lint, run, image, clean</td></tr><tr><td data-sk='README.md'><code>README.md</code></td><td data-sk='0045'>45</td><td data-sk='API table, local dev, branching, licence'>API table, local dev, branching, licence</td></tr><tr><td data-sk='app.py'><code>app.py</code></td><td data-sk='0107'>107</td><td data-sk='Flask HTTP layer, including two undocumented routes'>Flask HTTP layer, including two undocumented routes</td></tr><tr><td data-sk='ledger.py'><code>ledger.py</code></td><td data-sk='0115'>115</td><td data-sk='In-memory accounts, journal, overdraft and Decimal maths'>In-memory accounts, journal, overdraft and Decimal maths</td></tr><tr><td data-sk='requirements.txt'><code>requirements.txt</code></td><td data-sk='0003'>3</td><td data-sk='Flask 3.0.3, gunicorn 22.0.0, requests 2.32.3'>Flask 3.0.3, gunicorn 22.0.0, requests 2.32.3</td></tr><tr><td data-sk='requirements-dev.txt'><code>requirements-dev.txt</code></td><td data-sk='0003'>3</td><td data-sk='pytest 8.2.2, ruff 0.5.0'>pytest 8.2.2, ruff 0.5.0</td></tr><tr><td data-sk='tests/test_api.py'><code>tests/test_api.py</code></td><td data-sk='0041'>41</td><td data-sk='Five HTTP contract tests'>Five HTTP contract tests</td></tr><tr><td data-sk='tests/test_ledger.py'><code>tests/test_ledger.py</code></td><td data-sk='0045'>45</td><td data-sk='Nine ledger unit tests (parametrized amounts included)'>Nine ledger unit tests (parametrized amounts included)</td></tr><tr><td data-sk='openshift/deployment.yaml'><code>openshift/deployment.yaml</code></td><td data-sk='0039'>39</td><td data-sk='2 replicas, probes, resources, securityContext, :latest image'>2 replicas, probes, resources, securityContext, :latest image</td></tr><tr><td data-sk='openshift/service.yaml'><code>openshift/service.yaml</code></td><td data-sk='0013'>13</td><td data-sk='Service on port 8080'>Service on port 8080</td></tr><tr><td data-sk='openshift/route.yaml'><code>openshift/route.yaml</code></td><td data-sk='0015'>15</td><td data-sk='edge TLS, HTTP to HTTPS redirect'>edge TLS, HTTP to HTTPS redirect</td></tr></tbody></table></div>
+
+<h2 id="snippets">Key snippets</h2>
+<p class="muted">Short extracts from the uploaded source. The Dockerfile maintainer address is masked as <code>r•••@pseudoco.com</code>.</p>
+<h3>SSRF callback (app.py)</h3>
+<pre>@app.post(&quot;/api/v1/webhooks/verify&quot;)
+def verify_webhook():
+    &quot;&quot;&quot;Confirm a customer-supplied callback URL is reachable.&quot;&quot;&quot;
+    payload = request.get_json(silent=True) or {}
+    url = payload.get(&quot;callbackUrl&quot;, &quot;&quot;)
+    if not url:
+        return jsonify(error=&quot;missing_fields&quot;, fields=[&quot;callbackUrl&quot;]), 400
+
+    response = requests.get(url, timeout=5)
+    return jsonify(status=&quot;reachable&quot;, code=response.status_code)</pre>
+<h3>Cookie used as source IBAN (app.py)</h3>
+<pre>@app.post(&quot;/api/v1/transfers/quick&quot;)
+def quick_transfer():
+    &quot;&quot;&quot;Repeat a transfer from the customer&#x27;s dashboard form.&quot;&quot;&quot;
+    source = request.cookies.get(&quot;pseudobank_session&quot;, &quot;&quot;)
+    if not source:
+        return jsonify(error=&quot;not_authenticated&quot;), 401
+
+    target = request.form.get(&quot;to&quot;, &quot;&quot;)
+    amount = request.form.get(&quot;amount&quot;, &quot;&quot;)
+    ...
+    record = ledger.transfer(source, target, amount,
+                             request.form.get(&quot;reference&quot;, &quot;&quot;))</pre>
+<h3>Routes after app.run (app.py)</h3>
+<pre>if __name__ == &quot;__main__&quot;:
+    app.run(host=&quot;0.0.0.0&quot;, port=int(os.getenv(&quot;PORT&quot;, &quot;8080&quot;)))
+
+@app.post(&quot;/api/v1/webhooks/verify&quot;)
+def verify_webhook():
+    ...</pre>
+<h3>Ledger transfer and overdraft floor (ledger.py)</h3>
+<pre>def transfer(self, source, target, amount, reference=&quot;&quot;):
+    debit = self.get(source)
+    credit = self.get(target)
+    value = self._parse(amount)
+    if debit.currency != credit.currency:
+        raise LedgerError(&quot;cross-currency transfers are not supported&quot;)
+    floor = -debit.overdraft_limit
+    if debit.balance - value &lt; floor:
+        raise InsufficientFunds(source)
+    debit.balance -= value
+    credit.balance += value
+    ...</pre>
+<h3>Dockerfile (email masked)</h3>
+<pre>FROM registry.access.redhat.com/ubi9/python-311:latest
+
+LABEL name=&quot;pseudobank&quot; \
+      summary=&quot;PseudoBank Core Banking API&quot; \
+      maintainer=&quot;Ryan &lt;r•••@pseudoco.com&gt;&quot;
+
+...
+USER 1001
+
+CMD [&quot;gunicorn&quot;, &quot;--bind&quot;, &quot;0.0.0.0:8080&quot;, &quot;--workers&quot;, &quot;2&quot;, \
+     &quot;--access-logfile&quot;, &quot;-&quot;, &quot;app:app&quot;]</pre>
+<h3>Deployment replicas, image and securityContext</h3>
+<pre>spec:
+  replicas: 2
+  ...
+          image: image-registry.openshift-image-registry.svc:5000/sng669995/pseudobank:latest
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: { drop: [&quot;ALL&quot;] }
+            runAsNonRoot: true
+            seccompProfile: { type: RuntimeDefault }</pre>
+
+<footer>
+  Hidden review page for the PseudoBank Core Banking API upload. Generated 2026-11-12 00:51 UTC.
+  <code>noindex, nofollow</code>. Not listed in the site menu. Fictitious demo account data only.
+</footer>
+<script>
+(function(){
+  var btn=document.getElementById('theme-toggle');
+  function label(){
+    var t=document.documentElement.getAttribute('data-theme')||'light';
+    btn.textContent=t==='dark'?'Light theme':'Dark theme';
+  }
+  if(btn){
+    label();
+    btn.addEventListener('click',function(){
+      var t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',t);
+      document.documentElement.style.colorScheme=t;
+      try{localStorage.setItem('siteTheme',t)}catch(e){};
+      label();
+    });
+  }
+  function keyOf(td){
+    if(td.hasAttribute('data-sk')) return td.getAttribute('data-sk');
+    return (td.textContent||'').trim();
+  }
+  document.querySelectorAll('table.sort').forEach(function(table){
+    var heads=table.querySelectorAll('thead th');
+    heads.forEach(function(th,idx){
+      th.addEventListener('click',function(){
+        var body=table.tBodies[0];
+        var rows=[].slice.call(body.rows);
+        var cur=th.classList.contains('sort-asc')?1:-1;
+        heads.forEach(function(h){h.classList.remove('sort-asc','sort-desc')});
+        th.classList.add(cur===-1?'sort-asc':'sort-desc');
+        rows.sort(function(a,b){
+          var av=keyOf(a.cells[idx]), bv=keyOf(b.cells[idx]);
+          var an=parseFloat(av), bn=parseFloat(bv);
+          var cmp=(!isNaN(an)&&!isNaN(bn)&&av!==''&&bv!=='')?(an-bn):av.localeCompare(bv,undefined,{numeric:true,sensitivity:'base'});
+          return cmp* (cur===-1?1:-1);
+        });
+        rows.forEach(function(r){body.appendChild(r)});
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
