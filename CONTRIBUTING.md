@@ -62,3 +62,13 @@ python3 scripts/site_menu_sync.py
 ```
 
 Do **not** hand-copy `var G` from another page — that is what caused stale SpaceX Tracking badge counts.
+
+## ACI GUI Forms (Visitors)
+
+Form pages live under `visitors/aci-gui-forms/`. When a page has an APIC screenshot (`a.shot`) above a **Form replica** section, run the layout script so the screenshot and replica stay side by side:
+
+```bash
+python3 scripts/aci_gui_forms_apply_layout.py
+```
+
+Shared CSS: `visitors/aci-gui-forms/assets/forms.css`. Paths under `visitors/aci-gui-forms/` are skipped by bulk HTML publish scripts (`scripts/site_html_guards.py`).
