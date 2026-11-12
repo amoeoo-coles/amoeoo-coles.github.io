@@ -29,6 +29,7 @@ SNAPSHOT_FILES = (
     "raptor.json",
     "launch_sequence.json",
     "launch_prep.json",
+    "launch_streams.json",
     "meta.json",
 )
 

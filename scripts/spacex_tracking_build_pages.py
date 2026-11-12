@@ -241,12 +241,13 @@ CONTROL_BODY = """
 <section class="sxt-cc-panel" id="sxt-cc-fleet"></section>
 <section class="sxt-cc-panel" id="sxt-cc-pads"></section>
 <section class="sxt-cc-panel" id="sxt-cc-raptor"></section>
+<section class="sxt-cc-panel" id="sxt-cc-streams"></section>
 <section class="sxt-cc-panel sxt-cc-links" id="sxt-cc-links"></section>
 </div>
 """
 
 CONTROL_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
-<script>SpaceXTrack.initControlCenter({metaUrl:"/spacex-tracking/data/meta.json",shipsUrl:"/spacex-tracking/data/ships.json",boostersUrl:"/spacex-tracking/data/boosters.json",sitesUrl:"/spacex-tracking/data/sites.json",raptorUrl:"/spacex-tracking/data/raptor.json",previousUrl:"/spacex-tracking/data/previous_flights.json",updatedEl:document.getElementById("sxt-cc-updated")});</script>"""
+<script>SpaceXTrack.initControlCenter({metaUrl:"/spacex-tracking/data/meta.json",streamsUrl:"/spacex-tracking/data/launch_streams.json",shipsUrl:"/spacex-tracking/data/ships.json",boostersUrl:"/spacex-tracking/data/boosters.json",sitesUrl:"/spacex-tracking/data/sites.json",raptorUrl:"/spacex-tracking/data/raptor.json",previousUrl:"/spacex-tracking/data/previous_flights.json",updatedEl:document.getElementById("sxt-cc-updated")});</script>"""
 
 SEQUENCE_BODY = """
 <div class="sxt-stars" aria-hidden="true"></div>
@@ -265,7 +266,7 @@ SEQUENCE_BODY = """
 """
 
 SEQUENCE_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
-<script>SpaceXTrack.initLaunchSequence({dataUrl:"/spacex-tracking/data/launch_sequence.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
+<script>SpaceXTrack.initLaunchSequence({dataUrl:"/spacex-tracking/data/launch_sequence.json",metaUrl:"/spacex-tracking/data/meta.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
 
 PREPARATION_BODY = """
 <div class="sxt-stars" aria-hidden="true"></div>
@@ -301,6 +302,7 @@ MONITORING_BODY = """
   <p class="sxt-cc-big" id="sxt-lm-phase" style="font-size:1.5rem">—</p>
   <p class="sxt-meta" id="sxt-lm-phase-note"></p>
 </section>
+<section class="sxt-cc-panel" id="sxt-lm-streams"></section>
 <section class="sxt-cc-panel" id="sxt-lm-weather"></section>
 <section class="sxt-cc-panel" id="sxt-lm-links"></section>
 <section class="sxt-cc-panel" id="sxt-lm-results"></section>
@@ -308,7 +310,7 @@ MONITORING_BODY = """
 """
 
 MONITORING_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
-<script>SpaceXTrack.initLaunchMonitoring({metaUrl:"/spacex-tracking/data/meta.json",sequenceUrl:"/spacex-tracking/data/launch_sequence.json",previousUrl:"/spacex-tracking/data/previous_flights.json",metaEl:document.getElementById("sxt-lm-meta")});</script>"""
+<script>SpaceXTrack.initLaunchMonitoring({metaUrl:"/spacex-tracking/data/meta.json",streamsUrl:"/spacex-tracking/data/launch_streams.json",sequenceUrl:"/spacex-tracking/data/launch_sequence.json",previousUrl:"/spacex-tracking/data/previous_flights.json",metaEl:document.getElementById("sxt-lm-meta")});</script>"""
 
 
 PAGES = [
