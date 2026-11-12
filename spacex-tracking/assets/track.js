@@ -1085,7 +1085,6 @@
     var rows = [];
     if (streamsData.webcast && !isNaN(liftoffMs)) {
       var ws = liftoffMs + streamsData.webcast.offset_sec * 1000;
-      var we = liftoffMs + 8 * 3600 * 1000;
       rows.push({
         label: streamsData.webcast.label,
         provider: streamsData.webcast.provider,
@@ -1093,16 +1092,12 @@
         utc: new Date(ws).toISOString().replace(".000Z", "Z"),
         url: streamsData.webcast.url,
         start: ws,
-        end: we
+        end: ws + 8 * 3600 * 1000
       });
     }
     var list = streamsData.streams || [];
-    list.forEach(function (st, i) {
+    list.forEach(function (st) {
       var start = new Date(st.start_utc).getTime();
-      var end =
-        i < list.length - 1
-          ? new Date(list[i + 1].start_utc).getTime()
-          : start + 6 * 3600 * 1000;
       rows.push({
         label: st.label,
         provider: st.provider,
@@ -1111,8 +1106,16 @@
         utc: st.start_utc,
         url: st.url,
         start: start,
-        end: end
+        end: start + 6 * 3600 * 1000
       });
+    });
+    rows.sort(function (a, b) {
+      return a.start - b.start;
+    });
+    rows.forEach(function (r, i) {
+      if (i < rows.length - 1) {
+        r.end = rows[i + 1].start;
+      }
     });
     function rowHtml(r) {
       var now = Date.now();
