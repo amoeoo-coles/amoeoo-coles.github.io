@@ -1041,6 +1041,154 @@
     return d + "d " + h + "h " + m + "m " + s + "s";
   }
 
+  function formatHmsCountdown(ms) {
+    if (ms <= 0) return "0s";
+    var s = Math.floor(ms / 1000);
+    var h = Math.floor(s / 3600);
+    s -= h * 3600;
+    var m = Math.floor(s / 60);
+    s -= m * 60;
+    if (h) return h + "h " + m + "m " + s + "s";
+    if (m) return m + "m " + s + "s";
+    return s + "s";
+  }
+
+  function melbourneFormat(utcIso) {
+    try {
+      return new Intl.DateTimeFormat("en-AU", {
+        timeZone: "Australia/Melbourne",
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+        timeZoneName: "short"
+      }).format(new Date(utcIso));
+    } catch (e) {
+      return utcIso;
+    }
+  }
+
+  function liftoffMelbourne(liftoffUtc, offsetSec) {
+    if (!liftoffUtc) return "";
+    var t = new Date(liftoffUtc).getTime() + offsetSec * 1000;
+    return melbourneFormat(new Date(t).toISOString());
+  }
+
+  var streamTimer = null;
+
+  function paintStreamSchedule(container, streamsData, liftoffUtc) {
+    if (!container || !streamsData) return;
+    var liftoffMs = liftoffUtc ? new Date(liftoffUtc).getTime() : NaN;
+    var rows = [];
+    if (streamsData.webcast && !isNaN(liftoffMs)) {
+      var ws = liftoffMs + streamsData.webcast.offset_sec * 1000;
+      var we = liftoffMs + 8 * 3600 * 1000;
+      rows.push({
+        label: streamsData.webcast.label,
+        provider: streamsData.webcast.provider,
+        mel: streamsData.webcast.melbourne_nominal || liftoffMelbourne(liftoffUtc, streamsData.webcast.offset_sec),
+        utc: new Date(ws).toISOString().replace(".000Z", "Z"),
+        url: streamsData.webcast.url,
+        start: ws,
+        end: we
+      });
+    }
+    var list = streamsData.streams || [];
+    list.forEach(function (st, i) {
+      var start = new Date(st.start_utc).getTime();
+      var end =
+        i < list.length - 1
+          ? new Date(list[i + 1].start_utc).getTime()
+          : start + 6 * 3600 * 1000;
+      rows.push({
+        label: st.label,
+        provider: st.provider,
+        mel: st.melbourne_label,
+        cst: st.cst_label,
+        utc: st.start_utc,
+        url: st.url,
+        start: start,
+        end: end
+      });
+    });
+    function rowHtml(r) {
+      var now = Date.now();
+      var state = "ended";
+      var stateText = "Ended";
+      if (now < r.start) {
+        state = "upcoming";
+        stateText = "Starts in " + formatHmsCountdown(r.start - now);
+      } else if (now >= r.start && now < r.end) {
+        state = "live";
+        stateText = "LIVE now · ~" + formatHmsCountdown(r.end - now) + " left";
+      }
+      return (
+        '<div class="sxt-stream-row"><div><p class="sxt-stream-name"><a href="' +
+        esc(r.url) +
+        '" target="_blank" rel="noopener">' +
+        esc(r.label) +
+        "</a></p><p class=\"sxt-stream-meta\">" +
+        esc(r.provider) +
+        "<br/>Melbourne: " +
+        esc(r.mel || "") +
+        (r.cst ? "<br/>Starbase: " + esc(r.cst) : "") +
+        "<br/>UTC: " +
+        esc(r.utc) +
+        '</p></div><div class="sxt-stream-state ' +
+        state +
+        '">' +
+        esc(stateText) +
+        "</div></div>"
+      );
+    }
+    var catchHtml = "";
+    if (!isNaN(liftoffMs) && streamsData.catch_milestones) {
+      catchHtml =
+        '<div class="sxt-catch-row">' +
+        streamsData.catch_milestones
+          .map(function (c) {
+            return (
+              "<p><strong>" +
+              esc(c.label) +
+              "</strong>: " +
+              esc(liftoffMelbourne(liftoffUtc, c.offset_sec)) +
+              (c.detail ? ' <span class="sxt-dim">(' + esc(c.detail) + ")</span>" : "") +
+              "</p>"
+            );
+          })
+          .join("") +
+        "</div>";
+    }
+    var src = streamsData.schedule_source
+      ? '<p class="sxt-src">' +
+        linkSrc(streamsData.schedule_source) +
+        (streamsData.schedule_source.note
+          ? " — " + esc(streamsData.schedule_source.note)
+          : "") +
+        "</p>"
+      : "";
+    container.innerHTML =
+      "<h2>Stream schedule</h2><p class=\"sxt-dim\">Subject to change. " +
+      esc(streamsData.liftoff_note || "") +
+      '</p><div class="sxt-stream-list">' +
+      rows.map(rowHtml).join("") +
+      "</div>" +
+      catchHtml +
+      src;
+  }
+
+  function startStreamSchedule(container, streamsData, liftoffUtc) {
+    if (streamTimer) clearInterval(streamTimer);
+    function tick() {
+      paintStreamSchedule(container, streamsData, liftoffUtc);
+    }
+    tick();
+    streamTimer = setInterval(tick, 1000);
+  }
+
   function startCountdown(targetIso, el, subEl, nf) {
     if (ccTimer) {
       clearInterval(ccTimer);
@@ -1082,6 +1230,7 @@
   function initControlCenter(opts) {
     var loads = [
       loadJson(opts.metaUrl),
+      opts.streamsUrl ? loadJson(opts.streamsUrl) : Promise.resolve(null),
       loadJson(opts.shipsUrl),
       loadJson(opts.boostersUrl),
       loadJson(opts.sitesUrl),
@@ -1091,11 +1240,12 @@
     return Promise.all(loads)
       .then(function (parts) {
         var meta = parts[0];
-        var ships = parts[1].vehicles || [];
-        var boosters = parts[2].vehicles || [];
-        var sites = parts[3].sites || [];
-        var raptor = parts[4];
-        var prev = parts[5];
+        var streamsData = parts[1];
+        var ships = parts[2].vehicles || [];
+        var boosters = parts[3].vehicles || [];
+        var sites = parts[4].sites || [];
+        var raptor = parts[5];
+        var prev = parts[6];
         if (opts.updatedEl) {
           opts.updatedEl.textContent =
             "Tracker data · " + (meta.last_updated_label || melbourneLabel(meta.last_updated));
@@ -1105,6 +1255,14 @@
         var cds = document.getElementById("sxt-cc-countdown-sub");
         if (cd && nf.countdown_target_utc) {
           startCountdown(nf.countdown_target_utc, cd, cds, nf);
+        }
+        var streamsEl = document.getElementById("sxt-cc-streams");
+        if (streamsEl && streamsData) {
+          startStreamSchedule(
+            streamsEl,
+            streamsData,
+            streamsData.liftoff_window_open_utc || nf.countdown_target_utc
+          );
         }
         var nx = document.getElementById("sxt-cc-next");
         if (nx) {
@@ -1267,7 +1425,7 @@
     return [];
   }
 
-  function renderSequenceTimeline(events) {
+  function renderSequenceTimeline(events, liftoffUtc) {
     var byPhase = {};
     events.forEach(function (ev) {
       var p = ev.phase || "Other";
@@ -1282,10 +1440,15 @@
           "</h3>" +
           byPhase[phase]
             .map(function (ev) {
+              var mel = liftoffUtc
+                ? '<div class="sxt-seq-mel">' + esc(liftoffMelbourne(liftoffUtc, ev.offset_sec)) + "</div>"
+                : "";
               return (
                 '<div class="sxt-seq-event"><div class="sxt-seq-time">' +
                 esc(formatOffsetSec(ev.offset_sec)) +
-                '</div><div class="sxt-seq-label">' +
+                "</div>" +
+                mel +
+                '<div class="sxt-seq-label">' +
                 esc(ev.label) +
                 "</div></div>"
               );
@@ -1298,8 +1461,16 @@
   }
 
   function initLaunchSequence(opts) {
-    return loadJson(opts.dataUrl)
-      .then(function (data) {
+    var loads = [loadJson(opts.dataUrl)];
+    if (opts.metaUrl) loads.push(loadJson(opts.metaUrl));
+    return Promise.all(loads)
+      .then(function (parts) {
+        var data = parts[0];
+        var meta = parts[1] || {};
+        var liftoffRef =
+          data.liftoff_reference_utc ||
+          (meta.next_flight && meta.next_flight.countdown_target_utc) ||
+          null;
         if (opts.metaEl) {
           opts.metaEl.textContent = "As of " + esc(data.as_of || "unknown");
         }
@@ -1309,12 +1480,18 @@
         if (sel) {
           sel.innerHTML = flights
             .map(function (f) {
+              var tag =
+                f.status === "expected"
+                  ? " (expected)"
+                  : f.status === "scheduled"
+                  ? " (scheduled)"
+                  : "";
               return (
                 '<option value="' +
                 esc(f.id) +
                 '">' +
                 esc(f.label) +
-                (f.status === "expected" ? " (expected)" : "") +
+                tag +
                 "</option>"
               );
             })
@@ -1328,13 +1505,23 @@
           });
           if (!tl || !flight) return;
           var events = resolveSequenceFlight(data, flight);
-          var note = flight.note
-            ? '<p class="sxt-note">' + esc(flight.note) + "</p>"
+          var liftoffUtc = flight.liftoff_utc || (id === data.default_flight_id ? liftoffRef : null);
+          var refNote =
+            liftoffUtc && id.indexOf("flight-15") === 0
+              ? '<p class="sxt-seq-ref-note">Melbourne times assume liftoff at window open (' +
+                esc(melbourneFormat(liftoffUtc)) +
+                "). Shifts if liftoff slips.</p>"
+              : flight.note
+              ? '<p class="sxt-note">' + esc(flight.note) + "</p>"
+              : "";
+          var mission = flight.mission_note
+            ? '<p class="sxt-meta">' + esc(flight.mission_note) + "</p>"
             : "";
           var src = flight.source
             ? '<p class="sxt-src">Source: ' + linkSrc(flight.source) + "</p>"
             : "";
-          tl.innerHTML = note + renderSequenceTimeline(events) + src;
+          tl.innerHTML =
+            refNote + mission + renderSequenceTimeline(events, liftoffUtc) + src;
         }
         if (sel) sel.addEventListener("change", paint);
         paint();
@@ -1418,13 +1605,15 @@
   function initLaunchMonitoring(opts) {
     return Promise.all([
       loadJson(opts.metaUrl),
+      opts.streamsUrl ? loadJson(opts.streamsUrl) : Promise.resolve(null),
       loadJson(opts.sequenceUrl),
       loadJson(opts.previousUrl)
     ])
       .then(function (parts) {
         var meta = parts[0];
-        var seqData = parts[1];
-        var prev = parts[2];
+        var streamsData = parts[1];
+        var seqData = parts[2];
+        var prev = parts[3];
         if (opts.metaEl) {
           opts.metaEl.textContent =
             "Tracker · " + (meta.last_updated_label || "");
@@ -1433,11 +1622,19 @@
         var cd = document.getElementById("sxt-lm-countdown");
         var cds = document.getElementById("sxt-lm-countdown-sub");
         var flight15 = (seqData.flights || []).find(function (f) {
-          return f.id === "flight-15-expected";
+          return f.id === "flight-15" || f.id === "flight-15-expected";
         });
         var events = flight15
           ? resolveSequenceFlight(seqData, flight15)
           : resolveSequenceFlight(seqData, (seqData.flights || [])[0] || {});
+        var streamsEl = document.getElementById("sxt-lm-streams");
+        if (streamsEl && streamsData) {
+          startStreamSchedule(
+            streamsEl,
+            streamsData,
+            streamsData.liftoff_window_open_utc || nf.countdown_target_utc
+          );
+        }
         var phaseEl = document.getElementById("sxt-lm-phase");
         var phaseNote = document.getElementById("sxt-lm-phase-note");
         if (lmTimer) clearInterval(lmTimer);
@@ -1461,8 +1658,8 @@
           if (phaseNote) {
             phaseNote.textContent =
               elapsed < 0
-                ? "Before liftoff — phase from published countdown."
-                : "After liftoff — phase estimated from Flight 14 published timeline.";
+                ? "Before liftoff — phase from SpaceX Flight 15 published timeline."
+                : "After liftoff — phase from SpaceX Flight 15 timeline (long coast ~21 h).";
           }
         }
         tick();
