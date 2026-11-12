@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:auto;
+  min-height:44px;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:auto;min-height:44px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:visible;
+  text-overflow:unset;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.25;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:22px;
+  height:22px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:16px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:#1d4ed8!important;
+}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reports — Intersight Reports — amoeoo-coles</title>
+<meta name="description" content="Intersight reports for SNG-AI1 from uploaded CSV exports: KPIs, check results, relationship diagram, dataset inventory and report pages.">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg,#f8fafc);color:var(--ink,#0f172a);font:15px/1.55 system-ui,Segoe UI,Arial,sans-serif}
+main{max-width:var(--site-content-max,1200px);margin:0 auto;padding:18px 18px 64px;min-width:0}
+.tr17{color:var(--muted,#475569)!important}
+.crumb{font-size:13px;color:var(--muted,#475569);margin:0 0 12px}
+.crumb a{color:var(--link,#1d4ed8);text-decoration:none}
+h1{font-size:1.7rem;line-height:1.25;margin:0 0 8px;overflow-wrap:anywhere}
+h2{font-size:1.2rem;margin:1.6rem 0 .6rem}
+h3{font-size:1.02rem;margin:1.1rem 0 .4rem}
+.lede{font-size:1.02rem;color:var(--muted,#475569);margin:0 0 1.1rem;max-width:80ch}
+.kicker{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;color:#fff;margin:0 6px 8px 0}
+.stamp{display:inline-block;font-size:12.5px;color:var(--muted,#475569);background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:8px;padding:3px 9px;margin:0 0 12px}
+.note,.warn,.gap{border-radius:10px;padding:10px 12px;margin:12px 0;border:1px solid var(--line,#e2e8f0);background:var(--card,#fff)}
+.note{border-left:4px solid #2563eb}.warn{border-left:4px solid #d97706}.gap{border-left:4px solid #64748b}
+.badge{display:inline-block;font:700 10.5px/1.6 system-ui;letter-spacing:.03em;text-transform:uppercase;border-radius:999px;padding:0 7px;margin-right:4px;white-space:nowrap;color:#fff}
+.b-demo{background:#0e7490}.b-cvd{background:#7c3aed}.b-plan{background:#b45309}.b-none{background:#64748b}.b-now{background:#15803d}
+.kids{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));margin:8px 0 16px}
+.pbox{display:block;text-decoration:none;color:inherit;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:12px 14px;border-top:5px solid var(--c,#0e7490);transition:transform .12s,box-shadow .12s;min-width:0}
+.pbox:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,23,42,.08)}
+.pbox h3{margin:0 0 4px;font-size:1.02rem}.pbox p{margin:0;color:var(--muted,#475569);font-size:13.5px}
+.pbox .no{display:inline-block;font-size:11px;font-weight:700;color:var(--muted,#475569);margin-bottom:2px}
+.facts{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));margin:10px 0 16px}
+.fact{background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:12px;padding:10px 12px;min-width:0;border-left:4px solid var(--c,#0e7490)}
+.fact b{display:block;margin:0 0 2px}.fact p{margin:0;font-size:13.5px;color:var(--muted,#475569)}
+.tblwrap{overflow-x:auto;max-width:100%;margin:0 0 16px;border:1px solid var(--line,#e2e8f0);border-radius:10px;background:var(--card,#fff)}
+table.tree{width:100%;min-width:760px;border-collapse:collapse;font-size:13.5px}
+table.tree th,table.tree td{border-bottom:1px solid var(--line,#e2e8f0);padding:7px 9px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+table.tree th{background:var(--th-bg,#f1f5f9);font-size:12px;letter-spacing:.02em;cursor:pointer;white-space:nowrap}
+.filter{width:100%;max-width:360px;padding:7px 10px;border:1px solid var(--line,#e2e8f0);border-radius:8px;margin:0 0 10px;font:inherit;background:var(--card,#fff);color:var(--ink,#0f172a)}
+.help{font-size:13.5px;color:var(--muted,#475569);margin:-4px 0 12px}
+.svgwrap{overflow-x:auto;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:10px;margin:12px 0 20px}
+.svgwrap svg{min-width:900px;width:100%;height:auto;display:block}
+.svgwrap svg text{fill:var(--ink,#0f172a);font-family:system-ui,Arial,sans-serif}
+.svgwrap svg text.mut{fill:var(--muted,#475569)}
+.svgwrap svg .card{fill:var(--card,#fff);stroke:var(--line,#cbd5e1)}
+.svgwrap svg .arrow{stroke:var(--muted,#94a3b8)}
+cite.src{font-style:normal;font-size:12px;color:var(--muted,#475569)}
+cite.src a{color:var(--link,#1d4ed8)}
+ol.srcs{font-size:13px;padding-left:1.3rem;overflow-wrap:anywhere}ol.srcs li{margin:0 0 5px}
+.asof{font-size:11.5px;color:var(--muted,#475569);white-space:nowrap}
+.related{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
+.related a{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);text-decoration:none;color:var(--ink,#0f172a);font-size:13px}
+ol.steps{counter-reset:s;list-style:none;padding:0;margin:8px 0 16px}
+ol.steps>li{counter-increment:s;position:relative;padding:10px 12px 10px 52px;margin:0 0 10px;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:12px}
+ol.steps>li:before{content:counter(s);position:absolute;left:12px;top:10px;width:28px;height:28px;border-radius:999px;background:#0e7490;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center}
+.path{display:inline-block;font:600 12.5px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;background:var(--th-bg,#f1f5f9);border:1px solid var(--line,#e2e8f0);border-radius:6px;padding:0 6px;white-space:nowrap}
+.obj,.exp{border-radius:12px;padding:10px 12px;margin:10px 0 14px;border:1px solid var(--line,#e2e8f0);background:var(--card,#fff)}
+.obj{border-left:5px solid #0e7490}.exp{border-left:5px solid #15803d}
+.obj b,.exp b{display:block;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted,#475569);margin-bottom:2px}
+figure.shot{margin:12px 0 18px;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:12px;padding:8px}
+figure.shot img{display:block;width:100%;height:auto;border-radius:8px}
+figure.shot figcaption{font-size:12.5px;color:var(--muted,#475569);padding:6px 4px 0}
+.backlink{display:flex;width:fit-content;max-width:100%;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:#0e7490;color:#fff!important;text-decoration:none;font-weight:600;font-size:13.5px;margin:4px 0 10px}
+.pager{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:18px 0 6px}
+.pager a{flex:1 1 220px;min-width:0;text-decoration:none;color:inherit;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:12px;padding:9px 12px}
+.pager a small{display:block;color:var(--muted,#475569);font-size:12px}
+.pager a.nx{text-align:right}
+table.tree td:first-child{white-space:nowrap}table.tree td:nth-child(2){min-width:120px}table.tree .path{white-space:normal}
+ul.tight{margin:6px 0 14px;padding-left:1.2rem}ul.tight li{margin:0 0 5px}
+@media(max-width:430px){main{padding:14px 10px 56px}h1{font-size:1.4rem}.kids,.facts{grid-template-columns:1fr}.svgwrap svg{min-width:760px}ol.steps>li{padding-left:46px}.path{white-space:normal}}
+
+.kpis{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));margin:10px 0 18px}
+.kpi{display:block;text-decoration:none;color:inherit;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:12px;padding:10px 12px;border-top:4px solid var(--c,#0e7490);min-width:0}
+.kpi .n{display:block;font-size:1.6rem;font-weight:800;line-height:1.15;overflow-wrap:anywhere}
+.kpi .l{display:block;font-size:12.5px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:var(--muted,#475569)}
+.kpi .s{display:block;font-size:12.5px;color:var(--muted,#475569);margin-top:3px;overflow-wrap:anywhere}
+ul.finds{list-style:none;padding:0;margin:8px 0 16px}
+ul.finds li{background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-left:5px solid var(--c,#64748b);border-radius:10px;padding:9px 12px;margin:0 0 8px;overflow-wrap:anywhere}
+ul.finds li b.t{display:inline}ul.finds li p{margin:4px 0 0;font-size:13.5px;color:var(--muted,#475569)}
+ul.finds li .on{font-size:12px;margin-top:4px}ul.finds li .on a{color:var(--link,#1d4ed8)}
+.dl{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;border:1px solid var(--line,#e2e8f0);background:var(--card,#fff);color:var(--ink,#0f172a)!important;text-decoration:none;font-weight:600;font-size:13.5px;margin:4px 6px 10px 0}
+.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12.5px}
+table.tree td{white-space:normal}
+.pbox.soon{opacity:.75;border-style:dashed}
+.sect{margin:22px 0 6px;padding-top:6px;border-top:1px dashed var(--line,#e2e8f0)}
+</style>
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+
+<!-- site-menu v1 --><nav class="site"><a href="/">Home</a></nav>
+<main>
+<div class="tr17" style="text-align:right;font-size:13px;margin:0 0 10px"><span class="uv" style="background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></div>
+<nav class="crumb"><a href="/">Home</a> › <a href="/intersight-demo/">Intersight Demo</a> › Reports</nav>
+<div class="stamp">Last updated 12 Nov 2026 11:51 AEDT (00:51 UTC) · data: Intersight export uploaded 12 Nov 2026</div>
+<a class="backlink" href="/intersight-demo/">🔭 Intersight Demo hub ›</a>
+
+<span class="kicker" style="background:#0e7490">Reports</span>
+<h1>📑 Intersight Reports: SNG-AI1</h1>
+<p class="lede">Reports built from the Cisco Intersight CSV exports Aung uploaded on 12 Nov 2026 for organization SNG-AI1: 2 Fabric Interconnect pairs, 2 UCS X9508 chassis, UCSX-210C-M7 blades, their domain, chassis and server profiles, 4 claimed targets, a NetApp AFF-A800 with its nodes, disks and volumes, the software repository and settings, plus licenses from a read-only Intersight API pull. This is real inventory data, unlike the rest of the Intersight Demo pages, which follow the demo guide.</p>
+<div class="note">Serial numbers, target IDs and the contract number are masked to their last 4 characters (for example ****74J0), claimed-by emails are shortened (j•••@cisco.com) and the external IP is shown as 173.39.x.x, on these pages and in the CSV downloads. Management IPs are in the 198.19.x lab range and are shown as exported.</div>
+<h2>At a glance</h2>
+<div class="kpis"><a href="/intersight-demo/reports/servers/" class="kpi" style="--c:#d97706"><span class="l">Servers (blades)</span><span class="n">5</span><span class="s">4 Healthy · 1 Warning</span></a><a href="/intersight-demo/reports/chassis/" class="kpi" style="--c:#15803d"><span class="l">Chassis</span><span class="n">2</span><span class="s">2 Healthy · UCSX-9508</span></a><a href="/intersight-demo/reports/fabric-interconnects/" class="kpi" style="--c:#15803d"><span class="l">Fabric Interconnects</span><span class="n">4</span><span class="s">4 Healthy · 2 pairs</span></a><a href="/intersight-demo/reports/server-profiles/" class="kpi" style="--c:#d97706"><span class="l">Server profiles</span><span class="n">13</span><span class="s">7 assigned OK · 6 Not Assigned</span></a><a href="/intersight-demo/reports/domain-profiles/" class="kpi" style="--c:#7c3aed"><span class="l">Domain profiles</span><span class="n">2</span><span class="s">2 OK · FI-B column check</span></a><a href="/intersight-demo/reports/chassis-profiles/" class="kpi" style="--c:#15803d"><span class="l">Chassis profiles</span><span class="n">2</span><span class="s">2 OK</span></a><a href="/intersight-demo/reports/server-profiles/" class="kpi" style="--c:#15803d"><span class="l">Template sync OK</span><span class="n">15/15</span><span class="s">server + domain profiles</span></a><a href="/intersight-demo/reports/fabric-interconnects/" class="kpi" style="--c:#2563eb"><span class="l">FI ports used</span><span class="n">40/144</span><span class="s">27.8% · 104 available</span></a><a href="/intersight-demo/reports/targets/" class="kpi" style="--c:#7c3aed"><span class="l">Targets</span><span class="n">4</span><span class="s">4 Connected · 3 connector versions</span></a><a href="/intersight-demo/reports/storage/" class="kpi" style="--c:#dc2626"><span class="l">NetApp cluster</span><span class="n">Degraded</span><span class="s">AFF-A800 · 31.02 TiB · 0.90% used</span></a><a href="/intersight-demo/reports/storage/" class="kpi" style="--c:#15803d"><span class="l">NetApp nodes / disks</span><span class="n">2 / 24</span><span class="s">2 Up · 24 Present</span></a><a href="/intersight-demo/reports/software-repository/" class="kpi" style="--c:#9333ea"><span class="l">SCU images</span><span class="n">3</span><span class="s">newest 7.1(7.260200)</span></a><a href="/intersight-demo/reports/settings/" class="kpi" style="--c:#64748b"><span class="l">Tag keys / sites</span><span class="n">16 / 6</span><span class="s">1 certificate</span></a><a href="/intersight-demo/reports/licenses/" class="kpi" style="--c:#ca8a04"><span class="l">Advantage licenses</span><span class="n">168/1000</span><span class="s">5 entitlements past expiry date</span></a></div>
+<h2>Check results</h2>
+<p class="help">1 problem, 5 warnings, 5 data checks, 9 info and 6 good. Worked out from the exports only; anything the exports do not show is said so.</p>
+<ul class='finds'><li style="--c:#b91c1c"><span class="badge" style="background:#b91c1c">Problem</span> <b class="t">NetApp sng-netapp-aff-1 cluster status is Degraded</b><p>AFF-A800, NetApp ONTAP 9.16.1P4. Capacity 31.02 TiB at 0.90% used (about 0.28 TiB, calculated from the two columns). Usage is tiny, so Degraded is not about space. Check the cluster in ONTAP System Manager, Active IQ Unified Manager or Intersight alarms.</p><div class="on">Report pages: <a href="/intersight-demo/reports/storage/">NetApp Storage</a></div></li><li style="--c:#b45309"><span class="badge" style="background:#b45309">Warning</span> <b class="t">Blade sng-ai1-pod1-1-1 health is Warning</b><p>Slot 1 in chassis sng-ai1-pod1-1, model UCSX-210C-M7, management IP 198.19.223.190. Its server profile SNG-AI1-Openshift-pod1-1-1 still reports OK, so the warning is a hardware or alarm condition, not a profile problem. The export does not say why: open the server in Operate &gt; Servers and check its alarms.</p><div class="on">Report pages: <a href="/intersight-demo/reports/servers/">Servers</a> · <a href="/intersight-demo/reports/server-profiles/">Server Profiles</a></div></li><li style="--c:#b45309"><span class="badge" style="background:#b45309">Warning</span> <b class="t">Storage VM svm1 is not protected</b><p>svm1 (NFS, local tiers n01_aggregate,n02_aggregate) shows Protected = No, so there is no SnapMirror or other data protection relationship reported for it.</p><div class="on">Report pages: <a href="/intersight-demo/reports/storage/">NetApp Storage</a></div></li><li style="--c:#b45309"><span class="badge" style="background:#b45309">Warning</span> <b class="t">6 standalone worker server profiles are Not Assigned</b><p>sng-ai1-srv1-worker, sng-ai1-srv2-worker, sng-ai1-srv3-worker, sng-ai1-srv4-worker, sng-ai1-srv5-worker, sng-ai1-srv6-worker: target UCS Server (Standalone), server family UCSC2XX/4XX, template sng-ai1-worker-template, sync OK, but no Assigned Server. Last updated Jul 15,2026. The only standalone server claimed is sng-ai1-strg1 (UCSC-C240-M7SN), and the exports do not link it to these profiles. Assign or remove them.</p><div class="on">Report pages: <a href="/intersight-demo/reports/server-profiles/">Server Profiles</a> · <a href="/intersight-demo/reports/targets/">Targets</a></div></li><li style="--c:#b45309"><span class="badge" style="background:#b45309">Warning</span> <b class="t">5 license entitlements have an expiry date in the past</b><p>Advantage expired 2025-03-12 00:00:00 UTC; IWO-Premier expired 2025-06-20 00:00:00 UTC; INC-Premier-100GFixed expired 2025-04-24 00:00:00 UTC; INC-Premier-D2OpsFixed expired 2025-04-24 00:00:00 UTC; INC-Premier-10GFixed expired 2025-04-24 00:00:00 UTC. Intersight still reports them as Compliance / NotLicensed with enforce mode Authorized, so nothing is blocked today, but renew or confirm them with the account owner.</p><div class="on">Report pages: <a href="/intersight-demo/reports/licenses/">Licenses</a></div></li><li style="--c:#b45309"><span class="badge" style="background:#b45309">Warning</span> <b class="t">Negative license balance: IKS-Advantage -24</b><p>IKS-Advantage shows balance -24 with 0 purchased and state Compliance, so more is consumed than owned. Check what uses IKS (Intersight Kubernetes Service).</p><div class="on">Report pages: <a href="/intersight-demo/reports/licenses/">Licenses</a></div></li><li style="--c:#7c3aed"><span class="badge" style="background:#7c3aed">Data check</span> <b class="t">Cluster Degraded, but every node, disk and storage VM in the exports is healthy</b><p>2 of 2 nodes are Up and HA partners of each other, 24 of 24 disks are Present, and storage VM svm1 is Running. None of these exports explains the Degraded status, so the cause is elsewhere (for example a port, network interface, aggregate, cluster peer or an AIQUM event).</p><div class="on">Report pages: <a href="/intersight-demo/reports/storage/">NetApp Storage</a></div></li><li style="--c:#7c3aed"><span class="badge" style="background:#7c3aed">Data check</span> <b class="t">Domain profiles show FI-A in the Fabric Interconnect B column (2 of 2)</b><p>SNG-AI1-FI2: A = sng-ai1-pod2 FI-A, B = sng-ai1-pod2 FI-A (the FI export lists sng-ai1-pod2 FI-A and sng-ai1-pod2 FI-B for this profile); SNG-AI1-FI1: A = sng-ai1-pod1 FI-A, B = sng-ai1-pod1 FI-A (the FI export lists sng-ai1-pod1 FI-A and sng-ai1-pod1 FI-B for this profile). Reported as exported. The FI and target exports show both FI-A and FI-B on each domain, so this looks like an export quirk, but check the domain profile in Intersight.</p><div class="on">Report pages: <a href="/intersight-demo/reports/domain-profiles/">Domain Profiles</a> · <a href="/intersight-demo/reports/fabric-interconnects/">Fabric Interconnects</a></div></li><li style="--c:#7c3aed"><span class="badge" style="background:#7c3aed">Data check</span> <b class="t">pod2 blades are missing from the servers export</b><p>Chassis sng-ai1-pod2-1 is Healthy with chassis profile SNG-AI1-FI2-Chassis1, target sng-ai1-pod2 is Connected, and server profiles point at sng-ai1-pod2-1-1, sng-ai1-pod2-1-3, but the servers export lists only the 5 pod1 blades. The export was probably filtered. Export Operate &gt; Servers again with no filter to see pod2.</p><div class="on">Report pages: <a href="/intersight-demo/reports/servers/">Servers</a> · <a href="/intersight-demo/reports/chassis/">Chassis</a> · <a href="/intersight-demo/reports/server-profiles/">Server Profiles</a></div></li><li style="--c:#7c3aed"><span class="badge" style="background:#7c3aed">Data check</span> <b class="t">Device connector versions differ across the 4 targets</b><p>1.0.11-20250716125743791: 198.19.254.38; 1.0.11-20260917054012119: sng-ai1-pod2, sng-ai1-pod1; 1.0.11-20261002171755451: sng-ai1-strg1. The build stamp after 1.0.11- is a date, so the NetApp AIQUM connector (2025-07-16) is about 15 months older than the UCS ones (2026-09-17 and 2026-10-02). Intersight normally updates connectors itself; check whether AIQUM's is held back.</p><div class="on">Report pages: <a href="/intersight-demo/reports/targets/">Targets</a></div></li><li style="--c:#7c3aed"><span class="badge" style="background:#7c3aed">Data check</span> <b class="t">Tag keys differ only by case (2 pairs)</b><p>Demo / demo; Owner / owner. Intersight tag keys are case-sensitive, so these are separate keys. Pick one spelling so filters and policies match. 16 keys in total, all in use, none restricted.</p><div class="on">Report pages: <a href="/intersight-demo/reports/settings/">Tags, Sites &amp; Certificates</a></div></li><li style="--c:#2563eb"><span class="badge" style="background:#2563eb">Info</span> <b class="t">Raw disk 42.00 TiB vs reported capacity 31.02 TiB</b><p>24 × 1.75 TiB SSDNVM (X4010S172B1T9NTE) = 42.00 TiB raw. Reported capacity is 31.02 TiB, about 74% of raw. Derived, not exported: the gap is normal for RAID parity, spare disks and ONTAP root/system space. Disks per node: sng-netapp-aff-1-01 12, sng-netapp-aff-1-02 12.</p><div class="on">Report pages: <a href="/intersight-demo/reports/storage/">NetApp Storage</a></div></li><li style="--c:#2563eb"><span class="badge" style="background:#2563eb">Info</span> <b class="t">Storage performance is not reported</b><p>Latency, IOPS and throughput are -1 (shown as “not reported”) for sng-netapp-aff-1-02, sng-netapp-aff-1-01, svm1, so these exports have no performance data.</p><div class="on">Report pages: <a href="/intersight-demo/reports/storage/">NetApp Storage</a></div></li><li style="--c:#2563eb"><span class="badge" style="background:#2563eb">Info</span> <b class="t">6 volumes in svm1, all created by Trident</b><p>5 are trident_pvc_… persistent volume claims and 1 is trident_empty, which points to OpenShift/Kubernetes storage through NetApp Trident. The export also had 3 blank rows, which were dropped.</p><div class="on">Report pages: <a href="/intersight-demo/reports/storage/">NetApp Storage</a></div></li><li style="--c:#2563eb"><span class="badge" style="background:#2563eb">Info</span> <b class="t">FI port use is 40 of 144 ports (27.8%)</b><p>Each of the 4 UCS-FI-6536 uses 10 of 36 ports, with 26 available, so there is plenty of room to add chassis or uplinks.</p><div class="on">Report pages: <a href="/intersight-demo/reports/fabric-interconnects/">Fabric Interconnects</a></div></li><li style="--c:#2563eb"><span class="badge" style="background:#2563eb">Info</span> <b class="t">3 SCU images in the software repository, newest 7.1(7.260200)</b><p>7.1(7.260200), 7.1(7.260100), 7.1(6.250100), all Intersight Hosted and Completed, 3.22 GiB in total. Newest uploaded Aug 6, 2026 8:31 PM. Older images can be removed once the newest is in use.</p><div class="on">Report pages: <a href="/intersight-demo/reports/software-repository/">Software Repository</a></div></li><li style="--c:#2563eb"><span class="badge" style="background:#2563eb">Info</span> <b class="t">1 certificate: nxos, issued by nxos</b><p>Self-issued (issuer = name). The export has no usage or expiry date, so its validity cannot be checked from this file.</p><div class="on">Report pages: <a href="/intersight-demo/reports/settings/">Tags, Sites &amp; Certificates</a></div></li><li style="--c:#2563eb"><span class="badge" style="background:#2563eb">Info</span> <b class="t">6 sites defined</b><p>RTP (Morrisville), BDLK (Feltham), SNG (Singapore), SJC (San Jose), RCDN (Richardson), GPK (Reading). SNG (Singapore) matches organization SNG-AI1. Negative longitudes were exported as text with a leading apostrophe; they are shown here as normal minus numbers.</p><div class="on">Report pages: <a href="/intersight-demo/reports/settings/">Tags, Sites &amp; Certificates</a></div></li><li style="--c:#2563eb"><span class="badge" style="background:#2563eb">Info</span> <b class="t">Short chassis export is a subset of the full one; duplicate uploads removed</b><p>The short chassis export has 1 row (sng-ai1-pod1-1) and matches the full export (2 rows), so both are on the Chassis page. 31 CSV files were uploaded; 14 are exact duplicates (same content after removing the byte-order mark), leaving 17 unique datasets. See the dataset inventory on the Reports hub.</p><div class="on">Report pages: <a href="/intersight-demo/reports/chassis/">Chassis</a></div></li><li style="--c:#2563eb"><span class="badge" style="background:#2563eb">Info</span> <b class="t">INC-Premier-10GFixed is covered by substitution (net -4)</b><p>ACI Base License for 10G+ Leaf XF x1 (Substitution To Lower Tier); DCN Essential for 10G+ Leaf XF x3 (Substitution To Lower Tier).</p><div class="on">Report pages: <a href="/intersight-demo/reports/licenses/">Licenses</a></div></li><li style="--c:#15803d"><span class="badge" style="background:#15803d">Good</span> <b class="t">4 of 4 targets are Healthy and Connected</b><p>sng-ai1-pod2 (Intersight Managed Domain); sng-ai1-pod1 (Intersight Managed Domain); sng-ai1-strg1 (Standalone M7 Server); 198.19.254.38 (NetApp Active IQ Unified Manager). All are in resource group SNG-AI1 with access mode Allow Control. Claimed-by emails, target IDs and the external IP are masked.</p><div class="on">Report pages: <a href="/intersight-demo/reports/targets/">Targets</a></div></li><li style="--c:#15803d"><span class="badge" style="background:#15803d">Good</span> <b class="t">FI firmware is consistent</b><p>All 4 FIs run bundle 4.3(5.250011) with NX-OS 9.3(5)I43(5d). The server and chassis exports have no firmware column, so blade and IFM firmware cannot be checked from these files. The software repository holds only SCU images, no UCS firmware bundles.</p><div class="on">Report pages: <a href="/intersight-demo/reports/fabric-interconnects/">Fabric Interconnects</a> · <a href="/intersight-demo/reports/servers/">Servers</a> · <a href="/intersight-demo/reports/chassis/">Chassis</a> · <a href="/intersight-demo/reports/software-repository/">Software Repository</a></div></li><li style="--c:#15803d"><span class="badge" style="background:#15803d">Good</span> <b class="t">Template sync is OK on 15 of 15 profiles</b><p>All 13 server profiles and 2 domain profiles are in sync with their templates. The chassis profile export has no sync column; both chassis profiles are Status OK.</p><div class="on">Report pages: <a href="/intersight-demo/reports/server-profiles/">Server Profiles</a> · <a href="/intersight-demo/reports/domain-profiles/">Domain Profiles</a> · <a href="/intersight-demo/reports/chassis-profiles/">Chassis Profiles</a></div></li><li style="--c:#15803d"><span class="badge" style="background:#15803d">Good</span> <b class="t">Every blade in the export has a server profile</b><p>pod1-1-1 and pod1-1-3 run the OpenShift profile (template sng-ai1-pod-openshift); pod1-1-6, -7 and -8 run the control profile (template sng-ai1-control-template).</p><div class="on">Report pages: <a href="/intersight-demo/reports/servers/">Servers</a> · <a href="/intersight-demo/reports/server-profiles/">Server Profiles</a></div></li><li style="--c:#15803d"><span class="badge" style="background:#15803d">Good</span> <b class="t">Support contract Active on all 6 FIs and chassis</b><p>All use one contract number (****0144, masked). Location fields are empty in both exports.</p><div class="on">Report pages: <a href="/intersight-demo/reports/fabric-interconnects/">Fabric Interconnects</a> · <a href="/intersight-demo/reports/chassis/">Chassis</a></div></li><li style="--c:#15803d"><span class="badge" style="background:#15803d">Good</span> <b class="t">Advantage tier: 168 of 1000 licenses used</b><p>Balance 757. Default tier Advantage, highest compliant tier Advantage, registration REGISTERED.</p><div class="on">Report pages: <a href="/intersight-demo/reports/licenses/">Licenses</a></div></li></ul>
+<h2>Relationship diagram</h2>
+<p class="help">Target → domain profile → Fabric Interconnect pair → chassis profile → chassis → blades → server profile and template, plus the NetApp storage and the standalone server. Swipe or scroll sideways on a phone.</p>
+<div class='svgwrap'><svg viewBox="0 0 1200 660" role="img" aria-label="Relationship of SNG-AI1 Intersight objects: targets, domain profiles, fabric interconnect pairs, chassis profiles, chassis, blades, server profiles and templates, plus NetApp storage and the standalone server"><defs><marker id="rarr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#94a3b8"/></marker></defs><text x="14" y="26" font-size="15" font-weight="700">How the SNG-AI1 objects fit together (from the exports)</text><text class="mut" x="14" y="45" font-size="12">Click a row label or box to open its report. Border colour = status: green OK/Healthy/Up, amber Warning, red Degraded, grey Not Assigned, dashed = referenced but not in the export.</text><a href="/intersight-demo/reports/domain-profiles/"><text x="14" y="100" font-size="12.5" font-weight="700">Domain profile</text></a><a href="/intersight-demo/reports/fabric-interconnects/"><text x="14" y="180" font-size="12.5" font-weight="700">Fabric Interconnects</text></a><a href="/intersight-demo/reports/chassis-profiles/"><text x="14" y="260" font-size="12.5" font-weight="700">Chassis profile</text></a><a href="/intersight-demo/reports/chassis/"><text x="14" y="340" font-size="12.5" font-weight="700">Chassis</text></a><a href="/intersight-demo/reports/servers/"><text x="14" y="420" font-size="12.5" font-weight="700">Blades</text></a><a href="/intersight-demo/reports/server-profiles/"><text x="14" y="500" font-size="12.5" font-weight="700">Server profiles</text></a><rect x="154" y="58" width="482" height="580" rx="12" fill="#0e7490" opacity=".06"/><a href="/intersight-demo/reports/targets/"><text x="160" y="630" font-size="12" font-weight="700">target sng-ai1-pod1: Connected</text></a><a href="/intersight-demo/reports/domain-profiles/"><rect class="card" x="265.0" y="70" width="260" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="395.0" y="90" text-anchor="middle" font-size="11.5" font-weight="700">SNG-AI1-FI1</text><text class="mut" x="395.0" y="107" text-anchor="middle" font-size="10.5">template sng-ai1-pod-domain · sync OK</text></a><line class="arrow" x1="395.0" y1="116" x2="395.0" y2="148" stroke-width="1.6" marker-end="url(#rarr)"/><a href="/intersight-demo/reports/fabric-interconnects/"><rect class="card" x="240.0" y="150" width="150" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="315.0" y="170" text-anchor="middle" font-size="11.5" font-weight="700">pod1 FI-A</text><text class="mut" x="315.0" y="187" text-anchor="middle" font-size="10.5">UCS-FI-6536 · 10/36 ports</text></a><a href="/intersight-demo/reports/fabric-interconnects/"><rect class="card" x="400.0" y="150" width="150" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="475.0" y="170" text-anchor="middle" font-size="11.5" font-weight="700">pod1 FI-B</text><text class="mut" x="475.0" y="187" text-anchor="middle" font-size="10.5">UCS-FI-6536 · 10/36 ports</text></a><line class="arrow" x1="395.0" y1="196" x2="395.0" y2="228" stroke-width="1.6" marker-end="url(#rarr)"/><a href="/intersight-demo/reports/chassis-profiles/"><rect class="card" x="265.0" y="230" width="260" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="395.0" y="250" text-anchor="middle" font-size="11.5" font-weight="700">SNG-AI1-FI1-Chassis1</text><text class="mut" x="395.0" y="267" text-anchor="middle" font-size="10.5">template SNG-AI1-POD-Chassis</text></a><line class="arrow" x1="395.0" y1="276" x2="395.0" y2="308" stroke-width="1.6" marker-end="url(#rarr)"/><a href="/intersight-demo/reports/chassis/"><rect class="card" x="265.0" y="310" width="260" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="395.0" y="330" text-anchor="middle" font-size="11.5" font-weight="700">sng-ai1-pod1-1</text><text class="mut" x="395.0" y="347" text-anchor="middle" font-size="10.5">UCSX-9508 · IFM UCSX-I-9108-100G</text></a><line class="arrow" x1="395.0" y1="356" x2="395.0" y2="388" stroke-width="1.6" marker-end="url(#rarr)"/><a href="/intersight-demo/reports/servers/"><rect class="card" x="169.0" y="390" width="84" height="46" rx="9" stroke-width="2" style="stroke:#d97706"/><text x="211.0" y="410" text-anchor="middle" font-size="11.5" font-weight="700">slot 1</text><text class="mut" x="211.0" y="427" text-anchor="middle" font-size="10.5">Warning</text></a><line class="arrow" x1="211.0" y1="436" x2="211.0" y2="468" stroke-width="1.6" marker-end="url(#rarr)"/><a href="/intersight-demo/reports/server-profiles/"><rect class="card" x="169.0" y="470" width="84" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="211.0" y="490" text-anchor="middle" font-size="11.5" font-weight="700">OpenShift</text><text class="mut" x="211.0" y="507" text-anchor="middle" font-size="10.5">OK</text></a><a href="/intersight-demo/reports/servers/"><rect class="card" x="261.0" y="390" width="84" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="303.0" y="410" text-anchor="middle" font-size="11.5" font-weight="700">slot 3</text><text class="mut" x="303.0" y="427" text-anchor="middle" font-size="10.5">Healthy</text></a><line class="arrow" x1="303.0" y1="436" x2="303.0" y2="468" stroke-width="1.6" marker-end="url(#rarr)"/><a href="/intersight-demo/reports/server-profiles/"><rect class="card" x="261.0" y="470" width="84" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="303.0" y="490" text-anchor="middle" font-size="11.5" font-weight="700">OpenShift</text><text class="mut" x="303.0" y="507" text-anchor="middle" font-size="10.5">OK</text></a><a href="/intersight-demo/reports/servers/"><rect class="card" x="353.0" y="390" width="84" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="395.0" y="410" text-anchor="middle" font-size="11.5" font-weight="700">slot 6</text><text class="mut" x="395.0" y="427" text-anchor="middle" font-size="10.5">Healthy</text></a><line class="arrow" x1="395.0" y1="436" x2="395.0" y2="468" stroke-width="1.6" marker-end="url(#rarr)"/><a href="/intersight-demo/reports/server-profiles/"><rect class="card" x="353.0" y="470" width="84" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="395.0" y="490" text-anchor="middle" font-size="11.5" font-weight="700">control</text><text class="mut" x="395.0" y="507" text-anchor="middle" font-size="10.5">OK</text></a><a href="/intersight-demo/reports/servers/"><rect class="card" x="445.0" y="390" width="84" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="487.0" y="410" text-anchor="middle" font-size="11.5" font-weight="700">slot 7</text><text class="mut" x="487.0" y="427" text-anchor="middle" font-size="10.5">Healthy</text></a><line class="arrow" x1="487.0" y1="436" x2="487.0" y2="468" stroke-width="1.6" marker-end="url(#rarr)"/><a href="/intersight-demo/reports/server-profiles/"><rect class="card" x="445.0" y="470" width="84" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="487.0" y="490" text-anchor="middle" font-size="11.5" font-weight="700">control</text><text class="mut" x="487.0" y="507" text-anchor="middle" font-size="10.5">OK</text></a><a href="/intersight-demo/reports/servers/"><rect class="card" x="537.0" y="390" width="84" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="579.0" y="410" text-anchor="middle" font-size="11.5" font-weight="700">slot 8</text><text class="mut" x="579.0" y="427" text-anchor="middle" font-size="10.5">Healthy</text></a><line class="arrow" x1="579.0" y1="436" x2="579.0" y2="468" stroke-width="1.6" marker-end="url(#rarr)"/><a href="/intersight-demo/reports/server-profiles/"><rect class="card" x="537.0" y="470" width="84" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="579.0" y="490" text-anchor="middle" font-size="11.5" font-weight="700">control</text><text class="mut" x="579.0" y="507" text-anchor="middle" font-size="10.5">OK</text></a><text class="mut" x="395.0" y="536" text-anchor="middle" font-size="10.5">template sng-ai1-control-template</text><text class="mut" x="395.0" y="552" text-anchor="middle" font-size="10.5">template sng-ai1-pod-openshift</text><rect x="644" y="58" width="352" height="580" rx="12" fill="#0e7490" opacity=".06"/><a href="/intersight-demo/reports/targets/"><text x="650" y="630" font-size="12" font-weight="700">target sng-ai1-pod2: Connected</text></a><a href="/intersight-demo/reports/domain-profiles/"><rect class="card" x="690.0" y="70" width="260" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="820.0" y="90" text-anchor="middle" font-size="11.5" font-weight="700">SNG-AI1-FI2</text><text class="mut" x="820.0" y="107" text-anchor="middle" font-size="10.5">template sng-ai1-pod-domain · sync OK</text></a><line class="arrow" x1="820.0" y1="116" x2="820.0" y2="148" stroke-width="1.6" marker-end="url(#rarr)"/><a href="/intersight-demo/reports/fabric-interconnects/"><rect class="card" x="665.0" y="150" width="150" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="740.0" y="170" text-anchor="middle" font-size="11.5" font-weight="700">pod2 FI-A</text><text class="mut" x="740.0" y="187" text-anchor="middle" font-size="10.5">UCS-FI-6536 · 10/36 ports</text></a><a href="/intersight-demo/reports/fabric-interconnects/"><rect class="card" x="825.0" y="150" width="150" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="900.0" y="170" text-anchor="middle" font-size="11.5" font-weight="700">pod2 FI-B</text><text class="mut" x="900.0" y="187" text-anchor="middle" font-size="10.5">UCS-FI-6536 · 10/36 ports</text></a><line class="arrow" x1="820.0" y1="196" x2="820.0" y2="228" stroke-width="1.6" marker-end="url(#rarr)"/><a href="/intersight-demo/reports/chassis-profiles/"><rect class="card" x="690.0" y="230" width="260" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="820.0" y="250" text-anchor="middle" font-size="11.5" font-weight="700">SNG-AI1-FI2-Chassis1</text><text class="mut" x="820.0" y="267" text-anchor="middle" font-size="10.5">template SNG-AI1-POD-Chassis</text></a><line class="arrow" x1="820.0" y1="276" x2="820.0" y2="308" stroke-width="1.6" marker-end="url(#rarr)"/><a href="/intersight-demo/reports/chassis/"><rect class="card" x="690.0" y="310" width="260" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="820.0" y="330" text-anchor="middle" font-size="11.5" font-weight="700">sng-ai1-pod2-1</text><text class="mut" x="820.0" y="347" text-anchor="middle" font-size="10.5">UCSX-9508 · IFM UCSX-I-9108-100G</text></a><line class="arrow" x1="820.0" y1="356" x2="820.0" y2="388" stroke-width="1.6" marker-end="url(#rarr)"/><a href="/intersight-demo/reports/servers/"><rect class="card" x="732.0" y="390" width="84" height="46" rx="9" stroke-width="2" style="stroke:#64748b" stroke-dasharray="5 4"/><text x="774.0" y="410" text-anchor="middle" font-size="11.5" font-weight="700">slot 1</text><text class="mut" x="774.0" y="427" text-anchor="middle" font-size="10.5">not in export</text></a><line class="arrow" x1="774.0" y1="436" x2="774.0" y2="468" stroke-width="1.6" marker-end="url(#rarr)"/><a href="/intersight-demo/reports/server-profiles/"><rect class="card" x="732.0" y="470" width="84" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="774.0" y="490" text-anchor="middle" font-size="11.5" font-weight="700">OpenShift</text><text class="mut" x="774.0" y="507" text-anchor="middle" font-size="10.5">OK</text></a><a href="/intersight-demo/reports/servers/"><rect class="card" x="824.0" y="390" width="84" height="46" rx="9" stroke-width="2" style="stroke:#64748b" stroke-dasharray="5 4"/><text x="866.0" y="410" text-anchor="middle" font-size="11.5" font-weight="700">slot 3</text><text class="mut" x="866.0" y="427" text-anchor="middle" font-size="10.5">not in export</text></a><line class="arrow" x1="866.0" y1="436" x2="866.0" y2="468" stroke-width="1.6" marker-end="url(#rarr)"/><a href="/intersight-demo/reports/server-profiles/"><rect class="card" x="824.0" y="470" width="84" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="866.0" y="490" text-anchor="middle" font-size="11.5" font-weight="700">OpenShift</text><text class="mut" x="866.0" y="507" text-anchor="middle" font-size="10.5">OK</text></a><text class="mut" x="820.0" y="536" text-anchor="middle" font-size="10.5">template sng-ai1-pod-openshift</text><rect x="1006" y="58" width="192" height="580" rx="12" fill="#64748b" opacity=".07"/><text x="1012" y="630" font-size="12" font-weight="700">Outside the pods</text><a href="/intersight-demo/reports/storage/"><rect class="card" x="1012" y="70" width="180" height="46" rx="9" stroke-width="2" style="stroke:#dc2626"/><text x="1102.0" y="90" text-anchor="middle" font-size="11.5" font-weight="700">sng-netapp-aff-1</text><text class="mut" x="1102.0" y="107" text-anchor="middle" font-size="10.5">AFF-A800 · Degraded</text></a><a href="/intersight-demo/reports/storage/"><rect class="card" x="1012" y="150" width="180" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="1102.0" y="170" text-anchor="middle" font-size="11.5" font-weight="700">2 nodes · 24 SSD</text><text class="mut" x="1102.0" y="187" text-anchor="middle" font-size="10.5">2 Up · 24 Present</text></a><line class="arrow" x1="1102.0" y1="116" x2="1102.0" y2="148" stroke-width="1.6" marker-end="url(#rarr)"/><a href="/intersight-demo/reports/storage/"><rect class="card" x="1012" y="230" width="180" height="46" rx="9" stroke-width="2" style="stroke:#d97706"/><text x="1102.0" y="250" text-anchor="middle" font-size="11.5" font-weight="700">svm1 · 6 volumes</text><text class="mut" x="1102.0" y="267" text-anchor="middle" font-size="10.5">NFS · Protected No</text></a><line class="arrow" x1="1102.0" y1="196" x2="1102.0" y2="228" stroke-width="1.6" marker-end="url(#rarr)"/><text class="mut" x="1102.0" y="292" text-anchor="middle" font-size="10.5">31.02 TiB · 0.90% used</text><a href="/intersight-demo/reports/targets/"><rect class="card" x="1012" y="310" width="180" height="46" rx="9" stroke-width="2" style="stroke:#15803d"/><text x="1102.0" y="330" text-anchor="middle" font-size="11.5" font-weight="700">sng-ai1-strg1</text><text class="mut" x="1102.0" y="347" text-anchor="middle" font-size="10.5">UCSC-C240-M7SN · Connected</text></a><a href="/intersight-demo/reports/server-profiles/"><rect class="card" x="1012" y="390" width="180" height="46" rx="9" stroke-width="2" style="stroke:#64748b" stroke-dasharray="5 4"/><text x="1102.0" y="410" text-anchor="middle" font-size="11.5" font-weight="700">6 worker profiles</text><text class="mut" x="1102.0" y="427" text-anchor="middle" font-size="10.5">standalone · Not Assigned</text></a><text class="mut" x="1102.0" y="452" text-anchor="middle" font-size="10.5">template sng-ai1-worker-template</text><text class="mut" x="1102.0" y="468" text-anchor="middle" font-size="10.5">no server assigned</text></svg></div>
+<h2>Report pages</h2>
+<div class="kids"><a class="pbox" style="--c:#2563eb" href="/intersight-demo/reports/server-profiles/"><span class="no">🧾 Report</span><h3>Server Profiles</h3><p>13 UCS server profiles: 7 FI-attached and assigned, 6 standalone C-series worker profiles not assigned.</p></a><a class="pbox" style="--c:#0e7490" href="/intersight-demo/reports/domain-profiles/"><span class="no">🌐 Report</span><h3>Domain Profiles</h3><p>2 UCS domain profiles, one per Fabric Interconnect pair, both from the sng-ai1-pod-domain template.</p></a><a class="pbox" style="--c:#7c3aed" href="/intersight-demo/reports/chassis-profiles/"><span class="no">🧩 Report</span><h3>Chassis Profiles</h3><p>2 UCS chassis profiles from the SNG-AI1-POD-Chassis template, one per chassis.</p></a><a class="pbox" style="--c:#15803d" href="/intersight-demo/reports/servers/"><span class="no">🖥️ Report</span><h3>Servers</h3><p>5 UCSX-210C-M7 blades in chassis sng-ai1-pod1-1; one shows Health Warning.</p></a><a class="pbox" style="--c:#b45309" href="/intersight-demo/reports/chassis/"><span class="no">🗄️ Report</span><h3>Chassis</h3><p>2 UCSX-9508 chassis (pod1-1 and pod2-1) with 9108-100G fabric modules, both healthy.</p></a><a class="pbox" style="--c:#be185d" href="/intersight-demo/reports/fabric-interconnects/"><span class="no">🔀 Report</span><h3>Fabric Interconnects</h3><p>4 UCS-FI-6536 Fabric Interconnects in 2 pairs, same firmware bundle, 10 of 36 ports used on each.</p></a><a class="pbox" style="--c:#475569" href="/intersight-demo/reports/storage/"><span class="no">💾 Report</span><h3>NetApp Storage</h3><p>NetApp AFF-A800 on ONTAP 9.16.1P4: cluster (Degraded), 2 nodes, 24 NVMe SSDs, storage VM svm1 and its Trident volumes.</p></a><a class="pbox" style="--c:#0369a1" href="/intersight-demo/reports/targets/"><span class="no">🎯 Report</span><h3>Targets</h3><p>4 claimed targets: 2 Intersight Managed Domains, 1 standalone C240 M7 server and NetApp Active IQ Unified Manager, all Connected.</p></a><a class="pbox" style="--c:#9333ea" href="/intersight-demo/reports/software-repository/"><span class="no">📦 Report</span><h3>Software Repository</h3><p>3 Cisco Server Configuration Utility (SCU) images hosted in Intersight.</p></a><a class="pbox" style="--c:#64748b" href="/intersight-demo/reports/settings/"><span class="no">🏷️ Report</span><h3>Tags, Sites &amp; Certificates</h3><p>16 tag keys, 6 Cisco sites with coordinates, and 1 certificate.</p></a><a class="pbox" style="--c:#ca8a04" href="/intersight-demo/reports/licenses/"><span class="no">🔑 Report</span><h3>Licenses</h3><p>Intersight license tiers for account dCloud-DC-Practice from a read-only API pull: Advantage 168 of 1000 used, expired dates, substitutions.</p></a></div>
+<h2>Dataset inventory</h2>
+<p class='help'>31 CSV files uploaded. Compared by content (MD5 after removing the byte-order mark): 17 unique export datasets, 14 duplicates ignored, plus the licenses API pull.</p><input class="filter" type="search" placeholder="Filter this table…" aria-label="Filter table" oninput="isFilter(this.value, document.getElementById('rp-inventory'))"><div class="tblwrap"><table class="tree" id="rp-inventory"><thead><tr><th onclick="isSort(document.getElementById('rp-inventory'),0)">#</th><th onclick="isSort(document.getElementById('rp-inventory'),1)">Dataset</th><th onclick="isSort(document.getElementById('rp-inventory'),2)">Report page</th><th onclick="isSort(document.getElementById('rp-inventory'),3)">Files (short hash)</th><th onclick="isSort(document.getElementById('rp-inventory'),4)">Files</th><th onclick="isSort(document.getElementById('rp-inventory'),5)">Duplicates</th><th onclick="isSort(document.getElementById('rp-inventory'),6)">Rows</th><th onclick="isSort(document.getElementById('rp-inventory'),7)">Columns shown</th></tr></thead><tbody><tr><td data-k="1">1</td><td>Server Profiles</td><td><a href="/intersight-demo/reports/server-profiles/">Server Profiles</a></td><td><span class='mono'>5769f1…, 66d5f6…, 691ec4…, c283db…</span></td><td data-k="4">4</td><td data-k="3">3</td><td data-k="13">13</td><td data-k="9">9</td></tr><tr><td data-k="2">2</td><td>Domain Profiles</td><td><a href="/intersight-demo/reports/domain-profiles/">Domain Profiles</a></td><td><span class='mono'>05f74a…, 6cb4bf…, df1c04…, ffd090…</span></td><td data-k="4">4</td><td data-k="3">3</td><td data-k="2">2</td><td data-k="8">8</td></tr><tr><td data-k="3">3</td><td>Chassis Profiles</td><td><a href="/intersight-demo/reports/chassis-profiles/">Chassis Profiles</a></td><td><span class='mono'>0f24e1…, 6d250e…, 806354…, 91a982…</span></td><td data-k="4">4</td><td data-k="3">3</td><td data-k="2">2</td><td data-k="6">6</td></tr><tr><td data-k="4">4</td><td>Servers</td><td><a href="/intersight-demo/reports/servers/">Servers</a></td><td><span class='mono'>145160…, 69e5d3…</span></td><td data-k="2">2</td><td data-k="1">1</td><td data-k="5">5</td><td data-k="10">10</td></tr><tr><td data-k="5">5</td><td>Chassis</td><td><a href="/intersight-demo/reports/chassis/">Chassis</a></td><td><span class='mono'>259286…, 678cd0…</span></td><td data-k="2">2</td><td data-k="1">1</td><td data-k="2">2</td><td data-k="13">13</td></tr><tr><td data-k="6">6</td><td>Chassis (short export)</td><td><a href="/intersight-demo/reports/chassis/">Chassis</a></td><td><span class='mono'>1a7c64…, 277bc6…</span></td><td data-k="2">2</td><td data-k="1">1</td><td data-k="1">1</td><td data-k="8">8</td></tr><tr><td data-k="7">7</td><td>Fabric Interconnects</td><td><a href="/intersight-demo/reports/fabric-interconnects/">Fabric Interconnects</a></td><td><span class='mono'>ae8b16…, d8ed91…</span></td><td data-k="2">2</td><td data-k="1">1</td><td data-k="4">4</td><td data-k="16">16</td></tr><tr><td data-k="8">8</td><td>NetApp cluster</td><td><a href="/intersight-demo/reports/storage/">NetApp Storage</a></td><td><span class='mono'>c624f2…, efda96…</span></td><td data-k="2">2</td><td data-k="1">1</td><td data-k="1">1</td><td data-k="8">8</td></tr><tr><td data-k="9">9</td><td>NetApp nodes</td><td><a href="/intersight-demo/reports/storage/">NetApp Storage</a></td><td><span class='mono'>fbecc7…</span></td><td data-k="1">1</td><td data-k="0">0</td><td data-k="2">2</td><td data-k="9">9</td></tr><tr><td data-k="10">10</td><td>NetApp disks</td><td><a href="/intersight-demo/reports/storage/">NetApp Storage</a></td><td><span class='mono'>26ebea…</span></td><td data-k="1">1</td><td data-k="0">0</td><td data-k="24">24</td><td data-k="7">7</td></tr><tr><td data-k="11">11</td><td>NetApp storage VMs</td><td><a href="/intersight-demo/reports/storage/">NetApp Storage</a></td><td><span class='mono'>7b3277…</span></td><td data-k="1">1</td><td data-k="0">0</td><td data-k="1">1</td><td data-k="10">10</td></tr><tr><td data-k="12">12</td><td>NetApp volumes</td><td><a href="/intersight-demo/reports/storage/">NetApp Storage</a></td><td><span class='mono'>a090e0…</span></td><td data-k="1">1</td><td data-k="0">0</td><td data-k="6">6 (+3 blank dropped)</td><td data-k="2">2</td></tr><tr><td data-k="13">13</td><td>Targets</td><td><a href="/intersight-demo/reports/targets/">Targets</a></td><td><span class='mono'>eea3c4…</span></td><td data-k="1">1</td><td data-k="0">0</td><td data-k="4">4</td><td data-k="15">15</td></tr><tr><td data-k="14">14</td><td>Software Repository</td><td><a href="/intersight-demo/reports/software-repository/">Software Repository</a></td><td><span class='mono'>fc78b4…</span></td><td data-k="1">1</td><td data-k="0">0</td><td data-k="3">3</td><td data-k="8">8</td></tr><tr><td data-k="15">15</td><td>Tags</td><td><a href="/intersight-demo/reports/settings/">Tags, Sites &amp; Certificates</a></td><td><span class='mono'>5546d0…</span></td><td data-k="1">1</td><td data-k="0">0</td><td data-k="16">16</td><td data-k="5">5</td></tr><tr><td data-k="16">16</td><td>Sites</td><td><a href="/intersight-demo/reports/settings/">Tags, Sites &amp; Certificates</a></td><td><span class='mono'>b3235c…</span></td><td data-k="1">1</td><td data-k="0">0</td><td data-k="6">6</td><td data-k="9">9</td></tr><tr><td data-k="17">17</td><td>Certificates</td><td><a href="/intersight-demo/reports/settings/">Tags, Sites &amp; Certificates</a></td><td><span class='mono'>a48456…</span></td><td data-k="1">1</td><td data-k="0">0</td><td data-k="1">1</td><td data-k="2">2</td></tr><tr><td data-k="18">18</td><td>Licenses (API pull)</td><td><a href="/intersight-demo/reports/licenses/">Licenses</a></td><td><span class='mono'>licenses.csv</span></td><td data-k="1">1</td><td data-k="0">0</td><td data-k="17">17</td><td data-k="17">17</td></tr></tbody></table></div>
+<h2 id='sources'>Source</h2><p class='help'>Source: Intersight export uploaded by Aung 12 Nov 2026 (export times as shown; the export files carry no export timestamp, so the Last Update values are the newest dates in them). Organization SNG-AI1. Values of “'-” are treated as empty. Serial numbers, target IDs and the contract number are masked to their last 4 characters (for example ****74J0), claimed-by emails are shortened (j•••@cisco.com) and the external IP is shown as 173.39.x.x, on these pages and in the CSV downloads. Management IPs are in the 198.19.x lab range and are shown as exported.</p><ol class='srcs'><li><b>Server Profiles</b>: file <span class='mono'>691ec40696f7….csv</span> (3 identical duplicates ignored), 13 rows, 12 columns (3 empty); Last Update values Jul 15, 2026 11:09 AM to Oct 31, 2026 7:44 PM. Intersight view: <span class="path">Configure &gt; Profiles &gt; UCS Server Profiles</span>.</li><li><b>Domain Profiles</b>: file <span class='mono'>6cb4bfb158d0….csv</span> (3 identical duplicates ignored), 2 rows, 10 columns (2 empty); Last Update values Oct 31, 2026 7:44 PM. Intersight view: <span class="path">Configure &gt; Profiles &gt; UCS Domain Profiles</span>.</li><li><b>Chassis Profiles</b>: file <span class='mono'>0f24e164ed54….csv</span> (3 identical duplicates ignored), 2 rows, 7 columns (1 empty); Last Update values Oct 31, 2026 7:44 PM. Intersight view: <span class="path">Configure &gt; Profiles &gt; UCS Chassis Profiles</span>.</li><li><b>Servers</b>: file <span class='mono'>69e5d303e7ec….csv</span> (1 identical duplicate ignored), 5 rows, 11 columns (1 empty). Intersight view: <span class="path">Operate &gt; Servers</span>.</li><li><b>Chassis</b>: file <span class='mono'>678cd0de6ae4….csv</span> (1 identical duplicate ignored), 2 rows, 20 columns (7 empty). Intersight view: <span class="path">Operate &gt; Chassis</span>.</li><li><b>Chassis (short export)</b>: file <span class='mono'>277bc646ef18….csv</span> (1 identical duplicate ignored), 1 rows, 9 columns (1 empty). Intersight view: <span class="path">Operate &gt; Chassis (fewer columns)</span>.</li><li><b>Fabric Interconnects</b>: file <span class='mono'>d8ed9128770e….csv</span> (1 identical duplicate ignored), 4 rows, 21 columns (5 empty). Intersight view: <span class="path">Operate &gt; Fabric Interconnects</span>.</li><li><b>NetApp cluster</b>: file <span class='mono'>c624f277d7a0….csv</span> (1 identical duplicate ignored), 1 rows, 10 columns (2 empty). Intersight view: <span class="path">Operate &gt; Storage</span>.</li><li><b>NetApp nodes</b>: file <span class='mono'>fbecc74b96cb….csv</span>, 2 rows, 9 columns (0 empty). Intersight view: <span class="path">Storage cluster &gt; Nodes</span>.</li><li><b>NetApp disks</b>: file <span class='mono'>26ebea9a4829….csv</span>, 24 rows, 7 columns (0 empty). Intersight view: <span class="path">Storage cluster &gt; Disks</span>.</li><li><b>NetApp storage VMs</b>: file <span class='mono'>7b3277ec2d60….csv</span>, 1 rows, 10 columns (0 empty). Intersight view: <span class="path">Storage cluster &gt; Storage VMs</span>.</li><li><b>NetApp volumes</b>: file <span class='mono'>a090e0e6fd8a….csv</span>, 6 rows, 3 blank rows dropped, 2 columns (0 empty). Intersight view: <span class="path">Storage cluster &gt; Volumes</span>.</li><li><b>Targets</b>: file <span class='mono'>eea3c4e2e9f2….csv</span>, 4 rows, 15 columns (0 empty). Intersight view: <span class="path">Admin &gt; Targets</span>.</li><li><b>Software Repository</b>: file <span class='mono'>fc78b421f19a….csv</span>, 3 rows, 10 columns (2 empty); Last Update values Aug 6, 2026 8:31 PM to May 1, 2026 7:13 PM. Intersight view: <span class="path">Admin &gt; Software Repository</span>.</li><li><b>Tags</b>: file <span class='mono'>5546d04d63e2….csv</span>, 16 rows, 5 columns (0 empty). Intersight view: <span class="path">Settings &gt; Tags</span>.</li><li><b>Sites</b>: file <span class='mono'>b3235c9d0709….csv</span>, 6 rows, 10 columns (1 empty). Intersight view: <span class="path">Settings &gt; Locations</span>.</li><li><b>Certificates</b>: file <span class='mono'>a48456427d79….csv</span>, 1 rows, 4 columns (2 empty). Intersight view: <span class="path">Settings &gt; Certificates</span>.</li><li><b>Licenses</b>: read-only Intersight API pull (license/LicenseInfos and license/AccountLicenseData), pulled 2026-11-12 00:44:48 UTC / 2026-11-12 11:44:48 AEDT; 17 rows. Only a cleaned CSV is published. Raw API JSON, internal object IDs and the account's admin tags are not.</li></ol>
+<div class="pager"><a href="/intersight-demo/cheat-sheet/"><small>‹ Previous</small>Cheat Sheet</a><a class="nx" href="/intersight-demo/reports/server-profiles/"><small>Next ›</small>Server Profiles</a></div>
+
+</main>
+
+<script>
+function isFilter(q,t){q=(q||'').toLowerCase();t.querySelectorAll('tbody tr').forEach(function(r){r.style.display=r.textContent.toLowerCase().indexOf(q)>=0?'':'none';});}
+function isSort(t,c){var tb=t.tBodies[0],rows=[].slice.call(tb.rows),ths=t.tHead.rows[0].cells;
+var dir=t.getAttribute('data-dir')==='asc'&&t.getAttribute('data-col')==String(c)?'desc':'asc';
+function key(r){var td=r.cells[c];if(!td)return '';var k=td.getAttribute('data-k');return (k!==null?k:td.textContent).trim().toLowerCase();}
+rows.sort(function(a,b){var x=key(a),y=key(b);var nx=parseFloat(x),ny=parseFloat(y);if(!isNaN(nx)&&!isNaN(ny)&&/^[-0-9.]+$/.test(x)&&/^[-0-9.]+$/.test(y)){x=nx;y=ny;}
+if(x<y)return dir==='asc'?-1:1;if(x>y)return dir==='asc'?1:-1;return 0;});
+rows.forEach(function(r){tb.appendChild(r)});t.setAttribute('data-dir',dir);t.setAttribute('data-col',c);
+for(var i=0;i<ths.length;i++){ths[i].textContent=ths[i].textContent.replace(/ [\u25B2\u25BC]$/,'');if(i===c)ths[i].textContent+=' '+(dir==='asc'?'\u25B2':'\u25BC');}}
+</script>
+
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/+$/,"")||"/"}}</script><script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c)}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script>
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:8px 0 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:6px;margin:0;padding:8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
+nav.site.im a.mi{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:auto;min-height:44px;min-width:0;padding:8px 10px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a)}
+nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:visible;text-overflow:unset;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.25;text-align:left}
+nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:22px;height:22px;padding:0 5px;border-radius:999px;font-size:16px;font-weight:800;line-height:1;background:#0f172a;color:#fff}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc;color:#0f172a}
+nav.site.im a.mi.on .im-seq{background:#fff;color:#1d4ed8}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px;flex:none}#sg-link,#tt-btn,#mm-link{height:36px;border-radius:18px}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["ARR Model","/netbox-yaml-model/arr/","🧪"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"],["Pod Policy Group","/aci-policy/pod-policy-group/","🕒"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["AI FineTune Pod","/ai-finetune-pod/","🎛️",[["AI FineTune Pod","/ai-finetune-pod/","🎛️"],["Plan","/ai-finetune-pod/plan/","📋"],["Checklist","/ai-finetune-pod/checklist/","✅"],["Showcase","/ai-finetune-pod/showcase/","🏆"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["MCP Servers","/mcp-servers/","🔌",[["MCP Servers","/mcp-servers/","🔌"],["MCP for ACI","/mcp-servers/aci/","🟦"],["MCP for Nexus Dashboard","/mcp-servers/nexus-dashboard/","🟩"],["MCP for DNA","/mcp-servers/dna/","🟧"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["SpaceX Tracking","/spacex-tracking/","🚀",[["Overview","/spacex-tracking/","🚀"],["Ships","/spacex-tracking/ships/","🛸"],["Boosters","/spacex-tracking/boosters/","🔥"],["Launch & landing sites","/spacex-tracking/sites/","📍"],["Previous Starships analysis","/spacex-tracking/boosters/previous/","📊"],["Raptor production","/spacex-tracking/raptor/","⚙️"],["SpaceX control center","/spacex-tracking/control-center/","🛰️"],["Launch sequence","/spacex-tracking/launch-sequence/","⏱️"],["Launch preparation","/spacex-tracking/launch-preparation/","🛠️"],["Launch monitoring","/spacex-tracking/launch-monitoring/","📡"]]],["CyberCab","/cybercab/","🚕",[["CyberCab","/cybercab/","🚕"],["Production","/cybercab/production/","🏭"],["Taxi Fleet","/cybercab/taxi-fleet/","🚖"],["City Info","/cybercab/city-info/","🏙️"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=(seq?String(seq)+'. ':'')+e[0];if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks ›';r2.appendChild(t);
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1))});r2.appendChild(pills);n.appendChild(r2)}}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+</body>
+</html>
