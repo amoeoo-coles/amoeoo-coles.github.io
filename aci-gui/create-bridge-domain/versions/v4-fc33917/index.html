@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:auto;
+  min-height:44px;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:auto;min-height:44px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:visible;
+  text-overflow:unset;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.25;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:22px;
+  height:22px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:16px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:#1d4ed8!important;
+}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+<meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Create Bridge Domain — amoeoo-coles</title>
+<style>
+:root{--ink:#0f172a;--muted:#475569;--line:#e2e8f0;--bg:#f8fafc;--card:#fff;--code:#0b1220}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,Segoe UI,Arial,sans-serif}
+main{max-width:var(--site-content-max,1200px);margin:0 auto;padding:18px 18px 64px}
+.tr17{color:#475569!important}
+#version-history{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line)}
+#version-history ul{padding-left:1.2rem}#version-history a{color:#1d4ed8}
+#version-history code{font-size:12.5px}
+.crumb{font-size:13px;color:var(--muted);margin:0 0 12px}
+.crumb a{color:#1d4ed8;text-decoration:none}
+.crumb a:hover{text-decoration:underline}
+h1{font-size:1.7rem;line-height:1.25;margin:0 0 8px}
+h2{font-size:1.2rem;margin:1.6rem 0 .6rem;padding-top:.2rem}
+h3{font-size:1.02rem;margin:1.15rem 0 .4rem}
+p,li{color:#1e293b}
+.lede{font-size:1.02rem;color:var(--muted);margin:0 0 1.1rem;max-width:70ch}
+.note,.warn,.example-flag{border-radius:10px;padding:10px 12px;margin:12px 0;border:1px solid var(--line);background:#fff}
+.note{border-left:4px solid #2563eb;background:#eff6ff}
+.warn{border-left:4px solid #d97706;background:#fffbeb}
+.example-flag{border-left:4px solid #dc2626;background:#fef2f2;font-size:13.5px}
+.kicker{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;color:#fff;margin:0 6px 8px 0}
+.dn{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;background:#e2e8f0;padding:1px 6px;border-radius:5px;word-break:break-all}
+.meta{display:flex;flex-wrap:wrap;gap:8px 14px;margin:8px 0 16px;font-size:13px;color:var(--muted)}
+.grid{display:grid;gap:12px}
+@media(min-width:760px){.grid.cols-2{grid-template-columns:1fr 1fr}.grid.cols-3{grid-template-columns:repeat(3,1fr)}}
+.pbox{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;box-shadow:0 1px 2px rgba(15,23,42,.04);border-top:5px solid var(--c,#2563eb);transition:transform .12s,box-shadow .12s}
+.pbox:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,23,42,.08)}
+.pbox h3{margin:0 0 4px;font-size:1.02rem}
+.pbox p{margin:0;color:var(--muted);font-size:13.5px}
+.pbox .klass{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;color:#64748b;margin-top:6px}
+.group{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:0 0 16px}
+.group h2{margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.kids{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+.codebox{position:relative;background:var(--code);color:#e2e8f0;border-radius:12px;margin:10px 0 16px;overflow:auto}
+.codebox pre{margin:0;padding:36px 14px 14px;font:12.5px/1.45 ui-monospace,Menlo,Consolas,monospace;white-space:pre}
+.codebox .copy{position:absolute;top:8px;right:8px;background:#1e293b;color:#fff;border:1px solid #334155;border-radius:8px;padding:4px 9px;font:600 11px system-ui;cursor:pointer}
+.codebox .copy:hover{background:#334155}
+.codebox .tag{position:absolute;top:8px;left:8px;font:600 10px system-ui;color:#93c5fd;letter-spacing:.04em;text-transform:uppercase}
+.related{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
+.related a{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);text-decoration:none;color:var(--ink);font-size:13px}
+.related a:hover{border-color:#94a3b8}
+.related a i{width:8px;height:8px;border-radius:50%;background:var(--c,#2563eb);display:inline-block}
+/* APIC form replica */
+.tblwrap{max-width:100%;overflow-x:auto;min-width:0}
+.apic{max-width:min(640px,100%);width:100%;box-sizing:border-box;background:#fff;border:1px solid #c5cdd8;border-radius:4px;box-shadow:0 8px 24px rgba(15,23,42,.12);margin:12px 0 18px;font:13px/1.4 Tahoma,Segoe UI,Arial,sans-serif;color:#222;overflow-x:auto}
+.apic .hd{background:linear-gradient(#3d6ba8,#2b4f86);color:#fff;padding:8px 12px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.apic .hd .x{opacity:.8}
+.apic .bd{padding:12px 14px 8px}
+.apic .sec{font-weight:700;margin:0 0 10px;color:#1e3a5f}
+.apic .row{display:grid;grid-template-columns:170px 1fr;gap:8px;align-items:center;margin:0 0 10px}
+@media(max-width:560px){.apic .row{grid-template-columns:1fr}}
+.apic label{color:#333}
+.apic .req{color:#c00}
+.apic input,.apic select,.apic .fake-input{width:100%;border:1px solid #8aa0b8;border-radius:2px;padding:4px 6px;background:#fff;font:inherit}
+.apic .fake-input{min-height:24px;color:#444;background:#f7f9fc}
+.apic .dd{border:1px solid #8aa0b8;background:#fff;margin-top:-6px;margin-bottom:10px;box-shadow:0 4px 10px rgba(0,0,0,.12)}
+.apic .dd div{padding:4px 8px}
+.apic .dd div.on{background:#1e4b8f;color:#fff}
+.apic .dd div.hint{color:#1e4b8f}
+.apic .ft{display:flex;justify-content:flex-end;gap:8px;padding:8px 12px 12px;border-top:1px solid #e5e7eb}
+.apic .btn{border-radius:3px;padding:4px 16px;font:600 13px system-ui;border:1px solid #8aa0b8;background:#f3f4f6;color:#222}
+.apic .btn.pri{background:#2b4f86;border-color:#2b4f86;color:#fff}
+.wizard{display:flex;gap:0;margin:0 0 14px;border-bottom:2px solid #dbe3ee}
+.wizard span{flex:1;text-align:center;padding:8px 4px;font-size:12px;color:#64748b;position:relative}
+.wizard span em{display:inline-block;width:20px;height:20px;border-radius:50%;background:#cbd5e1;color:#fff;font-style:normal;font-weight:700;font-size:11px;line-height:20px;margin-right:4px}
+.wizard span.on{color:#1e3a5f;font-weight:700;border-bottom:2px solid #2b4f86;margin-bottom:-2px}
+.wizard span.on em{background:#2b4f86}
+.field-help{font-size:13.5px;color:var(--muted);margin:-4px 0 12px}
+table.tree{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13.5px}
+table.tree th,table.tree td{border-bottom:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+table.tree th{background:#e2e8f0;font-size:12px;letter-spacing:.02em}
+table.tree tr:hover td{background:#f1f5f9}
+.filter{width:100%;max-width:360px;padding:7px 10px;border:1px solid #94a3b8;border-radius:8px;margin:0 0 10px;font:inherit}
+/* Policy tenant layers */
+.layers{display:flex;flex-direction:column;gap:8px;margin:12px 0 18px}
+.band{position:relative;border:2px dashed var(--c,#94a3b8);border-radius:14px;padding:12px 108px 12px 12px;background:color-mix(in srgb, var(--c) 10%, #fff)}
+.band .lab{position:absolute;right:8px;top:50%;transform:translateY(-50%);writing-mode:vertical-rl;transform:translateY(-50%) rotate(180deg);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--c);max-height:90%}
+@media(max-width:700px){.band{padding:28px 10px 10px}.band .lab{writing-mode:horizontal-tb;transform:none;top:6px;right:10px;left:10px;text-align:right}}
+.rowboxes{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-around}
+.tbox{display:inline-block;text-decoration:none;color:#0f172a;background:#fff;border:2px solid var(--c,#2563eb);border-radius:8px;padding:8px 12px;font-weight:700;font-size:13px;min-width:88px;text-align:center;box-shadow:0 1px 2px rgba(15,23,42,.06)}
+.tbox small{display:block;font-weight:500;color:var(--muted);font-size:11px}
+.col{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;min-width:140px}
+.clines{display:block;width:100%;height:28px}
+svg.contracts{width:100%;height:36px;display:block}
+
+main.wide{max-width:var(--site-content-max,1200px)}
+.treewrap{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;margin:12px 0 20px}
+.treewrap svg{min-width:1280px;width:100%;height:auto;display:block}
+.treewrap a:hover rect.box{filter:brightness(1.06);stroke-width:2.8}
+.shot{display:block;max-width:640px;margin:8px 0 16px;text-decoration:none;color:inherit}
+.shot img{width:100%;cursor:zoom-in;border:1px solid var(--line);border-radius:10px;background:#fff}
+.shot .caption{margin:6px 0 0;font-size:13px;color:var(--muted)}
+#lightbox{display:none;position:fixed;inset:0;background:rgba(15,23,42,.82);z-index:2147483001;align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
+#lightbox.on{display:flex}
+#lightbox img{max-width:96%;max-height:96%;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.4)}
+.hl{outline:2px solid #dc2626;outline-offset:2px;border-radius:3px}
+.chk{display:inline-flex;align-items:center;gap:6px;margin:2px 0}
+.chk i{width:14px;height:14px;border:1px solid #5b6b7b;border-radius:2px;background:#fff;display:inline-block;position:relative}
+.chk i.on{background:#1e4b8f;border-color:#1e4b8f}
+.chk i.on::after{content:"";position:absolute;left:3px;top:0;width:6px;height:9px;border:2px solid #fff;border-top:0;border-left:0;transform:rotate(45deg)}
+.tog{display:inline-flex;border:1px solid #2b6cb0;border-radius:999px;overflow:hidden;font-size:12px;font-weight:700}
+.tog span{padding:3px 12px;color:#2b6cb0;background:#fff}
+.tog span.on{background:#2b6cb0;color:#fff}
+.apic .row.top{align-items:start}
+.apic .muted-field{opacity:.55;pointer-events:none}
+
+
+.apic-chips{display:flex;flex-direction:column;align-items:flex-start;gap:6px;max-width:100%;overflow-x:auto}
+.apic-chip{display:inline-flex;align-items:center;gap:6px;max-width:100%}
+.dn-chip{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;background:#e2e8f0;padding:2px 8px;border-radius:6px;white-space:nowrap;text-decoration:none;color:#0f172a;display:inline-block}
+a.dn-chip:hover{background:#dbeafe;color:#1d4ed8}
+.copy-dn{flex:none;background:#fff;color:#334155;border:1px solid #cbd5e1;border-radius:6px;padding:1px 7px;font:600 11px system-ui;cursor:pointer}
+.copy-dn:hover{background:#f1f5f9}
+.apic-empty{color:#64748b}
+.gui-path{display:inline;line-height:1.7}
+.gui-path .gui-seg{white-space:nowrap}
+.gui-path .gui-sep{margin:0 .35em;color:#94a3b8}
+.meta-row{display:grid;grid-template-columns:160px 1fr;gap:8px 12px;margin:8px 0 16px;font-size:14.5px}
+.meta-row dt{color:#64748b;margin:0;padding-top:4px}
+.meta-row dd{margin:0;min-width:0}
+</style>
+<!-- aci-gui-forms-layout v1 -->
+<link rel="stylesheet" href="/aci-gui-forms/assets/forms.css"/>
+<style>
+.forms-nav{margin:8px 0 16px;padding:10px 12px;border:1px solid var(--line,#e2e8f0);border-radius:12px;background:var(--card,#fff);box-sizing:border-box;max-width:100%}
+.forms-nav .fn-label{display:block;font:700 12px/1.2 system-ui,Segoe UI,Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--muted,#475569);margin:0 0 8px}
+.forms-nav-row{display:flex;flex-wrap:wrap;gap:8px;max-width:100%}
+a.fn-pill{display:inline-flex;align-items:center;gap:2px;max-width:100%;box-sizing:border-box;padding:7px 12px;border-radius:999px;border:1px solid #94a3b8;background:#fff;color:#0f172a!important;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1.5px;font:650 13px/1.2 system-ui,Segoe UI,Arial,sans-serif;cursor:pointer}
+a.fn-pill .fn-arrow{text-decoration:none;margin-left:3px;font-weight:700}
+a.fn-pill:hover,a.fn-pill:focus{background:#eff6ff;border-color:#2563eb;color:#1d4ed8!important;outline:2px solid #2563eb;outline-offset:1px}
+a.fn-pill.on{background:#1e3a5f;border-color:#1e3a5f;color:#fff!important;text-decoration:none;outline:none}
+a.fn-pill.on .fn-arrow{display:none}
+html[data-theme="dark"] .forms-nav{background:#1e293b;border-color:#475569}
+html[data-theme="dark"] .forms-nav .fn-label{color:#94a3b8}
+html[data-theme="dark"] a.fn-pill{background:#0f172a;border-color:#64748b;color:#e2e8f0!important}
+html[data-theme="dark"] a.fn-pill:hover,html[data-theme="dark"] a.fn-pill:focus{background:#1e3a5f;border-color:#93c5fd;color:#93c5fd!important}
+html[data-theme="dark"] a.fn-pill.on{background:#93c5fd;border-color:#93c5fd;color:#0f172a!important}
+.pbox{cursor:pointer}
+.pbox:hover,.pbox:focus{border-color:#2563eb;outline:2px solid #2563eb;outline-offset:1px}
+.pbox:hover h3,.pbox:focus h3{text-decoration:underline}
+.pbox .open{margin-top:10px;font:700 13px system-ui,Segoe UI,Arial,sans-serif;color:#1d4ed8}
+html[data-theme="dark"] .pbox .open{color:#93c5fd}
+html[data-theme="dark"] .pbox:hover,html[data-theme="dark"] .pbox:focus{border-color:#93c5fd;outline-color:#93c5fd}
+.forms-toc{display:flex;flex-wrap:wrap;gap:8px 14px;margin:0 0 18px;padding:0;list-style:none;max-width:100%}
+.forms-toc a{font-weight:650}
+.form-block{margin:0 0 28px;padding-top:4px;scroll-margin-top:12px;min-width:0}
+.form-block .own{font-weight:700;margin:10px 0 0}
+
+@media (max-width:720px){body{padding-bottom:92px}.forms-nav{position:fixed;left:0;right:0;bottom:0;z-index:50;margin:0;border-radius:12px 12px 0 0;box-shadow:0 -6px 20px rgba(15,23,42,.14);max-width:100%;padding:8px 10px 10px}.forms-nav-row{flex-wrap:nowrap;overflow-x:auto;gap:6px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}a.fn-pill{white-space:nowrap;flex:0 0 auto;padding:6px 10px;font-size:12.5px}}
+
+.apic.apic-nx{max-width:100%;width:100%;box-sizing:border-box;background:#fff;border:1px solid #d1d5db;border-radius:8px;box-shadow:0 10px 28px rgba(15,23,42,.14);margin:0 0 12px;font:14px/1.4 "Segoe UI",system-ui,Arial,sans-serif;color:#111;overflow-x:auto}
+.apic.apic-nx .hd{background:#fff;color:#111;padding:12px 16px;font-weight:650;font-size:18px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center}
+.apic.apic-nx .hd .x{opacity:.85;width:26px;height:26px;border:1px solid #d1d5db;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:400}
+.apic.apic-nx .bd{padding:14px 18px 8px}
+.apic.apic-nx .ft{display:flex;justify-content:flex-end;gap:8px;padding:12px 16px 16px;border-top:0}
+.apic.apic-nx .btn{border-radius:999px;padding:6px 18px;font:600 13px system-ui;border:1px solid #8aa0b8;background:#f3f4f6;color:#222}
+.apic.apic-nx .btn.cancel{background:#111;border-color:#111;color:#fff}
+.apic.apic-nx .btn.pri{background:#1e4b8f;border-color:#1e4b8f;color:#fff}
+.apic.apic-nx .row{display:grid;grid-template-columns:minmax(110px,150px) 1fr;gap:8px;align-items:center;margin:0 0 12px}
+.apic.apic-nx .row.top{align-items:start}
+@media(max-width:560px){.apic.apic-nx .row{grid-template-columns:1fr}}
+.seg{display:inline-flex;flex-wrap:wrap;border-radius:999px;overflow:hidden;border:1px solid #cbd5e1;background:#fff;max-width:100%}
+.seg span{padding:5px 12px;font-size:13px;color:#334155;white-space:normal}
+.seg span.on{background:#1e4b8f;color:#fff}
+.encap-bar{display:flex;align-items:center;justify-content:flex-end;gap:10px;background:#d1d5db;padding:6px 10px;color:#374151}
+.encap-bar .plus{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;font-weight:700;border-radius:2px;background:#e5e7eb}
+table.encap{width:100%;border-collapse:collapse;font-size:13px;min-width:0}
+table.encap th,table.encap td{text-align:left;padding:8px;border-bottom:1px solid #e5e7eb;word-break:break-word}
+table.encap th{color:#64748b;font-weight:500;background:#f8fafc}
+.range-row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px}
+.range-row .mini{width:72px;min-width:0;flex:0 1 72px;text-align:center}
+.range-row .hint{font-size:11px;color:#94a3b8;flex-basis:100%;margin:-4px 0 0 88px}
+.dd-mini{display:inline-flex;align-items:center;border:1px solid #8aa0b8;border-radius:2px;padding:4px 8px;background:#fff}
+.apic-app-wrap .bd{padding:0}
+.apic-app{min-width:0}
+.apic-app .app-bar{background:#fff;border-bottom:1px solid #e5e7eb;padding:8px 12px}
+.apic-app .app-brand{margin:0 0 6px}
+.apic-app .tabs{display:flex;flex-wrap:wrap;gap:0;font-size:13px}
+.apic-app .tabs span{padding:6px 9px}
+.apic-app .tabs .on{border-bottom:3px solid #1e4b8f;font-weight:700;color:#1e4b8f}
+.apic-app .subnav{background:#1e3a5f;color:#e2e8f0;padding:6px 12px;font-size:13px}
+.apic-app .subnav .on{font-weight:700;color:#fff;text-decoration:underline}
+.apic-app .app-body{display:grid;grid-template-columns:minmax(0,200px) minmax(0,1fr);min-width:0}
+@media(max-width:700px){.apic-app .app-body{grid-template-columns:1fr}}
+.apic-app .tree{background:#0f3a5f;color:#e2e8f0;padding:8px;font-size:12.5px;min-width:0}
+.apic-app .tree-h{font-weight:700;margin:0 0 6px}
+.apic-app .tree-item{padding:3px 6px;word-break:break-word}
+.apic-app .tree-item.on{background:#1e4b8f}
+.apic-app .tree-item.open{font-weight:700}
+.apic-app .tree-item.sub{padding-left:16px}
+.apic-app .ctx{display:inline-block;background:#1e4b8f;color:#fff;padding:2px 8px;border-radius:2px;margin:2px 0 0 4px}
+.apic-app .list{padding:10px 12px;min-width:0;overflow-x:auto}
+.apic-app .list h3{margin:0 0 8px}
+html[data-theme="dark"] .apic.apic-nx{background:#1e293b;color:#e2e8f0;border-color:#475569}
+html[data-theme="dark"] .apic.apic-nx .hd{background:#1e293b;color:#e2e8f0;border-bottom-color:#475569}
+html[data-theme="dark"] .seg{background:#0f172a;border-color:#475569}
+html[data-theme="dark"] .seg span{color:#e2e8f0}
+html[data-theme="dark"] table.encap th{background:#0f172a;color:#94a3b8}
+html[data-theme="dark"] table.encap th,html[data-theme="dark"] table.encap td{border-bottom-color:#334155}
+html[data-theme="dark"] .encap-bar{background:#334155;color:#e2e8f0}
+html[data-theme="dark"] .apic-app .app-bar{background:#1e293b;border-bottom-color:#475569}
+html[data-theme="dark"] .dd-mini{background:#0f172a;border-color:#475569;color:#e2e8f0}
+.vlan-step{margin:0 0 8px}
+#vlan-step1, #vlan-step2, #vlan-step3, #vlan-step4, #vlan-step5{scroll-margin-top:12px}
+
+.apic.apic-nx .row label{text-align:right}
+.apic.apic-nx .row label.stack{line-height:1.25}
+.apic.apic-nx .fake-input.dd{display:flex;justify-content:space-between;align-items:center;background:#fff;gap:8px}
+.apic.apic-nx .fake-input.dd .caret{color:#64748b;flex:none}
+.apic.apic-nx .fake-input.placeholder{color:#94a3b8;background:#fff}
+.apic.apic-nx .fake-input.val-red{color:#dc2626;font-weight:650;background:#fff}
+.sd-wrap{border:1px solid #d1d5db;min-width:0;overflow-x:auto}
+.sd-bar{display:flex;align-items:center;justify-content:flex-end;gap:10px;background:#d1d5db;padding:6px 10px;color:#374151}
+.sd-bar .plus{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;font-weight:700;border-radius:2px;background:#e5e7eb}
+.cb{display:inline-block;width:13px;height:13px;border:1px solid #64748b;background:#fff;border-radius:2px;vertical-align:middle}
+table.encap.sd tbody tr:nth-child(even){background:#f3f4f6}
+#phys-step1, #phys-step2{scroll-margin-top:12px}
+html[data-theme="dark"] .apic.apic-nx .fake-input.placeholder{color:#94a3b8;background:#0f172a}
+html[data-theme="dark"] .apic.apic-nx .fake-input.val-red{color:#fca5a5;background:#0f172a}
+html[data-theme="dark"] .sd-wrap{border-color:#475569}
+html[data-theme="dark"] .sd-bar{background:#334155;color:#e2e8f0}
+html[data-theme="dark"] table.encap.sd tbody tr:nth-child(even){background:#0f172a}
+html[data-theme="dark"] .cb{background:#0f172a;border-color:#94a3b8}
+
+.apic-app .tree-item.sub2{padding-left:26px}
+.apic-app .tree-item.sub3{padding-left:36px}
+.apic-app table.encap th,.apic-app table.encap td{word-break:normal;overflow-wrap:normal;white-space:nowrap}
+.ipg-top{max-width:min(420px,100%)}
+.ipg-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 20px;min-width:0}
+@media(max-width:700px){.ipg-cols{grid-template-columns:1fr}.ipg-top{max-width:100%}}
+.ipg-col{min-width:0}
+.ipg-col .row{margin-bottom:8px}
+.adv-link{color:#1d4ed8;font-weight:650;margin:2px 0 10px;padding-left:4px}
+.adv-spacer{height:28px}
+@media(max-width:700px){.adv-spacer{display:none}}
+#accint-step1, #accint-step2{scroll-margin-top:12px}
+html[data-theme="dark"] .adv-link{color:#93c5fd}
+
+.wiz-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 16px}
+.wiz-crumb{color:#1d4ed8;font-weight:700;min-width:0}
+.wiz-tabs{display:flex;align-items:stretch;min-width:0;max-width:100%}
+.wiz-tab{padding:8px 14px;background:#e5e7eb;color:#475569;font-weight:650;white-space:nowrap;font-size:13px}
+.wiz-tab.chev{clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%);padding-right:22px}
+.wiz-tab.on{background:#0e7490;color:#fff}
+.apic.apic-nx .btn.dis{background:#e5e7eb;border-color:#e5e7eb;color:#9ca3af}
+table.encap.trunc th{font-size:11px;line-height:1.2;font-weight:600;white-space:normal;min-width:3.2em}
+table.encap.trunc td{font-size:12px}
+#pcpol-step1, #pcpol-step2, #pcpol-step3{scroll-margin-top:12px}
+html[data-theme="dark"] .wiz-crumb{color:#93c5fd}
+html[data-theme="dark"] .wiz-tab{background:#334155;color:#cbd5e1}
+html[data-theme="dark"] .wiz-tab.on{background:#22d3ee;color:#0f172a}
+html[data-theme="dark"] .apic.apic-nx .btn.dis{background:#334155;border-color:#334155;color:#64748b}
+</style>
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+<div style="background:#302d20;border-left:4px solid #fc6;color:#eee;padding:10px 14px;margin:0 0 14px;font:14px system-ui,sans-serif"><b>Archived version v4</b> of /aci-gui/create-bridge-domain/ — commit <a style="color:#8cf" href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/fc3391746e79cb5db827e557e5d96a3201ecbe0a">fc33917</a>, 14 Nov 2026 00:40 AEDT (Melbourne time). Not live. Recovered from git; links, images and downloads open the current files. <a style="color:#8cf" href="/aci-gui/create-bridge-domain/">Latest version →</a></div><!-- site-menu v1 --><nav class="site" style="padding:8px 12px;font:14px system-ui,Arial,sans-serif"><a style="color:#8ecbff" href="/">Home</a> | <a style="color:#8ecbff" href="/report17-aoapic-monitoring/tenants/">Tenants Detail</a> | <a style="color:#8ecbff" href="/netbox-aci-tenants/">NetBox ACI Tenants</a> | <a style="color:#8ecbff" href="/netbox-aci-tenants/diagrams/">Tenant Diagrams</a> | <a style="color:#8ecbff" href="/netbox-aci-objects/">NB ACI Objects</a> | <a style="color:#8ecbff" href="/netbox-yaml-model/">YAML Model</a> | <a style="color:#8ecbff" href="/netbox-yaml-model/aoapic/">AOAPIC Model</a> | <a style="color:#8ecbff" href="/netbox-yaml-model/arr/">ARR Model</a> | <a style="color:#8ecbff" href="/report17-aoapic-monitoring/pending-provisioning/">Pending Provisioning</a> | <a style="color:#8ecbff" href="/report17-aoapic-monitoring/universal-provisioning/">Universal Provisioning</a> | <a style="color:#8ecbff" href="/report17-aoapic-monitoring/objects/">Object Drill-down</a> | <a style="color:#8ecbff" href="/report17-aoapic-monitoring/">Report 17</a> | <a style="color:#8ecbff" href="/grafana-screenshots/">Group 1</a> | <a style="color:#8ecbff" href="/grafana-screenshots-part2/">Group 2</a> | <a style="color:#8ecbff" href="/visitors/">Visitors</a> | <a style="color:#8ecbff" href="https://amoeoo-coles.github.io/aoapic-nac-test-status/">nac-test Status</a></nav>
+
+<main>
+<div class="tr17" style="text-align:right;font-size:13px;color:#475569;margin:0 0 10px">Page updated 14 Nov 2026 00:40 AEDT (Melbourne time)<span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span><span class="uvt" style="font-size:11px;color:#888"></span></div>
+<nav class="crumb"><a href="/">Home</a> › <a href="/aci-gui/create-pod-policy-group/">ACI GUI</a> › Create Bridge Domain</nav>
+<style>ol.recipe-steps{padding-left:1.3rem}ol.recipe-steps li{margin:0 0 6px}</style><span class="kicker" style="background:#0891b2">ACI GUI</span><h1>Create Bridge Domain</h1>
+<nav class="forms-nav" aria-label="Forms"><span class="fn-label">Forms</span><div class="forms-nav-row"><a class="fn-pill" href="/aci-gui-forms/WIP/all-forms/">All Forms<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui-forms/WIP/gui-map/">GUI Map<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/create-pod-policy-group/">Create Pod Policy Group<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/create-bridge-domain-step3/">Create Bridge Domain (step 3)<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/create-subnet/">Create Subnet<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/create-application-profile/">Create Application Profile<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/create-management-epg/">Create Management EPG<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/static-node-management-addresses/">Static Node Management Addresses<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/create-fabric-policies/">Create Fabric Policies<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/create-access-policies/">Create Access Policies<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/create-vlan-pool/">Create VLAN Pool<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/create-physical-domain/">Create Physical Domain<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/create-access-interface-policy-group/">Create Access Interface Policy Group<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/create-pc-interface-policy-group/">Create PC Interface Policy Group<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/interface-wizard-vpc/">Interface Wizard for vPC<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/create-vmm-domain/">Create VMM Domain<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/vcenter-networking/">vCenter Networking<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/create-tenant/">Create Tenant<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/create-l3out/">Create L3Out<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/l3out-contracts/">L3Out Contracts<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill on" href="/aci-gui/create-bridge-domain/" aria-current="page">Create Bridge Domain</a><a class="fn-pill" href="/aci-gui/mgmt-bridge-domain/">Mgmt Bridge Domain<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/dhcp-relay/">DHCP Relay<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/management-application-profile/">Management Application Profile<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/create-vrf/">Create VRF<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/create-endpoint-group/">Create Endpoint Group<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/contracts-between-tenants/">Contracts Between Tenants<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/create-filter/">Create Filter<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/create-contract/">Create Contract<span class="fn-arrow" aria-hidden="true">→</span></a><a class="fn-pill" href="/aci-gui/create-management-contracts/">Create Management Contracts<span class="fn-arrow" aria-hidden="true">→</span></a></div></nav><p class="lede">Create aci_p01_bd_web (subnet 10.0.144.1/29 Advertised Externally, Associated L3 Out aci_p01_L3out) and aci_p01_bd_app (subnet 172.16.1.1/24 Private to VRF) in tenant aci_p01_tenant, VRF aci_p01_vrf. Values are taken only from Aung's unique screenshots; three duplicate files are not shown twice. Step 3 Advanced/Troubleshooting appears only in the app BD sequence.</p><div class="meta"><span>GUI: <span class="gui-path"><span class="gui-seg">Tenants</span><span class="gui-sep">›</span><span class="gui-seg">aci_p01_tenant</span><span class="gui-sep">›</span><span class="gui-seg">Networking</span><span class="gui-sep">›</span><span class="gui-seg">Bridge Domains</span><span class="gui-sep">›</span><span class="gui-seg">Create Bridge Domain</span></span></span><span>Class <div class="apic-chips"><span class="apic-chip"><a class="dn-chip" href="https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/fv:BD/overview" title="Cisco APIC MIM: fv:BD" target="_blank" rel="noopener">fvBD</a></span><span class="apic-chip"><a class="dn-chip" href="https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/fv:Subnet/overview" title="Cisco APIC MIM: fv:Subnet" target="_blank" rel="noopener">fvSubnet</a></span></div></span></div>
+<style>
+.apic.apic-nx{max-width:100%;width:100%;box-sizing:border-box;background:#fff;border:1px solid #d1d5db;border-radius:8px;box-shadow:0 10px 28px rgba(15,23,42,.14);margin:0 0 12px;font:14px/1.4 "Segoe UI",system-ui,Arial,sans-serif;color:#111;overflow-x:auto}
+.apic.apic-nx .hd{background:#fff;color:#111;padding:12px 16px;font-weight:650;font-size:18px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center}
+.apic.apic-nx .hd .x{opacity:.85;width:26px;height:26px;border:1px solid #d1d5db;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:400}
+.apic.apic-nx .bd{padding:14px 18px 8px}
+.apic.apic-nx .ft{display:flex;justify-content:flex-end;gap:8px;padding:12px 16px 16px;border-top:0}
+.apic.apic-nx .btn{border-radius:999px;padding:6px 18px;font:600 13px system-ui;border:1px solid #8aa0b8;background:#f3f4f6;color:#222}
+.apic.apic-nx .btn.cancel{background:#111;border-color:#111;color:#fff}
+.apic.apic-nx .btn.pri{background:#1e4b8f;border-color:#1e4b8f;color:#fff}
+.apic.apic-nx .row{display:grid;grid-template-columns:minmax(110px,150px) 1fr;gap:8px;align-items:center;margin:0 0 12px}
+.apic.apic-nx .row.top{align-items:start}
+@media(max-width:560px){.apic.apic-nx .row{grid-template-columns:1fr}}
+.seg{display:inline-flex;flex-wrap:wrap;border-radius:999px;overflow:hidden;border:1px solid #cbd5e1;background:#fff;max-width:100%}
+.seg span{padding:5px 12px;font-size:13px;color:#334155;white-space:normal}
+.seg span.on{background:#1e4b8f;color:#fff}
+.encap-bar{display:flex;align-items:center;justify-content:flex-end;gap:10px;background:#d1d5db;padding:6px 10px;color:#374151}
+.encap-bar .plus{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;font-weight:700;border-radius:2px;background:#e5e7eb}
+table.encap{width:100%;border-collapse:collapse;font-size:13px;min-width:0}
+table.encap th,table.encap td{text-align:left;padding:8px;border-bottom:1px solid #e5e7eb;word-break:break-word}
+table.encap th{color:#64748b;font-weight:500;background:#f8fafc}
+.range-row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px}
+.range-row .mini{width:72px;min-width:0;flex:0 1 72px;text-align:center}
+.range-row .hint{font-size:11px;color:#94a3b8;flex-basis:100%;margin:-4px 0 0 88px}
+.dd-mini{display:inline-flex;align-items:center;border:1px solid #8aa0b8;border-radius:2px;padding:4px 8px;background:#fff}
+.apic-app-wrap .bd{padding:0}
+.apic-app{min-width:0}
+.apic-app .app-bar{background:#fff;border-bottom:1px solid #e5e7eb;padding:8px 12px}
+.apic-app .app-brand{margin:0 0 6px}
+.apic-app .tabs{display:flex;flex-wrap:wrap;gap:0;font-size:13px}
+.apic-app .tabs span{padding:6px 9px}
+.apic-app .tabs .on{border-bottom:3px solid #1e4b8f;font-weight:700;color:#1e4b8f}
+.apic-app .subnav{background:#1e3a5f;color:#e2e8f0;padding:6px 12px;font-size:13px}
+.apic-app .subnav .on{font-weight:700;color:#fff;text-decoration:underline}
+.apic-app .app-body{display:grid;grid-template-columns:minmax(0,200px) minmax(0,1fr);min-width:0}
+@media(max-width:700px){.apic-app .app-body{grid-template-columns:1fr}}
+.apic-app .tree{background:#0f3a5f;color:#e2e8f0;padding:8px;font-size:12.5px;min-width:0}
+.apic-app .tree-h{font-weight:700;margin:0 0 6px}
+.apic-app .tree-item{padding:3px 6px;word-break:break-word}
+.apic-app .tree-item.on{background:#1e4b8f}
+.apic-app .tree-item.open{font-weight:700}
+.apic-app .tree-item.sub{padding-left:16px}
+.apic-app .ctx{display:inline-block;background:#1e4b8f;color:#fff;padding:2px 8px;border-radius:2px;margin:2px 0 0 4px}
+.apic-app .list{padding:10px 12px;min-width:0;overflow-x:auto}
+.apic-app .list h3{margin:0 0 8px}
+html[data-theme="dark"] .apic.apic-nx{background:#1e293b;color:#e2e8f0;border-color:#475569}
+html[data-theme="dark"] .apic.apic-nx .hd{background:#1e293b;color:#e2e8f0;border-bottom-color:#475569}
+html[data-theme="dark"] .seg{background:#0f172a;border-color:#475569}
+html[data-theme="dark"] .seg span{color:#e2e8f0}
+html[data-theme="dark"] table.encap th{background:#0f172a;color:#94a3b8}
+html[data-theme="dark"] table.encap th,html[data-theme="dark"] table.encap td{border-bottom-color:#334155}
+html[data-theme="dark"] .encap-bar{background:#334155;color:#e2e8f0}
+html[data-theme="dark"] .apic-app .app-bar{background:#1e293b;border-bottom-color:#475569}
+html[data-theme="dark"] .dd-mini{background:#0f172a;border-color:#475569;color:#e2e8f0}
+.vlan-step{margin:0 0 8px}
+#vlan-step1, #vlan-step2, #vlan-step3, #vlan-step4, #vlan-step5{scroll-margin-top:12px}
+
+.apic.apic-nx .row label{text-align:right}
+.apic.apic-nx .row label.stack{line-height:1.25}
+.apic.apic-nx .fake-input.dd{display:flex;justify-content:space-between;align-items:center;background:#fff;gap:8px}
+.apic.apic-nx .fake-input.dd .caret{color:#64748b;flex:none}
+.apic.apic-nx .fake-input.placeholder{color:#94a3b8;background:#fff}
+.apic.apic-nx .fake-input.val-red{color:#dc2626;font-weight:650;background:#fff}
+.sd-wrap{border:1px solid #d1d5db;min-width:0;overflow-x:auto}
+.sd-bar{display:flex;align-items:center;justify-content:flex-end;gap:10px;background:#d1d5db;padding:6px 10px;color:#374151}
+.sd-bar .plus{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;font-weight:700;border-radius:2px;background:#e5e7eb}
+.cb{display:inline-block;width:13px;height:13px;border:1px solid #64748b;background:#fff;border-radius:2px;vertical-align:middle}
+table.encap.sd tbody tr:nth-child(even){background:#f3f4f6}
+#phys-step1, #phys-step2{scroll-margin-top:12px}
+html[data-theme="dark"] .apic.apic-nx .fake-input.placeholder{color:#94a3b8;background:#0f172a}
+html[data-theme="dark"] .apic.apic-nx .fake-input.val-red{color:#fca5a5;background:#0f172a}
+html[data-theme="dark"] .sd-wrap{border-color:#475569}
+html[data-theme="dark"] .sd-bar{background:#334155;color:#e2e8f0}
+html[data-theme="dark"] table.encap.sd tbody tr:nth-child(even){background:#0f172a}
+html[data-theme="dark"] .cb{background:#0f172a;border-color:#94a3b8}
+
+.tn-bar-app{margin:0 0 12px;border:1px solid #cbd5e1;border-radius:6px;overflow:hidden;background:#fff}
+.tn-bar-app .app-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:6px 10px;border-bottom:0;background:#fff}
+.tn-bar-app .tabs{display:flex;flex-wrap:wrap;gap:0;font-size:12.5px}
+.tn-bar-app .tabs span{padding:6px 9px;color:#334155}
+.tn-bar-app .tabs span.on{font-weight:700;color:#fff;background:#1e3a5f;border-radius:3px}
+.tn-bar{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;background:#1e3a5f;color:#e2e8f0;padding:7px 10px;font-size:12.5px}
+.tn-bar .on{font-weight:700;color:#fff;text-decoration:underline}
+.tn-search{background:#fff;color:#94a3b8;border-radius:2px;padding:2px 8px}
+.tn-search em{font-style:italic;margin-left:6px}
+.tn-sub{margin:0 0 12px;color:#64748b}
+.tn-hint{font-size:11px;color:#94a3b8;margin:2px 0 0}
+.tn-check-row{display:block;width:100%;margin:12px 0 0}
+.tn-check{display:flex;gap:8px;align-items:flex-start;margin:0;font-size:13px;color:inherit}
+.tn-check{text-align:left}.tn-check input[type=checkbox]{width:auto;min-width:0;max-width:18px;flex:0 0 auto;margin:2px 8px 0 0;accent-color:#2563eb}
+.apic.apic-nx .hd-tools{display:flex;gap:6px;margin-left:auto}
+#tenant-step1, #tenant-step2{scroll-margin-top:12px}
+html[data-theme="dark"] .tn-bar-app{border-color:#334155;background:#0f172a}
+html[data-theme="dark"] .tn-bar-app .app-bar{background:#0f172a}
+html[data-theme="dark"] .tn-bar-app .tabs span{color:#cbd5e1}
+html[data-theme="dark"] .tn-bar-app .tabs span.on{background:#1e3a5f;color:#fff}
+html[data-theme="dark"] .tn-bar{background:#0f172a;color:#cbd5e1}
+html[data-theme="dark"] .tn-search{background:#1e293b;color:#64748b}
+
+.l3-wiz .hd{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.l3-hd-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-wrap:wrap}
+.l3-tabs{flex-wrap:wrap}
+.l3-work{display:flex;min-width:0;max-width:100%;border-top:1px solid #cbd5e1}
+.l3-tree{flex:0 0 200px;max-width:42%;background:#1e3a5f;color:#e2e8f0;padding:8px;font-size:12.5px}
+.l3-tree .tn-title{color:#a3e635;font-weight:700;margin:0 0 6px}
+.l3-tree .open{font-weight:650}
+.l3-tree .ind{padding-left:12px}
+.l3-tree .ind2{padding-left:24px}
+.l3-tree .on{background:#0f172a;color:#fff;font-weight:700;margin:2px -8px;padding:4px 8px 4px 24px}
+.l3-tree .ctx{background:#fff;color:#0f172a;margin:4px 8px 0 28px;padding:4px 8px;border-radius:2px;font-weight:650}
+.l3-main{flex:1;min-width:0;padding:8px;background:#fff}
+.l3-pane-title{font-weight:700;margin:0 0 8px}
+.l3-main td.empty{text-align:center;color:#64748b;padding:18px 8px}
+.l3-help{font-size:13px;color:#475569;margin:0 0 8px}
+.l3-id-grid{display:grid;gap:18px 28px;grid-template-columns:1fr}
+@media(min-width:900px){.l3-id-grid{grid-template-columns:1fr 1fr}}
+.l3-id-right .l3-kv{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:flex-start;margin:0 0 10px}
+.l3-id-right .l3-kv>span{flex:0 0 140px;max-width:100%;font-size:13px;color:#334155;padding-top:4px}
+.l3-id-right .l3-kv>div,.l3-id-right .l3-kv .l3-seg{flex:1 1 160px;min-width:0}
+.l3-protos,.l3-ctrl{display:flex;flex-direction:column;gap:6px;margin:0 0 12px}
+.l3-protos{flex-direction:row;flex-wrap:wrap;gap:16px}
+.l3-protos label,.l3-ctrl label{display:flex;gap:8px;align-items:flex-start;text-align:left;font-size:13px;color:inherit}
+.l3-protos .dis{opacity:.45}
+.l3-seg{display:inline-flex;flex-wrap:wrap;gap:0;border-radius:999px;overflow:hidden;border:1px solid #94a3b8;width:auto;max-width:100%}
+.l3-seg span{padding:4px 10px;font-size:12.5px;background:#fff;color:#334155;white-space:nowrap}
+.l3-seg span.on{background:#0e7490;color:#fff;font-weight:700}
+.l3-wiz input[type=checkbox]{width:auto;min-width:0;max-width:18px;flex:0 0 auto;margin:2px 0 0}
+.l3-diagram{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:4px 0 16px;padding:8px 24px}
+.l3-diagram .leaf,.l3-diagram .router{width:36px;height:36px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px}
+.l3-diagram .leaf{background:#9f1239}
+.l3-diagram .router{background:#0e7490}
+.l3-diagram small{display:block;color:#475569;font-weight:500;font-size:11px;margin-top:22px}
+.l3-diagram .wire{flex:1;border-top:2px dashed #94a3b8;height:0}
+.l3-sec{font-weight:700;margin:12px 0 6px}
+.l3-nodebox{border:1px solid #cbd5e1;border-radius:6px;padding:10px;background:#f8fafc}
+.l3-nodehead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;font-weight:650;margin:0 0 8px;background:#e2e8f0;padding:6px 8px;border-radius:4px}
+.l3-hide{color:#2563eb;font-size:13px;margin:4px 0 8px;text-align:right}
+.l3-hide-pol{font-weight:500;color:#475569}
+.apic.apic-nx .hd-tools{display:flex;gap:6px}
+#l3out-step1,#l3out-step2,#l3out-step3,#l3out-step4,#l3out-step5{scroll-margin-top:12px}
+html[data-theme="dark"] .l3-tree{background:#0f172a;color:#cbd5e1}
+html[data-theme="dark"] .l3-tree .on{background:#1e293b}
+html[data-theme="dark"] .l3-main,html[data-theme="dark"] .l3-nodebox{background:#1e293b}
+html[data-theme="dark"] .l3-work{border-color:#334155}
+html[data-theme="dark"] .l3-seg span{background:#0f172a;color:#cbd5e1}
+html[data-theme="dark"] .l3-seg span.on{background:#22d3ee;color:#0f172a}
+html[data-theme="dark"] .l3-nodebox{border-color:#334155}
+html[data-theme="dark"] .l3-nodehead{background:#0f172a;color:#e2e8f0}
+
+.bd-wiz .bd-step-lab{color:#0e7490;font-weight:700;font-size:13px;margin:0 0 12px}
+.bd-wiz .row{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin:0 0 8px}
+.bd-wiz .row.top,.bd-sub-dlg .row.top{align-items:flex-start}
+.bd-wiz .row>label:first-child,.bd-sub-dlg .row>label:first-child{flex:0 0 210px;max-width:100%;font-size:13px;color:#334155;text-align:right}
+.bd-wiz .row>div,.bd-wiz .row .l3-seg,.bd-wiz .row .tn-check,.bd-sub-dlg .row>div{flex:1 1 180px;min-width:0}
+.bd-wiz .fake-input,.bd-sub-dlg .fake-input{min-height:28px}
+.bd-wiz .fake-input.tall{min-height:56px}
+.bd-wiz .ph,.bd-sub-dlg .ph{color:#94a3b8;font-weight:400}
+.bd-hint{margin:0 0 8px 220px;font-size:11.5px;color:#64748b}
+.bd-vrf-note{margin:0 0 8px 220px;font-size:12.5px;color:#475569}
+.bd-checks{display:flex;flex-direction:column;gap:4px}
+.bd-tbl-wrap{min-width:0;max-width:100%;overflow-x:auto}
+.bd-tbl-bar{background:#cbd5e1;display:flex;justify-content:flex-end;gap:8px;padding:3px 8px;font-size:13px}
+.bd-tbl{width:100%;border-collapse:collapse;font-size:12.5px;min-width:0}
+.bd-tbl th{text-align:left;font-weight:600;padding:4px 6px;border-bottom:1px solid #cbd5e1;color:#334155;white-space:nowrap}
+.bd-tbl td{padding:4px 6px;border-bottom:1px solid #e2e8f0}
+.bd-tbl tr.on td{background:#e0f2fe}
+.bd-tbl td.empty{color:#94a3b8}
+.bd-plus{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:2px;background:#fff;border:1px solid #94a3b8;font-weight:700;line-height:1}
+.bd-plus.callout{outline:2px solid #ef4444;outline-offset:2px}
+.bd-info{display:flex;gap:8px;align-items:flex-start;border:1px solid #38bdf8;background:#fff;margin:8px 0 12px;padding:6px 8px;font-size:12.5px;min-width:0}
+.bd-info-i{flex:0 0 22px;height:22px;border-radius:3px;background:#0ea5e9;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center}
+.bd-warn{display:flex;gap:8px;align-items:flex-start;border:1px solid #f59e0b;background:#fffbeb;margin:0 0 12px;padding:6px 8px;font-size:13px;min-width:0}
+.bd-warn-i{flex:0 0 22px;height:22px;border-radius:3px;background:#f59e0b;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center}
+.bd-wiz .dim,.bd-wiz .dim label{color:#94a3b8}
+.bd-sub-dlg{max-width:100%}
+.bd-sub-dlg .bd{padding:12px 14px}
+.bd-sub-dlg .row{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin:0 0 8px}
+.bd-sub-dlg .row>label:first-child{flex:0 0 200px}
+.bd-sub-dlg .bd-hint{margin: -4px 0 8px 210px}
+.bd-tags{display:flex;align-items:center;gap:8px;font-size:13px;color:#334155}
+.bd-tbl-scroll{overflow-x:auto;max-width:100%;min-width:0}
+.bd-nav-app,.bd-nav-app .l3-work,.bd-nav-app .l3-main{min-width:0;max-width:100%}
+.bd-wiz,.bd-sub-dlg,.bd-step .aci-compare-grid,.bd-step .aci-compare-replica{min-width:0;max-width:100%}
+.bd-step .aci-compare-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.btn.lite{background:#e2e8f0;color:#475569;border:0;border-radius:999px;padding:6px 16px;font-weight:650}
+html[data-theme="dark"] .bd-tbl-bar{background:#334155}
+html[data-theme="dark"] .bd-tbl th{color:#cbd5e1;border-color:#334155}
+html[data-theme="dark"] .bd-tbl td{border-color:#334155}
+html[data-theme="dark"] .bd-tbl tr.on td{background:#0e7490;color:#fff}
+html[data-theme="dark"] .bd-info{background:#0f172a;border-color:#22d3ee;color:#e2e8f0}
+html[data-theme="dark"] .bd-warn{background:#422006;border-color:#f59e0b;color:#fde68a}
+html[data-theme="dark"] .bd-plus{background:#0f172a;border-color:#64748b;color:#e2e8f0}
+html[data-theme="dark"] .bd-wiz .row>label:first-child,html[data-theme="dark"] .bd-sub-dlg .row>label:first-child{color:#cbd5e1}
+html[data-theme="dark"] .btn.lite{background:#334155;color:#e2e8f0}
+@media(max-width:899px){
+  .bd-step .aci-compare-grid{grid-template-columns:minmax(0,1fr)}
+  .bd-hint,.bd-vrf-note,.bd-sub-dlg .bd-hint{margin-left:0}
+  .bd-wiz .row>label:first-child,.bd-sub-dlg .row>label:first-child{text-align:left;flex-basis:100%}
+}
+#bd-src1,#bd-src2,#bd-src3,#bd-src4,#bd-src5,#bd-src8,#bd-src9,#bd-src11,#bd-src12,#bd-src13{scroll-margin-top:12px}
+</style>
+<p>This page follows the Create Subnet and Create L3Out layout: each of Aung's unique screenshots sits beside an HTML replica of the same window or dialog. Values are taken only from those screenshots. Thirteen files were supplied as step1.png through step13.png; three are byte-identical to earlier shots (step7.png = step1.png, step6.png = step5.png, step10.png = step9.png) and are not shown twice. The files are presented in wizard order, which is not the same as the file numbers (the Create Subnet dialogs are step4.png and step11.png; Step 3 Advanced/Troubleshooting is step13.png and appears only in the app BD sequence).</p>
+<p>Two bridge domains are created in tenant <code>aci_p01_tenant</code>, VRF <code>aci_p01_vrf</code>: <code>aci_p01_bd_web</code> with subnet <code>10.0.144.1/29</code> (Advertised Externally) and Associated L3 Out <code>aci_p01_L3out</code>, then <code>aci_p01_bd_app</code> with subnet <code>172.16.1.1/24</code> (Private to VRF) and no associated L3Out. Both have Unicast Routing and ARP Flooding enabled and MAC Address <code>00:22:BD:F8:19:FF</code>.</p>
+<section class="form-step bd-step" id="bd-src1"><h2>Open Create Bridge Domain</h2><p>APIC (DC3) Tenants, Tenant Search <code>aci_p01_tenant</code>, Networking, right-click Bridge Domains, Create Bridge Domain. The Bridge Domains table is empty. The same image was also supplied as step7.png and is not repeated.</p>
+<div class="aci-compare-grid">
+  <div class="aci-compare-shot">
+    <a class="shot" href="/aci-gui-forms/img/create-bd-step1-20261114-0018-AEDT.png" onclick="aciZoom(this.href);return false;">
+      <img class="tt-keep" src="/aci-gui-forms/img/create-bd-step1-20261114-0018-AEDT.png" alt="Aung&#x27;s screenshot (step1.png)."><p class="caption">Aung&#x27;s screenshot (step1.png).</p>
+    </a>
+  </div>
+  <div class="aci-compare-replica">
+    <h2>Form replica</h2>
+    
+<div class="apic-app tn-bar-app l3-nav-app bd-nav-app">
+  <div class="app-bar">
+    <div class="app-brand"><strong>APIC</strong> <span class="hl">(DC3)</span></div>
+    <div class="tabs">
+      <span>System</span><span class="on">Tenants</span><span>Fabric</span>
+      <span>Virtual Networking</span><span>L4-L7 Services</span>
+      <span>Admin</span><span>Operations</span><span>Apps</span><span>Integrations</span>
+    </div>
+  </div>
+  <div class="tn-bar">
+    <span>ALL TENANTS</span>
+    <span>Add Tenant</span>
+    <span class="tn-search">Tenant Search <em class="val-red">aci_p01_tenant</em></span>
+    <span>common</span>
+    <span>aci_p01_tenant</span>
+  </div>
+  <div class="l3-work">
+    <nav class="l3-tree" aria-label="Tenant navigation">
+      <div class="tn-title">aci_p01_tenant</div>
+      <div>Quick Start</div>
+      <div class="open tn-title">aci_p01_tenant</div>
+      <div class="ind">Application Profiles</div>
+      <div class="ind open">Networking</div>
+      <div class="ind2 on">Bridge Domains</div>
+      <div class="ctx">Create Bridge Domain</div>
+      <div class="ind2">VRFs</div>
+    </nav>
+    <div class="l3-main">
+      <div class="l3-pane-title">Networking - Bridge Domains</div>
+      <div class="bd-tbl-scroll">
+        <table class="encap"><thead><tr><th>Name</th><th>Alias</th><th>Type</th><th>Segment</th><th>VRF</th><th>Multicast Address</th><th>Custom MAC Address</th><th>L2 Unknown Unicast</th><th>ARP Flooding</th><th>Unicast Routing</th><th>Subnet</th></tr></thead>
+        <tbody><tr><td colspan="11" class="empty">No items have been found.<br>Select Actions to create a new item.</td></tr></tbody></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+</div>
+</section>
+<section class="form-step bd-step" id="bd-src2"><h2>Step 1 Main — aci_p01_bd_web</h2><p>Name <code>aci_p01_bd_web</code>. Alias and Description are blank (Description shows the placeholder <code>optional</code>). Tags is blank. Type is <strong>regular</strong>. Advertise Host Routes is unticked. VRF is <code>aci_p01_vrf</code> (the screenshot annotation also names tenant <code>aci_p01_tenant</code>). Forwarding is Optimize. Endpoint Retention, IGMP Snoop and MLD Snoop policies are unset. Next is the highlighted action (light).</p>
+<div class="aci-compare-grid">
+  <div class="aci-compare-shot">
+    <a class="shot" href="/aci-gui-forms/img/create-bd-step2-20261114-0018-AEDT.png" onclick="aciZoom(this.href);return false;">
+      <img class="tt-keep" src="/aci-gui-forms/img/create-bd-step2-20261114-0018-AEDT.png" alt="Aung&#x27;s screenshot (step2.png)."><p class="caption">Aung&#x27;s screenshot (step2.png).</p>
+    </a>
+  </div>
+  <div class="aci-compare-replica">
+    <h2>Form replica</h2>
+    
+<div class="apic apic-nx l3-wiz bd-wiz">
+  <div class="hd">Create Bridge Domain <span class="l3-hd-right"><div class="wiz-tabs l3-tabs bd-tabs" aria-hidden="true"><span class="wiz-tab chev on">1. Main</span><span class="wiz-tab chev">2. L3 Configurations</span><span class="wiz-tab">3. Advanced/Troubleshooting</span></div> <span class="hd-tools"><span class="x">?</span> <span class="x">×</span></span></span></div>
+  <div class="bd">
+    <p class="bd-step-lab">STEP 1 &gt; Main</p>
+    
+    <div class="row"><label>Name:</label><div class="fake-input val-red">aci_p01_bd_web</div></div>
+    <div class="row"><label>Alias:</label><div class="fake-input"></div></div>
+    <div class="row top"><label>Description:</label><div class="fake-input tall ph">optional</div></div>
+    <div class="row"><label>Tags:</label><div class="fake-input dd-mini ph">enter tags separated by comma ▾</div></div>
+    <div class="row"><label>Type:</label><div class="l3-seg" aria-hidden="true"><span>fc</span><span class="on">regular</span></div></div>
+    <div class="row"><label>Advertise Host Routes:</label><label class="tn-check"><input type="checkbox" disabled></label></div>
+    <div class="row"><label>VRF:</label><div class="fake-input val-red dd-mini">aci_p01_vrf ▾</div></div>
+    <p class="bd-vrf-note">The screenshot annotation lists VRF <code>aci_p01_vrf</code> under tenant <code>aci_p01_tenant</code>.</p>
+    <div class="row"><label>Forwarding:</label><div class="fake-input dd-mini">Optimize ▾</div></div>
+    <div class="row top"><label>Endpoint Retention Policy:</label>
+      <div>
+        <div class="fake-input dd-mini ph">select a value ▾</div>
+        <p class="bd-hint">This policy only applies to local L2 L3 and remote L3 entries</p>
+      </div>
+    </div>
+    <div class="row"><label>IGMP Snoop Policy:</label><div class="fake-input dd-mini ph">select a value ▾</div></div>
+    <div class="row"><label>MLD Snoop Policy:</label><div class="fake-input dd-mini ph">select a value ▾</div></div>
+
+  </div>
+  <div class="ft">
+    <button type="button" class="btn dis">Previous</button>
+    <button type="button" class="btn cancel">Cancel</button>
+    <button type="button" class="btn lite">Next</button>
+  </div>
+</div>
+
+  </div>
+</div>
+</section>
+<section class="form-step bd-step" id="bd-src4"><h2>Create Subnet — 10.0.144.1/29</h2><p>Opened from Step 2. Gateway IP <code>10.0.144.1/29</code>. Treat as virtual IP address and Make this IP address primary are unticked. Scope: Advertised Externally ticked, Shared between VRFs unticked. Description blank. Subnet Control: ND RA Prefix ticked; No Default SVI Gateway and Querier IP unticked. IP Data-plane Learning is Enabled. L3 Out for Route Profile, ND RA Prefix Policy and Policy Tags are unset. Cancel and OK (OK is light in the screenshot).</p>
+<div class="aci-compare-grid">
+  <div class="aci-compare-shot">
+    <a class="shot" href="/aci-gui-forms/img/create-bd-step4-20261114-0018-AEDT.png" onclick="aciZoom(this.href);return false;">
+      <img class="tt-keep" src="/aci-gui-forms/img/create-bd-step4-20261114-0018-AEDT.png" alt="Aung&#x27;s screenshot (step4.png)."><p class="caption">Aung&#x27;s screenshot (step4.png).</p>
+    </a>
+  </div>
+  <div class="aci-compare-replica">
+    <h2>Form replica</h2>
+    
+<div class="apic apic-nx bd-sub-dlg">
+  <div class="hd">Create Subnet <span class="hd-tools"><span class="x">?</span> <span class="x">×</span></span></div>
+  <div class="bd">
+    <div class="row"><label>Gateway IP:</label><div class="fake-input val-red">10.0.144.1/29</div></div>
+    <p class="bd-hint">address/mask</p>
+    <div class="row"><label>Treat as virtual IP address:</label><label class="tn-check"><input type="checkbox" disabled></label></div>
+    <div class="row"><label>Make this IP address primary:</label><label class="tn-check"><input type="checkbox" disabled></label></div>
+    <div class="row top"><label>Scope:</label>
+      <div class="bd-checks">
+        <label class="tn-check"><input type="checkbox" checked disabled> Advertised Externally</label>
+        <label class="tn-check"><input type="checkbox" disabled> Shared between VRFs</label>
+      </div>
+    </div>
+    <div class="row top"><label>Description:</label><div class="fake-input tall ph">optional</div></div>
+    <div class="row top"><label>Subnet Control:</label>
+      <div class="bd-checks">
+        <label class="tn-check"><input type="checkbox" checked disabled> ND RA Prefix</label>
+        <label class="tn-check"><input type="checkbox" disabled> No Default SVI Gateway</label>
+        <label class="tn-check"><input type="checkbox" disabled> Querier IP</label>
+      </div>
+    </div>
+    <div class="row"><label>IP Data-plane Learning:</label>
+      <div class="l3-seg" aria-hidden="true"><span>Disabled</span><span class="on">Enabled</span></div>
+    </div>
+    <div class="row"><label>L3 Out for Route Profile:</label><div class="fake-input dd-mini ph">select a value ▾</div></div>
+    <div class="row"><label>ND RA Prefix Policy:</label><div class="fake-input dd-mini ph">select a value ▾</div></div>
+    <div class="row"><label>Policy Tags:</label><div class="bd-tags"><span class="bd-plus">+</span> Click to add a new tag</div></div>
+  </div>
+  <div class="ft">
+    <button type="button" class="btn cancel">Cancel</button>
+    <button type="button" class="btn lite">OK</button>
+  </div>
+</div>
+
+  </div>
+</div>
+</section>
+<section class="form-step bd-step" id="bd-src3"><h2>Step 2 L3 Configurations — web, subnet added</h2><p>Unicast Routing and ARP Flooding Enabled. Config BD MAC Address ticked, MAC Address <code>00:22:BD:F8:19:FF</code>. Subnet row <code>10.0.144.1/29</code>, Advertised Externally, Primary IP Address False. Limit Local IP Learning To BD/EPG Subnet(s) is greyed, with the Enforce Subnet Check info note. EP Move Detection Mode (GARP based detection) unticked. DHCP Labels empty. Associated L3 Outs empty; the screenshot highlights the <strong>+</strong>.</p>
+<div class="aci-compare-grid">
+  <div class="aci-compare-shot">
+    <a class="shot" href="/aci-gui-forms/img/create-bd-step3-20261114-0018-AEDT.png" onclick="aciZoom(this.href);return false;">
+      <img class="tt-keep" src="/aci-gui-forms/img/create-bd-step3-20261114-0018-AEDT.png" alt="Aung&#x27;s screenshot (step3.png)."><p class="caption">Aung&#x27;s screenshot (step3.png).</p>
+    </a>
+  </div>
+  <div class="aci-compare-replica">
+    <h2>Form replica</h2>
+    
+<div class="apic apic-nx l3-wiz bd-wiz">
+  <div class="hd">Create Bridge Domain <span class="l3-hd-right"><div class="wiz-tabs l3-tabs bd-tabs" aria-hidden="true"><span class="wiz-tab chev">1. Main</span><span class="wiz-tab chev on">2. L3 Configurations</span><span class="wiz-tab">3. Advanced/Troubleshooting</span></div> <span class="hd-tools"><span class="x">?</span> <span class="x">×</span></span></span></div>
+  <div class="bd">
+    <p class="bd-step-lab">STEP 2 &gt; L3 Configurations</p>
+    
+    <div class="row"><label>Unicast Routing:</label><label class="tn-check"><input type="checkbox" checked disabled> Enabled</label></div>
+    <div class="row"><label>ARP Flooding:</label><label class="tn-check"><input type="checkbox" checked disabled> Enabled</label></div>
+    <div class="row"><label>Config BD MAC Address:</label><label class="tn-check"><input type="checkbox" checked disabled></label></div>
+    <div class="row"><label>MAC Address:</label><div class="fake-input">00:22:BD:F8:19:FF</div></div>
+
+    <div class="row top"><label>Subnets:</label>
+      <div class="bd-tbl-wrap">
+        <div class="bd-tbl-bar"><span class="bd-ico">🗑</span><span class="bd-plus">+</span></div>
+        <table class="bd-tbl"><thead><tr><th>Gateway Address</th><th>Scope</th><th>Primary IP Address</th><th>Subnet Control</th></tr></thead>
+        <tbody><tr class="on"><td class="val-red">10.0.144.1/29</td><td>Advertised Externally</td><td>False</td><td></td></tr></tbody></table>
+      </div>
+    </div>
+
+    <div class="row top dim">
+      <label>Limit Local IP Learning To BD/EPG Subnet(s):</label>
+      <label class="tn-check"><input type="checkbox" checked disabled></label>
+    </div>
+    <div class="bd-info"><span class="bd-info-i">i</span><span>Info: This option is not available when &quot;Enforce Subnet Check&quot; is enabled from &quot;System Settings&quot; -&gt; &quot;Fabric-Wide Settings Policy&quot;.</span></div>
+    <div class="row"><label>EP Move Detection Mode:</label><label class="tn-check"><input type="checkbox" disabled> GARP based detection</label></div>
+    <div class="row top"><label>DHCP Labels:</label>
+      <div class="bd-tbl-wrap">
+        <div class="bd-tbl-bar"><span class="bd-ico">🗑</span><span class="bd-plus">+</span></div>
+        <table class="bd-tbl"><thead><tr><th>Name</th><th>Scope</th><th>DHCP Option Policy</th></tr></thead>
+        <tbody><tr><td colspan="3" class="empty">&nbsp;</td></tr></tbody></table>
+      </div>
+    </div>
+
+    <div class="row top"><label>Associated L3 Outs:</label>
+      <div class="bd-tbl-wrap">
+        <div class="bd-tbl-bar"><span class="bd-ico">🗑</span><span class="bd-plus callout">+</span></div>
+        <table class="bd-tbl"><thead><tr><th>L3 Out</th></tr></thead>
+        <tbody><tr><td class="empty">&nbsp;</td></tr></tbody></table>
+      </div>
+    </div>
+
+  </div>
+  <div class="ft">
+    <button type="button" class="btn cancel">Previous</button>
+    <button type="button" class="btn cancel">Cancel</button>
+    <button type="button" class="btn pri hl">Next</button>
+  </div>
+</div>
+
+  </div>
+</div>
+</section>
+<section class="form-step bd-step" id="bd-src5"><h2>Associated L3 Out aci_p01_L3out</h2><p>Same Step 2 values as the previous shot, now with Associated L3 Out <code>aci_p01_L3out</code>. Next is the highlighted action. The same image was also supplied as step6.png and is not repeated.</p>
+<div class="aci-compare-grid">
+  <div class="aci-compare-shot">
+    <a class="shot" href="/aci-gui-forms/img/create-bd-step5-20261114-0018-AEDT.png" onclick="aciZoom(this.href);return false;">
+      <img class="tt-keep" src="/aci-gui-forms/img/create-bd-step5-20261114-0018-AEDT.png" alt="Aung&#x27;s screenshot (step5.png)."><p class="caption">Aung&#x27;s screenshot (step5.png).</p>
+    </a>
+  </div>
+  <div class="aci-compare-replica">
+    <h2>Form replica</h2>
+    
+<div class="apic apic-nx l3-wiz bd-wiz">
+  <div class="hd">Create Bridge Domain <span class="l3-hd-right"><div class="wiz-tabs l3-tabs bd-tabs" aria-hidden="true"><span class="wiz-tab chev">1. Main</span><span class="wiz-tab chev on">2. L3 Configurations</span><span class="wiz-tab">3. Advanced/Troubleshooting</span></div> <span class="hd-tools"><span class="x">?</span> <span class="x">×</span></span></span></div>
+  <div class="bd">
+    <p class="bd-step-lab">STEP 2 &gt; L3 Configurations</p>
+    
+    <div class="row"><label>Unicast Routing:</label><label class="tn-check"><input type="checkbox" checked disabled> Enabled</label></div>
+    <div class="row"><label>ARP Flooding:</label><label class="tn-check"><input type="checkbox" checked disabled> Enabled</label></div>
+    <div class="row"><label>Config BD MAC Address:</label><label class="tn-check"><input type="checkbox" checked disabled></label></div>
+    <div class="row"><label>MAC Address:</label><div class="fake-input">00:22:BD:F8:19:FF</div></div>
+
+    <div class="row top"><label>Subnets:</label>
+      <div class="bd-tbl-wrap">
+        <div class="bd-tbl-bar"><span class="bd-ico">🗑</span><span class="bd-plus">+</span></div>
+        <table class="bd-tbl"><thead><tr><th>Gateway Address</th><th>Scope</th><th>Primary IP Address</th><th>Subnet Control</th></tr></thead>
+        <tbody><tr class="on"><td class="val-red">10.0.144.1/29</td><td>Advertised Externally</td><td>False</td><td></td></tr></tbody></table>
+      </div>
+    </div>
+
+    <div class="row top dim">
+      <label>Limit Local IP Learning To BD/EPG Subnet(s):</label>
+      <label class="tn-check"><input type="checkbox" checked disabled></label>
+    </div>
+    <div class="bd-info"><span class="bd-info-i">i</span><span>Info: This option is not available when &quot;Enforce Subnet Check&quot; is enabled from &quot;System Settings&quot; -&gt; &quot;Fabric-Wide Settings Policy&quot;.</span></div>
+    <div class="row"><label>EP Move Detection Mode:</label><label class="tn-check"><input type="checkbox" disabled> GARP based detection</label></div>
+    <div class="row top"><label>DHCP Labels:</label>
+      <div class="bd-tbl-wrap">
+        <div class="bd-tbl-bar"><span class="bd-ico">🗑</span><span class="bd-plus">+</span></div>
+        <table class="bd-tbl"><thead><tr><th>Name</th><th>Scope</th><th>DHCP Option Policy</th></tr></thead>
+        <tbody><tr><td colspan="3" class="empty">&nbsp;</td></tr></tbody></table>
+      </div>
+    </div>
+
+    <div class="row top"><label>Associated L3 Outs:</label>
+      <div class="bd-tbl-wrap">
+        <div class="bd-tbl-bar"><span class="bd-ico">🗑</span><span class="bd-plus">+</span></div>
+        <table class="bd-tbl"><thead><tr><th>L3 Out</th></tr></thead>
+        <tbody><tr class="on"><td class="val-red">aci_p01_L3out</td></tr></tbody></table>
+      </div>
+    </div>
+
+  </div>
+  <div class="ft">
+    <button type="button" class="btn cancel">Previous</button>
+    <button type="button" class="btn cancel">Cancel</button>
+    <button type="button" class="btn pri hl">Next</button>
+  </div>
+</div>
+
+  </div>
+</div>
+</section>
+<section class="form-step bd-step" id="bd-src8"><h2>Step 1 Main — aci_p01_bd_app</h2><p>A second Create Bridge Domain wizard. Name is <code>aci_p01_bd_app</code>. Alias, Description and Tags are blank, Type is regular, Advertise Host Routes is unticked, VRF is <code>aci_p01_vrf</code> (annotation also names tenant <code>aci_p01_tenant</code>), Forwarding is Optimize, and the three policies are unset — the same Main values as the web BD, with a different name. Next is the highlighted action (light).</p>
+<div class="aci-compare-grid">
+  <div class="aci-compare-shot">
+    <a class="shot" href="/aci-gui-forms/img/create-bd-step8-20261114-0018-AEDT.png" onclick="aciZoom(this.href);return false;">
+      <img class="tt-keep" src="/aci-gui-forms/img/create-bd-step8-20261114-0018-AEDT.png" alt="Aung&#x27;s screenshot (step8.png)."><p class="caption">Aung&#x27;s screenshot (step8.png).</p>
+    </a>
+  </div>
+  <div class="aci-compare-replica">
+    <h2>Form replica</h2>
+    
+<div class="apic apic-nx l3-wiz bd-wiz">
+  <div class="hd">Create Bridge Domain <span class="l3-hd-right"><div class="wiz-tabs l3-tabs bd-tabs" aria-hidden="true"><span class="wiz-tab chev on">1. Main</span><span class="wiz-tab chev">2. L3 Configurations</span><span class="wiz-tab">3. Advanced/Troubleshooting</span></div> <span class="hd-tools"><span class="x">?</span> <span class="x">×</span></span></span></div>
+  <div class="bd">
+    <p class="bd-step-lab">STEP 1 &gt; Main</p>
+    
+    <div class="row"><label>Name:</label><div class="fake-input val-red">aci_p01_bd_app</div></div>
+    <div class="row"><label>Alias:</label><div class="fake-input"></div></div>
+    <div class="row top"><label>Description:</label><div class="fake-input tall ph">optional</div></div>
+    <div class="row"><label>Tags:</label><div class="fake-input dd-mini ph">enter tags separated by comma ▾</div></div>
+    <div class="row"><label>Type:</label><div class="l3-seg" aria-hidden="true"><span>fc</span><span class="on">regular</span></div></div>
+    <div class="row"><label>Advertise Host Routes:</label><label class="tn-check"><input type="checkbox" disabled></label></div>
+    <div class="row"><label>VRF:</label><div class="fake-input val-red dd-mini">aci_p01_vrf ▾</div></div>
+    <p class="bd-vrf-note">The screenshot annotation lists VRF <code>aci_p01_vrf</code> under tenant <code>aci_p01_tenant</code>.</p>
+    <div class="row"><label>Forwarding:</label><div class="fake-input dd-mini">Optimize ▾</div></div>
+    <div class="row top"><label>Endpoint Retention Policy:</label>
+      <div>
+        <div class="fake-input dd-mini ph">select a value ▾</div>
+        <p class="bd-hint">This policy only applies to local L2 L3 and remote L3 entries</p>
+      </div>
+    </div>
+    <div class="row"><label>IGMP Snoop Policy:</label><div class="fake-input dd-mini ph">select a value ▾</div></div>
+    <div class="row"><label>MLD Snoop Policy:</label><div class="fake-input dd-mini ph">select a value ▾</div></div>
+
+  </div>
+  <div class="ft">
+    <button type="button" class="btn dis">Previous</button>
+    <button type="button" class="btn cancel">Cancel</button>
+    <button type="button" class="btn lite">Next</button>
+  </div>
+</div>
+
+  </div>
+</div>
+</section>
+<section class="form-step bd-step" id="bd-src9"><h2>Step 2 — no subnets yet</h2><p>Warning: <em>It is recommended to disable Unicast Routing when no subnets are configured.</em> Unicast Routing and ARP Flooding remain Enabled, Config BD MAC Address is ticked, MAC Address is <code>00:22:BD:F8:19:FF</code>, the Subnets table is empty, and the screenshot highlights <strong>+</strong> on Subnets. Associated L3 Outs is empty. The same image was also supplied as step10.png and is not repeated.</p>
+<div class="aci-compare-grid">
+  <div class="aci-compare-shot">
+    <a class="shot" href="/aci-gui-forms/img/create-bd-step9-20261114-0018-AEDT.png" onclick="aciZoom(this.href);return false;">
+      <img class="tt-keep" src="/aci-gui-forms/img/create-bd-step9-20261114-0018-AEDT.png" alt="Aung&#x27;s screenshot (step9.png)."><p class="caption">Aung&#x27;s screenshot (step9.png).</p>
+    </a>
+  </div>
+  <div class="aci-compare-replica">
+    <h2>Form replica</h2>
+    
+<div class="apic apic-nx l3-wiz bd-wiz">
+  <div class="hd">Create Bridge Domain <span class="l3-hd-right"><div class="wiz-tabs l3-tabs bd-tabs" aria-hidden="true"><span class="wiz-tab chev">1. Main</span><span class="wiz-tab chev on">2. L3 Configurations</span><span class="wiz-tab">3. Advanced/Troubleshooting</span></div> <span class="hd-tools"><span class="x">?</span> <span class="x">×</span></span></span></div>
+  <div class="bd">
+    <p class="bd-step-lab">STEP 2 &gt; L3 Configurations</p>
+    <div class="bd-warn"><span class="bd-warn-i">!</span><span>It is recommended to disable Unicast Routing when no subnets are configured.</span></div>
+    <div class="row"><label>Unicast Routing:</label><label class="tn-check"><input type="checkbox" checked disabled> Enabled</label></div>
+    <div class="row"><label>ARP Flooding:</label><label class="tn-check"><input type="checkbox" checked disabled> Enabled</label></div>
+    <div class="row"><label>Config BD MAC Address:</label><label class="tn-check"><input type="checkbox" checked disabled></label></div>
+    <div class="row"><label>MAC Address:</label><div class="fake-input">00:22:BD:F8:19:FF</div></div>
+
+    <div class="row top"><label>Subnets:</label>
+      <div class="bd-tbl-wrap">
+        <div class="bd-tbl-bar"><span class="bd-ico">🗑</span><span class="bd-plus">+</span></div>
+        <table class="bd-tbl"><thead><tr><th>Gateway Address</th><th>Scope</th><th>Primary IP Address</th><th>Subnet Control</th></tr></thead>
+        <tbody><tr><td colspan="4" class="empty">&nbsp;</td></tr></tbody></table>
+      </div>
+    </div>
+
+    <div class="row top dim">
+      <label>Limit Local IP Learning To BD/EPG Subnet(s):</label>
+      <label class="tn-check"><input type="checkbox" checked disabled></label>
+    </div>
+    <div class="bd-info"><span class="bd-info-i">i</span><span>Info: This option is not available when &quot;Enforce Subnet Check&quot; is enabled from &quot;System Settings&quot; -&gt; &quot;Fabric-Wide Settings Policy&quot;.</span></div>
+    <div class="row"><label>EP Move Detection Mode:</label><label class="tn-check"><input type="checkbox" disabled> GARP based detection</label></div>
+    <div class="row top"><label>DHCP Labels:</label>
+      <div class="bd-tbl-wrap">
+        <div class="bd-tbl-bar"><span class="bd-ico">🗑</span><span class="bd-plus">+</span></div>
+        <table class="bd-tbl"><thead><tr><th>Name</th><th>Scope</th><th>DHCP Option Policy</th></tr></thead>
+        <tbody><tr><td colspan="3" class="empty">&nbsp;</td></tr></tbody></table>
+      </div>
+    </div>
+
+    <div class="row top"><label>Associated L3 Outs:</label>
+      <div class="bd-tbl-wrap">
+        <div class="bd-tbl-bar"><span class="bd-ico">🗑</span><span class="bd-plus">+</span></div>
+        <table class="bd-tbl"><thead><tr><th>L3 Out</th></tr></thead>
+        <tbody><tr><td class="empty">&nbsp;</td></tr></tbody></table>
+      </div>
+    </div>
+
+  </div>
+  <div class="ft">
+    <button type="button" class="btn cancel">Previous</button>
+    <button type="button" class="btn cancel">Cancel</button>
+    <button type="button" class="btn pri hl">Next</button>
+  </div>
+</div>
+
+  </div>
+</div>
+</section>
+<section class="form-step bd-step" id="bd-src11"><h2>Create Subnet — 172.16.1.1/24</h2><p>Gateway IP <code>172.16.1.1/24</code>. Treat as virtual IP address and Make this IP address primary are unticked. Scope: Advertised Externally and Shared between VRFs are both unticked. Description blank. Subnet Control: ND RA Prefix ticked; No Default SVI Gateway and Querier IP unticked. IP Data-plane Learning is Enabled. L3 Out for Route Profile, ND RA Prefix Policy and Policy Tags are unset. The screenshot highlights OK (light).</p>
+<div class="aci-compare-grid">
+  <div class="aci-compare-shot">
+    <a class="shot" href="/aci-gui-forms/img/create-bd-step11-20261114-0018-AEDT.png" onclick="aciZoom(this.href);return false;">
+      <img class="tt-keep" src="/aci-gui-forms/img/create-bd-step11-20261114-0018-AEDT.png" alt="Aung&#x27;s screenshot (step11.png)."><p class="caption">Aung&#x27;s screenshot (step11.png).</p>
+    </a>
+  </div>
+  <div class="aci-compare-replica">
+    <h2>Form replica</h2>
+    
+<div class="apic apic-nx bd-sub-dlg">
+  <div class="hd">Create Subnet <span class="hd-tools"><span class="x">?</span> <span class="x">×</span></span></div>
+  <div class="bd">
+    <div class="row"><label>Gateway IP:</label><div class="fake-input val-red">172.16.1.1/24</div></div>
+    <p class="bd-hint">address/mask</p>
+    <div class="row"><label>Treat as virtual IP address:</label><label class="tn-check"><input type="checkbox" disabled></label></div>
+    <div class="row"><label>Make this IP address primary:</label><label class="tn-check"><input type="checkbox" disabled></label></div>
+    <div class="row top"><label>Scope:</label>
+      <div class="bd-checks">
+        <label class="tn-check"><input type="checkbox" disabled> Advertised Externally</label>
+        <label class="tn-check"><input type="checkbox" disabled> Shared between VRFs</label>
+      </div>
+    </div>
+    <div class="row top"><label>Description:</label><div class="fake-input tall ph">optional</div></div>
+    <div class="row top"><label>Subnet Control:</label>
+      <div class="bd-checks">
+        <label class="tn-check"><input type="checkbox" checked disabled> ND RA Prefix</label>
+        <label class="tn-check"><input type="checkbox" disabled> No Default SVI Gateway</label>
+        <label class="tn-check"><input type="checkbox" disabled> Querier IP</label>
+      </div>
+    </div>
+    <div class="row"><label>IP Data-plane Learning:</label>
+      <div class="l3-seg" aria-hidden="true"><span>Disabled</span><span class="on">Enabled</span></div>
+    </div>
+    <div class="row"><label>L3 Out for Route Profile:</label><div class="fake-input dd-mini ph">select a value ▾</div></div>
+    <div class="row"><label>ND RA Prefix Policy:</label><div class="fake-input dd-mini ph">select a value ▾</div></div>
+    <div class="row"><label>Policy Tags:</label><div class="bd-tags"><span class="bd-plus">+</span> Click to add a new tag</div></div>
+  </div>
+  <div class="ft">
+    <button type="button" class="btn cancel">Cancel</button>
+    <button type="button" class="btn lite">OK</button>
+  </div>
+</div>
+
+  </div>
+</div>
+</section>
+<section class="form-step bd-step" id="bd-src12"><h2>Step 2 — app subnet added, no L3 Out</h2><p>Subnet row <code>172.16.1.1/24</code>, Private to VRF, Primary IP Address False. Associated L3 Outs is still empty. Unicast Routing and ARP Flooding stay Enabled, MAC Address is <code>00:22:BD:F8:19:FF</code>. Next is the highlighted action.</p>
+<div class="aci-compare-grid">
+  <div class="aci-compare-shot">
+    <a class="shot" href="/aci-gui-forms/img/create-bd-step12-20261114-0018-AEDT.png" onclick="aciZoom(this.href);return false;">
+      <img class="tt-keep" src="/aci-gui-forms/img/create-bd-step12-20261114-0018-AEDT.png" alt="Aung&#x27;s screenshot (step12.png)."><p class="caption">Aung&#x27;s screenshot (step12.png).</p>
+    </a>
+  </div>
+  <div class="aci-compare-replica">
+    <h2>Form replica</h2>
+    
+<div class="apic apic-nx l3-wiz bd-wiz">
+  <div class="hd">Create Bridge Domain <span class="l3-hd-right"><div class="wiz-tabs l3-tabs bd-tabs" aria-hidden="true"><span class="wiz-tab chev">1. Main</span><span class="wiz-tab chev on">2. L3 Configurations</span><span class="wiz-tab">3. Advanced/Troubleshooting</span></div> <span class="hd-tools"><span class="x">?</span> <span class="x">×</span></span></span></div>
+  <div class="bd">
+    <p class="bd-step-lab">STEP 2 &gt; L3 Configurations</p>
+    
+    <div class="row"><label>Unicast Routing:</label><label class="tn-check"><input type="checkbox" checked disabled> Enabled</label></div>
+    <div class="row"><label>ARP Flooding:</label><label class="tn-check"><input type="checkbox" checked disabled> Enabled</label></div>
+    <div class="row"><label>Config BD MAC Address:</label><label class="tn-check"><input type="checkbox" checked disabled></label></div>
+    <div class="row"><label>MAC Address:</label><div class="fake-input">00:22:BD:F8:19:FF</div></div>
+
+    <div class="row top"><label>Subnets:</label>
+      <div class="bd-tbl-wrap">
+        <div class="bd-tbl-bar"><span class="bd-ico">🗑</span><span class="bd-plus">+</span></div>
+        <table class="bd-tbl"><thead><tr><th>Gateway Address</th><th>Scope</th><th>Primary IP Address</th><th>Subnet Control</th></tr></thead>
+        <tbody><tr class="on"><td class="val-red">172.16.1.1/24</td><td>Private to VRF</td><td>False</td><td></td></tr></tbody></table>
+      </div>
+    </div>
+
+    <div class="row top dim">
+      <label>Limit Local IP Learning To BD/EPG Subnet(s):</label>
+      <label class="tn-check"><input type="checkbox" checked disabled></label>
+    </div>
+    <div class="bd-info"><span class="bd-info-i">i</span><span>Info: This option is not available when &quot;Enforce Subnet Check&quot; is enabled from &quot;System Settings&quot; -&gt; &quot;Fabric-Wide Settings Policy&quot;.</span></div>
+    <div class="row"><label>EP Move Detection Mode:</label><label class="tn-check"><input type="checkbox" disabled> GARP based detection</label></div>
+    <div class="row top"><label>DHCP Labels:</label>
+      <div class="bd-tbl-wrap">
+        <div class="bd-tbl-bar"><span class="bd-ico">🗑</span><span class="bd-plus">+</span></div>
+        <table class="bd-tbl"><thead><tr><th>Name</th><th>Scope</th><th>DHCP Option Policy</th></tr></thead>
+        <tbody><tr><td colspan="3" class="empty">&nbsp;</td></tr></tbody></table>
+      </div>
+    </div>
+
+    <div class="row top"><label>Associated L3 Outs:</label>
+      <div class="bd-tbl-wrap">
+        <div class="bd-tbl-bar"><span class="bd-ico">🗑</span><span class="bd-plus">+</span></div>
+        <table class="bd-tbl"><thead><tr><th>L3 Out</th></tr></thead>
+        <tbody><tr><td class="empty">&nbsp;</td></tr></tbody></table>
+      </div>
+    </div>
+
+  </div>
+  <div class="ft">
+    <button type="button" class="btn cancel">Previous</button>
+    <button type="button" class="btn cancel">Cancel</button>
+    <button type="button" class="btn pri hl">Next</button>
+  </div>
+</div>
+
+  </div>
+</div>
+</section>
+<section class="form-step bd-step" id="bd-src13"><h2>Step 3 Advanced/Troubleshooting</h2><p>Shown only in the <code>aci_p01_bd_app</code> sequence — there is no separate Advanced screenshot for <code>aci_p01_bd_web</code>. Monitoring Policy and First Hop Security Policy are unset. BD stretched to Remote Sites is unticked. Disable IP Data-plane learning for PBR Node is <strong>No</strong>. NetFlow Monitor Policies is empty. Configure Quota is unticked. Drop ARP with Multicast SMAC is ticked. Rogue/Coop Exception List is empty. Finish is the highlighted action.</p>
+<div class="aci-compare-grid">
+  <div class="aci-compare-shot">
+    <a class="shot" href="/aci-gui-forms/img/create-bd-step13-20261114-0018-AEDT.png" onclick="aciZoom(this.href);return false;">
+      <img class="tt-keep" src="/aci-gui-forms/img/create-bd-step13-20261114-0018-AEDT.png" alt="Aung&#x27;s screenshot (step13.png)."><p class="caption">Aung&#x27;s screenshot (step13.png).</p>
+    </a>
+  </div>
+  <div class="aci-compare-replica">
+    <h2>Form replica</h2>
+    
+<div class="apic apic-nx l3-wiz bd-wiz">
+  <div class="hd">Create Bridge Domain <span class="l3-hd-right"><div class="wiz-tabs l3-tabs bd-tabs" aria-hidden="true"><span class="wiz-tab chev">1. Main</span><span class="wiz-tab chev">2. L3 Configurations</span><span class="wiz-tab on">3. Advanced/Troubleshooting</span></div> <span class="hd-tools"><span class="x">?</span> <span class="x">×</span></span></span></div>
+  <div class="bd">
+    <p class="bd-step-lab">STEP 3 &gt; Advanced/Troubleshooting</p>
+    
+    <div class="row"><label>Monitoring Policy:</label><div class="fake-input dd-mini ph">select a value ▾</div></div>
+    <div class="row"><label>First Hop Security Policy:</label><div class="fake-input dd-mini ph">select a value ▾</div></div>
+    <div class="row"><label>BD stretched to Remote Sites:</label><label class="tn-check"><input type="checkbox" disabled></label></div>
+    <div class="row"><label>Disable IP Data-plane learning for PBR Node:</label>
+      <div class="l3-seg" aria-hidden="true"><span>Yes</span><span class="on">No</span></div>
+    </div>
+    <div class="row top"><label>NetFlow Monitor Policies:</label>
+      <div class="bd-tbl-wrap">
+        <div class="bd-tbl-bar"><span class="bd-ico">🗑</span><span class="bd-plus">+</span></div>
+        <table class="bd-tbl"><thead><tr><th>NetFlow IP Filter Type</th><th>NetFlow Monitor Policy</th></tr></thead>
+        <tbody><tr><td colspan="2" class="empty">&nbsp;</td></tr></tbody></table>
+      </div>
+    </div>
+    <div class="row"><label>Configure Quota:</label><label class="tn-check"><input type="checkbox" disabled></label></div>
+    <div class="row"><label>Drop ARP with Multicast SMAC:</label><label class="tn-check"><input type="checkbox" checked disabled></label></div>
+    <div class="row top"><label>Rogue/Coop Exception List:</label>
+      <div class="bd-tbl-wrap bd-narrow">
+        <div class="bd-tbl-bar"><span class="bd-ico">🗑</span><span class="bd-plus">+</span></div>
+        <table class="bd-tbl"><thead><tr><th>MAC</th></tr></thead>
+        <tbody><tr><td class="empty">&nbsp;</td></tr></tbody></table>
+      </div>
+    </div>
+
+  </div>
+  <div class="ft">
+    <button type="button" class="btn cancel">Previous</button>
+    <button type="button" class="btn cancel">Cancel</button>
+    <button type="button" class="btn pri hl">Finish</button>
+  </div>
+</div>
+
+  </div>
+</div>
+</section>
+<h2>APIC classes</h2>
+<table class="tree"><thead><tr><th>Class</th><th>Role</th><th>DN / attribute</th></tr></thead><tbody>
+<tr><td><span class="dn">fvBD</span></td><td>The bridge domain</td><td><span class="dn">uni/tn-aci_p01_tenant/BD-aci_p01_bd_web</span> and <span class="dn">uni/tn-aci_p01_tenant/BD-aci_p01_bd_app</span>. unicastRoute <code>yes</code>, arpFlood <code>yes</code>, mac <code>00:22:BD:F8:19:FF</code></td></tr>
+<tr><td><span class="dn">fvRsCtx</span></td><td>VRF attachment</td><td>tnFvCtxName <code>aci_p01_vrf</code> on both BDs</td></tr>
+<tr><td><span class="dn">fvSubnet</span></td><td>BD subnet / gateway</td><td>web: ip <code>10.0.144.1/29</code> scope <code>public</code> ctrl <code>nd</code>. app: ip <code>172.16.1.1/24</code> scope <code>private</code> ctrl <code>nd</code></td></tr>
+<tr><td><span class="dn">fvRsBDToOut</span></td><td>Associated L3 Out</td><td>tnL3extOutName <code>aci_p01_L3out</code> on <code>aci_p01_bd_web</code> only. The app BD left Associated L3 Outs empty</td></tr>
+</tbody></table>
+<h2>NaC YAML</h2>
+<pre class="code">apic:
+  tenants:
+    - name: aci_p01_tenant
+      bridge_domains:
+        - name: aci_p01_bd_web
+          vrf: aci_p01_vrf
+          # Unicast Routing and ARP Flooding were both Enabled
+          # Config BD MAC Address was ticked
+          mac: &quot;00:22:BD:F8:19:FF&quot;
+          subnets:
+            - ip: 10.0.144.1/29
+              # Scope: Advertised Externally (public); Shared between VRFs unticked
+              # Subnet Control: ND RA Prefix ticked
+              public: true
+              private: false
+              shared: false
+          l3outs:
+            - aci_p01_L3out
+        - name: aci_p01_bd_app
+          vrf: aci_p01_vrf
+          mac: &quot;00:22:BD:F8:19:FF&quot;
+          subnets:
+            - ip: 172.16.1.1/24
+              # Scope: both boxes unticked — row then shows Private to VRF
+              public: false
+              private: true
+              shared: false
+          # Associated L3 Outs was left empty
+</pre>
+<h2>REST JSON</h2>
+<pre class="code">{
+  &quot;fvBD&quot;: [
+    {
+      &quot;attributes&quot;: {
+        &quot;dn&quot;: &quot;uni/tn-aci_p01_tenant/BD-aci_p01_bd_web&quot;,
+        &quot;name&quot;: &quot;aci_p01_bd_web&quot;,
+        &quot;unicastRoute&quot;: &quot;yes&quot;,
+        &quot;arpFlood&quot;: &quot;yes&quot;,
+        &quot;mac&quot;: &quot;00:22:BD:F8:19:FF&quot;,
+        &quot;status&quot;: &quot;created&quot;
+      },
+      &quot;children&quot;: [
+        {&quot;fvRsCtx&quot;: {&quot;attributes&quot;: {&quot;tnFvCtxName&quot;: &quot;aci_p01_vrf&quot;}}},
+        {&quot;fvSubnet&quot;: {&quot;attributes&quot;: {&quot;ip&quot;: &quot;10.0.144.1/29&quot;, &quot;scope&quot;: &quot;public&quot;, &quot;ctrl&quot;: &quot;nd&quot;}}},
+        {&quot;fvRsBDToOut&quot;: {&quot;attributes&quot;: {&quot;tnL3extOutName&quot;: &quot;aci_p01_L3out&quot;}}}
+      ]
+    },
+    {
+      &quot;attributes&quot;: {
+        &quot;dn&quot;: &quot;uni/tn-aci_p01_tenant/BD-aci_p01_bd_app&quot;,
+        &quot;name&quot;: &quot;aci_p01_bd_app&quot;,
+        &quot;unicastRoute&quot;: &quot;yes&quot;,
+        &quot;arpFlood&quot;: &quot;yes&quot;,
+        &quot;mac&quot;: &quot;00:22:BD:F8:19:FF&quot;,
+        &quot;status&quot;: &quot;created&quot;
+      },
+      &quot;children&quot;: [
+        {&quot;fvRsCtx&quot;: {&quot;attributes&quot;: {&quot;tnFvCtxName&quot;: &quot;aci_p01_vrf&quot;}}},
+        {&quot;fvSubnet&quot;: {&quot;attributes&quot;: {&quot;ip&quot;: &quot;172.16.1.1/24&quot;, &quot;scope&quot;: &quot;private&quot;, &quot;ctrl&quot;: &quot;nd&quot;}}}
+      ]
+    }
+  ]
+}</pre>
+<h2>Related</h2><div class="related"><a href="/aci-gui/create-tenant/"><i style="--c:#2563eb"></i>Create Tenant</a><a href="/aci-gui/create-l3out/"><i style="--c:#dc2626"></i>Create L3Out</a><a href="/aci-gui/create-subnet/"><i style="--c:#0d9488"></i>Create Subnet</a><a href="/aci-gui/create-bridge-domain-step3/"><i style="--c:#0891b2"></i>Create Bridge Domain (step 3)</a><a href="/aci-policy/bridge-domain/"><i style="--c:#0891b2"></i>Bridge Domain</a><a href="/aci-gui-forms/WIP/all-forms/"><i style="--c:#0f172a"></i>All Forms</a><a href="/aci-gui-forms/WIP/gui-map/"><i style="--c:#0f172a"></i>GUI Map</a></div>
+</main>
+
+<script>
+function aciCopy(btn){
+  var pre=btn.parentElement.querySelector('pre');
+  var t=pre?pre.textContent:'';
+  if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1400)});}
+  else{var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();btn.textContent='Copied';}
+}
+function aciFilter(q, table){
+  q=(q||'').toLowerCase();
+  table.querySelectorAll('tbody tr').forEach(function(tr){
+    tr.style.display=tr.textContent.toLowerCase().indexOf(q)>=0?'':'none';
+  });
+}
+function aciSort(table, col){
+  var tb=table.tBodies[0], rows=[].slice.call(tb.rows), ths=table.tHead.rows[0].cells;
+  var dir=table.getAttribute('data-dir')==='asc'&&table.getAttribute('data-col')==String(col)?'desc':'asc';
+  rows.sort(function(a,b){
+    var x=(a.cells[col]||{}).textContent.trim().toLowerCase();
+    var y=(b.cells[col]||{}).textContent.trim().toLowerCase();
+    if(x<y) return dir==='asc'?-1:1; if(x>y) return dir==='asc'?1:-1; return 0;
+  });
+  rows.forEach(function(r){tb.appendChild(r)});
+  table.setAttribute('data-dir',dir); table.setAttribute('data-col',col);
+  for(var i=0;i<ths.length;i++){ths[i].textContent=ths[i].textContent.replace(/[▲▼]\s*$/,''); if(i===col) ths[i].textContent+=' '+(dir==='asc'?'▲':'▼');}
+}
+function aciCsv(table, name){
+  var rows=[].slice.call(table.querySelectorAll('tr')).map(function(tr){
+    return [].slice.call(tr.cells).map(function(td){var t=td.innerText.replace(/"/g,'""');return '"'+t+'"'}).join(',');
+  });
+  var blob=new Blob([rows.join('\n')],{type:'text/csv'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name||'table.csv';a.click();
+}
+function aciZoom(src){
+  var b=document.getElementById('lightbox');
+  if(!b){b=document.createElement('div');b.id='lightbox';b.onclick=function(){b.classList.remove('on')};var i=document.createElement('img');i.className='tt-keep';b.appendChild(i);document.body.appendChild(b);}
+  b.querySelector('img').src=src;b.classList.add('on');
+}
+
+function aciCopyText(btn, text){
+  var t=text||'';
+  var done=function(){var o=btn.textContent;btn.textContent='Copied';setTimeout(function(){btn.textContent=o||'Copy'},1400)};
+  if(navigator.clipboard){navigator.clipboard.writeText(t).then(done).catch(done);}
+  else{var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();done();}
+}
+
+</script>
+
+
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/+$/,"")||"/"}}</script><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc){const pt=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Melbourne",hour:"2-digit",minute:"2-digit",hour12:false,hourCycle:"h23",timeZoneName:"short"}).formatToParts(new Date(d.updated_utc));const g=t=>(pt.find(x=>x.type===t)||{}).value||"";const tz=(g("timeZoneName")||"AEDT").replace("GMT+11","AEDT").replace("GMT+10","AEST");e.textContent=" (data as of "+g("hour")+":"+g("minute")+" "+tz+")"}})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script>
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:8px 0 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:6px;margin:0;padding:8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
+nav.site.im a.mi{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:auto;min-height:44px;min-width:0;padding:8px 10px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a)}
+nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:visible;text-overflow:unset;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.25;text-align:left}
+nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:22px;height:22px;padding:0 5px;border-radius:999px;font-size:16px;font-weight:800;line-height:1;background:#0f172a;color:#fff}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc;color:#0f172a}
+nav.site.im a.mi.on .im-seq{background:#fff;color:#1d4ed8}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px;flex:none}#sg-link,#tt-btn,#mm-link{height:36px;border-radius:18px}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["ARR Model","/netbox-yaml-model/arr/","🧪"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"],["Pod Policy Group","/aci-policy/pod-policy-group/","🕒"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"],["ရှေ့သို့ချီ","/roadmap/forward/","⏩"],["Time Map 2026–2030","/roadmap/forward/time-map/","🗓️"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["zFrontier","/zfrontier/","🌠",[["zFrontier","/zfrontier/","🌠"],["Farzad","/zfrontier/farzad/","📺"],["SpaceX vs Tesla shares","/zfrontier/shares/","📈"],["Optimus","/zfrontier/optimus/","🤖"],["Gigafactory","/zfrontier/gigafactory/","🏭"],["FSD versions","/zfrontier/fsd-versions/","🛣️"],["Liquid cooling","/zfrontier/liquid-cooling/","💧"],["SpaceX Tracking","/zfrontier/spacex/","🚀"],["CyberCab","/zfrontier/cybercab/","🚕"],["AI FineTune Pod","/zfrontier/ai-finetune-pod/","🎛️"],["MCP Servers","/zfrontier/mcp-servers/","🔌"],["NaC CLI","/zfrontier/nac-cli/","🧰"],["GPU Workflow","/zfrontier/3gpu-ai-workflow/","🧮"],["MWMESH","/zfrontier/mwmesh/","📡"],["Notebooks","/zfrontier/notebooks/","📓"],["RAG documents","/zfrontier/rag-documents/","📚"],["Foundation-Sec-8B","/zfrontier/foundation-sec-8b/","🛡️"],["Terafab","/zfrontier/terafab/","💠"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"]]],["ACI GUI Forms","/aci-gui-forms/WIP/","📝",[["ACI GUI Forms","/aci-gui-forms/WIP/","📝"],["All Forms","/aci-gui-forms/WIP/all-forms/","📋"],["GUI Map","/aci-gui-forms/WIP/gui-map/","🗺️"]]],["ACI GUI","/aci-gui/create-pod-policy-group/","🖥️",[["Create Pod Policy Group","/aci-gui/create-pod-policy-group/","🧬"],["Create Bridge Domain (step 3)","/aci-gui/create-bridge-domain-step3/","🌉"],["Create Subnet","/aci-gui/create-subnet/","🔢"],["Create Application Profile","/aci-gui/create-application-profile/","🧩"],["Create Management EPG","/aci-gui/create-management-epg/","🛠️"],["Static Node Management Addresses","/aci-gui/static-node-management-addresses/","📍"],["Create Fabric Policies","/aci-gui/create-fabric-policies/","🧵"],["Create Access Policies","/aci-gui/create-access-policies/","🔐"],["Create VLAN Pool","/aci-gui/create-vlan-pool/","🏷️"],["Create Physical Domain","/aci-gui/create-physical-domain/","🏛️"],["Create Access Interface Policy Group","/aci-gui/create-access-interface-policy-group/","🔌"],["Create PC Interface Policy Group","/aci-gui/create-pc-interface-policy-group/","🔀"],["Interface Wizard for vPC","/aci-gui/interface-wizard-vpc/","🪄"],["Create VMM Domain","/aci-gui/create-vmm-domain/","💻"],["vCenter Networking","/aci-gui/vcenter-networking/","🖥️"],["Create Tenant","/aci-gui/create-tenant/","🏢"],["Create L3Out","/aci-gui/create-l3out/","🌐"],["L3Out Contracts","/aci-gui/l3out-contracts/","📜"],["Create Bridge Domain","/aci-gui/create-bridge-domain/","🌉"],["Mgmt Bridge Domain","/aci-gui/mgmt-bridge-domain/","🔧"],["DHCP Relay","/aci-gui/dhcp-relay/","📡"],["Management Application Profile","/aci-gui/management-application-profile/","📦"],["Application Profile (web + app)","/aci-gui/application-profile/","🧩"],["Create VRF","/aci-gui/create-vrf/","🧭"],["Create Endpoint Group","/aci-gui/create-endpoint-group/","🎯"],["Contracts Between Tenants","/aci-gui/contracts-between-tenants/","🤝"],["Create Filter","/aci-gui/create-filter/","🧹"],["Create Contract","/aci-gui/create-contract/","📃"],["Create Management Contracts","/aci-gui/create-management-contracts/","📑"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=(seq?String(seq)+'. ':'')+e[0];if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks ›';r2.appendChild(t);
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1))});r2.appendChild(pills);n.appendChild(r2)}}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+</body>
+</html>
