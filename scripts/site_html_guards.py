@@ -10,7 +10,7 @@ from pathlib import Path
 # (see scripts/spacex_tracking_build_pages.py).
 # visitors/aci-gui-forms/ layout is maintained via aci_gui_forms_apply_layout.py.
 SKIP_HTML_PUBLISH_PREFIXES = (
-    "spacex-tracking/",
+    "zfrontier/spacex/",
     "visitors/aci-gui-forms/",
 )
 
@@ -27,8 +27,8 @@ def should_skip_html_publish(path: Path, repo_root: Path | None = None) -> bool:
     """Return True if automated HTML refresh must not touch this file."""
     repo_root = repo_root or Path(__file__).resolve().parent.parent
     rel = relative_posix(path, repo_root)
-    if rel.endswith("spacex-tracking/index.html") or "/spacex-tracking/" in rel:
-        if path.name == "index.html" or rel.startswith("spacex-tracking/"):
+    if rel.endswith("zfrontier/spacex/index.html") or "/zfrontier/spacex/" in rel:
+        if path.name == "index.html" or rel.startswith("zfrontier/spacex/"):
             for prefix in SKIP_HTML_PUBLISH_PREFIXES:
                 if rel.startswith(prefix) or rel == prefix.rstrip("/"):
                     return True
