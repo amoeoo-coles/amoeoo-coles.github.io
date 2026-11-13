@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Fetch visitor stats from GoatCounter and write data/visitors.json plus
-visitors/daily.json and visitors/detail.json for the Visitors pages.
+visitors/daily.json, visitors/detail.json, and ARR/visitors/data.json for the Visitors and ARR visitors pages.
 
 Needs GOATCOUNTER_TOKEN (read-statistics). Optional GOATCOUNTER_EXPORT_TOKEN
 (read-statistics + export) is used for CSV/JSON exports. Never prints tokens.
@@ -841,6 +841,138 @@ def main():
         f.write("\n")
     print("countries", len(countries), "pages", len(out.get("pages", [])), "has_total", bool(out.get("total")), "as_of", out["as_of_aedt"])
     write_daily(total, total_src, now_utc, now_mel)
+    write_arr_visitors(out.get("pages") or [], now_utc, now_mel, out.get("countries") or [])
+
+
+def _norm_arr_path(p):
+    p = str(p or "").split("?")[0].replace("/index.html", "").rstrip("/")
+    return p or "/"
+
+
+def is_arr_report_path(p):
+    n = _norm_arr_path(p)
+    return n == "/ARR" or n.startswith("/ARR/")
+
+
+def write_arr_visitors(pages, now_utc, now_mel, site_countries=None):
+    """Write aggregate /ARR/ visitor counts for ARR/visitors/. Never stores raw hits."""
+    out_dir = "ARR/visitors"
+    os.makedirs(out_dir, exist_ok=True)
+    arr_pages = []
+    day_totals = {}
+    total = 0
+    for p in pages or []:
+        if not is_arr_report_path(p.get("path")):
+            continue
+        rec = {
+            "path": _norm_arr_path(p.get("path")),
+            "title": p.get("title") or "",
+            "count": int(p.get("count") or 0),
+            "days": p.get("days") or {},
+        }
+        arr_pages.append(rec)
+        total += rec["count"]
+        for day, n in (rec["days"] or {}).items():
+            day_totals[day] = day_totals.get(day, 0) + int(n or 0)
+    arr_pages.sort(key=lambda x: (-x["count"], x["path"]))
+    days = [{"day": d, "visitors": day_totals[d]} for d in sorted(day_totals)]
+
+    countries, countries_note = [], "No country counts for /ARR/ paths yet."
+    try:
+        end = (now_utc + dt.timedelta(hours=1)).strftime("%Y-%m-%dT%H:00:00Z")
+        filtered = get("/stats/locations", limit=100, filter="/ARR", start="2026-11-07T00:00:00Z", end=end).get("stats", [])
+        rows = [{"id": c.get("id"), "name": c.get("name"), "count": int(c.get("count") or 0)} for c in filtered if int(c.get("count") or 0)]
+        site_ids = {c.get("id") for c in (site_countries or [])}
+        site_total = sum(int(c.get("count") or 0) for c in (site_countries or []))
+        filt_total = sum(r["count"] for r in rows)
+        # If the API ignored the path filter, the list matches the site-wide countries — do not publish those as /ARR/.
+        if rows and not (site_total and filt_total == site_total and {r["id"] for r in rows} == site_ids):
+            countries = rows
+            countries_note = ""
+        elif rows:
+            countries_note = (
+                "GoatCounter did not return a path-filtered country list for /ARR/; "
+                "site-wide country totals stay on /visitors/countries/."
+            )
+    except Exception:
+        countries_note = "Country counts for /ARR/ paths are not available yet."
+
+    note = ""
+    if total == 0:
+        note = (
+            "GoatCounter tracking was added to /ARR/ pages on 13 Nov 2026. "
+            "There are no /ARR/ visits in this snapshot yet, so counts start from now."
+        )
+
+    data = {
+        "source": "GoatCounter aggregates via scripts/fetch_visitors.py (path prefix /ARR only)",
+        "prefix": "/ARR",
+        "updated_utc": now_utc.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "as_of_aedt": now_mel.strftime("%Y-%m-%d %H:%M %Z"),
+        "timezone": "Australia/Melbourne",
+        "metric": METRIC,
+        "total": total,
+        "days": days,
+        "pages": arr_pages,
+        "countries": countries,
+        "countries_note": countries_note,
+        "note": note,
+        "history_short": len(days) < 3,
+    }
+    data_path = os.path.join(out_dir, "data.json")
+    with open(data_path, "w") as f:
+        json.dump(data, f, indent=1)
+        f.write("\n")
+
+    day = now_mel.strftime("%Y-%m-%d")
+    hist_dir = os.path.join(out_dir, "history", day)
+    os.makedirs(hist_dir, exist_ok=True)
+    with open(os.path.join(hist_dir, "data.json"), "w") as f:
+        json.dump(data, f, indent=1)
+        f.write("\n")
+
+    versions_path = os.path.join(out_dir, "versions.json")
+    versions = {"entries": []}
+    if os.path.exists(versions_path):
+        try:
+            with open(versions_path) as f:
+                versions = json.load(f) or {"entries": []}
+        except Exception:
+            versions = {"entries": []}
+    entries = list(versions.get("entries") or [])
+    summary = (
+        f"Visitor stats refresh: {total} total visit{'s' if total != 1 else ''} "
+        f"across {len(arr_pages)} /ARR/ path{'s' if len(arr_pages) != 1 else ''} "
+        f"({len(days)} day{'s' if len(days) != 1 else ''} recorded)."
+        if (total or days) else
+        "Visitor stats refresh: no /ARR/ visits recorded yet."
+    )
+    entry = {
+        "id": day,
+        "day": day,
+        "kind": "refresh",
+        "at_aedt": data["as_of_aedt"],
+        "summary": summary,
+        "total": total,
+        "pages": len(arr_pages),
+        "days_recorded": len(days),
+    }
+    today_i = next((i for i, e in enumerate(entries) if e.get("day") == day and e.get("kind") == "refresh"), None)
+    if today_i is not None:
+        entries[today_i] = entry
+    else:
+        entries.insert(0, entry)
+
+    def _key(e):
+        return e.get("at_aedt") or e.get("day") or ""
+
+    entries.sort(key=_key, reverse=True)
+    versions["entries"] = entries
+    versions["updated_utc"] = data["updated_utc"]
+    with open(versions_path, "w") as f:
+        json.dump(versions, f, indent=1)
+        f.write("\n")
+    print("ARR/visitors total", total, "pages", len(arr_pages), "days", len(days), "countries", len(countries))
 
 
 if __name__ == "__main__":
