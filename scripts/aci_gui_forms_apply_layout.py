@@ -18,7 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 FORMS = ROOT / "visitors" / "aci-gui-forms"
 MARKER = "<!-- aci-gui-forms-layout v1 -->"
-CSS_LINK = '<link rel="stylesheet" href="/visitors/aci-gui-forms/assets/forms.css"/>'
+CSS_LINK = '<link rel="stylesheet" href="/aci-gui-forms/assets/forms.css"/>'
 
 # Shot block, then Form replica section up to the next <h2> or </main>.
 SHOT_REPLICA_RE = re.compile(
