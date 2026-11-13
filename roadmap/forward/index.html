@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:auto;
+  min-height:44px;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:auto;min-height:44px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:visible;
+  text-overflow:unset;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.25;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:22px;
+  height:22px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:16px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:#1d4ed8!important;
+}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ရှေ့သို့ချီ — Forward plan — RoadMap — amoeoo-coles</title>
+<meta name="description" content="Forward plan of next steps drawn from the existing RoadMap items, as of 2026-11-13.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--site-content-max:1200px}
+html,body{margin:0;padding:0;background:var(--bg,#f8fafc);color:var(--ink,#0f172a);
+  font:15px/1.55 system-ui,Segoe UI,Arial,"Noto Sans Myanmar","Myanmar Text","Padauk",sans-serif}
+main{max-width:var(--site-content-max,1200px);margin:0 auto;padding:16px 16px 48px;width:100%;box-sizing:border-box;min-width:0}
+a{color:var(--link,#1d4ed8)}
+h1,h2,h3,.my{font-family:"Noto Sans Myanmar","Myanmar Text","Padauk",system-ui,Segoe UI,Arial,sans-serif;overflow-wrap:anywhere}
+h1{font-size:1.7rem;line-height:1.3;margin:0 0 6px}
+h2{font-size:1.2rem;margin:26px 0 8px;border-left:6px solid #0ea5e9;padding-left:10px}
+h3{font-size:1.05rem;margin:0 0 6px}
+.lead,.muted,.stamp,.crumb{color:var(--muted,#475569)}
+.stamp,.crumb{font-size:13px;margin:0 0 10px}
+.crumb a{text-decoration:none}
+.sub{font-weight:600;color:var(--muted,#475569);margin:0 0 10px}
+.subnav{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 14px}
+.subnav a{font:600 12.5px system-ui,"Noto Sans Myanmar","Myanmar Text","Padauk",sans-serif;border:1px solid var(--line,#e2e8f0);border-radius:999px;padding:3px 10px;text-decoration:none;color:var(--ink,#0f172a);background:color-mix(in srgb,var(--card,#fff) 45%,transparent)}
+.subnav a.on,.subnav a.on:visited{background:#0ea5e9;color:#fff!important;border-color:#0ea5e9}
+.notice{background:color-mix(in srgb,var(--card,#fff) 45%,transparent);border:1px solid var(--line,#e2e8f0);border-left:5px solid #f59e0b;border-radius:10px;padding:10px 14px;margin:0 0 16px}
+.kp{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0;max-width:100%}
+.kp div{background:color-mix(in srgb,var(--card,#fff) 45%,transparent);border:1px solid var(--line,#e2e8f0);border-left:5px solid var(--c,#64748b);border-radius:8px;padding:8px 14px;min-width:0}
+.kp div b{display:block;font-size:22px}
+.card{background:color-mix(in srgb,var(--card,#fff) 45%,transparent);border:1px solid var(--line,#e2e8f0);border-left:5px solid var(--c,#64748b);border-radius:10px;padding:10px 14px;margin:8px 0;box-sizing:border-box;max-width:100%;min-width:0;overflow-wrap:anywhere}
+.card .s{font-size:12px;font-weight:700;padding:2px 9px;border-radius:10px;background:var(--c,#64748b);color:#0b1220;white-space:nowrap}
+.card .hz{font-size:12px;font-weight:700;padding:2px 9px;border-radius:10px;border:1px solid var(--line,#e2e8f0);margin-left:4px}
+.card .dt,.card .d{font-size:13px;color:var(--muted,#475569)}
+.card p{margin:6px 0 0}
+.tblwrap{overflow-x:auto;max-width:100%;margin:10px 0 16px}
+table.fwd{width:100%;border-collapse:collapse;font-size:13.5px}
+table.fwd th,table.fwd td{border:1px solid var(--line,#e2e8f0);padding:7px 8px;text-align:left;vertical-align:top;overflow-wrap:anywhere;min-width:0}
+table.fwd th{background:color-mix(in srgb,var(--card,#fff) 70%,transparent)}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;background:var(--c,#64748b);color:#0b1220;white-space:nowrap}
+.est{background:#f59e0b;color:#0b1220}
+.rec{background:#22c55e;color:#0b1220}
+.axiswrap{max-width:100%;margin:8px 0 14px}
+.axiswrap svg{width:100%;height:auto;display:block}
+.axiswrap svg rect.track{fill:#e2e8f0}
+.axiswrap svg rect.tick{fill:var(--yc,#0ea5e9)}
+.axiswrap svg text{font-family:system-ui,Segoe UI,Arial,sans-serif;fill:var(--ink,#0f172a);font-size:16px;font-weight:700}
+html[data-theme="dark"] .axiswrap svg rect.track{fill:#1e293b}
+html[data-theme="dark"] .axiswrap svg text{fill:#f1f5f9}
+.years{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;align-items:start;max-width:100%}
+.year{background:color-mix(in srgb,var(--card,#fff) 45%,transparent);border:1px solid var(--line,#e2e8f0);border-top:6px solid var(--yc,#0ea5e9);border-radius:12px;padding:10px 8px;min-width:0;overflow-wrap:anywhere}
+.year h3{margin:0 0 4px}
+.chip{display:block;background:color-mix(in srgb,var(--card,#fff) 70%,transparent);border:1px solid var(--line,#e2e8f0);border-left:4px solid var(--c,#22c55e);border-radius:8px;padding:5px 7px;margin:0 0 6px;font-size:12.5px;overflow-wrap:anywhere}
+.tcard{background:color-mix(in srgb,var(--card,#fff) 70%,transparent);border:1px solid var(--line,#e2e8f0);border-left:4px solid var(--c,#64748b);border-radius:8px;padding:7px 8px;margin:0 0 8px;font-size:12.5px;overflow-wrap:anywhere;min-width:0}
+.tcard b{display:block;margin:0 0 2px}
+.related{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 0}
+.related a{border:1px solid var(--line,#e2e8f0);border-radius:999px;padding:4px 10px;text-decoration:none;background:color-mix(in srgb,var(--card,#fff) 45%,transparent);color:var(--ink,#0f172a)}
+@media (max-width:720px){
+  .years{grid-template-columns:1fr}
+  table.fwd{font-size:13px}
+}
+@media (max-width:390px){
+  main{padding:12px 10px 40px}
+  .years{grid-template-columns:1fr;gap:8px}
+  .kp div{flex:1 1 100%}
+}
+</style>
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+
+<!-- site-menu v1 --><nav class="site"><a href="/">Home</a></nav>
+<main>
+<div class="tr17" style="text-align:right;font-size:13px;margin:0 0 10px"><span class="uv" style="background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></div>
+<nav class="crumb"><a href="/">Home</a> › <a href="/roadmap/">RoadMap</a> › ရှေ့သို့ချီ</nav>
+<div class="stamp">Last updated 13 Nov 2026 19:16 AEDT (Melbourne time) · as of 2026-11-13</div>
+<nav class="subnav" aria-label="RoadMap pages"><a href="/roadmap/">🗺️ RoadMap</a><a href="/mindmap/">🧠 MindMap</a><a class="on" href="/roadmap/forward/">⏩ ရှေ့သို့ချီ</a><a href="/roadmap/forward/time-map/">🗓️ Time Map 2026–2030</a></nav>
+<h1 class="my"><span class="tt-keep">⏩</span> ရှေ့သို့ချီ</h1>
+<p class="sub">Forward plan</p>
+<p class="lead">A forward plan of next steps, drawn only from the <a href="/roadmap/">RoadMap</a> items and their linked pages. As of 2026-11-13, the RoadMap lists <b>36</b> items: <b>23</b> done, and <b>13</b> still open. Nothing here invents a new work item or a recorded date. Suggested Now / Next / Later is an order for the open items; it does not change the status shown on the RoadMap. Year placements that are not taken from a RoadMap date are planned estimates, and are drawn on the <a href="/roadmap/forward/time-map/">Time Map 2026–2030</a>.</p>
+<div class="kp"><div style="--c:#64748b"><b>36</b>RoadMap items</div><div style="--c:#22c55e"><b>23</b>Done on the RoadMap</div><div style="--c:#f59e0b"><b>5</b>Waiting on Aung</div><div style="--c:#3b82f6"><b>1</b>Marked Next</div><div style="--c:#a855f7"><b>7</b>Planned</div><div style="--c:#ef4444"><b>6</b>Suggested Now</div><div style="--c:#3b82f6"><b>1</b>Suggested Next</div><div style="--c:#a855f7"><b>6</b>Suggested Later</div></div>
+<div class="notice"><b>How to read this page.</b> Status labels (Done, Waiting on Aung, Next, Planned) are copied from the RoadMap. If a linked page shows a more recent or more detailed picture, that difference is called out in the notes. Items with no clear status or date beyond the RoadMap label are marked as such.</div>
+<h2>အနှစ်ချုပ် / Summary</h2>
+<p>Most of the source-of-truth, monitoring, demo-site and AI-resource work is already marked Done (23 of 36). What is still open sits in four places: Cursor_tenant5 (unknown-unicast choice, contracts and DMZ L3Out), pull requests for existing model branches, ACI Rack Rental APIC access and the Simulator APIC VPN, the separate ACI hardware site, and the later full IaC flow plus extra environments. Six of the open items are suggested as Now because they are already Waiting on Aung, or — in the case of the Cursor_tenant5 contracts — a prepare-only package is already on the Pending Provisioning page. One item is suggested as Next (publish the hardware pages once the account exists). Six Phase 6 and Phase 7 items stay Later.</p>
+<h2>ယခု / Now</h2>
+<p class="lead">Work that is already waiting, or that a linked page already has a prepared package for. All of these still need a decision or an input from Aung.</p>
+<div class="card" style="--c:#f59e0b"><span class="s">Waiting on Aung</span><span class="hz">ယခု / Now</span><div><b><a href="/report17-aoapic-monitoring/pending-provisioning/">Cursor_tenant5 unknown-unicast setting</a></b><div class="d">Phase 2: Provisioning. Choose proxy or flood for the 3 bridge domains that differ between NetBox and AOAPIC.</div><p><b>Next step.</b> Choose proxy or flood for the Cursor_tenant5 bridge domains that differ between NetBox and AOAPIC, then approve the write. The RoadMap text says 3 bridge domains. The linked Pending Provisioning page (updated 11 Nov 2026 08:15 AEDT) lists 7 bridge domains with desired unknown unicast proxy versus AOAPIC flood, as part of one pending package.</p><p><b>Dependencies / blockers.</b> Waiting on Aung. The pending page says the package is prepare-only and that no live write happens until Aung names the objects and approves an explicit APIC/NetBox write. Placeholders must be confirmed.</p><p class="muted">Linked page: Pending Provisioning, rebuilt 11 Nov 2026 08:15:16 AEDT. Request titled “Cursor_tenant5 – DMZ L3Out + contracts”, requested 10 Nov 2026 10:58 AEDT, status pending, 7 differing BDs and 16 missing objects.</p></div></div>
+<div class="card" style="--c:#f59e0b"><span class="s">Waiting on Aung</span><span class="hz">ယခု / Now</span><div><b>Pull requests for the model branches</b><div class="d">Phase 2: Provisioning. PRs for the 20261109 netbox-export, hw-inventory and tenant-diagram branches and the Cursor_tenant1-3 aci-nac branches.</div><p><b>Next step.</b> Open pull requests for the 20261109 netbox-export, hw-inventory and tenant-diagram branches and the Cursor_tenant1-3 aci-nac branches, as named on the RoadMap. This item has no linked page.</p><p><b>Dependencies / blockers.</b> Waiting on Aung. The site does not show whether those PRs already exist.</p><p class="muted">No date and no link on the RoadMap. Status is only “Waiting on Aung”.</p></div></div>
+<div class="card" style="--c:#a855f7"><span class="s">Planned</span><span class="hz">ယခု / Now</span><div><b><a href="/netbox-aci-tenants/diagrams/cursor-tenant5/">Contracts and DMZ L3Out for Cursor_tenant5</a></b><div class="d">Phase 2: Provisioning. The tenant diagram shows no contracts and no L3Out yet.</div><p><b>Next step.</b> Add contracts and a DMZ L3Out for Cursor_tenant5 once the write is approved. The RoadMap marks this Planned and points at the tenant diagram, which still says there are no contracts and no L3Outs in NetBox or on AOAPIC.</p><p><b>Dependencies / blockers.</b> The tenant diagram (NetBox data 11 Nov 2026 08:15:31 AEDT; AOAPIC overlay 10 Nov 2026 08:38:09 AEDT) shows no contracts and no L3Outs. The Pending Provisioning page already has a prepare-only package for DMZ L3Out, contracts and unknown_unicast=proxy, awaiting Aung’s explicit write approval.</p><p class="muted">Suggested as Now rather than Later because the linked pending page already holds a prepared package dated 10 Nov 2026, even though the RoadMap status is Planned.</p></div></div>
+<div class="card" style="--c:#f59e0b"><span class="s">Waiting on Aung</span><span class="hz">ယခု / Now</span><div><b><a href="/netbox-yaml-model/arr/">Provide ACI Rack Rental APIC access</a></b><div class="d">Phase 3: Monitoring and testing. ARR pages need the rental APIC URL plus read-only credentials, or a config export. Physical inventory CSVs already exist under /workspace/acirackrentals.</div><p><b>Next step.</b> Provide the ACI Rack Rental APIC URL plus read-only credentials, or a read-only config export, so the ARR model pages can be filled. Physical inventory CSVs already exist under /workspace/acirackrentals.</p><p><b>Dependencies / blockers.</b> Waiting on Aung. The ARR page (rebuilt 11 Nov 2026 08:16 AEDT) says there is no rental APIC URL, credentials, or config export, and that ARR pages stay pending until that is provided. Nothing on that page is invented.</p><p class="muted">The ARR page also notes optional management/OOB IPs for existing Grafana SNMP targets. It clarifies that ARR means ACI Rack Rental, not the DevNet simulator.</p></div></div>
+<div class="card" style="--c:#f59e0b"><span class="s">Waiting on Aung</span><span class="hz">ယခု / Now</span><div><b><a href="/status/">Reconnect the Simulator APIC VPN</a></b><div class="d">Phase 3: Monitoring and testing. Simulator APIC (DevNet 10.10.20.14 — not ARR) is red on the Status page because it is unreachable. DevNet VPN appears down. ARR means ACI Rack Rental and needs its own APIC access.</div><p><b>Next step.</b> Reconnect the DevNet VPN so the Simulator APIC (10.10.20.14 — not ARR) can be reached again. The RoadMap says the Status page is red for this probe because the simulator is unreachable.</p><p><b>Dependencies / blockers.</b> Waiting on Aung (or on the DevNet VPN). The Status page last checked 13 Nov 2026 16:40 AEDT shows Simulator APIC red: it did not answer (waited 3002 ms). The same check also shows AOAPIC red (did not answer, waited 8020 ms); that is context from the linked page, not a separate RoadMap item.</p><p class="muted">Status page results on that check were already labelled as more than 26 hours old.</p></div></div>
+<div class="card" style="--c:#f59e0b"><span class="s">Waiting on Aung</span><span class="hz">ယခု / Now</span><div><b>Create the aci-hw-iac GitHub account</b><div class="d">Phase 5: Separate ACI hardware site. Private aci-hw-iac-src repo for scripts and data, public aci-hw-iac.github.io repo for the built pages, with amoeoo-coles as a collaborator.</div><p><b>Next step.</b> Create the aci-hw-iac GitHub account, with a private aci-hw-iac-src repo for scripts and data and a public aci-hw-iac.github.io repo for the built pages, and add amoeoo-coles as a collaborator.</p><p><b>Dependencies / blockers.</b> Waiting on Aung. This item has no linked page and no date on the RoadMap.</p><p class="muted">This is the blocker for “Publish the ACI hardware pages”.</p></div></div>
+<h2>နောက်တစ်ဆင့် / Next</h2>
+<p class="lead">Ready to start once its Now dependency is done. The RoadMap already marks this item as Next.</p>
+<div class="card" style="--c:#3b82f6"><span class="s">Next</span><span class="hz">နောက်တစ်ဆင့် / Next</span><div><b>Publish the ACI hardware pages</b><div class="d">Phase 5: Separate ACI hardware site. Build and publish the hardware environment site once the account exists.</div><p><b>Next step.</b> Build and publish the hardware environment site once the aci-hw-iac account exists.</p><p><b>Dependencies / blockers.</b> Depends on “Create the aci-hw-iac GitHub account”. The RoadMap lists that item as Next only after the account exists.</p><p class="muted">No date and no link on the RoadMap. Year 2027 is a planned estimate so it sits after the account-creation step in 2026.</p></div></div>
+<h2>နောက်မှ / Later</h2>
+<p class="lead">Planned Phase 6 and Phase 7 items. Explanation pages for these steps already exist from Phase 4; the open RoadMap items are the working form, portal, pipeline, promotion path and extra environments.</p>
+<div class="card" style="--c:#a855f7"><span class="s">Planned</span><span class="hz">နောက်မှ / Later</span><div><b><a href="/iac/form/">Request form</a></b><div class="d">Phase 6: Full IaC flow. Self-service form that creates the request.</div><p><b>Next step.</b> Build the self-service request form described on the RoadMap (one form that creates the request). A linked explanation page already exists at /iac/form/ (page updated 08 Nov 2026 16:32 AEDT) as part of the Phase 4 sub-pages; the Phase 6 item is the live form, not that explanation page.</p><p><b>Dependencies / blockers.</b> Planned. No delivery date is given on the RoadMap.</p><p class="muted">Placed in 2027 as a planned estimate, first in the Phase 6 sequence.</p></div></div>
+<div class="card" style="--c:#a855f7"><span class="s">Planned</span><span class="hz">နောက်မှ / Later</span><div><b><a href="/iac/super-portal/">Super Portal Front End</a></b><div class="d">Phase 6: Full IaC flow. One front end for requests, status and approvals.</div><p><b>Next step.</b> Build one front end for requests, status and approvals. The linked explanation page at /iac/super-portal/ (updated 08 Nov 2026 16:32 AEDT) already notes that Pending Provisioning, Tenants Detail, Object Drill-down and nac-test Status are early building blocks of that portal.</p><p><b>Dependencies / blockers.</b> Planned. No delivery date is given on the RoadMap.</p><p class="muted">Placed in 2027 as a planned estimate, with the request form.</p></div></div>
+<div class="card" style="--c:#a855f7"><span class="s">Planned</span><span class="hz">နောက်မှ / Later</span><div><b><a href="/iac/pipeline/">Pipeline and approval gate</a></b><div class="d">Phase 6: Full IaC flow. Pipeline that renders the model, runs nac-test, waits for approval, then deploys.</div><p><b>Next step.</b> Build the pipeline that renders the model, runs nac-test, waits for approval, then deploys, as described on the RoadMap and the /iac/pipeline/ explanation page (updated 08 Nov 2026 16:32 AEDT).</p><p><b>Dependencies / blockers.</b> Planned. No delivery date is given on the RoadMap. Naturally follows the form and portal in Phase 6.</p><p class="muted">Placed in 2028 as a planned estimate, after the 2027 form and portal estimates.</p></div></div>
+<div class="card" style="--c:#a855f7"><span class="s">Planned</span><span class="hz">နောက်မှ / Later</span><div><b><a href="/iac/dev-prod/">Dev then Prod promotion</a></b><div class="d">Phase 6: Full IaC flow. Deploy to Dev first, then promote to Prod.</div><p><b>Next step.</b> Deploy to Dev first, then promote to Prod, as described on the RoadMap and the /iac/dev-prod/ explanation page (updated 08 Nov 2026 16:32 AEDT). That page already says the Cisco DevNet Always-On sandboxes act as Development for this demo.</p><p><b>Dependencies / blockers.</b> Planned. No delivery date is given on the RoadMap. Follows the pipeline and approval gate.</p><p class="muted">Placed in 2028 as a planned estimate, with the pipeline item.</p></div></div>
+<div class="card" style="--c:#a855f7"><span class="s">Planned</span><span class="hz">နောက်မှ / Later</span><div><b><a href="/iac/sda/">SDA, SD-WAN, VXLAN EVPN and Nexus Dashboard</a></b><div class="d">Phase 7: More environments. Bring the same NetBox-driven flow to the other environments.</div><p><b>Next step.</b> Bring the same NetBox-driven flow to SDA, SD-WAN, VXLAN EVPN and Nexus Dashboard. Explanation pages for those environments already exist under /iac/ (for example /iac/sda/, updated 08 Nov 2026 16:32 AEDT); Phase 7 is the working flow, not those pages.</p><p><b>Dependencies / blockers.</b> Planned. No delivery date is given on the RoadMap. Phase 7 follows the full IaC flow in Phase 6.</p><p class="muted">Placed in 2029 as a planned estimate, first of the Phase 7 environment extensions.</p></div></div>
+<div class="card" style="--c:#a855f7"><span class="s">Planned</span><span class="hz">နောက်မှ / Later</span><div><b><a href="/iac/meraki/">Meraki, LoadBalancer and Firewall</a></b><div class="d">Phase 7: More environments. Extend the flow to Meraki, load balancers and firewalls.</div><p><b>Next step.</b> Extend the flow to Meraki, load balancers and firewalls. An explanation page already exists at /iac/meraki/ (updated 08 Nov 2026 16:32 AEDT); Phase 7 is the working flow, not that page.</p><p><b>Dependencies / blockers.</b> Planned. No delivery date is given on the RoadMap.</p><p class="muted">Placed in 2030 as a planned estimate, after the other Phase 7 environments.</p></div></div>
+<h2>အချက်အလက်ဇယား / All RoadMap items</h2>
+<p class="lead">Every one of the 36 RoadMap items, including the 23 already marked Done. Done items have no further step on the RoadMap.</p>
+<div class="tblwrap"><table class="fwd"><thead><tr><th>Phase</th><th>Item</th><th>Status on the RoadMap</th><th>Suggested order</th><th>Time Map year</th><th>Next step</th><th>Dependencies / blockers</th></tr></thead><tbody><tr><td>Phase 1: Source of truth (NetBox)</td><td><a href="/netbox-aci-objects/">NetBox ACI plugin populated</a></td><td><span class="badge" style="--c:#22c55e">Done</span><br>22 Oct 2026</td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge rec">Recorded date</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>Phase 1: Source of truth (NetBox)</td><td><a href="/netbox-aci-tenants/">Cursor tenants modelled in NetBox</a></td><td><span class="badge" style="--c:#22c55e">Done</span><br>28 Oct 2026</td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge rec">Recorded date</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>Phase 1: Source of truth (NetBox)</td><td>NetBox restored after the blank database</td><td><span class="badge" style="--c:#22c55e">Done</span><br>8 Nov 2026</td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge rec">Recorded date</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>Phase 1: Source of truth (NetBox)</td><td><a href="/netbox-yaml-model/">YAML Model from NetBox</a></td><td><span class="badge" style="--c:#22c55e">Done</span><br>9 Nov 2026</td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge rec">Recorded date</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>Phase 1: Source of truth (NetBox)</td><td><a href="/netbox-yaml-model/models/">Full NaC models for AOAPIC and ARR</a></td><td><span class="badge" style="--c:#22c55e">Done</span><br>10 Nov 2026</td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge rec">Recorded date</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>Phase 1: Source of truth (NetBox)</td><td><a href="/netbox-aci-tenants/diagrams/">NB Tenant Diagrams</a></td><td><span class="badge" style="--c:#22c55e">Done</span><br>10 Nov 2026</td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge rec">Recorded date</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>Phase 1: Source of truth (NetBox)</td><td><a href="/netbox-hw-inventory/">NB HW Inventory</a></td><td><span class="badge" style="--c:#22c55e">Done</span><br>10 Nov 2026</td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge rec">Recorded date</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>Phase 1: Source of truth (NetBox)</td><td><a href="/netbox-aci-objects/">NB Custom Objects Tracker</a></td><td><span class="badge" style="--c:#22c55e">Done</span><br>10 Nov 2026</td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge rec">Recorded date</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>Phase 2: Provisioning</td><td><a href="/report17-aoapic-monitoring/tenants/">Cursor_tenant1-3 provisioned to AOAPIC</a></td><td><span class="badge" style="--c:#22c55e">Done</span><br>8 Nov 2026</td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge rec">Recorded date</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>Phase 2: Provisioning</td><td><a href="/tasks/provisioning/">Pending Provisioning and Universal Provisioning pages</a></td><td><span class="badge" style="--c:#22c55e">Done</span><br>8 Nov 2026</td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge rec">Recorded date</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>Phase 2: Provisioning</td><td><a href="/report17-aoapic-monitoring/pending-provisioning/">Cursor_tenant5 unknown-unicast setting</a></td><td><span class="badge" style="--c:#f59e0b">Waiting on Aung</span></td><td>ယခု / Now</td><td>2026<br><span class="badge est">Planned estimate</span></td><td>Choose proxy or flood for the Cursor_tenant5 bridge domains that differ between NetBox and AOAPIC, then approve the write. The RoadMap text says 3 bridge domains. The linked Pending Provisioning page (updated 11 Nov 2026 08:15 AEDT) lists 7 bridge domains with desired unknown unicast proxy versus AOAPIC flood, as part of one pending package.</td><td>Waiting on Aung. The pending page says the package is prepare-only and that no live write happens until Aung names the objects and approves an explicit APIC/NetBox write. Placeholders must be confirmed.</td></tr><tr><td>Phase 2: Provisioning</td><td>Pull requests for the model branches</td><td><span class="badge" style="--c:#f59e0b">Waiting on Aung</span></td><td>ယခု / Now</td><td>2026<br><span class="badge est">Planned estimate</span></td><td>Open pull requests for the 20261109 netbox-export, hw-inventory and tenant-diagram branches and the Cursor_tenant1-3 aci-nac branches, as named on the RoadMap. This item has no linked page.</td><td>Waiting on Aung. The site does not show whether those PRs already exist.</td></tr><tr><td>Phase 2: Provisioning</td><td><a href="/netbox-aci-tenants/diagrams/cursor-tenant5/">Contracts and DMZ L3Out for Cursor_tenant5</a></td><td><span class="badge" style="--c:#a855f7">Planned</span></td><td>ယခု / Now</td><td>2026<br><span class="badge est">Planned estimate</span></td><td>Add contracts and a DMZ L3Out for Cursor_tenant5 once the write is approved. The RoadMap marks this Planned and points at the tenant diagram, which still says there are no contracts and no L3Outs in NetBox or on AOAPIC.</td><td>The tenant diagram (NetBox data 11 Nov 2026 08:15:31 AEDT; AOAPIC overlay 10 Nov 2026 08:38:09 AEDT) shows no contracts and no L3Outs. The Pending Provisioning page already has a prepare-only package for DMZ L3Out, contracts and unknown_unicast=proxy, awaiting Aung’s explicit write approval.</td></tr><tr><td>Phase 3: Monitoring and testing</td><td><a href="/tasks/monitoring/">Daily Report 17, drift and nac-test runs</a></td><td><span class="badge" style="--c:#22c55e">Done</span><br>7-9 Nov 2026</td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge rec">Recorded date</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>Phase 3: Monitoring and testing</td><td><a href="/visitors/">Visitors tracking for every page</a></td><td><span class="badge" style="--c:#22c55e">Done</span><br>10 Nov 2026</td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge rec">Recorded date</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>Phase 3: Monitoring and testing</td><td><a href="/status/">Status page</a></td><td><span class="badge" style="--c:#22c55e">Done</span><br>10 Nov 2026</td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge rec">Recorded date</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>Phase 3: Monitoring and testing</td><td><a href="/netbox-yaml-model/arr/">Provide ACI Rack Rental APIC access</a></td><td><span class="badge" style="--c:#f59e0b">Waiting on Aung</span></td><td>ယခု / Now</td><td>2026<br><span class="badge est">Planned estimate</span></td><td>Provide the ACI Rack Rental APIC URL plus read-only credentials, or a read-only config export, so the ARR model pages can be filled. Physical inventory CSVs already exist under /workspace/acirackrentals.</td><td>Waiting on Aung. The ARR page (rebuilt 11 Nov 2026 08:16 AEDT) says there is no rental APIC URL, credentials, or config export, and that ARR pages stay pending until that is provided. Nothing on that page is invented.</td></tr><tr><td>Phase 3: Monitoring and testing</td><td><a href="/status/">Reconnect the Simulator APIC VPN</a></td><td><span class="badge" style="--c:#f59e0b">Waiting on Aung</span></td><td>ယခု / Now</td><td>2026<br><span class="badge est">Planned estimate</span></td><td>Reconnect the DevNet VPN so the Simulator APIC (10.10.20.14 — not ARR) can be reached again. The RoadMap says the Status page is red for this probe because the simulator is unreachable.</td><td>Waiting on Aung (or on the DevNet VPN). The Status page last checked 13 Nov 2026 16:40 AEDT shows Simulator APIC red: it did not answer (waited 3002 ms). The same check also shows AOAPIC red (did not answer, waited 8020 ms); that is context from the linked page, not a separate RoadMap item.</td></tr><tr><td>Phase 4: Demo site</td><td><a href="/">Universal Provisioning IaC home page</a></td><td><span class="badge" style="--c:#22c55e">Done</span><br>9 Nov 2026</td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge rec">Recorded date</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>Phase 4: Demo site</td><td><a href="/iac/form/">Sub pages for every flow step and environment</a></td><td><span class="badge" style="--c:#22c55e">Done</span><br>10 Nov 2026</td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge rec">Recorded date</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>Phase 4: Demo site</td><td><a href="/tasks/">Task-based menu</a></td><td><span class="badge" style="--c:#22c55e">Done</span><br>10 Nov 2026</td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge rec">Recorded date</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>Phase 4: Demo site</td><td><a href="/tasks/itil/">ITIL pages for AOAPIC and ARR</a></td><td><span class="badge" style="--c:#22c55e">Done</span><br>10 Nov 2026</td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge rec">Recorded date</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>Phase 4: Demo site</td><td><a href="/">Meraki Dashboard page</a></td><td><span class="badge" style="--c:#22c55e">Done</span><br>10 Nov 2026</td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge rec">Recorded date</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>Phase 4: Demo site</td><td><a href="/">GitLab Dashboard page</a></td><td><span class="badge" style="--c:#22c55e">Done</span><br>10 Nov 2026</td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge rec">Recorded date</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>Phase 4: Demo site</td><td><a href="/mindmap/">MindMap page</a></td><td><span class="badge" style="--c:#22c55e">Done</span><br>10 Nov 2026</td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge rec">Recorded date</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>Phase 5: Separate ACI hardware site</td><td>Create the aci-hw-iac GitHub account</td><td><span class="badge" style="--c:#f59e0b">Waiting on Aung</span></td><td>ယခု / Now</td><td>2026<br><span class="badge est">Planned estimate</span></td><td>Create the aci-hw-iac GitHub account, with a private aci-hw-iac-src repo for scripts and data and a public aci-hw-iac.github.io repo for the built pages, and add amoeoo-coles as a collaborator.</td><td>Waiting on Aung. This item has no linked page and no date on the RoadMap.</td></tr><tr><td>Phase 5: Separate ACI hardware site</td><td>Publish the ACI hardware pages</td><td><span class="badge" style="--c:#3b82f6">Next</span></td><td>နောက်တစ်ဆင့် / Next</td><td>2027<br><span class="badge est">Planned estimate</span></td><td>Build and publish the hardware environment site once the aci-hw-iac account exists.</td><td>Depends on “Create the aci-hw-iac GitHub account”. The RoadMap lists that item as Next only after the account exists.</td></tr><tr><td>Phase 6: Full IaC flow</td><td><a href="/iac/form/">Request form</a></td><td><span class="badge" style="--c:#a855f7">Planned</span></td><td>နောက်မှ / Later</td><td>2027<br><span class="badge est">Planned estimate</span></td><td>Build the self-service request form described on the RoadMap (one form that creates the request). A linked explanation page already exists at /iac/form/ (page updated 08 Nov 2026 16:32 AEDT) as part of the Phase 4 sub-pages; the Phase 6 item is the live form, not that explanation page.</td><td>Planned. No delivery date is given on the RoadMap.</td></tr><tr><td>Phase 6: Full IaC flow</td><td><a href="/iac/super-portal/">Super Portal Front End</a></td><td><span class="badge" style="--c:#a855f7">Planned</span></td><td>နောက်မှ / Later</td><td>2027<br><span class="badge est">Planned estimate</span></td><td>Build one front end for requests, status and approvals. The linked explanation page at /iac/super-portal/ (updated 08 Nov 2026 16:32 AEDT) already notes that Pending Provisioning, Tenants Detail, Object Drill-down and nac-test Status are early building blocks of that portal.</td><td>Planned. No delivery date is given on the RoadMap.</td></tr><tr><td>Phase 6: Full IaC flow</td><td><a href="/iac/pipeline/">Pipeline and approval gate</a></td><td><span class="badge" style="--c:#a855f7">Planned</span></td><td>နောက်မှ / Later</td><td>2028<br><span class="badge est">Planned estimate</span></td><td>Build the pipeline that renders the model, runs nac-test, waits for approval, then deploys, as described on the RoadMap and the /iac/pipeline/ explanation page (updated 08 Nov 2026 16:32 AEDT).</td><td>Planned. No delivery date is given on the RoadMap. Naturally follows the form and portal in Phase 6.</td></tr><tr><td>Phase 6: Full IaC flow</td><td><a href="/iac/dev-prod/">Dev then Prod promotion</a></td><td><span class="badge" style="--c:#a855f7">Planned</span></td><td>နောက်မှ / Later</td><td>2028<br><span class="badge est">Planned estimate</span></td><td>Deploy to Dev first, then promote to Prod, as described on the RoadMap and the /iac/dev-prod/ explanation page (updated 08 Nov 2026 16:32 AEDT). That page already says the Cisco DevNet Always-On sandboxes act as Development for this demo.</td><td>Planned. No delivery date is given on the RoadMap. Follows the pipeline and approval gate.</td></tr><tr><td>Phase 7: More environments</td><td><a href="/iac/sda/">SDA, SD-WAN, VXLAN EVPN and Nexus Dashboard</a></td><td><span class="badge" style="--c:#a855f7">Planned</span></td><td>နောက်မှ / Later</td><td>2029<br><span class="badge est">Planned estimate</span></td><td>Bring the same NetBox-driven flow to SDA, SD-WAN, VXLAN EVPN and Nexus Dashboard. Explanation pages for those environments already exist under /iac/ (for example /iac/sda/, updated 08 Nov 2026 16:32 AEDT); Phase 7 is the working flow, not those pages.</td><td>Planned. No delivery date is given on the RoadMap. Phase 7 follows the full IaC flow in Phase 6.</td></tr><tr><td>Phase 7: More environments</td><td><a href="/iac/meraki/">Meraki, LoadBalancer and Firewall</a></td><td><span class="badge" style="--c:#a855f7">Planned</span></td><td>နောက်မှ / Later</td><td>2030<br><span class="badge est">Planned estimate</span></td><td>Extend the flow to Meraki, load balancers and firewalls. An explanation page already exists at /iac/meraki/ (updated 08 Nov 2026 16:32 AEDT); Phase 7 is the working flow, not that page.</td><td>Planned. No delivery date is given on the RoadMap.</td></tr><tr><td>RoadMap resources (AI Pod)</td><td><a href="/zfrontier/notebooks/">Jupyter notebooks</a></td><td><span class="badge" style="--c:#22c55e">Done</span></td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge est">Planned estimate</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>RoadMap resources (AI Pod)</td><td><a href="/zfrontier/rag-documents/">RAG documents</a></td><td><span class="badge" style="--c:#22c55e">Done</span></td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge est">Planned estimate</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr><tr><td>RoadMap resources (AI Pod)</td><td><a href="/zfrontier/foundation-sec-8b/">Foundation-Sec-8B bundle</a></td><td><span class="badge" style="--c:#22c55e">Done</span></td><td>ပြီးပြီ / Done</td><td>2026<br><span class="badge est">Planned estimate</span></td><td>None — already live on the site as a Done item.</td><td>None shown on the RoadMap.</td></tr></tbody></table></div>
+<h2>Related pages</h2><div class="related"><a href="/roadmap/">🗺️ RoadMap</a><a href="/mindmap/">🧠 MindMap</a><a href="/roadmap/forward/time-map/">🗓️ Time Map 2026–2030</a><a href="/report17-aoapic-monitoring/pending-provisioning/">⏳ Pending Provisioning</a><a href="/status/">🚦 Status</a></div>
+</main>
+<script async="" data-goatcounter="https://amoeoo-coles.goatcounter.com/count" src="//gc.zgo.at/count.js"></script><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc){const pt=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Melbourne",hour:"2-digit",minute:"2-digit",hour12:false,hourCycle:"h23",timeZoneName:"short"}).formatToParts(new Date(d.updated_utc));const g=t=>(pt.find(x=>x.type===t)||{}).value||"";const tz=(g("timeZoneName")||"AEDT").replace("GMT+11","AEDT").replace("GMT+10","AEST");e.textContent=" (data as of "+g("hour")+":"+g("minute")+" "+tz+")"}})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script>
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:8px 0 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:6px;margin:0;padding:8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
+nav.site.im a.mi{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:auto;min-height:44px;min-width:0;padding:8px 10px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a)}
+nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:visible;text-overflow:unset;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.25;text-align:left}
+nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:22px;height:22px;padding:0 5px;border-radius:999px;font-size:16px;font-weight:800;line-height:1;background:#0f172a;color:#fff}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc;color:#0f172a}
+nav.site.im a.mi.on .im-seq{background:#fff;color:#1d4ed8}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px;flex:none}#sg-link,#tt-btn,#mm-link{height:36px;border-radius:18px}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["ARR Model","/netbox-yaml-model/arr/","🧪"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"],["Pod Policy Group","/aci-policy/pod-policy-group/","🕒"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"],["ရှေ့သို့ချီ","/roadmap/forward/","⏩"],["Time Map 2026–2030","/roadmap/forward/time-map/","🗓️"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["zFrontier","/zfrontier/","🌠",[["zFrontier","/zfrontier/","🌠"],["Farzad","/zfrontier/farzad/","📺"],["SpaceX vs Tesla shares","/zfrontier/shares/","📈"],["Optimus","/zfrontier/optimus/","🤖"],["Gigafactory","/zfrontier/gigafactory/","🏭"],["FSD versions","/zfrontier/fsd-versions/","🛣️"],["Liquid cooling","/zfrontier/liquid-cooling/","💧"],["SpaceX Tracking","/zfrontier/spacex/","🚀"],["CyberCab","/zfrontier/cybercab/","🚕"],["AI FineTune Pod","/zfrontier/ai-finetune-pod/","🎛️"],["MCP Servers","/zfrontier/mcp-servers/","🔌"],["NaC CLI","/zfrontier/nac-cli/","🧰"],["GPU Workflow","/zfrontier/3gpu-ai-workflow/","🧮"],["MWMESH","/zfrontier/mwmesh/","📡"],["Notebooks","/zfrontier/notebooks/","📓"],["RAG documents","/zfrontier/rag-documents/","📚"],["Foundation-Sec-8B","/zfrontier/foundation-sec-8b/","🛡️"],["Terafab","/zfrontier/terafab/","💠"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"],["ACI GUI Forms","/visitors/aci-gui-forms/","📝"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=(seq?String(seq)+'. ':'')+e[0];if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks ›';r2.appendChild(t);
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1))});r2.appendChild(pills);n.appendChild(r2)}}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+</body>
+</html>
