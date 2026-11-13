@@ -178,7 +178,7 @@
   }
 
   function topologySvg() {
-    var vb = "0 0 900 535";
+    var vb = "0 0 900 500";
     var dcFill = "#2563eb";
     var mpFill = "#0d9488";
     var cloudFill = "#7c3aed";
@@ -330,21 +330,17 @@
         );
       })
       .join("");
-    var caption =
-      '<text x="450" y="508" text-anchor="middle" font-size="11" fill="currentColor" opacity="0.85">DCI: 4 links, each over 2 physically diverse dark-fibre paths (A/B); waves link Mega Pods</text>' +
-      '<text x="450" y="524" text-anchor="middle" font-size="10" fill="' +
-      orange +
-      '" opacity="0.95">Path A / Path B = physically diverse dark fibre</text>';
     return (
-      '<svg viewBox="' +
+      '<div class="vdc-diag-scroll"><svg viewBox="' +
       vb +
       '" xmlns="http://www.w3.org/2000/svg" aria-label="Virtual DC topology">' +
-      '<rect width="900" height="535" fill="transparent"/>' +
+      '<rect width="900" height="500" fill="transparent"/>' +
       lines.join("") +
       cloud +
       rects +
-      caption +
-      "</svg>"
+      "</svg></div>" +
+      '<p class="vdc-diag-caption">DCI: 4 links, each over 2 physically diverse dark-fibre paths (A/B); waves link Mega Pods</p>' +
+      '<p class="vdc-diag-legend">Path A / Path B = physically diverse dark fibre</p>'
     );
   }
 
