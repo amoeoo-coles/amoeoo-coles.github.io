@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Build RoadMap resource sub-pages: notebooks, RAG PDFs, Foundation-Sec-8B bundle."""
+"""Build zFrontier resource pages: notebooks, RAG PDFs, Foundation-Sec-8B bundle.
+
+Moved from /roadmap/... on 13 Nov 2026; old URLs are redirect stubs.
+"""
 
 from __future__ import annotations
 
@@ -18,7 +21,10 @@ from pygments.util import ClassNotFound
 
 ROOT = Path(__file__).resolve().parent.parent
 UPLOADS = Path("/home/ubuntu/.cursor/projects/agent-repos-amoeoo-coles-github-io/uploads")
-ROADMAP = ROOT / "roadmap"
+ROADMAP = ROOT / "roadmap"  # RoadMap hub only (patch_roadmap_index)
+# Pages moved under zFrontier on 13 Nov 2026 (old /roadmap/... URLs are redirect stubs)
+OUT = ROOT / "zfrontier"
+ASSET_CSS = "/zfrontier/assets/roadmap-resources.css"
 CHROME_HEAD = ROOT / "visitors" / "index.html"
 CHROME_FOOT = ROOT / "status" / "index.html"
 MARKER = "<!-- roadmap-resources-generated v1 -->"
@@ -170,7 +176,7 @@ def build_page(title: str, main_inner: str) -> str:
     head = re.sub(
         r"<style>body\{font-family:sans-serif.*?</style>",
         (
-            '<link rel="stylesheet" href="/roadmap/assets/roadmap-resources.css"/>'
+            f'<link rel="stylesheet" href="{ASSET_CSS}"/>'
             "<style>.rm-main{font:15px/1.5 system-ui,Arial,sans-serif}</style>"
         ),
         head,
@@ -184,16 +190,16 @@ def build_page(title: str, main_inner: str) -> str:
 
 def subnav(active: str) -> str:
     tabs = [
-        ("hub", "/roadmap/", "RoadMap hub"),
-        ("notebooks", "/roadmap/notebooks/", "Notebooks"),
-        ("rag", "/roadmap/rag-documents/", "RAG documents"),
-        ("fdtn", "/roadmap/foundation-sec-8b/", "Foundation-Sec-8B"),
+        ("hub", "/zfrontier/", "zFrontier hub"),
+        ("notebooks", "/zfrontier/notebooks/", "Notebooks"),
+        ("rag", "/zfrontier/rag-documents/", "RAG documents"),
+        ("fdtn", "/zfrontier/foundation-sec-8b/", "Foundation-Sec-8B"),
     ]
     parts = []
     for key, href, label in tabs:
         cls = ' class="on"' if key == active else ""
         parts.append(f'<a{cls} href="{href}">{label}</a>')
-    return '<nav class="rm-subnav" aria-label="RoadMap resources">\n' + "\n".join(parts) + "\n</nav>"
+    return '<nav class="rm-subnav" aria-label="zFrontier resources">\n' + "\n".join(parts) + "\n</nav>"
 
 
 def pyg_block(code: str, lexer_name: str = "python") -> str:
@@ -283,7 +289,7 @@ def redact_notebook_text(text: str) -> tuple[str, list[str]]:
 
 
 def copy_notebooks() -> list[str]:
-    dest_dir = ROADMAP / "notebooks" / "files"
+    dest_dir = OUT / "notebooks" / "files"
     dest_dir.mkdir(parents=True, exist_ok=True)
     redaction_notes: list[str] = []
     for spec in NOTEBOOKS:
@@ -298,14 +304,14 @@ def copy_notebooks() -> list[str]:
 
 
 def notebook_actions(file: str) -> str:
-    raw_url = f"{GITHUB_RAW}/roadmap/notebooks/files/{file}"
+    raw_url = f"{GITHUB_RAW}/zfrontier/notebooks/files/{file}"
     colab = (
         "https://colab.research.google.com/github/"
         "amoeoo-coles/amoeoo-coles.github.io/blob/main/"
-        f"roadmap/notebooks/files/{file}"
+        f"zfrontier/notebooks/files/{file}"
     )
-    nviewer = f"https://nbviewer.org/github/amoeoo-coles/amoeoo-coles.github.io/blob/main/roadmap/notebooks/files/{file}"
-    dl = f"/roadmap/notebooks/files/{file}"
+    nviewer = f"https://nbviewer.org/github/amoeoo-coles/amoeoo-coles.github.io/blob/main/zfrontier/notebooks/files/{file}"
+    dl = f"/zfrontier/notebooks/files/{file}"
     return (
         '<div class="rm-actions">'
         f'<a href="{html.escape(dl)}">Download .ipynb</a>'
@@ -319,24 +325,24 @@ def notebook_actions(file: str) -> str:
 def build_notebooks_index() -> None:
     rows = []
     for spec in NOTEBOOKS:
-        nb_path = ROADMAP / "notebooks" / "files" / spec["file"]
+        nb_path = OUT / "notebooks" / "files" / spec["file"]
         nb = nbformat.read(nb_path, as_version=4)
         has_out = sum(1 for c in nb.cells if c.cell_type == "code" and c.get("outputs"))
         rows.append(
             f"""<article class="rm-card">
   <p class="rm-kicker">{html.escape(spec["file"])}</p>
-  <h2><a href="/roadmap/notebooks/{spec["slug"]}/">{html.escape(spec["title"])}</a></h2>
+  <h2><a href="/zfrontier/notebooks/{spec["slug"]}/">{html.escape(spec["title"])}</a></h2>
   <p>{html.escape(spec["description"])}</p>
   <p class="rm-specs"><b>{len(nb.cells)}</b> cells · <b>{has_out}</b> code cells with saved output</p>
   <div class="rm-actions">
-    <a class="on" href="/roadmap/notebooks/{spec["slug"]}/">Read rendered notebook</a>
-    <a href="/roadmap/notebooks/files/{html.escape(spec["file"])}">Download</a>
+    <a class="on" href="/zfrontier/notebooks/{spec["slug"]}/">Read rendered notebook</a>
+    <a href="/zfrontier/notebooks/files/{html.escape(spec["file"])}">Download</a>
   </div>
 </article>"""
         )
     body = f"""
 {subnav("notebooks")}
-<p class="rm-crumb"><a href="/roadmap/">RoadMap</a> › Notebooks</p>
+<p class="rm-crumb"><a href="/zfrontier/">zFrontier</a> › Notebooks</p>
 <div class="rm-hero">
   <h1><span class="tt-keep">📓</span> Jupyter notebooks</h1>
   <p class="rm-lede">OpenShift AI Pod demo notebooks — static HTML views with code highlighting and saved outputs where present. Original <code>.ipynb</code> files are in the repo for Colab or local use.</p>
@@ -348,25 +354,25 @@ def build_notebooks_index() -> None:
   <b>Related on this site:</b>
   <a href="/demo-ai-pod/task-2/">Demo AI Pod — Task 2 (RAG)</a> ·
   <a href="/demo-ai-pod/task-5/">Task 5 (Jupyter / agentic notebooks)</a> ·
-  <a href="/roadmap/foundation-sec-8b/">Foundation-Sec-8B bundle</a>
+  <a href="/zfrontier/foundation-sec-8b/">Foundation-Sec-8B bundle</a>
 </div>
 """
-    (ROADMAP / "notebooks" / "index.html").write_text(
-        build_page("RoadMap — Jupyter notebooks", body),
+    (OUT / "notebooks" / "index.html").write_text(
+        build_page("zFrontier — Jupyter notebooks", body),
         encoding="utf-8",
     )
 
 
 def build_notebook_pages() -> None:
     for spec in NOTEBOOKS:
-        nb_path = ROADMAP / "notebooks" / "files" / spec["file"]
+        nb_path = OUT / "notebooks" / "files" / spec["file"]
         nb = nbformat.read(nb_path, as_version=4)
         strip_widget_outputs(nb)
         inner = render_notebook_body(nb)
         actions = notebook_actions(spec["file"]).replace('class="rm-actions"', 'class="rm-actions"')
         body = f"""
 {subnav("notebooks")}
-<p class="rm-crumb"><a href="/roadmap/">RoadMap</a> › <a href="/roadmap/notebooks/">Notebooks</a> › {html.escape(spec["title"])}</p>
+<p class="rm-crumb"><a href="/zfrontier/">zFrontier</a> › <a href="/zfrontier/notebooks/">Notebooks</a> › {html.escape(spec["title"])}</p>
 <div class="rm-hero">
   <h1>{html.escape(spec["title"])}</h1>
   <p class="rm-lede">{html.escape(spec["description"])}</p>
@@ -374,13 +380,13 @@ def build_notebook_pages() -> None:
 </div>
 {inner}
 <div class="rm-related">
-  <b>Related:</b> <a href="/roadmap/notebooks/">All notebooks</a>
-  {"· <a href=\"/roadmap/foundation-sec-8b/\">Foundation-Sec-8B</a>" if spec["slug"] == "cisco-fdtn-model" else ""}
+  <b>Related:</b> <a href="/zfrontier/notebooks/">All notebooks</a>
+  {"· <a href=\"/zfrontier/foundation-sec-8b/\">Foundation-Sec-8B</a>" if spec["slug"] == "cisco-fdtn-model" else ""}
   {"· <a href=\"/demo-ai-pod/task-5/\">Demo AI Pod Task 5</a>" if spec["slug"] in ("simple-agentic-ai", "advanced-agentic-ai") else ""}
   {"· <a href=\"/demo-ai-pod/task-5/\">Demo AI Pod Task 5 (F1 notebook)</a>" if spec["slug"] == "f1-qualifying-prediction" else ""}
 </div>
 """
-        out_dir = ROADMAP / "notebooks" / spec["slug"]
+        out_dir = OUT / "notebooks" / spec["slug"]
         out_dir.mkdir(parents=True, exist_ok=True)
         (out_dir / "index.html").write_text(
             build_page(f"Notebook — {spec['title']}", body),
@@ -389,7 +395,7 @@ def build_notebook_pages() -> None:
 
 
 def copy_pdfs() -> None:
-    dest = ROADMAP / "rag-documents" / "files"
+    dest = OUT / "rag-documents" / "files"
     dest.mkdir(parents=True, exist_ok=True)
     for spec in PDFS:
         src = UPLOADS / spec["upload"] if (UPLOADS / spec["upload"]).is_file() else dest / spec["file"]
@@ -410,7 +416,7 @@ def pdf_page_count(path: Path) -> int:
 def build_rag_index() -> None:
     cards = []
     for spec in PDFS:
-        path = ROADMAP / "rag-documents" / "files" / spec["file"]
+        path = OUT / "rag-documents" / "files" / spec["file"]
         pages = pdf_page_count(path)
         cards.append(
             f"""<article class="rm-card">
@@ -419,13 +425,13 @@ def build_rag_index() -> None:
   <p>{html.escape(spec["summary"])}</p>
   <ul class="rm-specs">{"".join(f"<li>{html.escape(s)}</li>" for s in spec["specs"])}</ul>
   <div class="rm-actions">
-    <a href="/roadmap/rag-documents/files/{html.escape(spec["file"])}" target="_blank" rel="noopener">View / download PDF</a>
+    <a href="/zfrontier/rag-documents/files/{html.escape(spec["file"])}" target="_blank" rel="noopener">View / download PDF</a>
   </div>
 </article>"""
         )
     body = f"""
 {subnav("rag")}
-<p class="rm-crumb"><a href="/roadmap/">RoadMap</a> › RAG documents</p>
+<p class="rm-crumb"><a href="/zfrontier/">zFrontier</a> › RAG documents</p>
 <div class="rm-hero">
   <h1><span class="tt-keep">📚</span> RAG document set</h1>
   <p class="rm-lede">Cisco AI POD and UCS collateral used as RAG sources in the Demo AI Pod (PDFs under <code>AI Pod Documents/RAG Documents/</code>). Summaries below are taken from each file&apos;s text.</p>
@@ -436,11 +442,11 @@ def build_rag_index() -> None:
 <div class="rm-related">
   <b>Related:</b>
   <a href="/demo-ai-pod/task-2/">Demo AI Pod — Task 2: RAG augmented inferencing</a> ·
-  <a href="/roadmap/notebooks/advanced-agentic-ai/">Advanced agentic AI notebook</a>
+  <a href="/zfrontier/notebooks/advanced-agentic-ai/">Advanced agentic AI notebook</a>
 </div>
 """
-    (ROADMAP / "rag-documents" / "index.html").write_text(
-        build_page("RoadMap — RAG documents", body),
+    (OUT / "rag-documents" / "index.html").write_text(
+        build_page("zFrontier — RAG documents", body),
         encoding="utf-8",
     )
 
@@ -460,7 +466,7 @@ def parse_alerts(raw: str) -> list[dict]:
 
 
 def copy_fdtn_files() -> None:
-    dest = ROADMAP / "foundation-sec-8b" / "files"
+    dest = OUT / "foundation-sec-8b" / "files"
     dest.mkdir(parents=True, exist_ok=True)
     mapping = {
         "alerts.json": "alerts_bdfe.json",
@@ -511,7 +517,7 @@ def alerts_table(alerts: list[dict]) -> str:
 
 
 def build_fdtn_page() -> None:
-    base = ROADMAP / "foundation-sec-8b" / "files"
+    base = OUT / "foundation-sec-8b" / "files"
     arch = (base / "architecture.txt").read_text(encoding="utf-8")
     diff = (base / "diff.txt").read_text(encoding="utf-8")
     tf = (base / "cloud.tf").read_text(encoding="utf-8")
@@ -519,37 +525,37 @@ def build_fdtn_page() -> None:
 
     body = f"""
 {subnav("fdtn")}
-<p class="rm-crumb"><a href="/roadmap/">RoadMap</a> › Foundation-Sec-8B</p>
+<p class="rm-crumb"><a href="/zfrontier/">zFrontier</a> › Foundation-Sec-8B</p>
 <div class="rm-hero">
   <h1><span class="tt-keep">🛡️</span> Foundation-Sec-8B reference bundle</h1>
   <p class="rm-lede">Supporting files for the <code>fdtn-ai/Foundation-Sec-8B</code> security LLM demo: cloud architecture notes, a Terraform example, a code review diff, and sample security alerts. Content is reproduced from the committed source files only.</p>
   <div class="rm-actions">
-    <a href="/roadmap/notebooks/cisco-fdtn-model/">Open cisco_fdtn_model.ipynb</a>
+    <a href="/zfrontier/notebooks/cisco-fdtn-model/">Open cisco_fdtn_model.ipynb</a>
     <a href="/demo-ai-pod/task-3/">Demo AI Pod — Task 3 (vLLM)</a>
   </div>
 </div>
 
 <h2>Architecture</h2>
 <div class="rm-card"><div class="rm-arch">{html.escape(arch)}</div>
-<p class="rm-specs"><a href="/roadmap/foundation-sec-8b/files/architecture.txt">Download architecture.txt</a></p></div>
+<p class="rm-specs"><a href="/zfrontier/foundation-sec-8b/files/architecture.txt">Download architecture.txt</a></p></div>
 
 <h2>Terraform (<code>cloud.tf</code>)</h2>
 <p class="rm-lede">Example Google Cloud network with a broad ingress firewall rule — useful for discussing misconfiguration risk with the security model.</p>
 <div class="codebox scroll">{pyg_block(tf, "hcl")}</div>
-<p class="rm-specs"><a href="/roadmap/foundation-sec-8b/files/cloud.tf">Download cloud.tf</a></p>
+<p class="rm-specs"><a href="/zfrontier/foundation-sec-8b/files/cloud.tf">Download cloud.tf</a></p>
 
 <h2>Diff (<code>diff.txt</code>)</h2>
 <p class="rm-lede">Patch replacing unsafe <code>eval()</code> with <code>ast.literal_eval</code> and hardening the deploy workflow with lint and test steps.</p>
 {render_diff(diff)}
-<p class="rm-specs"><a href="/roadmap/foundation-sec-8b/files/diff.txt">Download diff.txt</a></p>
+<p class="rm-specs"><a href="/zfrontier/foundation-sec-8b/files/diff.txt">Download diff.txt</a></p>
 
 <h2>Alerts (<code>alerts.json</code>)</h2>
 <p class="rm-lede">{len(alerts)} sample alert records with severity inferred from alert codes in the file.</p>
 {alerts_table(alerts)}
-<p class="rm-specs"><a href="/roadmap/foundation-sec-8b/files/alerts.json">Download alerts.json</a></p>
+<p class="rm-specs"><a href="/zfrontier/foundation-sec-8b/files/alerts.json">Download alerts.json</a></p>
 """
-    (ROADMAP / "foundation-sec-8b" / "index.html").write_text(
-        build_page("RoadMap — Foundation-Sec-8B", body),
+    (OUT / "foundation-sec-8b" / "index.html").write_text(
+        build_page("zFrontier — Foundation-Sec-8B", body),
         encoding="utf-8",
     )
 
@@ -559,9 +565,9 @@ def patch_roadmap_index() -> None:
     html_text = path.read_text(encoding="utf-8")
     section = """
 <section class="phs" id="roadmap-resources"><h2 class="ph">RoadMap resources (AI Pod)</h2>
-<div class="it" data-s="done" style="--c:#22c55e"><span class="s">Done</span><div><b><a href="/roadmap/notebooks/">Jupyter notebooks</a></b><div class="d">Four demo notebooks (agentic AI, Foundation-Sec-8B, F1 qualifying, simple agent) with rendered HTML, downloads, and Colab links.</div></div></div>
-<div class="it" data-s="done" style="--c:#22c55e"><span class="s">Done</span><div><b><a href="/roadmap/rag-documents/">RAG documents</a></b><div class="d">Cisco AI POD and UCS PDFs for RAG — summaries, page counts, and download links.</div></div></div>
-<div class="it" data-s="done" style="--c:#22c55e"><span class="s">Done</span><div><b><a href="/roadmap/foundation-sec-8b/">Foundation-Sec-8B bundle</a></b><div class="d">Architecture, Terraform, diff, and security alerts that accompany the Foundation-Sec-8B notebook.</div></div></div>
+<div class="it" data-s="done" style="--c:#22c55e"><span class="s">Done</span><div><b><a href="/zfrontier/notebooks/">Jupyter notebooks</a></b><div class="d">Four demo notebooks (agentic AI, Foundation-Sec-8B, F1 qualifying, simple agent) with rendered HTML, downloads, and Colab links.</div></div></div>
+<div class="it" data-s="done" style="--c:#22c55e"><span class="s">Done</span><div><b><a href="/zfrontier/rag-documents/">RAG documents</a></b><div class="d">Cisco AI POD and UCS PDFs for RAG — summaries, page counts, and download links.</div></div></div>
+<div class="it" data-s="done" style="--c:#22c55e"><span class="s">Done</span><div><b><a href="/zfrontier/foundation-sec-8b/">Foundation-Sec-8B bundle</a></b><div class="d">Architecture, Terraform, diff, and security alerts that accompany the Foundation-Sec-8B notebook.</div></div></div>
 </section>
 """
     if "roadmap-resources" in html_text:
@@ -590,7 +596,7 @@ def main() -> int:
     copy_fdtn_files()
     build_fdtn_page()
     patch_roadmap_index()
-    print("RoadMap resource pages built under", ROADMAP)
+    print("zFrontier resource pages built under", OUT)
     return 0
 
 
