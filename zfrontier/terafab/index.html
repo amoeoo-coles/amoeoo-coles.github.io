@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:auto;
+  min-height:44px;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:auto;min-height:44px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:visible;
+  text-overflow:unset;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.25;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:22px;
+  height:22px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:16px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:#1d4ed8!important;
+}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terafab -- zFrontier -- amoeoo-coles</title>
+<meta name="description" content="Tesla, SpaceX and xAI&#x27;s planned Terafab chip facilities: what has been announced, the AI5/AI6 foundry partners, possible locations and scale, how that compares with existing fabs, and the risks still open as of 13 Nov 2026.">
+<style>:root{--site-content-max:1200px}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg,#f8fafc);color:var(--ink,#0f172a);font:15px/1.55 system-ui,Segoe UI,Arial,sans-serif}
+main{max-width:var(--site-content-max,1200px);margin:0 auto;padding:18px 18px 64px;min-width:0}
+.tr17{color:var(--muted,#475569)!important}
+.crumb{font-size:13px;color:var(--muted,#475569);margin:0 0 12px}
+.crumb a{color:var(--link,#1d4ed8);text-decoration:none}
+h1{font-size:1.7rem;line-height:1.25;margin:0 0 8px;overflow-wrap:anywhere}
+h2{font-size:1.2rem;margin:1.6rem 0 .6rem}
+h3{font-size:1.02rem;margin:1.1rem 0 .4rem}
+.lede{font-size:1.02rem;color:var(--muted,#475569);margin:0 0 1.1rem;max-width:80ch}
+.kicker{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;color:#fff;margin:0 6px 8px 0}
+.stamp{display:inline-block;font-size:12.5px;color:var(--muted,#475569);background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:8px;padding:3px 9px;margin:0 0 12px}
+.note,.warn,.claim{border-radius:10px;padding:10px 12px;margin:12px 0;border:1px solid var(--line,#e2e8f0);background:var(--card,#fff)}
+.note{border-left:4px solid #2563eb}.warn{border-left:4px solid #d97706}.claim{border-left:4px solid #9333ea}
+.badge{display:inline-block;font:700 10.5px/1.6 system-ui;letter-spacing:.03em;text-transform:uppercase;border-radius:999px;padding:0 7px;margin-right:4px;white-space:nowrap;color:#fff}
+.b-fact{background:#15803d}.b-claim{background:#9333ea}.b-est{background:#b45309}.b-unk{background:#64748b}
+.b-live{background:#15803d}.b-sup{background:#0369a1}.b-ann{background:#9333ea}.b-disp{background:#be185d}.b-none{background:#64748b}
+.kids{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));margin:8px 0 16px}
+.pbox{display:block;text-decoration:none;color:inherit;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:12px 14px;border-top:5px solid var(--c,#2563eb);transition:transform .12s,box-shadow .12s;min-width:0}
+.pbox:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,23,42,.08)}
+.pbox h3{margin:0 0 4px;font-size:1.02rem}.pbox p{margin:0;color:var(--muted,#475569);font-size:13.5px}
+.stats{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));margin:10px 0 16px}
+.stat{background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:12px;padding:10px 12px;min-width:0}
+.stat b{display:block;font-size:1.35rem;line-height:1.2}
+.stat>span{display:block;font-size:12.5px;color:var(--muted,#475569)}
+.stat span.badge{display:inline-block}
+.stat>cite{display:block;font-style:normal;font-size:11.5px;margin-top:4px;overflow-wrap:anywhere}
+.stat cite.src{display:inline}
+.tblwrap{overflow-x:auto;max-width:100%;margin:0 0 16px;border:1px solid var(--line,#e2e8f0);border-radius:10px;background:var(--card,#fff)}
+table.tree{width:100%;min-width:720px;border-collapse:collapse;font-size:13.5px}
+table.tree th,table.tree td{border-bottom:1px solid var(--line,#e2e8f0);padding:7px 9px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+table.tree th{background:var(--th-bg,#f1f5f9);font-size:12px;letter-spacing:.02em;cursor:pointer;white-space:nowrap}
+.filter{width:100%;max-width:360px;padding:7px 10px;border:1px solid var(--line,#e2e8f0);border-radius:8px;margin:0 0 10px;font:inherit;background:var(--card,#fff);color:var(--ink,#0f172a)}
+.help{font-size:13.5px;color:var(--muted,#475569);margin:-4px 0 12px}
+.svgwrap{overflow-x:auto;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:10px;margin:12px 0 20px}
+.svgwrap svg{min-width:900px;width:100%;height:auto;display:block}
+.svgwrap svg text{fill:var(--ink,#0f172a);font-family:system-ui,Arial,sans-serif}
+.svgwrap svg text.mut{fill:var(--muted,#475569)}
+.svgwrap svg .axis{stroke:var(--muted,#94a3b8)}
+.svgwrap svg .card{fill:var(--card,#fff);stroke:var(--line,#cbd5e1)}
+cite.src{font-style:normal;font-size:12px;color:var(--muted,#475569)}
+cite.src a{color:var(--link,#1d4ed8)}
+.asof{font-size:11.5px;color:var(--muted,#475569);white-space:nowrap}
+ol.srcs{font-size:13px;padding-left:1.3rem;overflow-wrap:anywhere}ol.srcs li{margin:0 0 5px}
+.related{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
+.related a{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);text-decoration:none;color:var(--ink,#0f172a);font-size:13px}
+.citygrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));margin:10px 0 18px}
+.city{background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:12px;padding:10px 12px;border-left:5px solid var(--c,#64748b);min-width:0}
+.city h3{margin:0 0 4px;font-size:1rem}.city p{margin:2px 0;font-size:12.5px;color:var(--muted,#475569)}
+ul.tight{margin:6px 0 14px;padding-left:1.2rem}ul.tight li{margin:0 0 5px}
+@media(max-width:430px){main{padding:14px 10px 56px}h1{font-size:1.4rem}.kids,.citygrid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.svgwrap svg{min-width:760px}}
+
+.duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin:10px 0 18px}
+.col{background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:12px 14px;min-width:0;border-top:5px solid var(--c,#2563eb)}
+.col h3{margin:0 0 6px}
+.col .stats{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+.chart{overflow:hidden;margin:8px 0}.chart svg{width:100%;height:auto;display:block}
+.chart svg text{fill:var(--ink,#0f172a);font-family:system-ui,Arial,sans-serif}.chart svg text.mut{fill:var(--muted,#475569)}
+.chart svg .grid{stroke:var(--line,#e2e8f0)}
+.svgwrap svg rect,.svgwrap svg .card{fill:var(--card,#ffffff)}
+html[data-theme="dark"] .svgwrap svg rect,html[data-theme="dark"] .svgwrap svg .card{fill:var(--card,#1e293b)}
+.tag{display:inline-block;font:600 11px/1.6 system-ui;border-radius:999px;padding:0 7px;margin:1px 3px 1px 0;background:var(--th-bg,#f1f5f9);border:1px solid var(--line,#e2e8f0);color:var(--ink,#0f172a);white-space:nowrap}
+ol.steps{padding-left:1.3rem}ol.steps li{margin:0 0 7px}
+.b-ind{background:#0f766e}
+@media(max-width:720px){.duo{grid-template-columns:1fr}}
+
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:10px 0 18px}
+.role{background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:12px 14px;min-width:0;border-top:5px solid var(--c,#1d4ed8)}
+.role h3{margin:0 0 6px;font-size:1.05rem}
+.role p{margin:0;color:var(--muted,#475569);font-size:13.5px}
+.flowwrap{overflow-x:auto;max-width:100%;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:8px;margin:10px 0 16px}
+.flowwrap svg{min-width:640px;width:100%;height:auto;display:block}
+.flowwrap svg rect.bx{fill:var(--card,#ffffff)}
+html[data-theme="dark"] .flowwrap svg rect.bx{fill:var(--card,#1e293b)}
+.flowwrap svg text{font-family:system-ui,Segoe UI,Arial,sans-serif;fill:var(--ink,#0f172a)}
+.flowwrap svg text.mut{fill:var(--muted,#475569)}
+html[data-theme="dark"] .flowwrap svg text{fill:#f1f5f9}
+html[data-theme="dark"] .flowwrap svg text.mut{fill:#cbd5e1}
+.tblwrap{overflow-x:auto;max-width:100%}
+.tblwrap table{width:100%;min-width:640px}
+cite.src{overflow-wrap:anywhere;word-break:break-word}
+.callout{border:1px solid var(--line,#e2e8f0);border-left:5px solid #1d4ed8;border-radius:12px;padding:10px 14px;margin:10px 0 16px;background:var(--card,#fff)}
+.warnbox{border:1px solid var(--line,#e2e8f0);border-left:5px solid #b45309;border-radius:12px;padding:10px 14px;margin:10px 0 16px;background:var(--card,#fff)}
+ol.openq,ul.tight{padding-left:1.25rem}ol.openq li,ul.tight li{margin:0 0 8px}
+@media (max-width:390px){
+  .roles{grid-template-columns:1fr}
+  .flowwrap svg{min-width:560px}
+  h1{font-size:1.35rem;overflow-wrap:anywhere}
+  .tblwrap table{min-width:520px}
+}
+</style>
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+
+<!-- site-menu v1 --><nav class="site"><a href="/">Home</a></nav>
+<main>
+<div class="tr17" style="text-align:right;font-size:13px;margin:0 0 10px"><span class="uv" style="background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">...</b></span></div>
+<nav class="crumb"><a href="/">Home</a> › <a href="/zfrontier/">zFrontier</a> › Terafab</nav>
+<div class="stamp">Last updated 13 Nov 2026 18:53 AEDT (Melbourne time) · facts researched 13 Nov 2026 · as of 2026-11-13 · no daily refresh</div>
+
+<span class="kicker" style="background:#1d4ed8">zFrontier</span>
+<h1>💠 Terafab</h1>
+<p class="lede">Terafab is the name Elon Musk gave to a planned chip-making effort for Tesla, SpaceX and xAI. The idea is to design and manufacture enough AI chips for vehicles, Optimus robots and space-based data centres, instead of relying only on foundry partners. This page is a sourced snapshot as of 2026-11-13. It is not a daily tracker, and it does not invent missing figures.</p>
+<div class="callout"><p><b>As of 2026-11-13.</b> The research fab at Giga Texas is under construction. The large production plant is planned for Grimes County, Texas. Volume production is an aspiration for around the third quarter of 2028, with Musk himself putting "big error bars" on that date. Binding financial terms between the companies were still not fully set in SpaceX's May 2026 IPO filing. <cite class="src">[<a href="https://www.spacex.com/updates/terafab" title="SpaceX Updates, 6 Aug 2026: research fab groundbreaking at Giga Texas North Campus in April; production Terafab to be built in Grimes County; planned size, initial capital and jobs (as of 13 Nov 2026)">1</a>]</cite> <cite class="src">[<a href="https://www.sec.gov/Archives/edgar/data/1318605/000162828026066738/exhibit9914.htm" title="Tesla Q3 2026 Update, SEC Exhibit 99.1 (21 Oct 2026): construction of the Austin Fab, with equipment commissioning planned in 2027 (as of 13 Nov 2026)">2</a>]</cite> <cite class="src">[<a href="https://stockanalysis.com/stocks/tsla/transcripts/712902-q3-2026/" title="Tesla Q3 2026 earnings call transcript, 21 Oct 2026: research-fab commissioning, test-chip and volume targets; capital-equipment comments (as of 13 Nov 2026)">3</a>]</cite> <cite class="src">[<a href="https://www.investing.com/news/stock-market-news/spacex-and-teslas-terafab-targets-2028-for-volume-chip-production-musk-says-4961351" title="Reuters via Investing.com, 20 Oct 2026: SpaceX conference call -- first SRAM test chip around May or June 2027; volume production targeted for Q3 2028, with large error bars (as of 13 Nov 2026)">4</a>]</cite> <cite class="src">[<a href="https://www.sec.gov/Archives/edgar/data/1181412/000162828026036936/spaceexplorationtechnologi.htm" title="SpaceX Form S-1, filed 20 May 2026: Terafab defined as a one-terawatt-a-year compute-hardware initiative; general framework with Tesla; Intel joined in April; project terms not yet determined (as of 13 Nov 2026)">5</a>]</cite></p></div>
+
+<h2>At a glance</h2>
+<div class="stats">
+<div class="stat"><b>Q3 2028</b><span>Aspirational date for useful chips at volume, with large error bars</span><cite>Tesla call, 21 Oct 2026, and SpaceX call, 20 Oct 2026 <cite class="src">[<a href="https://stockanalysis.com/stocks/tsla/transcripts/712902-q3-2026/" title="Tesla Q3 2026 earnings call transcript, 21 Oct 2026: research-fab commissioning, test-chip and volume targets; capital-equipment comments (as of 13 Nov 2026)">3</a>]</cite> <cite class="src">[<a href="https://www.investing.com/news/stock-market-news/spacex-and-teslas-terafab-targets-2028-for-volume-chip-production-musk-says-4961351" title="Reuters via Investing.com, 20 Oct 2026: SpaceX conference call -- first SRAM test chip around May or June 2027; volume production targeted for Q3 2028, with large error bars (as of 13 Nov 2026)">4</a>]</cite></cite></div>
+<div class="stat"><b>$16.8B</b><span>Initial-phase capital, SpaceX and Tesla, as stated by SpaceX</span><cite>SpaceX Updates, 6 Aug 2026 <cite class="src">[<a href="https://www.spacex.com/updates/terafab" title="SpaceX Updates, 6 Aug 2026: research fab groundbreaking at Giga Texas North Campus in April; production Terafab to be built in Grimes County; planned size, initial capital and jobs (as of 13 Nov 2026)">1</a>]</cite></cite></div>
+<div class="stat"><b>&gt;$100B</b><span>Long-term cost, per Musk; SpaceX later called it a $100B project</span><cite>Tesla call, 21 Oct 2026; SpaceX, 12 Nov 2026 <cite class="src">[<a href="https://stockanalysis.com/stocks/tsla/transcripts/712902-q3-2026/" title="Tesla Q3 2026 earnings call transcript, 21 Oct 2026: research-fab commissioning, test-chip and volume targets; capital-equipment comments (as of 13 Nov 2026)">3</a>]</cite> <cite class="src">[<a href="https://www.spacex.com/updates/terafab" title="SpaceX Updates, 12 Nov 2026: refers to the $100B Terafab advanced chip manufacturing project in Grimes County, Texas (as of 13 Nov 2026)">6</a>]</cite></cite></div>
+<div class="stat"><b>1 TW / year</b><span>Long-term compute-hardware goal in SpaceX's S-1 glossary</span><cite>SpaceX S-1, 20 May 2026 <cite class="src">[<a href="https://www.sec.gov/Archives/edgar/data/1181412/000162828026036936/spaceexplorationtechnologi.htm" title="SpaceX Form S-1, filed 20 May 2026: Terafab defined as a one-terawatt-a-year compute-hardware initiative; general framework with Tesla; Intel joined in April; project terms not yet determined (as of 13 Nov 2026)">5</a>]</cite></cite></div>
+<div class="stat"><b>100,000 / 1M</b><span>Wafer starts a month: first fab, then a ten-fab complex, as Musk described in 2025</span><cite>Tesla shareholder meeting, 6 Nov 2025 <cite class="src">[<a href="https://singjupost.com/teslas-2025-annual-shareholder-meeting-transcript/" title="Tesla 2025 Annual Shareholder Meeting transcript, 6 Nov 2025 (published 7 Nov 2025) (as of 13 Nov 2026)">7</a>]</cite> <cite class="src">[<a href="https://www.cnbc.com/2025/11/07/elon-musk-says-tesla-needs-gigantic-chip-fab-terra-for-ai-and-robotics-tsmc-intel.html" title="CNBC, 6-7 Nov 2025: Musk says Tesla needs a gigantic chip fab; 100,000 then 1 million wafer starts a month; TSMC 2024 capacity comparison (as of 13 Nov 2026)">8</a>]</cite></cite></div>
+<div class="stat"><b>Unknown</b><span>How Tesla and SpaceX will split the bill; which chip generation Terafab first makes at volume</span><cite>Not stated in the sources opened for this page</cite></div>
+</div>
+
+<h2>What it is, and why they want it</h2>
+<p>Musk first sketched a "Tesla TeraFab" at Tesla's annual shareholder meeting on 6 November 2025. He said even a best-case outlook from Tesla's foundry partners would not be enough, and that Tesla would probably have to build "a gigantic chip fab." He compared the idea to a Gigafactory, "but way bigger." <cite class="src">[<a href="https://singjupost.com/teslas-2025-annual-shareholder-meeting-transcript/" title="Tesla 2025 Annual Shareholder Meeting transcript, 6 Nov 2025 (published 7 Nov 2025) (as of 13 Nov 2026)">7</a>]</cite> <cite class="src">[<a href="https://www.cnbc.com/2025/11/07/elon-musk-says-tesla-needs-gigantic-chip-fab-terra-for-ai-and-robotics-tsmc-intel.html" title="CNBC, 6-7 Nov 2025: Musk says Tesla needs a gigantic chip fab; 100,000 then 1 million wafer starts a month; TSMC 2024 capacity comparison (as of 13 Nov 2026)">8</a>]</cite> <cite class="src">[<a href="https://www.reuters.com/business/autos-transportation/musk-plans-tesla-mega-ai-chip-fab-mulls-potential-intel-partnership-2025-11-07/" title="Reuters, 7 Nov 2025: Musk plans a Tesla mega AI chip fab and says Intel talks are worth having, with no deal signed (as of 13 Nov 2026)">9</a>]</cite></p>
+<p>The formal Terafab announcement came on 21-22 March 2026 in Austin, as a collaboration of Tesla, SpaceX and xAI. Musk's short explanation, quoted by TechCrunch, was: "We either build the Terafab or we don't have the chips, and we need the chips, so we build the Terafab." <cite class="src">[<a href="https://techcrunch.com/2026/03/22/elon-musk-unveils-chip-manufacturing-plans-for-spacex-and-tesla/" title="TechCrunch, 22 Mar 2026: Terafab announced in Austin; 100-200 GW a year on Earth plus a terawatt in space (as of 13 Nov 2026)">10</a>]</cite> <cite class="src">[<a href="https://www.foxbusiness.com/technology/musk-says-tesla-spacex-build-advanced-chip-manufacturing-facility" title="Fox Business, 24 Mar 2026: two fabs, each one chip design; thanks to Samsung, TSMC and Micron; space-chip constraints; 1 TW/year versus about 0.5 TW of US generation (as of 13 Nov 2026)">11</a>]</cite> <cite class="src">[<a href="https://www.just-auto.com/news/tesla-spacex-austin-terafab-chip-complex/" title="Just Auto, 23 Mar 2026: Tesla and SpaceX Terafab in Austin; two factories; no timeline given at the launch (as of 13 Nov 2026)">12</a>]</cite> <cite class="src">[<a href="https://www.reuters.com/business/autos-transportation/musk-says-spacex-tesla-build-advanced-chip-factories-austin-2026-03-22/" title="Reuters, 22-23 Mar 2026: SpaceX and Tesla to build advanced chip factories in Austin (as of 13 Nov 2026)">13</a>]</cite></p>
+<p>On X the next day he wrote, as quoted by Fox Business and Just Auto, that "Terafab will technically be two fabs, each making only one chip design." One design is for Tesla vehicles and Optimus robots. The other is a high-power chip for SpaceX space-based data centres, which he said has to tolerate a harsher radiation environment and run a little hotter than a typical Earth chip so that radiator mass can be kept down. <cite class="src">[<a href="https://www.foxbusiness.com/technology/musk-says-tesla-spacex-build-advanced-chip-manufacturing-facility" title="Fox Business, 24 Mar 2026: two fabs, each one chip design; thanks to Samsung, TSMC and Micron; space-chip constraints; 1 TW/year versus about 0.5 TW of US generation (as of 13 Nov 2026)">11</a>]</cite> <cite class="src">[<a href="https://www.just-auto.com/news/tesla-spacex-austin-terafab-chip-complex/" title="Just Auto, 23 Mar 2026: Tesla and SpaceX Terafab in Austin; two factories; no timeline given at the launch (as of 13 Nov 2026)">12</a>]</cite></p>
+<p>At the March event he thanked existing suppliers, naming Samsung, TSMC and Micron, but said demand from his companies would eventually exceed total global chip output. TechCrunch reported a nearer-term goal of chips supporting 100 to 200 gigawatts of computing power a year on Earth, plus a terawatt in space. SpaceX's May 2026 S-1 later defined Terafab as "a chip manufacturing initiative with a long-term goal of producing one terawatt of compute hardware each year." Fox Business also recorded Musk comparing that one-terawatt-a-year aim with about half a terawatt of electricity generation across the United States. <cite class="src">[<a href="https://www.foxbusiness.com/technology/musk-says-tesla-spacex-build-advanced-chip-manufacturing-facility" title="Fox Business, 24 Mar 2026: two fabs, each one chip design; thanks to Samsung, TSMC and Micron; space-chip constraints; 1 TW/year versus about 0.5 TW of US generation (as of 13 Nov 2026)">11</a>]</cite> <cite class="src">[<a href="https://techcrunch.com/2026/03/22/elon-musk-unveils-chip-manufacturing-plans-for-spacex-and-tesla/" title="TechCrunch, 22 Mar 2026: Terafab announced in Austin; 100-200 GW a year on Earth plus a terawatt in space (as of 13 Nov 2026)">10</a>]</cite> <cite class="src">[<a href="https://www.sec.gov/Archives/edgar/data/1181412/000162828026036936/spaceexplorationtechnologi.htm" title="SpaceX Form S-1, filed 20 May 2026: Terafab defined as a one-terawatt-a-year compute-hardware initiative; general framework with Tesla; Intel joined in April; project terms not yet determined (as of 13 Nov 2026)">5</a>]</cite></p>
+<p>SpaceX's 6 August 2026 update said the factory would combine manufacturing, packaging and testing of advanced logic and memory in one place, and would make edge and inference chips for Optimus and Cybercab as well as high-power chips for space-based data centres. <cite class="src">[<a href="https://www.spacex.com/updates/terafab" title="SpaceX Updates, 6 Aug 2026: research fab groundbreaking at Giga Texas North Campus in April; production Terafab to be built in Grimes County; planned size, initial capital and jobs (as of 13 Nov 2026)">1</a>]</cite></p>
+
+<h2>Timeline of announcements</h2>
+<p class="help">Dates are in the source's own calendar. Statements are Musk, Tesla, SpaceX or Intel claims unless the row says otherwise.</p>
+<div class="tblwrap"><table class="tree"><thead><tr><th>Date</th><th>What was said or filed</th><th>Where</th></tr></thead><tbody><tr><td>28 Jul 2025</td><td>Samsung wins a $16.5 billion contract to supply chips for Tesla through the end of 2033. This is a foundry supply deal, not a Terafab construction contract.</td><td>Nikkei Asia <cite class="src">[<a href="https://asia.nikkei.com/business/tech/semiconductors/samsung-wins-16.5bn-deal-to-supply-chips-for-tesla" title="Nikkei Asia, 28 Jul 2025: Samsung wins a $16.5bn deal to supply chips for Tesla through the end of 2033 (as of 13 Nov 2026)">14</a>]</cite></td></tr><tr><td>6 Nov 2025</td><td>At Tesla's annual meeting Musk describes a possible “Tesla TeraFab,” talks with Intel (no deal signed), AI5 production at TSMC Taiwan, Samsung Korea, TSMC Arizona and TSMC Texas, and a scale of at least 100,000 wafer starts a month, perhaps one of ten fabs in a 1 million wafer-start complex.</td><td>Meeting transcript; CNBC; Reuters <cite class="src">[<a href="https://singjupost.com/teslas-2025-annual-shareholder-meeting-transcript/" title="Tesla 2025 Annual Shareholder Meeting transcript, 6 Nov 2025 (published 7 Nov 2025) (as of 13 Nov 2026)">7</a>]</cite> <cite class="src">[<a href="https://www.cnbc.com/2025/11/07/elon-musk-says-tesla-needs-gigantic-chip-fab-terra-for-ai-and-robotics-tsmc-intel.html" title="CNBC, 6-7 Nov 2025: Musk says Tesla needs a gigantic chip fab; 100,000 then 1 million wafer starts a month; TSMC 2024 capacity comparison (as of 13 Nov 2026)">8</a>]</cite> <cite class="src">[<a href="https://www.reuters.com/business/autos-transportation/musk-plans-tesla-mega-ai-chip-fab-mulls-potential-intel-partnership-2025-11-07/" title="Reuters, 7 Nov 2025: Musk plans a Tesla mega AI chip fab and says Intel talks are worth having, with no deal signed (as of 13 Nov 2026)">9</a>]</cite></td></tr><tr><td>21-22 Mar 2026</td><td>Terafab is announced in Austin as a Tesla, SpaceX and xAI project. Two fabs, each one chip design. No construction timetable is given at the event.</td><td>TechCrunch, Fox Business, Just Auto, Reuters <cite class="src">[<a href="https://techcrunch.com/2026/03/22/elon-musk-unveils-chip-manufacturing-plans-for-spacex-and-tesla/" title="TechCrunch, 22 Mar 2026: Terafab announced in Austin; 100-200 GW a year on Earth plus a terawatt in space (as of 13 Nov 2026)">10</a>]</cite> <cite class="src">[<a href="https://www.foxbusiness.com/technology/musk-says-tesla-spacex-build-advanced-chip-manufacturing-facility" title="Fox Business, 24 Mar 2026: two fabs, each one chip design; thanks to Samsung, TSMC and Micron; space-chip constraints; 1 TW/year versus about 0.5 TW of US generation (as of 13 Nov 2026)">11</a>]</cite> <cite class="src">[<a href="https://www.just-auto.com/news/tesla-spacex-austin-terafab-chip-complex/" title="Just Auto, 23 Mar 2026: Tesla and SpaceX Terafab in Austin; two factories; no timeline given at the launch (as of 13 Nov 2026)">12</a>]</cite> <cite class="src">[<a href="https://www.reuters.com/business/autos-transportation/musk-says-spacex-tesla-build-advanced-chip-factories-austin-2026-03-22/" title="Reuters, 22-23 Mar 2026: SpaceX and Tesla to build advanced chip factories in Austin (as of 13 Nov 2026)">13</a>]</cite></td></tr><tr><td>April 2026</td><td>Tesla breaks ground on a research fab on the North Campus of Giga Texas, described later as the precursor to Terafab.</td><td>SpaceX Updates, 6 Aug 2026 <cite class="src">[<a href="https://www.spacex.com/updates/terafab" title="SpaceX Updates, 6 Aug 2026: research fab groundbreaking at Giga Texas North Campus in April; production Terafab to be built in Grimes County; planned size, initial capital and jobs (as of 13 Nov 2026)">1</a>]</cite></td></tr><tr><td>7 Apr 2026</td><td>Intel says it is joining Terafab with SpaceX, xAI and Tesla “to help refactor silicon fab technology,” and that its design, fabrication and packaging skills will help the 1 TW/year compute aim. Intel hosted Musk that weekend. The post did not set out contract terms.</td><td>Intel post, quoted by Tom's Hardware <cite class="src">[<a href="https://www.tomshardware.com/tech-industry/semiconductors/intel-joins-elon-musks-terafab-project-intel-is-proud-to-join-the-terafab-project-with-spacex-xai-and-tesla-to-help-refactor-silicon-fab-technology" title="Tom&#x27;s Hardware, 7 Apr 2026: Intel X post announcing it has joined Terafab with SpaceX, xAI and Tesla (as of 13 Nov 2026)">15</a>]</cite></td></tr><tr><td>22 Apr 2026</td><td>Reuters reports that Musk said Tesla plans to use Intel's next-generation 14A process at Terafab. Tom's Hardware later summarised the April plan the same way.</td><td>Reuters; Tom's Hardware, 7 Oct 2026 <cite class="src">[<a href="https://www.reuters.com/business/autos-transportation/tesla-ceo-musk-says-company-plans-use-intels-14a-process-terafab-2026-04-22/" title="Reuters, 22 Apr 2026: Musk says Tesla plans to use Intel&#x27;s 14A process for Terafab (as of 13 Nov 2026)">16</a>]</cite> <cite class="src">[<a href="https://www.tomshardware.com/tech-industry/semiconductors/musk-rejects-rumors-of-tsmc-takeover-of-terafab-intel-reaffirms-14a-node-deal-as-musk-floats-cleanroom-sublease" title="Tom&#x27;s Hardware, 7 Oct 2026: Musk rejects a TSMC takeover; Intel reaffirms involvement and the April 14A plan; Musk floats a cleanroom sublease (as of 13 Nov 2026)">17</a>]</cite></td></tr><tr><td>20 May 2026</td><td>SpaceX's S-1 says the companies have agreed “a general framework for the future development of Terafab,” and that specific projects, timelines, milestones and capital expenditures “have not yet been determined.”</td><td>SpaceX S-1 <cite class="src">[<a href="https://www.sec.gov/Archives/edgar/data/1181412/000162828026036936/spaceexplorationtechnologi.htm" title="SpaceX Form S-1, filed 20 May 2026: Terafab defined as a one-terawatt-a-year compute-hardware initiative; general framework with Tesla; Intel joined in April; project terms not yet determined (as of 13 Nov 2026)">5</a>]</cite> <cite class="src">[<a href="https://electrek.co/2026/05/20/spacex-s1-tesla-terafab-macrohard-not-done-deal/" title="Electrek, 20 May 2026: reporting on SpaceX S-1 language that Terafab was in very early stages, with financial terms, IP rights and a binding term still unfinalised (as of 13 Nov 2026)">18</a>]</cite></td></tr><tr><td>6 Aug 2026</td><td>SpaceX announces that the production Terafab will be built in Grimes County, Texas. It describes more than 100 million square feet of planned manufacturing space, an initial phase of about $16.8 billion, at least 3,000 jobs, and industrial water from Gibbons Creek Reservoir rather than local groundwater.</td><td>SpaceX Updates <cite class="src">[<a href="https://www.spacex.com/updates/terafab" title="SpaceX Updates, 6 Aug 2026: research fab groundbreaking at Giga Texas North Campus in April; production Terafab to be built in Grimes County; planned size, initial capital and jobs (as of 13 Nov 2026)">1</a>]</cite></td></tr><tr><td>Early Oct 2026</td><td>Musk says there have been discussions about cooperation with TSMC. On 7 October he writes that Tesla and SpaceX will build and run the fab themselves: “Maybe TSMC subleases part of the Terafab if they want, but nothing more than that.” Intel's CEO tells Bloomberg that Intel will stay involved.</td><td>Reuters via Investing.com; Tom's Hardware <cite class="src">[<a href="https://www.investing.com/news/stock-market-news/intel-to-keep-working-on-musks-terafab-chipmaking-venture-bloomberg-news-reports-4935609" title="Reuters via Investing.com, 7 Oct 2026: Musk says Tesla and SpaceX will build and run Terafab; TSMC may sublease part of it (as of 13 Nov 2026)">19</a>]</cite> <cite class="src">[<a href="https://www.tomshardware.com/tech-industry/semiconductors/musk-rejects-rumors-of-tsmc-takeover-of-terafab-intel-reaffirms-14a-node-deal-as-musk-floats-cleanroom-sublease" title="Tom&#x27;s Hardware, 7 Oct 2026: Musk rejects a TSMC takeover; Intel reaffirms involvement and the April 14A plan; Musk floats a cleanroom sublease (as of 13 Nov 2026)">17</a>]</cite></td></tr><tr><td>20 Oct 2026</td><td>On a SpaceX conference call Musk targets a first SRAM test chip around May or June 2027 at the Austin research facility, and volume production in Q3 2028, or possibly Q3 or Q4 2028, calling the dates “very aggressive” and putting “big error bars” on them. He thanks ASML and other suppliers for accelerating equipment deliveries, without directly confirming EUV tool orders.</td><td>Reuters via Investing.com <cite class="src">[<a href="https://www.investing.com/news/stock-market-news/spacex-and-teslas-terafab-targets-2028-for-volume-chip-production-musk-says-4961351" title="Reuters via Investing.com, 20 Oct 2026: SpaceX conference call -- first SRAM test chip around May or June 2027; volume production targeted for Q3 2028, with large error bars (as of 13 Nov 2026)">4</a>]</cite></td></tr><tr><td>21 Oct 2026</td><td>On Tesla's Q3 call Musk repeats the commissioning, test-chip and Q3 2028 volume targets. He says capital equipment will be “not less than tens of billions” through early 2028 and “probably be north of $100 billion long term,” and that the Tesla-SpaceX split is still to be decided. Tesla's finance chief says most research-fab tool orders have already been placed. Tesla's quarterly update shows the Austin Fab under construction, with equipment commissioning planned in 2027. 2026 capex guidance is revised to about $20 billion.</td><td>Tesla call and Exhibit 99.1 <cite class="src">[<a href="https://stockanalysis.com/stocks/tsla/transcripts/712902-q3-2026/" title="Tesla Q3 2026 earnings call transcript, 21 Oct 2026: research-fab commissioning, test-chip and volume targets; capital-equipment comments (as of 13 Nov 2026)">3</a>]</cite> <cite class="src">[<a href="https://www.sec.gov/Archives/edgar/data/1318605/000162828026066738/exhibit9914.htm" title="Tesla Q3 2026 Update, SEC Exhibit 99.1 (21 Oct 2026): construction of the Austin Fab, with equipment commissioning planned in 2027 (as of 13 Nov 2026)">2</a>]</cite></td></tr><tr><td>12 Nov 2026</td><td>A SpaceX Updates post refers to “the $100B Terafab advanced chip manufacturing project in Grimes County, Texas.”</td><td>SpaceX Updates <cite class="src">[<a href="https://www.spacex.com/updates/terafab" title="SpaceX Updates, 12 Nov 2026: refers to the $100B Terafab advanced chip manufacturing project in Grimes County, Texas (as of 13 Nov 2026)">6</a>]</cite></td></tr></tbody></table></div>
+
+<h2>AI5, AI6 and the foundry partners</h2>
+<p>Terafab is a long-term plan to make chips in-house. Until it is running at volume, Tesla still depends on contract foundries for the chips it has already designed.</p>
+<div class="roles">
+<div class="role" style="--c:#0f766e"><h3>Samsung</h3><p>In July 2025 Nikkei Asia reported a $16.5 billion Samsung deal to supply chips for Tesla through the end of 2033. At the November 2025 meeting Musk listed Samsung Korea among the sites that would make AI5. In March 2026 he thanked Samsung as a current supplier. That contract is foundry supply. It is not, on the evidence opened for this page, a contract to operate Terafab.<cite class="src">[<a href="https://asia.nikkei.com/business/tech/semiconductors/samsung-wins-16.5bn-deal-to-supply-chips-for-tesla" title="Nikkei Asia, 28 Jul 2025: Samsung wins a $16.5bn deal to supply chips for Tesla through the end of 2033 (as of 13 Nov 2026)">14</a>]</cite> <cite class="src">[<a href="https://singjupost.com/teslas-2025-annual-shareholder-meeting-transcript/" title="Tesla 2025 Annual Shareholder Meeting transcript, 6 Nov 2025 (published 7 Nov 2025) (as of 13 Nov 2026)">7</a>]</cite> <cite class="src">[<a href="https://www.foxbusiness.com/technology/musk-says-tesla-spacex-build-advanced-chip-manufacturing-facility" title="Fox Business, 24 Mar 2026: two fabs, each one chip design; thanks to Samsung, TSMC and Micron; space-chip constraints; 1 TW/year versus about 0.5 TW of US generation (as of 13 Nov 2026)">11</a>]</cite></p></div>
+<div class="role" style="--c:#1d4ed8"><h3>TSMC</h3><p>At the same meeting Musk said AI5 would also be made at TSMC Taiwan, TSMC Arizona and "TSMC Texas." This page has not found a later official confirmation of a Tesla production line at a TSMC plant in Texas, so that fourth site is recorded as he said it in November 2025. He hoped AI6 could follow in the same fabs less than a year after AI5 started, doubling the performance metrics. In October 2026 he said TSMC might only sublease part of Terafab.<cite class="src">[<a href="https://singjupost.com/teslas-2025-annual-shareholder-meeting-transcript/" title="Tesla 2025 Annual Shareholder Meeting transcript, 6 Nov 2025 (published 7 Nov 2025) (as of 13 Nov 2026)">7</a>]</cite> <cite class="src">[<a href="https://www.investing.com/news/stock-market-news/intel-to-keep-working-on-musks-terafab-chipmaking-venture-bloomberg-news-reports-4935609" title="Reuters via Investing.com, 7 Oct 2026: Musk says Tesla and SpaceX will build and run Terafab; TSMC may sublease part of it (as of 13 Nov 2026)">19</a>]</cite> <cite class="src">[<a href="https://www.tomshardware.com/tech-industry/semiconductors/musk-rejects-rumors-of-tsmc-takeover-of-terafab-intel-reaffirms-14a-node-deal-as-musk-floats-cleanroom-sublease" title="Tom&#x27;s Hardware, 7 Oct 2026: Musk rejects a TSMC takeover; Intel reaffirms involvement and the April 14A plan; Musk floats a cleanroom sublease (as of 13 Nov 2026)">17</a>]</cite></p></div>
+<div class="role" style="--c:#b45309"><h3>Intel</h3><p>In November 2025 Musk said "maybe we'll do something with Intel" but that no deal had been signed. Intel said on 7 April 2026 that it had joined Terafab. Reuters reported on 22 April that Musk said Tesla planned to use Intel's 14A process there. How the collaboration works in practice, including volumes and fees, has not been published in the sources opened for this page.<cite class="src">[<a href="https://singjupost.com/teslas-2025-annual-shareholder-meeting-transcript/" title="Tesla 2025 Annual Shareholder Meeting transcript, 6 Nov 2025 (published 7 Nov 2025) (as of 13 Nov 2026)">7</a>]</cite> <cite class="src">[<a href="https://www.reuters.com/business/autos-transportation/musk-plans-tesla-mega-ai-chip-fab-mulls-potential-intel-partnership-2025-11-07/" title="Reuters, 7 Nov 2025: Musk plans a Tesla mega AI chip fab and says Intel talks are worth having, with no deal signed (as of 13 Nov 2026)">9</a>]</cite> <cite class="src">[<a href="https://www.tomshardware.com/tech-industry/semiconductors/intel-joins-elon-musks-terafab-project-intel-is-proud-to-join-the-terafab-project-with-spacex-xai-and-tesla-to-help-refactor-silicon-fab-technology" title="Tom&#x27;s Hardware, 7 Apr 2026: Intel X post announcing it has joined Terafab with SpaceX, xAI and Tesla (as of 13 Nov 2026)">15</a>]</cite> <cite class="src">[<a href="https://www.reuters.com/business/autos-transportation/tesla-ceo-musk-says-company-plans-use-intels-14a-process-terafab-2026-04-22/" title="Reuters, 22 Apr 2026: Musk says Tesla plans to use Intel&#x27;s 14A process for Terafab (as of 13 Nov 2026)">16</a>]</cite> <cite class="src">[<a href="https://www.investing.com/news/stock-market-news/spacex-and-teslas-terafab-targets-2028-for-volume-chip-production-musk-says-4961351" title="Reuters via Investing.com, 20 Oct 2026: SpaceX conference call -- first SRAM test chip around May or June 2027; volume production targeted for Q3 2028, with large error bars (as of 13 Nov 2026)">4</a>]</cite></p></div>
+<div class="role" style="--c:#6d28d9"><h3>Micron and others</h3><p>Musk thanked Micron, with Samsung and TSMC, as a current supplier in March 2026. SpaceX later said Terafab would also handle memory, packaging and testing. No Micron contract terms for Terafab were found.<cite class="src">[<a href="https://www.foxbusiness.com/technology/musk-says-tesla-spacex-build-advanced-chip-manufacturing-facility" title="Fox Business, 24 Mar 2026: two fabs, each one chip design; thanks to Samsung, TSMC and Micron; space-chip constraints; 1 TW/year versus about 0.5 TW of US generation (as of 13 Nov 2026)">11</a>]</cite> <cite class="src">[<a href="https://www.spacex.com/updates/terafab" title="SpaceX Updates, 6 Aug 2026: research fab groundbreaking at Giga Texas North Campus in April; production Terafab to be built in Grimes County; planned size, initial capital and jobs (as of 13 Nov 2026)">1</a>]</cite></p></div>
+</div>
+<p>On Tesla's 21 October 2026 call, Musk said Tesla hoped to put the AI5 chip into Optimus around April 2027, and described AI5 as about an order of magnitude more compute than AI4. That is a Tesla chip-integration target, not a statement that Terafab will be the factory making those first AI5 parts. The sources opened for this page do not name the first useful chip generation Terafab itself will produce at volume. <cite class="src">[<a href="https://stockanalysis.com/stocks/tsla/transcripts/712902-q3-2026/" title="Tesla Q3 2026 earnings call transcript, 21 Oct 2026: research-fab commissioning, test-chip and volume targets; capital-equipment comments (as of 13 Nov 2026)">3</a>]</cite></p>
+<p>At the 2025 shareholder meeting Musk also said Tesla believed AI5 would use about a third of the power of an Nvidia Blackwell, for roughly comparable performance, and "much less than ten percent of the cost," because the chip is specialised for Tesla's own integer-heavy inference stack rather than a general-purpose GPU. Those are Musk's comparisons, not third-party measurements. <cite class="src">[<a href="https://singjupost.com/teslas-2025-annual-shareholder-meeting-transcript/" title="Tesla 2025 Annual Shareholder Meeting transcript, 6 Nov 2025 (published 7 Nov 2025) (as of 13 Nov 2026)">7</a>]</cite></p>
+
+<h2>Locations and scale</h2>
+<div class="flowwrap"><svg viewBox="0 0 1100 320" role="img" aria-label="Two Texas sites: a research fab at Tesla Giga Texas in Austin, and a planned production Terafab in Grimes County."><title>Where Terafab is planned</title><text x="550" y="28" text-anchor="middle" font-size="18" font-weight="800">Two Texas sites, as announced</text><text class="mut" x="550" y="50" text-anchor="middle" font-size="12">Research work starts in Austin. The large production plant was later placed in Grimes County.</text><rect class="bx" x="40" y="80" width="460" height="180" rx="16" fill="var(--card,#ffffff)" stroke="#1d4ed8" stroke-width="2.2"/><text x="270" y="112" text-anchor="middle" font-size="15" font-weight="700">Research fab - Austin</text><text class="mut" x="270" y="136" text-anchor="middle" font-size="12">North Campus, Giga Texas</text><text class="mut" x="270" y="158" text-anchor="middle" font-size="12">Tesla broke ground April 2026</text><text class="mut" x="270" y="180" text-anchor="middle" font-size="12">Commission tools 1H 2027 (target)</text><text class="mut" x="270" y="202" text-anchor="middle" font-size="12">First test chip ~ May or June 2027</text><text class="mut" x="270" y="232" text-anchor="middle" font-size="11">Tesla Q3 2026 update and 21 Oct call; SpaceX 6 Aug 2026</text><rect class="bx" x="600" y="80" width="460" height="180" rx="16" fill="var(--card,#ffffff)" stroke="#9a3412" stroke-width="2.2"/><text x="830" y="112" text-anchor="middle" font-size="15" font-weight="700">Production Terafab - Grimes County</text><text class="mut" x="830" y="136" text-anchor="middle" font-size="12">Announced 6 Aug 2026</text><text class="mut" x="830" y="158" text-anchor="middle" font-size="12">More than 100 million sq ft planned</text><text class="mut" x="830" y="180" text-anchor="middle" font-size="12">Initial phase about $16.8 billion</text><text class="mut" x="830" y="202" text-anchor="middle" font-size="12">Useful volume targeted around Q3 2028</text><text class="mut" x="830" y="232" text-anchor="middle" font-size="11">SpaceX 6 Aug and 12 Nov 2026; Tesla 21 Oct call</text><line x1="500" y1="170" x2="600" y2="170" stroke="#64748b" stroke-width="2"/><text class="mut" x="550" y="160" text-anchor="middle" font-size="11">then</text></svg></div>
+<p>The March 2026 launch placed Terafab in Austin, near Tesla's headquarters and Gigafactory. SpaceX's 6 August 2026 update then split the plan: a research fab already started on the North Campus of Giga Texas, and a production Terafab in Grimes County, near Brazos County. Tesla's Q3 2026 update confirms that construction of "the Austin Fab" was under way, with equipment commissioning planned in 2027. <cite class="src">[<a href="https://techcrunch.com/2026/03/22/elon-musk-unveils-chip-manufacturing-plans-for-spacex-and-tesla/" title="TechCrunch, 22 Mar 2026: Terafab announced in Austin; 100-200 GW a year on Earth plus a terawatt in space (as of 13 Nov 2026)">10</a>]</cite> <cite class="src">[<a href="https://www.spacex.com/updates/terafab" title="SpaceX Updates, 6 Aug 2026: research fab groundbreaking at Giga Texas North Campus in April; production Terafab to be built in Grimes County; planned size, initial capital and jobs (as of 13 Nov 2026)">1</a>]</cite> <cite class="src">[<a href="https://www.sec.gov/Archives/edgar/data/1318605/000162828026066738/exhibit9914.htm" title="Tesla Q3 2026 Update, SEC Exhibit 99.1 (21 Oct 2026): construction of the Austin Fab, with equipment commissioning planned in 2027 (as of 13 Nov 2026)">2</a>]</cite></p>
+<p>Figures that have been stated, and those that have not:</p>
+<ul class="tight">
+<li><b>Planned floor space.</b> SpaceX said a vertically integrated factory with more than 100 million square feet of manufacturing space is planned. That is a planned figure, not a built area. <cite class="src">[<a href="https://www.spacex.com/updates/terafab" title="SpaceX Updates, 6 Aug 2026: research fab groundbreaking at Giga Texas North Campus in April; production Terafab to be built in Grimes County; planned size, initial capital and jobs (as of 13 Nov 2026)">1</a>]</cite></li>
+<li><b>Initial capital.</b> SpaceX estimated the initial phase at approximately $16.8 billion from SpaceX and Tesla, "with potential future expansion phases bringing total investment much higher." <cite class="src">[<a href="https://www.spacex.com/updates/terafab" title="SpaceX Updates, 6 Aug 2026: research fab groundbreaking at Giga Texas North Campus in April; production Terafab to be built in Grimes County; planned size, initial capital and jobs (as of 13 Nov 2026)">1</a>]</cite></li>
+<li><b>Long-term capital.</b> On 21 October 2026 Musk said equipment through early 2028 would be "not less than tens of billions," and the project would "probably be north of $100 billion long term." Tesla's finance chief, Vaibhav Taneja, said most research-fab equipment orders were already placed. SpaceX's 12 November 2026 update called it "the $100B Terafab advanced chip manufacturing project." The split between Tesla and SpaceX had not been decided on the October call. <cite class="src">[<a href="https://stockanalysis.com/stocks/tsla/transcripts/712902-q3-2026/" title="Tesla Q3 2026 earnings call transcript, 21 Oct 2026: research-fab commissioning, test-chip and volume targets; capital-equipment comments (as of 13 Nov 2026)">3</a>]</cite> <cite class="src">[<a href="https://www.spacex.com/updates/terafab" title="SpaceX Updates, 12 Nov 2026: refers to the $100B Terafab advanced chip manufacturing project in Grimes County, Texas (as of 13 Nov 2026)">6</a>]</cite></li>
+<li><b>Jobs.</b> SpaceX said the Grimes County facility would employ at least 3,000 people, many from Grimes and nearby Brazos County, and pointed to a 60% to 80% local-hiring pattern at its other Texas sites. <cite class="src">[<a href="https://www.spacex.com/updates/terafab" title="SpaceX Updates, 6 Aug 2026: research fab groundbreaking at Giga Texas North Campus in April; production Terafab to be built in Grimes County; planned size, initial capital and jobs (as of 13 Nov 2026)">1</a>]</cite></li>
+<li><b>Water.</b> SpaceX said the site would use water from Gibbons Creek Reservoir for industrial operations rather than local groundwater, with on-site wastewater treatment and reuse. <cite class="src">[<a href="https://www.spacex.com/updates/terafab" title="SpaceX Updates, 6 Aug 2026: research fab groundbreaking at Giga Texas North Campus in April; production Terafab to be built in Grimes County; planned size, initial capital and jobs (as of 13 Nov 2026)">1</a>]</cite></li>
+<li><b>Wafer starts.</b> The 100,000 and 1 million wafer-starts-per-month figures come from Musk at the 6 November 2025 meeting. SpaceX's later official update did not repeat a wafer-start number. This page has not found a later official revision of those rates. <cite class="src">[<a href="https://singjupost.com/teslas-2025-annual-shareholder-meeting-transcript/" title="Tesla 2025 Annual Shareholder Meeting transcript, 6 Nov 2025 (published 7 Nov 2025) (as of 13 Nov 2026)">7</a>]</cite> <cite class="src">[<a href="https://www.cnbc.com/2025/11/07/elon-musk-says-tesla-needs-gigantic-chip-fab-terra-for-ai-and-robotics-tsmc-intel.html" title="CNBC, 6-7 Nov 2025: Musk says Tesla needs a gigantic chip fab; 100,000 then 1 million wafer starts a month; TSMC 2024 capacity comparison (as of 13 Nov 2026)">8</a>]</cite> <cite class="src">[<a href="https://www.spacex.com/updates/terafab" title="SpaceX Updates, 6 Aug 2026: research fab groundbreaking at Giga Texas North Campus in April; production Terafab to be built in Grimes County; planned size, initial capital and jobs (as of 13 Nov 2026)">1</a>]</cite></li>
+<li><b>Exact parcel and acreage</b> in Grimes County were not given in the sources opened for this page.</li>
+</ul>
+
+<h2>How that compares with existing fabs</h2>
+<p>TSMC's 2024 annual report said its manufacturing facilities had annual production capacity of approximately 17 million 12-inch equivalent wafers. Dividing that annual figure by 12 months gives about 1.42 million wafer starts a month. CNBC used the same annual figure, and the same monthly conversion, when it compared TSMC with Musk's November 2025 scale comments. <cite class="src">[<a href="https://investor.tsmc.com/sites/ir/annual-report/2024/2024-Annual%20Report-E.pdf" title="TSMC 2024 Annual Report: manufacturing facilities had annual production capacity of approximately 17 million 12-inch equivalent wafers (as of 13 Nov 2026)">20</a>]</cite> <cite class="src">[<a href="https://www.cnbc.com/2025/11/07/elon-musk-says-tesla-needs-gigantic-chip-fab-terra-for-ai-and-robotics-tsmc-intel.html" title="CNBC, 6-7 Nov 2025: Musk says Tesla needs a gigantic chip fab; 100,000 then 1 million wafer starts a month; TSMC 2024 capacity comparison (as of 13 Nov 2026)">8</a>]</cite></p>
+<p>If Terafab ever reached Musk's long-term 1 million wafer starts a month, that would be in the same order of magnitude as TSMC's entire 2024 capacity. A first 100,000 wafer-start fab would be about 7% of that 2024 TSMC monthly figure (100,000 / 1.42 million). Both percentages are derived from those two published numbers; they are not a TSMC or Tesla forecast, and they assume comparable wafer-size counting. <cite class="src">[<a href="https://singjupost.com/teslas-2025-annual-shareholder-meeting-transcript/" title="Tesla 2025 Annual Shareholder Meeting transcript, 6 Nov 2025 (published 7 Nov 2025) (as of 13 Nov 2026)">7</a>]</cite> <cite class="src">[<a href="https://www.cnbc.com/2025/11/07/elon-musk-says-tesla-needs-gigantic-chip-fab-terra-for-ai-and-robotics-tsmc-intel.html" title="CNBC, 6-7 Nov 2025: Musk says Tesla needs a gigantic chip fab; 100,000 then 1 million wafer starts a month; TSMC 2024 capacity comparison (as of 13 Nov 2026)">8</a>]</cite> <cite class="src">[<a href="https://investor.tsmc.com/sites/ir/annual-report/2024/2024-Annual%20Report-E.pdf" title="TSMC 2024 Annual Report: manufacturing facilities had annual production capacity of approximately 17 million 12-inch equivalent wafers (as of 13 Nov 2026)">20</a>]</cite></p>
+<p>Reuters, reporting the 20 October 2026 SpaceX call, noted that cutting-edge logic factories in the United States can take three or more years to build, which is why Musk's Q3 2028 volume date is unusually fast if it is met. Tesla's own 2026 capex guidance was revised to about $20 billion on that October call, a much smaller annual number than Musk's long-term Terafab bill, which is why the still-undecided split with SpaceX matters. <cite class="src">[<a href="https://www.investing.com/news/stock-market-news/spacex-and-teslas-terafab-targets-2028-for-volume-chip-production-musk-says-4961351" title="Reuters via Investing.com, 20 Oct 2026: SpaceX conference call -- first SRAM test chip around May or June 2027; volume production targeted for Q3 2028, with large error bars (as of 13 Nov 2026)">4</a>]</cite> <cite class="src">[<a href="https://stockanalysis.com/stocks/tsla/transcripts/712902-q3-2026/" title="Tesla Q3 2026 earnings call transcript, 21 Oct 2026: research-fab commissioning, test-chip and volume targets; capital-equipment comments (as of 13 Nov 2026)">3</a>]</cite></p>
+<p>In mid-March 2026, just before the Austin announcement, Sherwood News reported a Morgan Stanley estimate that Terafab could cost an extra $35 billion to $45 billion of capex, including about $20 billion to $25 billion for wafer-fabrication equipment. That was an analyst estimate, dated 17 March 2026, and it predates SpaceX's $16.8 billion initial-phase figure and Musk's later "north of $100 billion long term" comment. It is included here only as an early third-party range, not as a company figure. <cite class="src">[<a href="https://sherwood.news/tech/morgan-stanley-thinks-teslas-terafab-could-cost-an-additional-usd35-billion/" title="Sherwood News, 17 Mar 2026: Morgan Stanley estimate of $35-45bn capex for Terafab, including about $20-25bn of wafer-fabrication equipment (as of 13 Nov 2026)">21</a>]</cite></p>
+
+<h2>Risks and open questions</h2>
+<div class="warnbox">
+<p>Several official documents and Musk's own comments already flag that this is an aggressive plan, not a finished factory. The list below sticks to those points and to facts that were not found.</p>
+</div>
+<ol class="openq">
+<li><b>The timetable is explicitly uncertain.</b> On 20 October 2026 Musk said "I put big error bars on this because we don't know if we will actually achieve this or not," called the dates "very aggressive," and said volume production in Q3 or Q4 of 2028 was "at least in the set of possible outcomes." Reuters noted his history of missed timelines. <cite class="src">[<a href="https://www.investing.com/news/stock-market-news/spacex-and-teslas-terafab-targets-2028-for-volume-chip-production-musk-says-4961351" title="Reuters via Investing.com, 20 Oct 2026: SpaceX conference call -- first SRAM test chip around May or June 2027; volume production targeted for Q3 2028, with large error bars (as of 13 Nov 2026)">4</a>]</cite> <cite class="src">[<a href="https://stockanalysis.com/stocks/tsla/transcripts/712902-q3-2026/" title="Tesla Q3 2026 earnings call transcript, 21 Oct 2026: research-fab commissioning, test-chip and volume targets; capital-equipment comments (as of 13 Nov 2026)">3</a>]</cite></li>
+<li><b>The legal deal was still a framework in May 2026.</b> SpaceX's S-1, filed 20 May 2026, said specific Terafab projects, "including any development timelines, milestones and capital expenditures," had "not yet been determined." Electrek, reading the same filing, reported further risk-factor language that the project was in "very early stages," that financial terms, intellectual-property rights and the term of the collaboration had not been finalised, and that neither Tesla nor Intel was obligated to remain in the project. <cite class="src">[<a href="https://www.sec.gov/Archives/edgar/data/1181412/000162828026036936/spaceexplorationtechnologi.htm" title="SpaceX Form S-1, filed 20 May 2026: Terafab defined as a one-terawatt-a-year compute-hardware initiative; general framework with Tesla; Intel joined in April; project terms not yet determined (as of 13 Nov 2026)">5</a>]</cite> <cite class="src">[<a href="https://electrek.co/2026/05/20/spacex-s1-tesla-terafab-macrohard-not-done-deal/" title="Electrek, 20 May 2026: reporting on SpaceX S-1 language that Terafab was in very early stages, with financial terms, IP rights and a binding term still unfinalised (as of 13 Nov 2026)">18</a>]</cite></li>
+<li><b>Who pays, and how much, is still open.</b> Musk said the Tesla-SpaceX split had to be figured out. No official line-item for Terafab sat inside Tesla's about-$20 billion 2026 capex guide. <cite class="src">[<a href="https://stockanalysis.com/stocks/tsla/transcripts/712902-q3-2026/" title="Tesla Q3 2026 earnings call transcript, 21 Oct 2026: research-fab commissioning, test-chip and volume targets; capital-equipment comments (as of 13 Nov 2026)">3</a>]</cite></li>
+<li><b>Equipment is a bottleneck.</b> Leading-edge tools, especially EUV lithography from ASML, have long lead times. Musk thanked ASML and other suppliers for accelerating deliveries but did not, in the Reuters report, directly answer whether EUV machines had been ordered. <cite class="src">[<a href="https://www.investing.com/news/stock-market-news/spacex-and-teslas-terafab-targets-2028-for-volume-chip-production-musk-says-4961351" title="Reuters via Investing.com, 20 Oct 2026: SpaceX conference call -- first SRAM test chip around May or June 2027; volume production targeted for Q3 2028, with large error bars (as of 13 Nov 2026)">4</a>]</cite></li>
+<li><b>Process and control are unsettled.</b> Intel's 14A role was announced, but contract detail was not. A TSMC operating role was later ruled out by Musk, except possibly as a subtenant, which leaves an unresolved question of who actually runs which cleanroom. <cite class="src">[<a href="https://www.reuters.com/business/autos-transportation/tesla-ceo-musk-says-company-plans-use-intels-14a-process-terafab-2026-04-22/" title="Reuters, 22 Apr 2026: Musk says Tesla plans to use Intel&#x27;s 14A process for Terafab (as of 13 Nov 2026)">16</a>]</cite> <cite class="src">[<a href="https://www.tomshardware.com/tech-industry/semiconductors/musk-rejects-rumors-of-tsmc-takeover-of-terafab-intel-reaffirms-14a-node-deal-as-musk-floats-cleanroom-sublease" title="Tom&#x27;s Hardware, 7 Oct 2026: Musk rejects a TSMC takeover; Intel reaffirms involvement and the April 14A plan; Musk floats a cleanroom sublease (as of 13 Nov 2026)">17</a>]</cite> <cite class="src">[<a href="https://www.investing.com/news/stock-market-news/intel-to-keep-working-on-musks-terafab-chipmaking-venture-bloomberg-news-reports-4935609" title="Reuters via Investing.com, 7 Oct 2026: Musk says Tesla and SpaceX will build and run Terafab; TSMC may sublease part of it (as of 13 Nov 2026)">19</a>]</cite></li>
+<li><b>Semiconductor manufacturing is new territory for these companies.</b> TechCrunch, citing Bloomberg, noted that Musk does not have a semiconductor-manufacturing background and has a record of over-promising on goals and timelines. <cite class="src">[<a href="https://techcrunch.com/2026/03/22/elon-musk-unveils-chip-manufacturing-plans-for-spacex-and-tesla/" title="TechCrunch, 22 Mar 2026: Terafab announced in Austin; 100-200 GW a year on Earth plus a terawatt in space (as of 13 Nov 2026)">10</a>]</cite></li>
+<li><b>Several basic product facts are still unpublished</b> in the sources opened for this page: the first chip generation Terafab will make at volume; a later official wafer-start target for Grimes County; a detailed site plan or acreage; and any Micron or memory-partner contract for the on-site memory work SpaceX described.</li>
+</ol>
+<p>None of that means the project has been cancelled. Tesla is building the Austin research fab, SpaceX has named Grimes County for the production plant, and both companies have repeated the 2027-2028 research and volume targets. It does mean the public record, as of 2026-11-13, is still a plan with large uncertainties.</p>
+
+<h2 id='sources'>Sources</h2><p class='help'>Numbered as cited on this page. Every linked source was opened or fetched on 13 Nov 2026 (Melbourne time), except where a publisher page returned an error, in which case the citation is taken from the outlet's own headline or from a full reprint that carries the same date. Figures are as of 2026-11-13. There is no daily refresh. Where an official figure was not found, the page says so. Nothing here is a Tesla, SpaceX or Intel forecast you should treat as booked.</p><ol class='srcs'><li><a href="https://www.spacex.com/updates/terafab">SpaceX Updates, 6 Aug 2026: research fab groundbreaking at Giga Texas North Campus in April; production Terafab to be built in Grimes County; planned size, initial capital and jobs</a> <span class="asof">(as of 13 Nov 2026)</span></li><li><a href="https://www.sec.gov/Archives/edgar/data/1318605/000162828026066738/exhibit9914.htm">Tesla Q3 2026 Update, SEC Exhibit 99.1 (21 Oct 2026): construction of the Austin Fab, with equipment commissioning planned in 2027</a> <span class="asof">(as of 13 Nov 2026)</span></li><li><a href="https://stockanalysis.com/stocks/tsla/transcripts/712902-q3-2026/">Tesla Q3 2026 earnings call transcript, 21 Oct 2026: research-fab commissioning, test-chip and volume targets; capital-equipment comments</a> <span class="asof">(as of 13 Nov 2026)</span></li><li><a href="https://www.investing.com/news/stock-market-news/spacex-and-teslas-terafab-targets-2028-for-volume-chip-production-musk-says-4961351">Reuters via Investing.com, 20 Oct 2026: SpaceX conference call -- first SRAM test chip around May or June 2027; volume production targeted for Q3 2028, with large error bars</a> <span class="asof">(as of 13 Nov 2026)</span></li><li><a href="https://www.sec.gov/Archives/edgar/data/1181412/000162828026036936/spaceexplorationtechnologi.htm">SpaceX Form S-1, filed 20 May 2026: Terafab defined as a one-terawatt-a-year compute-hardware initiative; general framework with Tesla; Intel joined in April; project terms not yet determined</a> <span class="asof">(as of 13 Nov 2026)</span></li><li><a href="https://www.spacex.com/updates/terafab">SpaceX Updates, 12 Nov 2026: refers to the $100B Terafab advanced chip manufacturing project in Grimes County, Texas</a> <span class="asof">(as of 13 Nov 2026)</span></li><li><a href="https://singjupost.com/teslas-2025-annual-shareholder-meeting-transcript/">Tesla 2025 Annual Shareholder Meeting transcript, 6 Nov 2025 (published 7 Nov 2025)</a> <span class="asof">(as of 13 Nov 2026)</span></li><li><a href="https://www.cnbc.com/2025/11/07/elon-musk-says-tesla-needs-gigantic-chip-fab-terra-for-ai-and-robotics-tsmc-intel.html">CNBC, 6-7 Nov 2025: Musk says Tesla needs a gigantic chip fab; 100,000 then 1 million wafer starts a month; TSMC 2024 capacity comparison</a> <span class="asof">(as of 13 Nov 2026)</span></li><li><a href="https://www.reuters.com/business/autos-transportation/musk-plans-tesla-mega-ai-chip-fab-mulls-potential-intel-partnership-2025-11-07/">Reuters, 7 Nov 2025: Musk plans a Tesla mega AI chip fab and says Intel talks are worth having, with no deal signed</a> <span class="asof">(as of 13 Nov 2026)</span></li><li><a href="https://techcrunch.com/2026/03/22/elon-musk-unveils-chip-manufacturing-plans-for-spacex-and-tesla/">TechCrunch, 22 Mar 2026: Terafab announced in Austin; 100-200 GW a year on Earth plus a terawatt in space</a> <span class="asof">(as of 13 Nov 2026)</span></li><li><a href="https://www.foxbusiness.com/technology/musk-says-tesla-spacex-build-advanced-chip-manufacturing-facility">Fox Business, 24 Mar 2026: two fabs, each one chip design; thanks to Samsung, TSMC and Micron; space-chip constraints; 1 TW/year versus about 0.5 TW of US generation</a> <span class="asof">(as of 13 Nov 2026)</span></li><li><a href="https://www.just-auto.com/news/tesla-spacex-austin-terafab-chip-complex/">Just Auto, 23 Mar 2026: Tesla and SpaceX Terafab in Austin; two factories; no timeline given at the launch</a> <span class="asof">(as of 13 Nov 2026)</span></li><li><a href="https://www.reuters.com/business/autos-transportation/musk-says-spacex-tesla-build-advanced-chip-factories-austin-2026-03-22/">Reuters, 22-23 Mar 2026: SpaceX and Tesla to build advanced chip factories in Austin</a> <span class="asof">(as of 13 Nov 2026)</span></li><li><a href="https://asia.nikkei.com/business/tech/semiconductors/samsung-wins-16.5bn-deal-to-supply-chips-for-tesla">Nikkei Asia, 28 Jul 2025: Samsung wins a $16.5bn deal to supply chips for Tesla through the end of 2033</a> <span class="asof">(as of 13 Nov 2026)</span></li><li><a href="https://www.tomshardware.com/tech-industry/semiconductors/intel-joins-elon-musks-terafab-project-intel-is-proud-to-join-the-terafab-project-with-spacex-xai-and-tesla-to-help-refactor-silicon-fab-technology">Tom&#x27;s Hardware, 7 Apr 2026: Intel X post announcing it has joined Terafab with SpaceX, xAI and Tesla</a> <span class="asof">(as of 13 Nov 2026)</span></li><li><a href="https://www.reuters.com/business/autos-transportation/tesla-ceo-musk-says-company-plans-use-intels-14a-process-terafab-2026-04-22/">Reuters, 22 Apr 2026: Musk says Tesla plans to use Intel&#x27;s 14A process for Terafab</a> <span class="asof">(as of 13 Nov 2026)</span></li><li><a href="https://www.tomshardware.com/tech-industry/semiconductors/musk-rejects-rumors-of-tsmc-takeover-of-terafab-intel-reaffirms-14a-node-deal-as-musk-floats-cleanroom-sublease">Tom&#x27;s Hardware, 7 Oct 2026: Musk rejects a TSMC takeover; Intel reaffirms involvement and the April 14A plan; Musk floats a cleanroom sublease</a> <span class="asof">(as of 13 Nov 2026)</span></li><li><a href="https://electrek.co/2026/05/20/spacex-s1-tesla-terafab-macrohard-not-done-deal/">Electrek, 20 May 2026: reporting on SpaceX S-1 language that Terafab was in very early stages, with financial terms, IP rights and a binding term still unfinalised</a> <span class="asof">(as of 13 Nov 2026)</span></li><li><a href="https://www.investing.com/news/stock-market-news/intel-to-keep-working-on-musks-terafab-chipmaking-venture-bloomberg-news-reports-4935609">Reuters via Investing.com, 7 Oct 2026: Musk says Tesla and SpaceX will build and run Terafab; TSMC may sublease part of it</a> <span class="asof">(as of 13 Nov 2026)</span></li><li><a href="https://investor.tsmc.com/sites/ir/annual-report/2024/2024-Annual%20Report-E.pdf">TSMC 2024 Annual Report: manufacturing facilities had annual production capacity of approximately 17 million 12-inch equivalent wafers</a> <span class="asof">(as of 13 Nov 2026)</span></li><li><a href="https://sherwood.news/tech/morgan-stanley-thinks-teslas-terafab-could-cost-an-additional-usd35-billion/">Sherwood News, 17 Mar 2026: Morgan Stanley estimate of $35-45bn capex for Terafab, including about $20-25bn of wafer-fabrication equipment</a> <span class="asof">(as of 13 Nov 2026)</span></li></ol>
+<h2>Related pages</h2><div class='related'><a href='/zfrontier/'>🌠 zFrontier</a><a href='/zfrontier/gigafactory/'>🏭 Gigafactory</a><a href='/zfrontier/optimus/'>🤖 Optimus</a><a href='/zfrontier/cybercab/'>🚕 CyberCab</a><a href='/zfrontier/spacex/'>🚀 SpaceX Tracking</a></div>
+</main>
+
+<script>
+function ccFilter(q,t){q=(q||'').toLowerCase();t.querySelectorAll('tbody tr').forEach(function(r){r.style.display=r.textContent.toLowerCase().indexOf(q)>=0?'':'none';});}
+function ccSort(t,c){var tb=t.tBodies[0],rows=[].slice.call(tb.rows),ths=t.tHead.rows[0].cells;
+var dir=t.getAttribute('data-dir')==='asc'&&t.getAttribute('data-col')==String(c)?'desc':'asc';
+function key(r){var td=r.cells[c];if(!td)return '';var k=td.getAttribute('data-k');return (k!==null?k:td.textContent).trim().toLowerCase();}
+rows.sort(function(a,b){var x=key(a),y=key(b);var nx=parseFloat(x),ny=parseFloat(y);if(!isNaN(nx)&&!isNaN(ny)&&/^[-0-9.]+$/.test(x)&&/^[-0-9.]+$/.test(y)){x=nx;y=ny;}
+if(x<y)return dir==='asc'?-1:1;if(x>y)return dir==='asc'?1:-1;return 0;});
+rows.forEach(function(r){tb.appendChild(r)});t.setAttribute('data-dir',dir);t.setAttribute('data-col',c);
+for(var i=0;i<ths.length;i++){ths[i].textContent=ths[i].textContent.replace(/ [\u25B2\u25BC]$/,'');if(i===c)ths[i].textContent+=' '+(dir==='asc'?'\u25B2':'\u25BC');}}
+</script>
+
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/+$/,"")||"/"}}</script><script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c)}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script>
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:8px 0 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:6px;margin:0;padding:8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
+nav.site.im a.mi{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:auto;min-height:44px;min-width:0;padding:8px 10px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a)}
+nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:visible;text-overflow:unset;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.25;text-align:left}
+nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:22px;height:22px;padding:0 5px;border-radius:999px;font-size:16px;font-weight:800;line-height:1;background:#0f172a;color:#fff}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc;color:#0f172a}
+nav.site.im a.mi.on .im-seq{background:#fff;color:#1d4ed8}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px;flex:none}#sg-link,#tt-btn,#mm-link{height:36px;border-radius:18px}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["ARR Model","/netbox-yaml-model/arr/","🧪"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"],["Pod Policy Group","/aci-policy/pod-policy-group/","🕒"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["zFrontier","/zfrontier/","🌠",[["zFrontier","/zfrontier/","🌠"],["Farzad","/zfrontier/farzad/","📺"],["SpaceX vs Tesla shares","/zfrontier/shares/","📈"],["Optimus","/zfrontier/optimus/","🤖"],["Gigafactory","/zfrontier/gigafactory/","🏭"],["FSD versions","/zfrontier/fsd-versions/","🛣️"],["Liquid cooling","/zfrontier/liquid-cooling/","💧"],["SpaceX Tracking","/zfrontier/spacex/","🚀"],["CyberCab","/zfrontier/cybercab/","🚕"],["AI FineTune Pod","/zfrontier/ai-finetune-pod/","🎛️"],["MCP Servers","/zfrontier/mcp-servers/","🔌"],["NaC CLI","/zfrontier/nac-cli/","🧰"],["GPU Workflow","/zfrontier/3gpu-ai-workflow/","🧮"],["MWMESH","/zfrontier/mwmesh/","📡"],["Notebooks","/zfrontier/notebooks/","📓"],["RAG documents","/zfrontier/rag-documents/","📚"],["Foundation-Sec-8B","/zfrontier/foundation-sec-8b/","🛡️"],["Terafab","/zfrontier/terafab/","💠"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"],["ACI GUI Forms","/visitors/aci-gui-forms/","📝"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=(seq?String(seq)+'. ':'')+e[0];if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks ›';r2.appendChild(t);
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1))});r2.appendChild(pills);n.appendChild(r2)}}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+</body>
+</html>
