@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ARR — ACI Fabric Report</title>
+  <meta name="description" content="Read-only ACI fabric report generated from a Cisco APIC snapshot.">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f4f6f8;
+      --bg-accent: #e8eef4;
+      --card: #ffffff;
+      --ink: #15202b;
+      --muted: #5b6b7c;
+      --line: #d5dee7;
+      --accent: #0e7490;
+      --accent-soft: #e0f4f8;
+      --link: #0e7490;
+      --good: #047857;
+      --fair: #b45309;
+      --poor: #b91c1c;
+      --crit: #b91c1c;
+      --major: #c2410c;
+      --minor: #a16207;
+      --warn: #a16207;
+      --info: #0369a1;
+      --cleared: #047857;
+      --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+      --radius: 14px;
+      --mono: "IBM Plex Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+      --sans: "Source Sans 3", "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1220;
+        --bg-accent: #111827;
+        --card: #152033;
+        --ink: #e6edf5;
+        --muted: #93a4b8;
+        --line: #2a3b52;
+        --accent: #5eead4;
+        --accent-soft: #12313a;
+        --link: #5eead4;
+        --good: #34d399;
+        --fair: #fbbf24;
+        --poor: #f87171;
+        --crit: #f87171;
+        --major: #fb923c;
+        --minor: #fbbf24;
+        --warn: #fbbf24;
+        --info: #7dd3fc;
+        --cleared: #34d399;
+        --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--sans);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, var(--bg-accent), transparent 60%),
+        var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    header {
+      padding: 2.2rem 1.5rem 1.4rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem 3.5rem; }
+    header .wrap { padding-bottom: 0; }
+    .kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.72rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin: 0 0 0.35rem;
+    }
+    h1 {
+      font-size: clamp(1.7rem, 3vw, 2.25rem);
+      margin: 0 0 0.45rem;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+    }
+    .meta, .footer, .note, .muted, .card-sub, .card-label, .empty, .na, .dn {
+      color: var(--muted);
+    }
+    .meta { margin: 0 0 0.25rem; }
+    .snapshot { margin: 0; font-size: 0.98rem; }
+    h2 {
+      margin: 2.4rem 0 0.85rem;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.85rem;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem 1.05rem 0.95rem;
+      box-shadow: var(--shadow);
+    }
+    .card-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 650;
+    }
+    .card-value {
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-top: 0.2rem;
+    }
+    .card-value strong { font-weight: 700; }
+    .card-sub { font-size: 0.78rem; margin-top: 0.25rem; }
+    .unit { font-size: 0.9rem; color: var(--muted); font-weight: 600; margin-left: 0.15rem; }
+    .health.good, .sev.cleared { color: var(--good); }
+    .health.fair { color: var(--fair); }
+    .health.poor, .sev.critical { color: var(--poor); }
+    .sev.major { color: var(--major); }
+    .sev.warning, .sev.minor { color: var(--warn); }
+    .sev.info { color: var(--info); }
+    .table-wrap {
+      overflow-x: auto;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.93rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.65rem 0.85rem;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    th {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      font-weight: 700;
+      background: color-mix(in srgb, var(--card) 80%, var(--bg-accent));
+    }
+    tr:last-child td { border-bottom: 0; }
+    .mono { font-family: var(--mono); font-size: 0.86em; }
+    .num { font-variant-numeric: tabular-nums; text-align: right; font-family: var(--mono); }
+    th:nth-child(3) { text-align: left; }
+    table thead th:nth-child(3) { /* keep */ }
+    .pill {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      font-size: 0.78rem;
+      font-weight: 650;
+      background: color-mix(in srgb, var(--card) 70%, var(--bg-accent));
+    }
+    .pill.role-controller { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+    .pill.role-leaf { background: color-mix(in srgb, var(--good) 16%, var(--card)); color: var(--good); border-color: transparent; }
+    .pill.role-spine { background: color-mix(in srgb, var(--info) 16%, var(--card)); color: var(--info); border-color: transparent; }
+    .pill.sev.critical { background: color-mix(in srgb, var(--crit) 16%, var(--card)); color: var(--crit); border-color: transparent; }
+    .pill.sev.major { background: color-mix(in srgb, var(--major) 16%, var(--card)); color: var(--major); border-color: transparent; }
+    .pill.sev.warning, .pill.sev.minor { background: color-mix(in srgb, var(--warn) 16%, var(--card)); color: var(--warn); border-color: transparent; }
+    .tenant-block {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem 1.15rem 1.1rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1rem;
+    }
+    .tenant-block h3 { margin: 0 0 0.85rem; font-size: 1.05rem; }
+    .tenant-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 0.85rem 1.25rem;
+    }
+    .tenant-block h4 {
+      margin: 0 0 0.35rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+    }
+    .count {
+      font-family: var(--mono);
+      font-size: 0.85em;
+      color: var(--ink);
+    }
+    .obj-list { list-style: none; margin: 0; padding: 0; }
+    .obj-list li { margin: 0 0 0.35rem; }
+    .dn { display: block; font-family: var(--mono); font-size: 0.75rem; word-break: break-all; }
+    .empty, .na { font-style: italic; }
+    .note { font-size: 0.9rem; margin: 0.85rem 0 0; }
+    footer {
+      margin-top: 2.8rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--line);
+      font-size: 0.85rem;
+    }
+    a { color: var(--link); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <p class="kicker">ARR</p>
+      <h1>ARR — ACI Fabric Report</h1>
+      <p class="meta">Fabric: <strong>ACI Fabric1</strong> · Fabric ID: <strong>1</strong> · APIC version: <strong>6.1(6g)</strong></p>
+      <p class="snapshot">Snapshot: <strong>13 November 2026, 4:37:08 PM IST (Asia/Calcutta, UTC+5:30)</strong></p>
+      <p class="meta">Source: read-only REST from APIC at 192.168.10.1. Values below are taken only from that snapshot.</p>
+    </div>
+  </header>
+  <main class="wrap">
+    <section>
+      <h2>Summary</h2>
+      <div class="cards">
+        <article class="card health-card"><div class="card-label">Fabric health</div><div class="card-value"><strong class="health fair">89</strong><span class="unit">/100</span></div><div class="card-sub">max severity: info · previous: 66</div></article>
+<article class="card "><div class="card-label">Fabric nodes</div><div class="card-value"><strong>7</strong></div><div class="card-sub">3 controllers · 2 leaves · 2 spines</div></article>
+<article class="card "><div class="card-label">Tenants</div><div class="card-value"><strong>3</strong></div></article>
+<article class="card "><div class="card-label">VRFs</div><div class="card-value"><strong>6</strong></div></article>
+<article class="card "><div class="card-label">Bridge domains</div><div class="card-value"><strong>4</strong></div></article>
+<article class="card "><div class="card-label">EPGs</div><div class="card-value"><strong>2</strong></div></article>
+<article class="card "><div class="card-label">Contracts</div><div class="card-value"><strong>1</strong></div></article>
+<article class="card "><div class="card-label">L3Outs</div><div class="card-value"><strong>1</strong></div></article>
+<article class="card "><div class="card-label">Endpoints</div><div class="card-value"><strong>0</strong></div></article>
+      </div>
+    </section>
+
+    <section>
+      <h2>Faults by severity</h2>
+      <div class="cards">
+        <article class="card "><div class="card-label">Fault instances</div><div class="card-value"><strong>1,020</strong></div><div class="card-sub">faultInst count</div></article>
+<article class="card sev-critical"><div class="card-label">Critical</div><div class="card-value"><strong class="sev critical">4</strong></div><div class="card-sub">from fault summaries</div></article>
+<article class="card sev-major"><div class="card-label">Major</div><div class="card-value"><strong class="sev major">6</strong></div><div class="card-sub">from fault summaries</div></article>
+<article class="card sev-minor"><div class="card-label">Minor</div><div class="card-value"><strong class="sev minor">0</strong></div><div class="card-sub">from fault summaries</div></article>
+<article class="card sev-warning"><div class="card-label">Warning</div><div class="card-value"><strong class="sev warning">1,005</strong></div><div class="card-sub">from fault summaries</div></article>
+      </div>
+      <p class="note">Fault summaries account for 1,015 instances across 15 codes. The faultInst count is 1,020; the remaining 5 instances are not represented in the faultSummary data.</p>
+    </section>
+
+    <section>
+      <h2>Fabric nodes</h2>
+      
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th><th>ID</th><th>Role</th><th>Model</th><th>Serial</th><th>Version</th><th>State</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>apic1</td><td class='mono'>1</td><td><span class='pill role-controller'>controller</span></td><td class='mono'><span class="na">—</span></td><td class='mono'>TEP-1-1</td><td class='mono'>6.1(6g)</td><td><span class='pill state'>commissioned</span></td></tr><tr><td>apic2</td><td class='mono'>2</td><td><span class='pill role-controller'>controller</span></td><td class='mono'><span class="na">—</span></td><td class='mono'>TEP-1-2</td><td class='mono'>6.1(6g)</td><td><span class='pill state'>commissioned</span></td></tr><tr><td>apic3</td><td class='mono'>3</td><td><span class='pill role-controller'>controller</span></td><td class='mono'><span class="na">—</span></td><td class='mono'>TEP-1-3</td><td class='mono'>6.1(6g)</td><td><span class='pill state'>commissioned</span></td></tr><tr><td>LEAF-101</td><td class='mono'>101</td><td><span class='pill role-leaf'>leaf</span></td><td class='mono'>N9K-C9396PX</td><td class='mono'>TEP-1-101</td><td class='mono'>simsw-6.1(6g)</td><td><span class='pill state'>active</span></td></tr><tr><td>LEAF-102</td><td class='mono'>102</td><td><span class='pill role-leaf'>leaf</span></td><td class='mono'>N9K-C9396PX</td><td class='mono'>TEP-1-102</td><td class='mono'>simsw-6.1(6g)</td><td><span class='pill state'>active</span></td></tr><tr><td>SPINE-201</td><td class='mono'>201</td><td><span class='pill role-spine'>spine</span></td><td class='mono'>N9K-C9508</td><td class='mono'>TEP-1-103</td><td class='mono'>simsw-6.1(6g)</td><td><span class='pill state'>active</span></td></tr><tr><td>SPINE-202</td><td class='mono'>202</td><td><span class='pill role-spine'>spine</span></td><td class='mono'>N9K-C9508</td><td class='mono'>TEP-1-104</td><td class='mono'>simsw-6.1(6g)</td><td><span class='pill state'>active</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <section>
+      <h2>Tenants</h2>
+      
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Tenant</th><th>DN</th><th>Health</th><th>Max severity</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>common</td><td class='mono'>uni/tn-common</td><td><span class="health good">100</span></td><td>cleared</td></tr><tr><td>infra</td><td class='mono'>uni/tn-infra</td><td><span class="health good">100</span></td><td>cleared</td></tr><tr><td>mgmt</td><td class='mono'>uni/tn-mgmt</td><td><span class="health good">100</span></td><td>cleared</td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+    <section>
+      <h2>VRFs, bridge domains and EPGs by tenant</h2>
+      
+        <article class="tenant-block">
+          <h3>Tenant <span class="mono">common</span> <span class="health good">health 100</span></h3>
+          <div class="tenant-grid">
+            <div>
+              <h4>VRFs <span class="count">2</span></h4>
+              <ul class='obj-list'><li><span class="mono">copy</span> <span class="dn">uni/tn-common/ctx-copy</span></li><li><span class="mono">default</span> <span class="dn">uni/tn-common/ctx-default</span></li></ul>
+            </div>
+            <div>
+              <h4>Bridge domains <span class="count">1</span></h4>
+              <ul class='obj-list'><li><span class="mono">default</span> <span class="dn">uni/tn-common/BD-default</span></li></ul>
+            </div>
+            <div>
+              <h4>Application profiles <span class="count">1</span></h4>
+              <ul class='obj-list'><li><span class="mono">default</span> <span class="dn">uni/tn-common/ap-default</span></li></ul>
+            </div>
+            <div>
+              <h4>EPGs <span class="count">0</span></h4>
+              <p class="empty">None in this snapshot.</p>
+            </div>
+            <div>
+              <h4>Contracts <span class="count">1</span></h4>
+              <ul class='obj-list'><li><span class="mono">default</span> <span class="muted">scope: context</span> <span class="dn">uni/tn-common/brc-default</span></li></ul>
+            </div>
+            <div>
+              <h4>L3Outs <span class="count">1</span></h4>
+              <ul class='obj-list'><li><span class="mono">default</span> <span class="dn">uni/tn-common/out-default</span></li></ul>
+            </div>
+          </div>
+        </article>
+        
+
+        <article class="tenant-block">
+          <h3>Tenant <span class="mono">infra</span> <span class="health good">health 100</span></h3>
+          <div class="tenant-grid">
+            <div>
+              <h4>VRFs <span class="count">2</span></h4>
+              <ul class='obj-list'><li><span class="mono">ave-ctrl</span> <span class="dn">uni/tn-infra/ctx-ave-ctrl</span></li><li><span class="mono">overlay-1</span> <span class="dn">uni/tn-infra/ctx-overlay-1</span></li></ul>
+            </div>
+            <div>
+              <h4>Bridge domains <span class="count">2</span></h4>
+              <ul class='obj-list'><li><span class="mono">ave-ctrl</span> <span class="dn">uni/tn-infra/BD-ave-ctrl</span></li><li><span class="mono">default</span> <span class="dn">uni/tn-infra/BD-default</span></li></ul>
+            </div>
+            <div>
+              <h4>Application profiles <span class="count">2</span></h4>
+              <ul class='obj-list'><li><span class="mono">access</span> <span class="dn">uni/tn-infra/ap-access</span></li><li><span class="mono">ave-ctrl</span> <span class="dn">uni/tn-infra/ap-ave-ctrl</span></li></ul>
+            </div>
+            <div>
+              <h4>EPGs <span class="count">2</span></h4>
+              <ul class='obj-list'><li><span class="mono">ave-ctrl</span> <span class="muted">AP: ave-ctrl</span> <span class="pill">applied</span> <span class="dn">uni/tn-infra/ap-ave-ctrl/epg-ave-ctrl</span></li><li><span class="mono">default</span> <span class="muted">AP: access</span> <span class="pill">applied</span> <span class="dn">uni/tn-infra/ap-access/epg-default</span></li></ul>
+            </div>
+            <div>
+              <h4>Contracts <span class="count">0</span></h4>
+              <p class="empty">None in this snapshot.</p>
+            </div>
+            <div>
+              <h4>L3Outs <span class="count">0</span></h4>
+              <p class="empty">None in this snapshot.</p>
+            </div>
+          </div>
+        </article>
+        
+
+        <article class="tenant-block">
+          <h3>Tenant <span class="mono">mgmt</span> <span class="health good">health 100</span></h3>
+          <div class="tenant-grid">
+            <div>
+              <h4>VRFs <span class="count">2</span></h4>
+              <ul class='obj-list'><li><span class="mono">inb</span> <span class="dn">uni/tn-mgmt/ctx-inb</span></li><li><span class="mono">oob</span> <span class="dn">uni/tn-mgmt/ctx-oob</span></li></ul>
+            </div>
+            <div>
+              <h4>Bridge domains <span class="count">1</span></h4>
+              <ul class='obj-list'><li><span class="mono">inb</span> <span class="dn">uni/tn-mgmt/BD-inb</span></li></ul>
+            </div>
+            <div>
+              <h4>Application profiles <span class="count">0</span></h4>
+              <p class="empty">None in this snapshot.</p>
+            </div>
+            <div>
+              <h4>EPGs <span class="count">0</span></h4>
+              <p class="empty">None in this snapshot.</p>
+            </div>
+            <div>
+              <h4>Contracts <span class="count">0</span></h4>
+              <p class="empty">None in this snapshot.</p>
+            </div>
+            <div>
+              <h4>L3Outs <span class="count">0</span></h4>
+              <p class="empty">None in this snapshot.</p>
+            </div>
+          </div>
+        </article>
+        
+    </section>
+
+    <section>
+      <h2>Top fault summaries</h2>
+      
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Code</th><th>Severity</th><th>Count</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class='mono'>F0104</td><td><span class='pill sev critical'>critical</span></td><td class='num'>3</td><td>This fault occurs when a bond interface on a controller is in the link-down state.</td></tr><tr><td class='mono'>F4674</td><td><span class='pill sev critical'>critical</span></td><td class='num'>1</td><td>This fault occurs when the Strong encryption is not enabled on pkiExportEncryption policy.</td></tr><tr><td class='mono'>F0103</td><td><span class='pill sev major'>major</span></td><td class='num'>3</td><td>This fault occurs when a physical interface on a controller is in the link-down state.</td></tr><tr><td class='mono'>F1318</td><td><span class='pill sev major'>major</span></td><td class='num'>3</td><td>This fault occurs when PSU are not detected correctly</td></tr><tr><td class='mono'>F0546</td><td><span class='pill sev warning'>warning</span></td><td class='num'>888</td><td>This fault occurs when a port goes down</td></tr><tr><td class='mono'>F100264</td><td><span class='pill sev warning'>warning</span></td><td class='num'>18</td><td>Threshold crossing alert for class eqptIngrDropPkts5min, property bufferRate</td></tr><tr><td class='mono'>F100480</td><td><span class='pill sev warning'>warning</span></td><td class='num'>18</td><td>Threshold crossing alert for class eqptIngrDropPkts5min, property errorRate</td></tr><tr><td class='mono'>F100696</td><td><span class='pill sev warning'>warning</span></td><td class='num'>18</td><td>Threshold crossing alert for class eqptIngrDropPkts5min, property forwardingRate</td></tr><tr><td class='mono'>F96760</td><td><span class='pill sev warning'>warning</span></td><td class='num'>18</td><td>Threshold crossing alert for class eqptEgrDropPkts5min, property bufferRate</td></tr><tr><td class='mono'>F96976</td><td><span class='pill sev warning'>warning</span></td><td class='num'>18</td><td>Threshold crossing alert for class eqptEgrDropPkts5min, property errorRate</td></tr><tr><td class='mono'>F381328</td><td><span class='pill sev warning'>warning</span></td><td class='num'>15</td><td>Threshold crossing alert for class eqptIngrErrPkts5min, property crcLast</td></tr><tr><td class='mono'>F1360</td><td><span class='pill sev warning'>warning</span></td><td class='num'>6</td><td>This fault occurs when the operational state of the coop adjacency is down</td></tr><tr><td class='mono'>F1207</td><td><span class='pill sev warning'>warning</span></td><td class='num'>3</td><td>This fault occurs when the operational state of the arp adjacency is down</td></tr><tr><td class='mono'>F110176</td><td><span class='pill sev warning'>warning</span></td><td class='num'>2</td><td>Threshold crossing alert for class l2IngrBytes5min, property dropRate</td></tr><tr><td class='mono'>F3057</td><td><span class='pill sev warning'>warning</span></td><td class='num'>1</td><td>This fault is raised when APIC smart licensing network settings are not configured and APIC cannot report license usage to Cisco Smart Software Manager (CSSM).</td></tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+  </main>
+  <footer class="wrap">
+    <p class="footer">Static report. No credentials, tokens or session IDs are included. Raw derived summary: <a href="data.json">data.json</a>.</p>
+  </footer>
+</body>
+</html>
