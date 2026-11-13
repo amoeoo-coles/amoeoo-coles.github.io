@@ -17,7 +17,7 @@ from zoneinfo import ZoneInfo
 
 MELBOURNE = ZoneInfo("Australia/Melbourne")
 ROOT = Path(__file__).resolve().parent.parent
-TRACK = ROOT / "spacex-tracking"
+TRACK = ROOT / "zfrontier" / "spacex"
 DATA = TRACK / "data"
 HISTORY = TRACK / "history"
 META = DATA / "meta.json"
@@ -71,7 +71,7 @@ def run(date_str: str | None = None) -> Path:
     meta["last_updated_label"] = now.strftime("%d %b %Y %H:%M %Z")
 
     history = meta.setdefault("version_history", [])
-    path = f"/spacex-tracking/history/{date_str}/"
+    path = f"/zfrontier/spacex/history/{date_str}/"
     label = now.strftime("%d %b %Y") + f" (snapshot {date_str})"
     entry = {"date": date_str, "path": path, "label": label}
 

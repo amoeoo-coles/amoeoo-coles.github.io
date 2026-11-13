@@ -3,7 +3,7 @@
 
 Pages must be generated with this script (or equivalent) so the Status dashboard
 <main> block is never copied in. External site publishers must skip paths under
-spacex-tracking/ — see SKIP_PATH_PREFIXES.
+zfrontier/spacex/ (moved from /spacex-tracking/ on 13 Nov 2026) — see SKIP_PATH_PREFIXES.
 """
 
 from __future__ import annotations
@@ -14,9 +14,9 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-TRACK = ROOT / "spacex-tracking"
+TRACK = ROOT / "zfrontier" / "spacex"
 # Paths no automated HTML refresh should rewrite (Report 17 / status publish, etc.).
-SKIP_PATH_PREFIXES = ("spacex-tracking/",)
+SKIP_PATH_PREFIXES = ("zfrontier/spacex/",)
 
 CHROME_HEAD_SOURCE = ROOT / "visitors" / "index.html"
 CHROME_FOOT_SOURCE = ROOT / "status" / "index.html"
@@ -26,16 +26,16 @@ MARKER = "<!-- spacex-tracking-generated v1 -->"
 def sxt_nav(active: str) -> str:
     """Tab order matches data/site-menu.json SpaceX Tracking sub-items."""
     tabs = [
-        ("overview", "/spacex-tracking/", "Overview"),
-        ("ships", "/spacex-tracking/ships/", "Ships"),
-        ("boosters", "/spacex-tracking/boosters/", "Boosters"),
-        ("sites", "/spacex-tracking/sites/", "Launch &amp; landing sites"),
-        ("previous", "/spacex-tracking/boosters/previous/", "Previous Starships analysis"),
-        ("raptor", "/spacex-tracking/raptor/", "Raptor production"),
-        ("control", "/spacex-tracking/control-center/", "SpaceX control center"),
-        ("sequence", "/spacex-tracking/launch-sequence/", "Launch sequence"),
-        ("preparation", "/spacex-tracking/launch-preparation/", "Launch preparation"),
-        ("monitoring", "/spacex-tracking/launch-monitoring/", "Launch monitoring"),
+        ("overview", "/zfrontier/spacex/", "Overview"),
+        ("ships", "/zfrontier/spacex/ships/", "Ships"),
+        ("boosters", "/zfrontier/spacex/boosters/", "Boosters"),
+        ("sites", "/zfrontier/spacex/sites/", "Launch &amp; landing sites"),
+        ("previous", "/zfrontier/spacex/boosters/previous/", "Previous Starships analysis"),
+        ("raptor", "/zfrontier/spacex/raptor/", "Raptor production"),
+        ("control", "/zfrontier/spacex/control-center/", "SpaceX control center"),
+        ("sequence", "/zfrontier/spacex/launch-sequence/", "Launch sequence"),
+        ("preparation", "/zfrontier/spacex/launch-preparation/", "Launch preparation"),
+        ("monitoring", "/zfrontier/spacex/launch-monitoring/", "Launch monitoring"),
     ]
     parts = []
     for key, href, label in tabs:
@@ -88,7 +88,7 @@ def build_page(title: str, main_inner: str, tail_scripts: str) -> str:
     head = re.sub(
         r"<style>body\{font-family:sans-serif.*?</style>",
         (
-            '<link rel="stylesheet" href="/spacex-tracking/assets/track.css"/>'
+            '<link rel="stylesheet" href="/zfrontier/spacex/assets/track.css"/>'
             '<style>.sxt-main{font:15px/1.5 system-ui,Arial,sans-serif}</style>'
         ),
         head,
@@ -123,8 +123,8 @@ LANDING_BODY = """
 </section>
 """
 
-LANDING_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
-<script>SpaceXTrack.initLanding({metaUrl:"/spacex-tracking/data/meta.json",shipsUrl:"/spacex-tracking/data/ships.json",boostersUrl:"/spacex-tracking/data/boosters.json",sitesUrl:"/spacex-tracking/data/sites.json"});</script>"""
+LANDING_TAIL = """<script src="/zfrontier/spacex/assets/track.js"></script>
+<script>SpaceXTrack.initLanding({metaUrl:"/zfrontier/spacex/data/meta.json",shipsUrl:"/zfrontier/spacex/data/ships.json",boostersUrl:"/zfrontier/spacex/data/boosters.json",sitesUrl:"/zfrontier/spacex/data/sites.json"});</script>"""
 
 BOOSTERS_BODY = """
 <div class="sxt-stars" aria-hidden="true"></div>
@@ -132,13 +132,13 @@ BOOSTERS_BODY = """
 <p>Megabay 1. Confirmed cryo/static-fire counts; AVID graphic notes where stale.</p>
 <p class="sxt-meta" id="sxt-list-meta">Loading…</p></div>
 """ + sxt_nav("boosters") + """
-<p class="sxt-meta"><a href="/spacex-tracking/boosters/previous/">Previous Starships analysis →</a></p>
+<p class="sxt-meta"><a href="/zfrontier/spacex/boosters/previous/">Previous Starships analysis →</a></p>
 <div id="sxt-grid"><p class="sxt-meta">Loading…</p></div>
-<p class="sxt-meta"><a href="/spacex-tracking/data/boosters.json">boosters.json</a></p>
+<p class="sxt-meta"><a href="/zfrontier/spacex/data/boosters.json">boosters.json</a></p>
 """
 
-BOOSTERS_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
-<script>SpaceXTrack.initListing({dataUrl:"/spacex-tracking/data/boosters.json",gridId:"sxt-grid",metaUrl:"/spacex-tracking/data/meta.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
+BOOSTERS_TAIL = """<script src="/zfrontier/spacex/assets/track.js"></script>
+<script>SpaceXTrack.initListing({dataUrl:"/zfrontier/spacex/data/boosters.json",gridId:"sxt-grid",metaUrl:"/zfrontier/spacex/data/meta.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
 
 SHIPS_BODY = """
 <div class="sxt-stars" aria-hidden="true"></div>
@@ -146,11 +146,11 @@ SHIPS_BODY = """
 <p>Megabay 2 upper stages.</p><p class="sxt-meta" id="sxt-list-meta">Loading…</p></div>
 """ + sxt_nav("ships") + """
 <div id="sxt-grid"><p class="sxt-meta">Loading…</p></div>
-<p class="sxt-meta"><a href="/spacex-tracking/data/ships.json">ships.json</a></p>
+<p class="sxt-meta"><a href="/zfrontier/spacex/data/ships.json">ships.json</a></p>
 """
 
-SHIPS_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
-<script>SpaceXTrack.initListing({dataUrl:"/spacex-tracking/data/ships.json",gridId:"sxt-grid",metaUrl:"/spacex-tracking/data/meta.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
+SHIPS_TAIL = """<script src="/zfrontier/spacex/assets/track.js"></script>
+<script>SpaceXTrack.initListing({dataUrl:"/zfrontier/spacex/data/ships.json",gridId:"sxt-grid",metaUrl:"/zfrontier/spacex/data/meta.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
 
 SITES_BODY = """
 <div class="sxt-stars" aria-hidden="true"></div>
@@ -159,11 +159,11 @@ SITES_BODY = """
 <p class="sxt-meta" id="sxt-list-meta">Loading…</p></div>
 """ + sxt_nav("sites") + """
 <div id="sxt-sites"><p class="sxt-meta">Loading…</p></div>
-<p class="sxt-meta"><a href="/spacex-tracking/data/sites.json">sites.json</a></p>
+<p class="sxt-meta"><a href="/zfrontier/spacex/data/sites.json">sites.json</a></p>
 """
 
-SITES_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
-<script>SpaceXTrack.initSites({dataUrl:"/spacex-tracking/data/sites.json",gridId:"sxt-sites",metaUrl:"/spacex-tracking/data/meta.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
+SITES_TAIL = """<script src="/zfrontier/spacex/assets/track.js"></script>
+<script>SpaceXTrack.initSites({dataUrl:"/zfrontier/spacex/data/sites.json",gridId:"sxt-sites",metaUrl:"/zfrontier/spacex/data/meta.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
 
 PREVIOUS_BODY = """
 <div class="sxt-stars" aria-hidden="true"></div>
@@ -196,12 +196,12 @@ PREVIOUS_BODY = """
 <div id="sxt-prev-boosters"><p class="sxt-meta">Loading…</p></div>
 <h2>Previous ships</h2>
 <div id="sxt-prev-ships"><p class="sxt-meta">Loading…</p></div>
-<p class="sxt-meta"><a href="/spacex-tracking/data/previous_flights.json">previous_flights.json</a></p>
+<p class="sxt-meta"><a href="/zfrontier/spacex/data/previous_flights.json">previous_flights.json</a></p>
 </div>
 """
 
-PREVIOUS_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
-<script>SpaceXTrack.initPreviousAnalysis({dataUrl:"/spacex-tracking/data/previous_flights.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
+PREVIOUS_TAIL = """<script src="/zfrontier/spacex/assets/track.js"></script>
+<script>SpaceXTrack.initPreviousAnalysis({dataUrl:"/zfrontier/spacex/data/previous_flights.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
 
 RAPTOR_BODY = """
 <div class="sxt-stars" aria-hidden="true"></div>
@@ -215,12 +215,12 @@ RAPTOR_BODY = """
 <div id="sxt-raptor-layout"></div>
 <h2>Per-flight engine notes</h2>
 <div id="sxt-raptor-events"></div>
-<p class="sxt-meta"><a href="/spacex-tracking/data/raptor.json">raptor.json</a></p>
+<p class="sxt-meta"><a href="/zfrontier/spacex/data/raptor.json">raptor.json</a></p>
 </div>
 """
 
-RAPTOR_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
-<script>SpaceXTrack.initRaptor({dataUrl:"/spacex-tracking/data/raptor.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
+RAPTOR_TAIL = """<script src="/zfrontier/spacex/assets/track.js"></script>
+<script>SpaceXTrack.initRaptor({dataUrl:"/zfrontier/spacex/data/raptor.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
 
 CONTROL_BODY = """
 <div class="sxt-stars" aria-hidden="true"></div>
@@ -246,8 +246,8 @@ CONTROL_BODY = """
 </div>
 """
 
-CONTROL_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
-<script>SpaceXTrack.initControlCenter({metaUrl:"/spacex-tracking/data/meta.json",streamsUrl:"/spacex-tracking/data/launch_streams.json",shipsUrl:"/spacex-tracking/data/ships.json",boostersUrl:"/spacex-tracking/data/boosters.json",sitesUrl:"/spacex-tracking/data/sites.json",raptorUrl:"/spacex-tracking/data/raptor.json",previousUrl:"/spacex-tracking/data/previous_flights.json",updatedEl:document.getElementById("sxt-cc-updated")});</script>"""
+CONTROL_TAIL = """<script src="/zfrontier/spacex/assets/track.js"></script>
+<script>SpaceXTrack.initControlCenter({metaUrl:"/zfrontier/spacex/data/meta.json",streamsUrl:"/zfrontier/spacex/data/launch_streams.json",shipsUrl:"/zfrontier/spacex/data/ships.json",boostersUrl:"/zfrontier/spacex/data/boosters.json",sitesUrl:"/zfrontier/spacex/data/sites.json",raptorUrl:"/zfrontier/spacex/data/raptor.json",previousUrl:"/zfrontier/spacex/data/previous_flights.json",updatedEl:document.getElementById("sxt-cc-updated")});</script>"""
 
 SEQUENCE_BODY = """
 <div class="sxt-stars" aria-hidden="true"></div>
@@ -261,12 +261,12 @@ SEQUENCE_BODY = """
 <label class="sxt-meta" for="sxt-seq-select">Flight profile</label>
 <select id="sxt-seq-select" class="sxt-seq-select" aria-label="Select flight timeline"></select>
 <div id="sxt-seq-timeline" class="sxt-seq-timeline"><p class="sxt-meta">Loading…</p></div>
-<p class="sxt-meta"><a href="/spacex-tracking/data/launch_sequence.json">launch_sequence.json</a></p>
+<p class="sxt-meta"><a href="/zfrontier/spacex/data/launch_sequence.json">launch_sequence.json</a></p>
 </div>
 """
 
-SEQUENCE_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
-<script>SpaceXTrack.initLaunchSequence({dataUrl:"/spacex-tracking/data/launch_sequence.json",metaUrl:"/spacex-tracking/data/meta.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
+SEQUENCE_TAIL = """<script src="/zfrontier/spacex/assets/track.js"></script>
+<script>SpaceXTrack.initLaunchSequence({dataUrl:"/zfrontier/spacex/data/launch_sequence.json",metaUrl:"/zfrontier/spacex/data/meta.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
 
 PREPARATION_BODY = """
 <div class="sxt-stars" aria-hidden="true"></div>
@@ -277,11 +277,11 @@ PREPARATION_BODY = """
 </div>
 """ + sxt_nav("preparation") + """
 <div class="sxt-prev-page" id="sxt-prep-list"><p class="sxt-meta">Loading…</p></div>
-<p class="sxt-meta"><a href="/spacex-tracking/data/launch_prep.json">launch_prep.json</a></p>
+<p class="sxt-meta"><a href="/zfrontier/spacex/data/launch_prep.json">launch_prep.json</a></p>
 """
 
-PREPARATION_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
-<script>SpaceXTrack.initLaunchPreparation({dataUrl:"/spacex-tracking/data/launch_prep.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
+PREPARATION_TAIL = """<script src="/zfrontier/spacex/assets/track.js"></script>
+<script>SpaceXTrack.initLaunchPreparation({dataUrl:"/zfrontier/spacex/data/launch_prep.json",metaEl:document.getElementById("sxt-list-meta")});</script>"""
 
 MONITORING_BODY = """
 <div class="sxt-stars" aria-hidden="true"></div>
@@ -309,8 +309,8 @@ MONITORING_BODY = """
 </div>
 """
 
-MONITORING_TAIL = """<script src="/spacex-tracking/assets/track.js"></script>
-<script>SpaceXTrack.initLaunchMonitoring({metaUrl:"/spacex-tracking/data/meta.json",streamsUrl:"/spacex-tracking/data/launch_streams.json",sequenceUrl:"/spacex-tracking/data/launch_sequence.json",previousUrl:"/spacex-tracking/data/previous_flights.json",metaEl:document.getElementById("sxt-lm-meta")});</script>"""
+MONITORING_TAIL = """<script src="/zfrontier/spacex/assets/track.js"></script>
+<script>SpaceXTrack.initLaunchMonitoring({metaUrl:"/zfrontier/spacex/data/meta.json",streamsUrl:"/zfrontier/spacex/data/launch_streams.json",sequenceUrl:"/zfrontier/spacex/data/launch_sequence.json",previousUrl:"/zfrontier/spacex/data/previous_flights.json",metaEl:document.getElementById("sxt-lm-meta")});</script>"""
 
 
 PAGES = [

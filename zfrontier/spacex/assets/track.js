@@ -459,7 +459,7 @@
               sum.innerHTML =
                 '<ul class="sxt-site-sum-list">' +
                 lines.join("") +
-                '</ul><p class="sxt-meta"><a href="/spacex-tracking/sites/">All launch &amp; landing sites →</a></p>';
+                '</ul><p class="sxt-meta"><a href="/zfrontier/spacex/sites/">All launch &amp; landing sites →</a></p>';
             }
           }
         });
@@ -1306,7 +1306,7 @@
             melbourneLabel(lf.date_utc) +
             "</p><p>" +
             esc(lf.summary_line || "") +
-            '</p><p class="sxt-meta"><a href="/spacex-tracking/boosters/previous/">Full flight history →</a></p>';
+            '</p><p class="sxt-meta"><a href="/zfrontier/spacex/boosters/previous/">Full flight history →</a></p>';
         }
         var fleet = document.getElementById("sxt-cc-fleet");
         if (fleet) {
@@ -1353,7 +1353,7 @@
                 );
               })
               .join("") +
-            '</ul><p class="sxt-meta"><a href="/spacex-tracking/sites/">All sites →</a></p>';
+            '</ul><p class="sxt-meta"><a href="/zfrontier/spacex/sites/">All sites →</a></p>';
         }
         var rap = document.getElementById("sxt-cc-raptor");
         if (rap && raptor) {
@@ -1376,7 +1376,7 @@
                 );
               })
               .join("") +
-            '</ul><p class="sxt-meta"><a href="/spacex-tracking/raptor/">Raptor production →</a></p>';
+            '</ul><p class="sxt-meta"><a href="/zfrontier/spacex/raptor/">Raptor production →</a></p>';
         }
         var links = document.getElementById("sxt-cc-links");
         if (links) {
@@ -1388,11 +1388,11 @@
           links.innerHTML =
             "<h2>Quick links</h2><ul>" +
             ext +
-            "<li><a href=\"/spacex-tracking/\">Overview</a></li>" +
-            "<li><a href=\"/spacex-tracking/ships/\">Ships</a></li>" +
-            "<li><a href=\"/spacex-tracking/boosters/\">Boosters</a></li>" +
-            "<li><a href=\"/spacex-tracking/sites/\">Launch &amp; landing sites</a></li>" +
-            "<li><a href=\"/spacex-tracking/boosters/previous/\">Previous Starships analysis</a></li>" +
+            "<li><a href=\"/zfrontier/spacex/\">Overview</a></li>" +
+            "<li><a href=\"/zfrontier/spacex/ships/\">Ships</a></li>" +
+            "<li><a href=\"/zfrontier/spacex/boosters/\">Boosters</a></li>" +
+            "<li><a href=\"/zfrontier/spacex/sites/\">Launch &amp; landing sites</a></li>" +
+            "<li><a href=\"/zfrontier/spacex/boosters/previous/\">Previous Starships analysis</a></li>" +
             "</ul>";
         }
       })
@@ -1680,8 +1680,8 @@
             "<h2>Official links</h2><ul>" +
             '<li><a href="https://www.spacex.com/launches" target="_blank" rel="noopener">SpaceX launches / webcast</a></li>' +
             '<li><a href="https://x.com/SpaceX" target="_blank" rel="noopener">SpaceX on X</a></li>' +
-            '<li><a href="/spacex-tracking/launch-sequence/">Launch sequence</a></li>' +
-            '<li><a href="/spacex-tracking/launch-preparation/">Launch preparation</a></li>' +
+            '<li><a href="/zfrontier/spacex/launch-sequence/">Launch sequence</a></li>' +
+            '<li><a href="/zfrontier/spacex/launch-preparation/">Launch preparation</a></li>' +
             "</ul>";
         }
         var res = document.getElementById("sxt-lm-results");
