@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Critical faults — ARR</title>
+  <meta name="description" content="Read-only ACI fabric report generated from a Cisco APIC snapshot.">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f4f6f8;
+      --bg-accent: #e8eef4;
+      --card: #ffffff;
+      --ink: #15202b;
+      --muted: #5b6b7c;
+      --line: #d5dee7;
+      --accent: #0e7490;
+      --accent-soft: #e0f4f8;
+      --link: #0e7490;
+      --good: #047857;
+      --fair: #b45309;
+      --poor: #b91c1c;
+      --crit: #b91c1c;
+      --major: #c2410c;
+      --minor: #a16207;
+      --warn: #a16207;
+      --info: #0369a1;
+      --cleared: #047857;
+      --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+      --radius: 14px;
+      --mono: "IBM Plex Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+      --sans: "Source Sans 3", "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1220;
+        --bg-accent: #111827;
+        --card: #152033;
+        --ink: #e6edf5;
+        --muted: #93a4b8;
+        --line: #2a3b52;
+        --accent: #5eead4;
+        --accent-soft: #12313a;
+        --link: #5eead4;
+        --good: #34d399;
+        --fair: #fbbf24;
+        --poor: #f87171;
+        --crit: #f87171;
+        --major: #fb923c;
+        --minor: #fbbf24;
+        --warn: #fbbf24;
+        --info: #7dd3fc;
+        --cleared: #34d399;
+        --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--sans);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, var(--bg-accent), transparent 60%),
+        var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    header {
+      padding: 2.2rem 1.5rem 1.4rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem 3.5rem; }
+    header .wrap { padding-bottom: 0; }
+    .kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.72rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin: 0 0 0.35rem;
+    }
+    h1 {
+      font-size: clamp(1.7rem, 3vw, 2.25rem);
+      margin: 0 0 0.45rem;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+    }
+    .meta, .footer, .note, .muted, .card-sub, .card-label, .empty, .na, .dn {
+      color: var(--muted);
+    }
+    .meta { margin: 0 0 0.25rem; }
+    .snapshot { margin: 0; font-size: 0.98rem; }
+    h2 {
+      margin: 2.4rem 0 0.85rem;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.85rem;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem 1.05rem 0.95rem;
+      box-shadow: var(--shadow);
+    }
+    .card-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 650;
+    }
+    .card-value {
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-top: 0.2rem;
+    }
+    .card-value strong { font-weight: 700; }
+    .card-sub { font-size: 0.78rem; margin-top: 0.25rem; }
+    .unit { font-size: 0.9rem; color: var(--muted); font-weight: 600; margin-left: 0.15rem; }
+    .health.good, .sev.cleared { color: var(--good); }
+    .health.fair { color: var(--fair); }
+    .health.poor, .sev.critical { color: var(--poor); }
+    .sev.major { color: var(--major); }
+    .sev.warning, .sev.minor { color: var(--warn); }
+    .sev.info { color: var(--info); }
+    .table-wrap {
+      overflow-x: auto;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.93rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.65rem 0.85rem;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    th {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      font-weight: 700;
+      background: color-mix(in srgb, var(--card) 80%, var(--bg-accent));
+    }
+    tr:last-child td { border-bottom: 0; }
+    .mono { font-family: var(--mono); font-size: 0.86em; }
+    .num { font-variant-numeric: tabular-nums; text-align: right; font-family: var(--mono); }
+    th:nth-child(3) { text-align: left; }
+    table thead th:nth-child(3) { /* keep */ }
+    .pill {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      font-size: 0.78rem;
+      font-weight: 650;
+      background: color-mix(in srgb, var(--card) 70%, var(--bg-accent));
+    }
+    .pill.role-controller { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+    .pill.role-leaf { background: color-mix(in srgb, var(--good) 16%, var(--card)); color: var(--good); border-color: transparent; }
+    .pill.role-spine { background: color-mix(in srgb, var(--info) 16%, var(--card)); color: var(--info); border-color: transparent; }
+    .pill.sev.critical { background: color-mix(in srgb, var(--crit) 16%, var(--card)); color: var(--crit); border-color: transparent; }
+    .pill.sev.major { background: color-mix(in srgb, var(--major) 16%, var(--card)); color: var(--major); border-color: transparent; }
+    .pill.sev.warning, .pill.sev.minor { background: color-mix(in srgb, var(--warn) 16%, var(--card)); color: var(--warn); border-color: transparent; }
+    .tenant-block {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem 1.15rem 1.1rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1rem;
+    }
+    .tenant-block h3 { margin: 0 0 0.85rem; font-size: 1.05rem; }
+    .tenant-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 0.85rem 1.25rem;
+    }
+    .tenant-block h4 {
+      margin: 0 0 0.35rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+    }
+    .count {
+      font-family: var(--mono);
+      font-size: 0.85em;
+      color: var(--ink);
+    }
+    .obj-list { list-style: none; margin: 0; padding: 0; }
+    .obj-list li { margin: 0 0 0.35rem; }
+    .dn { display: block; font-family: var(--mono); font-size: 0.75rem; word-break: break-all; }
+    .empty, .na { font-style: italic; }
+    .note { font-size: 0.9rem; margin: 0.85rem 0 0; }
+    footer {
+      margin-top: 2.8rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--line);
+      font-size: 0.85rem;
+    }
+    a { color: var(--link); }
+  
+    a { color: var(--link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .card-value a, .card-sub a, .count a, a.count, td a, .health a, a.health {
+      color: inherit;
+    }
+    .card-value a:hover, a.count:hover, .count a:hover { text-decoration: underline; }
+    .crumb {
+      font-size: 0.92rem;
+      margin: 0 0 0.85rem;
+      color: var(--muted);
+    }
+    .crumb ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.3rem 0.15rem; }
+    .crumb li { display: inline; }
+    .crumb li:not(:last-child)::after { content: "/"; margin: 0 0.4rem; color: var(--muted); }
+    .crumb a { color: var(--link); }
+    .back { margin: 0 0 1rem; }
+    dl.attrs {
+      display: grid;
+      grid-template-columns: minmax(11rem, 15rem) 1fr;
+      gap: 0.45rem 1.1rem;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem 1.15rem;
+      box-shadow: var(--shadow);
+      margin: 0 0 1.4rem;
+    }
+    dl.attrs dt { color: var(--muted); font-size: 0.85rem; padding-top: 0.1rem; }
+    dl.attrs dd { margin: 0; word-break: break-word; }
+    h2 .count, h3 .count { font-weight: 600; }
+    section[id] { scroll-margin-top: 1rem; }
+
+  </style>
+  
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <p class="kicker">ARR</p>
+      <nav class="crumb" aria-label="Breadcrumb"><ol><li><a href="../index.html">ARR</a></li><li><a href="../faults.html">Faults</a></li><li>Critical</li></ol></nav>
+      <h1>Critical faults</h1>
+      <p class="meta">Fabric: <strong>ACI Fabric1</strong> · APIC version: <strong>6.1(6g)</strong></p>
+      <p class="snapshot">Snapshot: <strong>13 November 2026, 4:37:08 PM IST (Asia/Calcutta, UTC+5:30)</strong></p>
+      
+      <p class="back"><a href="../index.html">← Back to ARR report</a></p>
+    </div>
+  </header>
+<main class='wrap'><p class='meta'>Severity <strong>critical</strong>: <strong>4</strong> instances from fault summaries in this snapshot.</p><div class="table-wrap"><table>
+      <thead><tr><th>Code</th><th>Severity</th><th>Count</th><th>Description</th></tr></thead>
+      <tbody><tr><td class='mono'>F0104</td><td><span class='pill sev critical'>critical</span></td><td class='num'>3</td><td>This fault occurs when a bond interface on a controller is in the link-down state.</td></tr><tr><td class='mono'>F4674</td><td><span class='pill sev critical'>critical</span></td><td class='num'>1</td><td>This fault occurs when the Strong encryption is not enabled on pkiExportEncryption policy.</td></tr></tbody></table></div><section><h3 class='mono'>F0104 <span class='pill sev critical'>critical</span></h3><dl class='attrs'><dt>Code</dt><dd class=''>F0104</dd><dt>Severity</dt><dd class=''>critical</dd><dt>Count</dt><dd class=''>3</dd><dt>Description</dt><dd class=''>This fault occurs when a bond interface on a controller is in the link-down state.</dd><dt>Cause</dt><dd class=''>port-down</dd><dt>Domain</dt><dd class=''>infra</dd><dt>Subject</dt><dd class=''>equipment</dd><dt>Not acknowledged</dt><dd class=''>3</dd><dt>Rule</dt><dd class=''>cnw-aggr-if-down</dd><dt>DN</dt><dd class='mono'>fltcode-F0104</dd><dt>nonDelegated</dt><dd class=''>3</dd><dt>nonDelegatedAndNonAcked</dt><dd class=''>3</dd><dt>Type</dt><dd class=''>operational</dd></dl></section>
+<section><h3 class='mono'>F4674 <span class='pill sev critical'>critical</span></h3><dl class='attrs'><dt>Code</dt><dd class=''>F4674</dd><dt>Severity</dt><dd class=''>critical</dd><dt>Count</dt><dd class=''>1</dd><dt>Description</dt><dd class=''>This fault occurs when the Strong encryption is not enabled on pkiExportEncryption policy.</dd><dt>Cause</dt><dd class=''>encryption-disabled</dd><dt>Domain</dt><dd class=''>security</dd><dt>Subject</dt><dd class=''>security-provider</dd><dt>Not acknowledged</dt><dd class=''>1</dd><dt>Rule</dt><dd class=''>pki-export-encryption-key-encryption-disabled</dd><dt>DN</dt><dd class='mono'>fltcode-F4674</dd><dt>nonDelegated</dt><dd class=''>1</dd><dt>nonDelegatedAndNonAcked</dt><dd class=''>1</dd><dt>Type</dt><dd class=''>operational</dd></dl></section></main>
+
+  <footer class="wrap">
+    <p class="footer">Static report from a read-only APIC snapshot. No credentials, tokens or session IDs are included. Raw derived summary: <a href="../data.json">data.json</a>. <a href="../index.html">Back to ARR</a>.</p>
+  </footer>
+</body>
+</html>
