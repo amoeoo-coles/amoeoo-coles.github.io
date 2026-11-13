@@ -2,7 +2,7 @@
   "task": "aci-lab-guide-policy",
   "source": "https://amoeoo-coles.github.io/aci-policy/aci-lab-guide-policy/",
   "target": "AOAPIC (https://sandboxapicdc.cisco.com)",
-  "updated": "2026-11-11T23:24:43+11:00",
+  "updated": "2026-11-14T08:50:00+11:00",
   "steps": [
     {
       "id": "fetch",
@@ -29,43 +29,43 @@
       "id": "netbox-branch",
       "name": "NetBox branch created",
       "state": "done",
-      "time": "2026-11-11T23:24:43+11:00",
-      "detail": "Open NetBox branches aci-tenant-aci_p01_tenant (id 5, schema ohmas7d7) and aci-tenant-msite_p01_tenant (id 6, schema xlghvzws). Not merged."
+      "time": "2026-11-14T08:37:25+11:00",
+      "detail": "Verified after 14 Nov box refresh (NetBox restored from 13 Nov 07:50 AEDT backup): open branches aci-tenant-aci_p01_tenant (id 5, schema ohmas7d7, status ready) and aci-tenant-msite_p01_tenant (id 6, schema xlghvzws, status ready) still present and unmerged. Branch objects match the existing git models (aci_p01: 1 VRF, 3 BDs, 2 subnets, 2 APs, 3 EPGs; msite: 1 VRF, 1 BD, 1 subnet, 1 AP, 1 EPG). Not merged."
     },
     {
       "id": "precheck",
       "name": "Pre-check",
-      "state": "failed",
-      "time": "2026-11-11T23:24:43+11:00",
-      "detail": "pipeline.sh pre not run. Listener pre-backup failed: aaaLogin APIC unreachable after retries (SSLError). sandboxapicdc.cisco.com TLS unexpected EOF from the box; external fetch returned 504."
+      "state": "done",
+      "time": "2026-11-14T08:41:41+11:00",
+      "detail": "Completed 14 Nov 2026 morning AEDT. Listener --force pre-backups OK (aci_p01 08:37:31 AEDT, 7 tenants, 2909 MOs, backup 20261114-083731-pre @ cfa2377; msite 08:37:41 AEDT, backup 20261114-083741-pre @ cedb702). Model branches updated only for the comment timestamp (desired state unchanged). Ansible check-mode dry-run: both rc=0, ok=9 changed=6 failed=0 skipped=1 (read-only). pipeline.sh pre aci_p01_tenant 20261114-083830-pre: BASELINE 33 passed / 18 failed / 51 total (fabric 33/33, tenant 0/18), 11 warnings, 12 objects pending; committed 7a801ea on precheck/aci_p01_tenant-20261111-2318. pipeline.sh pre msite_p01_tenant 20261114-083854-pre: BASELINE 33 passed / 8 failed / 41 total (fabric 33/33, tenant 0/8), 11 warnings, 6 objects pending; committed 6b18605 on precheck/msite_p01_tenant-20261111-2321. Tenant failures are expected (tenants not on the reset sandbox). Fabric warnings: 52 critical / 4-5 major pre-existing faults, plus model-tenant drift for historical tenants not on APIC (MUHC, OS1, prod, TEST, etc.). Topology PNG not rendered (graphviz missing after box refresh). Grafana screenshots rendered. No APIC writes."
     },
     {
       "id": "drift",
       "name": "Drift check",
-      "state": "failed",
-      "time": "2026-11-11T23:24:43+11:00",
-      "detail": "Fresh APIC drift/read-only inventory could not run: AOAPIC unreachable (TLS EOF / 504). No APIC objects were read or written."
+      "state": "done",
+      "time": "2026-11-14T08:41:41+11:00",
+      "detail": "Read-only AOAPIC inventory and nac-test fabric snapshots collected. Target tenants aci_p01_tenant and msite_p01_tenant are absent (0 present, all objects pending). No subnet overlap with 10.0.144.1/29, 172.16.1.1/24, 192.168.101.1/24. Models do not reference L3Outs or common contracts (those remain excluded). Current tenants: common, mgmt, infra, Heroes, SnV, ROR, oneaciapp. Fabric health 81, 4 nodes active."
     },
     {
       "id": "approval-email",
       "name": "Approval email sent",
-      "state": "pending",
-      "time": "2026-11-11T23:24:43+11:00",
-      "detail": "Not sent. Pre-check and drift did not complete, so no approval email with dry-run/backup evidence was generated."
+      "state": "done",
+      "time": "2026-11-14T08:41:41+11:00",
+      "detail": "Sent via user-Gmail send_email to 179172@gmail.com with subject prefix 'EndUser Simulation'. aci_p01_tenant: subject 'EndUser Simulation [APPROVAL REQUIRED] aci_p01_tenant -> AOAPIC', Gmail message id 1a1d6db8ee56cb7a (thread 1a1d6db8ee56cb7a), sent 14 Nov 2026 about 08:41 AEDT. msite_p01_tenant: subject 'EndUser Simulation [APPROVAL REQUIRED] msite_p01_tenant -> AOAPIC', Gmail message id 1a1d6dbb5d92e493 (thread 1a1d6dbb5d92e493), sent shortly after. Each email has grafana-pre.png (inline) and the tenant playbook zip (tenant.yml + model). Approve/Deny mailto buttons still use subject 'Re: [APPROVAL REQUIRED] <tenant> -> AOAPIC' with body APPROVE or REJECT. Listener [PRE-BACKUP] emails remain queued in .netbox-listener/outbox/ and were not sent. No apply. Waiting for Aung's emailed APPROVE."
     },
     {
       "id": "aung-approval",
       "name": "Aung approval (Gmail)",
-      "state": "pending",
-      "time": null,
-      "detail": "Waiting for Aung's emailed APPROVE; not started."
+      "state": "done",
+      "time": "2026-11-14T08:44:48+11:00",
+      "detail": "Aung APPROVED both by Gmail: msite_p01_tenant at 08:43:31 AEDT (reply 1a1d6dda003a1024) and aci_p01_tenant at 08:44:48 AEDT (reply 1a1d6decef85e7ec)."
     },
     {
       "id": "apply",
       "name": "Apply to APIC",
-      "state": "pending",
-      "time": null,
-      "detail": "Blocked until Aung's emailed APPROVE."
+      "state": "running",
+      "time": "2026-11-14T08:48:00+11:00",
+      "detail": "Apply to AOAPIC started 14 Nov 08:48 AEDT, one tenant at a time."
     },
     {
       "id": "postcheck",
