@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply screenshot + form-replica side-by-side layout on visitors/aci-gui-forms pages.
+"""Apply screenshot + form-replica side-by-side layout on visitors/aci-gui-forms/WIP pages.
 
 Run after adding or republishing form pages that include an APIC screenshot
 (a.shot) followed by the Form replica section.

@@ -8,10 +8,10 @@ from pathlib import Path
 # Includes generated tracker pages: overview, ships, boosters, sites, boosters/previous/,
 # raptor/, control-center/, launch-sequence/, launch-preparation/, launch-monitoring/
 # (see scripts/spacex_tracking_build_pages.py).
-# visitors/aci-gui-forms/ layout is maintained via aci_gui_forms_apply_layout.py.
+# visitors/aci-gui-forms/WIP/ layout is maintained via aci_gui_forms_apply_layout.py.
 SKIP_HTML_PUBLISH_PREFIXES = (
     "zfrontier/spacex/",
-    "visitors/aci-gui-forms/",
+    "visitors/aci-gui-forms/WIP/",
 )
 
 
