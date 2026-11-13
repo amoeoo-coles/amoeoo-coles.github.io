@@ -1,0 +1,104 @@
+{
+  "planOnly": true,
+  "doNotApply": true,
+  "warning": "This is a design document, not an executable request. Missing parents on this ARR APIC must be created first. Placeholder values must be confirmed by the user.",
+  "referenceApic": "https://192.168.10.1",
+  "tenant": "Cursor_tenant5",
+  "basedOn": "approvals/Cursor_tenant5-dmz-contracts-20261110-1058 plus post-deploy read-back on this fabric",
+  "missingParentsOnThisApic": [
+    "l3extDomP (no L3 domains; my_L3_domain does not exist)",
+    "fvnsVlanInstP (no VLAN pools)",
+    "AAEP association for the L3 domain (existing AAEP default has no domain mappings in the pull)",
+    "switch profile / interface profile / port group covering the leaf path"
+  ],
+  "placeholders": {
+    "PLACEHOLDER_ROUTER_ID": "10.255.5.1",
+    "PLACEHOLDER_PORT": "eth1/20 on node 101",
+    "PLACEHOLDER_L3OUT_IP": "10.250.50.1/30",
+    "PLACEHOLDER_PEER_IP": "10.250.50.2",
+    "PLACEHOLDER_VLAN": "997 (optional; only if SVI/sub-interface)",
+    "PLACEHOLDER_EXT_SUBNET": "0.0.0.0/0",
+    "L3_DOMAIN": "my_L3_domain (MUST BE CREATED; missing on this APIC)"
+  },
+  "bdUnknownUnicastOnThisFabric": {
+    "alreadyProxy": [
+      "cursor5_app_bd",
+      "cursor5_db_bd",
+      "cursor5_web_bd"
+    ],
+    "stillFloodProposedToProxy": [
+      "cursor5_fw_app_bd",
+      "cursor5_fw_db_bd",
+      "cursor5_fw_dmz_bd",
+      "cursor5_fw_web_bd"
+    ]
+  },
+  "proposedObjects": {
+    "bdUnknownUnicastProxy": [
+      "uni/tn-Cursor_tenant5/BD-cursor5_fw_app_bd",
+      "uni/tn-Cursor_tenant5/BD-cursor5_fw_db_bd",
+      "uni/tn-Cursor_tenant5/BD-cursor5_fw_dmz_bd",
+      "uni/tn-Cursor_tenant5/BD-cursor5_fw_web_bd"
+    ],
+    "filters": [
+      {
+        "name": "flt-http-https",
+        "entries": [
+          "tcp/80",
+          "tcp/443"
+        ]
+      },
+      {
+        "name": "flt-web-to-app",
+        "entries": [
+          "tcp/8080",
+          "tcp/443"
+        ]
+      },
+      {
+        "name": "flt-app-to-db",
+        "entries": [
+          "tcp/1433",
+          "tcp/3306",
+          "tcp/5432"
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "name": "dmz-to-web",
+        "scope": "context",
+        "filter": "flt-http-https",
+        "provider": "uni/tn-Cursor_tenant5/ap-cursor5_ap/epg-web",
+        "consumer": "DMZ_L3Out/DMZ_ExtEPG"
+      },
+      {
+        "name": "web-to-app",
+        "scope": "context",
+        "filter": "flt-web-to-app",
+        "provider": "uni/tn-Cursor_tenant5/ap-cursor5_ap/epg-app",
+        "consumer": "uni/tn-Cursor_tenant5/ap-cursor5_ap/epg-web"
+      },
+      {
+        "name": "app-to-db",
+        "scope": "context",
+        "filter": "flt-app-to-db",
+        "provider": "uni/tn-Cursor_tenant5/ap-cursor5_ap/epg-db",
+        "consumer": "uni/tn-Cursor_tenant5/ap-cursor5_ap/epg-app"
+      }
+    ],
+    "l3out": {
+      "name": "DMZ_L3Out",
+      "vrf": "cursor5_vrf",
+      "domain": "my_L3_domain (MISSING on this APIC)",
+      "node": "101",
+      "routerId": "PLACEHOLDER_ROUTER_ID 10.255.5.1",
+      "path": "PLACEHOLDER_PORT topology/pod-1/paths-101/pathep-[eth1/20]",
+      "interfaceAddress": "PLACEHOLDER_L3OUT_IP 10.250.50.1/30",
+      "peer": "PLACEHOLDER_PEER_IP 10.250.50.2",
+      "optionalEncap": "PLACEHOLDER_VLAN 997",
+      "extEpg": "DMZ_ExtEPG",
+      "extSubnet": "PLACEHOLDER_EXT_SUBNET 0.0.0.0/0 import-security"
+    }
+  }
+}
