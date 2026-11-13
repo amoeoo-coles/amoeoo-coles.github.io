@@ -178,10 +178,11 @@
   }
 
   function topologySvg() {
-    var vb = "0 0 900 520";
+    var vb = "0 0 900 535";
     var dcFill = "#2563eb";
     var mpFill = "#0d9488";
     var cloudFill = "#7c3aed";
+    var orange = "#f59e0b";
     var lines = [];
     var nodes = [
       { id: "DC1", x: 720, y: 80, label: "DC1\nSydney" },
@@ -192,30 +193,77 @@
       { id: "MEGAPOD2", x: 280, y: 300, label: "MEGAPOD2\nSydney" },
       { id: "MEGAPOD3", x: 280, y: 440, label: "MEGAPOD3\nAdelaide" },
     ];
-    ["DC1", "DC2", "DC3", "DC4"].forEach(function (dc) {
-      lines.push(
-        '<line x1="' +
-          nodeX(nodes, dc) +
-          '" y1="' +
-          nodeY(nodes, dc) +
-          '" x2="' +
-          nodeX(nodes, "MEGAPOD1") +
-          '" y2="' +
-          nodeY(nodes, "MEGAPOD1") +
-          '" stroke="#64748b" stroke-width="2" stroke-dasharray="6 4" opacity="0.85"/>'
-      );
-      lines.push(
-        '<line x1="' +
-          nodeX(nodes, dc) +
-          '" y1="' +
-          nodeY(nodes, dc) +
-          '" x2="' +
-          nodeX(nodes, "MEGAPOD2") +
-          '" y2="' +
-          nodeY(nodes, "MEGAPOD2") +
-          '" stroke="#64748b" stroke-width="2" stroke-dasharray="6 4" opacity="0.85"/>'
-      );
-    });
+    function nodeW(id) {
+      return id.indexOf("MEGAPOD") === 0 ? 130 : 90;
+    }
+    function edgeX(id, side) {
+      var half = nodeW(id) / 2;
+      return nodeX(nodes, id) + (side === "right" ? half : -half);
+    }
+    // Two physically diverse orange paths (A upper, B lower) between an MP and a DC.
+    // Attach at the box edges so both fibres are visible; cubic curves stay apart.
+    function diverseLink(mp, dc, bulgeA, bulgeB, startA, startB, endA, endB, labelTA, labelTB) {
+      var x1 = edgeX(mp, "right");
+      var x2 = edgeX(dc, "left");
+      var ymp = nodeY(nodes, mp);
+      var ydc = nodeY(nodes, dc);
+      var tA = labelTA == null ? 0.48 : labelTA;
+      var tB = labelTB == null ? 0.48 : labelTB;
+      function one(name, y1, y2, bulge, t) {
+        var mx = (x1 + x2) / 2;
+        var c1x = x1 + (x2 - x1) * 0.28;
+        var c2x = x1 + (x2 - x1) * 0.72;
+        var c1y = y1 + bulge;
+        var c2y = y2 + bulge;
+        lines.push(
+          '<path d="M' +
+            x1 +
+            " " +
+            y1 +
+            " C" +
+            c1x +
+            " " +
+            c1y +
+            " " +
+            c2x +
+            " " +
+            c2y +
+            " " +
+            x2 +
+            " " +
+            y2 +
+            '" fill="none" stroke="' +
+            orange +
+            '" stroke-width="2.5" stroke-linecap="round"/>'
+        );
+        // Cubic point at t
+        var u = 1 - t;
+        var lx =
+          u * u * u * x1 +
+          3 * u * u * t * c1x +
+          3 * u * t * t * c2x +
+          t * t * t * x2;
+        var ly =
+          u * u * u * y1 +
+          3 * u * u * t * c1y +
+          3 * u * t * t * c2y +
+          t * t * t * y2;
+        var lyOff = name === "A" ? -11 : 14;
+        lines.push(
+          '<text x="' +
+            lx +
+            '" y="' +
+            (ly + lyOff) +
+            '" text-anchor="middle" font-size="10" font-weight="700" fill="' +
+            orange +
+            '">' +
+            name +
+            "</text>"
+        );
+      }
+      one("A", ymp + startA, ydc + endA, bulgeA, tA);
+      one("B", ymp + startB, ydc + endB, bulgeB, tB);
+    }
     [
       ["MEGAPOD1", "MEGAPOD2"],
       ["MEGAPOD1", "MEGAPOD3"],
@@ -230,11 +278,19 @@
           nodeX(nodes, pair[1]) +
           '" y2="' +
           nodeY(nodes, pair[1]) +
-          '" stroke="#f59e0b" stroke-width="2.5"/>'
+          '" stroke="' +
+          orange +
+          '" stroke-width="2.5"/>'
       );
     });
-    var mesh =
-      '<path d="M120 260 Q200 180 280 220 Q360 120 480 160 Q560 200 640 240" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 6" opacity="0.7"/>';
+    // MEGAPOD1 Melbourne — DC2 Melbourne (crossing)
+    diverseLink("MEGAPOD1", "DC2", -46, 40, -8, 8, -8, 8, 0.32, 0.66);
+    // MEGAPOD2 Sydney — DC1 Sydney (crossing)
+    diverseLink("MEGAPOD2", "DC1", -70, 36, -16, -4, -8, 8, 0.66, 0.34);
+    // MEGAPOD2 Sydney — DC3 Brisbane
+    diverseLink("MEGAPOD2", "DC3", -30, 30, 4, 16, -8, 8, 0.5, 0.5);
+    // MEGAPOD3 Adelaide — DC4 Perth
+    diverseLink("MEGAPOD3", "DC4", -28, 28, -8, 8, -8, 8, 0.5, 0.5);
     var cloud =
       '<g fill="' +
       cloudFill +
@@ -274,16 +330,20 @@
         );
       })
       .join("");
+    var caption =
+      '<text x="450" y="508" text-anchor="middle" font-size="11" fill="currentColor" opacity="0.85">DCI: 4 links, each over 2 physically diverse dark-fibre paths (A/B); waves link Mega Pods</text>' +
+      '<text x="450" y="524" text-anchor="middle" font-size="10" fill="' +
+      orange +
+      '" opacity="0.95">Path A / Path B = physically diverse dark fibre</text>';
     return (
       '<svg viewBox="' +
       vb +
       '" xmlns="http://www.w3.org/2000/svg" aria-label="Virtual DC topology">' +
-      '<rect width="900" height="520" fill="transparent"/>' +
-      mesh +
+      '<rect width="900" height="535" fill="transparent"/>' +
       lines.join("") +
       cloud +
       rects +
-      '<text x="450" y="500" text-anchor="middle" font-size="11" fill="currentColor" opacity="0.8">DCI mesh (12 EVPL paths) rides DC↔MP dark fibre; waves link Mega Pods</text>' +
+      caption +
       "</svg>"
     );
   }
