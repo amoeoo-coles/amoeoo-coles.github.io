@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:auto;
+  min-height:44px;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:auto;min-height:44px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:visible;
+  text-overflow:unset;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.25;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:22px;
+  height:22px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:16px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:#1d4ed8!important;
+}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3DiffsVXLAN — zFrontier — amoeoo-coles</title>
+<meta name="description" content="CPU liquid cooling: AIO versus custom loop, parts, step-by-step air-to-liquid conversion, compatibility checklist, risks, and data-centre direct-to-chip.">
+<style>:root{--site-content-max:1200px}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg,#f8fafc);color:var(--ink,#0f172a);font:15px/1.55 system-ui,Segoe UI,Arial,sans-serif}
+main{max-width:var(--site-content-max,1200px);margin:0 auto;padding:18px 18px 64px;min-width:0}
+.tr17{color:var(--muted,#475569)!important}
+.crumb{font-size:13px;color:var(--muted,#475569);margin:0 0 12px}
+.crumb a{color:var(--link,#1d4ed8);text-decoration:none}
+h1{font-size:1.7rem;line-height:1.25;margin:0 0 8px;overflow-wrap:anywhere}
+h2{font-size:1.2rem;margin:1.6rem 0 .6rem}
+h3{font-size:1.02rem;margin:1.1rem 0 .4rem}
+.lede{font-size:1.02rem;color:var(--muted,#475569);margin:0 0 1.1rem;max-width:80ch}
+.kicker{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;color:#fff;margin:0 6px 8px 0}
+.stamp{display:inline-block;font-size:12.5px;color:var(--muted,#475569);background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:8px;padding:3px 9px;margin:0 0 12px}
+.note,.warn,.claim{border-radius:10px;padding:10px 12px;margin:12px 0;border:1px solid var(--line,#e2e8f0);background:var(--card,#fff)}
+.note{border-left:4px solid #2563eb}.warn{border-left:4px solid #d97706}.claim{border-left:4px solid #9333ea}
+.badge{display:inline-block;font:700 10.5px/1.6 system-ui;letter-spacing:.03em;text-transform:uppercase;border-radius:999px;padding:0 7px;margin-right:4px;white-space:nowrap;color:#fff}
+.b-fact{background:#15803d}.b-claim{background:#9333ea}.b-est{background:#b45309}.b-unk{background:#64748b}
+.b-live{background:#15803d}.b-sup{background:#0369a1}.b-ann{background:#9333ea}.b-disp{background:#be185d}.b-none{background:#64748b}
+.kids{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));margin:8px 0 16px}
+.pbox{display:block;text-decoration:none;color:inherit;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:12px 14px;border-top:5px solid var(--c,#2563eb);transition:transform .12s,box-shadow .12s;min-width:0}
+.pbox:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,23,42,.08)}
+.pbox h3{margin:0 0 4px;font-size:1.02rem}.pbox p{margin:0;color:var(--muted,#475569);font-size:13.5px}
+.stats{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));margin:10px 0 16px}
+.stat{background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:12px;padding:10px 12px;min-width:0}
+.stat b{display:block;font-size:1.35rem;line-height:1.2}
+.stat>span{display:block;font-size:12.5px;color:var(--muted,#475569)}
+.stat span.badge{display:inline-block}
+.stat>cite{display:block;font-style:normal;font-size:11.5px;margin-top:4px;overflow-wrap:anywhere}
+.stat cite.src{display:inline}
+.tblwrap{overflow-x:auto;max-width:100%;margin:0 0 16px;border:1px solid var(--line,#e2e8f0);border-radius:10px;background:var(--card,#fff)}
+table.tree{width:100%;min-width:720px;border-collapse:collapse;font-size:13.5px}
+table.tree th,table.tree td{border-bottom:1px solid var(--line,#e2e8f0);padding:7px 9px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+table.tree th{background:var(--th-bg,#f1f5f9);font-size:12px;letter-spacing:.02em;cursor:pointer;white-space:nowrap}
+.filter{width:100%;max-width:360px;padding:7px 10px;border:1px solid var(--line,#e2e8f0);border-radius:8px;margin:0 0 10px;font:inherit;background:var(--card,#fff);color:var(--ink,#0f172a)}
+.help{font-size:13.5px;color:var(--muted,#475569);margin:-4px 0 12px}
+.svgwrap{overflow-x:auto;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:10px;margin:12px 0 20px}
+.svgwrap svg{min-width:900px;width:100%;height:auto;display:block}
+.svgwrap svg text{fill:var(--ink,#0f172a);font-family:system-ui,Arial,sans-serif}
+.svgwrap svg text.mut{fill:var(--muted,#475569)}
+.svgwrap svg .axis{stroke:var(--muted,#94a3b8)}
+.svgwrap svg .card{fill:var(--card,#fff);stroke:var(--line,#cbd5e1)}
+cite.src{font-style:normal;font-size:12px;color:var(--muted,#475569)}
+cite.src a{color:var(--link,#1d4ed8)}
+.asof{font-size:11.5px;color:var(--muted,#475569);white-space:nowrap}
+ol.srcs{font-size:13px;padding-left:1.3rem;overflow-wrap:anywhere}ol.srcs li{margin:0 0 5px}
+.related{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
+.related a{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);text-decoration:none;color:var(--ink,#0f172a);font-size:13px}
+.citygrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));margin:10px 0 18px}
+.city{background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:12px;padding:10px 12px;border-left:5px solid var(--c,#64748b);min-width:0}
+.city h3{margin:0 0 4px;font-size:1rem}.city p{margin:2px 0;font-size:12.5px;color:var(--muted,#475569)}
+ul.tight{margin:6px 0 14px;padding-left:1.2rem}ul.tight li{margin:0 0 5px}
+@media(max-width:430px){main{padding:14px 10px 56px}h1{font-size:1.4rem}.kids,.citygrid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.svgwrap svg{min-width:760px}}
+
+.duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin:10px 0 18px}
+.col{background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:12px 14px;min-width:0;border-top:5px solid var(--c,#2563eb)}
+.col h3{margin:0 0 6px}
+.col .stats{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+.chart{overflow:hidden;margin:8px 0}.chart svg{width:100%;height:auto;display:block}
+.chart svg text{fill:var(--ink,#0f172a);font-family:system-ui,Arial,sans-serif}.chart svg text.mut{fill:var(--muted,#475569)}
+.chart svg .grid{stroke:var(--line,#e2e8f0)}
+.svgwrap svg rect,.svgwrap svg .card{fill:var(--card,#ffffff)}
+html[data-theme="dark"] .svgwrap svg rect,html[data-theme="dark"] .svgwrap svg .card{fill:var(--card,#1e293b)}
+.tag{display:inline-block;font:600 11px/1.6 system-ui;border-radius:999px;padding:0 7px;margin:1px 3px 1px 0;background:var(--th-bg,#f1f5f9);border:1px solid var(--line,#e2e8f0);color:var(--ink,#0f172a);white-space:nowrap}
+ol.steps{padding-left:1.3rem}ol.steps li{margin:0 0 7px}
+.b-ind{background:#0f766e}
+@media(max-width:720px){.duo{grid-template-columns:1fr}}
+</style>
+<style id="zf-3diffsvxlan-style">
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.toc a{font-size:13px;padding:5px 10px;border-radius:999px;border:1px solid var(--line,#e2e8f0);background:var(--card,#fff);color:var(--ink,#0f172a);text-decoration:none}
+.toc a:hover{border-color:var(--link,#1d4ed8)}
+.hdr{display:flex;flex-wrap:wrap;gap:4px;margin:10px 0 8px;align-items:stretch}
+.hdr .seg{flex:1 1 110px;min-width:90px;border:1px solid var(--line,#e2e8f0);border-radius:8px;padding:8px 10px;background:var(--th-bg,#f1f5f9);font-size:12.5px}
+.hdr .seg b{display:block;font-size:12px;margin:0 0 2px}
+.hdr .seg.vx{background:rgba(37,99,235,.12);border-color:#2563eb}
+.hdr .seg.sec{background:rgba(15,118,110,.12);border-color:#0f766e}
+.hdr .seg.warn{background:rgba(180,83,9,.12);border-color:#b45309}
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:10px 0 18px}
+@media(max-width:800px){.trio{grid-template-columns:1fr}}
+.plane{background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:12px 14px;border-top:5px solid var(--c,#2563eb);min-width:0}
+.plane h3{margin:0 0 6px}
+.plane p{margin:0 0 8px;font-size:13.5px;color:var(--muted,#475569)}
+.figcap{font-size:12.5px;color:var(--muted,#475569);margin:0 0 16px}
+.svgwrap svg text{font-size:12px}
+</style>
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+
+<!-- site-menu v1 --><nav class="site"><a href="/">Home</a></nav>
+<main>
+<div class="tr17" style="text-align:right;font-size:13px;margin:0 0 10px"><span class="uv" style="background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></div>
+<nav class="crumb"><a href="/">Home</a> › <a href="/zfrontier/">zFrontier</a> › 3DiffsVXLAN</nav>
+<div class="stamp">Last updated 14 Nov 2026 03:58 AEDT (Melbourne time) · facts researched 14 Nov 2026</div>
+
+<span class="kicker" style="background:#1d4ed8">zFrontier</span>
+<span class="kicker" style="background:#0f766e">ACI · SD-Access · SD-WAN</span>
+<h1><span class="tt-keep">🔀</span> 3DiffsVXLAN: why Cisco built ACI, SD-Access and SD-WAN differently</h1>
+<p class="lede">Cisco has three software-defined fabrics, one for the data centre, one for the campus, and one for the WAN. ACI and SD-Access both use a VXLAN overlay, but they put different policy metadata in the header and they use different control planes. SD-WAN is the odd one out: its normal data plane is IPsec or GRE, not VXLAN. This page compares the three against Cisco’s public documentation, and says where VXLAN really is — and is not — used.</p>
+
+<div class="note"><strong>The short version.</strong> The common idea is an overlay that separates a user’s identity or group from where they sit on the underlay. Only ACI and SD-Access implement that overlay with VXLAN. SD-WAN implements it with encrypted transport-layer tunnels and service VPNs. Treating all three as “VXLAN fabrics” is the usual mistake this page is here to correct.</div>
+
+<nav class="toc" aria-label="On this page">
+<a href="#why">Why three</a>
+<a href="#picture">Picture</a>
+<a href="#aci">ACI</a>
+<a href="#sda">SD-Access</a>
+<a href="#sdwan">SD-WAN</a>
+<a href="#compare">Comparison table</a>
+<a href="#analysis">Same idea, different problems</a>
+<a href="#interwork">Interworking</a>
+<a href="#when">When to use which</a>
+<a href="#sources">Sources</a>
+<a href="#limits">What I could not confirm</a>
+</nav>
+
+<h2 id="why">Why three?</h2>
+<p>Each fabric grew up around a different problem, not around a shared VXLAN standard. The data centre had to move east–west application traffic at high scale, place endpoints anywhere, and enforce contracts between application groups. The campus had to follow users and devices as they roam, keep wired and wireless policy the same, and segment by identity. The WAN had to stitch branches, campuses, data centres and cloud over mixed transports, keep the overlay encrypted, and steer applications by policy.</p>
+<p>Cisco therefore picked a control plane, a data plane and a policy model that fit each domain, then later documented ways to hand policy groups and virtual networks from one domain to the next. ISE is the usual meeting point for group identity. The overlays themselves stay different. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/5-x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-50x/m_cisco_aci_layer_2_and_layer_3_forwarding.html" title="Cisco APIC Layer 2 Networking Configuration Guide, Release 5.0(x): Cisco ACI Forwarding (read 14 Nov 2026)">1</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html" title="Cisco Software-Defined Access Design Guide, updated 30 Jul 2026 (read 14 Nov 2026)">4</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/routers/sdwan/26x-later/solution/cisco-catalyst-sd-wan-solution-overview/solution.html" title="Cisco Catalyst SD-WAN Solution Overview, 26.x and later (read 14 Nov 2026)">5</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/catalyst-center/cisco-validated-solution-profiles/common-policy-integration-guide.html" title="Cisco Common Policy Integration Guide, updated 15 Jan 2026 (read 14 Nov 2026)">9</a>]</cite></p>
+
+<div class="trio">
+<div class="plane" style="--c:#2563eb">
+<h3>ACI — data centre</h3>
+<p>A spine–leaf fabric that looks like one switch to the outside, built for east–west application traffic and distributed contracts.</p>
+<ul class="tight">
+<li>Control: COOP, IS-IS, MP-BGP</li>
+<li>Data: VXLAN, with the source EPG in the header</li>
+<li>Policy: EPGs or ESGs and contracts, from APIC</li>
+</ul>
+</div>
+<div class="plane" style="--c:#0f766e">
+<h3>SD-Access — campus</h3>
+<p>A wired and wireless campus fabric that keeps a user’s identity when they move, and segments by virtual network and security group.</p>
+<ul class="tight">
+<li>Control: LISP (EID to RLOC)</li>
+<li>Data: VXLAN, with the SGT in the header</li>
+<li>Policy: VNs and SGTs / SGACLs, from Catalyst Center and ISE</li>
+</ul>
+</div>
+<div class="plane" style="--c:#b45309">
+<h3>SD-WAN — WAN</h3>
+<p>A policy-driven WAN overlay across MPLS, internet, broadband and cellular, with centralised control and direct edge-to-edge traffic.</p>
+<ul class="tight">
+<li>Control: OMP from SD-WAN Controllers</li>
+<li>Data: IPsec or GRE between TLOCs — not VXLAN</li>
+<li>Policy: service VPNs, plus optional SGT in tunnel metadata</li>
+</ul>
+</div>
+</div>
+
+<h2 id="picture">How the three sit together</h2>
+<p class="help">This is a conceptual picture of the three domains and the documented hand-offs. It is not a deployment drawing for a particular site.</p>
+<div class="svgwrap">
+<svg viewBox="0 0 1100 480" role="img" aria-labelledby="fig1title fig1desc">
+<title id="fig1title">ACI, SD-Access and SD-WAN: three domains, two VXLAN fabrics, one IPsec or GRE WAN</title>
+<desc id="fig1desc">Three columns show the data centre ACI fabric using VXLAN with a source group, the campus SD-Access fabric using VXLAN with an SGT, and the SD-WAN overlay using IPsec or GRE with a VPN label and optional SGT metadata. ISE sits between ACI and SD-Access for group mapping. A campus border hands a virtual network and SGT to an SD-WAN edge.</desc>
+<rect class="card" x="20" y="20" width="1060" height="440" rx="16"/>
+<!-- ACI -->
+<rect x="40" y="48" width="320" height="300" rx="12" fill="rgba(37,99,235,.10)" stroke="#2563eb"/>
+<text x="200" y="76" text-anchor="middle" font-size="16" font-weight="700">Data centre — ACI</text>
+<rect x="60" y="92" width="280" height="36" rx="8" fill="#2563eb"/>
+<text x="200" y="115" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">APIC (policy and management)</text>
+<text x="200" y="150" text-anchor="middle" font-size="12" class="mut">Control plane</text>
+<text x="200" y="170" text-anchor="middle" font-size="13">IS-IS underlay · COOP endpoints · MP-BGP external</text>
+<rect x="60" y="190" width="280" height="64" rx="8" fill="#1d4ed8"/>
+<text x="200" y="216" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">VXLAN data plane</text>
+<text x="200" y="236" text-anchor="middle" font-size="12" fill="#dbeafe">Source group (EPG pcTag) + 24-bit VNID</text>
+<text x="200" y="268" text-anchor="middle" font-size="12">Spine–leaf · policy on the leaf</text>
+<text x="200" y="290" text-anchor="middle" font-size="12">EPGs / ESGs and contracts</text>
+<text x="200" y="324" text-anchor="middle" font-size="12" class="mut">Endpoints: servers, virtual machines, containers</text>
+<!-- SDA -->
+<rect x="390" y="48" width="320" height="300" rx="12" fill="rgba(15,118,110,.10)" stroke="#0f766e"/>
+<text x="550" y="76" text-anchor="middle" font-size="16" font-weight="700">Campus — SD-Access</text>
+<rect x="410" y="92" width="280" height="36" rx="8" fill="#0f766e"/>
+<text x="550" y="115" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Catalyst Center + ISE</text>
+<text x="550" y="150" text-anchor="middle" font-size="12" class="mut">Control plane</text>
+<text x="550" y="170" text-anchor="middle" font-size="13">LISP map-server / map-resolver (EID ↔ RLOC)</text>
+<rect x="410" y="190" width="280" height="64" rx="8" fill="#0f766e"/>
+<text x="550" y="216" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">VXLAN data plane</text>
+<text x="550" y="236" text-anchor="middle" font-size="12" fill="#ccfbf1">SGT + VNI (VN / VRF attributes)</text>
+<text x="550" y="268" text-anchor="middle" font-size="12">Edge, border, control-plane nodes</text>
+<text x="550" y="290" text-anchor="middle" font-size="12">VNs (macro) and SGTs / SGACLs (micro)</text>
+<text x="550" y="324" text-anchor="middle" font-size="12" class="mut">Endpoints: users, phones, APs, IoT</text>
+<!-- SD-WAN -->
+<rect x="740" y="48" width="320" height="300" rx="12" fill="rgba(180,83,9,.10)" stroke="#b45309"/>
+<text x="900" y="76" text-anchor="middle" font-size="16" font-weight="700">WAN — Catalyst SD-WAN</text>
+<rect x="760" y="92" width="280" height="36" rx="8" fill="#b45309"/>
+<text x="900" y="115" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Manager · Controllers · Validator</text>
+<text x="900" y="150" text-anchor="middle" font-size="12" class="mut">Control plane</text>
+<text x="900" y="170" text-anchor="middle" font-size="13">OMP: routes, TLOCs, keys, policy</text>
+<rect x="760" y="190" width="280" height="64" rx="8" fill="#b45309"/>
+<text x="900" y="216" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">IPsec or GRE data plane</text>
+<text x="900" y="236" text-anchor="middle" font-size="12" fill="#ffedd5">Not VXLAN · VPN label · optional SGT in CMD</text>
+<text x="900" y="268" text-anchor="middle" font-size="12">WAN Edges, TLOCs, BFD on tunnels</text>
+<text x="900" y="290" text-anchor="middle" font-size="12">Service VPNs 1–65527; VPN 0 / 512 reserved</text>
+<text x="900" y="324" text-anchor="middle" font-size="12" class="mut">Sites: branches, campuses, DC, cloud, SaaS</text>
+<!-- interworking -->
+<rect x="40" y="368" width="1020" height="72" rx="12" fill="rgba(100,116,139,.10)" stroke="var(--line, #94a3b8)"/>
+<text x="550" y="392" text-anchor="middle" font-size="13" font-weight="700">Documented interworking (policy and segmentation, not a shared VXLAN fabric)</text>
+<text x="550" y="416" text-anchor="middle" font-size="12">ISE maps ACI EPG / ESG ↔ SGT and campus SGT ↔ ACI external EPG</text>
+<text x="550" y="434" text-anchor="middle" font-size="12">SD-Access VN ↔ SD-WAN service VPN; SGT moves VXLAN → Ethernet CMD → IPsec CMD</text>
+</svg>
+</div>
+<p class="figcap">Figure 1. Three Cisco domains. VXLAN is the data plane for ACI and SD-Access only. Sources: <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/5-x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-50x/m_cisco_aci_layer_2_and_layer_3_forwarding.html">1</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">4</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/routers/sdwan/26x-later/solution/cisco-catalyst-sd-wan-solution-overview/solution.html">5</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/dna-center/Cisco-Validated-Solution-Profiles/b_cisco_validated_solution_ipv6.html">8</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/catalyst-center/cisco-validated-solution-profiles/common-policy-integration-guide.html">9</a>]</cite></p>
+
+<h2 id="aci">Cisco ACI (data centre)</h2>
+<h3>Domain and goals</h3>
+<p>ACI is Cisco’s application-centric data centre fabric. Official forwarding documentation describes a spine–leaf fabric that appears as a single switch to the outside, built to carry modern east–west traffic (server to server, virtual-machine mobility, multi-tier applications) without Spanning Tree blocking links. As traffic enters, ACI encapsulates it, applies policy, forwards it through a spine (a maximum of two hops), and de-encapsulates it on the way out. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/5-x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-50x/m_cisco_aci_layer_2_and_layer_3_forwarding.html" title="Cisco ACI Forwarding (APIC L2 guide 5.0(x), read 14 Nov 2026)">1</a>]</cite></p>
+
+<h3>Control plane</h3>
+<p>Inside the fabric, ACI uses <strong>IS-IS</strong> and the <strong>Council of Oracle Protocol (COOP)</strong> for endpoint-to-endpoint forwarding. That is what lets every fabric link be active, equal-cost multipath, and fast to reconverge. To distribute routes between software-defined networks in the fabric and routers outside it, ACI uses <strong>multiprotocol BGP (MP-BGP)</strong>. Spine switches can be configured as MP-BGP route reflectors. ACI also decouples an endpoint’s identity (its MAC or IP) from its location, which is a VXLAN tunnel endpoint (VTEP) on a leaf. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/5-x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-50x/m_cisco_aci_layer_2_and_layer_3_forwarding.html">1</a>]</cite></p>
+
+<h3>Data plane and header</h3>
+<p>All traffic in the ACI fabric is normalised as VXLAN. At ingress, ACI encapsulates external VLAN, VXLAN or NVGRE packets into VXLAN. The official packet-format description says the ACI VXLAN header’s <strong>source group</strong> field identifies the application policy endpoint group (EPG) the packet belongs to, and the 24-bit <strong>VNID</strong> is used to forward the packet through tenant VRFs. Cisco states that a 24-bit VNID gives an address space of up to 16 million unique Layer 2 segments. Policy attributes travel in every packet so enforcement can be distributed. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/5-x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-50x/m_cisco_aci_layer_2_and_layer_3_forwarding.html">1</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-62x/g_cisco_aci_layer_2_and_layer_3_forwarding/vxlan-in-aci.html" title="VXLAN in ACI, APIC L2 guide 6.2(x), updated 7 Jul 2026 (read 14 Nov 2026)">2</a>]</cite></p>
+<p>That source group is the EPG’s policy class tag (<strong>pcTag</strong>), also called sclass or dclass depending on direction. A Cisco technical note describes pcTag as the numeric ID used inside ACI to represent an EPG for classification and contract enforcement. <cite class="src">[<a href="https://www.cisco.com/c/en/us/support/docs/cloud-systems-management/application-policy-infrastructure-controller-apic/217302-application-centric-infrastructure-all.html" title="Application Centric Infrastructure: All about PolicyClassTag (pcTag) (read 14 Nov 2026)">3</a>]</cite></p>
+<div class="warn">Engineers often call this Cisco-extended header <strong>iVXLAN</strong>. The official ACI forwarding pages opened for this article say “ACI VXLAN” and “source group field”. They do not use the name iVXLAN in the text I could read, so that name is recorded here as common usage, not as a term I found in those guides.</div>
+<p class="help">Schematic only — not a bit-accurate decode. Cisco publishes a “Cisco ACI VXLAN Packet Format” figure in the forwarding guide. I have not redrawn reserved bits or exact field widths beyond what the text states (source group and 24-bit VNID).</p>
+<div class="hdr" aria-label="ACI VXLAN encapsulation, schematic">
+<div class="seg"><b>Outer Ethernet</b> leaf to leaf</div>
+<div class="seg"><b>Outer IP</b> VTEP → VTEP</div>
+<div class="seg"><b>UDP</b> VXLAN transport</div>
+<div class="seg vx"><b>VXLAN header</b> source group (EPG pcTag) + 24-bit VNID</div>
+<div class="seg"><b>Original frame</b> tenant MAC / IP</div>
+</div>
+<p class="figcap">Figure 2. ACI fabric encapsulation, from Cisco’s ACI forwarding and VXLAN-in-ACI pages. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/5-x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-50x/m_cisco_aci_layer_2_and_layer_3_forwarding.html">1</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-62x/g_cisco_aci_layer_2_and_layer_3_forwarding/vxlan-in-aci.html">2</a>]</cite></p>
+
+<h3>Segmentation and policy</h3>
+<p>ACI decouples application policy (the EPG) from forwarding. Endpoints are grouped into EPGs (tied to a bridge domain) or, in later designs, endpoint security groups (ESGs, tied to a VRF). Contracts between those groups are the policy. The pcTag is what the leaf uses when it looks up a zoning rule. pcTag values run from 1 to 65535, with documented ranges for system (1–15), global (16–16385) and local-to-VRF (16386–65535) tags. <cite class="src">[<a href="https://www.cisco.com/c/en/us/support/docs/cloud-systems-management/application-policy-infrastructure-controller-apic/217302-application-centric-infrastructure-all.html">3</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/security/ise/aci_common_policy.html" title="Connect Cisco Application Centric Infrastructure with Cisco ISE, updated 8 May 2025 (read 14 Nov 2026)">10</a>]</cite></p>
+
+<h3>Management</h3>
+<p>The fabric is managed by the <strong>Application Policy Infrastructure Controller (APIC)</strong>. Policy is defined on the controller and pushed to the leaves, which enforce it in hardware as packets enter and leave the fabric.</p>
+
+<h3>Scale notes (only what the docs state)</h3>
+<p>Cisco documents a 24-bit VNID and “up to 16 million unique Layer 2 segments”, and a pcTag space of 1–65535 with the ranges above. I have not copied a full verified scale table (tenants, endpoints, contracts per leaf) from a data sheet, because those numbers change by platform and release. Use the scale guide for the APIC and switch release you run. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-62x/g_cisco_aci_layer_2_and_layer_3_forwarding/vxlan-in-aci.html">2</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/support/docs/cloud-systems-management/application-policy-infrastructure-controller-apic/217302-application-centric-infrastructure-all.html">3</a>]</cite></p>
+
+<h2 id="sda">Cisco SD-Access (campus)</h2>
+<h3>Domain and goals</h3>
+<p>Software-Defined Access is Cisco’s intent-based architecture for wired and wireless campus networks. The current design guide (Catalyst Center 2.3.7.10, LISP Pub/Sub control plane) describes it as a way to automate campus fabrics, keep security consistent whether a user is on Ethernet or Wi-Fi, and segment by identity rather than by VLAN and IP alone. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html" title="Cisco SD-Access Design Guide, updated 30 Jul 2026 (read 14 Nov 2026)">4</a>]</cite></p>
+
+<h3>Control plane</h3>
+<p>The overlay control plane is <strong>Locator/ID Separation Protocol (LISP)</strong>. An endpoint’s identity (EID — MAC, IPv4 or IPv6) is mapped to a routing locator (RLOC), which in SD-Access is the Loopback 0 address of a fabric node. Fabric devices query a control-plane node (map-server and map-resolver) for that mapping, cache it, and forward to the RLOC. That split is also what lets an anycast gateway present the same subnet in many wiring closets without Spanning Tree. The design guide recommends LISP Pub/Sub for new deployments. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">4</a>]</cite></p>
+
+<h3>Data plane and header</h3>
+<p>The data plane is <strong>VXLAN</strong> — a MAC-in-IP encapsulation that preserves the original Ethernet header, so the overlay can be Layer 2 or Layer 3. Each overlay network is identified by a VXLAN network identifier (VNI): a VLAN-to-VNI mapping for Layer 2, and a VRF-to-VNI mapping for Layer 3. The design guide also says SD-Access places additional information in the fabric VXLAN header — “alternative forwarding attributes” used for policy — and that in the policy plane the SGT and VRF values are encoded into that header and carried across the overlay. A 16-bit SGT is assigned by ISE in an authorisation policy. VXLAN encapsulation adds at least 50 bytes and sets the IP Don’t Fragment bit; the underlay is therefore designed with a larger MTU, commonly 9100. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">4</a>]</cite></p>
+<div class="note">The design guide points to Appendix A for a bit-level diagram of the SD-Access VXLAN header. I have not transcribed that appendix here. A separate Cisco white paper on <strong>VXLAN Group Policy Option (GPO)</strong> describes carrying a 16-bit source SGT in the VXLAN header (and a Policy Applied bit). That paper is written for data-centre microsegmentation, so it is cited only as a description of the header extension, not as an SD-Access design document. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/dcn/whitepapers/securing-datacenters-with-microsegmentation-and-vxlan-gpo.html" title="Securing Data Centers with Microsegmentation using VXLAN GPO (read 14 Nov 2026)">12</a>]</cite></div>
+<div class="hdr" aria-label="SD-Access VXLAN encapsulation, schematic">
+<div class="seg"><b>Outer Ethernet</b> underlay hop</div>
+<div class="seg"><b>Outer IP</b> RLOC → RLOC</div>
+<div class="seg"><b>UDP</b> + at least 50 bytes total overhead</div>
+<div class="seg sec"><b>Fabric VXLAN</b> VNI (VN / VRF) + SGT (16-bit) and other policy attributes</div>
+<div class="seg"><b>Original frame</b> endpoint Ethernet</div>
+</div>
+<p class="figcap">Figure 3. SD-Access fabric encapsulation, from the SD-Access design guide’s data-plane and policy-plane sections. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">4</a>]</cite></p>
+
+<h3>Segmentation and policy</h3>
+<p>SD-Access uses two layers. <strong>Macro-segmentation</strong> is a virtual network (a VRF): complete control-plane and data-plane isolation, with inter-VN traffic only through an external device or a documented shared-services pattern such as LISP Extranet. <strong>Micro-segmentation</strong> is Cisco TrustSec: a 16-bit SGT carried in the fabric header, with group-based access control lists (SGACLs) enforced on the tags. ISE is optional if you only need virtual networks, and mandatory for identity-based micro-segmentation. ISE is the authoritative system for creating SGTs; Catalyst Center is the pane of glass for authoring and consuming them. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">4</a>]</cite></p>
+
+<h3>Management</h3>
+<p>Cisco <strong>Catalyst Center</strong> owns the management plane: design, policy, provision and assurance. It automates the underlay (including LAN Automation) and the fabric roles (edge, border, control-plane, optional extended nodes and fabric wireless). A Catalyst Center outage does not, by itself, stop already-forwarding wired and wireless fabric traffic; it does stop provisioning, assurance and policy changes. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">4</a>]</cite></p>
+
+<h3>Scale notes (only what the docs state)</h3>
+<p>The design guide does not put a single endpoint-count number on the public HTML page I opened. It says scale depends on the platforms, the number of endpoints and the Catalyst Center form factor, and it sends readers to the current Catalyst Center data sheet for latency and scale metrics. What the guide does state in this context: a 16-bit SGT, at least 50 bytes of VXLAN overhead, and a recommended campus-wide MTU of 9100 (with 1550 as a documented minimum to carry the overlay). <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">4</a>]</cite></p>
+
+<h2 id="sdwan">Cisco Catalyst SD-WAN (WAN)</h2>
+<h3>Domain and goals</h3>
+<p>Catalyst SD-WAN is a secure, policy-driven WAN that connects users, branches, data centres, clouds and SaaS over any transport, with centralised management and control. The current solution overview is explicit about the overlay: it is “a set of transport-layer tunnels, generally IPsec or GRE, managed by SD-WAN Controllers.” User traffic then flows directly between edge routers, not through the controllers. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/routers/sdwan/26x-later/solution/cisco-catalyst-sd-wan-solution-overview/solution.html" title="Cisco Catalyst SD-WAN Solution Overview, 26.x and later (read 14 Nov 2026)">5</a>]</cite></p>
+
+<h3>Control plane</h3>
+<p>The main control-plane protocol is the <strong>Overlay Management Protocol (OMP)</strong>. It runs between SD-WAN Controllers (formerly vSmart) and WAN Edge devices over secure DTLS or TLS control connections, and distributes overlay reachability, routes, transport locators (TLOCs), policy and encryption keys. Controllers apply centralised policy and advertise the result back to the edges, which is how hub-and-spoke, full mesh or per-VPN topologies are built without configuring every edge pair. The <strong>Validator</strong> (formerly vBond) authenticates devices and helps edges and controllers find each other. <strong>SD-WAN Manager</strong> (formerly vManage) is the management system. Edges generate per-transport encryption keys and send them to the controllers, which distribute keys to peers; that avoids a full mesh of IKE negotiations. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/routers/sdwan/26x-later/solution/cisco-catalyst-sd-wan-solution-overview/solution.html">5</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/SDWAN/cisco-sdwan-design-guide.html" title="Cisco Catalyst SD-WAN Design Guide (read 14 Nov 2026)">6</a>]</cite></p>
+
+<h3>Data plane and header — not VXLAN</h3>
+<p>Most data-plane connections are <strong>IPsec</strong> tunnels; <strong>GRE</strong> is also supported. The tunnels run between TLOCs on the transport side (VPN 0). BFD runs in those tunnels to measure reachability, loss, jitter and delay for application-aware routing. Segmentation is VRF-based and operationally called a VPN. The design guide says labels in OMP route attributes and in the packet encapsulation identify the VPN a packet belongs to. VPN numbers are a four-byte integer from 0 to 65535, with several values reserved; the maximum VPN you should configure is 65527. VPN 0 is the transport VPN. VPN 512 is the out-of-band management VPN, ignored by OMP and not carried across the overlay. Service-side VPNs use 1 to 65527. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/routers/sdwan/26x-later/solution/cisco-catalyst-sd-wan-solution-overview/solution.html">5</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/SDWAN/cisco-sdwan-design-guide.html">6</a>]</cite></p>
+<div class="hdr" aria-label="SD-WAN overlay encapsulation, schematic">
+<div class="seg"><b>Underlay</b> MPLS, internet, broadband, cellular, cloud</div>
+<div class="seg warn"><b>IPsec or GRE tunnel</b> TLOC to TLOC — this is the overlay, not VXLAN</div>
+<div class="seg vx"><b>VPN label</b> identifies the service VPN</div>
+<div class="seg sec"><b>Optional CMD / metadata</b> can carry an SGT across the WAN</div>
+<div class="seg"><b>Original packet</b> from the service side</div>
+</div>
+<p class="figcap">Figure 4. Normal SD-WAN encapsulation, from the solution overview and design guide, plus the TrustSec inline-tagging document for the optional SGT. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/routers/sdwan/26x-later/solution/cisco-catalyst-sd-wan-solution-overview/solution.html">5</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/SDWAN/cisco-sdwan-design-guide.html">6</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/support/docs/routers/sd-wan/222694-configure-trustsec-sgt-inline-tagging-pr.html">7</a>]</cite></p>
+
+<h3>Where VXLAN does appear in SD-WAN</h3>
+<p>VXLAN is not the Catalyst SD-WAN site-to-site data plane. It does show up in a few documented, narrower places:</p>
+<ul class="tight">
+<li><strong>SGT hand-off with SD-Access, not as the WAN overlay.</strong> On a two-box border/WAN-edge hand-off, the fabric border takes the SGT out of the SD-Access VXLAN header and puts it in the Cisco Meta Data (CMD) field of the Ethernet frame. The SD-WAN edge then copies that SGT into the IPsec CMD field and carries it across the SD-WAN fabric. The far edge reverses the steps, and the far border puts the SGT back into the VXLAN header. The WAN hop itself is still IPsec (or GRE), not VXLAN. Starting with 20.6.1 / 17.6.1, SGT propagation on the SD-WAN tunnel is disabled by default and must be turned on. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/dna-center/Cisco-Validated-Solution-Profiles/b_cisco_validated_solution_ipv6.html" title="IPv6 Software-Defined Network (SD-Access, SD-WAN, and Firepower) Integration Guide (read 14 Nov 2026)">8</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/support/docs/routers/sd-wan/222694-configure-trustsec-sgt-inline-tagging-pr.html" title="Configure TrustSec SGT Inline Tagging Propagation in SD-WAN, document 222694 (read 14 Nov 2026)">7</a>]</cite></li>
+<li><strong>Inline tagging between TrustSec switches and an SD-WAN edge.</strong> Cisco document 222694 describes the same idea without a fabric: a TrustSec switch writes the SGT in an Ethernet CMD frame, the IOS XE SD-WAN edge extracts it and propagates it over IPsec or GRE, and the far edge rebuilds the CMD frame. An additional eight bytes are added for that field. <cite class="src">[<a href="https://www.cisco.com/c/en/us/support/docs/routers/sd-wan/222694-configure-trustsec-sgt-inline-tagging-pr.html">7</a>]</cite></li>
+<li><strong>A special multitenant / manager connector case.</strong> The Catalyst SD-WAN Security Configuration Guide for 26.x describes VXLAN connectivity for tenant-managed external services on a multitenant edge, and a VXLAN tunnel between Cisco SD-WAN Manager and an Edge Connector for each tenant. That is a management and tenant-isolation path, not the normal branch-to-branch overlay. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/routers/sdwan/26x-later/security/security-configuration-guide.pdf" title="Cisco Catalyst SD-WAN Security Configuration Guide, Releases 26.x and later, first published 24 Apr 2026 (read 14 Nov 2026)">11</a>]</cite></li>
+</ul>
+<div class="claim">If you remember only one fact about SD-WAN from this page: the overlay that carries user traffic between sites is IPsec or GRE. VXLAN may appear at a campus fabric hand-off, or in a documented tenant-connector design, but it is not how Catalyst SD-WAN normally builds the WAN.</div>
+
+<h3>Segmentation, policy and management</h3>
+<p>Service VPNs isolate business groups on the same fabric. Centralised policy on the Controllers and Manager covers topology, security, QoS and application-aware routing. Identity-based firewall policy can use SGTs learned from ISE (supported from SD-WAN 20.10.1 / IOS XE 17.10.1a in the Common Policy guide). <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/SDWAN/cisco-sdwan-design-guide.html">6</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/catalyst-center/cisco-validated-solution-profiles/common-policy-integration-guide.html">9</a>]</cite></p>
+
+<h2 id="compare">Comparison table</h2>
+<p class="help">Filter the table if you want to jump to one plane. Every cell is drawn from the sources in the last column. I have left scale cells thin on purpose where Cisco points to a data sheet rather than publishing a single number in the page I opened.</p>
+<input class="filter" type="search" placeholder="Filter this table…" aria-label="Filter comparison table" oninput="ccFilter(this.value, document.getElementById('zf-vxlan-cmp'))">
+<div class="tblwrap">
+<table class="tree" id="zf-vxlan-cmp">
+<thead>
+<tr>
+<th onclick="ccSort(document.getElementById('zf-vxlan-cmp'),0)">Aspect</th>
+<th onclick="ccSort(document.getElementById('zf-vxlan-cmp'),1)">Cisco ACI</th>
+<th onclick="ccSort(document.getElementById('zf-vxlan-cmp'),2)">Cisco SD-Access</th>
+<th onclick="ccSort(document.getElementById('zf-vxlan-cmp'),3)">Cisco Catalyst SD-WAN</th>
+<th onclick="ccSort(document.getElementById('zf-vxlan-cmp'),4)">Sources</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Primary domain</td>
+<td>Data centre fabric (spine–leaf, east–west applications)</td>
+<td>Campus wired and wireless LAN</td>
+<td>WAN between sites, clouds and SaaS, over mixed transports</td>
+<td><cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/5-x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-50x/m_cisco_aci_layer_2_and_layer_3_forwarding.html">1</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">4</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/routers/sdwan/26x-later/solution/cisco-catalyst-sd-wan-solution-overview/solution.html">5</a>]</cite></td>
+</tr>
+<tr>
+<td>What problem it is solving</td>
+<td>Place endpoints anywhere, carry east–west traffic in two hops, enforce contracts between application groups</td>
+<td>Keep identity as users and devices roam, unify wired and wireless policy, segment by group</td>
+<td>Build a secure overlay over any transport, centralise policy, steer applications by intent</td>
+<td><cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/5-x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-50x/m_cisco_aci_layer_2_and_layer_3_forwarding.html">1</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">4</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/routers/sdwan/26x-later/solution/cisco-catalyst-sd-wan-solution-overview/solution.html">5</a>]</cite></td>
+</tr>
+<tr>
+<td>Management / controllers</td>
+<td>APIC</td>
+<td>Catalyst Center, with ISE for identity and SGTs</td>
+<td>SD-WAN Manager, Controllers (formerly vSmart), Validator (formerly vBond)</td>
+<td><cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">4</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/routers/sdwan/26x-later/solution/cisco-catalyst-sd-wan-solution-overview/solution.html">5</a>]</cite></td>
+</tr>
+<tr>
+<td>Overlay control plane</td>
+<td>COOP for endpoints; IS-IS in the fabric; MP-BGP for external routes</td>
+<td>LISP (map-server / map-resolver; Pub/Sub recommended for new sites)</td>
+<td>OMP between Controllers and WAN Edges, over DTLS or TLS</td>
+<td><cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/5-x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-50x/m_cisco_aci_layer_2_and_layer_3_forwarding.html">1</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">4</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/SDWAN/cisco-sdwan-design-guide.html">6</a>]</cite></td>
+</tr>
+<tr>
+<td>Data plane</td>
+<td>VXLAN (all fabric traffic is normalised as VXLAN)</td>
+<td>VXLAN (MAC-in-IP fabric overlay)</td>
+<td>IPsec (typical) or GRE between TLOCs — <strong>not VXLAN</strong></td>
+<td><cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-62x/g_cisco_aci_layer_2_and_layer_3_forwarding/vxlan-in-aci.html">2</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">4</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/routers/sdwan/26x-later/solution/cisco-catalyst-sd-wan-solution-overview/solution.html">5</a>]</cite></td>
+</tr>
+<tr>
+<td>Policy metadata in the header</td>
+<td>Source group field = EPG (pcTag / sclass); 24-bit VNID</td>
+<td>SGT (16-bit) and VRF / VNI attributes in the fabric VXLAN header</td>
+<td>VPN label in the encapsulation; optional SGT in IPsec or Ethernet CMD metadata</td>
+<td><cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/5-x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-50x/m_cisco_aci_layer_2_and_layer_3_forwarding.html">1</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">4</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/SDWAN/cisco-sdwan-design-guide.html">6</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/support/docs/routers/sd-wan/222694-configure-trustsec-sgt-inline-tagging-pr.html">7</a>]</cite></td>
+</tr>
+<tr>
+<td>Identity / location split</td>
+<td>Tenant MAC or IP (identity) versus leaf VTEP (location)</td>
+<td>EID versus RLOC (Loopback 0)</td>
+<td>Service-side prefixes versus TLOCs on the transport side</td>
+<td><cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/5-x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-50x/m_cisco_aci_layer_2_and_layer_3_forwarding.html">1</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">4</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/routers/sdwan/26x-later/solution/cisco-catalyst-sd-wan-solution-overview/solution.html">5</a>]</cite></td>
+</tr>
+<tr>
+<td>Macro-segmentation</td>
+<td>Tenants and VRFs; bridge domains for L2</td>
+<td>Virtual networks (VRFs)</td>
+<td>Service VPNs (VRFs), IDs 1–65527; VPN 0 transport, VPN 512 management</td>
+<td><cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-62x/g_cisco_aci_layer_2_and_layer_3_forwarding/vxlan-in-aci.html">2</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">4</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/SDWAN/cisco-sdwan-design-guide.html">6</a>]</cite></td>
+</tr>
+<tr>
+<td>Micro-segmentation / policy</td>
+<td>EPGs or ESGs and contracts, classified by pcTag</td>
+<td>SGTs and SGACLs (TrustSec); ISE required for identity-based micro-segmentation</td>
+<td>Centralised policy, per-VPN isolation, optional identity-based firewall and SGT propagation</td>
+<td><cite class="src">[<a href="https://www.cisco.com/c/en/us/support/docs/cloud-systems-management/application-policy-infrastructure-controller-apic/217302-application-centric-infrastructure-all.html">3</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">4</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/catalyst-center/cisco-validated-solution-profiles/common-policy-integration-guide.html">9</a>]</cite></td>
+</tr>
+<tr>
+<td>Underlay</td>
+<td>IS-IS spine–leaf fabric; infrastructure VTEP network</td>
+<td>Layer 3 routed access; IS-IS if you use LAN Automation; OSPF or EIGRP also supported if built by hand</td>
+<td>Whatever IP transports you already have (MPLS, internet, broadband, LTE, cloud)</td>
+<td><cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/5-x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-50x/m_cisco_aci_layer_2_and_layer_3_forwarding.html">1</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">4</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/routers/sdwan/26x-later/solution/cisco-catalyst-sd-wan-solution-overview/solution.html">5</a>]</cite></td>
+</tr>
+<tr>
+<td>Documented encapsulation numbers</td>
+<td>24-bit VNID, up to 16 million L2 segments; pcTag 1–65535</td>
+<td>16-bit SGT; VXLAN overhead at least 50 bytes; recommended MTU 9100</td>
+<td>VPN IDs 0–65535, configure up to 65527; optional eight extra bytes for inline SGT</td>
+<td><cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-62x/g_cisco_aci_layer_2_and_layer_3_forwarding/vxlan-in-aci.html">2</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/support/docs/cloud-systems-management/application-policy-infrastructure-controller-apic/217302-application-centric-infrastructure-all.html">3</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">4</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/SDWAN/cisco-sdwan-design-guide.html">6</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/support/docs/routers/sd-wan/222694-configure-trustsec-sgt-inline-tagging-pr.html">7</a>]</cite></td>
+</tr>
+<tr>
+<td>Does the WAN or campus fabric use the other domain’s overlay?</td>
+<td>No. Interworking with campus is through ISE group mapping and L3Out external EPGs, not a shared VXLAN fabric</td>
+<td>Hands SGT and VN to SD-WAN at the border; the WAN then uses IPsec or GRE</td>
+<td>Does not extend campus or DC VXLAN across the WAN as its data plane</td>
+<td><cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/dna-center/Cisco-Validated-Solution-Profiles/b_cisco_validated_solution_ipv6.html">8</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/catalyst-center/cisco-validated-solution-profiles/common-policy-integration-guide.html">9</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/security/ise/aci_common_policy.html">10</a>]</cite></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="analysis">Same VXLAN idea, different problems</h2>
+<p>VXLAN’s original job is simple: take an Ethernet frame, wrap it in UDP/IP, and carry it across a routed underlay, identified by a 24-bit VNID. Both ACI and SD-Access start from that idea, then do two extra things that a plain RFC 7348 VXLAN network does not have to do.</p>
+<p><strong>They carry a group identifier in the header.</strong> ACI puts the source EPG (pcTag) in the source group field so a leaf can enforce contracts without looking the source up again from IP alone. SD-Access puts a 16-bit SGT in the fabric VXLAN header so a campus device can enforce TrustSec policy the same way for a wired user, a wireless user, or a user who just roamed. The mechanism is similar; the group model is not. An EPG is an application grouping inside a tenant and bridge domain (or an ESG inside a VRF). An SGT is an identity or role grouping assigned at the access edge, usually by ISE. You can map one to the other, but they are not the same object. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/5-x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-50x/m_cisco_aci_layer_2_and_layer_3_forwarding.html">1</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">4</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/security/ise/aci_common_policy.html">10</a>]</cite></p>
+<p><strong>They chose different control planes because the mobility problem is different.</strong> A data centre leaf needs a very fast, always-on picture of endpoints and their VTEPs — COOP on the spines, with IS-IS underneath and MP-BGP for the outside world, fits a tightly coupled fabric that is usually in one hall or a few tightly connected halls. A campus fabric needs a mapping system that can follow a laptop or a phone from one closet or AP to another without changing its IP — LISP’s EID/RLOC split and a central map-server are built for that. A WAN edge, meanwhile, has to build encrypted tunnels over transports it does not own, advertise thousands of prefixes, and change path by application. OMP plus IPsec, with controllers distributing keys and policy, is a WAN answer, not a VXLAN answer. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/5-x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-50x/m_cisco_aci_layer_2_and_layer_3_forwarding.html">1</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">4</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/routers/sdwan/26x-later/solution/cisco-catalyst-sd-wan-solution-overview/solution.html">5</a>]</cite></p>
+<p><strong>Security at the WAN is a transport problem first.</strong> Campus and data-centre VXLAN usually run over a private underlay you control. A WAN overlay is expected to cross the public internet. IPsec (or GRE, where you accept the trade-off) is the natural data plane; VXLAN by itself does not give you that encryption. When Cisco wants group policy to survive the WAN hop, it copies the SGT into tunnel metadata rather than switching the WAN over to VXLAN. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/routers/sdwan/26x-later/solution/cisco-catalyst-sd-wan-solution-overview/solution.html">5</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/support/docs/routers/sd-wan/222694-configure-trustsec-sgt-inline-tagging-pr.html">7</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/dna-center/Cisco-Validated-Solution-Profiles/b_cisco_validated_solution_ipv6.html">8</a>]</cite></p>
+<p>So “all based on VXLAN” is half right and half wrong. ACI and SD-Access are both VXLAN fabrics with a group tag in the header. They still differ in control plane, group model, controllers and the job they were hired to do. SD-WAN shares the <em>idea</em> of an overlay that carries a segment identifier — a VPN label, and sometimes an SGT — but it does not share the VXLAN encapsulation.</p>
+
+<h2 id="interwork">Interworking, only where it is documented</h2>
+<h3>ACI and SD-Access (policy-group mapping through ISE)</h3>
+<p>Cisco does not merge the two VXLAN fabrics into one overlay. What is documented is a <strong>common policy</strong> path with ISE in the middle. ISE connects to APIC, learns EPGs and ESGs, and turns them into SGTs and IP-SGT bindings. In the other direction, ISE shares campus SGTs with ACI, which creates correlating external EPGs (EEPGs) on a chosen L3Out, with subnets from the SGT bindings. Contracts can be attached to those EEPGs. Campus-to-DC filtering on an SD-Access border uses SXP: ISE Policy Service Nodes share ACI-sourced bindings with the border, which can then enforce SGACLs before the traffic reaches the data centre. The current ISE/ACI workflow described by Cisco is for ISE 3.4.1 or later and ACI 6.1.1 or later. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/security/ise/aci_common_policy.html">10</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/catalyst-center/cisco-validated-solution-profiles/common-policy-integration-guide.html">9</a>]</cite></p>
+<p>The older community write-up of “SDA–ACI integration” describes the same idea (SGT ↔ EPG through ISE and pxGrid) and lists caveats that applied to that phase (for example a single ACI fabric and tenant in that design). Prefer the current ISE and Common Policy guides for what is supported now; they document multiple ACI fabrics, multi-tenant and multi-VRF, and multiple L3Outs on the current releases. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/catalyst-center/cisco-validated-solution-profiles/common-policy-integration-guide.html">9</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/security/ise/aci_common_policy.html">10</a>]</cite></p>
+
+<h3>SD-Access and SD-WAN (VN / VPN and SGT hand-off)</h3>
+<p>The documented independent-domain design maps each SD-Access virtual network to an SD-WAN service VPN. In the two-box case, a shared 802.1Q VLAN is the mapping between a border SVI (in the VN) and a WAN-edge subinterface (in the service VPN). CTS inline tagging on both sides carries the SGT across that Ethernet link; the edge then sends the SGT across the WAN in the IPsec CMD field, as described above. The Common Policy guide summarises the pairwise integration as eBGP, VRF-lite and inline SGT between the SD-Access border and the SD-WAN edge, and says ISE can also send IP-SGT bindings into a named SD-WAN VPN. Catalyst Center can integrate with SD-WAN Manager so that fabric-specific changes and WAN-specific changes stay with their own controllers. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/dna-center/Cisco-Validated-Solution-Profiles/b_cisco_validated_solution_ipv6.html">8</a>]</cite> <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/catalyst-center/cisco-validated-solution-profiles/common-policy-integration-guide.html">9</a>]</cite></p>
+<p>There is also a one-box, or integrated, design discussed in Cisco training and press material, where a WAN Edge takes part in both domains after Catalyst Center is API-integrated with SD-WAN Manager. The validated integration pages I opened for this article concentrate on the independent-domain (two-box) hand-off and on SGT/VPN mapping. I have not treated the one-box model as a fully quoted design here. <cite class="src">[<a href="https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/dna-center/Cisco-Validated-Solution-Profiles/b_cisco_validated_solution_ipv6.html">8</a>]</cite></p>
+
+<h2 id="when">When to use which</h2>
+<ul class="tight">
+<li><strong>Use ACI</strong> when the problem is a data centre or colocation fabric: application groups, contracts, east–west scale, and a spine–leaf underlay you own. APIC is the controller. VXLAN is the right data plane here.</li>
+<li><strong>Use SD-Access</strong> when the problem is a campus or large branch LAN: identity, roaming, unified wired and wireless policy, and segmentation by virtual network and SGT. Catalyst Center and, for micro-segmentation, ISE are the controllers. VXLAN is again the right data plane, with LISP as the control plane.</li>
+<li><strong>Use Catalyst SD-WAN</strong> when the problem is the network between sites — including internet and cellular transports, cloud on-ramps and application-aware paths. Manager, Controllers and Validator are the control components. IPsec or GRE is the data plane. Do not expect this overlay to be VXLAN.</li>
+<li><strong>Use them together</strong> when traffic and policy have to cross domains: map SDA VNs to SD-WAN VPNs and propagate SGTs at the border; map ACI EPGs or ESGs to SGTs through ISE, and enforce at the leaf, the campus border, the WAN edge or a firewall, as the Common Policy guide describes. That is policy stitching, not one VXLAN fabric from the laptop to the server.</li>
+</ul>
+
+<h2 id="sources">Sources</h2>
+<p class="help">Numbered as cited on this page. All of these Cisco public pages or PDFs were opened or searched on 14 Nov 2026 (Melbourne time, AEDT). I have not used unofficial blogs as a source for a technical claim.</p>
+<ol class="srcs">
+<li><a href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/5-x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-50x/m_cisco_aci_layer_2_and_layer_3_forwarding.html">Cisco APIC Layer 2 Networking Configuration Guide, Release 5.0(x) — Cisco ACI Forwarding</a> <span class="asof">(read 14 Nov 2026)</span></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-62x/g_cisco_aci_layer_2_and_layer_3_forwarding/vxlan-in-aci.html">Cisco APIC Layer 2 Networking Configuration Guide, Release 6.2(x) — VXLAN in ACI</a> <span class="asof">(updated 7 Jul 2026; read 14 Nov 2026)</span></li>
+<li><a href="https://www.cisco.com/c/en/us/support/docs/cloud-systems-management/application-policy-infrastructure-controller-apic/217302-application-centric-infrastructure-all.html">Application Centric Infrastructure: All about PolicyClassTag (pcTag)</a> <span class="asof">(read 14 Nov 2026)</span></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/cisco-sda-design-guide.html">Cisco Software-Defined Access Design Guide</a> <span class="asof">(updated 30 Jul 2026; read 14 Nov 2026)</span></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/routers/sdwan/26x-later/solution/cisco-catalyst-sd-wan-solution-overview/solution.html">Cisco Catalyst SD-WAN Solution Overview, Releases 26.x and later</a> <span class="asof">(read 14 Nov 2026)</span></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/solutions/CVD/SDWAN/cisco-sdwan-design-guide.html">Cisco Catalyst SD-WAN Design Guide</a> <span class="asof">(read 14 Nov 2026)</span></li>
+<li><a href="https://www.cisco.com/c/en/us/support/docs/routers/sd-wan/222694-configure-trustsec-sgt-inline-tagging-pr.html">Configure TrustSec SGT Inline Tagging Propagation in SD-WAN</a> (Cisco document 222694) <span class="asof">(updated 16 Jan 2025; read 14 Nov 2026)</span></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/dna-center/Cisco-Validated-Solution-Profiles/b_cisco_validated_solution_ipv6.html">IPv6 — Software-Defined Network (Cisco SD-Access, SD-WAN, and Firepower) Integration Guide</a> <span class="asof">(read 14 Nov 2026)</span></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/catalyst-center/cisco-validated-solution-profiles/common-policy-integration-guide.html">Cisco Common Policy Integration Guide</a> <span class="asof">(updated 15 Jan 2026; read 14 Nov 2026)</span></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/security/ise/aci_common_policy.html">Connect Cisco Application Centric Infrastructure with Cisco ISE</a> <span class="asof">(updated 8 May 2025; read 14 Nov 2026)</span></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/routers/sdwan/26x-later/security/security-configuration-guide.pdf">Cisco Catalyst SD-WAN Security Configuration Guide, Releases 26.x and later</a> (PDF) <span class="asof">(first published 24 Apr 2026; cited for the multitenant VXLAN / Edge Connector note; read 14 Nov 2026)</span></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/whitepapers/securing-datacenters-with-microsegmentation-and-vxlan-gpo.html">Securing Data Centers with Microsegmentation using VXLAN GPO</a> <span class="asof">(read 14 Nov 2026; header-extension context only)</span></li>
+</ol>
+
+<h2 id="limits">What I could not confirm</h2>
+<ul class="tight">
+<li>Whether current official ACI forwarding guides still use the product name <strong>iVXLAN</strong>. The pages I opened say “ACI VXLAN” and “source group field”.</li>
+<li>The exact bit layout of the SD-Access fabric VXLAN header. That lives in Appendix A of the SD-Access design guide, which I did not transcribe, and in figures that do not copy cleanly as text.</li>
+<li>A single official endpoint, VN or tunnel scale number that applies to every deployment. The SD-Access design guide points to the current Catalyst Center data sheet; ACI and ISE have their own platform scale guides. I have not invented those figures.</li>
+<li>A complete, official HTML treatment of the <strong>one-box</strong> (integrated WAN-edge-as-border) SD-Access / SD-WAN design. Validated pages I opened focus on the independent-domain hand-off.</li>
+<li>Source 11 is a PDF. I used Cisco’s published 26.x security-guide wording about tenant VXLAN connectivity and the Manager-to-Edge-Connector VXLAN tunnel; I did not re-format that PDF into HTML.</li>
+</ul>
+
+<p class="help">Related on this site: the <a href="/aci-gui/">ACI GUI</a> form pages, and the <a href="/zfrontier/">zFrontier hub</a>.</p>
+</main>
+
+
+<script>
+function ccFilter(q,t){q=(q||'').toLowerCase();t.querySelectorAll('tbody tr').forEach(function(r){r.style.display=r.textContent.toLowerCase().indexOf(q)>=0?'':'none';});}
+function ccSort(t,c){var tb=t.tBodies[0],rows=[].slice.call(tb.rows),ths=t.tHead.rows[0].cells;
+var dir=t.getAttribute('data-dir')==='asc'&&t.getAttribute('data-col')==String(c)?'desc':'asc';
+function key(r){var td=r.cells[c];if(!td)return '';var k=td.getAttribute('data-k');return (k!==null?k:td.textContent).trim().toLowerCase();}
+rows.sort(function(a,b){var x=key(a),y=key(b);var nx=parseFloat(x),ny=parseFloat(y);if(!isNaN(nx)&&!isNaN(ny)&&/^[-0-9.]+$/.test(x)&&/^[-0-9.]+$/.test(y)){x=nx;y=ny;}
+if(x<y)return dir==='asc'?-1:1;if(x>y)return dir==='asc'?1:-1;return 0;});
+rows.forEach(function(r){tb.appendChild(r)});t.setAttribute('data-dir',dir);t.setAttribute('data-col',c);
+for(var i=0;i<ths.length;i++){ths[i].textContent=ths[i].textContent.replace(/ [\u25B2\u25BC]$/,'');if(i===c)ths[i].textContent+=' '+(dir==='asc'?'\u25B2':'\u25BC');}}
+</script>
+
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/+$/,"")||"/"}}</script><script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c)}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script>
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:8px 0 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:6px;margin:0;padding:8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
+nav.site.im a.mi{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:auto;min-height:44px;min-width:0;padding:8px 10px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a)}
+nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:visible;text-overflow:unset;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.25;text-align:left}
+nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:22px;height:22px;padding:0 5px;border-radius:999px;font-size:16px;font-weight:800;line-height:1;background:#0f172a;color:#fff}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc;color:#0f172a}
+nav.site.im a.mi.on .im-seq{background:#fff;color:#1d4ed8}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px;flex:none}#sg-link,#tt-btn,#mm-link{height:36px;border-radius:18px}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["ARR Model","/netbox-yaml-model/arr/","🧪"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"],["Pod Policy Group","/aci-policy/pod-policy-group/","🕒"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"],["ရှေ့သို့ချီ","/roadmap/forward/","⏩"],["Time Map 2026–2030","/roadmap/forward/time-map/","🗓️"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["zFrontier","/zfrontier/","🌠",[["zFrontier","/zfrontier/","🌠"],["Farzad","/zfrontier/farzad/","📺"],["SpaceX vs Tesla shares","/zfrontier/shares/","📈"],["Optimus","/zfrontier/optimus/","🤖"],["Gigafactory","/zfrontier/gigafactory/","🏭"],["FSD versions","/zfrontier/fsd-versions/","🛣️"],["Liquid cooling","/zfrontier/liquid-cooling/","💧"],["SpaceX Tracking","/zfrontier/spacex/","🚀"],["CyberCab","/zfrontier/cybercab/","🚕"],["AI FineTune Pod","/zfrontier/ai-finetune-pod/","🎛️"],["MCP Servers","/zfrontier/mcp-servers/","🔌"],["NaC CLI","/zfrontier/nac-cli/","🧰"],["GPU Workflow","/zfrontier/3gpu-ai-workflow/","🧮"],["MWMESH","/zfrontier/mwmesh/","📡"],["Notebooks","/zfrontier/notebooks/","📓"],["RAG documents","/zfrontier/rag-documents/","📚"],["Foundation-Sec-8B","/zfrontier/foundation-sec-8b/","🛡️"],["Terafab","/zfrontier/terafab/","💠"],["3DiffsVXLAN","/zfrontier/3diffsvxlan/","🔀"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"]]],["ACI GUI Forms","/aci-gui-forms/WIP/","📝",[["ACI GUI Forms","/aci-gui-forms/WIP/","📝"],["All Forms","/aci-gui-forms/WIP/all-forms/","📋"],["GUI Map","/aci-gui-forms/WIP/gui-map/","🗺️"]]],["ACI GUI","/aci-gui/create-pod-policy-group/","🖥️",[["Create Pod Policy Group","/aci-gui/create-pod-policy-group/","🧬"],["Create Bridge Domain (step 3)","/aci-gui/create-bridge-domain-step3/","🌉"],["Create Subnet","/aci-gui/create-subnet/","🔢"],["Create Application Profile","/aci-gui/create-application-profile/","🧩"],["Create Management EPG","/aci-gui/create-management-epg/","🛠️"],["Static Node Management Addresses","/aci-gui/static-node-management-addresses/","📍"],["Create Fabric Policies","/aci-gui/create-fabric-policies/","🧵"],["Create Access Policies","/aci-gui/create-access-policies/","🔐"],["Create VLAN Pool","/aci-gui/create-vlan-pool/","🏷️"],["Create Physical Domain","/aci-gui/create-physical-domain/","🏛️"],["Create Access Interface Policy Group","/aci-gui/create-access-interface-policy-group/","🔌"],["Create PC Interface Policy Group","/aci-gui/create-pc-interface-policy-group/","🔀"],["Interface Wizard for vPC","/aci-gui/interface-wizard-vpc/","🪄"],["Create VMM Domain","/aci-gui/create-vmm-domain/","💻"],["vCenter Networking","/aci-gui/vcenter-networking/","🖥️"],["Create Tenant","/aci-gui/create-tenant/","🏢"],["Create L3Out","/aci-gui/create-l3out/","🌐"],["L3Out Contracts","/aci-gui/l3out-contracts/","📜"],["Create Bridge Domain","/aci-gui/create-bridge-domain/","🌉"],["Bridge Domain","/aci-gui/bridge-domain/","🌉"],["Mgmt Bridge Domain","/aci-gui/mgmt-bridge-domain/","🔧"],["DHCP Relay","/aci-gui/dhcp-relay/","📡"],["Management Application Profile","/aci-gui/management-application-profile/","📦"],["Application Profile (web + app)","/aci-gui/application-profile/","🧩"],["Create VRF","/aci-gui/create-vrf/","🧭"],["Create Endpoint Group","/aci-gui/create-endpoint-group/","🎯"],["Contracts Between Tenants","/aci-gui/contracts-between-tenants/","🤝"],["Create Filter","/aci-gui/create-filter/","🧹"],["Create Contract","/aci-gui/create-contract/","📃"],["Create Management Contracts","/aci-gui/create-management-contracts/","📑"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=(seq?String(seq)+'. ':'')+e[0];if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks ›';r2.appendChild(t);
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1))});r2.appendChild(pills);n.appendChild(r2)}}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+</body>
+</html>
