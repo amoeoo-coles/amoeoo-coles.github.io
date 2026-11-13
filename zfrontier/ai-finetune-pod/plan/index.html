@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:auto;
+  min-height:44px;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:auto;min-height:44px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:visible;
+  text-overflow:unset;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.25;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:22px;
+  height:22px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:16px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:#1d4ed8!important;
+}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plan — AI FineTune Pod — amoeoo-coles</title>
+<meta name="description" content="AI FineTune Pod: single-GPU fine-tuning node plan for the NVIDIA RTX 4000 SFF Ada Generation (20GB ECC, 70 W), with Plan, interactive Checklist and Showcase subpages">
+<style>
+:root{--ink:#0f172a;--muted:#475569;--line:#e2e8f0;--bg:#f8fafc;--card:#fff;--code:#0b1220;--link:#1d4ed8}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,Segoe UI,Arial,sans-serif}
+main{max-width:var(--site-content-max,1200px);margin:0 auto;padding:18px 18px 64px}
+main.wide{max-width:var(--site-content-max,1200px)}
+.tr17{color:var(--muted)!important}
+#version-history{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line)}
+#version-history ul{padding-left:1.2rem}#version-history a{color:var(--link)}
+#version-history code{font-size:12.5px}
+.crumb{font-size:13px;color:var(--muted);margin:0 0 12px}
+.crumb a{color:var(--link);text-decoration:none}
+.crumb a:hover{text-decoration:underline}
+h1{font-size:1.7rem;line-height:1.25;margin:0 0 8px}
+h2{font-size:1.2rem;margin:1.6rem 0 .6rem;padding-top:.2rem}
+h3{font-size:1.02rem;margin:1.15rem 0 .4rem}
+p,li{color:var(--ink)}
+.lede{font-size:1.02rem;color:var(--muted);margin:0 0 1.1rem;max-width:78ch}
+.note,.warn,.example-flag{border-radius:10px;padding:10px 12px;margin:12px 0;border:1px solid var(--line);background:var(--card)}
+.note{border-left:4px solid #2563eb}
+.warn{border-left:4px solid #d97706}
+.example-flag{border-left:4px solid #dc2626;font-size:13.5px}
+.kicker{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;color:#fff;margin:0 6px 8px 0}
+.dn{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;background:var(--chip,#e2e8f0);padding:1px 6px;border-radius:5px;word-break:break-all}
+.meta{display:flex;flex-wrap:wrap;gap:8px 14px;margin:8px 0 16px;font-size:13px;color:var(--muted)}
+.grid{display:grid;gap:12px}
+@media(min-width:760px){.grid.cols-2{grid-template-columns:1fr 1fr}.grid.cols-3{grid-template-columns:repeat(3,1fr)}}
+.pbox{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;box-shadow:0 1px 2px rgba(15,23,42,.04);border-top:5px solid var(--c,#2563eb);transition:transform .12s,box-shadow .12s}
+.pbox:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,23,42,.08)}
+.pbox h3{margin:0 0 4px;font-size:1.02rem}
+.pbox p{margin:0;color:var(--muted);font-size:13.5px}
+.group{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:0 0 16px}
+.group h2{margin:0 0 10px}
+.kids{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.codebox{position:relative;background:var(--code);color:#e2e8f0;border-radius:12px;margin:10px 0 16px;overflow:auto;max-width:100%}
+.codebox pre{margin:0;padding:36px 14px 14px;font:12.5px/1.45 ui-monospace,Menlo,Consolas,monospace;white-space:pre;overflow-wrap:anywhere}
+.codebox .copy{position:absolute;top:8px;right:8px;background:#1e293b;color:#fff;border:1px solid #334155;border-radius:8px;padding:4px 9px;font:600 11px system-ui;cursor:pointer}
+.codebox .tag{position:absolute;top:8px;left:8px;font:600 10px system-ui;color:#93c5fd;letter-spacing:.04em;text-transform:uppercase}
+.related{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
+.related a,.dlrow a{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:var(--card);border:1px solid var(--line);text-decoration:none;color:var(--ink);font-size:13px}
+.related a i{width:8px;height:8px;border-radius:50%;background:var(--c,#2563eb);display:inline-block}
+table.tree{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13.5px}
+.tblwrap{overflow-x:auto;max-width:100%;margin:0 0 16px}
+table.tree th,table.tree td{border-bottom:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top;overflow-wrap:anywhere;word-break:break-word}
+table.tree a{overflow-wrap:anywhere;word-break:break-all}
+table.tree th{background:var(--th-bg,#e2e8f0);font-size:12px;letter-spacing:.02em;cursor:pointer}
+table.tree tr:hover td{filter:brightness(.98)}
+.filter{width:100%;max-width:360px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;margin:0 0 10px;font:inherit;background:var(--card);color:var(--ink)}
+.field-help{font-size:13.5px;color:var(--muted);margin:-4px 0 12px}
+.treewrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;margin:12px 0 20px}
+.treewrap svg{min-width:1100px;width:100%;height:auto;display:block}
+.treewrap a:hover rect.box{filter:brightness(1.06);stroke-width:2.8}
+.src{display:inline;font-size:12.5px;color:var(--muted)}
+.src a{color:var(--link)}
+.src-list{font-size:13.5px;margin:0 0 16px;padding-left:1.2rem}
+ol.steps{margin:8px 0 16px;padding-left:1.4rem}
+ol.steps>li{margin:0 0 10px}
+.chk{list-style:none;padding:0;margin:8px 0 16px}
+.chk li{display:flex;gap:8px;align-items:flex-start;margin:0 0 8px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.chk i{width:16px;height:16px;border:1px solid #64748b;border-radius:3px;flex:none;margin-top:3px;background:#fff}
+.page-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start;margin:0 0 8px}
+.page-head h1{margin:0;min-width:0;overflow-wrap:anywhere}
+.dlbar{display:flex;justify-content:flex-end;align-items:center;gap:6px;flex-wrap:wrap}
+.dlico{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border:1px solid var(--btn-bd,#94a3b8);border-radius:6px;background:var(--btn-bg,#fff);color:var(--btn-fg,#0f172a)!important;text-decoration:none!important;font:600 11px/1 system-ui,Arial,sans-serif;white-space:nowrap}
+.dlico:hover{filter:brightness(1.05)}
+html[data-theme="dark"] .dlico{background:var(--card,#1e293b);color:var(--ink,#e2e8f0)!important;border-color:var(--line,#334155)}
+@media(max-width:430px){main{padding:14px 12px 56px}h1{font-size:1.4rem}.kids{grid-template-columns:1fr}table.tree{font-size:12.5px}table.tree th,table.tree td{padding:6px 7px}.treewrap svg{min-width:720px}}
+
+
+.apic-chips{display:flex;flex-direction:column;align-items:flex-start;gap:6px;max-width:100%;overflow-x:auto}
+.apic-chip{display:inline-flex;align-items:center;gap:6px;max-width:100%}
+.dn-chip{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;background:#e2e8f0;padding:2px 8px;border-radius:6px;white-space:nowrap;text-decoration:none;color:#0f172a;display:inline-block}
+a.dn-chip:hover{background:#dbeafe;color:#1d4ed8}
+.copy-dn{flex:none;background:#fff;color:#334155;border:1px solid #cbd5e1;border-radius:6px;padding:1px 7px;font:600 11px system-ui;cursor:pointer}
+.copy-dn:hover{background:#f1f5f9}
+.apic-empty{color:#64748b}
+.gui-path{display:inline;line-height:1.7}
+.gui-path .gui-seg{white-space:nowrap}
+.gui-path .gui-sep{margin:0 .35em;color:#94a3b8}
+.meta-row{display:grid;grid-template-columns:160px 1fr;gap:8px 12px;margin:8px 0 16px;font-size:14.5px}
+.meta-row dt{color:#64748b;margin:0;padding-top:4px}
+.meta-row dd{margin:0;min-width:0}
+
+
+.specgrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));margin:10px 0 16px}
+.spec{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.spec b{display:block;font-size:1.15rem}.spec span{font-size:12.5px;color:var(--muted)}
+.archwrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;margin:12px 0 20px;max-width:100%}
+.archwrap svg{min-width:760px;width:100%;height:auto;display:block}
+.archwrap svg text{font-family:system-ui,Segoe UI,Arial,sans-serif}
+.archwrap .lbl{fill:#0f172a}.archwrap .sub{fill:#334155}
+html[data-theme="dark"] .archwrap .lbl{fill:#f1f5f9}html[data-theme="dark"] .archwrap .sub{fill:#cbd5e1}
+html[data-theme="dark"] .archwrap rect.bx{fill-opacity:.28}
+.phase{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c,#2563eb);border-radius:12px;padding:10px 14px;margin:0 0 12px}
+.phase h3{margin:0 0 4px}
+.cl-top{position:sticky;top:0;z-index:2;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--line);margin:0 0 12px}
+.cl-bar{height:14px;border-radius:999px;background:var(--line);overflow:hidden}
+.cl-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#16a34a,#22c55e);transition:width .2s}
+.cl-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin:6px 0 0;font-size:13.5px}
+.cl-btns{display:flex;flex-wrap:wrap;gap:6px}
+.cl-btns button{font:600 12px system-ui;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.cl-group{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin:0 0 14px}
+.cl-group h2{margin:0 0 6px;font-size:1.05rem;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.cl-group h2 small{font-weight:600;color:var(--muted);font-size:12.5px}
+.cl-group label{display:flex;gap:9px;align-items:flex-start;padding:6px 2px;border-top:1px solid var(--line);cursor:pointer}
+.cl-group label:first-of-type{border-top:0}
+.cl-group input{width:18px;height:18px;flex:none;margin-top:2px}
+.cl-group label.done span{text-decoration:line-through;color:var(--muted)}
+.ph-card{background:var(--card);border:2px dashed var(--line);border-radius:14px;padding:12px 14px}
+.ph-card h3{margin:0 0 4px}.ph-card .nr{display:inline-block;font:700 11px system-ui;letter-spacing:.04em;text-transform:uppercase;color:#92400e;background:#fef3c7;border-radius:999px;padding:3px 8px;margin:0 0 6px}
+.est{display:inline-block;font:700 10.5px system-ui;letter-spacing:.03em;text-transform:uppercase;color:#7c2d12;background:#ffedd5;border-radius:6px;padding:1px 6px;margin-left:4px}
+@media(max-width:430px){.archwrap svg{min-width:640px}.specgrid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+
+<!-- site-menu v1 --><nav class="site"><a href="/">Home</a></nav>
+<main>
+<div class="tr17" style="text-align:right;font-size:13px;color:#475569;margin:0 0 10px">Page updated 12 Nov 2026 09:19 AEDT (Melbourne time)<span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span><span class="uvt" style="font-size:11px;color:#888"></span></div>
+<nav class="crumb"><a href="/">Home</a> › <a href="/zfrontier/">zFrontier</a> › <a href="/zfrontier/ai-finetune-pod/">AI FineTune Pod</a> › Plan</nav>
+
+<span class="kicker" style="background:#2563eb">Plan</span>
+<h1>Plan: AI FineTune Pod on RTX 4000 SFF Ada</h1>
+<p class="lede">A phased plan from bare hardware to a served, monitored, fine-tuned model. It runs on Docker throughout. Memory figures are estimates based on published minimums. Example files are labelled as examples and use placeholders for every version and secret.</p>
+<div class="example-flag"><strong>Example values.</strong> Image tags such as <span class='dn'>&lt;YY.MM&gt;</span>, model paths and every <span class='dn'>&lt;REPLACE&gt;</span> are placeholders. Hyperparameters are starting points, not tuned results.</div>
+<div class="page-head"><h2 style="margin:0">Downloads</h2><div class="dlbar"><a class="dlico" href="/zfrontier/ai-finetune-pod/plan/docker-compose.example.yml" download="docker-compose.example.yml" title="Download docker-compose.yml"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M8 1.25a.75.75 0 0 1 .75.75v6.19l1.97-1.97a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 1.06-1.06l1.97 1.97V2a.75.75 0 0 1 .75-.75zM3.25 12a.75.75 0 0 0 0 1.5h9.5a.75.75 0 0 0 0-1.5h-9.5z"/></svg><span>docker-compose.yml</span></a><a class="dlico" href="/zfrontier/ai-finetune-pod/plan/qlora-train.example.yaml" download="qlora-train.example.yaml" title="Download train config YAML"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M8 1.25a.75.75 0 0 1 .75.75v6.19l1.97-1.97a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 1.06-1.06l1.97 1.97V2a.75.75 0 0 1 .75-.75zM3.25 12a.75.75 0 0 0 0 1.5h9.5a.75.75 0 0 0 0-1.5h-9.5z"/></svg><span>train config YAML</span></a></div></div>
+<h2>Phases</h2>
+<div class="phase" style="--c:#64748b"><h3>P0 · Scope and data inventory</h3><p style="margin:0">Pick 2–3 target tasks (see Showcase). List the data sources: ACI/NaC YAML from the lab repos and a NetBox export. Decide what must never leave the box (credentials, tokens, customer data).</p></div><div class="phase" style="--c:#76b900"><h3>P1 · Hardware and host</h3><p style="margin:0">Choose a chassis with a free PCIe x16 slot (PCIe 4.0 for full bandwidth), the right bracket height and good front-to-back airflow over a dual-slot card.</p></div><div class="phase" style="--c:#475569"><h3>P2 · OS, driver and containers</h3><p style="margin:0">Linux, NVIDIA driver, Docker and the NVIDIA Container Toolkit, then a GPU smoke test in a container.</p></div><div class="phase" style="--c:#0891b2"><h3>P3 · Data prep</h3><p style="margin:0">Turn YAML and NetBox objects into chat-format Q&amp;A JSONL, then dedupe, scrub secrets and split train/eval.</p></div><div class="phase" style="--c:#2563eb"><h3>P4 · Training</h3><p style="margin:0">Run a QLoRA baseline on a 7–8B instruct model, then iterate on LoRA rank, sequence length and epochs.</p></div><div class="phase" style="--c:#9333ea"><h3>P5 · Evaluation</h3><p style="margin:0">Use a held-out question set, scripted exact-match and YAML-validity checks, and side-by-side review against the base model.</p></div><div class="phase" style="--c:#ea580c"><h3>P6 · Export and serve</h3><p style="margin:0">Merge the adapter, export GGUF (llama.cpp/Ollama) or keep safetensors for vLLM, and serve locally.</p></div><div class="phase" style="--c:#16a34a"><h3>P7 · Monitoring and ops</h3><p style="margin:0">Feed nvidia-smi and DCGM exporter metrics into the existing Grafana. Back up adapters and datasets, and version runs.</p></div>
+<h2 id="hardware">1 · Hardware and host selection</h2>
+<ul>
+<li><strong>Slot.</strong> The card is PCIe 4.0 x16. Use an x16 slot wired for Gen 4 so host-to-GPU loading isn’t throttled.  <cite class="src">Source: <a href="https://www.nvidia.com/content/dam/en-zz/Solutions/rtx-4000-sff/proviz-rtx-4000-sff-ada-datasheet-2616456-web.pdf">NVIDIA RTX 4000 SFF Ada Generation datasheet (PDF, Apr 2023)</a></cite></li>
+<li><strong>Size and bracket.</strong> It’s 2.7” H × 6.6” L, dual slot. A reseller listing says both low-profile and full-height brackets ship with it. Check the bracket that comes with your unit.  <cite class="src">Source: <a href="https://www.nvidia.com/content/dam/en-zz/Solutions/rtx-4000-sff/proviz-rtx-4000-sff-ada-datasheet-2616456-web.pdf">NVIDIA RTX 4000 SFF Ada Generation datasheet (PDF, Apr 2023)</a></cite>  <cite class="src">Source: <a href="https://nvnexus.com/product/nvidia-rtx-4000-sff-ada-generation/">NVNexus reseller listing: NVIDIA RTX 4000 SFF Ada Generation</a></cite></li>
+<li><strong>Power.</strong> Total board power is 70 W. A reseller says there’s no auxiliary power connector, so no PCIe power cable is needed. Size the PSU for the CPU and drives, with the card’s 70 W on top.  <cite class="src">Source: <a href="https://www.nvidia.com/content/dam/en-zz/Solutions/rtx-4000-sff/proviz-rtx-4000-sff-ada-datasheet-2616456-web.pdf">NVIDIA RTX 4000 SFF Ada Generation datasheet (PDF, Apr 2023)</a></cite>  <cite class="src">Source: <a href="https://nvnexus.com/product/nvidia-rtx-4000-sff-ada-generation/">NVNexus reseller listing: NVIDIA RTX 4000 SFF Ada Generation</a></cite></li>
+<li><strong>Airflow.</strong> The card uses an active cooler. In SFF cases, keep the intake clear in front of the fan and exhaust out the back, and avoid sandwiching it against another card.  <cite class="src">Source: <a href="https://www.nvidia.com/content/dam/en-zz/Solutions/rtx-4000-sff/proviz-rtx-4000-sff-ada-datasheet-2616456-web.pdf">NVIDIA RTX 4000 SFF Ada Generation datasheet (PDF, Apr 2023)</a></cite></li>
+<li><strong>Host RAM and disk</strong> <span class="est">estimate</span>. Model downloads, checkpoints and merged outputs add up fast. Plan for fast NVMe with hundreds of GB free, and at least as much system RAM as the largest model you will merge in 16-bit. This is a planning rule of thumb, not a vendor figure.</li>
+</ul>
+<h2 id="os">2 · OS, NVIDIA driver, CUDA and Container Toolkit</h2>
+<p>Install the NVIDIA driver from your distribution’s package manager, as NVIDIA recommends. Then install the NVIDIA Container Toolkit and register it with Docker using <span class="dn">nvidia-ctk runtime configure --runtime=docker</span>. Inside containers, CUDA comes from the image (for example NGC PyTorch), so the host only needs the driver.  <cite class="src">Source: <a href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html">NVIDIA Container Toolkit install guide</a></cite>  <cite class="src">Source: <a href="https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch">NVIDIA NGC: PyTorch container</a></cite></p>
+<div class='codebox'><span class='tag'>CLI · example</span><button type='button' class='copy' onclick='aciCopy(this)'>Copy</button><pre># Example host bring-up (Ubuntu). Commands as documented by NVIDIA; adjust versions.
+nvidia-smi                                   # driver loaded, card visible, 20GB listed
+sudo nvidia-ctk runtime configure --runtime=docker
+sudo systemctl restart docker
+docker run --rm --gpus all nvcr.io/nvidia/pytorch:&lt;YY.MM&gt;-py3 nvidia-smi
+docker run --rm --gpus all --ipc=host nvcr.io/nvidia/pytorch:&lt;YY.MM&gt;-py3 \
+  python -c &quot;import torch;print(torch.cuda.get_device_name(0), torch.cuda.is_bf16_supported())&quot;
+</pre></div>
+<p>NGC’s docs say PyTorch containers may need more shared memory. Use <span class="dn">--ipc=host</span> or <span class="dn">--shm-size</span>.  <cite class="src">Source: <a href="https://docs.nvidia.com/deeplearning/frameworks/pytorch-release-notes/running.html">NVIDIA PyTorch container release notes: Running PyTorch</a></cite></p>
+<h2 id="stack">3 · Docker stack</h2>
+<p>Pick one trainer image and stick with it per experiment.</p>
+<ul>
+<li><strong>NGC PyTorch + Hugging Face PEFT/TRL</strong>: the most transparent option, with LoRA adapters from PEFT and SFTTrainer from TRL.  <cite class="src">Source: <a href="https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch">NVIDIA NGC: PyTorch container</a></cite>  <cite class="src">Source: <a href="https://huggingface.co/docs/peft/index">Hugging Face PEFT documentation</a></cite>  <cite class="src">Source: <a href="https://huggingface.co/docs/trl/index">Hugging Face TRL documentation</a></cite></li>
+<li><strong>Unsloth</strong>: an official <span class="dn">unsloth/unsloth</span> Docker image, with memory-saving kernels for QLoRA and LoRA.  <cite class="src">Source: <a href="https://hub.docker.com/r/unsloth/unsloth">Docker Hub: unsloth/unsloth image</a></cite>  <cite class="src">Source: <a href="https://docs.unsloth.ai/get-started/beginner-start-here/unsloth-requirements">Unsloth docs: Requirements and fine-tuning VRAM table</a></cite></li>
+<li><strong>Axolotl</strong>: YAML-driven fine-tuning if you prefer config files over Python.  <cite class="src">Source: <a href="https://docs.axolotl.ai/">Axolotl documentation</a></cite></li>
+</ul>
+<p>The example compose file below has three profiles: <span class="dn">train</span>, <span class="dn">serve</span> and an always-on <span class="dn">dcgm-exporter</span>.</p>
+<div class='codebox'><span class='tag'>docker-compose.yml · example</span><button type='button' class='copy' onclick='aciCopy(this)'>Copy</button><pre># EXAMPLE ONLY - docker-compose.yml for the AI FineTune Pod.
+# Replace every &lt;REPLACE&gt; value. Pin image tags you have tested; do not run :latest in production.
+# Requires: NVIDIA driver + NVIDIA Container Toolkit configured for Docker (nvidia-ctk runtime configure --runtime=docker).
+name: ai-finetune-pod
+
+x-gpu: &amp;gpu
+  deploy:
+    resources:
+      reservations:
+        devices:
+          - driver: nvidia
+            count: 1
+            capabilities: [gpu]
+
+services:
+  trainer:
+    &lt;&lt;: *gpu
+    image: nvcr.io/nvidia/pytorch:&lt;YY.MM&gt;-py3     # NGC PyTorch; or unsloth/unsloth:&lt;tag&gt;
+    ipc: host                                    # NGC docs: raise shared memory (--ipc=host or --shm-size)
+    working_dir: /workspace
+    volumes:
+      - ./data:/data:ro                          # prepared JSONL datasets (read-only)
+      - ./models:/models                         # base models + merged outputs
+      - ./ckpt:/ckpt                             # checkpoints and LoRA adapters
+      - ./configs:/configs:ro
+    environment:
+      HF_HOME: /models/hf-cache
+      HF_TOKEN: ${HF_TOKEN:-}                    # only for gated models; keep in .env, never commit
+    command: [&quot;bash&quot;, &quot;-lc&quot;, &quot;pip install -q peft trl bitsandbytes datasets &amp;&amp; python /configs/train.py --config /configs/qlora-train.example.yaml&quot;]
+    profiles: [&quot;train&quot;]
+
+  serve:
+    &lt;&lt;: *gpu
+    image: vllm/vllm-openai:&lt;tag&gt;
+    ipc: host
+    volumes:
+      - ./models:/models:ro
+    command: [&quot;--model&quot;, &quot;/models/merged/&lt;REPLACE-model-dir&gt;&quot;, &quot;--max-model-len&quot;, &quot;4096&quot;, &quot;--gpu-memory-utilization&quot;, &quot;0.85&quot;]
+    ports:
+      - &quot;127.0.0.1:8000:8000&quot;                    # local only; put a reverse proxy + auth in front if shared
+    profiles: [&quot;serve&quot;]
+
+  dcgm-exporter:
+    &lt;&lt;: *gpu
+    image: nvcr.io/nvidia/k8s/dcgm-exporter:&lt;DCGM_EXPORTER_TAG&gt;
+    cap_add: [&quot;SYS_ADMIN&quot;]                       # per NVIDIA DCGM Exporter install docs
+    ports:
+      - &quot;9400:9400&quot;                              # Prometheus scrape target for the existing Grafana
+    restart: unless-stopped
+</pre></div>
+<h2 id="vram">4 · What fits in 20GB</h2>
+<p>QLoRA keeps the base model frozen in 4-bit NF4 and trains small LoRA adapters in bf16. The QLoRA paper fine-tuned a 65B model on a single 48GB GPU. LoRA trains low-rank adapters on a 16-bit base.  <cite class="src">Source: <a href="https://arxiv.org/abs/2305.14314">Dettmers et al., QLoRA: Efficient Finetuning of Quantized LLMs (arXiv 2305.14314)</a></cite>  <cite class="src">Source: <a href="https://arxiv.org/abs/2106.09685">Hu et al., LoRA: Low-Rank Adaptation of Large Language Models (arXiv 2106.09685)</a></cite> The QLoRA and LoRA columns are <strong>Unsloth’s published minimums</strong>. They are not measured on this card, and real use grows with context length and batch size. The fit column is my estimate for a 20GB card.</p>
+<input class="filter" type="search" placeholder="Filter this table…" oninput="aciFilter(this.value, document.getElementById('vram-tbl'))"><div class="tblwrap"><table class="tree" id="vram-tbl"><thead><tr><th onclick="aciSort(document.getElementById('vram-tbl'),0)">Model size</th><th onclick="aciSort(document.getElementById('vram-tbl'),1)">QLoRA 4-bit min (Unsloth)</th><th onclick="aciSort(document.getElementById('vram-tbl'),2)">LoRA 16-bit min (Unsloth)</th><th onclick="aciSort(document.getElementById('vram-tbl'),3)">Fit on 20GB</th><th onclick="aciSort(document.getElementById('vram-tbl'),4)">Why</th></tr></thead><tbody><tr><td>0.5B</td><td>—</td><td>—</td><td>Full fine-tune possible <span class="est">estimate</span></td><td>Hugging Face: about 18 bytes/param for mixed-precision AdamW, so ≈ 9 GB plus activations <cite class="src">Source: <a href="https://huggingface.co/docs/transformers/main/en/model_memory_anatomy">Hugging Face Transformers: Model training anatomy (memory per parameter)</a></cite></td></tr><tr><td>1B</td><td>—</td><td>—</td><td>Full fine-tune borderline <span class="est">estimate</span></td><td>≈ 18 GB before activations at 18 bytes/param, so too tight; use LoRA <cite class="src">Source: <a href="https://huggingface.co/docs/transformers/main/en/model_memory_anatomy">Hugging Face Transformers: Model training anatomy (memory per parameter)</a></cite></td></tr><tr><td>3B</td><td>3.5 GB</td><td>8 GB</td><td>QLoRA or LoRA <span class="est">estimate</span></td><td>Both under 20GB at Unsloth minimums <cite class="src">Source: <a href="https://docs.unsloth.ai/get-started/beginner-start-here/unsloth-requirements">Unsloth docs: Requirements and fine-tuning VRAM table</a></cite></td></tr><tr><td>7B</td><td>5 GB</td><td>19 GB</td><td>QLoRA (LoRA 16-bit marginal) <span class="est">estimate</span></td><td>16-bit LoRA minimum is within 1 GB of the card’s 20GB <cite class="src">Source: <a href="https://docs.unsloth.ai/get-started/beginner-start-here/unsloth-requirements">Unsloth docs: Requirements and fine-tuning VRAM table</a></cite></td></tr><tr><td>8B</td><td>6 GB</td><td>22 GB</td><td>QLoRA only <span class="est">estimate</span></td><td>16-bit LoRA minimum exceeds 20GB <cite class="src">Source: <a href="https://docs.unsloth.ai/get-started/beginner-start-here/unsloth-requirements">Unsloth docs: Requirements and fine-tuning VRAM table</a></cite></td></tr><tr><td>14B</td><td>8.5 GB</td><td>33 GB</td><td>QLoRA only <span class="est">estimate</span></td><td>Leaves the most headroom for context in the 7–14B range <cite class="src">Source: <a href="https://docs.unsloth.ai/get-started/beginner-start-here/unsloth-requirements">Unsloth docs: Requirements and fine-tuning VRAM table</a></cite></td></tr><tr><td>27B</td><td>22 GB</td><td>64 GB</td><td>Does not fit <span class="est">estimate</span></td><td>QLoRA minimum exceeds 20GB <cite class="src">Source: <a href="https://docs.unsloth.ai/get-started/beginner-start-here/unsloth-requirements">Unsloth docs: Requirements and fine-tuning VRAM table</a></cite></td></tr></tbody></table></div>
+<div class="note"><strong>Rule of thumb, an estimate.</strong> On this card, use QLoRA for roughly 7–14B models and LoRA for ≤3B. Full fine-tuning is only for sub-1B models, because Hugging Face counts about 18 bytes/param for mixed-precision AdamW (6 for weights, 8 for optimizer states, 4 for gradients) before activations.  <cite class="src">Source: <a href="https://huggingface.co/docs/transformers/main/en/model_memory_anatomy">Hugging Face Transformers: Model training anatomy (memory per parameter)</a></cite>  <cite class="src">Source: <a href="https://docs.unsloth.ai/get-started/beginner-start-here/unsloth-requirements">Unsloth docs: Requirements and fine-tuning VRAM table</a></cite></div>
+<h2 id="data">5 · Dataset prep</h2>
+<ol class="steps">
+<li><strong>Collect</strong> ACI/NaC YAML (tenants, VRFs, BDs, EPGs, contracts) from the lab repos, and a read-only NetBox export (sites, devices, prefixes, VLANs). Use read-only access only. No APIC or NetBox writes.</li>
+<li><strong>Scrub</strong> secrets before anything else: passwords, tokens, keys, <span class="dn">.env</span> contents and admin emails. Keep the scrub log.</li>
+<li><strong>Generate Q&amp;A pairs</strong>, for example “Which BD is EPG X in, and what subnet?” or “Write the NaC YAML for a new EPG in tenant Y.” Answers are taken from the real files, never made up.</li>
+<li><strong>Format</strong> as chat-style JSONL (<span class="dn">messages</span>), dedupe, and split 90/10 into train/eval with no overlap between them.</li>
+</ol>
+<p>The QLoRA authors found that dataset quality and fit to the task mattered more than size.  <cite class="src">Source: <a href="https://arxiv.org/abs/2305.14314">Dettmers et al., QLoRA: Efficient Finetuning of Quantized LLMs (arXiv 2305.14314)</a></cite></p>
+<h2 id="training">6 · Training</h2>
+<p>Start with a QLoRA baseline using the example config below: NF4 4-bit, double quantization, bf16 compute, LoRA on all linear layers and a paged optimizer. The QLoRA paper found that putting adapters on all linear layers was the key to matching 16-bit results. It also introduced paged optimizers to absorb memory spikes.  <cite class="src">Source: <a href="https://arxiv.org/abs/2305.14314">Dettmers et al., QLoRA: Efficient Finetuning of Quantized LLMs (arXiv 2305.14314)</a></cite>  <cite class="src">Source: <a href="https://huggingface.co/docs/transformers/main/en/quantization/bitsandbytes">Hugging Face Transformers: bitsandbytes quantization</a></cite></p>
+<div class='codebox'><span class='tag'>qlora-train.example.yaml · example</span><button type='button' class='copy' onclick='aciCopy(this)'>Copy</button><pre># EXAMPLE ONLY - QLoRA training config for a 20GB card (illustrative values, not tuned).
+# Read by an example train.py built on Hugging Face Transformers + PEFT + TRL (SFTTrainer).
+run_name: aci-nac-qa-qlora-&lt;YYYYMMDD&gt;
+base_model: /models/&lt;REPLACE-7B-or-8B-instruct-model&gt;
+output_dir: /ckpt/aci-nac-qa-qlora
+
+quantization:            # QLoRA: 4-bit NF4 base weights + double quantization, bf16 compute
+  load_in_4bit: true
+  bnb_4bit_quant_type: nf4
+  bnb_4bit_use_double_quant: true
+  bnb_4bit_compute_dtype: bfloat16
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules: all-linear   # QLoRA paper: adapters on all linear layers matter most
+
+data:
+  train_file: /data/aci_nac_qa.train.jsonl   # {&quot;messages&quot;:[{&quot;role&quot;:&quot;user&quot;,...},{&quot;role&quot;:&quot;assistant&quot;,...}]}
+  eval_file: /data/aci_nac_qa.eval.jsonl
+  max_seq_length: 2048
+
+training:
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 16
+  gradient_checkpointing: true
+  learning_rate: 2.0e-4
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.03
+  num_train_epochs: 2
+  optim: paged_adamw_8bit      # paged optimizer to absorb memory spikes
+  bf16: true
+  logging_steps: 10
+  eval_steps: 100
+  save_steps: 200
+  save_total_limit: 3
+  seed: 42
+</pre></div>
+<h2 id="eval">7 · Evaluation</h2>
+<ul>
+<li>Use the held-out eval split, never seen in training. Score with exact or regex match for facts like VLAN IDs, subnets and BD names, and use a YAML parser plus the NaC schema for generated configs.</li>
+<li>Compare against the untuned base model on the same prompts, and record both in the Showcase.</li>
+<li>Do a human spot check on 20–50 answers before calling a run “good” <span class="est">estimate</span>.</li>
+</ul>
+<h2 id="export">8 · Quantize, export and serve</h2>
+<ul>
+<li><strong>Merge</strong> the LoRA adapter into the base model (PEFT), or keep it separate for vLLM’s LoRA support.  <cite class="src">Source: <a href="https://huggingface.co/docs/peft/index">Hugging Face PEFT documentation</a></cite>  <cite class="src">Source: <a href="https://docs.vllm.ai/en/latest/">vLLM documentation</a></cite></li>
+<li><strong>GGUF</strong>: convert with <span class="dn">convert_hf_to_gguf.py</span>, quantize with <span class="dn">llama-quantize</span> (for example Q4_K_M), and run in llama.cpp or Ollama. Ollama can build from Safetensors or GGUF.  <cite class="src">Source: <a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md">llama.cpp: convert_hf_to_gguf.py and llama-quantize README</a></cite>  <cite class="src">Source: <a href="https://docs.ollama.com/modelfile">Ollama Modelfile reference (build from Safetensors or GGUF)</a></cite></li>
+<li><strong>AWQ</strong>: AutoAWQ is officially deprecated, and its work moved to vLLM’s llm-compressor, so use that path if you need AWQ for vLLM.  <cite class="src">Source: <a href="https://github.com/casper-hansen/AutoAWQ">AutoAWQ README (deprecated; adopted by vLLM llm-compressor)</a></cite></li>
+</ul>
+<div class='codebox'><span class='tag'>CLI · example</span><button type='button' class='copy' onclick='aciCopy(this)'>Copy</button><pre># Example export paths (llama.cpp README). Run inside a llama.cpp checkout.
+python convert_hf_to_gguf.py /models/merged/aci-nac-qa --outfile aci-nac-qa-bf16.gguf --outtype bf16
+./build/bin/llama-quantize aci-nac-qa-bf16.gguf aci-nac-qa-Q4_K_M.gguf Q4_K_M
+# Ollama: Modelfile with  FROM ./aci-nac-qa-Q4_K_M.gguf  then  ollama create aci-nac-qa -f Modelfile
+</pre></div>
+<h2 id="serving">9 · Serving</h2>
+<p>vLLM needs compute capability 7.5 or higher, and this card is 8.9. The example compose file binds vLLM to 127.0.0.1 only. For a lighter desktop-style option, use Ollama or llama.cpp with the GGUF file.  <cite class="src">Source: <a href="https://docs.vllm.ai/en/latest/getting_started/installation/gpu.html">vLLM GPU installation (compute capability requirement)</a></cite>  <cite class="src">Source: <a href="https://developer.nvidia.com/cuda-gpus">NVIDIA CUDA GPUs: compute capability list</a></cite>  <cite class="src">Source: <a href="https://docs.ollama.com/modelfile">Ollama Modelfile reference (build from Safetensors or GGUF)</a></cite></p>
+<h2 id="monitoring">10 · Monitoring into the existing Grafana</h2>
+<p>NVIDIA’s DCGM Exporter runs as a container on port 9400 and exposes GPU metrics for Prometheus, such as GPU utilisation and framebuffer memory used. Add it as a scrape target and build a GPU panel next to the existing Grafana dashboards. <span class="dn">nvidia-smi --query-gpu</span> is the quick fallback.  <cite class="src">Source: <a href="https://docs.nvidia.com/datacenter/dcgm/latest/installation/install-dcgm-exporter.html">NVIDIA DCGM docs: Install DCGM Exporter</a></cite>  <cite class="src">Source: <a href="https://docs.nvidia.com/deploy/nvidia-smi/index.html">NVIDIA nvidia-smi documentation</a></cite></p>
+<div class='codebox'><span class='tag'>CLI · example</span><button type='button' class='copy' onclick='aciCopy(this)'>Copy</button><pre># DCGM exporter (NVIDIA DCGM docs), then add a Prometheus scrape job for &lt;pod-host&gt;:9400
+docker run -d --rm --name dcgm-exporter --gpus all --cap-add SYS_ADMIN \
+  -p 9400:9400 nvcr.io/nvidia/k8s/dcgm-exporter:${DCGM_EXPORTER_TAG}
+# Quick look without Prometheus:
+nvidia-smi --query-gpu=timestamp,temperature.gpu,power.draw,utilization.gpu,memory.used --format=csv -l 5
+</pre></div>
+<h2 id="integration">11 · Integration with the network work</h2>
+<ul>
+<li><strong>Config Q&amp;A</strong>: ask “where is EPG X, which contracts does it consume?” and get answers from a model tuned on the AOAPIC/ARR NaC YAML. Link the answers back to the <a href="/aci-policy/">ACI Policy</a> and <a href="/netbox-yaml-model/">YAML Model</a> pages.</li>
+<li><strong>NetBox assistant</strong>: natural-language lookups over the NetBox export, such as prefixes, VLANs and devices per site. Read-only.</li>
+<li><strong>NaC YAML drafting</strong>: draft a new tenant or EPG block, then run nac-validate and nac-test before any human-approved push. The model never writes to the APIC.</li>
+<li><strong>Fault triage notes</strong>: summarise Report 17 fault lists into plain-language runbook steps, with links to <a href="/tasks/monitoring/">MONITORING</a>.</li>
+</ul>
+<h2>Timeline</h2>
+<input class="filter" type="search" placeholder="Filter this table…" oninput="aciFilter(this.value, document.getElementById('tl-tbl'))"><div class="tblwrap"><table class="tree" id="tl-tbl"><thead><tr><th onclick="aciSort(document.getElementById('tl-tbl'),0)">When</th><th onclick="aciSort(document.getElementById('tl-tbl'),1)">Phases</th><th onclick="aciSort(document.getElementById('tl-tbl'),2)">Exit criteria</th><th onclick="aciSort(document.getElementById('tl-tbl'),3)">Status</th></tr></thead><tbody><tr><td>Week 1</td><td>P0–P2</td><td>Host chosen, card fitted, driver, Docker and toolkit installed, GPU visible in a container</td><td>Planned</td></tr><tr><td>Week 2</td><td>P3</td><td>First 300–1,000 curated Q&A pairs from YAML and NetBox, plus an eval split</td><td>Planned <span class="est">estimate</span></td></tr><tr><td>Week 3</td><td>P4–P5</td><td>QLoRA baseline trained and evaluated against the base model</td><td>Planned</td></tr><tr><td>Week 4</td><td>P6–P7</td><td>Merged model served locally, GPU dashboard in Grafana, first Showcase write-up</td><td>Planned</td></tr></tbody></table></div>
+<h2>Risks</h2>
+<input class="filter" type="search" placeholder="Filter this table…" oninput="aciFilter(this.value, document.getElementById('risk-tbl'))"><div class="tblwrap"><table class="tree" id="risk-tbl"><thead><tr><th onclick="aciSort(document.getElementById('risk-tbl'),0)">Risk</th><th onclick="aciSort(document.getElementById('risk-tbl'),1)">Why it matters</th><th onclick="aciSort(document.getElementById('risk-tbl'),2)">Mitigation</th></tr></thead><tbody><tr><td>Out-of-memory at long context</td><td>Activation memory grows with sequence length and batch size. Unsloth’s figures are minimums.</td><td>Batch size 1–2, gradient checkpointing, paged optimizer, cap max_seq_length. <cite class="src">Source: <a href="https://docs.unsloth.ai/get-started/beginner-start-here/unsloth-requirements">Unsloth docs: Requirements and fine-tuning VRAM table</a></cite> <cite class="src">Source: <a href="https://arxiv.org/abs/2305.14314">Dettmers et al., QLoRA: Efficient Finetuning of Quantized LLMs (arXiv 2305.14314)</a></cite></td></tr><tr><td>Thermal throttling in an SFF case</td><td>70 W in a dual-slot card with an active fan still needs airflow.</td><td>Front-to-back airflow, watch temperature and clocks with nvidia-smi/DCGM, test a long run before trusting results. <cite class="src">Source: <a href="https://www.nvidia.com/content/dam/en-zz/Solutions/rtx-4000-sff/proviz-rtx-4000-sff-ada-datasheet-2616456-web.pdf">NVIDIA RTX 4000 SFF Ada Generation datasheet (PDF, Apr 2023)</a></cite> <cite class="src">Source: <a href="https://docs.nvidia.com/deploy/nvidia-smi/index.html">NVIDIA nvidia-smi documentation</a></cite></td></tr><tr><td>Secrets leaking into training data</td><td>YAML and exports can contain passwords, tokens or keys.</td><td>Run a scrub step before JSONL, add a regex deny-list and do a manual spot check. Never train on .env files.</td></tr><tr><td>Model hallucinates config</td><td>A small model can make up plausible but wrong ACI attributes.</td><td>Validate generated YAML against the NaC schema, keep a human review step and pair with retrieval from the real files.</td></tr><tr><td>Licence limits on base models</td><td>Each open model has its own licence and use terms.</td><td>Record the base model licence in the registry before any sharing.</td></tr><tr><td>Tool churn</td><td>AutoAWQ is officially deprecated, and its work moved to vLLM’s llm-compressor.</td><td>Prefer GGUF (llama.cpp) or vLLM-native quantization paths. Pin container tags. <cite class="src">Source: <a href="https://github.com/casper-hansen/AutoAWQ">AutoAWQ README (deprecated; adopted by vLLM llm-compressor)</a></cite></td></tr><tr><td>Bandwidth figure uncertainty</td><td>Datasheets disagree (280 vs 320 GB/s).</td><td>Don’t plan throughput from the datasheet. Measure on the real card. <cite class="src">Source: <a href="https://www.nvidia.com/content/dam/en-zz/Solutions/rtx-4000-sff/proviz-rtx-4000-sff-ada-datasheet-2616456-web.pdf">NVIDIA RTX 4000 SFF Ada Generation datasheet (PDF, Apr 2023)</a></cite> <cite class="src">Source: <a href="https://www.pny.com/file%20library/company/support/product%20brochures/nvidia%20rtx/english/proviz-rtx-4000-sff-ada-datasheet.pdf">PNY NVIDIA RTX 4000 SFF Ada Generation datasheet (PDF)</a></cite></td></tr></tbody></table></div>
+<h2>Sources</h2>
+<ul class="src-list"><li><a href="https://www.nvidia.com/content/dam/en-zz/Solutions/rtx-4000-sff/proviz-rtx-4000-sff-ada-datasheet-2616456-web.pdf">NVIDIA RTX 4000 SFF Ada Generation datasheet (PDF, Apr 2023)</a></li><li><a href="https://www.nvidia.com/en-us/products/workstations/rtx-4000-sff/">NVIDIA RTX 4000 SFF product page</a></li><li><a href="https://developer.nvidia.com/cuda-gpus">NVIDIA CUDA GPUs: compute capability list</a></li><li><a href="https://www.pny.com/file%20library/company/support/product%20brochures/nvidia%20rtx/english/proviz-rtx-4000-sff-ada-datasheet.pdf">PNY NVIDIA RTX 4000 SFF Ada Generation datasheet (PDF)</a></li><li><a href="https://nvnexus.com/product/nvidia-rtx-4000-sff-ada-generation/">NVNexus reseller listing: NVIDIA RTX 4000 SFF Ada Generation</a></li><li><a href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html">NVIDIA Container Toolkit install guide</a></li><li><a href="https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch">NVIDIA NGC: PyTorch container</a></li><li><a href="https://docs.nvidia.com/deeplearning/frameworks/pytorch-release-notes/running.html">NVIDIA PyTorch container release notes: Running PyTorch</a></li><li><a href="https://docs.unsloth.ai/get-started/beginner-start-here/unsloth-requirements">Unsloth docs: Requirements and fine-tuning VRAM table</a></li><li><a href="https://hub.docker.com/r/unsloth/unsloth">Docker Hub: unsloth/unsloth image</a></li><li><a href="https://arxiv.org/abs/2305.14314">Dettmers et al., QLoRA: Efficient Finetuning of Quantized LLMs (arXiv 2305.14314)</a></li><li><a href="https://arxiv.org/abs/2106.09685">Hu et al., LoRA: Low-Rank Adaptation of Large Language Models (arXiv 2106.09685)</a></li><li><a href="https://huggingface.co/docs/transformers/main/en/model_memory_anatomy">Hugging Face Transformers: Model training anatomy (memory per parameter)</a></li><li><a href="https://huggingface.co/docs/transformers/main/en/quantization/bitsandbytes">Hugging Face Transformers: bitsandbytes quantization</a></li><li><a href="https://huggingface.co/docs/peft/index">Hugging Face PEFT documentation</a></li><li><a href="https://huggingface.co/docs/trl/index">Hugging Face TRL documentation</a></li><li><a href="https://docs.axolotl.ai/">Axolotl documentation</a></li><li><a href="https://docs.vllm.ai/en/latest/">vLLM documentation</a></li><li><a href="https://docs.vllm.ai/en/latest/getting_started/installation/gpu.html">vLLM GPU installation (compute capability requirement)</a></li><li><a href="https://docs.ollama.com/modelfile">Ollama Modelfile reference (build from Safetensors or GGUF)</a></li><li><a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md">llama.cpp: convert_hf_to_gguf.py and llama-quantize README</a></li><li><a href="https://github.com/casper-hansen/AutoAWQ">AutoAWQ README (deprecated; adopted by vLLM llm-compressor)</a></li><li><a href="https://docs.nvidia.com/datacenter/dcgm/latest/installation/install-dcgm-exporter.html">NVIDIA DCGM docs: Install DCGM Exporter</a></li><li><a href="https://docs.nvidia.com/deploy/nvidia-smi/index.html">NVIDIA nvidia-smi documentation</a></li></ul>
+<h2>Related pages</h2><div class="related"><a href="/zfrontier/ai-finetune-pod/" style="--c:#7c3aed"><i style="background:#7c3aed"></i>AI FineTune Pod</a><a href="/zfrontier/ai-finetune-pod/checklist/" style="--c:#16a34a"><i style="background:#16a34a"></i>Checklist</a><a href="/zfrontier/ai-finetune-pod/showcase/" style="--c:#d97706"><i style="background:#d97706"></i>Showcase</a></div>
+
+<!--vh--><section aria-label="Version history" id="version-history"><h2>Version history</h2><p>Only the latest version of this page exists; there is no earlier committed version. Each entry is a real commit of this page (summary = commit message, with the page size at that commit). Archived snapshots are recovered from git and are not live.</p><ul><li><b>v1 (current)</b> · 12 Nov 2026 09:19 AEDT (Melbourne time) · AI FineTune Pod: single-GPU fine-tuning node plan for the NVIDIA RTX 4000 SFF Ada Generation (20GB ECC, 70 W), with Plan, interactive Checklist and Showcase subpages · <a href="./">this page</a></li></ul></section><!--/vh--></main>
+
+<script>
+function aciCopy(btn){
+  var pre=btn.parentElement.querySelector('pre');
+  var t=pre?pre.textContent:'';
+  if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1400)});}
+  else{var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();btn.textContent='Copied';}
+}
+function aciFilter(q, table){
+  q=(q||'').toLowerCase();
+  table.querySelectorAll('tbody tr').forEach(function(tr){
+    tr.style.display=tr.textContent.toLowerCase().indexOf(q)>=0?'':'none';
+  });
+}
+function aciSort(table, col){
+  var tb=table.tBodies[0], rows=[].slice.call(tb.rows), ths=table.tHead.rows[0].cells;
+  var dir=table.getAttribute('data-dir')==='asc'&&table.getAttribute('data-col')==String(col)?'desc':'asc';
+  rows.sort(function(a,b){
+    var x=(a.cells[col]||{}).textContent.trim().toLowerCase();
+    var y=(b.cells[col]||{}).textContent.trim().toLowerCase();
+    if(x<y) return dir==='asc'?-1:1; if(x>y) return dir==='asc'?1:-1; return 0;
+  });
+  rows.forEach(function(r){tb.appendChild(r)});
+  table.setAttribute('data-dir',dir); table.setAttribute('data-col',col);
+  for(var i=0;i<ths.length;i++){ths[i].textContent=ths[i].textContent.replace(/[▲▼]\s*$/,''); if(i===col) ths[i].textContent+=' '+(dir==='asc'?'▲':'▼');}
+}
+
+function aciCopyText(btn, text){
+  var t=text||'';
+  var done=function(){var o=btn.textContent;btn.textContent='Copied';setTimeout(function(){btn.textContent=o||'Copy'},1400)};
+  if(navigator.clipboard){navigator.clipboard.writeText(t).then(done).catch(done);}
+  else{var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();done();}
+}
+
+</script>
+
+
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/+$/,"")||"/"}}</script><script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc){const pt=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Melbourne",hour:"2-digit",minute:"2-digit",hour12:false,hourCycle:"h23",timeZoneName:"short"}).formatToParts(new Date(d.updated_utc));const g=t=>(pt.find(x=>x.type===t)||{}).value||"";const tz=(g("timeZoneName")||"AEDT").replace("GMT+11","AEDT").replace("GMT+10","AEST");e.textContent=" (data as of "+g("hour")+":"+g("minute")+" "+tz+")"}})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script>
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:8px 0 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:6px;margin:0;padding:8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
+nav.site.im a.mi{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:auto;min-height:44px;min-width:0;padding:8px 10px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a)}
+nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:visible;text-overflow:unset;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.25;text-align:left}
+nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:22px;height:22px;padding:0 5px;border-radius:999px;font-size:16px;font-weight:800;line-height:1;background:#0f172a;color:#fff}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc;color:#0f172a}
+nav.site.im a.mi.on .im-seq{background:#fff;color:#1d4ed8}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px;flex:none}#sg-link,#tt-btn,#mm-link{height:36px;border-radius:18px}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["ARR Model","/netbox-yaml-model/arr/","🧪"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"],["Pod Policy Group","/aci-policy/pod-policy-group/","🕒"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"],["Notebooks","/roadmap/notebooks/","📓"],["RAG documents","/roadmap/rag-documents/","📚"],["Foundation-Sec-8B","/roadmap/foundation-sec-8b/","🛡️"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["zFrontier","/zfrontier/","🌠",[["zFrontier","/zfrontier/","🌠"],["Farzad","/zfrontier/farzad/","📺"],["SpaceX vs Tesla shares","/zfrontier/shares/","📈"],["Optimus","/zfrontier/optimus/","🤖"],["Gigafactory","/zfrontier/gigafactory/","🏭"],["FSD versions","/zfrontier/fsd-versions/","🛣️"],["Liquid cooling","/zfrontier/liquid-cooling/","💧"],["SpaceX Tracking","/zfrontier/spacex/","🚀"],["CyberCab","/zfrontier/cybercab/","🚕"],["AI FineTune Pod","/zfrontier/ai-finetune-pod/","🎛️"],["MCP Servers","/zfrontier/mcp-servers/","🔌"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"],["ACI GUI Forms","/visitors/aci-gui-forms/","📝"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=(seq?String(seq)+'. ':'')+e[0];if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks ›';r2.appendChild(t);
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1))});r2.appendChild(pills);n.appendChild(r2)}}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+</body>
+</html>
