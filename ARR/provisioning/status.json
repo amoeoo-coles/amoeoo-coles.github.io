@@ -1,0 +1,185 @@
+{
+  "run_id": "Cursor_tenant1-arr-20261113-1816",
+  "tenant": "Cursor_tenant1",
+  "target": "https://192.168.10.1",
+  "target_name": "ARR APIC 192.168.10.1",
+  "target_note": "ARR simulator fabric at 192.168.10.1. Not AOAPIC (sandboxapicdc.cisco.com).",
+  "generated_at": "2026-11-13T18:19:15.162403+05:30",
+  "generated_at_ist": "13 November 2026, 6:19:15 PM IST (Asia/Calcutta, UTC+5:30)",
+  "netbox": {
+    "status": "unreachable",
+    "url": "http://localhost:8001",
+    "recovery_attempted": "/workspace/netbox-docker/scripts/start-box.sh",
+    "recovery_result": "failed: Debian apt mirrors returned HTTP 500 / not signed; Docker Engine could not be installed",
+    "model_source": "backup-derived",
+    "model_files": [
+      "/workspace/aci-intent/data/tenant_Cursor_tenant1.nac.yaml",
+      "/workspace/arr/cursor_tenant1_netbox.json"
+    ],
+    "label": "Done (from NetBox backup / intent YAML; live NetBox was down)",
+    "state": "done_from_backup"
+  },
+  "stages": [
+    {
+      "id": "netbox",
+      "label": "NetBox model",
+      "state": "done_from_backup",
+      "detail": "Live NetBox down; used backup-derived intent (Cursor_tenant1, cursor_vrf, cursor_bd 10.250.2.1/24, cursor_ap, web)."
+    },
+    {
+      "id": "pre_backup",
+      "label": "Pre-change backup",
+      "state": "done",
+      "detail": "Read-only snapshot from the user's Windows machine at 13 Nov 2026, 6:16 PM IST. Target mo/uni/tn-Cursor_tenant1 returned totalCount 0."
+    },
+    {
+      "id": "dry_run",
+      "label": "Dry-run diff",
+      "state": "done",
+      "detail": "Payload-versus-pre-backup DN diff (not Ansible). All 6 DNs are new. Result: PASS."
+    },
+    {
+      "id": "approval_email",
+      "label": "Approval email",
+      "state": "pending_send",
+      "detail": "Not sent yet."
+    },
+    {
+      "id": "awaiting_approve",
+      "label": "Awaiting APPROVE",
+      "state": "waiting",
+      "detail": "Apply waits for a Gmail reply with body exactly APPROVE, plus a separate go-ahead."
+    },
+    {
+      "id": "apply",
+      "label": "Apply to APIC",
+      "state": "pending",
+      "detail": "Not started. Will run from the user's Windows machine only. Nothing has been written to the APIC."
+    },
+    {
+      "id": "post_checks",
+      "label": "Post-checks",
+      "state": "pending",
+      "detail": "Not started."
+    },
+    {
+      "id": "post_email",
+      "label": "Post email",
+      "state": "pending",
+      "detail": "Not started."
+    }
+  ],
+  "planned_objects": [
+    {
+      "class": "fvTenant",
+      "name": "Cursor_tenant1",
+      "dn": "uni/tn-Cursor_tenant1",
+      "attrs": {
+        "name": "Cursor_tenant1",
+        "descr": "Cursor tenant 1 - web tier via Add Tenant portal (NaC + Ansible)"
+      }
+    },
+    {
+      "class": "fvCtx",
+      "name": "cursor_vrf",
+      "dn": "uni/tn-Cursor_tenant1/ctx-cursor_vrf",
+      "attrs": {
+        "name": "cursor_vrf",
+        "pcEnfDir": "ingress",
+        "pcEnfPref": "enforced",
+        "ipDataPlaneLearning": "enabled"
+      }
+    },
+    {
+      "class": "fvBD",
+      "name": "cursor_bd",
+      "dn": "uni/tn-Cursor_tenant1/BD-cursor_bd",
+      "attrs": {
+        "name": "cursor_bd",
+        "unicastRoute": "yes",
+        "arpFlood": "yes",
+        "hostBasedRouting": "no",
+        "ipLearning": "yes",
+        "limitIpLearnToSubnets": "yes",
+        "epMoveDetectMode": "",
+        "epClear": "no",
+        "mcastAllow": "no",
+        "ipv6McastAllow": "no",
+        "multiDstPktAct": "bd-flood",
+        "unkMacUcastAct": "flood",
+        "unkMcastAct": "flood",
+        "v6unkMcastAct": "flood"
+      },
+      "relations": {
+        "fvRsCtx.tnFvCtxName": "cursor_vrf"
+      }
+    },
+    {
+      "class": "fvSubnet",
+      "name": "10.250.2.1/24",
+      "dn": "uni/tn-Cursor_tenant1/BD-cursor_bd/subnet-[10.250.2.1/24]",
+      "attrs": {
+        "ip": "10.250.2.1/24",
+        "scope": "private",
+        "preferred": "no",
+        "virtual": "no",
+        "ctrl": "nd",
+        "ipDPLearning": "enabled"
+      }
+    },
+    {
+      "class": "fvAp",
+      "name": "cursor_ap",
+      "dn": "uni/tn-Cursor_tenant1/ap-cursor_ap",
+      "attrs": {
+        "name": "cursor_ap"
+      }
+    },
+    {
+      "class": "fvAEPg",
+      "name": "web",
+      "dn": "uni/tn-Cursor_tenant1/ap-cursor_ap/epg-web",
+      "attrs": {
+        "name": "web",
+        "shutdown": "no",
+        "floodOnEncap": "disabled",
+        "pcEnfPref": "unenforced",
+        "prefGrMemb": "exclude",
+        "fwdCtrl": "",
+        "prio": "unspecified"
+      },
+      "relations": {
+        "fvRsBd.tnFvBDName": "cursor_bd"
+      }
+    }
+  ],
+  "dry_run": {
+    "method": "payload-vs-pre-backup (not Ansible: no Ansible inventory or playbook run against this target)",
+    "result": "PASS",
+    "all_six_dns_are_new": true,
+    "tenant_exists_on_apic": false,
+    "existing_tenants": [
+      "mgmt",
+      "infra",
+      "common"
+    ],
+    "same_simple_name_in_other_tenants": []
+  },
+  "approval_email": {
+    "to": "179172@gmail.com",
+    "subject": "ARR Simulator - [APPROVAL REQUIRED] Cursor_tenant1 -> ARR APIC 192.168.10.1 (run Cursor_tenant1-arr-20261113-1816)",
+    "sent": false,
+    "sent_at_ist": null,
+    "message_id": null,
+    "thread_id": null,
+    "from": null,
+    "approve_reply_search": "subject:\"Re: ARR Simulator - [APPROVAL REQUIRED] Cursor_tenant1 -> ARR APIC 192.168.10.1 (run Cursor_tenant1-arr-20261113-1816)\" APPROVE"
+  },
+  "pages": {
+    "index": "https://amoeoo-coles.github.io/ARR/provisioning/",
+    "tenant": "https://amoeoo-coles.github.io/ARR/provisioning/cursor-tenant1.html",
+    "status_json": "https://amoeoo-coles.github.io/ARR/provisioning/status.json",
+    "arr_home": "https://amoeoo-coles.github.io/ARR/"
+  },
+  "apply_gate": "Apply is blocked until an APPROVE reply is received and a separate go-ahead is given. Apply runs from the user's Windows machine, not from the box. Nothing has been changed on the APIC."
+}
