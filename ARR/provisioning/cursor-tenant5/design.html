@@ -855,61 +855,117 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
       <p class="kicker">ARR</p>
       <nav class="crumb" aria-label="Breadcrumb"><ol><li><a href="../../index.html">ARR</a></li><li><a href="../index.html">Provisioning</a></li><li><a href="index.html">Cursor_tenant5</a></li><li>Design plan</li></ol></nav>
       <h1>Cursor_tenant5 design plan (not applied)</h1>
-      <p class="meta">Fabric: <strong>ACI Fabric1</strong> · APIC version: <strong>6.1(6g)</strong></p>
-      <p class="snapshot">Constructs snapshot: <strong>14 November 2026, 1:49 AM AEDT (Australia/Melbourne, UTC+11)</strong></p>
+      <p class="meta">Fabric: <strong>ARR-FABRIC</strong> · APIC: <strong>ARR-APIC-01</strong> · version: <strong>6.0(2h)</strong></p>
+      <p class="snapshot">Live APIC pull used for this plan: <strong>14 Nov 2026, 5:52 PM AEDT (Australia/Melbourne, UTC+11)</strong></p>
       
       <p class="back"><a href="../../index.html">← Back to ARR report</a></p>
     </div>
   </header>
   <main class="wrap">
 
+    
     <div class="banner plan">
-      <strong>PLAN ONLY — nothing on this page has been applied to the APIC.</strong>
-      This is a proposed contracts and L3Out design for <a href="../../tenant/cursor-tenant5.html">Cursor_tenant5</a>, based on the BDs and EPGs now present on this fabric and on the 10 November 2026 prepare package
-      <span class="mono">Cursor_tenant5-dmz-contracts-20261110-1058</span>.
-      A draft payload file is at <span class="mono">/workspace/arr/provisioning/Cursor_tenant5-design/payload-draft.json</span>
-      and as a copy here: <a href="payload-draft.json">payload-draft.json</a>. It is a plan document only.
+      <strong>Plan — awaiting NetBox provisioning + email APPROVE.</strong>
+      Nothing on this page has been written to the APIC or to NetBox.
+      <strong>Cursor_tenant5 is no longer on the live ARR-FABRIC APIC</strong>
+      (the 14 Nov 2026, 5:52 PM AEDT pull has only infra, common and mgmt).
+      This plan therefore starts by recreating the tenant base from
+      <span class="mono">Cursor_tenant5-arr-20261113-1923/payload.json</span>,
+      then the missing access policies, then the DMZ L3Out and contracts.
+      The draft is at <a href="payload-draft.json">payload-draft.json</a>
+      and the plan YAML is at <a href="tenants/Cursor_tenant5.nac.yaml">tenants/Cursor_tenant5.nac.yaml</a>.
+      When you want this pushed, it will go through the NetBox provisioning method
+      (backup, <span class="mono">nac validate</span>, dry run, approval email, apply, post-checks).
     </div>
 
-    <h2>What is already on this ARR APIC</h2>
-    <p>Post-deploy read-back shows tenant <strong>Cursor_tenant5</strong>, VRF <span class="mono">cursor5_vrf</span>, seven BDs with subnets, AP <span class="mono">cursor5_ap</span>, and EPGs <span class="mono">web</span>, <span class="mono">app</span> and <span class="mono">db</span>. Provider/consumer relations are <em>none configured</em>. There is no <span class="mono">DMZ_L3Out</span> on this tenant (the only L3Out in the pull is <span class="mono">uni/tn-common/out-default</span>).</p>
-    <p>Unknown unicast on this fabric today (from the post-deploy BD read-back), which differs from the 10 Nov prepare (that was taken against a different APIC where all seven BDs were flood):</p>
-    <ul>
-      <li>Already <strong>proxy</strong> (no change needed): <span class='mono'>cursor5_app_bd</span>, <span class='mono'>cursor5_db_bd</span>, <span class='mono'>cursor5_web_bd</span></li>
-      <li>Still <strong>flood</strong> (proposed change to proxy): <span class='mono'>cursor5_fw_app_bd</span>, <span class='mono'>cursor5_fw_db_bd</span>, <span class='mono'>cursor5_fw_dmz_bd</span>, <span class='mono'>cursor5_fw_web_bd</span></li>
-    </ul>
+    <h2>What is on this ARR APIC today</h2>
+    <p>The live pull of <strong>14 Nov 2026, 5:52 PM AEDT (Australia/Melbourne, UTC+11)</strong> shows fabric <strong>ARR-FABRIC</strong>:
+    ARR-APIC-01 (6.0(2h)), LEAF-101–104 and SPINE-201/202, TEP pool <span class="mono">10.0.0.0/16</span>,
+    and system tenants only. There is no Cursor_tenant5, no cursor5_vrf, and no DMZ_L3Out.
+    The only L3Out in the pull is <span class="mono">uni/tn-common/out-default</span>.
+    There are still no VLAN pools, L3 domains, or leaf interface / switch profiles
+    (only AAEP <span class="mono">default</span> and physical domain <span class="mono">phys</span>).</p>
+
+    <h2>Chosen L3Out values</h2>
+    <p>These were picked from the live pull so you can review them before any NetBox write or APIC push.</p>
+    <div class="table-wrap"><table><thead><tr><th>Item</th><th>Chosen value</th><th>Why</th></tr></thead><tbody>
+    <tr><td>L3Out VLAN</td><td><span class="mono">3051</span></td>
+    <td>No VLAN pools exist on the live APIC. The only encaps seen were native <span class="mono">vlan-1</span>
+    and encap 3 on the APIC link (LEAF-101 eth1/49). VLAN 3051 is unused and sits well above reserved ranges.</td></tr>
+    <tr><td>Transit subnet</td><td><span class="mono">10.250.250.0/30</span></td>
+    <td>Does not overlap the TEP pool <span class="mono">10.0.0.0/16</span>, OOB <span class="mono">192.168.10.0/24</span>,
+    any live APIC subnet (fvSubnet was empty), or NetBox prefixes
+    (10.250.2–4/24, 10.250.51–53/24, 10.250.59.0/28–.48/28).</td></tr>
+    <tr><td>L3Out IP (leaf)</td><td><span class="mono">10.250.250.1/30</span> on LEAF-101</td>
+    <td>First host of the transit /30, used as the SVI address on the leaf.</td></tr>
+    <tr><td>Peer IP</td><td><span class="mono">10.250.250.2</span></td>
+    <td>Second host of the same /30, for the external router. Starting point is a static default toward this peer; the protocol can be changed before the NetBox write.</td></tr>
+    <tr><td>Router ID</td><td><span class="mono">10.255.255.101</span> loopback on LEAF-101</td>
+    <td>Does not clash with the TEP pool 10.0.0.0/16, the 10.250.x tenant subnets, or 192.168.10.0/24. The node ID 101 is reflected in the last octet.</td></tr>
+    <tr><td>Leaf port</td><td><span class="mono">LEAF-101 eth1/3</span></td>
+    <td>From l1PhysIf/ethpmPhysIf: admin up, oper down (link-not-connected), usage=discovery, and not a fabric or APIC link
+    (fabric is eth1/53–54, APIC is eth1/49). Ports eth1/1, eth1/2, eth1/5 and eth1/6 are already up with no policy, so they were left alone.</td></tr>
+    </tbody></table></div>
+
+    <h2>Access policies to create</h2>
+    <div class="table-wrap"><table><thead><tr><th>Object</th><th>Name</th><th>Detail</th></tr></thead><tbody>
+    <tr><td>VLAN pool</td><td><span class="mono">cursor5_l3out_vlans</span></td><td>Static range 3051–3051, role external</td></tr>
+    <tr><td>L3 domain</td><td><span class="mono">cursor5_l3_dom</span></td><td>Bound to that VLAN pool</td></tr>
+    <tr><td>AAEP</td><td><span class="mono">cursor5_l3out_aaep</span></td><td>Binds the L3 domain (the existing AAEP default has no domain mappings in the pull)</td></tr>
+    <tr><td>Interface policy group</td><td><span class="mono">cursor5_l3out_ipg</span></td><td>Access (routed) group on that AAEP</td></tr>
+    <tr><td>Interface profile</td><td><span class="mono">cursor5_l3out_ifsel</span></td><td>Selects LEAF-101 eth1/3</td></tr>
+    <tr><td>Switch profile</td><td><span class="mono">cursor5_l3out_sw_101</span></td><td>Node 101, attaches the interface profile</td></tr>
+    </tbody></table></div>
+
+    <h2>Base tenant to recreate</h2>
+    <p>Because Cursor_tenant5 is gone, the 13 Nov 2026 payload is included in this plan (VRF, seven BDs and subnets, AP and EPGs). Unknown unicast stays as it was on that payload: proxy on the three tier BDs, flood on the four FW-leg BDs (those four are still proposed to change to proxy after the tenant is back).</p>
+    <div class="table-wrap"><table><thead><tr><th>Object</th><th>Name / value</th></tr></thead><tbody>
+    <tr><td>Tenant</td><td><span class="mono">Cursor_tenant5</span></td></tr>
+    <tr><td>VRF</td><td><span class="mono">cursor5_vrf</span> (enforced, ingress)</td></tr>
+    <tr><td>BD + subnet</td><td><span class="mono">cursor5_web_bd</span> 10.250.51.1/24 public, unknown unicast proxy</td></tr>
+    <tr><td>BD + subnet</td><td><span class="mono">cursor5_app_bd</span> 10.250.52.1/24 private, proxy</td></tr>
+    <tr><td>BD + subnet</td><td><span class="mono">cursor5_db_bd</span> 10.250.53.1/24 private, proxy</td></tr>
+    <tr><td>BD + subnet</td><td><span class="mono">cursor5_fw_dmz_bd</span> 10.250.59.1/28 private, flood</td></tr>
+    <tr><td>BD + subnet</td><td><span class="mono">cursor5_fw_web_bd</span> 10.250.59.17/28 private, flood</td></tr>
+    <tr><td>BD + subnet</td><td><span class="mono">cursor5_fw_app_bd</span> 10.250.59.33/28 private, flood</td></tr>
+    <tr><td>BD + subnet</td><td><span class="mono">cursor5_fw_db_bd</span> 10.250.59.49/28 private, flood</td></tr>
+    <tr><td>AP / EPGs</td><td><span class="mono">cursor5_ap</span> with EPGs <span class="mono">web</span>, <span class="mono">app</span>, <span class="mono">db</span></td></tr>
+    </tbody></table></div>
 
     <h2>Proposed contracts and filters</h2>
-    <p>Create three filters and three contracts (scope context), then bind them as in the 10 Nov plan:</p>
-    <div class="table-wrap"><table><thead><tr><th>Contract</th><th>Subject / filter</th><th>Provider</th><th>Consumer</th></tr></thead><tbody><tr><td><span class='mono'>dmz-to-web</span></td><td><span class='mono'>flt-http-https</span> (tcp/80, tcp/443)</td><td>EPG web</td><td>DMZ_ExtEPG on DMZ_L3Out</td></tr><tr><td><span class='mono'>web-to-app</span></td><td><span class='mono'>flt-web-to-app</span> (tcp/8080, tcp/443)</td><td>EPG app</td><td>EPG web</td></tr><tr><td><span class='mono'>app-to-db</span></td><td><span class='mono'>flt-app-to-db</span> (tcp/1433, 3306, 5432)</td><td>EPG db</td><td>EPG app</td></tr></tbody></table></div>
-    <p class="note">Filter ports are a starting point from the prepare file and should be confirmed. Direct whitelist contracts (no service-graph / PBR) are in scope here, even though some BD descriptions still mention FW hops.</p>
+    <p>Create three filters and three contracts (scope context), then bind them as in the earlier plan:</p>
+    <div class="table-wrap"><table><thead><tr><th>Contract</th><th>Subject / filter</th><th>Provider</th><th>Consumer</th></tr></thead><tbody>
+    <tr><td><span class="mono">dmz-to-web</span></td><td><span class="mono">flt-http-https</span> (tcp/80, tcp/443)</td><td>EPG web</td><td>DMZ_ExtEPG on DMZ_L3Out</td></tr>
+    <tr><td><span class="mono">web-to-app</span></td><td><span class="mono">flt-web-to-app</span> (tcp/8080, tcp/443)</td><td>EPG app</td><td>EPG web</td></tr>
+    <tr><td><span class="mono">app-to-db</span></td><td><span class="mono">flt-app-to-db</span> (tcp/1433, 3306, 5432)</td><td>EPG db</td><td>EPG app</td></tr>
+    </tbody></table></div>
+    <p class="note">Filter ports are a starting point and should be confirmed. Direct whitelist contracts (no service-graph / PBR) are in scope here.</p>
 
-    <h2>Proposed L3Out</h2>
-    <p>Create <span class="mono">DMZ_L3Out</span> in VRF <span class="mono">cursor5_vrf</span>, with node profile, interface profile, and external EPG <span class="mono">DMZ_ExtEPG</span> as consumer of <span class="mono">dmz-to-web</span>.</p>
+    <h2>Ordered change list</h2>
+    <ol>
+      <li>Write this design into NetBox (source of truth). No APIC write yet.</li>
+      <li>Export, run <span class="mono">nac validate</span>, dry-run, and send the [APPROVAL REQUIRED] email to 179172@gmail.com.</li>
+      <li>Wait for your APPROVE.</li>
+      <li>Create the access-policy parents: VLAN pool, L3 domain, AAEP, interface policy group, interface profile and switch profile.</li>
+      <li>Recreate the Cursor_tenant5 base (tenant, VRF, BDs, subnets, AP, EPGs).</li>
+      <li>Create the filters, contracts and EPG bindings.</li>
+      <li>Create DMZ_L3Out on LEAF-101 eth1/3 (VLAN 3051, 10.250.250.1/30, router-id 10.255.255.101) and DMZ_ExtEPG.</li>
+      <li>Post-checks, monitor page update, and post-deploy email.</li>
+    </ol>
 
-    <h2>Missing parent objects on this ARR APIC</h2>
-    <div class="banner warn">
-      The 10 Nov prepare assumed L3 domain <span class="mono">my_L3_domain</span> and VLAN pool <span class="mono">l3out_svlan_pool</span> already existed on AOAPIC (sandbox).
-      <strong class="missing">Those parents are MISSING on this ARR APIC.</strong>
-      The constructs pull has <span class="mono">l3extDomP</span> totalCount 0 and <span class="mono">fvnsVlanInstP</span> totalCount 0.
-      Interface profiles, switch profiles and access/PC port groups are also none configured.
-      The only access-policy objects present are physical domain <span class="mono">phys</span> and AAEP <span class="mono">default</span>.
-    </div>
-    <p>Before an L3Out could be used here, the following would need to be created (names below are suggestions only):</p>
-    <ul>
-      <li><strong class="missing">MISSING:</strong> an L3 domain (<span class="mono">l3extDomP</span>) — <span class="mono">my_L3_domain</span> does not exist here</li>
-      <li><strong class="missing">MISSING:</strong> a VLAN pool (<span class="mono">fvnsVlanInstP</span>) if an SVI/sub-interface encap is used</li>
-      <li><strong class="missing">MISSING:</strong> an AAEP (or AAEP associations) that binds that L3 domain — the existing AAEP <span class="mono">default</span> has no domain mappings in this pull</li>
-      <li><strong class="missing">MISSING:</strong> a leaf interface path / access policy (switch profile, interface profile, port group) covering the chosen leaf port</li>
-    </ul>
+    <h2>Proposed change counts</h2>
+    <div class="table-wrap"><table><thead><tr><th>Action</th><th>Count</th></tr></thead><tbody>
+    <tr><td>Recreate tenant / VRF / 7 BDs + subnets / AP + 3 EPGs</td><td>required first (tenant is gone)</td></tr>
+    <tr><td>Create access-policy parents (VLAN pool, L3 domain, AAEP, IPG, interface and switch profiles)</td><td>6</td></tr>
+    <tr><td>Create filters</td><td>3</td></tr>
+    <tr><td>Create contracts</td><td>3</td></tr>
+    <tr><td>Create contract bindings (3 EPG + 1 ExtEPG; web both provides and consumes)</td><td>6</td></tr>
+    <tr><td>Create L3Out + node / interface / ExtEPG</td><td>4</td></tr>
+    <tr><td>Optional: change FW-leg BD unknown unicast flood → proxy</td><td>4</td></tr>
+    </tbody></table></div>
 
-    <h2>Placeholders that need the user's input</h2>
-    <div class="table-wrap"><table><thead><tr><th>Placeholder</th><th>Draft value (unconfirmed)</th><th>Why</th></tr></thead><tbody><tr><td><span class='placeholder'>PLACEHOLDER_ROUTER_ID</span></td><td><span class='mono'>10.255.5.1</span> on node 101</td><td>Must be unique on the leaf</td></tr><tr><td><span class='placeholder'>PLACEHOLDER_PORT</span></td><td>Leaf-101 <span class='mono'>eth1/20</span></td><td>Must be free and covered by the access policy / AAEP. That port is oper down / discovery in this snapshot, but that is not a confirmation it is usable.</td></tr><tr><td><span class='placeholder'>PLACEHOLDER_L3OUT_IP</span></td><td><span class='mono'>10.250.50.1/30</span></td><td>Fabric-side L3Out address</td></tr><tr><td><span class='placeholder'>PLACEHOLDER_PEER_IP</span></td><td><span class='mono'>10.250.50.2</span></td><td>External router; routing protocol (static/OSPF/BGP) is not chosen</td></tr><tr><td><span class='placeholder'>PLACEHOLDER_VLAN</span></td><td><span class='mono'>997</span> (optional)</td><td>Only if an SVI/sub-interface is used. There is no VLAN pool on this APIC to place it in yet.</td></tr><tr><td><span class='placeholder'>PLACEHOLDER_EXT_SUBNET</span></td><td><span class='mono'>0.0.0.0/0</span></td><td>Tighten to the real DMZ prefix if known</td></tr><tr><td>L3 domain name</td><td><span class='mono'>my_L3_domain</span> (does not exist here)</td><td>Must be created, or a new name chosen</td></tr><tr><td>Filter ports</td><td>80/443, 8080/443, 1433/3306/5432</td><td>Confirm application and database ports</td></tr></tbody></table></div>
+    <p class="banner plan">Plan — awaiting NetBox provisioning + email APPROVE. This page does not authorise any write to the APIC at 192.168.10.1 or to NetBox.</p>
 
-    <h2>Proposed change counts (after parents exist and placeholders are filled)</h2>
-    <div class="table-wrap"><table><thead><tr><th>Action</th><th>Count</th></tr></thead><tbody><tr><td>Modify BD unknown unicast flood → proxy</td><td>4 (plus 3 already proxy)</td></tr><tr><td>Create filters</td><td>3</td></tr><tr><td>Create contracts</td><td>3</td></tr><tr><td>Create contract bindings (5 EPG + 1 ExtEPG)</td><td>6</td></tr><tr><td>Create L3Out + node / interface / ExtEPG</td><td>~4–5</td></tr><tr><td>Create missing access-policy parents (L3 domain, VLAN pool, AAEP association, leaf path)</td><td>required first — not in the 10 Nov package because they already existed on that other APIC</td></tr></tbody></table></div>
-
-    <p class="banner plan">This page does not authorise any write to the APIC at 192.168.10.1. The draft payload is a starting point only.</p>
     
   </main>
   <footer class="wrap">

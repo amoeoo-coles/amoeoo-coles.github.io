@@ -1,0 +1,182 @@
+# Network-as-Code (nac-aci data model, apic: root)
+# Environment: ARR-FABRIC — ACI Rack Rental (live APIC at https://192.168.10.1)
+# Source: Live read-only collection from ARR-APIC-01
+# Collected: 14 Nov 2026, 5:52 PM AEDT (Australia/Melbourne, UTC+11)
+# Method: GET only after aaaLogin; aaaLogout after. Pulled from DESKTOP-3GETEV9.
+# Built-in system-* interface policies are omitted. System tenants (common, infra, mgmt) are included.
+# No user tenants were present on this pull (Cursor_tenant1 and Cursor_tenant5 are gone).
+# SNMP communities and SNMPv3 users are omitted from the published files.
+# Complete model: pods, nodes, fabric, access, interfaces and all live tenants.
+---
+apic:
+  pods:
+  - id: 1
+    tep_pool: 10.0.0.0/16
+  node_policies:
+    nodes:
+    - id: 101
+      pod: 1
+      role: leaf
+      name: LEAF-101
+      serial_number: FDO22092GGP
+    - id: 102
+      pod: 1
+      role: leaf
+      name: LEAF-102
+      serial_number: FDO22430WPE
+    - id: 103
+      pod: 1
+      role: leaf
+      name: LEAF-103
+      serial_number: FDO22430TQ1
+    - id: 104
+      pod: 1
+      role: leaf
+      name: LEAF-104
+      serial_number: FDO21282CXA
+    - id: 201
+      pod: 1
+      role: spine
+      name: SPINE-201
+      serial_number: FDO244117BX
+    - id: 202
+      pod: 1
+      role: spine
+      name: SPINE-202
+      serial_number: FDO244117BH
+  fabric_policies:
+    pod_profiles:
+    - name: default
+      selectors:
+      - name: default
+        type: all
+    pod_profile_name: default
+  access_policies:
+    physical_domains:
+    - name: phys
+    aaeps:
+    - name: default
+  interface_policies:
+    nodes: []
+  tenants:
+  - name: common
+    vrfs:
+    - name: copy
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    - name: default
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: default
+      vrf: default
+      arp_flooding: false
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+    application_profiles:
+    - name: default
+    l3outs:
+    - name: default
+      export_route_control: true
+      import_route_control: false
+    contracts:
+    - name: default
+      scope: context
+  - name: infra
+    vrfs:
+    - name: ave-ctrl
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    - name: overlay-1
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: ave-ctrl
+      vrf: ave-ctrl
+      arp_flooding: false
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+    - name: default
+      vrf: overlay-1
+      arp_flooding: false
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
+    application_profiles:
+    - name: access
+      endpoint_groups:
+      - name: default
+        bridge_domain: default
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+    - name: ave-ctrl
+      endpoint_groups:
+      - name: ave-ctrl
+        bridge_domain: ave-ctrl
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        preferred_group: false
+  - name: mgmt
+    vrfs:
+    - name: inb
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    - name: oob
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: inb
+      vrf: inb
+      arp_flooding: false
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      limit_ip_learn_to_subnets: true
+      unicast_routing: true
+      unknown_unicast: proxy
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      l3_multicast: false
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      mac: 00:22:BD:F8:19:FF
