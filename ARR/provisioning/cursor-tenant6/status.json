@@ -5,9 +5,9 @@
   "source": "https://amoeoo-coles.github.io/ARR/provisioning/cursor-tenant6/",
   "target": "ARR-FABRIC (https://192.168.10.1)",
   "fabric": "ARR-FABRIC",
-  "stage": "Fix prepared — awaiting APPROVE",
+  "stage": "Apply failed (v2 HTTP 400)",
   "apic_write": false,
-  "updated": "2026-11-14T23:47:00+11:00",
+  "updated": "2026-11-14T23:54:22+11:00",
   "dry_run": {
     "create": 48,
     "modify": 0,
@@ -16,7 +16,13 @@
     "result": "PASS",
     "fresh": true,
     "backup": "11:32–11:33 PM AEDT pre-t6-fresh.zip",
-    "payload": "v2"
+    "payload": "v2",
+    "containers": 2,
+    "clashes": 0,
+    "vlan_clashes": 0,
+    "source": "re-diff of approved v2 planned DNs versus pre-t6v2-fresh.zip",
+    "generated_at": "2026-11-14T23:50:00+11:00",
+    "summary": "Re-diff versus the fresh 11:49–11:50 PM AEDT pre-backup: PASS. 48 create, existing containers uni/infra and uni/infra/funcprof only, no clashes, no 10.6.1.0/24 or VLAN 1601–1603 overlaps."
   },
   "netbox": {
     "created": 47,
@@ -31,9 +37,9 @@
   },
   "backup": {
     "taken": "2026-11-14T23:33:00+11:00",
-    "taken_label": "14 November 2026, 11:32–11:33 PM AEDT (live pull from DESKTOP-3GETEV9)",
+    "taken_label": "14 Nov 2026, 11:49–11:50 PM AEDT",
     "zip": "pre-t6-fresh.zip",
-    "health": 99,
+    "health": "99",
     "tenants": [
       "infra",
       "common",
@@ -41,7 +47,9 @@
     ],
     "cursor_tenant6_present": false,
     "live_prebackup": true,
-    "summary": "A fresh read-only pre-backup was taken from DESKTOP-3GETEV9 at 11:32–11:33 PM AEDT on 14 November 2026, after chat APPROVE."
+    "summary": "Fresh live pull from DESKTOP-3GETEV9 at 11:49–11:50 PM AEDT, after the 11:47 PM AEDT APPROVE and before the single v2 POST. The earlier 11:32–11:33 PM AEDT pre-backup was also clean.",
+    "source": "live pre-backup from DESKTOP-3GETEV9 (pre-t6v2-fresh.zip)",
+    "taken_at": "2026-11-14T23:49:22+11:00"
   },
   "values": {
     "subnet": "10.6.1.1/24",
@@ -86,15 +94,15 @@
       "id": "pre-backup",
       "name": "Pre-check / pre-backup",
       "state": "done",
-      "time": "2026-11-14T23:33:00+11:00",
-      "detail": "Fresh live pull from DESKTOP-3GETEV9 at 11:32–11:33 PM AEDT: tenants infra, common, mgmt; Cursor_Tenant6 absent; fabric health 99. login.json deleted immediately after aaaLogin."
+      "time": "2026-11-14T23:50:00+11:00",
+      "detail": "Fresh live pull from DESKTOP-3GETEV9 at 11:49–11:50 PM AEDT (pre-t6v2-fresh.zip): tenants infra, common, mgmt; Cursor_Tenant6 absent; fabric health 99. login.json deleted immediately after aaaLogin (11:49:22 PM AEDT)."
     },
     {
       "id": "dry-run",
       "name": "Dry-run",
       "state": "done",
-      "time": "2026-11-14T23:33:00+11:00",
-      "detail": "Re-diff versus the fresh pre-backup PASS: 48 create, 0 modify, existing containers uni/infra and uni/infra/funcprof only, no subnet or VLAN overlaps. Matches the approved dry-run."
+      "time": "2026-11-14T23:50:00+11:00",
+      "detail": "Re-diff versus the fresh 11:49–11:50 PM AEDT pre-backup PASS: 48 create, 0 modify, existing containers uni/infra and uni/infra/funcprof only, no subnet or VLAN overlaps. Matches the approved v2 dry-run."
     },
     {
       "id": "approval-email",
@@ -106,9 +114,9 @@
     {
       "id": "aung-approval",
       "name": "Aung approval (Gmail)",
-      "state": "running",
-      "time": "2026-11-14T23:22:00+11:00",
-      "detail": "Awaiting APPROVE for the v2 payload (SHA-256 cfc0cb850…). Gmail message 1a1da17fcacd6e7c. The 11:22 PM AEDT APPROVE applied only to v1. Nothing will be applied until a new APPROVE."
+      "state": "done",
+      "time": "2026-11-14T23:47:00+11:00",
+      "detail": "Approved in chat at 11:47 PM AEDT: \"approve tenant6 v2\". This APPROVE applied to the exact v2 payload (SHA-256 cfc0cb850b7b9a215fb3ca0aae6854c43217364d9f6b8b5ff278039a6166687a, Gmail message 1a1da17fcacd6e7c)."
     },
     {
       "id": "apply",
@@ -118,18 +126,25 @@
       "detail": "POST /api/mo/uni.json once from DESKTOP-3GETEV9 at 11:34:08 PM AEDT returned HTTP 400: unknown attribute 'resImedcy' in element 'fvRsPathAtt'. Payload hash unchanged. No retry. Because the POST is atomic, Cursor_Tenant6 objects were not created."
     },
     {
+      "id": "apply-v2",
+      "name": "Apply v2",
+      "state": "failed",
+      "at": "2026-11-14T23:50:46+11:00",
+      "detail": "POST /api/mo/uni.json once from DESKTOP-3GETEV9 at 11:50:46 PM AEDT returned HTTP 400: unknown attribute 'from' in element 'infraNodeBlk'. Payload hash unchanged (cfc0cb850…). No retry. Because the POST is atomic, Cursor_Tenant6 objects were not created."
+    },
+    {
       "id": "postcheck",
       "name": "Post-checks",
       "state": "failed",
-      "time": "2026-11-14T23:34:08+11:00",
-      "detail": "Post-checks were not run because the apply was rejected. Tenant, VRF, BD, subnet, EPGs, static paths, leaf l2BD/vlanCktEp and tenant faults were not read back."
+      "time": "2026-11-14T23:50:46+11:00",
+      "detail": "Post-checks were not run because the v2 apply was rejected. Tenant, VRF, BD, subnet, EPGs, static paths, leaf l2BD/vlanCktEp and tenant faults were not read back. NetBox was not marked deployed."
     },
     {
       "id": "post-email",
       "name": "Post email",
       "state": "done",
-      "time": "2026-11-14T23:38:00+11:00",
-      "detail": "Failure email sent to 179172@gmail.com. Subject: ARR Simulator — [FAILED] Cursor_Tenant6 push to ARR APIC. Gmail message id 1a1da0f37889f211."
+      "time": "2026-11-14T23:54:22+11:00",
+      "detail": "Failure email sent to 179172@gmail.com. Subject: ARR Simulator — [FAILED] Cursor_Tenant6 (fix v2) push to ARR APIC. Gmail message id 1a1da1ea9f003530."
     },
     {
       "id": "fix-v2",
@@ -146,27 +161,31 @@
       "detail": "Sent to 179172@gmail.com. Subject: ARR Simulator — [APPROVAL REQUIRED] Cursor_Tenant6 (fix v2) push to ARR APIC. Gmail message id 1a1da17fcacd6e7c. Nothing has been POSTed with the v2 payload."
     }
   ],
-  "generated_at": "2026-11-14T23:46:15+11:00",
+  "generated_at": "2026-11-14T23:54:22+11:00",
   "monitor_url": "https://amoeoo-coles.github.io/ARR/provisioning/cursor-tenant6/",
   "apply": {
     "http": 400,
-    "error": "unknown attribute 'resImedcy' in element 'fvRsPathAtt'",
+    "error": "unknown attribute 'from' in element 'infraNodeBlk'",
     "url": "https://192.168.10.1/api/mo/uni.json",
-    "started": "2026-11-14T23:34:08+11:00",
-    "ended": "2026-11-14T23:34:08+11:00",
-    "ended_label": "14 Nov 2026 23:34 AEDT",
-    "payload_sha256": "e029b9356f0fcfa5fe2f804436e0fd4eefb9f7f01ffef248033e1d194d94c72d",
+    "started": "2026-11-14T23:50:46+11:00",
+    "ended": "2026-11-14T23:50:46+11:00",
+    "ended_label": "14 Nov 2026, 11:50:46 PM AEDT",
+    "payload": "payload-t6-v2.json",
+    "payload_sha256": "cfc0cb850b7b9a215fb3ca0aae6854c43217364d9f6b8b5ff278039a6166687a",
     "retried": false,
-    "login_json_deleted": true
+    "login_json_deleted": true,
+    "login_deleted_at": "2026-11-14T23:49:22+11:00",
+    "login_deleted_label": "14 Nov 2026, 11:49:22 PM AEDT",
+    "version": "v2"
   },
   "failure_email": {
     "sent": true,
     "to": "179172@gmail.com",
-    "subject": "ARR Simulator — [FAILED] Cursor_Tenant6 push to ARR APIC",
-    "message_id": "1a1da0f37889f211",
-    "thread_id": "1a1da0f37889f211",
-    "sent_at": "2026-11-14T23:38:00+11:00",
-    "sent_label": "14 Nov 2026 23:38 AEDT"
+    "subject": "ARR Simulator — [FAILED] Cursor_Tenant6 (fix v2) push to ARR APIC",
+    "message_id": "1a1da1ea9f003530",
+    "thread_id": "1a1da1ea9f003530",
+    "sent_at": "2026-11-14T23:54:22+11:00",
+    "sent_label": "14 Nov 2026 23:54 AEDT"
   },
   "payload_version": "v2",
   "parent_run_id": "Cursor_Tenant6-arr-20261114-2219",
@@ -186,5 +205,25 @@
     "thread_id": "1a1da17fcacd6e7c",
     "sent_at": "2026-11-14T23:47:00+11:00",
     "sent_label": "14 Nov 2026 23:47 AEDT"
+  },
+  "apply_v1": {
+    "http": 400,
+    "error": "unknown attribute 'resImedcy' in element 'fvRsPathAtt'",
+    "url": "https://192.168.10.1/api/mo/uni.json",
+    "started": "2026-11-14T23:34:08+11:00",
+    "ended": "2026-11-14T23:34:08+11:00",
+    "ended_label": "14 Nov 2026 23:34 AEDT",
+    "payload_sha256": "e029b9356f0fcfa5fe2f804436e0fd4eefb9f7f01ffef248033e1d194d94c72d",
+    "retried": false,
+    "login_json_deleted": true
+  },
+  "failure_email_v1": {
+    "sent": true,
+    "to": "179172@gmail.com",
+    "subject": "ARR Simulator — [FAILED] Cursor_Tenant6 push to ARR APIC",
+    "message_id": "1a1da0f37889f211",
+    "thread_id": "1a1da0f37889f211",
+    "sent_at": "2026-11-14T23:38:00+11:00",
+    "sent_label": "14 Nov 2026 23:38 AEDT"
   }
 }
