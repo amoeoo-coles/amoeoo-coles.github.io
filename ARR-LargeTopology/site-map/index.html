@@ -848,13 +848,13 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
 })();</script>
 <!-- site-menu v1 --><nav class="site"><a href="/">Home</a></nav>
 
-<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:#bbb">Page updated 14 Nov 2026 22:43 AEDT (Melbourne time)<span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span><span class="uvt" style="font-size:11px;color:#888"></span></div><!--/arr-uv-tr17-->
+<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:#bbb">Page updated 14 Nov 2026 22:58 AEDT (Melbourne time)<span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span><span class="uvt" style="font-size:11px;color:#888"></span></div><!--/arr-uv-tr17-->
 
   <header>
     <div class="wrap">
       <p class="kicker">ARR</p>
       <h1>Site map</h1>
-      <p class="ver">v1 · 14 Nov 2026, 10:43 PM AEDT</p>
+      <p class="ver">v2 · 14 Nov 2026, 10:58 PM AEDT</p>
     </div>
   </header>
   <main class="wrap">
@@ -887,14 +887,23 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
   .map-toolbar .hint{color:var(--muted);font-size:0.84rem}
   .map-shell{position:relative;border:1px solid var(--line);border-radius:14px;background:var(--card);overflow:auto;height:min(78vh,840px);touch-action:none;overscroll-behavior:contain}
   .map-shell svg{display:block;width:100%;height:100%;min-width:640px;min-height:480px;cursor:grab}
-  .map-shell svg.dragging{cursor:grabbing}
+  .map-shell svg.dragging, .map-shell svg.dragging a.map-node{cursor:grabbing}
   .map-shell text{font-family:inherit}
+  .map-shell svg a.map-node{cursor:pointer}
+  .map-shell svg a.map-node circle.hit{fill:transparent;stroke:none;pointer-events:all}
+  .map-shell svg a.map-node text{stroke:transparent;stroke-width:12;paint-order:stroke;pointer-events:all}
+  .map-shell svg a.map-node:hover circle.dot{stroke-width:3.2}
+  .map-shell svg a.map-node:hover circle.hit{fill:color-mix(in srgb, var(--accent) 18%, transparent)}
+  .map-shell svg a.map-node:hover text{fill:var(--accent)}
+  .map-shell svg g.map-node.nolink{cursor:inherit}
+  .map-shell svg g.map-node.nolink text{fill:var(--muted);font-weight:600}
+  .map-shell svg g.map-node.nolink circle.dot{fill:var(--card);stroke:var(--muted)}
   noscript.map-fallback{display:block;margin:0.6rem 0;color:var(--muted)}
 </style>
 
     <p class="note">A collapsible tree and a mind map of every public page under
     <a href="/ARR-LargeTopology/">ARR-LargeTopology/</a>, built from the live file list.
-    Folder links end with <span class="mono">/</span>. This is v1 · 14 Nov 2026, 10:43 PM AEDT,
+    Folder links end with <span class="mono">/</span>. This is v2 · 14 Nov 2026, 10:58 PM AEDT,
     with <strong>75</strong> pages in the inventory.</p>
 
     <h2>Tree</h2>
@@ -1029,17 +1038,32 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
     edgeG.appendChild(line);
   });
 
+  var coarse = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
   all.forEach(function(n){
     var color = branchColor(n);
     var r = n._depth === 0 ? 22 : (n._depth === 1 ? 11 : 7);
-    var wrap = n.href ? document.createElementNS(svgNS, "a") : document.createElementNS(svgNS, "g");
-    if(n.href){
+    var clickable = !!n.href;
+    var wrap = clickable ? document.createElementNS(svgNS, "a") : document.createElementNS(svgNS, "g");
+    if(clickable){
       wrap.setAttribute("href", n.href);
       wrap.setAttributeNS("http://www.w3.org/1999/xlink", "href", n.href);
+      wrap.setAttribute("data-href", n.href);
     }
-    wrap.setAttribute("class", "map-node depth-"+n._depth+(n.current ? " current" : ""));
+    wrap.setAttribute("class", "map-node depth-"+n._depth+(n.current ? " current" : "")+(clickable ? " clickable" : " nolink"));
+
+    if(clickable){
+      var hit = document.createElementNS(svgNS, "circle");
+      hit.setAttribute("class", "hit");
+      hit.setAttribute("cx", n._x);
+      hit.setAttribute("cy", n._y);
+      var extra = coarse ? 12 : 8;
+      var minHit = n._depth >= 2 ? (coarse ? 18 : 16) : (coarse ? 26 : 22);
+      hit.setAttribute("r", Math.max(r + extra, minHit));
+      wrap.appendChild(hit);
+    }
 
     var c = document.createElementNS(svgNS, "circle");
+    c.setAttribute("class", "dot");
     c.setAttribute("cx", n._x);
     c.setAttribute("cy", n._y);
     c.setAttribute("r", r);
@@ -1077,9 +1101,12 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
   });
 
   // Zoom / pan. Scroll fallback is the overflow:auto shell.
+  // Do not capture the pointer or preventDefault on pan events — that swallows node clicks.
   var scale = 1, tx = 0, ty = 0;
-  var dragging = false, lastX = 0, lastY = 0, pointers = new Map();
+  var panning = false, suppressClick = false, lastX = 0, lastY = 0, startX = 0, startY = 0;
+  var pointers = new Map();
   var startPinch = 0, startScale = 1;
+  var TAP_PX = 5;
   function apply(){
     rootG.setAttribute("transform", "translate("+tx+","+ty+") scale("+scale+")");
   }
@@ -1097,6 +1124,21 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
     apply();
   }
   function reset(){ scale = 1; tx = 0; ty = 0; apply(); }
+  function closestLink(el){
+    while(el && el !== svg){
+      if(el.localName === "a") return el;
+      el = el.parentNode;
+    }
+    return null;
+  }
+  function hrefOf(el){
+    if(!el) return "";
+    return el.getAttribute("data-href") || el.getAttribute("href") || el.getAttributeNS("http://www.w3.org/1999/xlink", "href") || "";
+  }
+  function go(href){
+    if(!href) return;
+    window.location.assign(href);
+  }
 
   svg.addEventListener("wheel", function(ev){
     ev.preventDefault();
@@ -1107,13 +1149,14 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
   svg.addEventListener("pointerdown", function(ev){
     if(ev.pointerType === "mouse" && ev.button !== 0) return;
     pointers.set(ev.pointerId, {x:ev.clientX, y:ev.clientY});
-    svg.setPointerCapture(ev.pointerId);
     if(pointers.size === 1){
-      dragging = true;
-      lastX = ev.clientX; lastY = ev.clientY;
-      svg.classList.add("dragging");
+      panning = false;
+      suppressClick = false;
+      startX = lastX = ev.clientX;
+      startY = lastY = ev.clientY;
     } else if(pointers.size === 2){
-      dragging = false;
+      panning = false;
+      suppressClick = true;
       var pts = Array.from(pointers.values());
       var dx = pts[0].x - pts[1].x, dy = pts[0].y - pts[1].y;
       startPinch = Math.hypot(dx, dy) || 1;
@@ -1133,20 +1176,51 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
       startPinch = dist;
       return;
     }
-    if(!dragging) return;
+    if(pointers.size !== 1 || !pointers.has(ev.pointerId)) return;
+    var total = Math.hypot(ev.clientX - startX, ev.clientY - startY);
+    if(!panning){
+      if(total < TAP_PX) return;
+      panning = true;
+      suppressClick = true;
+      lastX = ev.clientX;
+      lastY = ev.clientY;
+      svg.classList.add("dragging");
+    }
     var rect = svg.getBoundingClientRect();
-    var dx = ev.clientX - lastX, dy = ev.clientY - lastY;
-    lastX = ev.clientX; lastY = ev.clientY;
-    tx += dx * (vbW / rect.width);
-    ty += dy * (vbH / rect.height);
+    tx += (ev.clientX - lastX) * (vbW / rect.width);
+    ty += (ev.clientY - lastY) * (vbH / rect.height);
+    lastX = ev.clientX;
+    lastY = ev.clientY;
     apply();
   });
   function endPtr(ev){
+    var wasPan = panning;
+    var link = closestLink(ev.target);
+    var href = hrefOf(link);
     pointers.delete(ev.pointerId);
-    if(pointers.size === 0){ dragging = false; svg.classList.remove("dragging"); }
+    if(pointers.size === 0){
+      panning = false;
+      svg.classList.remove("dragging");
+      if(!wasPan && ev.type === "pointerup" && href){
+        go(href);
+      }
+    }
   }
   svg.addEventListener("pointerup", endPtr);
   svg.addEventListener("pointercancel", endPtr);
+  svg.addEventListener("click", function(ev){
+    if(suppressClick){
+      ev.preventDefault();
+      ev.stopPropagation();
+      suppressClick = false;
+      return;
+    }
+    var href = hrefOf(closestLink(ev.target));
+    if(href){
+      ev.preventDefault();
+      go(href);
+    }
+  });
 
   var bar = document.getElementById("sitemap-map-tools");
   if(bar){
@@ -1163,7 +1237,7 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
 </script>
     
       <p class="meta">Fabric: <strong>ARR-FABRIC</strong> · APIC version: <strong>6.0(2h)</strong></p>
-      <p class="snapshot">Site map built: <strong>14 November 2026, 10:43 PM AEDT</strong></p>
+      <p class="snapshot">Site map built: <strong>14 November 2026, 10:58 PM AEDT</strong></p>
   </main>
   <footer class="wrap">
     <p class="footer">Built from the live ARR-LargeTopology file list in the site repo. No APIC or NetBox queries. No credentials, tokens or session IDs are included.</p>
