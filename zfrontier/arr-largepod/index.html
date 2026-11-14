@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:auto;
+  min-height:44px;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:auto;min-height:44px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:visible;
+  text-overflow:unset;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.25;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:22px;
+  height:22px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:16px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:#1d4ed8!important;
+}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARR-LargePod -- zFrontier -- amoeoo-coles</title>
+<meta name="description" content="Design plan for a large single-pod Cisco ACI fabric: topology and sizing, APIC cluster size, official verified scalability limits, and when to move to Multi-Pod or Multi-Site.">
+<style>:root{--site-content-max:1200px}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg,#f8fafc);color:var(--ink,#0f172a);font:15px/1.55 system-ui,Segoe UI,Arial,sans-serif}
+main{max-width:var(--site-content-max,1200px);margin:0 auto;padding:18px 18px 64px;min-width:0}
+.tr17{color:var(--muted,#475569)!important}
+.crumb{font-size:13px;color:var(--muted,#475569);margin:0 0 12px}
+.crumb a{color:var(--link,#1d4ed8);text-decoration:none}
+h1{font-size:1.7rem;line-height:1.25;margin:0 0 8px;overflow-wrap:anywhere}
+h2{font-size:1.2rem;margin:1.6rem 0 .6rem}
+h3{font-size:1.02rem;margin:1.1rem 0 .4rem}
+.lede{font-size:1.02rem;color:var(--muted,#475569);margin:0 0 1.1rem;max-width:80ch}
+.kicker{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;color:#fff;margin:0 6px 8px 0}
+.stamp{display:inline-block;font-size:12.5px;color:var(--muted,#475569);background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:8px;padding:3px 9px;margin:0 0 12px}
+.note,.warn,.claim{border-radius:10px;padding:10px 12px;margin:12px 0;border:1px solid var(--line,#e2e8f0);background:var(--card,#fff)}
+.note{border-left:4px solid #2563eb}.warn{border-left:4px solid #d97706}.claim{border-left:4px solid #9333ea}
+.badge{display:inline-block;font:700 10.5px/1.6 system-ui;letter-spacing:.03em;text-transform:uppercase;border-radius:999px;padding:0 7px;margin-right:4px;white-space:nowrap;color:#fff}
+.b-fact{background:#15803d}.b-claim{background:#9333ea}.b-est{background:#b45309}.b-unk{background:#64748b}
+.b-live{background:#15803d}.b-sup{background:#0369a1}.b-ann{background:#9333ea}.b-disp{background:#be185d}.b-none{background:#64748b}
+.kids{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));margin:8px 0 16px}
+.pbox{display:block;text-decoration:none;color:inherit;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:12px 14px;border-top:5px solid var(--c,#2563eb);transition:transform .12s,box-shadow .12s;min-width:0}
+.pbox:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,23,42,.08)}
+.pbox h3{margin:0 0 4px;font-size:1.02rem}.pbox p{margin:0;color:var(--muted,#475569);font-size:13.5px}
+.stats{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));margin:10px 0 16px}
+.stat{background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:12px;padding:10px 12px;min-width:0}
+.stat b{display:block;font-size:1.35rem;line-height:1.2}
+.stat>span{display:block;font-size:12.5px;color:var(--muted,#475569)}
+.stat span.badge{display:inline-block}
+.stat>cite{display:block;font-style:normal;font-size:11.5px;margin-top:4px;overflow-wrap:anywhere}
+.stat cite.src{display:inline}
+.tblwrap{overflow-x:auto;max-width:100%;margin:0 0 16px;border:1px solid var(--line,#e2e8f0);border-radius:10px;background:var(--card,#fff)}
+table.tree{width:100%;min-width:720px;border-collapse:collapse;font-size:13.5px}
+table.tree th,table.tree td{border-bottom:1px solid var(--line,#e2e8f0);padding:7px 9px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+table.tree th{background:var(--th-bg,#f1f5f9);font-size:12px;letter-spacing:.02em;cursor:pointer;white-space:nowrap}
+.filter{width:100%;max-width:360px;padding:7px 10px;border:1px solid var(--line,#e2e8f0);border-radius:8px;margin:0 0 10px;font:inherit;background:var(--card,#fff);color:var(--ink,#0f172a)}
+.help{font-size:13.5px;color:var(--muted,#475569);margin:-4px 0 12px}
+.svgwrap{overflow-x:auto;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:10px;margin:12px 0 20px}
+.svgwrap svg{min-width:900px;width:100%;height:auto;display:block}
+.svgwrap svg text{fill:var(--ink,#0f172a);font-family:system-ui,Arial,sans-serif}
+.svgwrap svg text.mut{fill:var(--muted,#475569)}
+.svgwrap svg .axis{stroke:var(--muted,#94a3b8)}
+.svgwrap svg .card{fill:var(--card,#fff);stroke:var(--line,#cbd5e1)}
+cite.src{font-style:normal;font-size:12px;color:var(--muted,#475569)}
+cite.src a{color:var(--link,#1d4ed8)}
+.asof{font-size:11.5px;color:var(--muted,#475569);white-space:nowrap}
+ol.srcs{font-size:13px;padding-left:1.3rem;overflow-wrap:anywhere}ol.srcs li{margin:0 0 5px}
+.related{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
+.related a{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);text-decoration:none;color:var(--ink,#0f172a);font-size:13px}
+.citygrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));margin:10px 0 18px}
+.city{background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:12px;padding:10px 12px;border-left:5px solid var(--c,#64748b);min-width:0}
+.city h3{margin:0 0 4px;font-size:1rem}.city p{margin:2px 0;font-size:12.5px;color:var(--muted,#475569)}
+ul.tight{margin:6px 0 14px;padding-left:1.2rem}ul.tight li{margin:0 0 5px}
+@media(max-width:430px){main{padding:14px 10px 56px}h1{font-size:1.4rem}.kids,.citygrid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.svgwrap svg{min-width:760px}}
+
+.duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin:10px 0 18px}
+.col{background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:12px 14px;min-width:0;border-top:5px solid var(--c,#2563eb)}
+.col h3{margin:0 0 6px}
+.col .stats{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+.chart{overflow:hidden;margin:8px 0}.chart svg{width:100%;height:auto;display:block}
+.chart svg text{fill:var(--ink,#0f172a);font-family:system-ui,Arial,sans-serif}.chart svg text.mut{fill:var(--muted,#475569)}
+.chart svg .grid{stroke:var(--line,#e2e8f0)}
+.svgwrap svg rect,.svgwrap svg .card{fill:var(--card,#ffffff)}
+html[data-theme="dark"] .svgwrap svg rect,html[data-theme="dark"] .svgwrap svg .card{fill:var(--card,#1e293b)}
+.tag{display:inline-block;font:600 11px/1.6 system-ui;border-radius:999px;padding:0 7px;margin:1px 3px 1px 0;background:var(--th-bg,#f1f5f9);border:1px solid var(--line,#e2e8f0);color:var(--ink,#0f172a);white-space:nowrap}
+ol.steps{padding-left:1.3rem}ol.steps li{margin:0 0 7px}
+.b-ind{background:#0f766e}
+#zf-yt th:first-child,#zf-yt td:first-child,#zf-yt td.pub{white-space:nowrap;width:1%}
+@media(max-width:720px){.duo{grid-template-columns:1fr}}
+
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:10px 0 18px}
+.role{background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:12px 14px;min-width:0;border-top:5px solid var(--c,#0f766e)}
+.role h3{margin:0 0 6px;font-size:1.05rem}
+.role p{margin:0;color:var(--muted,#475569);font-size:13.5px}
+.flowwrap{overflow-x:auto;max-width:100%;background:#f8fafc;border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:8px;margin:10px 0 16px}
+html[data-theme="dark"] .flowwrap{background:#f8fafc;border-color:#cbd5e1}
+.flowwrap svg{min-width:720px;width:100%;height:auto;display:block}
+.tblwrap{overflow-x:auto;max-width:100%}
+.tblwrap table{width:100%;min-width:680px}
+cite.src,.src{overflow-wrap:anywhere;word-break:break-word}
+.callout{border:1px solid var(--line,#e2e8f0);border-left:5px solid #0f766e;border-radius:12px;padding:10px 14px;margin:10px 0 16px;background:var(--card,#fff)}
+.warnbox{border:1px solid var(--line,#e2e8f0);border-left:5px solid #b45309;border-radius:12px;padding:10px 14px;margin:10px 0 16px;background:var(--card,#fff)}
+.notebox{border:1px solid var(--line,#e2e8f0);border-left:5px solid #1d4ed8;border-radius:12px;padding:10px 14px;margin:10px 0 16px;background:var(--card,#fff)}
+ol.openq,ul.tight{padding-left:1.25rem}
+ol.openq li,ul.tight li{margin:0 0 8px}
+.cap{font-size:13px;color:var(--muted,#475569);margin:0 0 16px}
+@media (max-width:390px){
+  .roles{grid-template-columns:1fr}
+  .flowwrap svg{min-width:640px}
+  h1{font-size:1.35rem;overflow-wrap:anywhere}
+  .tblwrap table{min-width:560px}
+}
+</style>
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+
+<!-- site-menu v1 --><nav class="site"><a href="/">Home</a></nav>
+<main>
+<div class="tr17" style="text-align:right;font-size:13px;margin:0 0 10px"><span class="uv" style="background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">...</b></span></div>
+<nav class="crumb"><a href="/">Home</a> › <a href="/zfrontier/">zFrontier</a> › ARR-LargePod</nav>
+<div class="stamp">Last updated 14 Nov 2026 17:29 AEDT (Melbourne time) · facts researched 14 Nov 2026 · as of 2026-11-14 · no daily refresh</div>
+
+<h1>🏗️ ARR-LargePod</h1>
+<p class="lede">A design plan for a <strong>large single-pod</strong> Cisco ACI fabric: what that topology looks like, how to size spines, leaves and the APIC cluster, which official scale limits apply inside one pod, and when to step up to Multi-Pod or Multi-Site instead.</p>
+
+<div class="notebox">
+<p>This page complements the existing <a href="/ARR/">ARR — ACI Fabric Report</a>, which is a snapshot of a specific fabric (ACI Fabric1, APIC 6.1(6g), snapshot 13 November 2026, 4:37:08 PM IST). That report is inventory and health from a read-only APIC pull. It is not a scale-out design. Use ARR to see what a fabric looks like in practice; use this page for the official design envelope of a large single pod.</p>
+</div>
+
+<div class="callout">
+<p><strong>Figures as of 14 Nov 2026.</strong> Scale numbers are taken only from the <a class="src" href="#src-vsg">[1]</a>. That guide covers APIC 6.2(1/2/3) and Nexus 9000 ACI-mode 16.2(1/2/3) and was last updated 19 October 2026. Numbers are not invented, and they are not refreshed daily. If a figure could not be verified in an official source opened for this build, the page says so. Re-check the guide for your exact release before a purchase or cut-over. Cisco also notes that these values are verified independently — you should not assume every maximum can be used at the same time in one fabric.</p>
+</div>
+
+<h2>What a large single-pod fabric looks like</h2>
+<p>A single ACI pod is one Clos fabric: a layer of spine switches, a layer of leaf switches, and one APIC cluster managing the pod. Every leaf has a path to every spine. Endpoints, L3Outs and services attach to leaves. APICs also attach to leaves, not to spines.</p>
+<p>In a <em>large</em> single pod you stay inside that one fabric and push toward the official <strong>per-pod</strong> limits, not the larger <strong>fabric-wide</strong> leaf totals that only apply when you add more pods. From the Verified Scalability Guide Table 1 <a class="src" href="#src-vsg">[1]</a>:</p>
+<ul class="tight">
+<li>With <strong>3</strong> APICs, a pod can have up to <strong>85</strong> leaves (and the fabric total is also 85, so this is already a one-pod maximum).</li>
+<li>With <strong>4</strong> APICs, or with <strong>5 or 6</strong> APICs, a pod can have up to <strong>200</strong> leaves. The fabric-wide totals of 200 (4 APICs) and 300 (5 or 6 APICs) mean a 5- or 6-node cluster can go beyond 200 leaves only by adding another pod.</li>
+<li>With <strong>7</strong> APICs, a pod can have up to <strong>400</strong> leaves. The fabric-wide total of 500 leaves likewise requires Multi-Pod once you pass 400.</li>
+</ul>
+<p>So a “large single pod” in current 6.2(x) verified terms is typically a <strong>7-node APIC cluster</strong> with up to <strong>400 leaves in that pod</strong>, or a 5- or 6-node cluster that stays at or under <strong>200 leaves</strong> in the pod. Crossing those per-pod leaf caps is the first hard reason to go Multi-Pod <a class="src" href="#src-vsg">[1]</a>.</p>
+
+<div class="flowwrap">
+<svg viewBox="0 0 1100 640" role="img" aria-label="Illustrative large single-pod ACI fabric: an APIC cluster with a cold standby, APIC-attached leaves, up to six spines, and border, compute and service leaf roles.">
+<title>Large single-pod ACI fabric (illustrative roles)</title>
+<rect x="0" y="0" width="1100" height="640" fill="#f8fafc"/>
+<text x="550" y="28" text-anchor="middle" font-size="18" font-weight="800" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Large single-pod ACI fabric</text>
+<text x="550" y="48" text-anchor="middle" font-size="12" fill="#334155" font-family="system-ui,Arial,sans-serif">Illustrative layout of roles. Leaf counts in the drawing are not a prescribed split — use the official per-pod maxima in the table below.</text>
+<text x="40" y="78" font-size="12" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">APIC cluster (active) and cold standby</text>
+<rect x="40" y="88" width="80" height="44" rx="8" fill="#0f766e" stroke="#134e4a" stroke-width="1.5"/>
+<text x="80" y="115" text-anchor="middle" font-size="12" font-weight="700" fill="#f8fafc" font-family="system-ui,Arial,sans-serif">APIC 1</text>
+<rect x="128" y="88" width="80" height="44" rx="8" fill="#0f766e" stroke="#134e4a" stroke-width="1.5"/>
+<text x="168" y="115" text-anchor="middle" font-size="12" font-weight="700" fill="#f8fafc" font-family="system-ui,Arial,sans-serif">APIC 2</text>
+<rect x="216" y="88" width="80" height="44" rx="8" fill="#0f766e" stroke="#134e4a" stroke-width="1.5"/>
+<text x="256" y="115" text-anchor="middle" font-size="12" font-weight="700" fill="#f8fafc" font-family="system-ui,Arial,sans-serif">APIC 3</text>
+<rect x="304" y="88" width="80" height="44" rx="8" fill="#0f766e" stroke="#134e4a" stroke-width="1.5"/>
+<text x="344" y="115" text-anchor="middle" font-size="12" font-weight="700" fill="#f8fafc" font-family="system-ui,Arial,sans-serif">APIC 4</text>
+<rect x="392" y="88" width="80" height="44" rx="8" fill="#0f766e" stroke="#134e4a" stroke-width="1.5"/>
+<text x="432" y="115" text-anchor="middle" font-size="12" font-weight="700" fill="#f8fafc" font-family="system-ui,Arial,sans-serif">APIC 5</text>
+<rect x="480" y="88" width="80" height="44" rx="8" fill="#0f766e" stroke="#134e4a" stroke-width="1.5"/>
+<text x="520" y="115" text-anchor="middle" font-size="12" font-weight="700" fill="#f8fafc" font-family="system-ui,Arial,sans-serif">APIC 6</text>
+<rect x="568" y="88" width="80" height="44" rx="8" fill="#0f766e" stroke="#134e4a" stroke-width="1.5"/>
+<text x="608" y="115" text-anchor="middle" font-size="12" font-weight="700" fill="#f8fafc" font-family="system-ui,Arial,sans-serif">APIC 7</text>
+<rect x="656" y="88" width="96" height="44" rx="8" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5" stroke-dasharray="5 3"/>
+<text x="704" y="115" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Standby</text>
+<line x1="200" y1="132" x2="330" y2="168" stroke="#1d4ed8" stroke-width="1.4"/>
+<line x1="464" y1="132" x2="470" y2="168" stroke="#1d4ed8" stroke-width="1.4"/>
+<rect x="250" y="168" width="160" height="40" rx="8" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.6"/>
+<rect x="430" y="168" width="160" height="40" rx="8" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="330" y="193" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">APIC leaf</text>
+<text x="510" y="193" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">APIC leaf</text>
+<text x="600" y="158" font-size="11" fill="#334155" font-family="system-ui,Arial,sans-serif">APICs attach to leaves, not to spines</text>
+<text x="40" y="238" font-size="12" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Spines (verified maximum: 6 per pod)</text>
+<rect x="40" y="246" width="150" height="44" rx="8" fill="#0f172a" stroke="#0f172a" stroke-width="1.5"/>
+<text x="115.0" y="273" text-anchor="middle" font-size="13" font-weight="700" fill="#f8fafc" font-family="system-ui,Arial,sans-serif">Spine 1</text>
+<line x1="330" y1="208" x2="115.0" y2="246" stroke="#94a3b8" stroke-width="1"/>
+<line x1="510" y1="208" x2="115.0" y2="246" stroke="#94a3b8" stroke-width="1"/>
+<rect x="208" y="246" width="150" height="44" rx="8" fill="#0f172a" stroke="#0f172a" stroke-width="1.5"/>
+<text x="283.0" y="273" text-anchor="middle" font-size="13" font-weight="700" fill="#f8fafc" font-family="system-ui,Arial,sans-serif">Spine 2</text>
+<line x1="330" y1="208" x2="283.0" y2="246" stroke="#94a3b8" stroke-width="1"/>
+<line x1="510" y1="208" x2="283.0" y2="246" stroke="#94a3b8" stroke-width="1"/>
+<rect x="376" y="246" width="150" height="44" rx="8" fill="#0f172a" stroke="#0f172a" stroke-width="1.5"/>
+<text x="451.0" y="273" text-anchor="middle" font-size="13" font-weight="700" fill="#f8fafc" font-family="system-ui,Arial,sans-serif">Spine 3</text>
+<line x1="330" y1="208" x2="451.0" y2="246" stroke="#94a3b8" stroke-width="1"/>
+<line x1="510" y1="208" x2="451.0" y2="246" stroke="#94a3b8" stroke-width="1"/>
+<rect x="544" y="246" width="150" height="44" rx="8" fill="#0f172a" stroke="#0f172a" stroke-width="1.5"/>
+<text x="619.0" y="273" text-anchor="middle" font-size="13" font-weight="700" fill="#f8fafc" font-family="system-ui,Arial,sans-serif">Spine 4</text>
+<line x1="330" y1="208" x2="619.0" y2="246" stroke="#94a3b8" stroke-width="1"/>
+<line x1="510" y1="208" x2="619.0" y2="246" stroke="#94a3b8" stroke-width="1"/>
+<rect x="712" y="246" width="150" height="44" rx="8" fill="#0f172a" stroke="#0f172a" stroke-width="1.5"/>
+<text x="787.0" y="273" text-anchor="middle" font-size="13" font-weight="700" fill="#f8fafc" font-family="system-ui,Arial,sans-serif">Spine 5</text>
+<line x1="330" y1="208" x2="787.0" y2="246" stroke="#94a3b8" stroke-width="1"/>
+<line x1="510" y1="208" x2="787.0" y2="246" stroke="#94a3b8" stroke-width="1"/>
+<rect x="880" y="246" width="150" height="44" rx="8" fill="#0f172a" stroke="#0f172a" stroke-width="1.5"/>
+<text x="955.0" y="273" text-anchor="middle" font-size="13" font-weight="700" fill="#f8fafc" font-family="system-ui,Arial,sans-serif">Spine 6</text>
+<line x1="330" y1="208" x2="955.0" y2="246" stroke="#94a3b8" stroke-width="1"/>
+<line x1="510" y1="208" x2="955.0" y2="246" stroke="#94a3b8" stroke-width="1"/>
+<text x="40" y="330" font-size="12" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Leaf roles (illustrative counts only)</text>
+<rect x="40" y="340" width="320" height="150" rx="12" fill="#ffffff" stroke="#b45309" stroke-width="1.8"/>
+<text x="52" y="362" font-size="13" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Border leaves</text>
+<text x="52" y="380" font-size="11" fill="#334155" font-family="system-ui,Arial,sans-serif">L3Out / WAN / DC-core</text>
+<rect x="52" y="394" width="70" height="34" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.3"/>
+<text x="87" y="416" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Leaf</text>
+<rect x="128" y="394" width="70" height="34" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.3"/>
+<text x="163" y="416" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Leaf</text>
+<rect x="204" y="394" width="70" height="34" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.3"/>
+<text x="239" y="416" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Leaf</text>
+<rect x="280" y="394" width="70" height="34" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.3"/>
+<text x="315" y="416" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Leaf</text>
+<line x1="115.0" y1="290" x2="200.0" y2="340" stroke="#94a3b8" stroke-width="0.9"/>
+<line x1="283.0" y1="290" x2="200.0" y2="340" stroke="#94a3b8" stroke-width="0.9"/>
+<line x1="451.0" y1="290" x2="200.0" y2="340" stroke="#94a3b8" stroke-width="0.9"/>
+<line x1="619.0" y1="290" x2="200.0" y2="340" stroke="#94a3b8" stroke-width="0.9"/>
+<line x1="787.0" y1="290" x2="200.0" y2="340" stroke="#94a3b8" stroke-width="0.9"/>
+<line x1="955.0" y1="290" x2="200.0" y2="340" stroke="#94a3b8" stroke-width="0.9"/>
+<rect x="390" y="340" width="330" height="150" rx="12" fill="#ffffff" stroke="#047857" stroke-width="1.8"/>
+<text x="402" y="362" font-size="13" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Compute leaves</text>
+<text x="402" y="380" font-size="11" fill="#334155" font-family="system-ui,Arial,sans-serif">Servers and hypervisors</text>
+<rect x="402" y="394" width="70" height="34" rx="6" fill="#d1fae5" stroke="#047857" stroke-width="1.3"/>
+<text x="437" y="416" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Leaf</text>
+<rect x="478" y="394" width="70" height="34" rx="6" fill="#d1fae5" stroke="#047857" stroke-width="1.3"/>
+<text x="513" y="416" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Leaf</text>
+<rect x="554" y="394" width="70" height="34" rx="6" fill="#d1fae5" stroke="#047857" stroke-width="1.3"/>
+<text x="589" y="416" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Leaf</text>
+<rect x="630" y="394" width="70" height="34" rx="6" fill="#d1fae5" stroke="#047857" stroke-width="1.3"/>
+<text x="665" y="416" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Leaf</text>
+<rect x="402" y="438" width="70" height="34" rx="6" fill="#d1fae5" stroke="#047857" stroke-width="1.3"/>
+<text x="437" y="460" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Leaf</text>
+<rect x="478" y="438" width="70" height="34" rx="6" fill="#d1fae5" stroke="#047857" stroke-width="1.3"/>
+<text x="513" y="460" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Leaf</text>
+<line x1="115.0" y1="290" x2="555.0" y2="340" stroke="#94a3b8" stroke-width="0.9"/>
+<line x1="283.0" y1="290" x2="555.0" y2="340" stroke="#94a3b8" stroke-width="0.9"/>
+<line x1="451.0" y1="290" x2="555.0" y2="340" stroke="#94a3b8" stroke-width="0.9"/>
+<line x1="619.0" y1="290" x2="555.0" y2="340" stroke="#94a3b8" stroke-width="0.9"/>
+<line x1="787.0" y1="290" x2="555.0" y2="340" stroke="#94a3b8" stroke-width="0.9"/>
+<line x1="955.0" y1="290" x2="555.0" y2="340" stroke="#94a3b8" stroke-width="0.9"/>
+<rect x="740" y="340" width="320" height="150" rx="12" fill="#ffffff" stroke="#6d28d9" stroke-width="1.8"/>
+<text x="752" y="362" font-size="13" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Service leaves</text>
+<text x="752" y="380" font-size="11" fill="#334155" font-family="system-ui,Arial,sans-serif">FW / LB / services</text>
+<rect x="752" y="394" width="70" height="34" rx="6" fill="#ede9fe" stroke="#6d28d9" stroke-width="1.3"/>
+<text x="787" y="416" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Leaf</text>
+<rect x="828" y="394" width="70" height="34" rx="6" fill="#ede9fe" stroke="#6d28d9" stroke-width="1.3"/>
+<text x="863" y="416" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Leaf</text>
+<rect x="904" y="394" width="70" height="34" rx="6" fill="#ede9fe" stroke="#6d28d9" stroke-width="1.3"/>
+<text x="939" y="416" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Leaf</text>
+<line x1="115.0" y1="290" x2="900.0" y2="340" stroke="#94a3b8" stroke-width="0.9"/>
+<line x1="283.0" y1="290" x2="900.0" y2="340" stroke="#94a3b8" stroke-width="0.9"/>
+<line x1="451.0" y1="290" x2="900.0" y2="340" stroke="#94a3b8" stroke-width="0.9"/>
+<line x1="619.0" y1="290" x2="900.0" y2="340" stroke="#94a3b8" stroke-width="0.9"/>
+<line x1="787.0" y1="290" x2="900.0" y2="340" stroke="#94a3b8" stroke-width="0.9"/>
+<line x1="955.0" y1="290" x2="900.0" y2="340" stroke="#94a3b8" stroke-width="0.9"/>
+<rect x="40" y="508" width="1020" height="110" rx="12" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6" stroke-dasharray="6 4"/>
+<text x="56" y="534" font-size="13" font-weight="700" fill="#0f172a" font-family="system-ui,Arial,sans-serif">When this single pod is no longer enough</text>
+<text x="56" y="556" font-size="12" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Multi-Pod: more pods under the same APIC cluster (cabling / buildings / per-pod leaf cap).</text>
+<text x="56" y="576" font-size="12" fill="#0f172a" font-family="system-ui,Arial,sans-serif">Multi-Site: a second APIC domain plus Nexus Dashboard Orchestrator, typically for isolation or geography.</text>
+<text x="56" y="596" font-size="11" fill="#334155" font-family="system-ui,Arial,sans-serif">See the Multi-Pod and Multi-Site section. This dashed box is a decision hint, not a topology you deploy inside the pod.</text>
+</svg></div>
+<p class="cap">The diagram sits on a light card in both light and dark themes so the explicit fills stay readable. A specific official split of border vs compute vs service leaves was not found in the Verified Scalability Guide; the boxes show typical roles only.</p>
+
+<h2>Spine and leaf topology and sizing</h2>
+<div class="roles">
+<div class="role" style="--c:#0f172a"><h3>Spines</h3><p>Verified maximum is <strong>6 spines per pod</strong> <a class="src" href="#src-vsg">[1]</a>. A minimum spine count is <strong>not listed</strong> in that table. Design for enough ECMP paths and for the endpoint and LPM scale of the spine hardware you pick (see endpoints below). The same guide notes that some high-scale points (for example more than 1,000 VRFs, or maximum endpoints / LPM routes) assume <strong>32 GB RAM on the spines</strong>.</p></div>
+<div class="role" style="--c:#b45309"><h3>Border leaves</h3><p>These are the leaves that host L3Outs toward WAN, campus or DC-core. The guide does <strong>not</strong> prescribe how many border leaves a pod must have. It does cap related objects — for example <strong>24 border leaves per L3Out</strong> in the per-fabric table, and L3Out counts that grow with cluster size (2,400 or 10,000) <a class="src" href="#src-vsg">[1]</a>. Size this role from routing, bandwidth and those object limits, not from an invented ratio.</p></div>
+<div class="role" style="--c:#047857"><h3>Compute leaves</h3><p>These attach servers and hypervisors. Again, the official guide does not give a required count or a percentage of the pod. The binding constraint is the <strong>leaves-per-pod</strong> maximum for the APIC cluster size you choose, plus ports, oversubscription and the endpoint scale of the spines.</p></div>
+<div class="role" style="--c:#6d28d9"><h3>Service leaves</h3><p>These typically front firewalls, load balancers and other service graphs. No official service-leaf count was found in the Verified Scalability Guide. Treat them as leaves that still count toward the per-pod leaf cap, and plan contracts and policy-CAM (TCAM) carefully on those switches.</p></div>
+</div>
+<p>Other verified topology caps from the same per-fabric table <a class="src" href="#src-vsg">[1]</a>, independent of the Default / Medium / Large / 7-node columns: <strong>24,000 physical ports</strong> per fabric, <strong>20 virtual ports (vPCs) per leaf</strong>, <strong>400 vPCs per fabric</strong> in a Layer 3 fabric (1,000 in a Layer 2 fabric), and <strong>650 FEXs</strong> per fabric if you use them. Remote leaf is listed at <strong>200</strong> (100 locations with 2 remote leaves each) for a Layer 3 fabric, with a 4-remote-leaf / 2-location Multi-Pod exception in a note. If you need those designs, read that section of the guide rather than stretching this single-pod plan.</p>
+
+<h2>APIC cluster sizing (3, 5, 7 and standby)</h2>
+<p>Cisco documents an <strong>active cluster size of 3 to 7</strong> APICs, and says you should size the cluster with the Verified Scalability Guide for the intended topology <a class="src" href="#src-gs52-cluster">[3]</a> <a class="src" href="#src-bc60-cluster">[4]</a> <a class="src" href="#src-gs60-cluster-size">[5]</a>. In most cases Cisco recommends a cluster of <strong>3, 5 or 7</strong> APICs, plus additional standby APICs. A cluster of <strong>4</strong> is specifically recommended for a two-site Multi-Pod fabric with between 80 and 200 leaf switches <a class="src" href="#src-gs52-cluster">[3]</a> <a class="src" href="#src-bc60-cluster">[4]</a> <a class="src" href="#src-gs60-cluster-size">[5]</a>.</p>
+<p>The Verified Scalability Guide Table 1 still publishes limits for all of those sizes — Default (3 nodes), Medium (4 nodes), Large (5 or 6 nodes) and a 7-node column <a class="src" href="#src-vsg">[1]</a>. Even cluster sizes are therefore <em>documented for scale</em>, even though the Getting Started guidance prefers odd sizes except for that Multi-Pod case.</p>
+<div class="tblwrap">
+<table>
+<thead>
+<tr><th>Cluster (Table 1)</th><th>APIC nodes</th><th>Leaves (fabric)</th><th>Leaves per pod</th><th>Pods</th><th>Tenants</th><th>VRFs</th><th>L3Outs</th></tr>
+</thead>
+<tbody>
+<tr><td>Default</td><td>3</td><td>85</td><td>85</td><td>6</td><td>1,000</td><td>1,000</td><td>2,400</td></tr>
+<tr><td>Medium</td><td>4</td><td>200</td><td>200</td><td>6</td><td>1,000</td><td>1,000</td><td>2,400</td></tr>
+<tr><td>Large</td><td>5 or 6</td><td>300</td><td>200</td><td>25</td><td>3,000</td><td>10,000</td><td>10,000</td></tr>
+<tr><td>7-node</td><td>7</td><td>500</td><td>400</td><td>25</td><td>3,000</td><td>10,000</td><td>10,000</td></tr>
+</tbody>
+</table>
+</div>
+<p class="cap">Source: Cisco ACI Verified Scalability Guide, Table 1, APIC 6.2(1/2/3), updated 19 October 2026 <a class="src" href="#src-vsg">[1]</a>. “Leaves” is the fabric-wide total. “Leaves per pod” is the cap that binds a single-pod design.</p>
+<p>A <strong>cold standby</strong> APIC is official in the 6.2 Getting Started guide: typically at least three active controllers plus one or more standby controllers. Switchover to a standby is a <strong>manual</strong> operation, not an automatic failover <a class="src" href="#src-gs62-standby">[2]</a>. Standby controllers do not add to the Table 1 “Number of APIC nodes” used for scale. An exact official maximum number of standby APICs, or a required standby ID range, was <strong>not verified</strong> in the documents opened for this build, so those figures are not stated here.</p>
+
+<h2>Verified scalability limits for a single pod</h2>
+<p>Unless noted, the figures below are fabric-wide values from the same 6.2(x) guide <a class="src" href="#src-vsg">[1]</a>. For a single pod, use the <strong>leaves-per-pod</strong> column as the leaf cap, and remember that fabric-wide object counts (tenants, VRFs, BDs, EPGs, contracts, endpoints) are still the official published maxima for that cluster — they are not restated as a smaller “per-pod only” table in the guide.</p>
+
+<h3>Leaves, tenants, VRFs, bridge domains, EPGs</h3>
+<ul class="tight">
+<li><strong>Leaves per pod:</strong> 85 (3 APICs), 200 (4, 5 or 6 APICs), 400 (7 APICs) <a class="src" href="#src-vsg">[1]</a>.</li>
+<li><strong>Tenants:</strong> 1,000 (3 or 4 APICs) or 3,000 (5, 6 or 7 APICs) <a class="src" href="#src-vsg">[1]</a>.</li>
+<li><strong>VRFs:</strong> 1,000 (3 or 4 APICs) or 10,000 (5, 6 or 7 APICs) <a class="src" href="#src-vsg">[1]</a>. High VRF counts are one of the cases where the guide assumes 32 GB spine RAM.</li>
+<li><strong>Bridge domains:</strong> 15,000 in a Layer 3 fabric, or 21,000 in a Layer 2 fabric <a class="src" href="#src-vsg">[1]</a>. These are in the per-fabric table (not split by cluster size).</li>
+<li><strong>EPGs:</strong> 15,000 in a Layer 3 fabric, or 21,000 in a Layer 2 fabric <a class="src" href="#src-vsg">[1]</a>. The guide also discusses EPGs per tenant, including special use cases; use that section if you are packing a very large tenant rather than many small ones.</li>
+<li><strong>External EPGs across all border leaves:</strong> 4,000 (3 or 4 APICs) or 10,000 (5, 6 or 7 APICs) <a class="src" href="#src-vsg">[1]</a>.</li>
+</ul>
+
+<h3>Endpoints</h3>
+<p>Endpoint scale is <strong>not a single number</strong>. In the 6.2(x) guide it depends on spine type and on the endpoint/route scale profile (the proxy database) <a class="src" href="#src-vsg">[1]</a>:</p>
+<ul class="tight">
+<li><strong>450,000</strong> proxy-database entries on <strong>-EX, -FX, -GX, -GX2, -FX3, FX3-P, -H and -C</strong> spines (and the guide lists 450,000 as the maximum endpoints for those platforms in the profile discussion).</li>
+<li><strong>360,000</strong> on <strong>FX2 and -GX2A</strong> spines.</li>
+<li><strong>180,000</strong> on first-generation spines.</li>
+</ul>
+<p>A single official “endpoints per pod” figure, separate from those fabric-wide proxy-database maxima, was <strong>not</strong> listed in the sections reviewed for this build. Plan endpoints against the spine generation you will actually buy, and re-read the endpoint and forwarding-scale sections of the guide for your exact SKU and profile.</p>
+
+<h3>Contracts and TCAM</h3>
+<ul class="tight">
+<li><strong>Contracts per fabric:</strong> 10,000 <a class="src" href="#src-vsg">[1]</a>.</li>
+<li><strong>Contract filters per fabric:</strong> 10,000 <a class="src" href="#src-vsg">[1]</a>.</li>
+<li>Security / policy <strong>TCAM is per leaf</strong>, not a fabric-wide pool. The per-fabric column for “Security TCAM size” is marked not applicable. The default security TCAM is <strong>64,000</strong> per leaf <a class="src" href="#src-vsg">[1]</a>.</li>
+<li>On <strong>32 GB</strong> second-generation leaf switches (LSE2 / -EX/-FX and later, as named in the guide), a <strong>High Policy</strong> forwarding profile can raise policy-CAM scale up to <strong>256,000</strong>, with compression and profile caveats that are spelled out in the guide. Do not treat 256,000 as the default <a class="src" href="#src-vsg">[1]</a>.</li>
+</ul>
+<p>How many contracts you can actually install on a given leaf depends on the leaf policy-CAM size, the forwarding profile, and how the contracts are written (filters, direction, reuse). Those engineering limits belong in the contract / forwarding-scale sections of the official guides — this page does not invent a “contracts per leaf” number beyond what the VSG states.</p>
+
+<h2>When to go Multi-Pod or Multi-Site instead</h2>
+<p>Stay on a single pod while the design fits the per-pod leaf cap, the building and cabling plan, and your tolerance for one fabric and one APIC cluster as a shared fault and change domain. Move when one of those no longer holds.</p>
+<div class="roles">
+<div class="role" style="--c:#1d4ed8">
+<h3>Choose Multi-Pod when</h3>
+<p>You need more leaves than one pod allows (200 or 400 depending on cluster size), or more than six spines in one place, or you want separate Clos fabrics in different halls or buildings under <strong>one APIC cluster</strong> <a class="src" href="#src-mp-wp">[6]</a> <a class="src" href="#src-design">[7]</a> <a class="src" href="#src-infographic">[8]</a> <a class="src" href="#src-vsg">[1]</a>. Multi-Pod keeps a single policy domain and interconnects pods over an IPN. A 5-, 6- or 7-node cluster is verified up to <strong>25 pods</strong> and 50 spines in a Multi-Pod fabric; 3- or 4-node clusters are verified up to <strong>6 pods</strong> <a class="src" href="#src-vsg">[1]</a>. A configuration error in that shared APIC cluster can still affect every pod <a class="src" href="#src-ms-wp">[9]</a> <a class="src" href="#src-infographic">[8]</a>.</p>
+</div>
+<div class="role" style="--c:#b91c1c">
+<h3>Choose Multi-Site when</h3>
+<p>You need <strong>separate APIC clusters</strong> (separate configuration and availability domains), typically across longer distances or organisational boundaries, with Nexus Dashboard Orchestrator coordinating inter-site policy <a class="src" href="#src-ms-wp">[9]</a> <a class="src" href="#src-infographic">[8]</a>. Cisco’s Multi-Pod vs Multi-Site overview also frames Multi-Site for geographically distributed data centres <a class="src" href="#src-ms-wp">[9]</a> <a class="src" href="#src-infographic">[8]</a>. Each site is still bound by that site’s APIC Verified Scalability Guide. <strong>Multi-Site scale numbers are no longer in this VSG</strong> — the 6.2(x) guide says they live in the Nexus Dashboard Orchestrator documentation. Those NDO figures were not copied here because they were not verified for this build.</p>
+</div>
+</div>
+<p>This site already has an <a href="/aci-multipod/">ACI Multi-Pod</a> page if you are past the single-pod envelope.</p>
+
+<h2>Design checklist</h2>
+<ol class="openq">
+<li>Pick the APIC cluster size from Table 1 for the planned leaf, tenant, VRF and L3Out scale — not only from habit. Prefer 3, 5 or 7 unless you are in the documented 4-node Multi-Pod case <a class="src" href="#src-gs52-cluster">[3]</a> <a class="src" href="#src-bc60-cluster">[4]</a> <a class="src" href="#src-gs60-cluster-size">[5]</a> <a class="src" href="#src-vsg">[1]</a>.</li>
+<li>Stay inside the <strong>leaves-per-pod</strong> cap for that cluster (85 / 200 / 400). Do not use the larger fabric-wide leaf totals (300 or 500) as a single-pod target.</li>
+<li>Plan spines within the verified maximum of six per pod, and check spine RAM and generation against VRF, endpoint and LPM assumptions in the guide.</li>
+<li>Count every leaf role — border, compute, service, APIC-attached, and any remote or FEX designs — against the same per-pod leaf cap. Do not invent a required role split.</li>
+<li>Size contracts and filters against the 10,000 fabric-wide caps, and size policy-CAM against the per-leaf default of 64,000 or a documented High Policy profile.</li>
+<li>Size endpoints against the proxy-database limits of the actual spine SKU (450,000 / 360,000 / 180,000 as published).</li>
+<li>Add one or more <strong>cold standby</strong> APICs if you want a spare controller; remember switchover is manual <a class="src" href="#src-gs62-standby">[2]</a>.</li>
+<li>If you need another hall, another 200–400 leaves, or more than six spines, design Multi-Pod rather than stretching the pod.</li>
+<li>If you need a second APIC domain, geographic isolation, or NDO-managed inter-site policy, design Multi-Site and read the current NDO scalability guide.</li>
+<li>Re-read the Verified Scalability Guide for the exact APIC and switch software you will run. This page is a snapshot as of 14 Nov 2026, not a live feed.</li>
+<li>Do not assume every published maximum can be used at once. Cisco states the values are independently verified.</li>
+</ol>
+
+<h2>Risks</h2>
+<ul class="tight">
+<li><strong>Reading fabric-wide leaf totals as a single-pod plan.</strong> 300 or 500 leaves require Multi-Pod under the 6.2(x) table.</li>
+<li><strong>Multi-dimensional scale.</strong> Hitting tenants, VRFs, EPGs, contracts and endpoints all at their published maxima in one fabric is not something the guide claims to have verified together.</li>
+<li><strong>Spine and leaf hardware mismatch.</strong> Endpoint, LPM and High Policy numbers depend on generation and RAM. Undersizing spine memory or using a mixed generation quietly lowers the ceiling.</li>
+<li><strong>Policy-CAM exhaustion on hot leaves.</strong> Border and service leaves often carry more contracts than compute leaves. The fabric can be “in scale” on contract count while an individual leaf is not.</li>
+<li><strong>One APIC cluster, one change domain.</strong> A bad policy push or cluster event is shared by the whole pod, and by every pod if you later add Multi-Pod <a class="src" href="#src-ms-wp">[9]</a> <a class="src" href="#src-infographic">[8]</a>.</li>
+<li><strong>Cold standby is not automatic HA.</strong> A failed active APIC does not automatically promote the standby <a class="src" href="#src-gs62-standby">[2]</a>.</li>
+<li><strong>Even-sized clusters.</strong> 4- and 6-node sizes appear in Table 1, but general Getting Started guidance still prefers 3, 5 or 7 except for a documented Multi-Pod case. Do not pick 4 or 6 without reading that guidance.</li>
+<li><strong>Unverified role splits and NDO numbers.</strong> This page does not invent a border/compute/service ratio, a minimum spine count, a standby maximum, or Multi-Site object limits. Treat any unofficial rule of thumb as unverified until you check a current official guide.</li>
+</ul>
+
+<h2 id='sources'>Sources</h2><p class='help'>Numbered as cited on this page. Official Cisco documents were opened or confirmed on 14 Nov 2026. Scale numbers are taken only from the cited Verified Scalability Guide. There is no daily refresh; re-check the guide for your exact APIC and switch release before a design cut-over.</p><ol class='openq'><li id="src-vsg"><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/verified-scalability/cisco-aci-verified-scalability-guide-621.html">Cisco ACI Verified Scalability Guide for APIC 6.2(1), 6.2(2) and 6.2(3) and Nexus 9000 ACI-Mode Switches 16.2(1), 16.2(2) and 16.2(3), last updated 19 October 2026</a></li><li id="src-gs62-standby"><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/getting-started/cisco-apic-getting-started-guide-62x/m-cold-standby.html">Cisco APIC Getting Started Guide, Release 6.2(x): About Cold Standby for a Cisco APIC Cluster</a></li><li id="src-gs52-cluster"><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/5x/getting-started/cisco-apic-getting-started-guide-52x/m-configuring-the-cisco-apic-cluster-using-the-cli.html">Cisco APIC Getting Started Guide, Release 5.2(x): Configuring the Cisco APIC Using the CLI — cluster guidelines (3, 5 or 7 APICs; 4 for a two-site Multi-Pod fabric with 80–200 leaves)</a></li><li id="src-bc60-cluster"><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/basic-configuration/cisco-apic-basic-configuration-guide-60x/m-configuring-the-cisco-apic-cluster-using-the-cli.html">Cisco APIC Basic Configuration Guide, Release 6.0(x): Configuring the Cisco APIC Cluster Using the CLI — same cluster-size guidelines as the 5.2 Getting Started note</a></li><li id="src-gs60-cluster-size"><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/getting-started/cisco-apic-getting-started-guide-60x/cisco-apic-cluster-sizing-60x.html">Cisco APIC Getting Started Guide, Release 6.0(x): Cisco APIC Cluster Sizing (active cluster size 3–7; use the Verified Scalability Guide for a given topology)</a></li><li id="src-mp-wp"><a href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/kb/white-papers/Cisco_ACI_Multi-Pod_Design_White_Paper.html">Cisco ACI Multi-Pod White Paper</a></li><li id="src-design"><a href="https://www.cisco.com/c/en/us/td/docs/dcn/whitepapers/cisco-application-centric-infrastructure-design-guide.html">Cisco Application Centric Infrastructure Design Guide</a></li><li id="src-infographic"><a href="https://www.cisco.com/c/en/us/solutions/collateral/data-center-virtualization/application-centric-infrastructure/introduction-multi-pod-multi-site.html">Cisco ACI: Introduction to Multi-Pod and Multi-Site (infographic)</a></li><li id="src-ms-wp"><a href="https://www.cisco.com/c/en/us/solutions/collateral/data-center-virtualization/application-centric-infrastructure/white-paper-c11-739609.html">Cisco ACI Multi-Site Architecture White Paper</a></li></ol>
+<h2>Related pages</h2><div class='related'><a href="/zfrontier/">🧭 zFrontier</a><a href="/ARR/">📊 ARR — ACI Fabric Report</a><a href="/aci-multipod/">🔗 ACI Multi-Pod</a><a href="/zfrontier/nac-cli/">🧰 NaC CLI</a><a href="/zfrontier/3diffsvxlan/">🔀 3DiffsVXLAN</a><a href="/zfrontier/terafab/">💠 Terafab</a></div>
+<!--vh--><section aria-label="Version history" id="version-history"><h2>Version history</h2><p>Only the latest version of this page exists; there is no earlier committed version. Each entry is a real commit of this page (summary = commit message, with the page size at that commit). Archived snapshots are recovered from git and are not live.</p><ul><li><b>v1 (current)</b> · 14 Nov 2026 17:31 AEDT (Melbourne time) · New ARR-LargePod design plan: large single-pod ACI sizing, APIC cluster and standby, official VSG 6.2(x) limits, Multi-Pod vs Multi-Site, topology diagram, checklist and risks · <a href="./">this page</a></li></ul></section><!--/vh--></main>
+
+<script>
+function ccFilter(q,t){q=(q||'').toLowerCase();t.querySelectorAll('tbody tr').forEach(function(r){r.style.display=r.textContent.toLowerCase().indexOf(q)>=0?'':'none';});}
+function ccSort(t,c){var tb=t.tBodies[0],rows=[].slice.call(tb.rows),ths=t.tHead.rows[0].cells;
+var dir=t.getAttribute('data-dir')==='asc'&&t.getAttribute('data-col')==String(c)?'desc':'asc';
+function key(r){var td=r.cells[c];if(!td)return '';var k=td.getAttribute('data-k');return (k!==null?k:td.textContent).trim().toLowerCase();}
+rows.sort(function(a,b){var x=key(a),y=key(b);var nx=parseFloat(x),ny=parseFloat(y);if(!isNaN(nx)&&!isNaN(ny)&&/^[-0-9.]+$/.test(x)&&/^[-0-9.]+$/.test(y)){x=nx;y=ny;}
+if(x<y)return dir==='asc'?-1:1;if(x>y)return dir==='asc'?1:-1;return 0;});
+rows.forEach(function(r){tb.appendChild(r)});t.setAttribute('data-dir',dir);t.setAttribute('data-col',c);
+for(var i=0;i<ths.length;i++){ths[i].textContent=ths[i].textContent.replace(/ [\u25B2\u25BC]$/,'');if(i===c)ths[i].textContent+=' '+(dir==='asc'?'\u25B2':'\u25BC');}}
+</script>
+
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/+$/,"")||"/"}}</script><script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c)}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script>
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:8px 0 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:6px;margin:0;padding:8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
+nav.site.im a.mi{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:auto;min-height:44px;min-width:0;padding:8px 10px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a)}
+nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:visible;text-overflow:unset;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.25;text-align:left}
+nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:22px;height:22px;padding:0 5px;border-radius:999px;font-size:16px;font-weight:800;line-height:1;background:#0f172a;color:#fff}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc;color:#0f172a}
+nav.site.im a.mi.on .im-seq{background:#fff;color:#1d4ed8}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px;flex:none}#sg-link,#tt-btn,#mm-link{height:36px;border-radius:18px}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["ARR Model","/netbox-yaml-model/arr/","🧪"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"],["ရှေ့သို့ချီ","/roadmap/forward/","⏩"],["Time Map 2026–2030","/roadmap/forward/time-map/","🗓️"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["zFrontier","/zfrontier/","🌠",[["zFrontier","/zfrontier/","🌠"],["Farzad","/zfrontier/farzad/","📺"],["SpaceX vs Tesla shares","/zfrontier/shares/","📈"],["Optimus","/zfrontier/optimus/","🤖"],["Gigafactory","/zfrontier/gigafactory/","🏭"],["FSD versions","/zfrontier/fsd-versions/","🛣️"],["Liquid cooling","/zfrontier/liquid-cooling/","💧"],["SpaceX Tracking","/zfrontier/spacex/","🚀"],["CyberCab","/zfrontier/cybercab/","🚕"],["AI FineTune Pod","/zfrontier/ai-finetune-pod/","🎛️"],["MCP Servers","/zfrontier/mcp-servers/","🔌"],["NaC CLI","/zfrontier/nac-cli/","🧰"],["GPU Workflow","/zfrontier/3gpu-ai-workflow/","🧮"],["MWMESH","/zfrontier/mwmesh/","📡"],["Notebooks","/zfrontier/notebooks/","📓"],["RAG documents","/zfrontier/rag-documents/","📚"],["Foundation-Sec-8B","/zfrontier/foundation-sec-8b/","🛡️"],["Terafab","/zfrontier/terafab/","💠"],["3DiffsVXLAN","/zfrontier/3diffsvxlan/","🔀"],["ARR-LargePod","/zfrontier/arr-largepod/","🏗️"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"]]],["ACI GUI Forms","/aci-gui-forms/WIP/","📝",[["ACI GUI Forms","/aci-gui-forms/WIP/","📝"],["All Forms","/aci-gui-forms/WIP/all-forms/","📋"],["GUI Map","/aci-gui-forms/WIP/gui-map/","🗺️"]]],["ACI GUI","/aci-gui/","🖥️",[["Create Pod Policy Group","/aci-gui/create-pod-policy-group/","🧬"],["Create Bridge Domain (step 3)","/aci-gui/create-bridge-domain-step3/","🌉"],["Create Subnet","/aci-gui/create-subnet/","🔢"],["Create Application Profile","/aci-gui/create-application-profile/","🧩"],["Create Management EPG","/aci-gui/create-management-epg/","🛠️"],["Static Node Management Addresses","/aci-gui/static-node-management-addresses/","📍"],["Create Fabric Policies","/aci-gui/create-fabric-policies/","🧵"],["Create Access Policies","/aci-gui/create-access-policies/","🔐"],["Create VLAN Pool","/aci-gui/create-vlan-pool/","🏷️"],["Create Physical Domain","/aci-gui/create-physical-domain/","🏛️"],["Create Access Interface Policy Group","/aci-gui/create-access-interface-policy-group/","🔌"],["Create PC Interface Policy Group","/aci-gui/create-pc-interface-policy-group/","🔀"],["Interface Wizard for vPC","/aci-gui/interface-wizard-vpc/","🪄"],["Create VMM Domain","/aci-gui/create-vmm-domain/","💻"],["vCenter Networking","/aci-gui/vcenter-networking/","🖥️"],["Create Tenant","/aci-gui/create-tenant/","🏢"],["Create L3Out","/aci-gui/create-l3out/","🌐"],["L3Out Contracts","/aci-gui/l3out-contracts/","📜"],["Create Bridge Domain","/aci-gui/create-bridge-domain/","🌉"],["Bridge Domain","/aci-gui/bridge-domain/","🌉"],["Mgmt Bridge Domain","/aci-gui/mgmt-bridge-domain/","🔧"],["DHCP Relay","/aci-gui/dhcp-relay/","📡"],["Management Application Profile","/aci-gui/management-application-profile/","📦"],["Application Profile (web + app)","/aci-gui/application-profile/","🧩"],["Create VRF","/aci-gui/create-vrf/","🧭"],["Create Endpoint Group","/aci-gui/create-endpoint-group/","🎯"],["Contracts Between Tenants","/aci-gui/contracts-between-tenants/","🤝"],["Create Filter","/aci-gui/create-filter/","🧹"],["Create Contract","/aci-gui/create-contract/","📃"],["Create Management Contracts","/aci-gui/create-management-contracts/","📑"],["Mgmt PortGroup to VM","/aci-gui/mgmt-portgroup-to-vm/","🧷"],["Pod Policy Group","/aci-gui/pod-policy-group/","🕒"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=(seq?String(seq)+'. ':'')+e[0];if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks ›';r2.appendChild(t);
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1))});r2.appendChild(pills);n.appendChild(r2)}}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+</body>
+</html>
