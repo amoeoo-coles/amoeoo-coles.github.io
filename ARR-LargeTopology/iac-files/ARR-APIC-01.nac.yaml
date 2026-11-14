@@ -1,0 +1,54 @@
+# Per-node IaC inventory for ARR-APIC-01 on ARR-FABRIC.
+# Source: live read-only APIC pull from https://192.168.10.1
+# Collected: 14 Nov 2026, 5:52 PM AEDT (Australia/Melbourne, UTC+11)
+# Method: GET only after aaaLogin; aaaLogout after. Pulled from DESKTOP-3GETEV9.
+# Official nac-aci node_policies covers switch registration (id, pod, role, name, serial_number).
+# OOB, TEP, interfaces, fabric links and LLDP are not official node_policies fields.
+# Those facts are recorded under observations from this pull. Do not invent missing objects.
+# Validate with: nac-validate --non-strict -s schema.yaml -r rules (unexpected keys accepted).
+# This controller is not a node_policies switch entry, so node_policies.nodes is empty.
+---
+apic:
+  node_policies:
+    nodes: []
+  observations:
+    source_pull: 14 Nov 2026, 5:52 PM AEDT (Australia/Melbourne, UTC+11)
+    node:
+      id: 1
+      name: ARR-APIC-01
+      role: controller
+      model: APIC-SERVER-VMWARE-M1
+      serial: 302770556E00
+      version: 6.0(2h)
+      pod: 1
+      fabric_state: unknown
+      admin_state: 'on'
+      state: in-service
+      oob: 192.168.10.1
+      tep: 10.0.0.1
+      tep_pool: 10.0.0.0/16
+      registered_in_fabricNodeIdentP: false
+      uptime_at_pull: '00:01:20:05.000'
+      inb: not configured
+    interfaces:
+    - id: eth2/1
+      source: derived from fabricLink / LLDP (not in l1PhysIf on this pull)
+      peer: LEAF-101 eth1/49
+    fabric_links:
+    - local_port: eth2/1
+      peer: LEAF-101
+      peer_id: 101
+      peer_port: eth1/49
+    lldp:
+    - local_port: eth2/1
+      sys_name: LEAF-101
+      peer_port: Eth1/49
+    cdp: none in this pull
+    missing:
+    - Physical interfaces were not present in l1PhysIf / ethpmPhysIf for this node
+      on this pull.
+    - The ports listed under interfaces come from fabricLink and LLDP only.
+    - cdpAdjEp returned no adjacencies on this pull.
+    - ARR-APIC-01 is not in fabricNodeIdentP; that class lists the six switches only.
+      The controller identity below is from fabricNode and topSystem.
+    - No in-band management address is configured (topSystem.inbMgmtAddr is 0.0.0.0).
