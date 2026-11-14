@@ -14,7 +14,7 @@ Melbourne day and says so. Keep the last good export aggregates on failure.
 
 Retries /stats/total on 404/429/5xx. Hourly buckets follow Australia/Melbourne.
 """
-import csv, gzip, io, json, os, time, zipfile, datetime as dt, urllib.request, urllib.parse, urllib.error
+import csv, gzip, io, json, os, re, time, zipfile, datetime as dt, urllib.request, urllib.parse, urllib.error
 from collections import Counter, defaultdict
 from zoneinfo import ZoneInfo
 
@@ -738,6 +738,484 @@ def write_detail(page_rows, now_utc, now_mel, prev):
     )
 
 
+
+ISP_COLLECT_SINCE_AEDT = "2026-11-14 21:52 AEDT"
+ISP_COLLECT_SINCE_UTC = "2026-11-14T10:52:00Z"
+ISP_CACHE_REPO = "data/asn_rdap_cache.json"
+ISP_RIR_FILES = [
+    # APNIC first, then the other RIRs so non-APNIC ASNs still get a registry country and RIR name.
+    ("APNIC", "https://ftp.apnic.net/stats/apnic/delegated-apnic-extended-latest"),
+    ("RIPE NCC", "https://ftp.ripe.net/ripe/stats/delegated-ripencc-extended-latest"),
+    ("ARIN", "https://ftp.arin.net/pub/stats/arin/delegated-arin-extended-latest"),
+    ("LACNIC", "https://ftp.lacnic.net/pub/stats/lacnic/delegated-lacnic-extended-latest"),
+    ("AFRINIC", "https://ftp.afrinic.net/stats/afrinic/delegated-afrinic-extended-latest"),
+]
+ISP_RDAP = {
+    "APNIC": "https://rdap.apnic.net/autnum/{asn}",
+    "RIPE NCC": "https://rdap.db.ripe.net/autnum/{asn}",
+    "ARIN": "https://rdap.arin.net/registry/autnum/{asn}",
+    "LACNIC": "https://rdap.lacnic.net/rdap/autnum/{asn}",
+    "AFRINIC": "https://rdap.afrinic.net/rdap/autnum/{asn}",
+}
+ISP_RDAP_FALLBACK = "https://rdap.org/autnum/{asn}"
+
+
+def is_isp_event_path(path):
+    n = str(path or "").split("?")[0].strip()
+    if n.startswith("/"):
+        n = n[1:]
+    return n.lower().startswith("isp/")
+
+
+def is_isp_test_event(path, title=""):
+    n = str(path or "").split("?")[0].strip()
+    if n.startswith("/"):
+        n = n[1:]
+    low = n.lower()
+    if low == "isp/_test" or low.startswith("isp/_test/"):
+        return True
+    if "excluded from published" in str(title or "").lower():
+        return True
+    return False
+
+
+def parse_isp_path(path):
+    n = str(path or "").split("?")[0].strip()
+    if n.startswith("/"):
+        n = n[1:]
+    parts = [p for p in n.split("/") if p]
+    if len(parts) < 3 or parts[0].lower() != "isp":
+        return None
+    cc = parts[1].upper()
+    if not re.fullmatch(r"[A-Z]{2}", cc) and cc not in ("XX", "_TEST"):
+        if not re.fullmatch(r"[A-Z]{2}", cc):
+            return None
+    asn = parts[2].upper()
+    if asn.startswith("AS"):
+        asn = "AS" + re.sub(r"\D", "", asn[2:])
+    elif asn.isdigit():
+        asn = "AS" + asn
+    else:
+        return None
+    if not re.fullmatch(r"AS\d+", asn):
+        return None
+    return cc, asn
+
+
+def _isp_cache_dirs():
+    dirs = []
+    for raw in ("/home/box/.cache/rir", os.path.join(os.environ.get("XDG_CACHE_HOME", "/tmp"), "rir-cache")):
+        path = raw
+        try:
+            os.makedirs(path, exist_ok=True)
+            if os.access(path, os.W_OK):
+                dirs.append(path)
+        except OSError:
+            continue
+    return dirs or ["/tmp"]
+
+
+def _http_get_bytes(url, timeout=60, retries=3):
+    req = urllib.request.Request(url, headers={"User-Agent": "amoeoo-coles-visitors-isp/1.0"})
+    last = None
+    for i in range(retries):
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                return r.read()
+        except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, OSError) as e:
+            last = e
+            if isinstance(e, urllib.error.HTTPError) and e.code in (404, 400, 401, 403):
+                raise
+            if i < retries - 1:
+                time.sleep(1.2 * (i + 1))
+                continue
+            raise
+    raise last
+
+
+def _load_delegated_asns():
+    """Map AS1234 -> {rir, registry_country} from RIR delegated files. APNIC wins on overlap."""
+    out = {}
+    cache_dir = _isp_cache_dirs()[0]
+    for rir, url in ISP_RIR_FILES:
+        name = url.rstrip("/").split("/")[-1]
+        cache = os.path.join(cache_dir, name)
+        body = None
+        try:
+            if os.path.exists(cache) and (time.time() - os.path.getmtime(cache)) < 24 * 3600 and os.path.getsize(cache) > 1000:
+                with open(cache, "rb") as f:
+                    body = f.read()
+        except OSError:
+            body = None
+        if body is None:
+            try:
+                body = _http_get_bytes(url, timeout=90)
+                try:
+                    with open(cache, "wb") as f:
+                        f.write(body)
+                except OSError:
+                    pass
+            except Exception:
+                if os.path.exists(cache):
+                    with open(cache, "rb") as f:
+                        body = f.read()
+                else:
+                    continue
+        for line in body.decode("utf-8", "replace").splitlines():
+            if not line or line.startswith("#"):
+                continue
+            parts = line.split("|")
+            if len(parts) < 7 or parts[2] != "asn":
+                continue
+            if parts[6] in ("available", "reserved"):
+                continue
+            try:
+                start = int(parts[3])
+                count = int(parts[4] or "1")
+            except ValueError:
+                continue
+            cc = (parts[1] or "").upper()
+            for n in range(start, start + max(count, 1)):
+                key = "AS%d" % n
+                if key not in out:  # APNIC listed first keeps priority
+                    out[key] = {"rir": rir, "registry_country": cc if re.fullmatch(r"[A-Z]{2}", cc) else ""}
+    return out
+
+
+def _vcard_fn(entity):
+    v = entity.get("vcardArray") if isinstance(entity, dict) else None
+    if not (isinstance(v, list) and len(v) > 1 and isinstance(v[1], list)):
+        return ""
+    fn = org = ""
+    for item in v[1]:
+        if not (isinstance(item, list) and item):
+            continue
+        if item[0] == "fn" and item[-1]:
+            fn = str(item[-1]).strip()
+        if item[0] == "org" and item[-1]:
+            org = str(item[-1]).strip() if not isinstance(item[-1], list) else " ".join(str(x) for x in item[-1] if x).strip()
+    return org or fn
+
+
+def _rdap_holder(doc):
+    if not isinstance(doc, dict):
+        return ""
+    ents = doc.get("entities") or []
+    # Prefer the registrant, then any named organisation, then the RDAP object name if it is not just ASN-FOO.
+    for want in ("registrant", "administrative", None):
+        for e in ents:
+            if not isinstance(e, dict):
+                continue
+            roles = [str(r).lower() for r in (e.get("roles") or [])]
+            if want and want not in roles:
+                continue
+            name = _vcard_fn(e)
+            if name:
+                return name
+            nested = e.get("entities") or []
+            for child in nested:
+                name = _vcard_fn(child) if isinstance(child, dict) else ""
+                if name:
+                    return name
+    name = str(doc.get("name") or "").strip()
+    if name and not re.fullmatch(r"AS(N)?[- ]?\d+", name, re.I):
+        return name
+    return name
+
+
+def _load_rdap_cache():
+    try:
+        with open(ISP_CACHE_REPO) as f:
+            data = json.load(f) or {}
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def _save_rdap_cache(cache):
+    os.makedirs(os.path.dirname(ISP_CACHE_REPO) or ".", exist_ok=True)
+    # Never store IPs or tokens in this cache.
+    clean = {}
+    for asn, rec in cache.items():
+        if not re.fullmatch(r"AS\d+", str(asn)) or not isinstance(rec, dict):
+            continue
+        clean[asn] = {
+            "holder": rec.get("holder") or "",
+            "rir": rec.get("rir") or "",
+            "registry_country": rec.get("registry_country") or "",
+            "rdap_name": rec.get("rdap_name") or "",
+            "fetched_utc": rec.get("fetched_utc") or "",
+        }
+    with open(ISP_CACHE_REPO, "w") as f:
+        json.dump(clean, f, indent=1, sort_keys=True)
+        f.write("\n")
+
+
+def _lookup_rdap(asn, rir, now_utc):
+    num = asn[2:] if str(asn).upper().startswith("AS") else str(asn)
+    urls = []
+    if rir in ISP_RDAP:
+        urls.append(ISP_RDAP[rir].format(asn=num))
+    # APNIC first when the RIR is unknown.
+    if rir != "APNIC":
+        urls.append(ISP_RDAP["APNIC"].format(asn=num))
+    urls.append(ISP_RDAP_FALLBACK.format(asn=num))
+    seen = set()
+    for url in urls:
+        if url in seen:
+            continue
+        seen.add(url)
+        try:
+            raw = _http_get_bytes(url, timeout=25, retries=2)
+            doc = json.loads(raw.decode("utf-8", "replace"))
+            holder = _rdap_holder(doc)
+            name = str(doc.get("name") or "").strip()
+            port = str(doc.get("port43") or "")
+            found_rir = rir
+            if "apnic" in (url + port).lower():
+                found_rir = found_rir or "APNIC"
+            elif "ripe" in (url + port).lower():
+                found_rir = found_rir or "RIPE NCC"
+            elif "arin" in (url + port).lower():
+                found_rir = found_rir or "ARIN"
+            elif "lacnic" in (url + port).lower():
+                found_rir = found_rir or "LACNIC"
+            elif "afrinic" in (url + port).lower():
+                found_rir = found_rir or "AFRINIC"
+            cc = str(doc.get("country") or "").upper()
+            return {
+                "holder": holder or name or asn,
+                "rir": found_rir or rir or "",
+                "registry_country": cc if re.fullmatch(r"[A-Z]{2}", cc) else "",
+                "rdap_name": name,
+                "fetched_utc": now_utc.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            }
+        except Exception:
+            time.sleep(0.2)
+            continue
+    return None
+
+
+def _list_isp_paths():
+    """Return GoatCounter path records for isp/* events (including tests)."""
+    found, after = [], None
+    for _ in range(50):
+        q = {"Limit": 200}
+        if after is not None:
+            q["After"] = after
+        try:
+            data = get("/paths", **q)
+        except urllib.error.HTTPError:
+            # Some deployments expect lower-case query names.
+            q2 = {"limit": 200}
+            if after is not None:
+                q2["after"] = after
+            data = get("/paths", **q2)
+        paths = data.get("paths") or []
+        if not paths:
+            break
+        for rec in paths:
+            if is_isp_event_path(rec.get("path")):
+                found.append(rec)
+        after = paths[-1].get("id")
+        if not data.get("more") or after is None:
+            break
+        time.sleep(0.15)
+    return found
+
+
+def _stats_for_paths(path_recs, start, end):
+    if not path_recs:
+        return []
+    # Prefer IDs; fall back to names.
+    ids = [str(r.get("id")) for r in path_recs if r.get("id") is not None]
+    out = []
+    if ids:
+        for i in range(0, len(ids), 50):
+            chunk = ids[i:i + 50]
+            data = get("/stats/hits", limit=100, daily="true", start=start, end=end, include_paths=",".join(chunk))
+            out.extend(data.get("hits") or [])
+            time.sleep(0.15)
+        return out
+    for rec in path_recs:
+        data = get(
+            "/stats/hits",
+            limit=20,
+            daily="true",
+            start=start,
+            end=end,
+            path_by_name="true",
+            include_paths=rec.get("path") or "",
+        )
+        out.extend(data.get("hits") or [])
+        time.sleep(0.15)
+    return out
+
+
+def write_isps(hits, now_utc, now_mel, country_names=None, prev=None):
+    """Build the isps section from GoatCounter isp/* events and RIR/RDAP enrichment."""
+    notes = []
+    test_excluded = 0
+    raw_rows = []
+    source_hits = [h for h in (hits or []) if is_isp_event_path(h.get("path"))]
+    if not source_hits:
+        try:
+            path_recs = _list_isp_paths()
+            if path_recs:
+                start = "2026-11-14T00:00:00Z"
+                end = (now_utc + dt.timedelta(hours=1)).strftime("%Y-%m-%dT%H:00:00Z")
+                source_hits = _stats_for_paths(path_recs, start, end)
+                if not source_hits:
+                    # Still record zero-count path names so a listed test event is visible in the exclusion count once it exists.
+                    source_hits = [
+                        {"path": r.get("path"), "title": r.get("title") or "", "count": 0, "event": r.get("event"), "days": {}}
+                        for r in path_recs
+                    ]
+        except Exception as e:
+            notes.append("GoatCounter isp/* path list failed (%s)" % type(e).__name__)
+            source_hits = []
+
+    for h in source_hits:
+        path = h.get("path")
+        title = h.get("title") or ""
+        count = int(h.get("count") or 0)
+        days = {}
+        if isinstance(h.get("days"), dict):
+            days = {d: int(n or 0) for d, n in h["days"].items() if int(n or 0)}
+        else:
+            for st in h.get("stats") or []:
+                n = int(st.get("daily") or 0)
+                if n and st.get("day"):
+                    days[st["day"]] = n
+            if not count:
+                count = sum(days.values())
+        if is_isp_test_event(path, title):
+            test_excluded += count or (1 if path else 0)
+            continue
+        parsed = parse_isp_path(path)
+        if not parsed or count <= 0:
+            continue
+        cc, asn = parsed
+        raw_rows.append({"country": cc, "asn": asn, "title": title, "visits": count, "days": days})
+
+    # Merge identical country+ASN rows (in case path spelling varied).
+    merged = {}
+    for r in raw_rows:
+        key = (r["country"], r["asn"])
+        if key not in merged:
+            merged[key] = {"country": r["country"], "asn": r["asn"], "titles": [], "visits": 0, "days": {}}
+        merged[key]["visits"] += r["visits"]
+        if r["title"] and r["title"] not in merged[key]["titles"]:
+            merged[key]["titles"].append(r["title"])
+        for d, n in r["days"].items():
+            merged[key]["days"][d] = merged[key]["days"].get(d, 0) + n
+
+    asns = sorted({r["asn"] for r in merged.values()})
+    delegated = {}
+    if asns:
+        try:
+            delegated = _load_delegated_asns()
+        except Exception as e:
+            notes.append("RIR delegated files failed (%s)" % type(e).__name__)
+    rdap_cache = _load_rdap_cache()
+    cache_dirty = False
+    for asn in asns:
+        rec = rdap_cache.get(asn) or {}
+        delg = delegated.get(asn) or {}
+        stale = True
+        fetched = rec.get("fetched_utc") or ""
+        if fetched:
+            try:
+                t = dt.datetime.strptime(fetched, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=dt.timezone.utc)
+                stale = (now_utc - t) > dt.timedelta(days=30)
+            except ValueError:
+                stale = True
+        if rec.get("holder") and not stale:
+            if not rec.get("rir") and delg.get("rir"):
+                rec["rir"] = delg["rir"]
+                cache_dirty = True
+            if not rec.get("registry_country") and delg.get("registry_country"):
+                rec["registry_country"] = delg["registry_country"]
+                cache_dirty = True
+            rdap_cache[asn] = rec
+            continue
+        rir = rec.get("rir") or delg.get("rir") or ""
+        looked = _lookup_rdap(asn, rir, now_utc)
+        if looked:
+            if not looked.get("rir"):
+                looked["rir"] = rir
+            if not looked.get("registry_country"):
+                looked["registry_country"] = delg.get("registry_country") or rec.get("registry_country") or ""
+            rdap_cache[asn] = looked
+            cache_dirty = True
+        else:
+            rdap_cache[asn] = {
+                "holder": rec.get("holder") or "",
+                "rir": rir,
+                "registry_country": delg.get("registry_country") or rec.get("registry_country") or "",
+                "rdap_name": rec.get("rdap_name") or "",
+                "fetched_utc": rec.get("fetched_utc") or "",
+            }
+            if delg and not rec:
+                cache_dirty = True
+        time.sleep(0.15)
+    if cache_dirty or (asns and not os.path.exists(ISP_CACHE_REPO)):
+        try:
+            _save_rdap_cache(rdap_cache)
+        except OSError:
+            notes.append("could not write ASN RDAP cache")
+
+    names = {c.get("id"): c.get("name") for c in (country_names or []) if c.get("id")}
+    rows = []
+    for r in merged.values():
+        info = rdap_cache.get(r["asn"]) or {}
+        delg = delegated.get(r["asn"]) or {}
+        holder = (info.get("holder") or r["titles"][0] if r["titles"] else r["asn"]) or r["asn"]
+        rows.append({
+            "country": r["country"],
+            "country_name": names.get(r["country"]) or r["country"],
+            "asn": r["asn"],
+            "holder": holder,
+            "event_title": r["titles"][0] if r["titles"] else "",
+            "rir": info.get("rir") or delg.get("rir") or "",
+            "registry_country": info.get("registry_country") or delg.get("registry_country") or "",
+            "visits": r["visits"],
+            "days": r["days"],
+        })
+    rows.sort(key=lambda x: (-x["visits"], x["country"], x["asn"]))
+
+    prev_isp = (prev or {}).get("isps") or {}
+    if not rows and not notes and prev_isp.get("rows"):
+        # Keep previous real rows if this refresh somehow missed them, but never keep test rows.
+        kept = [r for r in prev_isp["rows"] if not is_isp_test_event("isp/%s/%s" % (r.get("country"), r.get("asn")), r.get("event_title") or "")]
+        if kept:
+            rows = kept
+            notes.append("kept previous ISP rows after an empty refresh")
+
+    section = {
+        "source": (
+            "GoatCounter isp/* events via scripts/fetch_visitors.py, enriched with RIR delegated "
+            "stats (APNIC first) and RDAP holder names. Test events are excluded from published counts."
+        ),
+        "collecting_since_aedt": ISP_COLLECT_SINCE_AEDT,
+        "collecting_since_utc": ISP_COLLECT_SINCE_UTC,
+        "updated_utc": now_utc.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "as_of_aedt": now_mel.strftime("%Y-%m-%d %H:%M %Z"),
+        "timezone": "Australia/Melbourne",
+        "lookup": "https://get.geojs.io/v1/ip/geo.json (fallback https://ipwho.is/)",
+        "note": (
+            "ISP data is ASN-level and comes from a third-party lookup on each new visit. "
+            "The visitor IP is sent only to that lookup service, never stored here or sent to GoatCounter. "
+            "Past visits cannot be backfilled because GoatCounter does not store IP addresses."
+        ),
+        "rows": rows,
+        "excluded_test_events": test_excluded,
+        "notes": notes,
+    }
+    print("isps rows", len(rows), "test_excluded", test_excluded, "asns", len(asns))
+    return section
+
+
 def main():
     now_utc = dt.datetime.now(dt.timezone.utc)
     now_mel = now_utc.astimezone(MEL)
@@ -751,6 +1229,7 @@ def main():
         "timezone": "Australia/Melbourne",
     }
     prev = load_prev("data/visitors.json")
+    isp_hits = []
     total = None
     total_src = "GoatCounter API /api/v0/stats/total (read-only)"
     try:
@@ -796,10 +1275,12 @@ def main():
             seen += [x.get("path_id") for x in hits if x.get("path_id") is not None]
             if not h.get("more") or not hits:
                 break
+        isp_hits.extend(x for x in pages if is_isp_event_path(x.get("path")))
+        pages = [x for x in pages if not is_isp_event_path(x.get("path")) and not x.get("event")]
         out["pages"] = pages
     except Exception as e:
         if prev.get("pages"):
-            out["pages"] = prev["pages"]
+            out["pages"] = [x for x in prev["pages"] if not is_isp_event_path(x.get("path"))]
             out["pages_error"] = str(e) + " (kept previous pages)"
         else:
             out["pages_error"] = str(e)
@@ -834,6 +1315,29 @@ def main():
     write_detail(hour_src, now_utc, now_mel, prev)
     for p in out.get("pages") or []:
         p.pop("_hourly", None)
+
+    try:
+        out["isps"] = write_isps(isp_hits, now_utc, now_mel, countries, prev)
+    except Exception as e:
+        prev_isp = (prev or {}).get("isps") or {}
+        if prev_isp:
+            out["isps"] = dict(prev_isp)
+            out["isps"]["isps_error"] = type(e).__name__ + " (kept previous isps)"
+        else:
+            out["isps"] = {
+                "source": "GoatCounter isp/* events via scripts/fetch_visitors.py",
+                "collecting_since_aedt": ISP_COLLECT_SINCE_AEDT,
+                "collecting_since_utc": ISP_COLLECT_SINCE_UTC,
+                "updated_utc": now_utc.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "as_of_aedt": now_mel.strftime("%Y-%m-%d %H:%M %Z"),
+                "timezone": "Australia/Melbourne",
+                "lookup": "https://get.geojs.io/v1/ip/geo.json (fallback https://ipwho.is/)",
+                "note": "ISP data is ASN-level and comes from a third-party lookup on each new visit. Past visits cannot be backfilled because GoatCounter does not store IP addresses.",
+                "rows": [],
+                "excluded_test_events": 0,
+                "notes": ["ISP refresh failed (%s)" % type(e).__name__],
+                "isps_error": type(e).__name__,
+            }
 
     os.makedirs("data", exist_ok=True)
     with open("data/visitors.json", "w") as f:

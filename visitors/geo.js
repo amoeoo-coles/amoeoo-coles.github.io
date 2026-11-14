@@ -1,10 +1,11 @@
 /* Shared hourly-detail + country UI for /visitors/, /visitors/trends/
    and /visitors/countries/. Charts and tables read /visitors/detail.json
    (and daily/visitors JSON) so the scheduled GitHub Action refresh updates
-   every page without rewriting HTML. Aggregated counts only. No IPs,
+   every page without rewriting HTML. The countries page also reads the isps
+   section of /data/visitors.json. Aggregated counts only. No IPs,
    sessions, user agents or tokens. */
 (function(){
-var GEO={detail:null, daily:null, filter:null, period:'h48', mode:'summary', sort:{col:'count', dir:-1}};
+var GEO={detail:null, daily:null, visitors:null, filter:null, period:'h48', mode:'summary', sort:{col:'count', dir:-1}, ispSort:{col:'visits', dir:-1}};
 var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function lab(d){var p=String(d).split('-');return +p[2]+' '+MON[+p[1]-1]}
@@ -430,6 +431,133 @@ function paintCountries(){
       ?'<p class="muted">Click a country in the chart or table to see its daily counts'+(hasHourlyCountries()?' and, when present, its hourly series':'')+'.</p>'
       :'';
   }
+  paintIsps();
+}
+
+
+function ispSinceText(isp){
+  var raw=(isp&&isp.collecting_since_aedt)||'2026-11-14 21:52 AEDT';
+  var m=String(raw).match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})(?:\s+(\S+))?/);
+  if(!m) return raw;
+  var mon=MON[+m[2]-1]||m[2];
+  var h=+m[4], ap=h>=12?'PM':'AM', h12=h%12||12;
+  return +m[3]+' '+mon+' '+m[1]+', '+h12+':'+m[5]+' '+ap+(m[6]?' '+m[6]:'');
+}
+function ispRowsForPeriod(isp){
+  var rows=(isp&&isp.rows)||[];
+  var days=periodDays(GEO.period||'all');
+  if(!days||!days.length||(GEO.period==='all')){
+    return rows.map(function(r){return r});
+  }
+  var want={};
+  days.forEach(function(d){want[d]=1});
+  return rows.map(function(r){
+    var visits=0, rec=r.days||{};
+    Object.keys(rec).forEach(function(d){if(want[d]) visits+=(+rec[d]||0)});
+    if(!visits) return null;
+    var copy={};
+    Object.keys(r).forEach(function(k){copy[k]=r[k]});
+    copy.visits=visits;
+    return copy;
+  }).filter(Boolean);
+}
+function ensureIspSection(){
+  if(pageMode()!=='full') return null;
+  var el=document.getElementById('isp');
+  if(!el){
+    el=document.createElement('section');
+    el.id='isp';
+    el.setAttribute('aria-label','ISPs by country');
+    el.innerHTML='<h2 id="isp-heading">ISPs by country</h2>'+
+      '<p class="muted" id="isp-note"></p>'+
+      '<div id="isp-table"></div>';
+    var host=document.getElementById('geo')||document.querySelector('main')||document.body;
+    if(host&&host.parentNode&&host.id==='geo') host.parentNode.insertBefore(el, host.nextSibling);
+    else (document.querySelector('main')||document.body).appendChild(el);
+  } else {
+    if(!document.getElementById('isp-heading')){
+      var h=document.createElement('h2');
+      h.id='isp-heading';
+      h.textContent='ISPs by country';
+      el.insertBefore(h, el.firstChild);
+    }
+    if(!document.getElementById('isp-note')){
+      var n=document.createElement('p');
+      n.className='muted';
+      n.id='isp-note';
+      var heading=document.getElementById('isp-heading');
+      heading.parentNode.insertBefore(n, heading.nextSibling);
+    }
+    if(!document.getElementById('isp-table')){
+      var t=document.createElement('div');
+      t.id='isp-table';
+      el.appendChild(t);
+    }
+  }
+  return el;
+}
+function ispTable(rows){
+  var sort=GEO.ispSort||{col:'visits',dir:-1};
+  var data=rows.slice().sort(function(a,b){
+    var col=sort.col, dir=sort.dir, av, bv;
+    if(col==='visits'){
+      av=+a.visits||0; bv=+b.visits||0;
+      if(av!==bv) return av<bv?-dir:dir;
+      return String(a.country||'').localeCompare(String(b.country||''))||String(a.asn||'').localeCompare(String(b.asn||''));
+    }
+    if(col==='asn'){
+      av=parseInt(String(a.asn||'').replace(/^AS/,''),10)||0;
+      bv=parseInt(String(b.asn||'').replace(/^AS/,''),10)||0;
+      if(av!==bv) return av<bv?-dir:dir;
+    }
+    av=String(a[col]||a.country_name||'').toLowerCase();
+    bv=String(b[col]||b.country_name||'').toLowerCase();
+    if(av!==bv) return av<bv?-dir:av>bv?dir:0;
+    return (+b.visits||0)-(+a.visits||0);
+  });
+  function arrow(col){return '<span class="ar">'+(sort.col===col?(sort.dir>0?'\u25B2':'\u25BC'):'\u2195')+'</span>'}
+  function th(label,col,cls){return '<th class="'+(cls||'')+' s'+(sort.col===col?' on':'')+'" data-sort="'+col+'" scope="col">'+label+arrow(col)+'</th>'}
+  var head='<thead><tr>'+th('Country','country')+th('ASN','asn')+th('ISP / holder','holder')+th('RIR','rir')+th('Visits','visits','n')+'</tr></thead>';
+  var body=data.map(function(r){
+    var cc=r.country||'';
+    var label=/^[A-Z]{2}$/.test(cc)?(flag(cc)+' <span class="geo-cc">'+esc(cc)+'</span> '+esc(r.country_name||cc)):esc(r.country_name||cc||'Unknown');
+    return '<tr>'+
+      '<td>'+label+'</td>'+
+      '<td><code>'+esc(r.asn||'')+'</code></td>'+
+      '<td>'+esc(r.holder||r.event_title||r.asn||'')+'</td>'+
+      '<td>'+esc(r.rir||'')+'</td>'+
+      '<td class="n">'+esc(r.visits)+'</td></tr>';
+  }).join('');
+  return '<div class="wrapt"><table class="geo-t" id="isp-sort">'+head+'<tbody>'+body+'</tbody></table></div>';
+}
+function paintIsps(){
+  if(pageMode()!=='full') return;
+  ensureIspSection();
+  var isp=(GEO.visitors&&GEO.visitors.isps)||null;
+  var note=document.getElementById('isp-note');
+  var table=document.getElementById('isp-table');
+  var since=ispSinceText(isp);
+  var base='ISP data is ASN-level and comes from a third-party lookup (the visitor IP is sent only to that lookup service, never stored here or sent to GoatCounter). Past visits cannot be backfilled. Collecting since '+since+'.';
+  var rows=ispRowsForPeriod(isp);
+  if(note){
+    note.textContent=(isp&&isp.note)?(isp.note+' Collecting since '+since+'.'):base;
+  }
+  if(!table) return;
+  if(!rows.length){
+    table.innerHTML='<p class="muted" id="isp-empty">Collecting since '+esc(since)+'. ISP events will appear here after the next visitor-stats refresh.</p>';
+    return;
+  }
+  table.innerHTML=ispTable(rows);
+  table.querySelectorAll('th.s').forEach(function(th){
+    th.addEventListener('click',function(){
+      var col=th.getAttribute('data-sort');
+      if(!col) return;
+      if(!GEO.ispSort) GEO.ispSort={col:'visits',dir:-1};
+      if(GEO.ispSort.col===col) GEO.ispSort.dir=-GEO.ispSort.dir;
+      else {GEO.ispSort.col=col; GEO.ispSort.dir=col==='visits'||col==='asn'?-1:1;}
+      paintIsps();
+    });
+  });
 }
 
 function injectStyle(){
@@ -455,13 +583,13 @@ function injectStyle(){
     '.hour-detail .hd-close,#geo-clear,#geo-csv,#geo-periods button{font:600 12.5px/1 system-ui,Arial,sans-serif;padding:7px 12px;border-radius:16px;border:1px solid var(--btn-bd,#94a3b8);background:var(--btn-bg,#fff);color:var(--btn-fg,#0f172a);cursor:pointer}',
     '#geo-periods{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}',
     '#geo-periods button.on{background:#2563eb;border-color:#2563eb;color:#fff}',
-    '#geo .geo-t, .hour-detail .geo-t{border-collapse:collapse;width:100%;margin:6px 0}',
-    '#geo .geo-t th,#geo .geo-t td,.hour-detail .geo-t th,.hour-detail .geo-t td{border-bottom:1px solid var(--line,#e2e8f0);padding:6px 8px;font-size:13px;text-align:left;color:var(--ink,#0f172a)}',
-    '#geo .geo-t th.n,#geo .geo-t td.n,.hour-detail .geo-t th.n,.hour-detail .geo-t td.n{text-align:right;font-variant-numeric:tabular-nums}',
-    '#geo .geo-t th.s{cursor:pointer;user-select:none;white-space:nowrap}',
-    '#geo .geo-t th.s:hover{color:var(--link,#1d4ed8)}',
-    '#geo .geo-t th.s .ar{opacity:.45;font-size:11px;margin-left:3px}',
-    '#geo .geo-t th.s.on .ar{opacity:1}',
+    '#geo .geo-t, #isp .geo-t, .hour-detail .geo-t{border-collapse:collapse;width:100%;margin:6px 0}',
+    '#geo .geo-t th,#isp .geo-t th,#geo .geo-t td,#isp .geo-t td,.hour-detail .geo-t th,.hour-detail .geo-t td{border-bottom:1px solid var(--line,#e2e8f0);padding:6px 8px;font-size:13px;text-align:left;color:var(--ink,#0f172a)}',
+    '#geo .geo-t th.n,#isp .geo-t th.n,#geo .geo-t td.n,#isp .geo-t td.n,.hour-detail .geo-t th.n,.hour-detail .geo-t td.n{text-align:right;font-variant-numeric:tabular-nums}',
+    '#geo .geo-t th.s,#isp .geo-t th.s{cursor:pointer;user-select:none;white-space:nowrap}',
+    '#geo .geo-t th.s:hover,#isp .geo-t th.s:hover{color:var(--link,#1d4ed8)}',
+    '#geo .geo-t th.s .ar,#isp .geo-t th.s .ar{opacity:.45;font-size:11px;margin-left:3px}',
+    '#geo .geo-t th.s.on .ar,#isp .geo-t th.s.on .ar{opacity:1}',
     '.geo-c{border:0;background:none;color:inherit;font:inherit;cursor:pointer;padding:0;text-align:left}',
     '.geo-c:hover .geo-name{text-decoration:underline}',
     '.gbar{display:inline-block;width:80px;max-width:100%;height:8px;background:var(--chip,#e2e8f0);border-radius:99px;vertical-align:middle}',
@@ -500,11 +628,13 @@ function boot(){
   ]).then(function(a){
     GEO.detail=a[0];
     GEO.daily=a[1];
+    GEO.visitors=a[2];
     if(a[2]&&a[2].total&&a[2].total.stats){
       var newer=!a[1]||!a[1].generated_utc||(a[2].updated_utc&&a[2].updated_utc>=a[1].generated_utc);
       if(newer) GEO.daily={days:(a[2].total.stats||[]).map(function(s){return {day:s.day,visitors:s.daily||0,hourly:s.hourly||[]}}), generated_utc:a[2].updated_utc};
     }
     paintCountries();
+    paintIsps();
     bindHourClicks(document);
     var obs=new MutationObserver(function(){bindHourClicks(document)});
     var roots=['mrtg-graphs','hourly','hourly-table'].map(function(id){return document.getElementById(id)}).filter(Boolean);
