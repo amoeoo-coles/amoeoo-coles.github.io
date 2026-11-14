@@ -1,0 +1,921 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:auto;
+  min-height:44px;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:auto;min-height:44px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:visible;
+  text-overflow:unset;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.25;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:22px;
+  height:22px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:16px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:#1d4ed8!important;
+}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cursor_Tenant6 (N9Kv-01 and N9Kv-03) — Deployment status</title>
+<meta name="description" content="ARR provisioning monitor for Cursor_Tenant6 on ARR-FABRIC. Nothing is applied until APPROVE.">
+<style>
+h1{margin:14px 0 6px}
+.lead{color:var(--muted,#c3cfdc);margin:0 0 12px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin:8px 0 16px;font-size:14px}
+.meta b{font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin:8px 0 14px;font-size:13px;color:var(--muted,#c3cfdc)}
+.legend .sw{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:16px;height:14px;border-radius:3px;flex:none}
+.legend .lg-done{background:#16a34a}
+.legend .lg-failed{background:#dc2626}
+.legend .lg-pending{background:#64748b}
+.legend .lg-running{background:#64748b;box-shadow:0 0 0 2px #f59e0b}
+h2.dep{border-left:6px solid #f59e0b;padding-left:10px;margin:22px 0 10px;font-size:20px}
+.topmeta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin:0 0 8px;font-size:13px;color:var(--muted,#94a3b8)}
+.uv{margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap}
+.chev-rows{display:flex;flex-direction:column;gap:8px;margin:8px 0 16px;width:100%}
+.chev-row{display:flex;width:100%;min-width:0}
+.chev{position:relative;flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:54px;padding:7px 16px 7px 22px;margin-left:-10px;color:#fff;text-align:center;font:700 11px/1.15 system-ui,Arial,sans-serif;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%,12px 50%);z-index:1}
+.chev.row-start{margin-left:0;padding-left:12px;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%);border-radius:8px 0 0 8px}
+.chev .n{font-size:10px;font-weight:800;opacity:.9}
+.chev .nm{font-size:11px;font-weight:700;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chev.done{background:#16a34a;z-index:2}
+.chev.failed{background:#dc2626;z-index:3}
+.chev.pending{background:#64748b}
+.chev.running{background:#64748b;box-shadow:inset 0 0 0 2px #f59e0b,0 0 0 1px #f59e0b;z-index:4;animation:chev-pulse 1.4s ease-in-out infinite}
+@keyframes chev-pulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25)}}
+.tblwrap{max-width:100%;overflow-x:auto;border:1px solid var(--line,#2a3446);border-radius:10px;background:var(--card,#161d29)}
+table.steps{width:100%;border-collapse:collapse;font-size:13.5px}
+table.steps th,table.steps td{padding:8px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line,#2a3446)}
+table.steps th{background:var(--th-bg,#1b2838);font-weight:700;white-space:nowrap}
+table.steps tbody tr:last-child td{border-bottom:0}
+table.steps td.t{white-space:nowrap}
+table.steps td.mono,table.steps .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px}
+.st-pill{display:inline-block;padding:2px 8px;border-radius:999px;color:#fff;font-weight:700;font-size:12px;letter-spacing:.02em}
+.st-pill.done{background:#16a34a}
+.st-pill.failed{background:#dc2626}
+.st-pill.pending{background:#64748b}
+.st-pill.running{background:#64748b;box-shadow:0 0 0 2px #f59e0b}
+.note{font-size:13px;color:var(--muted,#94a3b8);margin-top:14px}
+.cards{display:flex;flex-wrap:wrap;gap:14px;margin:12px 0 16px}
+.card{flex:1 1 calc(25% - 14px);min-width:160px;box-sizing:border-box;background:var(--card,#161d29);border:1px solid var(--line,#2a3446);border-top:4px solid var(--c,#16a34a);border-radius:10px;padding:14px 16px;color:inherit}
+.card .card-label{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted,#94a3b8);font-weight:700}
+.card .card-value{display:block;font-size:22px;font-weight:800;margin:4px 0 0}
+.card .card-sub{display:block;margin-top:4px;font-size:13px;color:var(--muted,#94a3b8)}
+.card.pending{--c:#64748b}
+.card.running{--c:#f59e0b}
+.card.ok{--c:#16a34a}
+.notice{background:var(--card,#161d29);border:1px solid var(--line,#2a3446);border-left:4px solid #f59e0b;border-radius:10px;padding:14px 16px;margin:8px 0 16px}
+.notice.ok{border-left-color:#16a34a}
+.notice.pending{border-left-color:#64748b}
+.notice p{margin:0}
+.evidence{margin:8px 0 16px;padding-left:1.2rem}
+.evidence li{margin:4px 0}
+.sec-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.sec-head h2{margin-right:auto}
+@media (max-width:900px){
+  .chev-rows{gap:6px}
+  .chev{min-height:48px;padding:6px 14px 6px 18px;font-size:10px}
+  .chev .nm{white-space:normal}
+}
+@media (max-width:700px){
+  .chev-row{flex-wrap:wrap;gap:6px 0}
+  .chev{flex:1 1 calc(50% - 4px);margin-left:0;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%);border-radius:6px;margin:2px}
+  .chev.row-start{border-radius:6px}
+}
+</style>
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+
+<nav class="site"><a href="/">Home</a></nav>
+<main>
+<div class="topmeta">Updated <b id="updated-at">14 Nov 2026 22:24 AEDT</b> (Melbourne time)<span class="uv">Unique visitors (this page): <b class="uvc">…</b></span><span class="uvt"></span></div>
+<h1><span class="tt-keep">🚀</span> Cursor_Tenant6 (N9Kv-01 and N9Kv-03)</h1>
+<p class="lead">Provisioning N9Kv-01 and N9Kv-03 under tenant <code>Cursor_Tenant6</code> on ARR-FABRIC, using the normal NetBox provision flow, with <code>nac-validate</code>, a pre-backup and a dry run. Nothing is applied, merged or pushed until Aung’s emailed APPROVE arrives. <a href="/ARR/provisioning/">Provisioning ›</a> · <a href="/ARR/tracker/">Tracker ›</a></p>
+<div class="meta">
+  <div><b>Source</b> · <a href="https://amoeoo-coles.github.io/ARR/provisioning/cursor-tenant6/">/ARR/provisioning/cursor-tenant6/</a></div>
+  <div><b>Target</b> · ARR-FABRIC (https://192.168.10.1)</div>
+  <div><b>Run</b> · <span id="run-id">Cursor_Tenant6-arr-20261114-2219</span></div>
+  <div><b>Current step</b> · <span id="current-step">Approval email sent (Running)</span></div>
+  <div><b>Progress</b> · <span id="progress">5 done · 1 running · 0 failed · 4 pending</span></div>
+  <div><b>Stage</b> · <span id="stage-label">Awaiting approval email</span></div>
+</div>
+<div class="notice" id="stage-notice"><p><strong>Awaiting APPROVE.</strong> NetBox has been updated and the dry-run passed (48 objects to create, 0 to modify, no subnet overlaps). The live pre-backup could not be refreshed because DESKTOP-3GETEV9 was offline; the dry-run used the 6:31 PM AEDT snapshot. <strong>No write has been sent to the APIC.</strong> Apply starts only after you reply <code>APPROVE</code> to the approval email or in chat, and a fresh pre-backup has been taken from DESKTOP-3GETEV9.</p></div>
+<h2 class="dep">Deployment status</h2>
+<div class="legend" id="legend">
+  <span class="sw"><i class="lg-done"></i> Green = done</span>
+  <span class="sw"><i class="lg-failed"></i> Red = failed</span>
+  <span class="sw"><i class="lg-pending"></i> Grey = pending</span>
+  <span class="sw"><i class="lg-running"></i> Grey + amber outline = running</span>
+</div>
+<div class="chev-rows" id="chevron-bar"><div class="chev-row"><div class="chev done row-start" data-id="design" title="Design plan — Done"><span class="n">1</span><span class="nm">Design plan</span></div><div class="chev done" data-id="netbox-write" title="NetBox write — Done"><span class="n">2</span><span class="nm">NetBox write</span></div><div class="chev done" data-id="validate" title="Validate model — Done"><span class="n">3</span><span class="nm">nac-validate</span></div><div class="chev done" data-id="pre-backup" title="Pre-check / pre-backup — Done"><span class="n">4</span><span class="nm">Pre-backup</span></div><div class="chev done" data-id="dry-run" title="Dry-run — Done"><span class="n">5</span><span class="nm">Dry-run</span></div><div class="chev running" data-id="approval-email" title="Approval email sent — Running"><span class="n">6</span><span class="nm">Approval email</span></div><div class="chev pending" data-id="aung-approval" title="Aung approval (Gmail) — Pending"><span class="n">7</span><span class="nm">Awaiting APPROVE</span></div></div><div class="chev-row"><div class="chev pending row-start" data-id="apply" title="Apply to APIC — Pending"><span class="n">8</span><span class="nm">Apply to APIC</span></div><div class="chev pending" data-id="postcheck" title="Post-checks — Pending"><span class="n">9</span><span class="nm">Post-checks</span></div><div class="chev pending" data-id="post-email" title="Post email — Pending"><span class="n">10</span><span class="nm">Post email</span></div></div></div>
+<div class="tblwrap"><table class="steps" id="steps-table">
+<thead><tr><th>#</th><th>Step</th><th>State</th><th>Time (AEDT)</th><th>Details</th></tr></thead>
+<tbody><tr><td>1</td><td>Design plan</td><td><span class="st-pill done">Done</span></td><td class="t">14 Nov 2026 22:14 AEDT</td><td>Approved in chat (approve tenant6). Defaults: Cursor_Tenant6, VRF/BD/AP, VLAN 1601/1603, 10.6.1.1/24, individual trunk ports. Static ports follow the NetBox cable inventory (leaf Ethernet1/5 only; Ethernet1/6 is N9Kv-02/04).</td></tr><tr><td>2</td><td>NetBox write</td><td><span class="st-pill done">Done</span></td><td class="t">14 Nov 2026 22:21 AEDT</td><td>Idempotent write to http://localhost:8001 at 10:20–10:21 PM AEDT: 47 created, 0 updated, all tagged ARR-Tenant6. Second pass 10:21 PM AEDT: 47 unchanged. cursor5_* objects were not modified.</td></tr><tr><td>3</td><td>Validate model</td><td><span class="st-pill done">Done</span></td><td class="t">14 Nov 2026 22:21 AEDT</td><td>nac-validate --non-strict PASS on tenants/Cursor_Tenant6.nac.yaml. nac validate on the ARR model tree (4 files) PASS.</td></tr><tr><td>4</td><td>Pre-check / pre-backup</td><td><span class="st-pill done">Done</span></td><td class="t">14 Nov 2026 22:22 AEDT</td><td>Fresh pull could not be taken: DESKTOP-3GETEV9 was offline at 10:22 PM AEDT. Dry-run used the last live snapshot from 6:31 PM AEDT (infra, common, mgmt; Cursor_Tenant6 absent; health 99). A fresh GET should be taken before apply.</td></tr><tr><td>5</td><td>Dry-run</td><td><span class="st-pill done">Done</span></td><td class="t">14 Nov 2026 22:22 AEDT</td><td>Payload-vs-last-known-backup DN diff PASS: 48 create, 0 modify, 0 unchanged, no subnet overlaps. dn_diff.py: 7/7 tenant-base DNs missing (expected). nac-test --render-only PASS. descr omitted on domain and pool objects. Nothing POSTed.</td></tr><tr><td>6</td><td>Approval email sent</td><td><span class="st-pill running">Running</span></td><td class="t">—</td><td>Approval email to 179172@gmail.com is being prepared. Nothing will be applied to the APIC until APPROVE.</td></tr><tr><td>7</td><td>Aung approval (Gmail)</td><td><span class="st-pill pending">Pending</span></td><td class="t">—</td><td>Awaiting APPROVE. Nothing will be applied to the APIC until you reply APPROVE to the approval email or in chat after reviewing the dry-run.</td></tr><tr><td>8</td><td>Apply to APIC</td><td><span class="st-pill pending">Pending</span></td><td class="t">—</td><td>Blocked until APPROVE. Will run from DESKTOP-3GETEV9 after a fresh pre-backup: POST /api/mo/uni.json with payload.json.</td></tr><tr><td>9</td><td>Post-checks</td><td><span class="st-pill pending">Pending</span></td><td class="t">—</td><td>Read-back and nac-test after apply. Pending.</td></tr><tr><td>10</td><td>Post email</td><td><span class="st-pill pending">Pending</span></td><td class="t">—</td><td>Post-deploy email: sent only after apply and post-checks. Pending.</td></tr></tbody>
+</table></div>
+
+<h2 class="dep">Chosen values</h2>
+<div class="cards" id="values-cards">
+  <article class="card ok"><span class="card-label">Subnet</span><span class="card-value">10.6.1.1/24</span><span class="card-sub">private, no L3Out</span></article>
+  <article class="card ok"><span class="card-label">N9Kv-01</span><span class="card-value">VLAN 1601</span><span class="card-sub">LEAF-101/102 Ethernet1/5</span></article>
+  <article class="card ok"><span class="card-label">N9Kv-03</span><span class="card-value">VLAN 1603</span><span class="card-sub">LEAF-103/104 Ethernet1/5</span></article>
+  <article class="card ok"><span class="card-label">Port mode</span><span class="card-value">trunk (regular), non-vPC</span><span class="card-sub">leaf Ethernet1/6 left for N9Kv-02/04</span></article>
+</div>
+
+<div class="sec-head"><h2 class="dep">Pre-check</h2><span id="precheck-pill"><span class="st-pill done">Done</span></span></div>
+<p>A fresh read-only pre-backup could not be taken because DESKTOP-3GETEV9 was offline at 10:22 PM AEDT. The dry-run used the last live snapshot from <strong>Last live snapshot 14 November 2026, 6:31 PM AEDT (fresh pull blocked: DESKTOP-3GETEV9 offline at 10:22 PM AEDT)</strong>. Fabric health in that snapshot was <strong>99</strong>. Tenants on the APIC then: <code>infra</code>, <code>common</code>, <code>mgmt</code>. <code>Cursor_Tenant6</code> was not present. No <code>configExportP</code> job was used. nac-validate: PASS.</p>
+<p class="note">Backup artifact reused: <code>arr_pre_20261114-1831.zip (reused; not a new pull)</code>. NetBox write: 47 created, 0 updated, all tagged ARR-Tenant6. Second pass: 47 unchanged. A fresh GET from DESKTOP-3GETEV9 should be taken before apply.</p>
+
+<div class="sec-head"><h2 class="dep">Dry-run</h2><span id="dryrun-pill"><span class="st-pill done">Done</span></span></div>
+<div class="cards" id="dry-cards">
+  <article class="card ok"><span class="card-label">Create</span><span class="card-value" id="dry-create">48</span></article>
+  <article class="card ok"><span class="card-label">Modify</span><span class="card-value" id="dry-modify">0</span></article>
+  <article class="card ok"><span class="card-label">Unchanged</span><span class="card-value" id="dry-unchanged">0</span></article>
+  <article class="card ok"><span class="card-label">Result</span><span class="card-value" id="dry-result">PASS</span><span class="card-sub">no subnet overlaps</span></article>
+</div>
+<p>Payload-versus-last-known-pre-backup DN diff. <code>dn_diff.py</code> reported 7/7 tenant-base DNs missing (expected, because the tenant is not on the APIC). <code>nac-test --render-only</code> PASS. Relation objects in the payload use <code>status=modified</code>. Domain and VLAN-pool objects have no <code>descr</code> attribute. <strong>Nothing was POSTed to the APIC.</strong></p>
+
+<div class="sec-head"><h2 class="dep">Approval</h2><span id="approval-pill"><span class="st-pill running">Running</span></span></div>
+<p>Approval email will be sent to <strong>179172@gmail.com</strong>. Subject: ARR Simulator — [APPROVAL REQUIRED] Cursor_Tenant6 (N9Kv-01 and N9Kv-03) push to ARR APIC. Reply <code>APPROVE</code> to that email or in chat to apply. Apply, post-checks and the post email stay pending until then.</p>
+
+<div class="sec-head"><h2 class="dep">Apply to APIC</h2><span id="apply-pill"><span class="st-pill pending">Pending</span></span></div>
+<p id="apply-detail">Blocked until APPROVE. Will run from DESKTOP-3GETEV9 after a fresh pre-backup: POST /api/mo/uni.json with payload.json.</p>
+
+<div class="sec-head"><h2 class="dep">Post-check</h2><span id="postcheck-pill"><span class="st-pill pending">Pending</span></span></div>
+<p id="postcheck-detail">Read-back and nac-test after apply. Pending.</p>
+<p id="postemail-detail">Post-deploy email: sent only after apply and post-checks. Pending.</p>
+
+<h2 class="dep">Evidence</h2>
+<ul class="evidence">
+  <li><a href="status.json"><code>status.json</code></a> — live pipeline state for this page</li>
+  <li><a href="/ARR/tracker/">ARR tracker</a></li>
+  <li><a href="/ARR/provisioning/">ARR provisioning index</a></li>
+  <li>Local run artifacts (not published here): <code>precheck.md</code>, <code>dry-run.json</code>, <code>payload.json</code>, <code>netbox-changes.json</code>, <code>nac-validate/</code></li>
+</ul>
+
+<h2 class="dep">Objects to create (48 new DNs)</h2>
+<div class="tblwrap"><table class="steps" id="objects-table"><thead><tr><th>Class</th><th>Name</th><th>DN (pattern)</th></tr></thead><tbody><tr><td class='mono'>physDomP</td><td>Cursor_Tenant6_phys</td><td class='mono'>uni/phys-Cursor_Tenant6_phys</td></tr><tr><td class='mono'>fvnsVlanInstP</td><td>Cursor_Tenant6_vlans 1601-1603 static</td><td class='mono'>uni/infra/vlanns-[Cursor_Tenant6_vlans]-static</td></tr><tr><td class='mono'>infraAttEntityP</td><td>Cursor_Tenant6_aaep</td><td class='mono'>uni/infra/attentp-Cursor_Tenant6_aaep</td></tr><tr><td class='mono'>infraAccPortGrp</td><td>Cursor_Tenant6_ipg (access, non-vPC)</td><td class='mono'>uni/infra/funcprof/accportgrp-Cursor_Tenant6_ipg</td></tr><tr><td class='mono'>infraAccPortP</td><td>Cursor_Tenant6_ifsel_101_102 (eth1/5)</td><td class='mono'>uni/infra/accportprof-Cursor_Tenant6_ifsel_101_102</td></tr><tr><td class='mono'>infraAccPortP</td><td>Cursor_Tenant6_ifsel_103_104 (eth1/5)</td><td class='mono'>uni/infra/accportprof-Cursor_Tenant6_ifsel_103_104</td></tr><tr><td class='mono'>infraNodeP</td><td>Cursor_Tenant6_sw_101..104</td><td class='mono'>uni/infra/nprof-Cursor_Tenant6_sw_101 (and 102, 103, 104)</td></tr><tr><td class='mono'>fvTenant</td><td>Cursor_Tenant6</td><td class='mono'>uni/tn-Cursor_Tenant6</td></tr><tr><td class='mono'>fvCtx</td><td>Cursor_Tenant6_VRF</td><td class='mono'>uni/tn-Cursor_Tenant6/ctx-Cursor_Tenant6_VRF</td></tr><tr><td class='mono'>fvBD / fvSubnet</td><td>Cursor_Tenant6_BD 10.6.1.1/24 private</td><td class='mono'>uni/tn-Cursor_Tenant6/BD-Cursor_Tenant6_BD/subnet-[10.6.1.1/24]</td></tr><tr><td class='mono'>fvAp</td><td>Cursor_Tenant6_AP</td><td class='mono'>uni/tn-Cursor_Tenant6/ap-Cursor_Tenant6_AP</td></tr><tr><td class='mono'>fvAEPg</td><td>N9Kv-01_EPG VLAN 1601</td><td class='mono'>uni/tn-Cursor_Tenant6/ap-Cursor_Tenant6_AP/epg-N9Kv-01_EPG</td></tr><tr><td class='mono'>fvRsPathAtt</td><td>LEAF-101/102 eth1/5</td><td class='mono'>topology/pod-1/paths-101/pathep-[eth1/5] and paths-102</td></tr><tr><td class='mono'>fvAEPg</td><td>N9Kv-03_EPG VLAN 1603</td><td class='mono'>uni/tn-Cursor_Tenant6/ap-Cursor_Tenant6_AP/epg-N9Kv-03_EPG</td></tr><tr><td class='mono'>fvRsPathAtt</td><td>LEAF-103/104 eth1/5</td><td class='mono'>topology/pod-1/paths-103/pathep-[eth1/5] and paths-104</td></tr></tbody></table></div>
+
+<p class="note">Times are shown in Australia/Melbourne (AEDT). The bar loads <code>status.json</code> next to this page when available, and falls back to the data baked in at last publish. This page has no credentials or secrets. No write has been sent to the APIC unless the Apply step is marked Done.</p>
+</main>
+<script id="status-fallback" type="application/json">{"task":"cursor-tenant6","run_id":"Cursor_Tenant6-arr-20261114-2219","tenant":"Cursor_Tenant6","source":"https://amoeoo-coles.github.io/ARR/provisioning/cursor-tenant6/","target":"ARR-FABRIC (https://192.168.10.1)","fabric":"ARR-FABRIC","stage":"Awaiting approval email","apic_write":false,"updated":"2026-11-14T22:24:00+11:00","dry_run":{"create":48,"modify":0,"unchanged":0,"overlaps":0,"result":"PASS"},"netbox":{"created":47,"updated":0,"unchanged_second_pass":47,"tag":"ARR-Tenant6","url":"http://localhost:8001"},"validation":{"nac_validate":"PASS","nac_test_render_only":"PASS"},"backup":{"taken":"2026-11-14T18:31:00+11:00","taken_label":"Last live snapshot 14 November 2026, 6:31 PM AEDT (fresh pull blocked: DESKTOP-3GETEV9 offline at 10:22 PM AEDT)","zip":"arr_pre_20261114-1831.zip (reused; not a new pull)","health":99,"tenants":["infra","common","mgmt"],"cursor_tenant6_present":false,"live_prebackup":false},"values":{"subnet":"10.6.1.1/24","vlan_01":"1601","vlan_03":"1603","ports_01":"LEAF-101/102 Ethernet1/5","ports_03":"LEAF-103/104 Ethernet1/5","mode":"trunk (regular), non-vPC"},"approval_email":{"sent":false,"to":"179172@gmail.com","subject":"ARR Simulator \u2014 [APPROVAL REQUIRED] Cursor_Tenant6 (N9Kv-01 and N9Kv-03) push to ARR APIC","message_id":null,"sent_at":null},"steps":[{"id":"design","name":"Design plan","state":"done","time":"2026-11-14T22:14:00+11:00","detail":"Approved in chat (approve tenant6). Defaults: Cursor_Tenant6, VRF/BD/AP, VLAN 1601/1603, 10.6.1.1/24, individual trunk ports. Static ports follow the NetBox cable inventory (leaf Ethernet1/5 only; Ethernet1/6 is N9Kv-02/04)."},{"id":"netbox-write","name":"NetBox write","state":"done","time":"2026-11-14T22:21:00+11:00","detail":"Idempotent write to http://localhost:8001 at 10:20\u201310:21 PM AEDT: 47 created, 0 updated, all tagged ARR-Tenant6. Second pass 10:21 PM AEDT: 47 unchanged. cursor5_* objects were not modified."},{"id":"validate","name":"Validate model","state":"done","time":"2026-11-14T22:21:00+11:00","detail":"nac-validate --non-strict PASS on tenants/Cursor_Tenant6.nac.yaml. nac validate on the ARR model tree (4 files) PASS."},{"id":"pre-backup","name":"Pre-check / pre-backup","state":"done","time":"2026-11-14T22:22:00+11:00","detail":"Fresh pull could not be taken: DESKTOP-3GETEV9 was offline at 10:22 PM AEDT. Dry-run used the last live snapshot from 6:31 PM AEDT (infra, common, mgmt; Cursor_Tenant6 absent; health 99). A fresh GET should be taken before apply."},{"id":"dry-run","name":"Dry-run","state":"done","time":"2026-11-14T22:22:00+11:00","detail":"Payload-vs-last-known-backup DN diff PASS: 48 create, 0 modify, 0 unchanged, no subnet overlaps. dn_diff.py: 7/7 tenant-base DNs missing (expected). nac-test --render-only PASS. descr omitted on domain and pool objects. Nothing POSTed."},{"id":"approval-email","name":"Approval email sent","state":"running","time":null,"detail":"Approval email to 179172@gmail.com is being prepared. Nothing will be applied to the APIC until APPROVE."},{"id":"aung-approval","name":"Aung approval (Gmail)","state":"pending","time":null,"detail":"Awaiting APPROVE. Nothing will be applied to the APIC until you reply APPROVE to the approval email or in chat after reviewing the dry-run."},{"id":"apply","name":"Apply to APIC","state":"pending","time":null,"detail":"Blocked until APPROVE. Will run from DESKTOP-3GETEV9 after a fresh pre-backup: POST /api/mo/uni.json with payload.json."},{"id":"postcheck","name":"Post-checks","state":"pending","time":null,"detail":"Read-back and nac-test after apply. Pending."},{"id":"post-email","name":"Post email","state":"pending","time":null,"detail":"Post-deploy email: sent only after apply and post-checks. Pending."}],"generated_at":"2026-11-14T22:25:11+11:00","monitor_url":"https://amoeoo-coles.github.io/ARR/provisioning/cursor-tenant6/"}</script>
+<script>
+(function(){
+  var SHORT={"design":"Design plan","netbox-write":"NetBox write","validate":"nac-validate","pre-backup":"Pre-backup","dry-run":"Dry-run","approval-email":"Approval email","aung-approval":"Awaiting APPROVE","apply":"Apply to APIC","postcheck":"Post-checks","post-email":"Post email"};
+  var LABEL={done:"Done",failed:"Failed",pending:"Pending",running:"Running"};
+  function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+  function fmt(t){
+    if(!t) return "—";
+    var d=new Date(t);
+    if(isNaN(d)) return String(t);
+    var pt=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Melbourne",day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",hour12:false,hourCycle:"h23",timeZoneName:"short"}).formatToParts(d);
+    var g=function(k){return (pt.find(function(x){return x.type===k})||{}).value||""};
+    var tz=(g("timeZoneName")||"AEDT").replace("GMT+11","AEDT").replace("GMT+10","AEST").replace("UTC+11","AEDT").replace("UTC+10","AEST");
+    return g("day")+" "+g("month")+" "+g("year")+" "+g("hour")+":"+g("minute")+" "+tz;
+  }
+  function counts(steps){
+    var c={done:0,failed:0,pending:0,running:0};
+    steps.forEach(function(s){var k=s.state||"pending";c[k]=(c[k]||0)+1});
+    return c;
+  }
+  function current(steps){
+    return steps.find(function(s){return s.state==="running"})||
+           steps.find(function(s){return s.state==="failed"})||
+           steps.find(function(s){return s.state!=="done"})||
+           steps[steps.length-1];
+  }
+  function step(steps,id){return (steps||[]).find(function(s){return s.id===id})||{};}
+  function pill(state){state=state||"pending";return '<span class="st-pill '+esc(state)+'">'+esc(LABEL[state]||state)+"</span>";}
+  function setTxt(id,text){var el=document.getElementById(id);if(el) el.textContent=text;}
+  function setHtml(id,html){var el=document.getElementById(id);if(el) el.innerHTML=html;}
+  function render(data){
+    var steps=data.steps||[];
+    var c=counts(steps);
+    var cur=current(steps);
+    var bar=document.getElementById("chevron-bar");
+    if(bar){
+      var html="";
+      for(var r=0;r<steps.length;r+=7){
+        var row=steps.slice(r,r+7);
+        html+='<div class="chev-row">';
+        row.forEach(function(st,i){
+          var state=st.state||"pending";
+          var n=r+i+1;
+          var name=SHORT[st.id]||st.name||"";
+          html+='<div class="chev '+esc(state)+(i===0?" row-start":"")+'" data-id="'+esc(st.id||"")+'" title="'+esc((st.name||"")+" — "+(LABEL[state]||state))+'"><span class="n">'+n+'</span><span class="nm">'+esc(name)+'</span></div>';
+        });
+        html+="</div>";
+      }
+      bar.innerHTML=html;
+    }
+    var tb=document.querySelector("#steps-table tbody");
+    if(tb){
+      tb.innerHTML=steps.map(function(st,i){
+        var state=st.state||"pending";
+        var when=st.time||st.at||"";
+        return "<tr><td>"+(i+1)+"</td><td>"+esc(st.name||"")+'</td><td>'+pill(state)+"</td><td class=\"t\">"+esc(fmt(when))+"</td><td>"+esc(st.detail||"—")+"</td></tr>";
+      }).join("");
+    }
+    var ua=document.getElementById("updated-at");
+    if(ua) ua.textContent=fmt(data.updated);
+    var cs=document.getElementById("current-step");
+    if(cs&&cur) cs.textContent=(cur.name||"—")+" ("+(LABEL[cur.state]||cur.state)+")";
+    var pr=document.getElementById("progress");
+    if(pr) pr.textContent=c.done+" done · "+c.running+" running · "+c.failed+" failed · "+c.pending+" pending";
+    var stage=data.stage||(cur&&cur.name)||"";
+    setTxt("stage-label", stage);
+    var dry=data.dry_run||{};
+    setTxt("dry-create", dry.create==null?"—":String(dry.create));
+    setTxt("dry-modify", dry.modify==null?"—":String(dry.modify));
+    setTxt("dry-unchanged", dry.unchanged==null?"—":String(dry.unchanged));
+    setTxt("dry-result", dry.result||"—");
+    ["precheck-pill","dryrun-pill","approval-pill","apply-pill","postcheck-pill"].forEach(function(id){
+      var map={
+        "precheck-pill":"pre-backup",
+        "dryrun-pill":"dry-run",
+        "approval-pill": data.stage==="Awaiting APPROVE" ? "aung-approval" : "approval-email",
+        "apply-pill":"apply",
+        "postcheck-pill":"postcheck"
+      };
+      var st=step(steps, map[id]);
+      setHtml(id, pill(st.state||"pending"));
+    });
+    var applySt=step(steps,"apply");
+    var postSt=step(steps,"postcheck");
+    var mailSt=step(steps,"post-email");
+    setTxt("apply-detail", applySt.detail||"Blocked until APPROVE. Will run from DESKTOP-3GETEV9: POST /api/mo/uni.json with payload.json.");
+    setTxt("postcheck-detail", postSt.detail||"nac-test / DN read-back after apply. Pending.");
+    setTxt("postemail-detail", mailSt.detail||"Sent only after apply and post-checks. Pending.");
+  }
+  function fallback(){
+    try{return JSON.parse(document.getElementById("status-fallback").textContent)}catch(e){return null}
+  }
+  function load(){
+    fetch("status.json?t="+Date.now(),{cache:"no-store"}).then(function(r){
+      if(!r.ok) throw new Error("status "+r.status);
+      return r.json();
+    }).then(render).catch(function(){
+      var data=fallback();
+      if(data) render(data);
+    });
+  }
+  load();
+})();
+</script>
+<script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc){const pt=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Melbourne",hour:"2-digit",minute:"2-digit",hour12:false,hourCycle:"h23",timeZoneName:"short"}).formatToParts(new Date(d.updated_utc));const g=t=>(pt.find(x=>x.type===t)||{}).value||"";const tz=(g("timeZoneName")||"AEDT").replace("GMT+11","AEDT").replace("GMT+10","AEST");e.textContent=" (data as of "+g("hour")+":"+g("minute")+" "+tz+")"}})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script>
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:8px 0 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:6px;margin:0;padding:8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
+nav.site.im a.mi{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:auto;min-height:44px;min-width:0;padding:8px 10px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a)}
+nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:visible;text-overflow:unset;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.25;text-align:left}
+nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:22px;height:22px;padding:0 5px;border-radius:999px;font-size:16px;font-weight:800;line-height:1;background:#0f172a;color:#fff}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc;color:#0f172a}
+nav.site.im a.mi.on .im-seq{background:#fff;color:#1d4ed8}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px;flex:none}#sg-link,#tt-btn,#mm-link{height:36px;border-radius:18px}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"],["ရှေ့သို့ချီ","/roadmap/forward/","⏩"],["Time Map 2026–2030","/roadmap/forward/time-map/","🗓️"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["ARR-LargeTopology","/ARR-LargeTopology/","🗺️",[["Overview","/ARR-LargeTopology/","🗺️"],["Nodes","/ARR-LargeTopology/nodes.html","🖥️"],["Serials","/ARR-LargeTopology/serials.html","🔢"],["Mgmt IPs","/ARR-LargeTopology/mgmt-ips.html","🌐"],["Links","/ARR-LargeTopology/links.html","🔗"],["Tenants","/ARR-LargeTopology/tenants.html","🏢"],["VRFs","/ARR-LargeTopology/vrfs.html","🧭"],["BDs","/ARR-LargeTopology/bds.html","🌉"],["Subnets","/ARR-LargeTopology/subnets.html","🔢"],["EPGs","/ARR-LargeTopology/epgs.html","🎯"],["Leaf VNIs","/ARR-LargeTopology/vni.html","💠"],["YAML model","/ARR-LargeTopology/yaml-model/","📄"],["IAC files","/ARR-LargeTopology/iac-files/","📦"],["Hardware monitor","/ARR-LargeTopology/hw-monitor/","📟"]]],["zFrontier","/zfrontier/","🌠",[["zFrontier","/zfrontier/","🌠"],["Farzad","/zfrontier/farzad/","📺"],["SpaceX vs Tesla shares","/zfrontier/shares/","📈"],["Optimus","/zfrontier/optimus/","🤖"],["Gigafactory","/zfrontier/gigafactory/","🏭"],["FSD versions","/zfrontier/fsd-versions/","🛣️"],["Liquid cooling","/zfrontier/liquid-cooling/","💧"],["SpaceX Tracking","/zfrontier/spacex/","🚀"],["CyberCab","/zfrontier/cybercab/","🚕"],["AI FineTune Pod","/zfrontier/ai-finetune-pod/","🎛️"],["MCP Servers","/zfrontier/mcp-servers/","🔌"],["NaC CLI","/zfrontier/nac-cli/","🧰"],["GPU Workflow","/zfrontier/3gpu-ai-workflow/","🧮"],["MWMESH","/zfrontier/mwmesh/","📡"],["Notebooks","/zfrontier/notebooks/","📓"],["RAG documents","/zfrontier/rag-documents/","📚"],["Foundation-Sec-8B","/zfrontier/foundation-sec-8b/","🛡️"],["Terafab","/zfrontier/terafab/","💠"],["3DiffsVXLAN","/zfrontier/3diffsvxlan/","🔀"],["ARR-LargePod","/zfrontier/arr-largepod/","🏗️"],["ACI GUI Forms","/zfrontier/ACI-GUI-Forms/","📋"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"]]],["ACI GUI Forms","/aci-gui-forms/WIP/gui-map/","📝",[["GUI Map","/aci-gui-forms/WIP/gui-map/","🗺️"]]],["ACI GUI","/aci-gui/","🖥️",[["Create Pod Policy Group","/aci-gui/create-pod-policy-group/","🧬"],["Create Bridge Domain (step 3)","/aci-gui/create-bridge-domain-step3/","🌉"],["Create Subnet","/aci-gui/create-subnet/","🔢"],["Create Application Profile","/aci-gui/create-application-profile/","🧩"],["Create Management EPG","/aci-gui/create-management-epg/","🛠️"],["Static Node Management Addresses","/aci-gui/static-node-management-addresses/","📍"],["Create Fabric Policies","/aci-gui/create-fabric-policies/","🧵"],["Create Access Policies","/aci-gui/create-access-policies/","🔐"],["Create VLAN Pool","/aci-gui/create-vlan-pool/","🏷️"],["Create Physical Domain","/aci-gui/create-physical-domain/","🏛️"],["Create Access Interface Policy Group","/aci-gui/create-access-interface-policy-group/","🔌"],["Create PC Interface Policy Group","/aci-gui/create-pc-interface-policy-group/","🔀"],["Interface Wizard for vPC","/aci-gui/interface-wizard-vpc/","🪄"],["Create VMM Domain","/aci-gui/create-vmm-domain/","💻"],["vCenter Networking","/aci-gui/vcenter-networking/","🖥️"],["Create Tenant","/aci-gui/create-tenant/","🏢"],["Create L3Out","/aci-gui/create-l3out/","🌐"],["L3Out Contracts","/aci-gui/l3out-contracts/","📜"],["Create Bridge Domain","/aci-gui/create-bridge-domain/","🌉"],["Bridge Domain","/aci-gui/bridge-domain/","🌉"],["Mgmt Bridge Domain","/aci-gui/mgmt-bridge-domain/","🔧"],["DHCP Relay","/aci-gui/dhcp-relay/","📡"],["Management Application Profile","/aci-gui/management-application-profile/","📦"],["Application Profile (web + app)","/aci-gui/application-profile/","🧩"],["Create VRF","/aci-gui/create-vrf/","🧭"],["Create Endpoint Group","/aci-gui/create-endpoint-group/","🎯"],["Contracts Between Tenants","/aci-gui/contracts-between-tenants/","🤝"],["Create Filter","/aci-gui/create-filter/","🧹"],["Create Contract","/aci-gui/create-contract/","📃"],["Create Management Contracts","/aci-gui/create-management-contracts/","📑"],["Mgmt PortGroup to VM","/aci-gui/mgmt-portgroup-to-vm/","🧷"],["Pod Policy Group","/aci-gui/pod-policy-group/","🕒"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=(seq?String(seq)+'. ':'')+e[0];if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks ›';r2.appendChild(t);
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1))});r2.appendChild(pills);n.appendChild(r2)}}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+</body>
+</html>
