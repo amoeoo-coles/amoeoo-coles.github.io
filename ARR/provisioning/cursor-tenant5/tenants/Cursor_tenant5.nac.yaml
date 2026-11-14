@@ -1,0 +1,284 @@
+# Network-as-Code (nac-aci data model, apic: root)
+# Environment: ARR-FABRIC — ACI Rack Rental (live APIC at https://192.168.10.1)
+# Source: Live read-only collection from ARR-APIC-01
+# Collected: 14 Nov 2026, 5:52 PM AEDT (Australia/Melbourne, UTC+11)
+# Method: GET only after aaaLogin; aaaLogout after. Pulled from DESKTOP-3GETEV9.
+# PLAN ONLY — not present on the live APIC. Awaits NetBox provisioning + email APPROVE.
+# Chosen L3Out: VLAN 3051, transit 10.250.250.0/30, leaf 10.250.250.1/30, peer 10.250.250.2,
+# router-id 10.255.255.101 (loopback on LEAF-101), port LEAF-101 eth1/3.
+# Cursor_tenant5 must be recreated (tenant, VRF, BDs, subnets, AP, EPGs) before the L3Out.
+---
+apic:
+  access_policies:
+    vlan_pools:
+    - name: cursor5_l3out_vlans
+      allocation: static
+      ranges:
+      - from: 3051
+        to: 3051
+        allocation: static
+        role: external
+    routed_domains:
+    - name: cursor5_l3_dom
+      vlan_pool: cursor5_l3out_vlans
+      vlan_pool_allocation: static
+    aaeps:
+    - name: cursor5_l3out_aaep
+      routed_domains:
+      - cursor5_l3_dom
+    leaf_interface_policy_groups:
+    - name: cursor5_l3out_ipg
+      type: access
+      aaep: cursor5_l3out_aaep
+    leaf_interface_profiles:
+    - name: cursor5_l3out_ifsel
+      selectors:
+      - name: leaf101-eth1-3
+        policy_group: cursor5_l3out_ipg
+        port_blocks:
+        - name: eth1-3
+          from_module: 1
+          from_port: 3
+          to_module: 1
+          to_port: 3
+    leaf_switch_profiles:
+    - name: cursor5_l3out_sw_101
+      interface_profiles:
+      - cursor5_l3out_ifsel
+      selectors:
+      - name: leaf-101
+        node_blocks:
+        - name: leaf-101
+          from: 101
+          to: 101
+  tenants:
+  - name: Cursor_tenant5
+    description: Cursor tenant 5 - Web App DB tiers with firewall hops and DMZ L3Out
+      via NetBox pipeline (NaC + Ansible)
+    vrfs:
+    - name: cursor5_vrf
+      description: Single VRF - zones isolated by whitelist, inter-zone only via FW
+        service graph
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: cursor5_web_bd
+      description: Web tier (advertised to DMZ via L3Out)
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: proxy
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 10.250.51.1/24
+        description: Web tier (advertised to DMZ via L3Out)
+        public: true
+        private: false
+        shared: false
+    - name: cursor5_app_bd
+      description: App tier
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: proxy
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 10.250.52.1/24
+        description: App tier
+        public: false
+        private: true
+        shared: false
+    - name: cursor5_db_bd
+      description: DB tier
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: proxy
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 10.250.53.1/24
+        description: DB tier
+        public: false
+        private: true
+        shared: false
+    - name: cursor5_fw_dmz_bd
+      description: FW service leg DMZ side (PBR dest .2 active .3 standby)
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: flood
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 10.250.59.1/28
+        description: FW service leg DMZ side (PBR dest .2 active .3 standby)
+        public: false
+        private: true
+        shared: false
+    - name: cursor5_fw_web_bd
+      description: FW service leg Web (PBR dest .18 active .19 standby)
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: flood
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 10.250.59.17/28
+        description: FW service leg Web (PBR dest .18 active .19 standby)
+        public: false
+        private: true
+        shared: false
+    - name: cursor5_fw_app_bd
+      description: FW service leg App (PBR dest .34 active .35 standby)
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: flood
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 10.250.59.33/28
+        description: FW service leg App (PBR dest .34 active .35 standby)
+        public: false
+        private: true
+        shared: false
+    - name: cursor5_fw_db_bd
+      description: FW service leg DB (PBR dest .50 active .51 standby)
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: flood
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 10.250.59.49/28
+        description: FW service leg DB (PBR dest .50 active .51 standby)
+        public: false
+        private: true
+        shared: false
+    application_profiles:
+    - name: cursor5_ap
+      description: Three-tier application (web app db)
+      endpoint_groups:
+      - name: web
+        description: Web servers - reached from DMZ via FW
+        bridge_domain: cursor5_web_bd
+        preferred_group: false
+        contracts:
+          providers:
+          - dmz-to-web
+          consumers:
+          - web-to-app
+      - name: app
+        description: App servers - reached from Web via FW
+        bridge_domain: cursor5_app_bd
+        preferred_group: false
+        contracts:
+          providers:
+          - web-to-app
+          consumers:
+          - app-to-db
+      - name: db
+        description: DB servers - reached from App via FW
+        bridge_domain: cursor5_db_bd
+        preferred_group: false
+        contracts:
+          providers:
+          - app-to-db
+    filters:
+    - name: flt-http-https
+      entries:
+      - name: http
+        ethertype: ip
+        protocol: tcp
+        destination_from_port: 80
+        destination_to_port: 80
+      - name: https
+        ethertype: ip
+        protocol: tcp
+        destination_from_port: 443
+        destination_to_port: 443
+    - name: flt-web-to-app
+      entries:
+      - name: http-alt
+        ethertype: ip
+        protocol: tcp
+        destination_from_port: 8080
+        destination_to_port: 8080
+      - name: https
+        ethertype: ip
+        protocol: tcp
+        destination_from_port: 443
+        destination_to_port: 443
+    - name: flt-app-to-db
+      entries:
+      - name: mssql
+        ethertype: ip
+        protocol: tcp
+        destination_from_port: 1433
+        destination_to_port: 1433
+      - name: mysql
+        ethertype: ip
+        protocol: tcp
+        destination_from_port: 3306
+        destination_to_port: 3306
+      - name: postgres
+        ethertype: ip
+        protocol: tcp
+        destination_from_port: 5432
+        destination_to_port: 5432
+    contracts:
+    - name: dmz-to-web
+      scope: context
+      subjects:
+      - name: subj
+        filters:
+        - filter: flt-http-https
+          action: permit
+    - name: web-to-app
+      scope: context
+      subjects:
+      - name: subj
+        filters:
+        - filter: flt-web-to-app
+          action: permit
+    - name: app-to-db
+      scope: context
+      subjects:
+      - name: subj
+        filters:
+        - filter: flt-app-to-db
+          action: permit
+    l3outs:
+    - name: DMZ_L3Out
+      vrf: cursor5_vrf
+      domain: cursor5_l3_dom
+      export_route_control: true
+      import_route_control: false
+      node_profiles:
+      - name: DMZ_L3Out_nodeProfile
+        nodes:
+        - node_id: 101
+          router_id: 10.255.255.101
+          router_id_as_loopback: true
+        interface_profiles:
+        - name: DMZ_L3Out_interfaceProfile
+          interfaces:
+          - ip: 10.250.250.1/30
+            vlan: 3051
+            pod_id: 1
+            node_id: 101
+            module: 1
+            port: 3
+      external_endpoint_groups:
+      - name: DMZ_ExtEPG
+        preferred_group: false
+        subnets:
+        - prefix: 0.0.0.0/0
+          export_route_control: false
+          import_route_control: false
+          import_security: true
+          shared_route_control: false
+          shared_security: false
+        contracts:
+          consumers:
+          - dmz-to-web
