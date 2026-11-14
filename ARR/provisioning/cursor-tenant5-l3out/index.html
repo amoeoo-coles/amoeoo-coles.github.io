@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <!-- theme-boot v2 -->
@@ -548,268 +548,25 @@ html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5
 
 </style>
 
-<script id="tt-boot">(function(){
-  var t;
-  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
-  if(t!=='light'&&t!=='dark'){
-    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
-  }
-  var h=document.documentElement;
-  h.setAttribute('data-theme',t);
-  h.style.colorScheme=t;
-})();</script>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cursor_tenant5 rebuild + L3Out — ARR provisioning</title>
-<style><style>
-    :root {
-      color-scheme: light dark;
-      --bg: #f4f6f8;
-      --bg-accent: #e8eef4;
-      --card: #ffffff;
-      --ink: #15202b;
-      --muted: #5b6b7c;
-      --line: #d5dee7;
-      --accent: #0e7490;
-      --accent-soft: #e0f4f8;
-      --link: #0e7490;
-      --good: #047857;
-      --fair: #b45309;
-      --poor: #b91c1c;
-      --crit: #b91c1c;
-      --major: #c2410c;
-      --minor: #a16207;
-      --warn: #a16207;
-      --info: #0369a1;
-      --cleared: #047857;
-      --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
-      --radius: 14px;
-      --mono: "IBM Plex Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
-      --sans: "Source Sans 3", "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0b1220;
-        --bg-accent: #111827;
-        --card: #152033;
-        --ink: #e6edf5;
-        --muted: #93a4b8;
-        --line: #2a3b52;
-        --accent: #5eead4;
-        --accent-soft: #12313a;
-        --link: #5eead4;
-        --good: #34d399;
-        --fair: #fbbf24;
-        --poor: #f87171;
-        --crit: #f87171;
-        --major: #fb923c;
-        --minor: #fbbf24;
-        --warn: #fbbf24;
-        --info: #7dd3fc;
-        --cleared: #34d399;
-        --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
-      }
-    }
-    * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; }
-    body {
-      font-family: var(--sans);
-      background:
-        radial-gradient(1200px 500px at 10% -10%, var(--bg-accent), transparent 60%),
-        var(--bg);
-      color: var(--ink);
-      line-height: 1.5;
-      min-height: 100vh;
-    }
-    header {
-      padding: 2.2rem 1.5rem 1.4rem;
-      border-bottom: 1px solid var(--line);
-    }
-    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem 3.5rem; }
-    header .wrap { padding-bottom: 0; }
-    .kicker {
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      font-size: 0.72rem;
-      color: var(--accent);
-      font-weight: 700;
-      margin: 0 0 0.35rem;
-    }
-    h1 {
-      font-size: clamp(1.7rem, 3vw, 2.25rem);
-      margin: 0 0 0.45rem;
-      letter-spacing: -0.03em;
-      font-weight: 700;
-    }
-    .meta, .footer, .note, .muted, .card-sub, .card-label, .empty, .na, .dn {
-      color: var(--muted);
-    }
-    .meta { margin: 0 0 0.25rem; }
-    .snapshot { margin: 0; font-size: 0.98rem; }
-    h2 {
-      margin: 2.4rem 0 0.85rem;
-      font-size: 1.2rem;
-      letter-spacing: -0.02em;
-    }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 0.85rem;
-    }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 1rem 1.05rem 0.95rem;
-      box-shadow: var(--shadow);
-    }
-    .card-label {
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-weight: 650;
-    }
-    .card-value {
-      font-size: 1.65rem;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      margin-top: 0.2rem;
-    }
-    .card-value strong { font-weight: 700; }
-    .card-sub { font-size: 0.78rem; margin-top: 0.25rem; }
-    .unit { font-size: 0.9rem; color: var(--muted); font-weight: 600; margin-left: 0.15rem; }
-    .health.good, .sev.cleared { color: var(--good); }
-    .health.fair { color: var(--fair); }
-    .health.poor, .sev.critical { color: var(--poor); }
-    .sev.major { color: var(--major); }
-    .sev.warning, .sev.minor { color: var(--warn); }
-    .sev.info { color: var(--info); }
-    .table-wrap {
-      overflow-x: auto;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.93rem;
-    }
-    th, td {
-      text-align: left;
-      padding: 0.65rem 0.85rem;
-      border-bottom: 1px solid var(--line);
-      vertical-align: top;
-    }
-    th {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: var(--muted);
-      font-weight: 700;
-      background: color-mix(in srgb, var(--card) 80%, var(--bg-accent));
-    }
-    tr:last-child td { border-bottom: 0; }
-    .mono { font-family: var(--mono); font-size: 0.86em; }
-    .num { font-variant-numeric: tabular-nums; text-align: right; font-family: var(--mono); }
-    th:nth-child(3) { text-align: left; }
-    table thead th:nth-child(3) { /* keep */ }
-    .pill {
-      display: inline-block;
-      padding: 0.1rem 0.5rem;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      font-size: 0.78rem;
-      font-weight: 650;
-      background: color-mix(in srgb, var(--card) 70%, var(--bg-accent));
-    }
-    .pill.role-controller { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
-    .pill.role-leaf { background: color-mix(in srgb, var(--good) 16%, var(--card)); color: var(--good); border-color: transparent; }
-    .pill.role-spine { background: color-mix(in srgb, var(--info) 16%, var(--card)); color: var(--info); border-color: transparent; }
-    .pill.sev.critical { background: color-mix(in srgb, var(--crit) 16%, var(--card)); color: var(--crit); border-color: transparent; }
-    .pill.sev.major { background: color-mix(in srgb, var(--major) 16%, var(--card)); color: var(--major); border-color: transparent; }
-    .pill.sev.warning, .pill.sev.minor { background: color-mix(in srgb, var(--warn) 16%, var(--card)); color: var(--warn); border-color: transparent; }
-    .tenant-block {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 1rem 1.15rem 1.1rem;
-      box-shadow: var(--shadow);
-      margin-bottom: 1rem;
-    }
-    .tenant-block h3 { margin: 0 0 0.85rem; font-size: 1.05rem; }
-    .tenant-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 0.85rem 1.25rem;
-    }
-    .tenant-block h4 {
-      margin: 0 0 0.35rem;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: var(--muted);
-    }
-    .count {
-      font-family: var(--mono);
-      font-size: 0.85em;
-      color: var(--ink);
-    }
-    .obj-list { list-style: none; margin: 0; padding: 0; }
-    .obj-list li { margin: 0 0 0.35rem; }
-    .dn { display: block; font-family: var(--mono); font-size: 0.75rem; word-break: break-all; }
-    .empty, .na { font-style: italic; }
-    .note { font-size: 0.9rem; margin: 0.85rem 0 0; }
-    footer {
-      margin-top: 2.8rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--line);
-      font-size: 0.85rem;
-    }
-    a { color: var(--link); }
-  
-    a { color: var(--link); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .card-value a, .card-sub a, .count a, a.count, td a, .health a, a.health {
-      color: inherit;
-    }
-    .card-value a:hover, a.count:hover, .count a:hover { text-decoration: underline; }
-    .crumb {
-      font-size: 0.92rem;
-      margin: 0 0 0.85rem;
-      color: var(--muted);
-    }
-    .crumb ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.3rem 0.15rem; }
-    .crumb li { display: inline; }
-    .crumb li:not(:last-child)::after { content: "/"; margin: 0 0.4rem; color: var(--muted); }
-    .crumb a { color: var(--link); }
-    .back { margin: 0 0 1rem; }
-    dl.attrs {
-      display: grid;
-      grid-template-columns: minmax(11rem, 15rem) 1fr;
-      gap: 0.45rem 1.1rem;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 1rem 1.15rem;
-      box-shadow: var(--shadow);
-      margin: 0 0 1.4rem;
-    }
-    dl.attrs dt { color: var(--muted); font-size: 0.85rem; padding-top: 0.1rem; }
-    dl.attrs dd { margin: 0; word-break: break-word; }
-    h2 .count, h3 .count { font-weight: 600; }
-    section[id] { scroll-margin-top: 1rem; }
-
-  </style>
-
-.legend{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin:8px 0 14px;font-size:13px;color:var(--muted,#5b6b7c)}
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cursor_tenant5 rebuild + L3Out — Deployment status</title>
+<meta name="description" content="ARR provisioning monitor for the Cursor_tenant5 rebuild and L3Out on ARR-FABRIC. Nothing is applied until APPROVE.">
+<style>
+h1{margin:14px 0 6px}
+.lead{color:var(--muted,#c3cfdc);margin:0 0 12px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin:8px 0 16px;font-size:14px}
+.meta b{font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin:8px 0 14px;font-size:13px;color:var(--muted,#c3cfdc)}
 .legend .sw{display:inline-flex;align-items:center;gap:6px}
 .legend i{display:inline-block;width:16px;height:14px;border-radius:3px;flex:none}
 .legend .lg-done{background:#16a34a}
 .legend .lg-failed{background:#dc2626}
 .legend .lg-pending{background:#64748b}
 .legend .lg-running{background:#64748b;box-shadow:0 0 0 2px #f59e0b}
+h2.dep{border-left:6px solid #f59e0b;padding-left:10px;margin:22px 0 10px;font-size:20px}
+.topmeta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin:0 0 8px;font-size:13px;color:var(--muted,#94a3b8)}
+.uv{margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap}
 .chev-rows{display:flex;flex-direction:column;gap:8px;margin:8px 0 16px;width:100%}
 .chev-row{display:flex;width:100%;min-width:0}
 .chev{position:relative;flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:54px;padding:7px 16px 7px 22px;margin-left:-10px;color:#fff;text-align:center;font:700 11px/1.15 system-ui,Arial,sans-serif;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%,12px 50%);z-index:1}
@@ -821,17 +578,45 @@ html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5
 .chev.pending{background:#64748b}
 .chev.running{background:#64748b;box-shadow:inset 0 0 0 2px #f59e0b,0 0 0 1px #f59e0b;z-index:4;animation:chev-pulse 1.4s ease-in-out infinite}
 @keyframes chev-pulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25)}}
+.tblwrap{max-width:100%;overflow-x:auto;border:1px solid var(--line,#2a3446);border-radius:10px;background:var(--card,#161d29)}
+table.steps{width:100%;border-collapse:collapse;font-size:13.5px}
+table.steps th,table.steps td{padding:8px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line,#2a3446)}
+table.steps th{background:var(--th-bg,#1b2838);font-weight:700;white-space:nowrap}
+table.steps tbody tr:last-child td{border-bottom:0}
+table.steps td.t{white-space:nowrap}
+table.steps td.mono,table.steps .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px}
 .st-pill{display:inline-block;padding:2px 8px;border-radius:999px;color:#fff;font-weight:700;font-size:12px;letter-spacing:.02em}
 .st-pill.done{background:#16a34a}
 .st-pill.failed{background:#dc2626}
 .st-pill.pending{background:#64748b}
 .st-pill.running{background:#64748b;box-shadow:0 0 0 2px #f59e0b}
-.notice{background:var(--accent-soft,#e0f4f8);border:1px solid var(--line,#d5dee7);border-left:4px solid var(--accent,#0e7490);border-radius:8px;padding:0.9rem 1.1rem;margin:0 0 1.3rem}
-.notice.warning{border-left-color:var(--fair,#d97706)}
-table.steps{width:100%;border-collapse:collapse;font-size:13.5px}
-table.steps th,table.steps td{padding:8px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line,#d5dee7)}
-table.steps th{background:var(--th-bg,#f1f5f9);font-weight:700;white-space:nowrap}
-.tblwrap{max-width:100%;overflow-x:auto;border:1px solid var(--line,#d5dee7);border-radius:10px;background:var(--card,#fff)}
+.note{font-size:13px;color:var(--muted,#94a3b8);margin-top:14px}
+.cards{display:flex;flex-wrap:wrap;gap:14px;margin:12px 0 16px}
+.card{flex:1 1 calc(25% - 14px);min-width:160px;box-sizing:border-box;background:var(--card,#161d29);border:1px solid var(--line,#2a3446);border-top:4px solid var(--c,#16a34a);border-radius:10px;padding:14px 16px;color:inherit}
+.card .card-label{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted,#94a3b8);font-weight:700}
+.card .card-value{display:block;font-size:22px;font-weight:800;margin:4px 0 0}
+.card .card-sub{display:block;margin-top:4px;font-size:13px;color:var(--muted,#94a3b8)}
+.card.pending{--c:#64748b}
+.card.running{--c:#f59e0b}
+.card.ok{--c:#16a34a}
+.notice{background:var(--card,#161d29);border:1px solid var(--line,#2a3446);border-left:4px solid #f59e0b;border-radius:10px;padding:14px 16px;margin:8px 0 16px}
+.notice.ok{border-left-color:#16a34a}
+.notice.pending{border-left-color:#64748b}
+.notice p{margin:0}
+.evidence{margin:8px 0 16px;padding-left:1.2rem}
+.evidence li{margin:4px 0}
+.sec-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.sec-head h2{margin-right:auto}
+@media (max-width:900px){
+  .chev-rows{gap:6px}
+  .chev{min-height:48px;padding:6px 14px 6px 18px;font-size:10px}
+  .chev .nm{white-space:normal}
+}
+@media (max-width:700px){
+  .chev-row{flex-wrap:wrap;gap:6px 0}
+  .chev{flex:1 1 calc(50% - 4px);margin-left:0;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%);border-radius:6px;margin:2px}
+  .chev.row-start{border-radius:6px}
+}
 </style>
 </head>
 <body>
@@ -869,88 +654,184 @@ apply(preferred());
 function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
 place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
 })();</script>
-<!-- site-menu v1 --><nav class="site"><a href="/">Home</a></nav>
 
-<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:#bbb">Page updated 14 Nov 2026, 6:34 PM AEDT<span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span><span class="uvt" style="font-size:11px;color:#888"></span></div><!--/arr-uv-tr17-->
+<nav class="site"><a href="/">Home</a></nav>
+<main>
+<div class="topmeta">Updated <b id="updated-at">14 Nov 2026 18:37 AEDT</b> (Melbourne time)<span class="uv">Unique visitors (this page): <b class="uvc">…</b></span><span class="uvt"></span></div>
+<h1><span class="tt-keep">🚀</span> Cursor_tenant5 rebuild + L3Out</h1>
+<p class="lead">Provisioning the Cursor_tenant5 rebuild and L3Out to ARR-FABRIC using the normal NetBox provision flow, with <code>nac-validate</code>, a pre-backup and a dry run. Nothing is applied, merged or pushed until Aung’s emailed APPROVE arrives. <a href="/ARR/provisioning/">Provisioning ›</a> · <a href="/ARR/tracker/">Tracker ›</a></p>
+<div class="meta">
+  <div><b>Source</b> · <a href="https://amoeoo-coles.github.io/ARR/provisioning/cursor-tenant5/design.html">/ARR/provisioning/cursor-tenant5/design.html</a></div>
+  <div><b>Target</b> · ARR-FABRIC (https://192.168.10.1)</div>
+  <div><b>Run</b> · <span id="run-id">Cursor_tenant5-l3out-arr-20261114-1831</span></div>
+  <div><b>Current step</b> · <span id="current-step">Aung approval (Gmail) (Running)</span></div>
+  <div><b>Progress</b> · <span id="progress">6 done · 1 running · 0 failed · 3 pending</span></div>
+  <div><b>Stage</b> · <span id="stage-label">Awaiting APPROVE</span></div>
+</div>
+<div class="notice" id="stage-notice"><p><strong>Awaiting APPROVE.</strong> NetBox has been updated, the pre-backup is taken, and the dry-run passed (44 objects to create, 0 to modify, no subnet overlaps). <strong>No write has been sent to the APIC.</strong> Apply starts only after you reply <code>APPROVE</code> to the approval email or in chat.</p></div>
+<h2 class="dep">Deployment status</h2>
+<div class="legend" id="legend">
+  <span class="sw"><i class="lg-done"></i> Green = done</span>
+  <span class="sw"><i class="lg-failed"></i> Red = failed</span>
+  <span class="sw"><i class="lg-pending"></i> Grey = pending</span>
+  <span class="sw"><i class="lg-running"></i> Grey + amber outline = running</span>
+</div>
+<div class="chev-rows" id="chevron-bar"><div class="chev-row"><div class="chev done row-start" data-id="design" title="Design plan — Done"><span class="n">1</span><span class="nm">Design plan</span></div><div class="chev done" data-id="netbox-write" title="NetBox write — Done"><span class="n">2</span><span class="nm">NetBox write</span></div><div class="chev done" data-id="validate" title="Validate model — Done"><span class="n">3</span><span class="nm">nac-validate</span></div><div class="chev done" data-id="pre-backup" title="Pre-check / pre-backup — Done"><span class="n">4</span><span class="nm">Pre-backup</span></div><div class="chev done" data-id="dry-run" title="Dry-run — Done"><span class="n">5</span><span class="nm">Dry-run</span></div><div class="chev done" data-id="approval-email" title="Approval email sent — Done"><span class="n">6</span><span class="nm">Approval email</span></div><div class="chev running" data-id="aung-approval" title="Aung approval (Gmail) — Running"><span class="n">7</span><span class="nm">Awaiting APPROVE</span></div></div><div class="chev-row"><div class="chev pending row-start" data-id="apply" title="Apply to APIC — Pending"><span class="n">8</span><span class="nm">Apply to APIC</span></div><div class="chev pending" data-id="postcheck" title="Post-check — Pending"><span class="n">9</span><span class="nm">Post-checks</span></div><div class="chev pending" data-id="post-email" title="Post email — Pending"><span class="n">10</span><span class="nm">Post email</span></div></div></div>
+<div class="tblwrap"><table class="steps" id="steps-table">
+<thead><tr><th>#</th><th>Step</th><th>State</th><th>Time (AEDT)</th><th>Details</th></tr></thead>
+<tbody><tr><td>1</td><td>Design plan</td><td><span class="st-pill done">Done</span></td><td class="t">14 Nov 2026 18:11 AEDT</td><td>Approved design at /ARR/provisioning/cursor-tenant5/design.html. VLAN 3051, 10.250.250.0/30, router-id 10.255.255.101, LEAF-101 eth1/3. User go at 14 Nov 2026, evening AEDT.</td></tr><tr><td>2</td><td>NetBox write</td><td><span class="st-pill done">Done</span></td><td class="t">14 Nov 2026 18:29 AEDT</td><td>Idempotent write to http://localhost:8001 at 6:29 PM AEDT: 52 created, 36 updated, all tagged ARR-1-Simm. Second pass 6:30 PM AEDT: 88 unchanged. Export matches the design YAML (0 diffs).</td></tr><tr><td>3</td><td>Validate model</td><td><span class="st-pill done">Done</span></td><td class="t">14 Nov 2026 18:33 AEDT</td><td>nac-validate --non-strict PASS on the NetBox export and the design YAML. nac validate on the ARR model tree (3 files) PASS.</td></tr><tr><td>4</td><td>Pre-check / pre-backup</td><td><span class="st-pill done">Done</span></td><td class="t">14 Nov 2026 18:31 AEDT</td><td>Read-only class/MO dumps from DESKTOP-3GETEV9 at 6:31 PM AEDT. Cursor_tenant5 absent (totalCount 0). Tenants on fabric: infra, common, mgmt. Health 99. No configExportP job. Zip arr_pre_20261114-1831.zip.</td></tr><tr><td>5</td><td>Dry-run</td><td><span class="st-pill done">Done</span></td><td class="t">14 Nov 2026 18:33 AEDT</td><td>Payload-vs-pre-backup DN diff PASS: 44 create, 0 modify, 0 unchanged, no subnet overlaps. dn_diff.py: 20/20 tenant-base DNs missing (expected). nac-test --render-only PASS. fvRsCtx status=modified. Nothing POSTed.</td></tr><tr><td>6</td><td>Approval email sent</td><td><span class="st-pill done">Done</span></td><td class="t">14 Nov 2026 18:37 AEDT</td><td>Sent to 179172@gmail.com at about 6:37 PM AEDT on 14 Nov 2026. Subject: ARR Simulator — [APPROVAL REQUIRED] Cursor_tenant5 rebuild + L3Out push to ARR APIC. Gmail message id 1a1d8fd5608c49c8. No write has been sent to the APIC.</td></tr><tr><td>7</td><td>Aung approval (Gmail)</td><td><span class="st-pill running">Running</span></td><td class="t">—</td><td>Awaiting APPROVE. Nothing will be applied to the APIC until you reply APPROVE to the approval email or in chat after reviewing the dry-run.</td></tr><tr><td>8</td><td>Apply to APIC</td><td><span class="st-pill pending">Pending</span></td><td class="t">—</td><td>Blocked until APPROVE. Will run from DESKTOP-3GETEV9: POST /api/mo/uni.json with payload.json.</td></tr><tr><td>9</td><td>Post-check</td><td><span class="st-pill pending">Pending</span></td><td class="t">—</td><td>nac-test / DN read-back after apply. Pending.</td></tr><tr><td>10</td><td>Post email</td><td><span class="st-pill pending">Pending</span></td><td class="t">—</td><td>Sent only after apply and post-checks. Pending.</td></tr></tbody>
+</table></div>
 
-  <header>
-    <div class="wrap">
-      <p class="kicker">ARR</p>
-      <nav class="crumb" aria-label="Breadcrumb"><ol><li><a href="../../index.html">ARR</a></li><li><a href="../index.html">Provisioning</a></li><li>Cursor_tenant5 L3Out</li></ol></nav>
-      <h1>Cursor_tenant5 rebuild + L3Out</h1>
-<!--arr-visitors-pill v1-->
-<style>
-.arr-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0.7rem 0 0;max-width:100%}
-.arr-tools a.pill-link{display:inline-block;padding:0.25rem 0.7rem;border-radius:999px;border:1px solid var(--line,#d5dee7);background:var(--accent-soft,#e0f4f8);color:var(--accent,#0e7490);text-decoration:none;font-size:0.85rem;font-weight:650}
-.arr-tools a.pill-link.on{background:var(--accent,#0e7490);color:#fff;border-color:transparent}
-html[data-theme="dark"] .arr-tools a.pill-link.on{color:#042f2e}
-</style>
-<p class="arr-tools">
-  <a class="pill-link" href="/ARR/">Report</a>
-  <a class="pill-link" href="/ARR/physical/">Physical</a>
-  <a class="pill-link" href="/ARR/logical/">Logical</a>
-  <a class="pill-link" href="/ARR/vni/">VNI</a>
-  <a class="pill-link" href="/ARR-LargeTopology/">ARR-LargeTopology</a>
-  <a class="pill-link" href="/ARR/tracker/">Tracker</a>
-  <a class="pill-link" href="/ARR/visitors/">Visitors</a>
-</p>
-<!--/arr-visitors-pill-->
+<h2 class="dep">Chosen values</h2>
+<div class="cards" id="values-cards">
+  <article class="card ok"><span class="card-label">VLAN</span><span class="card-value">3051</span></article>
+  <article class="card ok"><span class="card-label">Transit</span><span class="card-value">10.250.250.0/30</span><span class="card-sub">leaf 10.250.250.1 · peer 10.250.250.2</span></article>
+  <article class="card ok"><span class="card-label">Router ID</span><span class="card-value">10.255.255.101</span><span class="card-sub">loopback on LEAF-101</span></article>
+  <article class="card ok"><span class="card-label">Port</span><span class="card-value">LEAF-101 eth1/3</span></article>
+</div>
 
-      <p class="meta">Target: <strong>https://192.168.10.1</strong> (ARR-FABRIC) · Run: <strong>Cursor_tenant5-l3out-arr-20261114-1831</strong></p>
-      <p class="snapshot">Stage: <strong>Awaiting APPROVE</strong> · Nothing has been written to the APIC.</p>
-      <p class="back"><a href="../index.html">← Back to ARR provisioning</a> · <a href="../../tracker/">Tracker</a> · <a href="../cursor-tenant5/design.html">Design plan</a></p>
-    </div>
-  </header>
-  <main class="wrap">
-    <div class="notice warning">
-      <p><strong>Awaiting APPROVE.</strong> NetBox has been updated, the pre-backup is taken, and the dry-run passed (44 objects to create, 0 to modify, no subnet overlaps). <strong>No write has been sent to the APIC.</strong> Apply starts only after you reply <code>APPROVE</code> to the approval email or in chat.</p>
-    </div>
-    <section>
-      <h2>Pipeline</h2>
-      <div class="legend">
-        <span class="sw"><i class="lg-done"></i> Done</span>
-        <span class="sw"><i class="lg-running"></i> Running</span>
-        <span class="sw"><i class="lg-pending"></i> Pending</span>
-      </div>
-      <div class="chev-rows"><div class="chev-row"><div class="chev done row-start" title="Design plan"><span class="n">1</span><span class="nm">Design plan</span></div><div class="chev done" title="NetBox write"><span class="n">2</span><span class="nm">NetBox write</span></div><div class="chev done" title="nac-validate"><span class="n">3</span><span class="nm">nac-validate</span></div><div class="chev done" title="Pre-backup"><span class="n">4</span><span class="nm">Pre-backup</span></div><div class="chev done" title="Dry-run"><span class="n">5</span><span class="nm">Dry-run</span></div></div><div class="chev-row"><div class="chev running row-start" title="Approval email"><span class="n">6</span><span class="nm">Approval email</span></div><div class="chev pending" title="Awaiting APPROVE"><span class="n">7</span><span class="nm">Awaiting APPROVE</span></div><div class="chev pending" title="Apply to APIC"><span class="n">8</span><span class="nm">Apply to APIC</span></div><div class="chev pending" title="Post-checks"><span class="n">9</span><span class="nm">Post-checks</span></div><div class="chev pending" title="Post-deploy email"><span class="n">10</span><span class="nm">Post-deploy email</span></div></div></div>
-      <div class="tblwrap"><table class="steps">
-        <thead><tr><th>#</th><th>Step</th><th>Status</th><th>Updated</th><th>Detail</th></tr></thead>
-        <tbody><tr><td>1</td><td><strong>Design plan</strong></td><td><span class='st-pill done'>Done</span></td><td class='t'>14 Nov 2026, 6:11 PM AEDT</td><td>Approved design at /ARR/provisioning/cursor-tenant5/design.html. VLAN 3051, 10.250.250.0/30, router-id 10.255.255.101, LEAF-101 eth1/3. User go at 14 Nov 2026, evening AEDT.</td></tr><tr><td>2</td><td><strong>NetBox write</strong></td><td><span class='st-pill done'>Done</span></td><td class='t'>14 Nov 2026, 6:29 PM AEDT</td><td>Idempotent write to http://localhost:8001 at 6:29 PM AEDT: 52 created, 36 updated, all tagged ARR-1-Simm. Second pass 6:30 PM AEDT: 88 unchanged. Export matches the design YAML (0 diffs).</td></tr><tr><td>3</td><td><strong>nac-validate</strong></td><td><span class='st-pill done'>Done</span></td><td class='t'>14 Nov 2026, 6:33 PM AEDT</td><td>nac-validate --non-strict PASS on the NetBox export and the design YAML. nac validate on the ARR model tree (3 files) PASS.</td></tr><tr><td>4</td><td><strong>Pre-backup</strong></td><td><span class='st-pill done'>Done</span></td><td class='t'>14 Nov 2026, 6:31 PM AEDT</td><td>Read-only class/MO dumps from DESKTOP-3GETEV9 at 6:31 PM AEDT. Cursor_tenant5 absent (totalCount 0). Tenants on fabric: infra, common, mgmt. Health 99. No configExportP job.</td></tr><tr><td>5</td><td><strong>Dry-run</strong></td><td><span class='st-pill done'>Done</span></td><td class='t'>14 Nov 2026, 6:33 PM AEDT</td><td>Payload-vs-pre-backup DN diff PASS: 44 create, 0 modify, 0 unchanged, no subnet overlaps. dn_diff.py: 20/20 tenant-base DNs missing (expected). nac-test --render-only PASS. fvRsCtx status=modified. Nothing POSTed.</td></tr><tr><td>6</td><td><strong>Approval email</strong></td><td><span class='st-pill running'>Running</span></td><td class='t'>14 Nov 2026, 6:35 PM AEDT</td><td>Draft ready for 179172@gmail.com. Subject: ARR Simulator — [APPROVAL REQUIRED] Cursor_tenant5 rebuild + L3Out push to ARR APIC. Not yet sent at page publish time if the send is still in flight.</td></tr><tr><td>7</td><td><strong>Awaiting APPROVE</strong></td><td><span class='st-pill pending'>Pending</span></td><td class='t'>—</td><td>Nothing will be applied to the APIC until you reply APPROVE to the approval email or in chat after reviewing the dry-run.</td></tr><tr><td>8</td><td><strong>Apply to APIC</strong></td><td><span class='st-pill pending'>Pending</span></td><td class='t'>—</td><td>Blocked until APPROVE. Will run from DESKTOP-3GETEV9: POST /api/mo/uni.json with payload.json.</td></tr><tr><td>9</td><td><strong>Post-checks</strong></td><td><span class='st-pill pending'>Pending</span></td><td class='t'>—</td><td>nac-test / DN read-back after apply.</td></tr><tr><td>10</td><td><strong>Post-deploy email</strong></td><td><span class='st-pill pending'>Pending</span></td><td class='t'>—</td><td>Sent only after apply and post-checks.</td></tr></tbody>
-      </table></div>
-    </section>
-    <section>
-      <h2>Chosen values</h2>
-      <div class="cards">
-        <article class="card"><div class="card-label">VLAN</div><div class="card-value"><strong>3051</strong></div></article>
-        <article class="card"><div class="card-label">Transit</div><div class="card-value"><strong>10.250.250.0/30</strong></div><div class="card-sub">leaf .1 · peer .2</div></article>
-        <article class="card"><div class="card-label">Router ID</div><div class="card-value"><strong>10.255.255.101</strong></div><div class="card-sub">loopback on LEAF-101</div></article>
-        <article class="card"><div class="card-label">Port</div><div class="card-value"><strong>LEAF-101 eth1/3</strong></div></article>
-      </div>
-    </section>
-    <section>
-      <h2>Dry-run result</h2>
-      <div class="cards">
-        <article class="card"><div class="card-label">Create</div><div class="card-value"><strong>44</strong></div></article>
-        <article class="card"><div class="card-label">Modify</div><div class="card-value"><strong>0</strong></div></article>
-        <article class="card"><div class="card-label">Unchanged</div><div class="card-value"><strong>0</strong></div></article>
-        <article class="card"><div class="card-label">Result</div><div class="card-value"><strong class="health good">PASS</strong></div><div class="card-sub">no subnet overlaps</div></article>
-      </div>
-      <p class="meta">Pre-backup 14 November 2026, 6:31 PM AEDT. Fabric health 99. Tenants on the APIC: <code>infra</code>, <code>common</code>, <code>mgmt</code>. <code>Cursor_tenant5</code> is not present. nac-validate and nac-test --render-only both passed. <code>fvRsCtx</code> in the payload is <code>modified</code>.</p>
-    </section>
-    <section>
-      <h2>Objects to create (44 DNs)</h2>
-      <div class="tblwrap"><table class="steps">
-        <thead><tr><th>Class</th><th>Name</th><th>DN (pattern)</th></tr></thead>
-        <tbody>
-        <tr><td class='mono'>fvnsVlanInstP</td><td>cursor5_l3out_vlans</td><td class='mono'>uni/infra/vlanns-[cursor5_l3out_vlans]-static</td></tr><tr><td class='mono'>l3extDomP</td><td>cursor5_l3_dom</td><td class='mono'>uni/l3dom-cursor5_l3_dom</td></tr><tr><td class='mono'>infraAttEntityP</td><td>cursor5_l3out_aaep</td><td class='mono'>uni/infra/attentp-cursor5_l3out_aaep</td></tr><tr><td class='mono'>infraAccPortGrp</td><td>cursor5_l3out_ipg</td><td class='mono'>uni/infra/funcprof/accportgrp-cursor5_l3out_ipg</td></tr><tr><td class='mono'>infraAccPortP</td><td>cursor5_l3out_ifsel</td><td class='mono'>uni/infra/accportprof-cursor5_l3out_ifsel</td></tr><tr><td class='mono'>infraNodeP</td><td>cursor5_l3out_sw_101</td><td class='mono'>uni/infra/nprof-cursor5_l3out_sw_101</td></tr><tr><td class='mono'>fvTenant</td><td>Cursor_tenant5</td><td class='mono'>uni/tn-Cursor_tenant5</td></tr><tr><td class='mono'>fvCtx</td><td>cursor5_vrf</td><td class='mono'>uni/tn-Cursor_tenant5/ctx-cursor5_vrf</td></tr><tr><td class='mono'>fvBD</td><td>7 BDs + 7 subnets</td><td class='mono'>uni/tn-Cursor_tenant5/BD-cursor5_*</td></tr><tr><td class='mono'>fvAp / fvAEPg</td><td>cursor5_ap / web, app, db</td><td class='mono'>uni/tn-Cursor_tenant5/ap-cursor5_ap/...</td></tr><tr><td class='mono'>vzFilter / vzBrCP</td><td>3 filters, 3 contracts</td><td class='mono'>uni/tn-Cursor_tenant5/flt-* and brc-*</td></tr><tr><td class='mono'>l3extOut</td><td>DMZ_L3Out + DMZ_ExtEPG</td><td class='mono'>uni/tn-Cursor_tenant5/out-DMZ_L3Out</td></tr>
-        </tbody>
-      </table></div>
-    </section>
-    <p class="meta">Page generated 14 November 2026, 6:35 PM AEDT (Australia/Melbourne, UTC+11). Source: NetBox write + read-only APIC pre-backup + offline dry-run. JSON: <a href="status.json"><code>status.json</code></a>.</p>
-  </main>
-<script>window.goatcounter={path:function(){return location.pathname.replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/"}}</script>
-<script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-<script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const n=s=>String(s||"").split("?")[0].replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/";const p=n(location.pathname);const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc){const pt=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Melbourne",hour:"2-digit",minute:"2-digit",hour12:false,hourCycle:"h23",timeZoneName:"short"}).formatToParts(new Date(d.updated_utc));const g=t=>(pt.find(x=>x.type===t)||{}).value||"";const tz=(g("timeZoneName")||"AEDT").replace("GMT+11","AEDT").replace("GMT+10","AEST");e.textContent=" (data as of "+g("hour")+":"+g("minute")+" "+tz+")"}}})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script>
+<div class="sec-head"><h2 class="dep">Pre-check</h2><span id="precheck-pill"><span class="st-pill done">Done</span></span></div>
+<p>Read-only pre-backup taken from DESKTOP-3GETEV9 at <strong>14 November 2026, 6:31 PM AEDT (Australia/Melbourne, UTC+11)</strong>. Fabric health <strong>99</strong>. Tenants on the APIC: <code>infra</code>, <code>common</code>, <code>mgmt</code>. <code>Cursor_tenant5</code> is not present. No <code>configExportP</code> job was used. nac-validate: PASS.</p>
+<p class="note">Backup artifact: <code>arr_pre_20261114-1831.zip</code>. NetBox write: 52 created, 36 updated, all tagged ARR-1-Simm. Second pass: 88 unchanged. Export vs design: 0 differences.</p>
+
+<div class="sec-head"><h2 class="dep">Dry-run</h2><span id="dryrun-pill"><span class="st-pill done">Done</span></span></div>
+<div class="cards" id="dry-cards">
+  <article class="card ok"><span class="card-label">Create</span><span class="card-value" id="dry-create">44</span></article>
+  <article class="card ok"><span class="card-label">Modify</span><span class="card-value" id="dry-modify">0</span></article>
+  <article class="card ok"><span class="card-label">Unchanged</span><span class="card-value" id="dry-unchanged">0</span></article>
+  <article class="card ok"><span class="card-label">Result</span><span class="card-value" id="dry-result">PASS</span><span class="card-sub">no subnet overlaps</span></article>
+</div>
+<p>Payload-versus-pre-backup DN diff. <code>dn_diff.py</code> reported 20/20 tenant-base DNs missing (expected, because the tenant is gone). <code>nac-test --render-only</code> PASS. <code>fvRsCtx</code> in the payload is <code>modified</code>. <strong>Nothing was POSTed to the APIC.</strong></p>
+
+<div class="sec-head"><h2 class="dep">Approval</h2><span id="approval-pill"><span class="st-pill running">Running</span></span></div>
+<p>Approval email sent to <strong>179172@gmail.com</strong> at about <strong>6:37 PM AEDT on 14 Nov 2026</strong>. Subject: ARR Simulator — [APPROVAL REQUIRED] Cursor_tenant5 rebuild + L3Out push to ARR APIC. Gmail message id <code>1a1d8fd5608c49c8</code>. Reply <code>APPROVE</code> to that email or in chat to apply. Apply, post-checks and the post email stay pending until then.</p>
+
+<div class="sec-head"><h2 class="dep">Apply to APIC</h2><span id="apply-pill"><span class="st-pill pending">Pending</span></span></div>
+<p id="apply-detail">Blocked until APPROVE. Will run from DESKTOP-3GETEV9: POST /api/mo/uni.json with payload.json.</p>
+
+<div class="sec-head"><h2 class="dep">Post-check</h2><span id="postcheck-pill"><span class="st-pill pending">Pending</span></span></div>
+<p id="postcheck-detail">nac-test / DN read-back after apply. Pending.</p>
+<p id="postemail-detail">Sent only after apply and post-checks. Pending.</p>
+
+<h2 class="dep">Evidence</h2>
+<ul class="evidence">
+  <li><a href="/ARR/provisioning/cursor-tenant5/design.html">Approved design plan</a></li>
+  <li><a href="status.json"><code>status.json</code></a> — live pipeline state for this page</li>
+  <li><a href="/ARR/tracker/">ARR tracker</a></li>
+  <li><a href="/ARR/provisioning/">ARR provisioning index</a></li>
+  <li>Local run artifacts (not published here): <code>arr_pre_20261114-1831.zip</code>, <code>dry-run.json</code>, <code>dn_diff.json</code>, <code>payload.json</code>, <code>netbox-changes.json</code>, <code>nac-validate/</code>, <code>precheck.md</code></li>
+</ul>
+
+<h2 class="dep">Objects to create (44 DNs)</h2>
+<div class="tblwrap"><table class="steps" id="objects-table"><thead><tr><th>Class</th><th>Name</th><th>DN (pattern)</th></tr></thead><tbody><tr><td class='mono'>fvnsVlanInstP</td><td>cursor5_l3out_vlans</td><td class='mono'>uni/infra/vlanns-[cursor5_l3out_vlans]-static</td></tr><tr><td class='mono'>l3extDomP</td><td>cursor5_l3_dom</td><td class='mono'>uni/l3dom-cursor5_l3_dom</td></tr><tr><td class='mono'>infraAttEntityP</td><td>cursor5_l3out_aaep</td><td class='mono'>uni/infra/attentp-cursor5_l3out_aaep</td></tr><tr><td class='mono'>infraAccPortGrp</td><td>cursor5_l3out_ipg</td><td class='mono'>uni/infra/funcprof/accportgrp-cursor5_l3out_ipg</td></tr><tr><td class='mono'>infraAccPortP</td><td>cursor5_l3out_ifsel</td><td class='mono'>uni/infra/accportprof-cursor5_l3out_ifsel</td></tr><tr><td class='mono'>infraNodeP</td><td>cursor5_l3out_sw_101</td><td class='mono'>uni/infra/nprof-cursor5_l3out_sw_101</td></tr><tr><td class='mono'>fvTenant</td><td>Cursor_tenant5</td><td class='mono'>uni/tn-Cursor_tenant5</td></tr><tr><td class='mono'>fvCtx</td><td>cursor5_vrf</td><td class='mono'>uni/tn-Cursor_tenant5/ctx-cursor5_vrf</td></tr><tr><td class='mono'>fvBD</td><td>7 BDs + 7 subnets</td><td class='mono'>uni/tn-Cursor_tenant5/BD-cursor5_*</td></tr><tr><td class='mono'>fvAp / fvAEPg</td><td>cursor5_ap / web, app, db</td><td class='mono'>uni/tn-Cursor_tenant5/ap-cursor5_ap/...</td></tr><tr><td class='mono'>vzFilter / vzBrCP</td><td>3 filters, 3 contracts</td><td class='mono'>uni/tn-Cursor_tenant5/flt-* and brc-*</td></tr><tr><td class='mono'>l3extOut</td><td>DMZ_L3Out + DMZ_ExtEPG</td><td class='mono'>uni/tn-Cursor_tenant5/out-DMZ_L3Out</td></tr></tbody></table></div>
+
+<p class="note">Times are shown in Australia/Melbourne (AEDT). The bar loads <code>status.json</code> next to this page when available, and falls back to the data baked in at last publish. This page has no credentials or secrets. No write has been sent to the APIC unless the Apply step is marked Done.</p>
+</main>
+<script id="status-fallback" type="application/json">{"task":"cursor-tenant5-l3out","run_id":"Cursor_tenant5-l3out-arr-20261114-1831","tenant":"Cursor_tenant5","source":"https://amoeoo-coles.github.io/ARR/provisioning/cursor-tenant5/design.html","target":"ARR-FABRIC (https://192.168.10.1)","fabric":"ARR-FABRIC","stage":"Awaiting APPROVE","apic_write":false,"updated":"2026-11-14T18:37:00+11:00","dry_run":{"create":44,"modify":0,"unchanged":0,"overlaps":0,"result":"PASS"},"netbox":{"created":52,"updated":36,"unchanged_second_pass":88,"tag":"ARR-1-Simm","url":"http://localhost:8001"},"validation":{"nac_validate":"PASS","nac_test_render_only":"PASS","export_vs_design":"0 differences"},"backup":{"taken":"2026-11-14T18:31:00+11:00","taken_label":"14 November 2026, 6:31 PM AEDT (Australia/Melbourne, UTC+11)","zip":"arr_pre_20261114-1831.zip","health":99,"tenants":["infra","common","mgmt"],"cursor_tenant5_present":false},"values":{"vlan":3051,"transit":"10.250.250.0/30","leaf_ip":"10.250.250.1/30","peer_ip":"10.250.250.2","router_id":"10.255.255.101","port":"LEAF-101 eth1/3"},"approval_email":{"sent":true,"to":"179172@gmail.com","subject":"ARR Simulator \u2014 [APPROVAL REQUIRED] Cursor_tenant5 rebuild + L3Out push to ARR APIC","message_id":"1a1d8fd5608c49c8","sent_at":"2026-11-14T18:37:00+11:00","sent_label":"14 Nov 2026, about 6:37 PM AEDT"},"steps":[{"id":"design","name":"Design plan","state":"done","time":"2026-11-14T18:11:00+11:00","detail":"Approved design at /ARR/provisioning/cursor-tenant5/design.html. VLAN 3051, 10.250.250.0/30, router-id 10.255.255.101, LEAF-101 eth1/3. User go at 14 Nov 2026, evening AEDT."},{"id":"netbox-write","name":"NetBox write","state":"done","time":"2026-11-14T18:29:00+11:00","detail":"Idempotent write to http://localhost:8001 at 6:29 PM AEDT: 52 created, 36 updated, all tagged ARR-1-Simm. Second pass 6:30 PM AEDT: 88 unchanged. Export matches the design YAML (0 diffs)."},{"id":"validate","name":"Validate model","state":"done","time":"2026-11-14T18:33:00+11:00","detail":"nac-validate --non-strict PASS on the NetBox export and the design YAML. nac validate on the ARR model tree (3 files) PASS."},{"id":"pre-backup","name":"Pre-check / pre-backup","state":"done","time":"2026-11-14T18:31:00+11:00","detail":"Read-only class/MO dumps from DESKTOP-3GETEV9 at 6:31 PM AEDT. Cursor_tenant5 absent (totalCount 0). Tenants on fabric: infra, common, mgmt. Health 99. No configExportP job. Zip arr_pre_20261114-1831.zip."},{"id":"dry-run","name":"Dry-run","state":"done","time":"2026-11-14T18:33:00+11:00","detail":"Payload-vs-pre-backup DN diff PASS: 44 create, 0 modify, 0 unchanged, no subnet overlaps. dn_diff.py: 20/20 tenant-base DNs missing (expected). nac-test --render-only PASS. fvRsCtx status=modified. Nothing POSTed."},{"id":"approval-email","name":"Approval email sent","state":"done","time":"2026-11-14T18:37:00+11:00","detail":"Sent to 179172@gmail.com at about 6:37 PM AEDT on 14 Nov 2026. Subject: ARR Simulator \u2014 [APPROVAL REQUIRED] Cursor_tenant5 rebuild + L3Out push to ARR APIC. Gmail message id 1a1d8fd5608c49c8. No write has been sent to the APIC."},{"id":"aung-approval","name":"Aung approval (Gmail)","state":"running","time":null,"detail":"Awaiting APPROVE. Nothing will be applied to the APIC until you reply APPROVE to the approval email or in chat after reviewing the dry-run."},{"id":"apply","name":"Apply to APIC","state":"pending","time":null,"detail":"Blocked until APPROVE. Will run from DESKTOP-3GETEV9: POST /api/mo/uni.json with payload.json."},{"id":"postcheck","name":"Post-check","state":"pending","time":null,"detail":"nac-test / DN read-back after apply. Pending."},{"id":"post-email","name":"Post email","state":"pending","time":null,"detail":"Sent only after apply and post-checks. Pending."}],"generated_at":"2026-11-14T19:07:17+11:00","monitor_url":"https://amoeoo-coles.github.io/ARR/provisioning/cursor-tenant5-l3out/"}</script>
+<script>
+(function(){
+  var SHORT={"design":"Design plan","netbox-write":"NetBox write","validate":"nac-validate","pre-backup":"Pre-backup","dry-run":"Dry-run","approval-email":"Approval email","aung-approval":"Awaiting APPROVE","apply":"Apply to APIC","postcheck":"Post-checks","post-email":"Post email"};
+  var LABEL={done:"Done",failed:"Failed",pending:"Pending",running:"Running"};
+  function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+  function fmt(t){
+    if(!t) return "—";
+    var d=new Date(t);
+    if(isNaN(d)) return String(t);
+    var pt=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Melbourne",day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",hour12:false,hourCycle:"h23",timeZoneName:"short"}).formatToParts(d);
+    var g=function(k){return (pt.find(function(x){return x.type===k})||{}).value||""};
+    var tz=(g("timeZoneName")||"AEDT").replace("GMT+11","AEDT").replace("GMT+10","AEST").replace("UTC+11","AEDT").replace("UTC+10","AEST");
+    return g("day")+" "+g("month")+" "+g("year")+" "+g("hour")+":"+g("minute")+" "+tz;
+  }
+  function counts(steps){
+    var c={done:0,failed:0,pending:0,running:0};
+    steps.forEach(function(s){var k=s.state||"pending";c[k]=(c[k]||0)+1});
+    return c;
+  }
+  function current(steps){
+    return steps.find(function(s){return s.state==="running"})||
+           steps.find(function(s){return s.state==="failed"})||
+           steps.find(function(s){return s.state!=="done"})||
+           steps[steps.length-1];
+  }
+  function step(steps,id){return (steps||[]).find(function(s){return s.id===id})||{};}
+  function pill(state){state=state||"pending";return '<span class="st-pill '+esc(state)+'">'+esc(LABEL[state]||state)+"</span>";}
+  function setTxt(id,text){var el=document.getElementById(id);if(el) el.textContent=text;}
+  function setHtml(id,html){var el=document.getElementById(id);if(el) el.innerHTML=html;}
+  function render(data){
+    var steps=data.steps||[];
+    var c=counts(steps);
+    var cur=current(steps);
+    var bar=document.getElementById("chevron-bar");
+    if(bar){
+      var html="";
+      for(var r=0;r<steps.length;r+=7){
+        var row=steps.slice(r,r+7);
+        html+='<div class="chev-row">';
+        row.forEach(function(st,i){
+          var state=st.state||"pending";
+          var n=r+i+1;
+          var name=SHORT[st.id]||st.name||"";
+          html+='<div class="chev '+esc(state)+(i===0?" row-start":"")+'" data-id="'+esc(st.id||"")+'" title="'+esc((st.name||"")+" — "+(LABEL[state]||state))+'"><span class="n">'+n+'</span><span class="nm">'+esc(name)+'</span></div>';
+        });
+        html+="</div>";
+      }
+      bar.innerHTML=html;
+    }
+    var tb=document.querySelector("#steps-table tbody");
+    if(tb){
+      tb.innerHTML=steps.map(function(st,i){
+        var state=st.state||"pending";
+        var when=st.time||st.at||"";
+        return "<tr><td>"+(i+1)+"</td><td>"+esc(st.name||"")+'</td><td>'+pill(state)+"</td><td class=\"t\">"+esc(fmt(when))+"</td><td>"+esc(st.detail||"—")+"</td></tr>";
+      }).join("");
+    }
+    var ua=document.getElementById("updated-at");
+    if(ua) ua.textContent=fmt(data.updated);
+    var cs=document.getElementById("current-step");
+    if(cs&&cur) cs.textContent=(cur.name||"—")+" ("+(LABEL[cur.state]||cur.state)+")";
+    var pr=document.getElementById("progress");
+    if(pr) pr.textContent=c.done+" done · "+c.running+" running · "+c.failed+" failed · "+c.pending+" pending";
+    var stage=data.stage||(cur&&cur.name)||"";
+    setTxt("stage-label", stage);
+    var dry=data.dry_run||{};
+    setTxt("dry-create", dry.create==null?"—":String(dry.create));
+    setTxt("dry-modify", dry.modify==null?"—":String(dry.modify));
+    setTxt("dry-unchanged", dry.unchanged==null?"—":String(dry.unchanged));
+    setTxt("dry-result", dry.result||"—");
+    ["precheck-pill","dryrun-pill","approval-pill","apply-pill","postcheck-pill"].forEach(function(id){
+      var map={
+        "precheck-pill":"pre-backup",
+        "dryrun-pill":"dry-run",
+        "approval-pill": data.stage==="Awaiting APPROVE" ? "aung-approval" : "approval-email",
+        "apply-pill":"apply",
+        "postcheck-pill":"postcheck"
+      };
+      var st=step(steps, map[id]);
+      setHtml(id, pill(st.state||"pending"));
+    });
+    var applySt=step(steps,"apply");
+    var postSt=step(steps,"postcheck");
+    var mailSt=step(steps,"post-email");
+    setTxt("apply-detail", applySt.detail||"Blocked until APPROVE. Will run from DESKTOP-3GETEV9: POST /api/mo/uni.json with payload.json.");
+    setTxt("postcheck-detail", postSt.detail||"nac-test / DN read-back after apply. Pending.");
+    setTxt("postemail-detail", mailSt.detail||"Sent only after apply and post-checks. Pending.");
+  }
+  function fallback(){
+    try{return JSON.parse(document.getElementById("status-fallback").textContent)}catch(e){return null}
+  }
+  function load(){
+    fetch("status.json?t="+Date.now(),{cache:"no-store"}).then(function(r){
+      if(!r.ok) throw new Error("status "+r.status);
+      return r.json();
+    }).then(render).catch(function(){
+      var data=fallback();
+      if(data) render(data);
+    });
+  }
+  load();
+})();
+</script>
+<script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc){const pt=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Melbourne",hour:"2-digit",minute:"2-digit",hour12:false,hourCycle:"h23",timeZoneName:"short"}).formatToParts(new Date(d.updated_utc));const g=t=>(pt.find(x=>x.type===t)||{}).value||"";const tz=(g("timeZoneName")||"AEDT").replace("GMT+11","AEDT").replace("GMT+10","AEST");e.textContent=" (data as of "+g("hour")+":"+g("minute")+" "+tz+")"}})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script>
 <!-- icon-menu v1 -->
 <style id="im-style">
 nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:8px 0 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
