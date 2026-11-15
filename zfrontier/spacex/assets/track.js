@@ -87,9 +87,42 @@
         );
       })
       .join(" · ");
+    var last = meta.last_flight;
+    var lasthtml = "";
+    if (last) {
+      var lastSrcs = (last.sources || [])
+        .map(function (s, i) {
+          return (
+            '<a href="' +
+            esc(s.url) +
+            '" target="_blank" rel="noopener">' +
+            esc(s.title || "Source " + (i + 1)) +
+            "</a>"
+          );
+        })
+        .join(" · ");
+      lasthtml =
+        '<div class="sxt-next-last"><h3>Last flight</h3><p class="sxt-next-id"><strong>' +
+        esc(last.id || "") +
+        "</strong> · " +
+        esc(last.status || "") +
+        "</p><p>" +
+        esc(last.mission_notes || last.phase_note || "") +
+        '</p><p class="sxt-meta">Liftoff: ' +
+        esc(last.liftoff_melbourne || last.liftoff_utc || "") +
+        " · Catch: " +
+        esc(last.catch_melbourne || "") +
+        " · " +
+        esc((last.vehicles && last.vehicles.booster) || "") +
+        " / " +
+        esc((last.vehicles && last.vehicles.ship) || "") +
+        '</p><p class="sxt-src">Sources: ' +
+        lastSrcs +
+        "</p></div>";
+    }
     var f16 = meta.upcoming_flight_16;
     var f16html = "";
-    if (f16) {
+    if (f16 && (!nf.id || f16.id !== nf.id)) {
       f16html =
         '<div class="sxt-next-sub"><h3>Flight 16 (beyond next)</h3><p>' +
         esc(f16.schedule_note || "") +
@@ -103,6 +136,7 @@
     }
     el.innerHTML =
       '<section class="sxt-next" aria-labelledby="sxt-nf-title">' +
+      lasthtml +
       '<h2 id="sxt-nf-title"><span class="tt-keep">📅</span> Next flight</h2>' +
       '<p class="sxt-next-id"><strong>' +
       esc(nf.id) +
@@ -1622,6 +1656,7 @@
             "Tracker · " + (meta.last_updated_label || "");
         }
         var nf = meta.next_flight || {};
+        var lastFl = meta.last_flight || {};
         var cd = document.getElementById("sxt-lm-countdown");
         var cds = document.getElementById("sxt-lm-countdown-sub");
         var flight15 = (seqData.flights || []).find(function (f) {
@@ -1635,15 +1670,41 @@
           startStreamSchedule(
             streamsEl,
             streamsData,
-            streamsData.liftoff_window_open_utc || nf.countdown_target_utc
+            streamsData.liftoff_window_open_utc || lastFl.liftoff_utc || nf.countdown_target_utc
           );
         }
         var phaseEl = document.getElementById("sxt-lm-phase");
         var phaseNote = document.getElementById("sxt-lm-phase-note");
         if (lmTimer) clearInterval(lmTimer);
         function tick() {
+          var flown = lastFl.status === "flown";
+          if (flown) {
+            if (cd) cd.textContent = (lastFl.id || "Last flight") + " complete";
+            if (cds) {
+              cds.innerHTML =
+                "Liftoff (Melbourne): " +
+                esc(lastFl.liftoff_melbourne || lastFl.liftoff_utc || "") +
+                "<br/>Ship catch (Melbourne): " +
+                esc(lastFl.catch_melbourne || "") +
+                "<br/>Next: " +
+                esc(nf.id || "") +
+                " — " +
+                esc(nf.status || "no official date");
+            }
+            if (phaseEl) phaseEl.textContent = lastFl.phase_label || "Post-flight";
+            if (phaseNote) phaseNote.textContent = lastFl.phase_note || "";
+            return;
+          }
           if (!nf.countdown_target_utc) {
             if (cd) cd.textContent = "No countdown target";
+            if (cds) {
+              cds.innerHTML =
+                esc(nf.id || "Next flight") +
+                " — " +
+                esc(nf.status || "") +
+                "<br/>" +
+                esc(nf.countdown_target_note || nf.window_melbourne || "");
+            }
             return;
           }
           var target = new Date(nf.countdown_target_utc).getTime();
@@ -1661,12 +1722,14 @@
           if (phaseNote) {
             phaseNote.textContent =
               elapsed < 0
-                ? "Before liftoff — phase from SpaceX Flight 15 published timeline."
-                : "After liftoff — phase from SpaceX Flight 15 timeline (long coast ~21 h).";
+                ? "Before liftoff — phase from the published timeline."
+                : "After liftoff — phase from the published timeline.";
           }
         }
         tick();
-        lmTimer = setInterval(tick, 1000);
+        if (lastFl.status !== "flown" && nf.countdown_target_utc) {
+          lmTimer = setInterval(tick, 1000);
+        }
         var wx = document.getElementById("sxt-lm-weather");
         if (wx) {
           wx.innerHTML =
@@ -1678,7 +1741,9 @@
         if (links) {
           links.innerHTML =
             "<h2>Official links</h2><ul>" +
-            '<li><a href="https://www.spacex.com/launches" target="_blank" rel="noopener">SpaceX launches / webcast</a></li>' +
+            '<li><a href="https://www.spacex.com/launches/starship-flight-15/" target="_blank" rel="noopener">SpaceX — Starship Flight 15</a></li>' +
+            '<li><a href="https://x.com/SpaceX/status/2121715216597827756" target="_blank" rel="noopener">SpaceX on X — Mechazilla catches Starship</a></li>' +
+            '<li><a href="https://www.spacex.com/launches/" target="_blank" rel="noopener">SpaceX launches / webcast</a></li>' +
             '<li><a href="https://x.com/SpaceX" target="_blank" rel="noopener">SpaceX on X</a></li>' +
             '<li><a href="/zfrontier/spacex/launch-sequence/">Launch sequence</a></li>' +
             '<li><a href="/zfrontier/spacex/launch-preparation/">Launch preparation</a></li>' +
@@ -1692,7 +1757,9 @@
             last.flight_number +
             "</strong>: " +
             esc(last.summary_line || "") +
-            '</p><p class="sxt-meta">Post-flight data from previous_flights.json. Flight 15 results appear here after it flies.</p>';
+            '</p><p class="sxt-meta">Post-flight data from previous_flights.json, last verified ' +
+            esc(prev.last_verified || "") +
+            ".</p>";
         }
       })
       .catch(function (err) {
