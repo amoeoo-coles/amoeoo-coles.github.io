@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:auto;
+  min-height:44px;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:auto;min-height:44px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:visible;
+  text-overflow:unset;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.25;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:22px;
+  height:22px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:16px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:#1d4ed8!important;
+}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Access policies</title>
+  <meta name="description" content="ARR ACI fabric report — read-only snapshot.">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f4f6f8;
+      --bg-accent: #e8eef4;
+      --card: #ffffff;
+      --ink: #15202b;
+      --muted: #5b6b7c;
+      --line: #d5dee7;
+      --accent: #0e7490;
+      --accent-soft: #e0f4f8;
+      --link: #0e7490;
+      --good: #047857;
+      --fair: #b45309;
+      --poor: #b91c1c;
+      --crit: #b91c1c;
+      --major: #c2410c;
+      --minor: #a16207;
+      --warn: #a16207;
+      --info: #0369a1;
+      --cleared: #047857;
+      --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+      --radius: 14px;
+      --mono: "IBM Plex Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+      --sans: "Source Sans 3", "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1220;
+        --bg-accent: #111827;
+        --card: #152033;
+        --ink: #e6edf5;
+        --muted: #93a4b8;
+        --line: #2a3b52;
+        --accent: #5eead4;
+        --accent-soft: #12313a;
+        --link: #5eead4;
+        --good: #34d399;
+        --fair: #fbbf24;
+        --poor: #f87171;
+        --crit: #f87171;
+        --major: #fb923c;
+        --minor: #fbbf24;
+        --warn: #fbbf24;
+        --info: #7dd3fc;
+        --cleared: #34d399;
+        --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--sans);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, var(--bg-accent), transparent 60%),
+        var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    header {
+      padding: 2.2rem 1.5rem 1.4rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem 3.5rem; }
+    header .wrap { padding-bottom: 0; }
+    .kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.72rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin: 0 0 0.35rem;
+    }
+    h1 {
+      font-size: clamp(1.7rem, 3vw, 2.25rem);
+      margin: 0 0 0.45rem;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+    }
+    .meta, .footer, .note, .muted, .card-sub, .card-label, .empty, .na, .dn {
+      color: var(--muted);
+    }
+    .meta { margin: 0 0 0.25rem; }
+    .snapshot { margin: 0; font-size: 0.98rem; }
+    h2 {
+      margin: 2.4rem 0 0.85rem;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.85rem;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem 1.05rem 0.95rem;
+      box-shadow: var(--shadow);
+    }
+    .card-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 650;
+    }
+    .card-value {
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-top: 0.2rem;
+    }
+    .card-value strong { font-weight: 700; }
+    .card-sub { font-size: 0.78rem; margin-top: 0.25rem; }
+    .unit { font-size: 0.9rem; color: var(--muted); font-weight: 600; margin-left: 0.15rem; }
+    .health.good, .sev.cleared { color: var(--good); }
+    .health.fair { color: var(--fair); }
+    .health.poor, .sev.critical { color: var(--poor); }
+    .sev.major { color: var(--major); }
+    .sev.warning, .sev.minor { color: var(--warn); }
+    .sev.info { color: var(--info); }
+    .table-wrap {
+      overflow-x: auto;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.93rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.65rem 0.85rem;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    th {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      font-weight: 700;
+      background: color-mix(in srgb, var(--card) 80%, var(--bg-accent));
+    }
+    tr:last-child td { border-bottom: 0; }
+    .mono { font-family: var(--mono); font-size: 0.86em; }
+    .num { font-variant-numeric: tabular-nums; text-align: right; font-family: var(--mono); }
+    th:nth-child(3) { text-align: left; }
+    table thead th:nth-child(3) { /* keep */ }
+    .pill {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      font-size: 0.78rem;
+      font-weight: 650;
+      background: color-mix(in srgb, var(--card) 70%, var(--bg-accent));
+    }
+    .pill.role-controller { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+    .pill.role-leaf { background: color-mix(in srgb, var(--good) 16%, var(--card)); color: var(--good); border-color: transparent; }
+    .pill.role-spine { background: color-mix(in srgb, var(--info) 16%, var(--card)); color: var(--info); border-color: transparent; }
+    .pill.sev.critical { background: color-mix(in srgb, var(--crit) 16%, var(--card)); color: var(--crit); border-color: transparent; }
+    .pill.sev.major { background: color-mix(in srgb, var(--major) 16%, var(--card)); color: var(--major); border-color: transparent; }
+    .pill.sev.warning, .pill.sev.minor { background: color-mix(in srgb, var(--warn) 16%, var(--card)); color: var(--warn); border-color: transparent; }
+    .tenant-block {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem 1.15rem 1.1rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1rem;
+    }
+    .tenant-block h3 { margin: 0 0 0.85rem; font-size: 1.05rem; }
+    .tenant-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 0.85rem 1.25rem;
+    }
+    .tenant-block h4 {
+      margin: 0 0 0.35rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+    }
+    .count {
+      font-family: var(--mono);
+      font-size: 0.85em;
+      color: var(--ink);
+    }
+    .obj-list { list-style: none; margin: 0; padding: 0; }
+    .obj-list li { margin: 0 0 0.35rem; }
+    .dn { display: block; font-family: var(--mono); font-size: 0.75rem; word-break: break-all; }
+    .empty, .na { font-style: italic; }
+    .note { font-size: 0.9rem; margin: 0.85rem 0 0; }
+    footer {
+      margin-top: 2.8rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--line);
+      font-size: 0.85rem;
+    }
+    a { color: var(--link); }
+  
+    a { color: var(--link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .card-value a, .card-sub a, .count a, a.count, td a, .health a, a.health {
+      color: inherit;
+    }
+    .card-value a:hover, a.count:hover, .count a:hover { text-decoration: underline; }
+    .crumb {
+      font-size: 0.92rem;
+      margin: 0 0 0.85rem;
+      color: var(--muted);
+    }
+    .crumb ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.3rem 0.15rem; }
+    .crumb li { display: inline; }
+    .crumb li:not(:last-child)::after { content: "/"; margin: 0 0.4rem; color: var(--muted); }
+    .crumb a { color: var(--link); }
+    .back { margin: 0 0 1rem; }
+    dl.attrs {
+      display: grid;
+      grid-template-columns: minmax(11rem, 15rem) 1fr;
+      gap: 0.45rem 1.1rem;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem 1.15rem;
+      box-shadow: var(--shadow);
+      margin: 0 0 1.4rem;
+    }
+    dl.attrs dt { color: var(--muted); font-size: 0.85rem; padding-top: 0.1rem; }
+    dl.attrs dd { margin: 0; word-break: break-word; }
+    h2 .count, h3 .count { font-weight: 600; }
+    section[id] { scroll-margin-top: 1rem; }
+
+  
+    .banner { border: 1px solid var(--line); border-radius: var(--radius); padding: 0.85rem 1.05rem; background: var(--accent-soft); margin: 0 0 1.2rem; }
+    .banner.warn { background: color-mix(in srgb, var(--warn) 14%, var(--card)); }
+    .banner.plan { background: color-mix(in srgb, var(--fair) 12%, var(--card)); border-color: color-mix(in srgb, var(--fair) 40%, var(--line)); }
+    .banner strong.missing { color: var(--poor); }
+    .placeholder { display: inline-block; padding: 0 0.35rem; border-radius: 4px; background: color-mix(in srgb, var(--warn) 18%, var(--card)); font-family: var(--mono); font-size: 0.86em; }
+    .tree, .tree ul { list-style: none; margin: 0; padding: 0; }
+    .tree ul { margin-left: 1.1rem; border-left: 1px solid var(--line); padding-left: 0.9rem; }
+    .tree li { margin: 0.28rem 0; }
+    .tree .meta-inline { color: var(--muted); font-size: 0.86rem; }
+    tr.hl td { background: color-mix(in srgb, var(--warn) 16%, var(--card)); }
+    .tag-post { display: inline-block; margin-left: 0.35rem; padding: 0.05rem 0.45rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; background: var(--accent-soft); color: var(--accent); }
+    .up { color: var(--good); font-weight: 650; }
+    .down { color: var(--muted); }
+    nav.local { margin: 0.6rem 0 1.1rem; display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    nav.local a { display: inline-block; padding: 0.2rem 0.65rem; border-radius: 999px; border: 1px solid var(--line); font-size: 0.85rem; font-weight: 650; }
+
+  </style>
+
+<style>
+  p.ver{margin:0.15rem 0 0;color:var(--muted);font-size:0.92rem}
+  body.access-policies{--site-content-max:1500px}
+  body.access-policies header .wrap,
+  body.access-policies main.wrap,
+  body.access-policies footer.wrap,
+  body.access-policies nav.site.im{max-width:1500px !important}
+  .toc{display:flex;flex-wrap:wrap;gap:0.45rem;margin:0.3rem 0 1rem}
+  .toc a{display:inline-block;padding:0.2rem 0.65rem;border-radius:999px;border:1px solid var(--line);font-size:0.85rem;font-weight:650}
+  .callout,.expect{border:1px solid var(--line);border-radius:var(--radius,10px);padding:0.85rem 1.05rem;background:var(--card);margin:0 0 1.15rem}
+  .expect{background:color-mix(in srgb,var(--warn,#ca8a04) 12%,var(--card));border-color:color-mix(in srgb,var(--warn,#ca8a04) 40%,var(--line))}
+  .callout ul,.expect ul,section ul{margin:0.35rem 0 0;padding-left:1.2rem}
+  .callout li,.expect li,section li{margin:0.25rem 0}
+  .diagram{margin:0.4rem 0 1.3rem;padding:0.55rem 0.55rem 0.2rem;border:1px solid var(--line);border-radius:var(--radius,10px);background:var(--card);overflow-x:auto}
+  .ap-svg{display:block;min-width:1180px;color:var(--ink)}
+  .ap-svg .band{fill:color-mix(in srgb,var(--muted,#64748b) 7%,var(--card,#fff));stroke:var(--line);stroke-width:1}
+  .ap-svg .band-s{fill:color-mix(in srgb,#be123c 8%,var(--card,#fff))}
+  .ap-svg .band-i{fill:color-mix(in srgb,#0369a1 8%,var(--card,#fff))}
+  .ap-svg .band-g{fill:color-mix(in srgb,#15803d 8%,var(--card,#fff))}
+  .ap-svg .tb{stroke-width:1.4}
+  .ap-svg .tb-s{fill:color-mix(in srgb,#be123c 16%,var(--card,#fff));stroke:#be123c}
+  .ap-svg .tb-i{fill:color-mix(in srgb,#0369a1 16%,var(--card,#fff));stroke:#0369a1}
+  .ap-svg .tb-p{fill:color-mix(in srgb,#7c3aed 14%,var(--card,#fff));stroke:#7c3aed}
+  .ap-svg .tb-g{fill:color-mix(in srgb,#15803d 16%,var(--card,#fff));stroke:#15803d}
+  .ap-svg .tb-n{fill:color-mix(in srgb,var(--muted,#64748b) 12%,var(--card,#fff));stroke:var(--muted,#64748b)}
+  .ap-svg .tn{fill:var(--ink);font:650 13px/1.15 system-ui,sans-serif}
+  .ap-svg .tc{fill:var(--muted);font:600 10.5px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .ap-svg .te{fill:var(--muted);font:500 10.5px/1.2 system-ui,sans-serif}
+  .ap-svg .th{fill:var(--ink);font:700 15px/1 system-ui,sans-serif}
+  .ap-svg .tl{stroke:var(--muted);stroke-width:1.5;fill:none;marker-end:url(#ap-arrow)}
+  .ap-svg .tl-soft{stroke:var(--muted);stroke-width:1.2;stroke-dasharray:5 4;fill:none;marker-end:url(#ap-arrow)}
+  .ap-svg .tlbl{fill:var(--muted);font:600 10px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .ap-svg .count{fill:#fff;font:700 10px/1 system-ui,sans-serif}
+  .ap-svg .count-bg{fill:#0f172a}
+  table.ap-table{font-size:0.92rem}
+  table.ap-table td,table.ap-table th{vertical-align:top}
+  table.ap-table td.mono,table.ap-table .mono{font-family:var(--mono);font-size:0.82rem}
+  table.ap-table thead th{position:sticky;top:0;background:var(--th-bg,var(--card));z-index:1}
+  .chip{display:inline-block;padding:0.05rem 0.5rem;border-radius:999px;font-size:0.75rem;font-weight:700;letter-spacing:0.03em;border:1px solid var(--line)}
+  .chip.yes{background:color-mix(in srgb,var(--good,#15803d) 18%,var(--card));color:var(--good,#15803d);border-color:transparent}
+  .chip.no{background:color-mix(in srgb,var(--poor,#b91c1c) 16%,var(--card));color:var(--poor,#b91c1c);border-color:transparent}
+  .chip.note{background:color-mix(in srgb,var(--warn,#ca8a04) 16%,var(--card));color:color-mix(in srgb,var(--warn,#ca8a04) 80%,var(--ink));border-color:transparent}
+  figure.shot{margin:0.5rem 0 1.2rem;border:1px solid var(--line);border-radius:var(--radius,10px);background:var(--card);padding:0.55rem}
+  figure.shot img{display:block;width:100%;height:auto;border-radius:6px}
+  figure.shot figcaption{color:var(--muted);font-size:0.88rem;margin:0.45rem 0.2rem 0.1rem}
+  pre.yaml{overflow-x:auto;padding:0.9rem 1rem;border-radius:10px;border:1px solid var(--line);background:var(--code,#0b1220);color:var(--code-fg,#e2e8f0);font:0.82rem/1.45 var(--mono,ui-monospace,Menlo,Consolas,monospace);white-space:pre}
+  h2{margin-top:1.7rem}
+</style>
+
+</head>
+<body class="access-policies">
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+<!-- site-menu v1 --><nav class="site"><a href="/">Home</a></nav>
+
+<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:#bbb">Page updated 15 Nov 2026 18:20 AEDT (Melbourne time)<span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span><span class="uvt" style="font-size:11px;color:#888"></span></div><!--/arr-uv-tr17-->
+
+  <header>
+    <div class="wrap">
+      <p class="kicker">ARR</p>
+      <h1>Access policies</h1>
+      <p class="ver">v1 · 15 Nov 2026, 6:20 PM AEDT</p>
+    </div>
+  </header>
+  <main class="wrap">
+
+    <p>This page walks the <strong>Fabric Access Policies</strong> chain: the fabric-side setup that lets a leaf port carry VLANs into a tenant EPG. It is drawn from two photographs of a DevLab / sandbox ACI (Leaf Profile <span class="mono">L-101_L102</span>, Interface Policy Group <span class="mono">Port_Std_ESXi_Host</span>, VLAN pool <span class="mono">ESXi_VLP</span> 300–399). Those names are <strong>not</strong> from ARR-FABRIC. The ARR cross-check at the bottom uses a NetBox export and the Cursor_Tenant6 v4 post-check files already on the box. No APIC was contacted for this page.</p>
+    <p class="ver">This is v1 · 15 Nov 2026, 6:20 PM AEDT.</p>
+    <nav class="toc" aria-label="On this page">
+      <a href="#explain">Walkthrough</a>
+      <a href="#diagram">Chain diagram</a>
+      <a href="#screenshots">Source screenshots</a>
+      <a href="#objects">Object table</a>
+      <a href="#yaml">Ansible and nac YAML</a>
+      <a href="#ports">Port mapping</a>
+      <a href="#arr-check">ARR cross-check</a>
+    </nav>
+
+    <div class="callout">
+      <p><strong>How to read the chain.</strong> You usually build it from the bottom (global) up, then attach ports:</p>
+      <ul>
+        <li>A <strong>VLAN pool</strong> holds the encapsulation range.</li>
+        <li>A <strong>physical domain</strong> points at that pool.</li>
+        <li>An <strong>AAEP</strong> points at the domain.</li>
+        <li>An <strong>interface policy group</strong> points at the AAEP and at interface policies (Link Level, LLDP, and so on).</li>
+        <li>A <strong>leaf interface profile</strong> has a port selector and port block, which point at the policy group.</li>
+        <li>A <strong>leaf switch profile</strong> selects the leaf nodes and points at the interface profile. A switch policy group can hang off the association for STP or BFD.</li>
+        <li>A tenant EPG then uses <span class="mono">fvRsDomAtt</span> to the same physical domain, and <span class="mono">fvRsPathAtt</span> to a concrete leaf port, so the VLAN on that port is valid.</li>
+      </ul>
+    </div>
+
+    <h2 id="explain">Plain-English walkthrough</h2>
+    <p>The source diagram is organised as three bands, top to bottom: Switch policies, Interface policies, and Global policies. The numbered circles are GUI menu counts on that sandbox fabric, not counts from ARR.</p>
+    <h3>1. Switch policies</h3>
+    <p>The Leaf Profile <span class="mono">L-101_L102</span> (<span class="mono">infra:NodeP</span>) uses a Switch Association whose node block covers leaves 101–102 (<span class="mono">infra:LeafS</span> and <span class="mono">infra:NodeBlk</span>, with <span class="mono">from_</span> / <span class="mono">to_</span>). That association can point at the Leaf Policy Group <span class="mono">Default_SPG</span> (<span class="mono">infra:AccNodePGrp</span>), which in the notes holds the default STP and BFD policies. The profile also points at the interface profile in the next band, through <span class="mono">infra:RsAccPortP</span>.</p>
+    <h3>2. Interface policies</h3>
+    <p>The Leaf Interface Profile <span class="mono">L101_L102_IPR</span> (<span class="mono">infra:AccPortP</span>) contains the access port selector <span class="mono">Eth1_1-5</span> (<span class="mono">infra:HPortS</span>) and a port block for eth1/1–5 (<span class="mono">infra:PortBlk</span>). The selector links through <span class="mono">infra:RsAccBaseGrp</span> to the Interface Policy Group <span class="mono">Port_Std_ESXi_Host</span> (<span class="mono">infra:AccPortGrp</span>). That group is a regular access (non-channel) group. A port-channel or VPC group would be <span class="mono">infra:AccBndlGrp</span> instead. The group uses the Link Level policy <span class="mono">10Gb_INTPOL</span> (<span class="mono">fabric:HIfPol</span>) and the LLDP policy <span class="mono">LLDP_Enable_INTPOL</span> (<span class="mono">lldp:IfPol</span>).</p>
+    <h3>3. Global policies</h3>
+    <p>The policy group points at the AAEP <span class="mono">PHY_AEP</span> (<span class="mono">infra:AttEntityP</span>). The AAEP points at the Physical Domain <span class="mono">Standalone_ESXi_PHY</span> (<span class="mono">phys:DomP</span>), which uses the VLAN pool <span class="mono">ESXi_VLP</span> (<span class="mono">fvns:VlanInstP</span>), allocation static, range 300–399.</p>
+    <p>The YAML snippets on the notes are the Ansible modules that build step 2: <span class="mono">cisco.aci.aci_interface_policy_leaf_policy_group</span> makes the group (5), and <span class="mono">cisco.aci.aci_access_port_to_interface_policy_leaf_profile</span> makes the selector and port block (6/7). The port list (SnV_server2 1/1, Heroes_corporate_external 1/47, and so on) shows other interface profiles mapped the same way. Those profile names match the published simulator (Heroes / SnV) <span class="mono">access_policies.nac.yaml</span>, not ARR-FABRIC.</p>
+
+    <h2 id="diagram">The chain, redrawn</h2>
+    <p>Three coloured bands, with arrows for containment and relation targets. The numbered badges are the GUI menu counts from the notes (9 leaf switch profiles, 8 switch policy groups, 6/7 interface profiles, 5 interface policy groups, 4 interface policies, 3 AAEPs, 2 physical domains, 1 VLAN pool). VLAN pool is badge 1 and the domain is badge 2 because those objects are usually created first.</p>
+    <div class="diagram" id="chain-svg"><svg class="ap-svg" viewBox="0 0 1420 820" width="100%" role="img" aria-labelledby="ap-title ap-desc">
+<title id="ap-title">ACI Fabric Access Policies chain: switch, interface and global bands</title>
+<desc id="ap-desc">Top band is Switch policies: Leaf Profile L-101_L102, a switch association with node block 101-102, and Leaf Policy Group Default_SPG holding the default STP and BFD policies. Middle band is Interface policies: Leaf Interface Profile L101_L102_IPR, access port selector Eth1_1-5 with port block eth1/1-5, relation infra:RsAccBaseGrp to Interface Policy Group Port_Std_ESXi_Host, which uses Link Level 10Gb_INTPOL and LLDP LLDP_Enable_INTPOL. A PC or VPC group would use infra:AccBndlGrp instead of infra:AccPortGrp. Bottom band is Global policies: AAEP PHY_AEP, Physical Domain Standalone_ESXi_PHY, and VLAN pool ESXi_VLP static 300-399. This is the DevLab example, not ARR-FABRIC.</desc>
+<defs><marker id="ap-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/></marker></defs>
+<text class="th" x="710" y="28" text-anchor="middle">Fabric Access Policies chain (DevLab example)</text>
+<text class="te" x="710" y="48" text-anchor="middle">Switch policies → Interface policies → Global policies · not ARR-FABRIC</text>
+<rect class="band band-s" x="20" y="64" width="1380" height="210" rx="12"/>
+<rect class="band band-i" x="20" y="290" width="1380" height="280" rx="12"/>
+<rect class="band band-g" x="20" y="586" width="1380" height="210" rx="12"/>
+<text class="th" x="40" y="92">Switch policies</text>
+<text class="th" x="40" y="318">Interface policies</text>
+<text class="th" x="40" y="614">Global policies</text>
+<g transform="translate(50,110)">
+<title>Leaf switch profile L-101_L102</title>
+<rect class="tb tb-s" x="0" y="0" width="280" height="140" rx="8"/>
+<text class="tn" x="140.0" y="28.0" text-anchor="middle">Leaf Profile</text>
+<text class="tn" x="140.0" y="52.0" text-anchor="middle">L-101_L102</text>
+<text class="tc" x="140.0" y="76.0" text-anchor="middle">infra:NodeP</text>
+<text class="te" x="140.0" y="100.0" text-anchor="middle">uni/infra/nprof-L-101_L102</text>
+<text class="te" x="140.0" y="124.0" text-anchor="middle">ties nodes to an interface profile</text>
+</g>
+<g transform="translate(322,118)"><circle class="count-bg" r="9"/><text class="count" x="0" y="3.5" text-anchor="middle">9</text></g>
+<g transform="translate(400,110)">
+<title>Switch association and node block 101-102</title>
+<rect class="tb tb-s" x="0" y="0" width="300" height="140" rx="8"/>
+<text class="tn" x="150.0" y="28.0" text-anchor="middle">Switch association</text>
+<text class="tn" x="150.0" y="52.0" text-anchor="middle">Node block 101–102</text>
+<text class="tc" x="150.0" y="76.0" text-anchor="middle">infra:LeafS + infra:NodeBlk</text>
+<text class="te" x="150.0" y="100.0" text-anchor="middle">from_/to_ 101–102</text>
+<text class="te" x="150.0" y="124.0" text-anchor="middle">selects LEAF-101 and LEAF-102</text>
+</g>
+<g transform="translate(770,110)">
+<title>Leaf switch policy group Default_SPG with default STP and BFD</title>
+<rect class="tb tb-s" x="0" y="0" width="280" height="140" rx="8"/>
+<text class="tn" x="140.0" y="28.0" text-anchor="middle">Leaf Policy Group</text>
+<text class="tn" x="140.0" y="52.0" text-anchor="middle">Default_SPG</text>
+<text class="tc" x="140.0" y="76.0" text-anchor="middle">infra:AccNodePGrp</text>
+<text class="te" x="140.0" y="100.0" text-anchor="middle">STP default · BFD default</text>
+<text class="te" x="140.0" y="124.0" text-anchor="middle">uni/infra/funcprof/accnodepgrp-…</text>
+</g>
+<g transform="translate(1042,118)"><circle class="count-bg" r="9"/><text class="count" x="0" y="3.5" text-anchor="middle">8</text></g>
+<line class="tl" x1="330" y1="180" x2="400" y2="180"/>
+<text class="tlbl" x="365.0" y="174.0" text-anchor="middle">contains</text>
+<line class="tl" x1="700" y1="180" x2="770" y2="180"/>
+<text class="tlbl" x="735.0" y="174.0" text-anchor="middle">uses</text>
+<g transform="translate(50,350)">
+<title>Leaf interface profile L101_L102_IPR</title>
+<rect class="tb tb-i" x="0" y="0" width="250" height="150" rx="8"/>
+<text class="tn" x="125.0" y="28.0" text-anchor="middle">Leaf Interface Profile</text>
+<text class="tn" x="125.0" y="52.0" text-anchor="middle">L101_L102_IPR</text>
+<text class="tc" x="125.0" y="76.0" text-anchor="middle">infra:AccPortP</text>
+<text class="te" x="125.0" y="100.0" text-anchor="middle">accportprof-L101_L102_IPR</text>
+<text class="te" x="125.0" y="124.0" text-anchor="middle">holds port selectors</text>
+</g>
+<g transform="translate(292,358)"><circle class="count-bg" r="9"/><text class="count" x="0" y="3.5" text-anchor="middle">6/7</text></g>
+<g transform="translate(360,350)">
+<title>Access port selector Eth1_1-5 with port block eth1/1-5</title>
+<rect class="tb tb-i" x="0" y="0" width="270" height="150" rx="8"/>
+<text class="tn" x="135.0" y="28.0" text-anchor="middle">Access port selector</text>
+<text class="tn" x="135.0" y="52.0" text-anchor="middle">Eth1_1-5</text>
+<text class="tc" x="135.0" y="76.0" text-anchor="middle">infra:HPortS + PortBlk</text>
+<text class="te" x="135.0" y="100.0" text-anchor="middle">eth1/1–5  (from 1 to 5)</text>
+<text class="te" x="135.0" y="124.0" text-anchor="middle">hports-Eth1_1-5-typ-range</text>
+</g>
+<g transform="translate(690,350)">
+<title>infra:RsAccBaseGrp binds the selector to the interface policy group</title>
+<rect class="tb tb-p" x="0" y="0" width="230" height="150" rx="8"/>
+<text class="tn" x="115.0" y="28.0" text-anchor="middle">Relation</text>
+<text class="tn" x="115.0" y="56.0" text-anchor="middle">infra:RsAccBaseGrp</text>
+<text class="tc" x="115.0" y="84.0" text-anchor="middle">selector → policy group</text>
+<text class="te" x="115.0" y="112.0" text-anchor="middle">rsaccBaseGrp</text>
+</g>
+<g transform="translate(980,336)">
+<title>Leaf access port policy group Port_Std_ESXi_Host</title>
+<rect class="tb tb-i" x="0" y="0" width="300" height="120" rx="8"/>
+<text class="tn" x="150.0" y="26.0" text-anchor="middle">Interface Policy Group</text>
+<text class="tn" x="150.0" y="50.0" text-anchor="middle">Port_Std_ESXi_Host</text>
+<text class="tc" x="150.0" y="74.0" text-anchor="middle">infra:AccPortGrp  (access)</text>
+<text class="te" x="150.0" y="98.0" text-anchor="middle">funcprof/accportgrp-Port_Std_ESXi_Host</text>
+</g>
+<g transform="translate(1272,344)"><circle class="count-bg" r="9"/><text class="count" x="0" y="3.5" text-anchor="middle">5</text></g>
+<g transform="translate(980,478)">
+<title>Link Level policy 10Gb_INTPOL</title>
+<rect class="tb tb-p" x="0" y="0" width="140" height="72" rx="8"/>
+<text class="tn" x="70.0" y="26.0" text-anchor="middle">10Gb_INTPOL</text>
+<text class="tc" x="70.0" y="48.0" text-anchor="middle">fabric:HIfPol</text>
+<text class="te" x="70.0" y="64.0" text-anchor="middle">Link Level</text>
+</g>
+<g transform="translate(1140,478)">
+<title>LLDP policy LLDP_Enable_INTPOL</title>
+<rect class="tb tb-p" x="0" y="0" width="160" height="72" rx="8"/>
+<text class="tn" x="80.0" y="26.0" text-anchor="middle">LLDP_Enable_INTPOL</text>
+<text class="tc" x="80.0" y="48.0" text-anchor="middle">lldp:IfPol</text>
+<text class="te" x="80.0" y="64.0" text-anchor="middle">LLDP enable</text>
+</g>
+<g transform="translate(1112,486)"><circle class="count-bg" r="9"/><text class="count" x="0" y="3.5" text-anchor="middle">4</text></g>
+<line class="tl" x1="300" y1="425" x2="360" y2="425"/>
+<line class="tl" x1="630" y1="425" x2="690" y2="425"/>
+<line class="tl" x1="920" y1="425" x2="980" y2="396"/>
+<line class="tl" x1="1130" y1="456" x2="1050" y2="478"/>
+<text class="tlbl" x="1080.0" y="468.0" text-anchor="middle">uses</text>
+<line class="tl" x1="1130" y1="456" x2="1220" y2="478"/>
+<g transform="translate(690,520)">
+<title>A port-channel or VPC policy group uses infra:AccBndlGrp instead of infra:AccPortGrp</title>
+<rect class="tb tb-n" x="0" y="0" width="260" height="36" rx="8"/>
+<text class="te" x="130.0" y="24.0" text-anchor="middle">PC / VPC would use infra:AccBndlGrp</text>
+</g>
+<line class="tl-soft" x1="190" y1="250" x2="175" y2="350"/>
+<text class="tlbl" x="250.0" y="300.0" text-anchor="middle">infra:RsAccPortP</text>
+<g transform="translate(200,640)">
+<title>Attachable Access Entity Profile PHY_AEP</title>
+<rect class="tb tb-g" x="0" y="0" width="280" height="130" rx="8"/>
+<text class="tn" x="140.0" y="26.0" text-anchor="middle">AAEP</text>
+<text class="tn" x="140.0" y="50.0" text-anchor="middle">PHY_AEP</text>
+<text class="tc" x="140.0" y="74.0" text-anchor="middle">infra:AttEntityP</text>
+<text class="te" x="140.0" y="98.0" text-anchor="middle">uni/infra/attentp-PHY_AEP</text>
+<text class="te" x="140.0" y="118.0" text-anchor="middle">joins domains to policy groups</text>
+</g>
+<g transform="translate(472,648)"><circle class="count-bg" r="9"/><text class="count" x="0" y="3.5" text-anchor="middle">3</text></g>
+<g transform="translate(560,640)">
+<title>Physical domain Standalone_ESXi_PHY</title>
+<rect class="tb tb-g" x="0" y="0" width="300" height="130" rx="8"/>
+<text class="tn" x="150.0" y="26.0" text-anchor="middle">Physical Domain</text>
+<text class="tn" x="150.0" y="50.0" text-anchor="middle">Standalone_ESXi_PHY</text>
+<text class="tc" x="150.0" y="74.0" text-anchor="middle">phys:DomP</text>
+<text class="te" x="150.0" y="98.0" text-anchor="middle">uni/phys-Standalone_ESXi_PHY</text>
+<text class="te" x="150.0" y="118.0" text-anchor="middle">the tenant EPG binds to this</text>
+</g>
+<g transform="translate(852,648)"><circle class="count-bg" r="9"/><text class="count" x="0" y="3.5" text-anchor="middle">2</text></g>
+<g transform="translate(940,640)">
+<title>VLAN pool ESXi_VLP, allocation static, range 300-399</title>
+<rect class="tb tb-g" x="0" y="0" width="300" height="130" rx="8"/>
+<text class="tn" x="150.0" y="26.0" text-anchor="middle">VLAN pool</text>
+<text class="tn" x="150.0" y="50.0" text-anchor="middle">ESXi_VLP  ·  static 300–399</text>
+<text class="tc" x="150.0" y="74.0" text-anchor="middle">fvns:VlanInstP + EncapBlk</text>
+<text class="te" x="150.0" y="98.0" text-anchor="middle">uni/infra/vlanns-[ESXi_VLP]-static</text>
+<text class="te" x="150.0" y="118.0" text-anchor="middle">from vlan-300 to vlan-399</text>
+</g>
+<g transform="translate(1232,648)"><circle class="count-bg" r="9"/><text class="count" x="0" y="3.5" text-anchor="middle">1</text></g>
+<line class="tl-soft" x1="1130" y1="336" x2="340" y2="640"/>
+<text class="tlbl" x="700.0" y="600.0" text-anchor="middle">infra:RsAttEntP</text>
+<line class="tl" x1="480" y1="705" x2="560" y2="705"/>
+<text class="tlbl" x="520.0" y="699.0" text-anchor="middle">infra:RsDomP</text>
+<line class="tl" x1="860" y1="705" x2="940" y2="705"/>
+<text class="tlbl" x="900.0" y="699.0" text-anchor="middle">infra:RsVlanNs</text>
+</svg></div>
+
+    <h2 id="screenshots">Source screenshots</h2>
+    <div class="expect"><p>Both source photographs were expected at the parent agent attachment paths <span class="mono">541b99860485ffda9b4ff9bf36c9abdc8ff2a710c878dce7ebbe8c6f638c40ec.jpg</span> and <span class="mono">5d76cfb376bc45a70d21c8e04434a7a562ab9b6fc04bb7a0f8053abd6466c939.jpg</span>. They were not on the box when this page was built, so they are not embedded here. The SVG, object table, YAML and port list are taken from those notes as recorded when the page was approved. They can be copied into this folder in a later revision.</p></div>
+
+    <h2 id="objects">Object table</h2>
+    <p class="note">Column headers sort the table. Counts are the DevLab GUI menu numbers from the notes. Example DNs use the DevLab names. APIC 6.0(2h) uses <span class="mono">from_</span>/<span class="mono">to_</span> on <span class="mono">infraNodeBlk</span> and <span class="mono">from</span>/<span class="mono">to</span> on <span class="mono">fvnsEncapBlk</span>.</p>
+    <div class="table-wrap"><table class="ap-table"><thead><tr><th>Band</th><th>Count</th><th>Menu path</th><th>Example name</th><th>Class</th><th>Example DN</th><th>What it does</th></tr></thead><tbody><tr><td>Switch</td><td class="mono">9</td><td>Fabric → Access Policies → Switches → Profiles → Leaf Profiles</td><td>L-101_L102</td><td class="mono">infraNodeP</td><td class="mono">uni/infra/nprof-L-101_L102</td><td>Leaf switch profile. Groups a node association with one or more interface profiles.</td></tr><tr><td>Switch</td><td class="mono">—</td><td>Switch association on the leaf profile</td><td>node block 101–102</td><td class="mono">infraLeafS, infraNodeBlk</td><td class="mono">uni/infra/nprof-L-101_L102/leaves-…-typ-range/nodeblk-…</td><td>Selects leaf nodes 101 to 102 (APIC uses from_/to_ on infraNodeBlk).</td></tr><tr><td>Switch</td><td class="mono">8</td><td>Fabric → Access Policies → Switches → Policy Groups → Leaf Policy Groups</td><td>Default_SPG</td><td class="mono">infraAccNodePGrp</td><td class="mono">uni/infra/funcprof/accnodepgrp-Default_SPG</td><td>Leaf switch policy group. The source diagram listed the default STP and BFD policies here.</td></tr><tr><td>Interface</td><td class="mono">6/7</td><td>Fabric → Access Policies → Interfaces → Leaf Interfaces → Profiles</td><td>L101_L102_IPR</td><td class="mono">infraAccPortP</td><td class="mono">uni/infra/accportprof-L101_L102_IPR</td><td>Leaf interface profile. Holds access port selectors (infraHPortS).</td></tr><tr><td>Interface</td><td class="mono">6/7</td><td>Access port selector on the interface profile</td><td>Eth1_1-5 (eth1/1–5)</td><td class="mono">infraHPortS, infraPortBlk</td><td class="mono">uni/infra/accportprof-L101_L102_IPR/hports-Eth1_1-5-typ-range/portblk-…</td><td>Port selector and block for Ethernet 1/1 through 1/5.</td></tr><tr><td>Interface</td><td class="mono">—</td><td>Selector → policy group relation</td><td>rsaccBaseGrp</td><td class="mono">infraRsAccBaseGrp</td><td class="mono">…/hports-Eth1_1-5-typ-range/rsaccBaseGrp</td><td>Binds the selector to an access (infraAccPortGrp) or PC/VPC (infraAccBndlGrp) policy group.</td></tr><tr><td>Interface</td><td class="mono">5</td><td>Fabric → Access Policies → Interfaces → Leaf Interfaces → Policy Groups → Leaf Access Port</td><td>Port_Std_ESXi_Host</td><td class="mono">infraAccPortGrp</td><td class="mono">uni/infra/funcprof/accportgrp-Port_Std_ESXi_Host</td><td>Access (non-PC) interface policy group. A PC or VPC group would be infraAccBndlGrp.</td></tr><tr><td>Interface</td><td class="mono">4</td><td>Fabric → Access Policies → Interface Policies → Policies → Link Level</td><td>10Gb_INTPOL</td><td class="mono">fabricHIfPol</td><td class="mono">uni/infra/hintfpol-10Gb_INTPOL</td><td>Link Level (speed) policy used by Port_Std_ESXi_Host.</td></tr><tr><td>Interface</td><td class="mono">4</td><td>Fabric → Access Policies → Interface Policies → Policies → LLDP</td><td>LLDP_Enable_INTPOL</td><td class="mono">lldpIfPol</td><td class="mono">uni/infra/lldpIfP-LLDP_Enable_INTPOL</td><td>LLDP policy used by Port_Std_ESXi_Host.</td></tr><tr><td>Global</td><td class="mono">3</td><td>Fabric → Access Policies → Global Policies → Attachable Access Entity Profiles</td><td>PHY_AEP</td><td class="mono">infraAttEntityP</td><td class="mono">uni/infra/attentp-PHY_AEP</td><td>AAEP. Joins physical (or routed) domains to interface policy groups (infraRsAttEntP).</td></tr><tr><td>Global</td><td class="mono">2</td><td>Fabric → Access Policies → Physical and External Domains → Physical Domains</td><td>Standalone_ESXi_PHY</td><td class="mono">physDomP</td><td class="mono">uni/phys-Standalone_ESXi_PHY</td><td>Physical domain. An EPG uses fvRsDomAtt to this domain so it can use the VLAN pool.</td></tr><tr><td>Global</td><td class="mono">1</td><td>Fabric → Access Policies → Pools → VLAN</td><td>ESXi_VLP (static 300–399)</td><td class="mono">fvnsVlanInstP, fvnsEncapBlk</td><td class="mono">uni/infra/vlanns-[ESXi_VLP]-static</td><td>Static VLAN pool. The domain points at it through infraRsVlanNs. Range 300–399.</td></tr></tbody></table></div>
+
+    <h2 id="yaml">Ansible and nac-aci YAML</h2>
+    <p>The Ansible below follows the official <span class="mono">cisco.aci</span> module options and the names from the notes. The login secret is the placeholder <span class="mono">{{ apic_password }}</span>. The port-block name <span class="mono">eth1-5</span> was not independently labelled on the notes; the range eth1/1–5 was. A PC or VPC group would set <span class="mono">lag_type: link</span> or <span class="mono">lag_type: node</span> and would create <span class="mono">infra:AccBndlGrp</span>.</p>
+    <pre class="yaml">---
+# DevLab example that builds step 5 (the access port policy group)
+# and steps 6/7 (the selector and port block) from the source notes.
+# These names are from the sandbox chain, not from ARR-FABRIC.
+# The login secret is a placeholder. Do not put a real value here.
+
+- name: Create the leaf access port policy group (5)
+  cisco.aci.aci_interface_policy_leaf_policy_group:
+    host: &quot;{{ apic_host }}&quot;
+    username: &quot;{{ apic_username }}&quot;
+    password: &quot;{{ apic_password }}&quot;
+    validate_certs: false
+    lag_type: leaf
+    policy_group: Port_Std_ESXi_Host
+    link_level_policy: 10Gb_INTPOL
+    lldp_policy: LLDP_Enable_INTPOL
+    aep: PHY_AEP
+    state: present
+  delegate_to: localhost
+
+- name: Associate Eth1_1-5 on L101_L102_IPR with that group (6/7)
+  cisco.aci.aci_access_port_to_interface_policy_leaf_profile:
+    host: &quot;{{ apic_host }}&quot;
+    username: &quot;{{ apic_username }}&quot;
+    password: &quot;{{ apic_password }}&quot;
+    validate_certs: false
+    interface_profile: L101_L102_IPR
+    access_port_selector: Eth1_1-5
+    port_blk: eth1-5
+    from_port: &quot;1&quot;
+    to_port: &quot;5&quot;
+    policy_group: Port_Std_ESXi_Host
+    state: present
+  delegate_to: localhost</pre>
+    <p>The equivalent nac-aci <span class="mono">access_policies</span> section for that same DevLab chain:</p>
+    <pre class="yaml"># nac-aci access_policies section equivalent to the DevLab chain.
+# Names come from the source notes. This is not the ARR-FABRIC model.
+---
+apic:
+  access_policies:
+    vlan_pools:
+    - name: ESXi_VLP
+      allocation: static
+      ranges:
+      - from: 300
+        to: 399
+        allocation: static
+    physical_domains:
+    - name: Standalone_ESXi_PHY
+      vlan_pool: ESXi_VLP
+      vlan_pool_allocation: static
+    aaeps:
+    - name: PHY_AEP
+      physical_domains:
+      - Standalone_ESXi_PHY
+    interface_policies:
+      link_level_policies:
+      - name: 10Gb_INTPOL
+      lldp_policies:
+      - name: LLDP_Enable_INTPOL
+        admin_rx_state: true
+        admin_tx_state: true
+    leaf_interface_policy_groups:
+    - name: Port_Std_ESXi_Host
+      type: access
+      aaep: PHY_AEP
+      link_level_policy: 10Gb_INTPOL
+      lldp_policy: LLDP_Enable_INTPOL
+    leaf_interface_profiles:
+    - name: L101_L102_IPR
+      selectors:
+      - name: Eth1_1-5
+        policy_group: Port_Std_ESXi_Host
+        port_blocks:
+        - name: eth1-5
+          from_module: 1
+          from_port: 1
+          to_module: 1
+          to_port: 5
+    leaf_switch_policy_groups:
+    - name: Default_SPG
+      # The source diagram listed the default STP and BFD policies on this
+      # group. Binding field names are omitted here rather than invented.
+    leaf_switch_profiles:
+    - name: L-101_L102
+      interface_profiles:
+      - L101_L102_IPR
+      selectors:
+      - name: L-101_L102
+        policy_group: Default_SPG
+        node_blocks:
+        - name: block-101-102
+          from: 101
+          to: 102</pre>
+    <p>For comparison, this is the <span class="mono">access_policies</span> section implied by the ARR-FABRIC post-t6v4p files (not the DevLab names):</p>
+    <pre class="yaml"># access_policies as collected from ARR-FABRIC after Cursor_Tenant6 v4
+# (post-t6v4p, apply 15 November 2026, 12:47 AM AEDT, HTTP 200, SHA 2e89245602689a8e0bc1bcd7a3729a05de50115fb648e43e1b6e44d32dc30769).
+# Built-in system-* interface policies are omitted. Role &quot;internal&quot; on
+# the VLAN range is from the NetBox export, not from the APIC encap block.
+---
+apic:
+  access_policies:
+    vlan_pools:
+    - name: Cursor_Tenant6_vlans
+      allocation: static
+      ranges:
+      - from: 1601
+        to: 1603
+        allocation: static
+        role: internal
+    physical_domains:
+    - name: phys
+    - name: Cursor_Tenant6_phys
+      vlan_pool: Cursor_Tenant6_vlans
+      vlan_pool_allocation: static
+    aaeps:
+    - name: default
+    - name: Cursor_Tenant6_aaep
+      physical_domains:
+      - Cursor_Tenant6_phys
+    leaf_interface_policy_groups:
+    - name: Cursor_Tenant6_ipg
+      type: access
+      aaep: Cursor_Tenant6_aaep
+    leaf_interface_profiles:
+    - name: Cursor_Tenant6_ifsel_101_102
+      selectors:
+      - name: eth1-5-n9kv01
+        policy_group: Cursor_Tenant6_ipg
+        port_blocks:
+        - name: eth1-5
+          from_module: 1
+          from_port: 5
+          to_module: 1
+          to_port: 5
+    - name: Cursor_Tenant6_ifsel_103_104
+      selectors:
+      - name: eth1-5-n9kv03
+        policy_group: Cursor_Tenant6_ipg
+        port_blocks:
+        - name: eth1-5
+          from_module: 1
+          from_port: 5
+          to_module: 1
+          to_port: 5
+    leaf_switch_profiles:
+    - name: Cursor_Tenant6_sw_101
+      interface_profiles: [Cursor_Tenant6_ifsel_101_102]
+      selectors:
+      - name: leaf-101
+        node_blocks:
+        - name: leaf-101
+          from: 101
+          to: 101
+    - name: Cursor_Tenant6_sw_102
+      interface_profiles: [Cursor_Tenant6_ifsel_101_102]
+      selectors:
+      - name: leaf-102
+        node_blocks:
+        - name: leaf-102
+          from: 102
+          to: 102
+    - name: Cursor_Tenant6_sw_103
+      interface_profiles: [Cursor_Tenant6_ifsel_103_104]
+      selectors:
+      - name: leaf-103
+        node_blocks:
+        - name: leaf-103
+          from: 103
+          to: 103
+    - name: Cursor_Tenant6_sw_104
+      interface_profiles: [Cursor_Tenant6_ifsel_103_104]
+      selectors:
+      - name: leaf-104
+        node_blocks:
+        - name: leaf-104
+          from: 104
+          to: 104</pre>
+
+    <h2 id="ports">Port mapping from the notes</h2>
+    <p>These interface profiles and port blocks were listed on the source notes. They belong to the Heroes / SnV sandbox style of lab, not to ARR-FABRIC. The example DN for Heroes_corporate_external was written on the notes; the other DNs follow the same pattern. The published simulator <span class="mono">access_policies.nac.yaml</span> on this site uses the same profile names and port ranges, and also has further profiles (for example SnV_server1 and Heroes_FI-2A) that were not on the list you sent.</p>
+    <div class="table-wrap"><table class="ap-table"><thead><tr><th>Interface profile</th><th>Ports</th><th>Notes</th><th>Example DN</th></tr></thead><tbody><tr><td class="mono">SnV_server2</td><td class="mono">1/1</td><td>Access port on the SnV / Heroes-style lab.</td><td class="mono">uni/infra/accportprof-SnV_server2/hports-ethernet1_1-typ-range</td></tr><tr><td class="mono">SnV_FI-1A</td><td class="mono">1/5–8</td><td>Four-port block; the simulator model uses a VPC policy group of the same name.</td><td class="mono">uni/infra/accportprof-SnV_FI-1A/hports-ethernet1_5-8-typ-range</td></tr><tr><td class="mono">SnV_phys_act_pass</td><td class="mono">1/2–4</td><td>Three-port block on the SnV physical path.</td><td class="mono">uni/infra/accportprof-SnV_phys_act_pass/hports-ethernet1_2-4-typ-range</td></tr><tr><td class="mono">Heroes_corporate_external</td><td class="mono">1/47</td><td>Single port. DN given on the source notes.</td><td class="mono">uni/infra/accportprof-Heroes_corporate_external/hports-ethernet1_47-typ-range</td></tr><tr><td class="mono">Heroes_phys_act_pass</td><td class="mono">1/22–24</td><td>Three-port block on the Heroes physical path.</td><td class="mono">uni/infra/accportprof-Heroes_phys_act_pass/hports-ethernet1_22-24-typ-range</td></tr></tbody></table></div>
+
+    <h2 id="arr-check">ARR-FABRIC cross-check (read-only, from files on the box)</h2>
+    <p>No APIC was contacted. The columns below compare the DevLab names with two sources that were already on the box:</p>
+    <ul>
+      <li>NetBox SSoT export at <span class="mono">/workspace/arr/arr-netbox/snapshots/20261114-224027/data.json</span>, pulled 14 November 2026, 10:40:27 PM AEDT (Australia/Melbourne, UTC+11). Read-only REST from NetBox 4.7.3 (http://localhost:8001) with netbox_aci_plugin 0.5.0. GET only. Fabric name in that export: Fabric1. Plugin 0.5.0, NetBox 4.7.3. That snapshot includes <span class="mono">physical_domains</span>, <span class="mono">vlan_pools</span> and <span class="mono">vlan_pool_ranges</span>. It does not include AAEPs, interface policy groups, interface profiles or switch profiles.</li>
+      <li>Cursor_Tenant6 v4 post-check files under <span class="mono">/workspace/arr/provisioning/Cursor_Tenant6-fix-v4-arr-20261115-0036/post-t6v4p</span>, taken after the apply at 15 November 2026, 12:47 AM AEDT (HTTP 200, payload SHA <span class="mono">2e89245602689a8e0bc1bcd7a3729a05de50115fb648e43e1b6e44d32dc30769</span>). The matching pre-check directory is <span class="mono">/workspace/arr/provisioning/Cursor_Tenant6-fix-v4-arr-20261115-0036/pre-t6v4p</span>.</li>
+    </ul>
+    <p>The published yaml-model/access_policies.nac.yaml was collected on 14 November 2026, 5:52 PM AEDT, before Cursor_Tenant6 v4, and only lists the default AAEP and the phys physical domain.</p>
+    <p>Just before the v4 apply, pre-t6v4p had VLAN pools totalCount 0, interface policy groups 0, leaf interface profiles 0, leaf switch profiles 0, AAEPs default, and physical domains phys. The Cursor_Tenant6 access objects therefore appear in the post-check because of that apply. The Cursor_tenant5 L3Out apply at 7:22 PM AEDT on 14 November 2026 was rejected (unknown attribute <span class="mono">descr</span> on <span class="mono">l3extDomP</span>), and NetBox was not marked deployed for it. Comments on the NetBox pool <span class="mono">cursor5_l3out_vlans</span> mention intended objects <span class="mono">cursor5_l3_dom</span>, <span class="mono">cursor5_l3out_aaep</span>, <span class="mono">cursor5_l3out_ipg</span> and <span class="mono">cursor5_l3out_ifsel</span>. Those names are not in the post-t6v4p access-policy class files, and pre-t6v4p already had zero VLAN pools and zero interface policy groups, so they were not on the fabric in these collected files.</p>
+    <div class="table-wrap"><table class="ap-table"><thead><tr><th>Object type</th><th>DevLab example</th><th>That name on ARR?</th><th>ARR names (post-t6v4p)</th><th>NetBox export</th><th>Notes</th></tr></thead><tbody><tr><td>VLAN pool</td><td class="mono">ESXi_VLP (static 300–399)</td><td><span class="chip no">Not present</span></td><td class="mono">Cursor_Tenant6_vlans</td><td>Cursor_Tenant6_vlans, cursor5_l3out_vlans</td><td>ARR has Cursor_Tenant6_vlans, static 1601–1603 (APIC encap block vlan-1601-1603). NetBox also has cursor5_l3out_vlans (static 3051, role external). That pool was not in post-t6v4p fvnsVlanInstP, and pre-t6v4p fvnsVlanInstP totalCount was 0.</td></tr><tr><td>Physical domain</td><td class="mono">Standalone_ESXi_PHY</td><td><span class="chip no">Not present</span></td><td class="mono">phys, Cursor_Tenant6_phys</td><td>Cursor_Tenant6_phys</td><td>ARR has phys (uni/phys-phys) and Cursor_Tenant6_phys, which is bound to Cursor_Tenant6_vlans through infraRsVlanNs. NetBox exported only Cursor_Tenant6_phys (not the default phys domain).</td></tr><tr><td>AAEP</td><td class="mono">PHY_AEP</td><td><span class="chip no">Not present</span></td><td class="mono">default, Cursor_Tenant6_aaep</td><td>not in this NetBox export (no AAEP list in the snapshot keys)</td><td>ARR has default (uni/infra/attentp-default) and Cursor_Tenant6_aaep, which has infraRsDomP to Cursor_Tenant6_phys.</td></tr><tr><td>Interface policy group</td><td class="mono">Port_Std_ESXi_Host (infraAccPortGrp)</td><td><span class="chip no">Not present</span></td><td class="mono">Cursor_Tenant6_ipg</td><td>not in this NetBox export</td><td>ARR has Cursor_Tenant6_ipg (access, non-vPC). infraRsAttEntP is formed to Cursor_Tenant6_aaep. Link-level and LLDP relations on that IPG were not in the collected class files (the AccPortGrp query had no subtree). No infraAccBndlGrp was in infra.json (none).</td></tr><tr><td>Link Level policy</td><td class="mono">10Gb_INTPOL</td><td><span class="chip no">Not present</span></td><td class="mono">system and default policies only: system-link-level-25G-auto, system-link-level-1G-auto, system-link-level-10G-auto, default, system-link-level-400G-auto, system-link-level-100G-auto, system-link-level-40G-auto, system-link-level-100M-auto</td><td>not in this NetBox export</td><td>ARR has fabricHIfPol default and the system-link-level-* set, including system-link-level-10G-auto. There is no policy named 10Gb_INTPOL.</td></tr><tr><td>LLDP policy</td><td class="mono">LLDP_Enable_INTPOL</td><td><span class="chip no">Not present</span></td><td class="mono">system-lldp-enabled, default, system-lldp-disabled</td><td>not in this NetBox export</td><td>ARR has lldpIfPol default, system-lldp-enabled and system-lldp-disabled. There is no policy named LLDP_Enable_INTPOL.</td></tr><tr><td>Leaf interface profile / selector</td><td class="mono">L101_L102_IPR / Eth1_1-5 (eth1/1–5)</td><td><span class="chip no">Not present</span></td><td class="mono">Cursor_Tenant6_ifsel_101_102, Cursor_Tenant6_ifsel_103_104 · selectors: eth1-5-n9kv03, eth1-5-n9kv01</td><td>not in this NetBox export</td><td>ARR has Cursor_Tenant6_ifsel_101_102 (selector eth1-5-n9kv01, port block eth1-5 = eth1/5 only) and Cursor_Tenant6_ifsel_103_104 (selector eth1-5-n9kv03, same port block). Both selectors have infraRsAccBaseGrp to Cursor_Tenant6_ipg. That is one port, not eth1/1–5.</td></tr><tr><td>Leaf switch profile</td><td class="mono">L-101_L102 (nodes 101–102 in one profile)</td><td><span class="chip no">Not present</span></td><td class="mono">Cursor_Tenant6_sw_104, Cursor_Tenant6_sw_103, Cursor_Tenant6_sw_102, Cursor_Tenant6_sw_101</td><td>not in this NetBox export</td><td>ARR has four profiles, one node each: Cursor_Tenant6_sw_101 to _104. 101 and 102 use ifsel_101_102; 103 and 104 use ifsel_103_104. infraNodeBlk uses from_/to_ equal to that single node id.</td></tr><tr><td>Leaf switch policy group</td><td class="mono">Default_SPG</td><td><span class="chip no">Not in collected classes</span></td><td class="mono">no infraAccNodePGrp in infra.json</td><td>not in this NetBox export</td><td>post-t6v4p infra.json contains stpInstPol default and bfdIpv4InstPol default, but no infraAccNodePGrp object. Default_SPG was not found.</td></tr></tbody></table></div>
+    <div class="expect">
+      <p><strong>What this does not show.</strong> This page does not claim a live data plane. The Cursor_Tenant6 v4 post-check already recorded the four path attachments as unformed and found no <span class="mono">vlanCktEp</span> for VLAN 1601 or 1603. Interface policy bindings (Link Level, LLDP) on <span class="mono">Cursor_Tenant6_ipg</span> were not in the collected class files, so they are not marked present or absent. Classes that were not pulled (for example <span class="mono">l3extDomP</span> in the T6 post-check set) are not treated as proof of absence except where the pre-check of a related class, such as <span class="mono">fvnsVlanInstP</span>, already covered them.</p>
+    </div>
+    
+      <p class="meta">Fabric: <strong>ARR-FABRIC</strong> · APIC version: <strong>6.0(2h)</strong></p>
+      <p class="snapshot">Page built: <strong>15 November 2026, 6:20 PM AEDT</strong></p>
+  </main>
+  <footer class="wrap">
+    <p class="footer">Built from two DevLab / sandbox access-policy photographs (not ARR-FABRIC), cross-checked against the NetBox export at /workspace/arr/arr-netbox/snapshots/20261114-224027/data.json (pulled 14 November 2026, 10:40:27 PM AEDT) and the Cursor_Tenant6 v4 post-check files under /workspace/arr/provisioning/Cursor_Tenant6-fix-v4-arr-20261115-0036/post-t6v4p (apply 15 November 2026, 12:47 AM AEDT, SHA 2e89245602689a8e0bc1bcd7a3729a05de50115fb648e43e1b6e44d32dc30769). Source photographs were not on the box at the stated attachment paths at build time; the SVG and tables follow the recorded notes. No APIC or NetBox writes. No credentials, tokens or session IDs are included.</p>
+  </footer>
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/"}}</script>
+<script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const n=s=>String(s||"").split("?")[0].replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/";const p=n(location.pathname);const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc){const pt=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Melbourne",hour:"2-digit",minute:"2-digit",hour12:false,hourCycle:"h23",timeZoneName:"short"}).formatToParts(new Date(d.updated_utc));const g=t=>(pt.find(x=>x.type===t)||{}).value||"";const tz=(g("timeZoneName")||"AEDT").replace("GMT+11","AEDT").replace("GMT+10","AEST");e.textContent=" (data as of "+g("hour")+":"+g("minute")+" "+tz+")"}}})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script>
+  <script src="sort.js" defer></script>
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:8px 0 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:6px;margin:0;padding:8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
+nav.site.im a.mi{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:auto;min-height:44px;min-width:0;padding:8px 10px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a)}
+nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:visible;text-overflow:unset;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.25;text-align:left}
+nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:22px;height:22px;padding:0 5px;border-radius:999px;font-size:16px;font-weight:800;line-height:1;background:#0f172a;color:#fff}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc;color:#0f172a}
+nav.site.im a.mi.on .im-seq{background:#fff;color:#1d4ed8}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px;flex:none}#sg-link,#tt-btn,#mm-link{height:36px;border-radius:18px}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Cursor_Tenant6","/ARR/provisioning/cursor-tenant6/","🚀"],["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"],["ရှေ့သို့ချီ","/roadmap/forward/","⏩"],["Time Map 2026–2030","/roadmap/forward/time-map/","🗓️"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["ARR-LargeTopology","/ARR-LargeTopology/","🗺️",[["Overview","/ARR-LargeTopology/","🗺️"],["Nodes","/ARR-LargeTopology/nodes.html","🖥️"],["Serials","/ARR-LargeTopology/serials.html","🔢"],["Mgmt IPs","/ARR-LargeTopology/mgmt-ips.html","🌐"],["Links","/ARR-LargeTopology/links.html","🔗"],["Tenants","/ARR-LargeTopology/tenants.html","🏢"],["VRFs","/ARR-LargeTopology/vrfs.html","🧭"],["BDs","/ARR-LargeTopology/bds.html","🌉"],["Subnets","/ARR-LargeTopology/subnets.html","🔢"],["EPGs","/ARR-LargeTopology/epgs.html","🎯"],["Leaf VNIs","/ARR-LargeTopology/vni.html","💠"],["VXLAN","/ARR-LargeTopology/vxlan/","🧵"],["Access policies","/ARR-LargeTopology/access-policies/","🧱"],["YAML model","/ARR-LargeTopology/yaml-model/","📄"],["IAC files","/ARR-LargeTopology/iac-files/","📦"],["ARR-netbox","/ARR-LargeTopology/arr-netbox/","🗄️"],["Hardware monitor","/ARR-LargeTopology/hw-monitor/","📟"],["Site map","/ARR-LargeTopology/site-map/","🌳"],["Provisioning","/ARR-LargeTopology/provisioning/","🚀"],["Test explain","/ARR-LargeTopology/test-explain/","🧪"]]],["zFrontier","/zfrontier/","🌠",[["zFrontier","/zfrontier/","🌠"],["Farzad","/zfrontier/farzad/","📺"],["SpaceX vs Tesla shares","/zfrontier/shares/","📈"],["Optimus","/zfrontier/optimus/","🤖"],["Gigafactory","/zfrontier/gigafactory/","🏭"],["FSD versions","/zfrontier/fsd-versions/","🛣️"],["Liquid cooling","/zfrontier/liquid-cooling/","💧"],["SpaceX Tracking","/zfrontier/spacex/","🚀"],["CyberCab","/zfrontier/cybercab/","🚕"],["AI FineTune Pod","/zfrontier/ai-finetune-pod/","🎛️"],["MCP Servers","/zfrontier/mcp-servers/","🔌"],["NaC CLI","/zfrontier/nac-cli/","🧰"],["GPU Workflow","/zfrontier/3gpu-ai-workflow/","🧮"],["MWMESH","/zfrontier/mwmesh/","📡"],["Notebooks","/zfrontier/notebooks/","📓"],["RAG documents","/zfrontier/rag-documents/","📚"],["Foundation-Sec-8B","/zfrontier/foundation-sec-8b/","🛡️"],["Terafab","/zfrontier/terafab/","💠"],["3DiffsVXLAN","/zfrontier/3diffsvxlan/","🔀"],["ARR-LargePod","/zfrontier/arr-largepod/","🏗️"],["ACI GUI Forms","/zfrontier/ACI-GUI-Forms/","📋"],["Nvidia A100 & H100","/zfrontier/Nvidia-A100-H100/","🟩"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"]]],["ACI GUI Forms","/aci-gui-forms/WIP/gui-map/","📝",[["GUI Map","/aci-gui-forms/WIP/gui-map/","🗺️"]]],["ACI GUI","/aci-gui/","🖥️",[["Create Pod Policy Group","/aci-gui/create-pod-policy-group/","🧬"],["Create Bridge Domain (step 3)","/aci-gui/create-bridge-domain-step3/","🌉"],["Create Subnet","/aci-gui/create-subnet/","🔢"],["Create Application Profile","/aci-gui/create-application-profile/","🧩"],["Create Management EPG","/aci-gui/create-management-epg/","🛠️"],["Static Node Management Addresses","/aci-gui/static-node-management-addresses/","📍"],["Create Fabric Policies","/aci-gui/create-fabric-policies/","🧵"],["Create Access Policies","/aci-gui/create-access-policies/","🔐"],["Create VLAN Pool","/aci-gui/create-vlan-pool/","🏷️"],["Create Physical Domain","/aci-gui/create-physical-domain/","🏛️"],["Create Access Interface Policy Group","/aci-gui/create-access-interface-policy-group/","🔌"],["Create PC Interface Policy Group","/aci-gui/create-pc-interface-policy-group/","🔀"],["Interface Wizard for vPC","/aci-gui/interface-wizard-vpc/","🪄"],["Create VMM Domain","/aci-gui/create-vmm-domain/","💻"],["vCenter Networking","/aci-gui/vcenter-networking/","🖥️"],["Create Tenant","/aci-gui/create-tenant/","🏢"],["Create L3Out","/aci-gui/create-l3out/","🌐"],["L3Out Contracts","/aci-gui/l3out-contracts/","📜"],["Create Bridge Domain","/aci-gui/create-bridge-domain/","🌉"],["Bridge Domain","/aci-gui/bridge-domain/","🌉"],["Mgmt Bridge Domain","/aci-gui/mgmt-bridge-domain/","🔧"],["DHCP Relay","/aci-gui/dhcp-relay/","📡"],["Management Application Profile","/aci-gui/management-application-profile/","📦"],["Application Profile (web + app)","/aci-gui/application-profile/","🧩"],["Create VRF","/aci-gui/create-vrf/","🧭"],["Create Endpoint Group","/aci-gui/create-endpoint-group/","🎯"],["Contracts Between Tenants","/aci-gui/contracts-between-tenants/","🤝"],["Create Filter","/aci-gui/create-filter/","🧹"],["Create Contract","/aci-gui/create-contract/","📃"],["Create Management Contracts","/aci-gui/create-management-contracts/","📑"],["Mgmt PortGroup to VM","/aci-gui/mgmt-portgroup-to-vm/","🧷"],["Pod Policy Group","/aci-gui/pod-policy-group/","🕒"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=(seq?String(seq)+'. ':'')+e[0];if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks ›';r2.appendChild(t);
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1))});r2.appendChild(pills);n.appendChild(r2)}}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+</body>
+</html>
