@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:auto;
+  min-height:44px;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:auto;min-height:44px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:visible;
+  text-overflow:unset;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.25;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:22px;
+  height:22px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:16px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:#1d4ed8!important;
+}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BD GIPo, VRF GIPo and FTAG trees</title>
+  <meta name="description" content="ARR ACI fabric report — read-only snapshot.">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f4f6f8;
+      --bg-accent: #e8eef4;
+      --card: #ffffff;
+      --ink: #15202b;
+      --muted: #5b6b7c;
+      --line: #d5dee7;
+      --accent: #0e7490;
+      --accent-soft: #e0f4f8;
+      --link: #0e7490;
+      --good: #047857;
+      --fair: #b45309;
+      --poor: #b91c1c;
+      --crit: #b91c1c;
+      --major: #c2410c;
+      --minor: #a16207;
+      --warn: #a16207;
+      --info: #0369a1;
+      --cleared: #047857;
+      --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+      --radius: 14px;
+      --mono: "IBM Plex Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+      --sans: "Source Sans 3", "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1220;
+        --bg-accent: #111827;
+        --card: #152033;
+        --ink: #e6edf5;
+        --muted: #93a4b8;
+        --line: #2a3b52;
+        --accent: #5eead4;
+        --accent-soft: #12313a;
+        --link: #5eead4;
+        --good: #34d399;
+        --fair: #fbbf24;
+        --poor: #f87171;
+        --crit: #f87171;
+        --major: #fb923c;
+        --minor: #fbbf24;
+        --warn: #fbbf24;
+        --info: #7dd3fc;
+        --cleared: #34d399;
+        --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--sans);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, var(--bg-accent), transparent 60%),
+        var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    header {
+      padding: 2.2rem 1.5rem 1.4rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem 3.5rem; }
+    header .wrap { padding-bottom: 0; }
+    .kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.72rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin: 0 0 0.35rem;
+    }
+    h1 {
+      font-size: clamp(1.7rem, 3vw, 2.25rem);
+      margin: 0 0 0.45rem;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+    }
+    .meta, .footer, .note, .muted, .card-sub, .card-label, .empty, .na, .dn {
+      color: var(--muted);
+    }
+    .meta { margin: 0 0 0.25rem; }
+    .snapshot { margin: 0; font-size: 0.98rem; }
+    h2 {
+      margin: 2.4rem 0 0.85rem;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.85rem;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem 1.05rem 0.95rem;
+      box-shadow: var(--shadow);
+    }
+    .card-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 650;
+    }
+    .card-value {
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-top: 0.2rem;
+    }
+    .card-value strong { font-weight: 700; }
+    .card-sub { font-size: 0.78rem; margin-top: 0.25rem; }
+    .unit { font-size: 0.9rem; color: var(--muted); font-weight: 600; margin-left: 0.15rem; }
+    .health.good, .sev.cleared { color: var(--good); }
+    .health.fair { color: var(--fair); }
+    .health.poor, .sev.critical { color: var(--poor); }
+    .sev.major { color: var(--major); }
+    .sev.warning, .sev.minor { color: var(--warn); }
+    .sev.info { color: var(--info); }
+    .table-wrap {
+      overflow-x: auto;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.93rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.65rem 0.85rem;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    th {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      font-weight: 700;
+      background: color-mix(in srgb, var(--card) 80%, var(--bg-accent));
+    }
+    tr:last-child td { border-bottom: 0; }
+    .mono { font-family: var(--mono); font-size: 0.86em; }
+    .num { font-variant-numeric: tabular-nums; text-align: right; font-family: var(--mono); }
+    th:nth-child(3) { text-align: left; }
+    table thead th:nth-child(3) { /* keep */ }
+    .pill {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      font-size: 0.78rem;
+      font-weight: 650;
+      background: color-mix(in srgb, var(--card) 70%, var(--bg-accent));
+    }
+    .pill.role-controller { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+    .pill.role-leaf { background: color-mix(in srgb, var(--good) 16%, var(--card)); color: var(--good); border-color: transparent; }
+    .pill.role-spine { background: color-mix(in srgb, var(--info) 16%, var(--card)); color: var(--info); border-color: transparent; }
+    .pill.sev.critical { background: color-mix(in srgb, var(--crit) 16%, var(--card)); color: var(--crit); border-color: transparent; }
+    .pill.sev.major { background: color-mix(in srgb, var(--major) 16%, var(--card)); color: var(--major); border-color: transparent; }
+    .pill.sev.warning, .pill.sev.minor { background: color-mix(in srgb, var(--warn) 16%, var(--card)); color: var(--warn); border-color: transparent; }
+    .tenant-block {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem 1.15rem 1.1rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1rem;
+    }
+    .tenant-block h3 { margin: 0 0 0.85rem; font-size: 1.05rem; }
+    .tenant-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 0.85rem 1.25rem;
+    }
+    .tenant-block h4 {
+      margin: 0 0 0.35rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+    }
+    .count {
+      font-family: var(--mono);
+      font-size: 0.85em;
+      color: var(--ink);
+    }
+    .obj-list { list-style: none; margin: 0; padding: 0; }
+    .obj-list li { margin: 0 0 0.35rem; }
+    .dn { display: block; font-family: var(--mono); font-size: 0.75rem; word-break: break-all; }
+    .empty, .na { font-style: italic; }
+    .note { font-size: 0.9rem; margin: 0.85rem 0 0; }
+    footer {
+      margin-top: 2.8rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--line);
+      font-size: 0.85rem;
+    }
+    a { color: var(--link); }
+  
+    a { color: var(--link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .card-value a, .card-sub a, .count a, a.count, td a, .health a, a.health {
+      color: inherit;
+    }
+    .card-value a:hover, a.count:hover, .count a:hover { text-decoration: underline; }
+    .crumb {
+      font-size: 0.92rem;
+      margin: 0 0 0.85rem;
+      color: var(--muted);
+    }
+    .crumb ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.3rem 0.15rem; }
+    .crumb li { display: inline; }
+    .crumb li:not(:last-child)::after { content: "/"; margin: 0 0.4rem; color: var(--muted); }
+    .crumb a { color: var(--link); }
+    .back { margin: 0 0 1rem; }
+    dl.attrs {
+      display: grid;
+      grid-template-columns: minmax(11rem, 15rem) 1fr;
+      gap: 0.45rem 1.1rem;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem 1.15rem;
+      box-shadow: var(--shadow);
+      margin: 0 0 1.4rem;
+    }
+    dl.attrs dt { color: var(--muted); font-size: 0.85rem; padding-top: 0.1rem; }
+    dl.attrs dd { margin: 0; word-break: break-word; }
+    h2 .count, h3 .count { font-weight: 600; }
+    section[id] { scroll-margin-top: 1rem; }
+
+  
+    .banner { border: 1px solid var(--line); border-radius: var(--radius); padding: 0.85rem 1.05rem; background: var(--accent-soft); margin: 0 0 1.2rem; }
+    .banner.warn { background: color-mix(in srgb, var(--warn) 14%, var(--card)); }
+    .banner.plan { background: color-mix(in srgb, var(--fair) 12%, var(--card)); border-color: color-mix(in srgb, var(--fair) 40%, var(--line)); }
+    .banner strong.missing { color: var(--poor); }
+    .placeholder { display: inline-block; padding: 0 0.35rem; border-radius: 4px; background: color-mix(in srgb, var(--warn) 18%, var(--card)); font-family: var(--mono); font-size: 0.86em; }
+    .tree, .tree ul { list-style: none; margin: 0; padding: 0; }
+    .tree ul { margin-left: 1.1rem; border-left: 1px solid var(--line); padding-left: 0.9rem; }
+    .tree li { margin: 0.28rem 0; }
+    .tree .meta-inline { color: var(--muted); font-size: 0.86rem; }
+    tr.hl td { background: color-mix(in srgb, var(--warn) 16%, var(--card)); }
+    .tag-post { display: inline-block; margin-left: 0.35rem; padding: 0.05rem 0.45rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; background: var(--accent-soft); color: var(--accent); }
+    .up { color: var(--good); font-weight: 650; }
+    .down { color: var(--muted); }
+    nav.local { margin: 0.6rem 0 1.1rem; display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    nav.local a { display: inline-block; padding: 0.2rem 0.65rem; border-radius: 999px; border: 1px solid var(--line); font-size: 0.85rem; font-weight: 650; }
+
+  </style>
+
+<style>
+  p.ver{margin:0.15rem 0 0;color:var(--muted);font-size:0.92rem}
+  body.bd-gipo-ftag{--site-content-max:1500px}
+  body.bd-gipo-ftag header .wrap,
+  body.bd-gipo-ftag main.wrap,
+  body.bd-gipo-ftag footer.wrap,
+  body.bd-gipo-ftag nav.site.im{max-width:1500px !important}
+  .toc{display:flex;flex-wrap:wrap;gap:0.45rem;margin:0.3rem 0 1rem}
+  .toc a{display:inline-block;padding:0.2rem 0.65rem;border-radius:999px;border:1px solid var(--line);font-size:0.85rem;font-weight:650}
+  .callout,.expect{border:1px solid var(--line);border-radius:var(--radius,10px);padding:0.85rem 1.05rem;background:var(--card);margin:0 0 1.15rem}
+  .expect{background:color-mix(in srgb,var(--warn,#ca8a04) 12%,var(--card));border-color:color-mix(in srgb,var(--warn,#ca8a04) 40%,var(--line))}
+  .callout ul,.expect ul,section ul,ol.steps{margin:0.35rem 0 0;padding-left:1.2rem}
+  .callout li,.expect li,section li,ol.steps li{margin:0.25rem 0}
+  .diagram{margin:0.4rem 0 1.3rem;padding:0.55rem 0.55rem 0.2rem;border:1px solid var(--line);border-radius:var(--radius,10px);background:var(--card);overflow-x:auto}
+  .gf-svg{display:block;min-width:1180px;color:var(--ink)}
+  .gf-svg .tb{stroke-width:1.4}
+  .gf-svg .tb-s{fill:color-mix(in srgb,#0369a1 16%,var(--card,#fff));stroke:#0369a1}
+  .gf-svg .tb-l{fill:color-mix(in srgb,var(--accent,#0e7490) 16%,var(--card,#fff));stroke:var(--accent,#0e7490)}
+  .gf-svg .tb-t{fill:color-mix(in srgb,#c2410c 14%,var(--card,#fff));stroke:#c2410c}
+  .gf-svg .tb-v{fill:color-mix(in srgb,#1d4ed8 14%,var(--card,#fff));stroke:#1d4ed8}
+  .gf-svg .tb-b{fill:color-mix(in srgb,#15803d 14%,var(--card,#fff));stroke:#15803d}
+  .gf-svg .tb-f{fill:color-mix(in srgb,#7c3aed 16%,var(--card,#fff));stroke:#7c3aed}
+  .gf-svg .tb-p{fill:color-mix(in srgb,var(--fair,#ca8a04) 14%,var(--card,#fff));stroke:color-mix(in srgb,var(--fair,#ca8a04) 65%,var(--line))}
+  .gf-svg .tb-h{fill:color-mix(in srgb,#57534e 12%,var(--card,#fff));stroke:#57534e}
+  .gf-svg .tn{fill:var(--ink);font:650 13px/1.15 system-ui,sans-serif}
+  .gf-svg .tc{fill:var(--ink);font:600 10.5px/1.15 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .gf-svg .te{fill:var(--muted);font:500 10.5px/1.2 system-ui,sans-serif}
+  .gf-svg .th{fill:var(--ink);font:700 16px/1 system-ui,sans-serif}
+  .gf-svg .tl{stroke:var(--muted);stroke-width:1.4;fill:none}
+  .gf-svg .tl-dash{stroke:var(--muted);stroke-width:1.2;stroke-dasharray:5 4;fill:none}
+  .gf-svg .tl-flow{stroke:#7c3aed;stroke-width:2;fill:none}
+  .gf-svg .tl-arp{stroke:#c2410c;stroke-width:2;fill:none}
+  .gf-svg .tlbl{fill:var(--muted);font:600 10px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .gf-svg .step{fill:#7c3aed;stroke:none}
+  .gf-svg .step-t{fill:#fff;font:700 11px/1 system-ui,sans-serif}
+  table.gf-table{font-size:0.92rem}
+  table.gf-table td,table.gf-table th{vertical-align:top}
+  table.gf-table td.mono,table.gf-table .mono{font-family:var(--mono);font-size:0.86rem}
+  table.gf-table thead th{position:sticky;top:0;background:var(--th-bg,var(--card));z-index:1}
+  .chip{display:inline-block;padding:0.05rem 0.5rem;border-radius:999px;font-size:0.75rem;font-weight:700;letter-spacing:0.03em;border:1px solid var(--line)}
+  .chip.up{background:color-mix(in srgb,var(--good) 18%,var(--card));color:var(--good);border-color:transparent}
+  .chip.miss{background:color-mix(in srgb,var(--warn,#ca8a04) 18%,var(--card));color:var(--warn,#ca8a04);border-color:transparent}
+  .chip.na{background:color-mix(in srgb,var(--muted) 14%,var(--card));color:var(--muted)}
+  pre.cli,pre.yaml{overflow-x:auto;padding:0.85rem 1rem;border:1px solid var(--line);border-radius:var(--radius,10px);background:color-mix(in srgb,var(--card) 92%,#000);font-size:0.86rem;line-height:1.45}
+  h2{margin-top:1.7rem}
+</style>
+
+</head>
+<body class="bd-gipo-ftag">
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+<!-- site-menu v1 --><nav class="site"><a href="/">Home</a></nav>
+
+<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:#bbb">Page updated 15 Nov 2026 22:48 AEDT (Melbourne time)<span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span><span class="uvt" style="font-size:11px;color:#888"></span></div><!--/arr-uv-tr17-->
+
+  <header>
+    <div class="wrap">
+      <p class="kicker">ARR</p>
+      <h1>BD GIPo, VRF GIPo and FTAG trees</h1>
+      <p class="ver">v1 · 15 Nov 2026, 10:48 PM AEDT</p>
+    </div>
+  </header>
+  <main class="wrap">
+
+    <p class="lede">How ARR-FABRIC forwards multi-destination traffic: the BD GIPo, the VRF GIPo, and the FTAG trees that carry them. The worked example is <span class="mono">Cursor_Tenant6_VRF</span> and <span class="mono">Cursor_Tenant6_BD</span>. Fabric values are taken from the Cursor_Tenant6 v4 post-check (15 November 2026, 12:47 AM AEDT) and the hw-monitor IS-IS snapshot at 14 Nov 2026, 10:08 PM AEDT. No APIC was contacted for this page. Where a value was not in those files, it is marked <strong>not collected</strong>. Example addresses used only to show the FTAG encoding are labelled as examples.</p>
+
+    <nav class="toc" aria-label="On this page">
+      <a href="#explain">Walkthrough</a>
+      <a href="#diagram">Relation diagram</a>
+      <a href="#walk">ARP flood walk</a>
+      <a href="#compare">BD GIPo vs VRF GIPo</a>
+      <a href="#values">ARR values</a>
+      <a href="#ftag">FTAG roots</a>
+      <a href="#objects">Classes and DNs</a>
+      <a href="#cli">CLI and API checks</a>
+      <a href="#sources">Sources</a>
+    </nav>
+
+    <div class="callout">
+      <p><strong>In one sentence.</strong> Each bridge domain gets a /28 outer multicast address (the BD GIPo) for Layer 2 floods of its VNID. Each VRF can get a separate /28 (the VRF GIPo) for user multicast when PIM is enabled. The ingress leaf hashes the flow onto one FTAG tree and writes that FTAG into the low four bits of the GIPo, which becomes the outer destination IP of the VXLAN packet.</p>
+    </div>
+
+    <h2 id="explain">Walkthrough</h2>
+    <p>Unicast in ACI is a leaf-spine-leaf VXLAN tunnel between VTEPs, described on the <a href="/ARR-LargeTopology/vxlan/">VXLAN</a> page. Multi-destination traffic — broadcast, unknown unicast that is still flooded, and multicast — cannot use a single unicast VTEP as the outer destination. ACI instead encapsulates the frame as a multicast VXLAN packet whose outer destination is a <strong>GIPo</strong> (Group IP outer address) and forwards that packet along a loop-free <strong>FTAG</strong> tree built by IS-IS.</p>
+
+    <h3>BD GIPo</h3>
+    <p>When a bridge domain is created, the APIC allocates it a /28 block from the fabric GIPo pool. The APIC GUI and <span class="mono">fvBD.bcastP</span> show the base address of that block, with the last four bits zero. On ARR, <span class="mono">Cursor_Tenant6_BD</span> has <span class="mono">bcastP 225.0.42.48</span>. That address is tied to the BD's VNID, <span class="mono">16547722</span> (<span class="mono">fvBD.seg</span>, operationally <span class="mono">l2BD.fabEncap</span>).</p>
+    <p>Traffic that uses the BD GIPo is Layer 2 flood traffic for that VNID:</p>
+    <ul>
+      <li>Broadcast, including ARP when <span class="mono">arpFlood</span> is yes (it is, on this BD).</li>
+      <li>Link-local multicast (224.0.0.0/24), which is always flooded in the BD.</li>
+      <li>Unknown unicast, but only when the BD floods it. <span class="mono">Cursor_Tenant6_BD</span> has <span class="mono">unkMacUcastAct=proxy</span>, so unknown unicast is sent to the spine proxy and is <em>not</em> flooded on the BD GIPo.</li>
+      <li>IP multicast, when PIM is not enabled on the BD. <span class="mono">mcastAllow</span> is no here, so IP multicast also uses the BD GIPo.</li>
+    </ul>
+
+    <h3>VRF GIPo</h3>
+    <p>The official 6.2(x) Tenant Routed Multicast guide says the APIC allocates one GIPo for the VRF and one GIPo for every BD under that VRF. A GIPo may be shared among BDs or among VRFs, but not mixed between the two. For the same VRF, the VRF GIPo is common to IPv4 and IPv6.</p>
+    <p>The VRF GIPo is used when a BD has multicast routing (PIM or PIM6) enabled:</p>
+    <ul>
+      <li>All user multicast on that BD, Layer 2 and Layer 3, is forwarded on the VRF GIPo.</li>
+      <li>Broadcast and unknown-unicast flood on that same BD still use the BD GIPo.</li>
+    </ul>
+    <p>The APIC GUI displays a GIPo for every VRF, always as a /28 base. The collected <span class="mono">fvCtx</span> for <span class="mono">Cursor_Tenant6_VRF</span> has the VRF VNID (<span class="mono">seg 2818049</span>) but no <span class="mono">bcastP</span>. Cisco Community guidance reads the VRF GIPo from <span class="mono">pimCtxP.vrfGipo</span>, and only when PIM is enabled on the VRF. That class was not pulled. The value is therefore <strong>not collected (needs read-only APIC pull)</strong>.</p>
+    <p>The default fabric pool is 225.0.0.0/15, entered at APIC setup and then permanent. VRF GIPos come from that same pool. A community example shows <span class="mono">pimCtxP.vrfGipo 225.1.192.0/3</span>. I am not treating 225.1.192.0/xx as a reserved default VRF range: the official 6.2(x) page describes /28 allocations from the fabric pool, and the /3 display in that example is not explained in the official guide.</p>
+
+    <h3>FTAG trees</h3>
+    <p>The outer GIPo /28 has sixteen addresses, selected by the low four bits of the last octet. The ingress leaf picks an FTAG by hashing the flow, then adds that FTAG to the GIPo base to form the outer destination IP. Cisco's TAC note and Cisco Live BRKDCN-3900 give the same rule: if the GIPo is 225.0.0.0 and the FTAG is 0x9, the outer destination is 225.0.0.9; if the GIPo is 225.0.2.128 and the FTAG is 0x8, it is 225.0.2.136. On this BD, the labelled example is <span class="mono">225.0.42.48 + FTAG 5 = 225.0.42.53</span>. The TAC note also says the hash is not stable even for the same leaf and the same BD GIPo, so FTAG 5 here is an example, not a captured flow.</p>
+    <p>There are 16 FTAG IDs (0–15) because of those four bits. On ARR, <span class="mono">isisFmcastTree</span> shows FTAGs 0–12 active and 13–15 inactive with root 0.0.0.0, which matches Cisco's own CLI examples (FTAG 0–12 enabled, 13–15 disabled) and the TAC note that the hash is in the range 0 to 12. FTAG 0 is active but marked <span class="mono">usage=internal</span>; FTAGs 1–12 are <span class="mono">usage=user</span>. Cisco ACI Fundamentals says the fabric "supports up to 12 FTAGs". That wording is slightly tighter than the 0–12 range in the TAC and Cisco Live material; both are recorded here rather than forced into one number.</p>
+    <p>Each active tree has one root. The APIC places those roots on spines at fabric bring-up. Multiple trees may share a spine, which is the ARR case: from every leaf, FTAGs 0–4, 11 and 12 are rooted on SPINE-201 (10.0.8.65) and FTAGs 5–10 on SPINE-202 (10.0.8.66). IS-IS recomputes the tree after a topology change, so a leaf can reach the same root through another path if an uplink fails. Root placement itself is configuration-driven and is not moved automatically when a spine fails. A non-root spine still takes part: its <span class="mono">rootPort</span> points at a leaf used to reach the root spine. That is visible on SPINE-201 for FTAGs 5–10, and on SPINE-202 for FTAGs 0–4, 11 and 12.</p>
+
+    <h2 id="diagram">Relation diagram</h2>
+    <p>Left to right: the tenant VRF, the BD it contains, that BD's VNID and GIPo, an example FTAG tree, and the outer header the ingress leaf writes. Below, the same relation is drawn on the ARR spine-leaf fabric. Solid purple lines are the example FTAG 5 tree, rooted on SPINE-202. Dashed lines are the other uplinks.</p>
+    <div class="diagram">
+      <svg class="gf-svg" viewBox="0 0 1480 900" width="100%" role="img" aria-labelledby="gf-rel-title gf-rel-desc">
+<title id="gf-rel-title">Relation between Cursor_Tenant6_VRF, Cursor_Tenant6_BD, their VNIDs and GIPos, an FTAG tree, and the outer VXLAN header</title>
+<desc id="gf-rel-desc">The tenant VRF Cursor_Tenant6_VRF, VNID 2818049, contains the bridge domain Cursor_Tenant6_BD, VNID 16547722, whose collected BD GIPo is 225.0.42.48. The VRF GIPo was not collected. A multi-destination frame is hashed onto one FTAG tree. In the worked example, FTAG 5 is rooted on SPINE-202. The ingress leaf writes the FTAG into the low four bits of the outer destination IP, so 225.0.42.48 plus FTAG 5 becomes 225.0.42.53. That encoding is an example; the actual hash was not collected.</desc>
+<text class="th" x="740" y="26" text-anchor="middle">VRF, BD, VNID, GIPo and FTAG — how they relate</text>
+<text class="te" x="740" y="46" text-anchor="middle">Worked example: Cursor_Tenant6 on ARR-FABRIC · BD GIPo from post-t6v4p · FTAG roots from hw-monitor 14 Nov 2026, 10:08 PM AEDT · FTAG 5 and outer DIP are a labelled example</text>
+<g transform="translate(30,70)">
+<title>Tenant</title>
+<rect class="tb tb-t" x="0" y="0" width="260" height="118" rx="8"/>
+<text class="tn" x="130.0" y="24.0" text-anchor="middle">Tenant</text>
+<text class="tc" x="130.0" y="48.0" text-anchor="middle">Cursor_Tenant6</text>
+<text class="tc" x="130.0" y="70.0" text-anchor="middle">uni/tn-Cursor_Tenant6</text>
+<text class="te" x="130.0" y="94.0" text-anchor="middle">policy container</text>
+</g>
+<g transform="translate(320,70)">
+<title>VRF  fvCtx</title>
+<rect class="tb tb-v" x="0" y="0" width="260" height="118" rx="8"/>
+<text class="tn" x="130.0" y="24.0" text-anchor="middle">VRF  fvCtx</text>
+<text class="tc" x="130.0" y="48.0" text-anchor="middle">Cursor_Tenant6_VRF</text>
+<text class="tc" x="130.0" y="70.0" text-anchor="middle">VNID  2818049</text>
+<text class="te" x="130.0" y="94.0" text-anchor="middle">VRF GIPo  not collected</text>
+</g>
+<g transform="translate(610,70)">
+<title>BD  fvBD</title>
+<rect class="tb tb-b" x="0" y="0" width="260" height="118" rx="8"/>
+<text class="tn" x="130.0" y="24.0" text-anchor="middle">BD  fvBD</text>
+<text class="tc" x="130.0" y="48.0" text-anchor="middle">Cursor_Tenant6_BD</text>
+<text class="tc" x="130.0" y="70.0" text-anchor="middle">VNID  16547722</text>
+<text class="te" x="130.0" y="94.0" text-anchor="middle">BD GIPo  225.0.42.48/28</text>
+</g>
+<g transform="translate(900,70)">
+<title>FTAG  5  (example)</title>
+<rect class="tb tb-f" x="0" y="0" width="260" height="118" rx="8"/>
+<text class="tn" x="130.0" y="24.0" text-anchor="middle">FTAG  5  (example)</text>
+<text class="tc" x="130.0" y="48.0" text-anchor="middle">user tree  ·  active</text>
+<text class="tc" x="130.0" y="70.0" text-anchor="middle">root  SPINE-202</text>
+<text class="te" x="130.0" y="94.0" text-anchor="middle">TEP  10.0.8.66</text>
+</g>
+<g transform="translate(1190,70)">
+<title>Outer VXLAN header</title>
+<rect class="tb tb-p" x="0" y="0" width="260" height="118" rx="8"/>
+<text class="tn" x="130.0" y="24.0" text-anchor="middle">Outer VXLAN header</text>
+<text class="tc" x="130.0" y="48.0" text-anchor="middle">sIPo  10.0.8.64</text>
+<text class="tc" x="130.0" y="70.0" text-anchor="middle">dIPo  225.0.42.53</text>
+<text class="te" x="130.0" y="94.0" text-anchor="middle">VNID  16547722</text>
+</g>
+<path class="tl" d="M 290.0 129.0 L 320.0 129.0"/>
+<text class="tlbl" x="305.0" y="119.0" text-anchor="middle">has</text>
+<path class="tl" d="M 580.0 129.0 L 610.0 129.0"/>
+<text class="tlbl" x="595.0" y="119.0" text-anchor="middle">fvRsCtx</text>
+<path class="tl" d="M 870.0 129.0 L 900.0 129.0"/>
+<text class="tlbl" x="885.0" y="119.0" text-anchor="middle">flow hash  (ex.)</text>
+<path class="tl" d="M 1160.0 129.0 L 1190.0 129.0"/>
+<text class="tlbl" x="1175.0" y="119.0" text-anchor="middle">low 4 bits</text>
+<text class="te" x="740" y="208" text-anchor="middle">The VRF is the Layer 3 context. Each of its BDs has its own Layer 2 VNID and its own BD GIPo. A BUM frame for that BD is hashed onto one FTAG tree. The ingress leaf adds the FTAG to the BD GIPo to form the outer destination IP. The VRF GIPo is a separate /28, used for user multicast when PIM is enabled on the BD.</text>
+<g transform="translate(360,250)">
+<title>SPINE-201 is the FTAG root for trees 0-4, 11 and 12</title>
+<rect class="tb tb-s" x="0" y="0" width="230" height="86" rx="8"/>
+<text class="tn" x="115.0" y="26.0" text-anchor="middle">SPINE-201</text>
+<text class="tc" x="115.0" y="48.0" text-anchor="middle">TEP  10.0.8.65</text>
+<text class="te" x="115.0" y="70.0" text-anchor="middle">root of FTAG 0-4, 11, 12</text>
+</g>
+<g transform="translate(890,250)">
+<title>SPINE-202 is the FTAG root for trees 5-10, including the example FTAG 5</title>
+<rect class="tb tb-s" x="0" y="0" width="230" height="86" rx="8"/>
+<text class="tn" x="115.0" y="26.0" text-anchor="middle">SPINE-202</text>
+<text class="tc" x="115.0" y="48.0" text-anchor="middle">TEP  10.0.8.66</text>
+<text class="te" x="115.0" y="70.0" text-anchor="middle">root of FTAG 5-10  ·  example</text>
+</g>
+<text class="tlbl" x="740" y="236" text-anchor="middle">ARR fabric  ·  example tree FTAG 5 drawn solid toward its root</text>
+<g transform="translate(80,470)">
+<title>LEAF-101 has Cursor_Tenant6_BD instantiated as l2BD fabEncap vxlan-16547722 under ctx vxlan-2818049, operSt up</title>
+<rect class="tb tb-l" x="0" y="0" width="250" height="150" rx="8"/>
+<text class="tn" x="125.0" y="24.0" text-anchor="middle">LEAF-101</text>
+<text class="tc" x="125.0" y="44.0" text-anchor="middle">TEP  10.0.8.64</text>
+<text class="tc" x="125.0" y="64.0" text-anchor="middle">BD VNID  16547722</text>
+<text class="tc" x="125.0" y="82.0" text-anchor="middle">VRF VNID  2818049</text>
+<text class="te" x="125.0" y="104.0" text-anchor="middle">N9Kv-01  ·  VLAN 1601</text>
+<text class="te" x="125.0" y="124.0" text-anchor="middle">root port  eth1/54  to  SPINE-202</text>
+</g>
+<g transform="translate(370,470)">
+<title>LEAF-102 has Cursor_Tenant6_BD instantiated as l2BD fabEncap vxlan-16547722 under ctx vxlan-2818049, operSt up</title>
+<rect class="tb tb-l" x="0" y="0" width="250" height="150" rx="8"/>
+<text class="tn" x="125.0" y="24.0" text-anchor="middle">LEAF-102</text>
+<text class="tc" x="125.0" y="44.0" text-anchor="middle">TEP  10.0.8.67</text>
+<text class="tc" x="125.0" y="64.0" text-anchor="middle">BD VNID  16547722</text>
+<text class="tc" x="125.0" y="82.0" text-anchor="middle">VRF VNID  2818049</text>
+<text class="te" x="125.0" y="104.0" text-anchor="middle">path  eth1/5  VLAN 1601</text>
+<text class="te" x="125.0" y="124.0" text-anchor="middle">root port  eth1/54  to  SPINE-202</text>
+</g>
+<g transform="translate(660,470)">
+<title>LEAF-103 has Cursor_Tenant6_BD instantiated as l2BD fabEncap vxlan-16547722 under ctx vxlan-2818049, operSt up</title>
+<rect class="tb tb-l" x="0" y="0" width="250" height="150" rx="8"/>
+<text class="tn" x="125.0" y="24.0" text-anchor="middle">LEAF-103</text>
+<text class="tc" x="125.0" y="44.0" text-anchor="middle">TEP  10.0.8.68</text>
+<text class="tc" x="125.0" y="64.0" text-anchor="middle">BD VNID  16547722</text>
+<text class="tc" x="125.0" y="82.0" text-anchor="middle">VRF VNID  2818049</text>
+<text class="te" x="125.0" y="104.0" text-anchor="middle">N9Kv-03  ·  VLAN 1603</text>
+<text class="te" x="125.0" y="124.0" text-anchor="middle">root port  eth1/54  to  SPINE-202</text>
+</g>
+<g transform="translate(950,470)">
+<title>LEAF-104 has Cursor_Tenant6_BD instantiated as l2BD fabEncap vxlan-16547722 under ctx vxlan-2818049, operSt up</title>
+<rect class="tb tb-l" x="0" y="0" width="250" height="150" rx="8"/>
+<text class="tn" x="125.0" y="24.0" text-anchor="middle">LEAF-104</text>
+<text class="tc" x="125.0" y="44.0" text-anchor="middle">TEP  10.0.8.69</text>
+<text class="tc" x="125.0" y="64.0" text-anchor="middle">BD VNID  16547722</text>
+<text class="tc" x="125.0" y="82.0" text-anchor="middle">VRF VNID  2818049</text>
+<text class="te" x="125.0" y="104.0" text-anchor="middle">path  eth1/5  VLAN 1603</text>
+<text class="te" x="125.0" y="124.0" text-anchor="middle">root port  eth1/54  to  SPINE-202</text>
+</g>
+<path class="tl-flow" d="M 205.0 470.0 L 1005.0 336.0"/>
+<path class="tl-dash" d="M 205.0 470.0 L 475.0 336.0"/>
+<path class="tl-flow" d="M 495.0 470.0 L 1005.0 336.0"/>
+<path class="tl-dash" d="M 495.0 470.0 L 475.0 336.0"/>
+<path class="tl-flow" d="M 785.0 470.0 L 1005.0 336.0"/>
+<path class="tl-dash" d="M 785.0 470.0 L 475.0 336.0"/>
+<path class="tl-flow" d="M 1075.0 470.0 L 1005.0 336.0"/>
+<path class="tl-dash" d="M 1075.0 470.0 L 475.0 336.0"/>
+<text class="tlbl" x="1005.0" y="354.0" text-anchor="middle">FTAG 5  (example, solid)</text>
+<text class="tlbl" x="475.0" y="354.0" text-anchor="middle">other trees  (dashed)</text>
+<path class="tl-dash" d="M 205.0 620.0 L 205.0 660.0"/>
+<g transform="translate(90,660)">
+<title>N9Kv-01 is the intended host on LEAF-101 eth1/5, EPG N9Kv-01_EPG, encap vlan-1601. The path attachment is unformed.</title>
+<rect class="tb tb-h" x="0" y="0" width="230" height="70" rx="8"/>
+<text class="tn" x="115.0" y="24.0" text-anchor="middle">N9Kv-01</text>
+<text class="tc" x="115.0" y="44.0" text-anchor="middle">LEAF-101  eth1/5  VLAN 1601</text>
+<text class="te" x="115.0" y="62.0" text-anchor="middle">path attachment  unformed</text>
+</g>
+<path class="tl-dash" d="M 785.0 620.0 L 785.0 660.0"/>
+<g transform="translate(670,660)">
+<title>N9Kv-03 is the intended host on LEAF-103 eth1/5, EPG N9Kv-03_EPG, encap vlan-1603. The path attachment is unformed.</title>
+<rect class="tb tb-h" x="0" y="0" width="230" height="70" rx="8"/>
+<text class="tn" x="115.0" y="24.0" text-anchor="middle">N9Kv-03</text>
+<text class="tc" x="115.0" y="44.0" text-anchor="middle">LEAF-103  eth1/5  VLAN 1603</text>
+<text class="te" x="115.0" y="62.0" text-anchor="middle">path attachment  unformed</text>
+</g>
+<text class="te" x="740" y="880" text-anchor="middle">Example outer header for a BD flood hashed onto FTAG 5: sIPo 10.0.8.64 (LEAF-101), dIPo 225.0.42.53 (225.0.42.48 + 5), VXLAN VNID 16547722. The hash itself was not collected, so FTAG 5 is an example, not a captured flow. FTAG roots come from isisFmcastTree on every leaf in the 10:08 PM AEDT snapshot.</text>
+</svg>
+    </div>
+
+    <h2 id="walk">ARP flood walk</h2>
+    <p>This is the path an ARP request from N9Kv-01 would take if the access path were formed. It is the forwarding mechanism, not a packet capture. In the 15 November 2026, 12:47 AM AEDT post-check every <span class="mono">fvRsPathAtt</span> was <span class="mono">unformed</span>, and no <span class="mono">vlanCktEp</span> for VLAN 1601 or 1603 was present. N9Kv-01 is the intended host on LEAF-101 eth1/5 VLAN 1601; N9Kv-03 is the intended host on LEAF-103 eth1/5 VLAN 1603. The BD itself is already instantiated on all four leaves.</p>
+    <ol class="steps">
+      <li>N9Kv-01 sends an ARP request with a broadcast destination MAC into LEAF-101 eth1/5, VLAN 1601, in <span class="mono">Cursor_Tenant6_BD</span>.</li>
+      <li>LEAF-101 classifies the frame into that BD, hashes the flow, and encapsulates VXLAN with VNID <span class="mono">16547722</span>. In this example the hash selects FTAG 5, so the outer destination is <span class="mono">225.0.42.53</span> and the outer source is the LEAF-101 TEP <span class="mono">10.0.8.64</span>.</li>
+      <li>The leaf forwards the packet on its FTAG 5 root port (eth1/54 toward SPINE-202 in the collected tree).</li>
+      <li>SPINE-202 is the root of FTAG 5 (<span class="mono">rootPort</span> unspecified on that spine). It forwards on the tree's outgoing interfaces except the incoming link, so the packet goes to the other leaves and is not sent back to LEAF-101.</li>
+      <li>LEAF-102, LEAF-103 and LEAF-104 receive the packet, decapsulate it, and flood the inner ARP in the BD on any local ports that belong to it.</li>
+      <li>If the LEAF-103 path were formed, N9Kv-03 would see the ARP. LEAF-102 and LEAF-104 also have the BD instantiated, so they receive the flood even when no host is up there.</li>
+    </ol>
+    <div class="diagram">
+      <svg class="gf-svg" viewBox="0 0 1480 980" width="100%" role="img" aria-labelledby="gf-walk-title gf-walk-desc">
+<title id="gf-walk-title">Step-by-step ARP flood from N9Kv-01 on LEAF-101 over an example FTAG tree to LEAF-102, 103 and 104</title>
+<desc id="gf-walk-desc">An ARP request from N9Kv-01 enters LEAF-101 on eth1/5 VLAN 1601. LEAF-101 encapsulates it in VXLAN with VNID 16547722, outer source 10.0.8.64 and, in this example, outer destination 225.0.42.53 for FTAG 5. The packet is sent to the FTAG 5 root, SPINE-202, which forwards it to the other leaves. Those leaves decapsulate and flood in the BD. This is the forwarding mechanism. The path attachments were unformed in the post-check, so this is not a captured packet.</desc>
+<text class="th" x="740" y="26" text-anchor="middle">ARP flood walk — N9Kv-01 on LEAF-101, example FTAG 5</text>
+<text class="te" x="740" y="46" text-anchor="middle">Mechanism, not a captured packet · path attachments unformed in the 15 November 2026, 12:47 AM AEDT post-check · example FTAG 5, dIPo 225.0.42.53</text>
+<rect class="tb tb-p" x="430" y="64" width="620" height="150" rx="10"/>
+<text class="tn" x="740.0" y="86.0" text-anchor="middle">Outer VXLAN packet  (example FTAG 5)</text>
+<text class="tc" x="740.0" y="108.0" text-anchor="middle">sIPo  10.0.8.64   (LEAF-101 TEP)</text>
+<text class="tc" x="740.0" y="128.0" text-anchor="middle">dIPo  225.0.42.53   =  225.0.42.48  +  FTAG 5</text>
+<text class="tc" x="740.0" y="148.0" text-anchor="middle">VXLAN VNID  16547722   (Cursor_Tenant6_BD)</text>
+<text class="te" x="740.0" y="170.0" text-anchor="middle">Inner frame: ARP request, broadcast DMAC, from N9Kv-01</text>
+<text class="te" x="740.0" y="190.0" text-anchor="middle">UDP destination port 4789  ·  the flood VNID is the BD VNID, not the VRF VNID</text>
+<g transform="translate(360,260)">
+<title>SPINE-201 is not the root of example FTAG 5; it reaches that tree through a leaf</title>
+<rect class="tb tb-s" x="0" y="0" width="230" height="80" rx="8"/>
+<text class="tn" x="115.0" y="24.0" text-anchor="middle">SPINE-201</text>
+<text class="tc" x="115.0" y="44.0" text-anchor="middle">TEP  10.0.8.65</text>
+<text class="te" x="115.0" y="66.0" text-anchor="middle">not the FTAG 5 root</text>
+</g>
+<g transform="translate(890,260)">
+<title>SPINE-202 is the collected root of FTAG 5. From this spine, rootPort is unspecified because it is the root.</title>
+<rect class="tb tb-s" x="0" y="0" width="230" height="80" rx="8"/>
+<text class="tn" x="115.0" y="24.0" text-anchor="middle">SPINE-202  ·  FTAG 5 root</text>
+<text class="tc" x="115.0" y="44.0" text-anchor="middle">TEP  10.0.8.66</text>
+<text class="te" x="115.0" y="66.0" text-anchor="middle">forwards on OIFs except ingress</text>
+</g>
+<g transform="translate(80,500)">
+<title>LEAF-101 TEP 10.0.8.64</title>
+<rect class="tb tb-l" x="0" y="0" width="250" height="136" rx="8"/>
+<text class="tn" x="125.0" y="24.0" text-anchor="middle">LEAF-101</text>
+<text class="tc" x="125.0" y="44.0" text-anchor="middle">TEP  10.0.8.64</text>
+<text class="tc" x="125.0" y="66.0" text-anchor="middle">ingress  ·  encap</text>
+<text class="te" x="125.0" y="88.0" text-anchor="middle">eth1/5 VLAN 1601  to  eth1/54</text>
+<text class="te" x="125.0" y="110.0" text-anchor="middle">l2BD  vxlan-16547722  up</text>
+</g>
+<g transform="translate(370,500)">
+<title>LEAF-102 TEP 10.0.8.67</title>
+<rect class="tb tb-l" x="0" y="0" width="250" height="136" rx="8"/>
+<text class="tn" x="125.0" y="24.0" text-anchor="middle">LEAF-102</text>
+<text class="tc" x="125.0" y="44.0" text-anchor="middle">TEP  10.0.8.67</text>
+<text class="tc" x="125.0" y="66.0" text-anchor="middle">egress  ·  decap</text>
+<text class="te" x="125.0" y="88.0" text-anchor="middle">flood in BD if local ports exist</text>
+<text class="te" x="125.0" y="110.0" text-anchor="middle">l2BD  vxlan-16547722  up</text>
+</g>
+<g transform="translate(660,500)">
+<title>LEAF-103 TEP 10.0.8.68</title>
+<rect class="tb tb-l" x="0" y="0" width="250" height="136" rx="8"/>
+<text class="tn" x="125.0" y="24.0" text-anchor="middle">LEAF-103</text>
+<text class="tc" x="125.0" y="44.0" text-anchor="middle">TEP  10.0.8.68</text>
+<text class="tc" x="125.0" y="66.0" text-anchor="middle">egress  ·  decap</text>
+<text class="te" x="125.0" y="88.0" text-anchor="middle">intended N9Kv-03  VLAN 1603</text>
+<text class="te" x="125.0" y="110.0" text-anchor="middle">l2BD  vxlan-16547722  up</text>
+</g>
+<g transform="translate(950,500)">
+<title>LEAF-104 TEP 10.0.8.69</title>
+<rect class="tb tb-l" x="0" y="0" width="250" height="136" rx="8"/>
+<text class="tn" x="125.0" y="24.0" text-anchor="middle">LEAF-104</text>
+<text class="tc" x="125.0" y="44.0" text-anchor="middle">TEP  10.0.8.69</text>
+<text class="tc" x="125.0" y="66.0" text-anchor="middle">egress  ·  decap</text>
+<text class="te" x="125.0" y="88.0" text-anchor="middle">flood in BD if local ports exist</text>
+<text class="te" x="125.0" y="110.0" text-anchor="middle">l2BD  vxlan-16547722  up</text>
+</g>
+<path class="tl-arp" d="M 205.0 500.0 L 205.0 214.0"/>
+<path class="tl-flow" d="M 1050.0 104.0 L 890.0 300.0"/>
+<path class="tl-flow" d="M 1005.0 340.0 L 495.0 500.0"/>
+<path class="tl-flow" d="M 1005.0 340.0 L 785.0 500.0"/>
+<path class="tl-flow" d="M 1005.0 340.0 L 1075.0 500.0"/>
+<path class="tl-dash" d="M 205.0 500.0 L 475.0 340.0"/>
+<g transform="translate(104,672)"><circle class="step" r="11"/><text class="step-t" x="0" y="4" text-anchor="middle">1</text></g>
+<g transform="translate(165.0,482)"><circle class="step" r="11"/><text class="step-t" x="0" y="4" text-anchor="middle">2</text></g>
+<g transform="translate(1068,104)"><circle class="step" r="11"/><text class="step-t" x="0" y="4" text-anchor="middle">3</text></g>
+<g transform="translate(1138,280)"><circle class="step" r="11"/><text class="step-t" x="0" y="4" text-anchor="middle">4</text></g>
+<g transform="translate(785.0,482)"><circle class="step" r="11"/><text class="step-t" x="0" y="4" text-anchor="middle">5</text></g>
+<g transform="translate(684,672)"><circle class="step" r="11"/><text class="step-t" x="0" y="4" text-anchor="middle">6</text></g>
+<g transform="translate(90,690)">
+<title>N9Kv-01 sends the ARP. Intended attachment is LEAF-101 eth1/5 VLAN 1601.</title>
+<rect class="tb tb-h" x="0" y="0" width="230" height="70" rx="8"/>
+<text class="tn" x="115.0" y="24.0" text-anchor="middle">N9Kv-01  ·  step 1</text>
+<text class="tc" x="115.0" y="44.0" text-anchor="middle">ARP request, broadcast</text>
+<text class="te" x="115.0" y="62.0" text-anchor="middle">eth1/5  VLAN 1601  (intended)</text>
+</g>
+<g transform="translate(670,690)">
+<title>N9Kv-03 would receive the flooded ARP if the LEAF-103 path were formed.</title>
+<rect class="tb tb-h" x="0" y="0" width="230" height="70" rx="8"/>
+<text class="tn" x="115.0" y="24.0" text-anchor="middle">N9Kv-03  ·  step 6</text>
+<text class="tc" x="115.0" y="44.0" text-anchor="middle">receives the ARP flood</text>
+<text class="te" x="115.0" y="62.0" text-anchor="middle">eth1/5  VLAN 1603  (intended)</text>
+</g>
+<path class="tl-arp" d="M 205.0 690.0 L 205.0 636.0"/>
+<path class="tl-flow" d="M 785.0 636.0 L 785.0 690.0"/>
+<text class="te" x="740" y="960" text-anchor="middle">Steps: 1 ingress ARP on the access port; 2 leaf encapsulates with BD VNID and BD GIPo + FTAG; 3 packet sent on the FTAG root port toward SPINE-202; 4 root spine forwards to the other leaves; 5 egress leaves decap and flood in the BD; 6 intended receiver on LEAF-103. Unknown unicast on this BD is proxy, not flood; ARP is broadcast and is flooded because arpFlood is yes.</text>
+</svg>
+    </div>
+    <div class="expect">
+      <p><strong>What this does not show.</strong> The FTAG chosen for a real ARP from N9Kv-01 is not known. Unknown unicast on this BD is proxy, so a unicast frame to an unknown MAC would not follow this flood. The IS-IS GIPo route table in the 14 Nov 2026, 10:08 PM AEDT snapshot does not yet list 225.0.42.48, because that pull was taken before the BD appeared as <span class="mono">l2BD</span> on the leaves (createTs 11:00 PM AEDT on 14 November 2026 on LEAF-101). The FTAG roots themselves are fabric-wide and were the same in the 7:20 PM, 9:44 PM and 10:08 PM AEDT pulls that evening.</p>
+    </div>
+
+    <h2 id="compare">BD GIPo versus VRF GIPo</h2>
+    <p>The traffic columns follow the official 6.2(x) VRF GIPo allocation table. Security policy is not applied to flooded multi-destination traffic on the FTAG tree (Cisco Live BRKDCN-3900).</p>
+    <div class="table-wrap"><table class="gf-table"><thead><tr><th></th><th>BD GIPo</th><th>VRF GIPo</th></tr></thead><tbody><tr><td>What it is</td><td>The /28 multicast block allocated to one bridge domain. The APIC shows the base address (last four bits zero) as fvBD.bcastP.</td><td>The /28 multicast block allocated to one VRF. The APIC GUI shows a GIPo for every VRF. It is not an attribute of the collected fvCtx object.</td></tr><tr><td>Carries</td><td>Layer 2 multi-destination traffic for that BD&#x27;s VNID: broadcast, link-local multicast, and unknown-unicast flood when the BD is set to flood unknown unicast.</td><td>User IPv4/IPv6 multicast for BDs in that VRF that have PIM (or PIM6) enabled, including Layer 2 and Layer 3 multicast on those BDs. One VRF GIPo is shared by IPv4 and IPv6.</td></tr><tr><td>Does not carry</td><td>Routed (PIM-enabled) user multicast — that switches to the VRF GIPo.</td><td>Broadcast and unknown-unicast flood. Those stay on the BD GIPo even when PIM is enabled on the BD.</td></tr><tr><td>When PIM is off on the BD</td><td>All multicast, broadcast and unknown-unicast flood use the BD GIPo. This is the Cursor_Tenant6_BD case (mcastAllow is no).</td><td>The address may still be allocated and shown in the GUI, but it is not used for this BD&#x27;s multicast.</td></tr><tr><td>Outer header</td><td>VXLAN VNID is the BD VNID (fvBD.seg). Outer destination IP is an address in the BD GIPo /28, selected by FTAG.</td><td>VXLAN VNID is the VRF VNID (fvCtx.seg). Outer destination IP is an address in the VRF GIPo /28, selected by FTAG.</td></tr><tr><td>Where to read it</td><td>moquery -c fvBD … | grep bcastP. Collected on ARR for Cursor_Tenant6_BD: 225.0.42.48.</td><td>Cisco documents pimCtxP.vrfGipo, and only when PIM is enabled on the VRF. fvCtxDef is the concrete VRF on the leaf. Neither class was in the collected files. The collected fvCtx has no bcastP.</td></tr><tr><td>Sharing</td><td>A given GIPo may be shared between multiple BDs, but not between a mix of VRFs and BDs.</td><td>A given GIPo may be shared between multiple VRFs, but not between a mix of VRFs and BDs.</td></tr><tr><td>Pool</td><td>Allocated from the fabric GIPo pool entered at APIC setup. The default is 225.0.0.0/15. Each allocation is a /28.</td><td>Allocated from the same fabric GIPo pool, not from a separate default range. A community example of a pimCtxP value is 225.1.192.0/3; that is one fabric&#x27;s allocation display, not a reserved VRF-only default that I can confirm from the official 6.2(x) guide.</td></tr></tbody></table></div>
+
+    <h2 id="values">ARR values</h2>
+    <p>Only values present in the box files are treated as facts. Example encodings are labelled. NetBox fabric name in the 14 November 2026, 10:40:27 PM AEDT export is Fabric1; its <span class="mono">gipo_pool</span> is null.</p>
+    <div class="table-wrap"><table class="gf-table"><thead><tr><th>Item</th><th>Object / attribute</th><th>Value</th><th>Status</th><th>Source and notes</th></tr></thead><tbody><tr><td>Cursor_Tenant6_VRF VNID</td><td class="mono">fvCtx.seg</td><td class="mono">2818049</td><td><span class="chip up">Collected</span></td><td>post-t6v4p fvCtx.json and fvBD.scope. Operational DN on each leaf: sys/ctx-[vxlan-2818049].</td></tr><tr><td>Cursor_Tenant6_BD VNID</td><td class="mono">fvBD.seg / l2BD.fabEncap</td><td class="mono">16547722</td><td><span class="chip up">Collected</span></td><td>post-t6v4p fvBD.json and l2BD-101..104.json. Instantiated on LEAF-101 to 104, operSt up.</td></tr><tr><td>Cursor_Tenant6_BD GIPo</td><td class="mono">fvBD.bcastP</td><td class="mono">225.0.42.48/28</td><td><span class="chip up">Collected</span></td><td>post-t6v4p. Last four bits are zero, so this is the /28 base the APIC displays.</td></tr><tr><td>Cursor_Tenant6_VRF GIPo</td><td class="mono">pimCtxP.vrfGipo / fvCtxDef</td><td>not collected (needs read-only APIC pull)</td><td><span class="chip miss">Not collected</span></td><td>The collected fvCtx object has no bcastP. pimCtxP and fvCtxDef were not in the post-check or hw-monitor files. mcastAllow on the BD is no, so this BD would not use a VRF GIPo for multicast in any case.</td></tr><tr><td>Example outer DIP</td><td class="mono">BD GIPo + FTAG 5</td><td class="mono">225.0.42.53</td><td><span class="chip na">Example</span></td><td>225.0.42.48 plus FTAG 5 equals 225.0.42.53. Labelled as an example because the ingress hash was not collected.</td></tr><tr><td>FTAG roots (user trees 1-12)</td><td class="mono">isisFmcastTree.root</td><td>SPINE-201 (10.0.8.65) for 1-4, 11, 12; SPINE-202 (10.0.8.66) for 5-10</td><td><span class="chip up">Collected</span></td><td>hw-monitor 14 Nov 2026, 10:08 PM AEDT. All four leaves agree. FTAG 0 is active with usage internal, also rooted on SPINE-201. FTAG 13-15 are inactive, root 0.0.0.0, usage internal.</td></tr><tr><td>System GIPo (configured)</td><td class="mono">isisDom.systemGipo</td><td class="mono">225.0.0.16</td><td><span class="chip up">Collected</span></td><td>Same value on LEAF-101-104 and both spines. Matches infra BD-default bcastP.</td></tr><tr><td>System GIPo (operational)</td><td class="mono">isisDom.systemGipoOperSt</td><td class="mono">239.255.255.240</td><td><span class="chip up">Collected</span></td><td>Same value on every node. This is the fabric system GIPo, not a tenant BD or VRF GIPo.</td></tr><tr><td>Fabric TEP pool</td><td class="mono">fabricSetupP.tepPool / topSystem.tepPool</td><td class="mono">10.0.0.0/16</td><td><span class="chip up">Collected</span></td><td>fabricSetupP at uni/controller/setuppol/setupp-1, and every leaf and spine topSystem.</td></tr><tr><td>Fabric GIPo pool</td><td class="mono">APIC setup / inferred</td><td>225.0.0.0/15 (inferred)</td><td><span class="chip na">Inferred</span></td><td>fabricSetupP in the collected file has no gipoPool attribute. NetBox aci_fabrics.gipo_pool is null. Cisco&#x27;s published method is to read the infra BD-default bcastP (here 225.0.0.16) and treat the pool as that /15, i.e. 225.0.0.0/15. Every collected BD bcastP sits in that range. A definitive read is the APIC setup file (for example /data/data_admin/sam_exported.config), which was not collected.</td></tr><tr><td>BD subnet / gateway</td><td class="mono">fvSubnet.ip</td><td class="mono">10.6.1.1/24</td><td><span class="chip up">Collected</span></td><td>uni/tn-Cursor_Tenant6/BD-Cursor_Tenant6_BD/subnet-[10.6.1.1/24]</td></tr><tr><td>Unknown unicast</td><td class="mono">fvBD.unkMacUcastAct</td><td class="mono">proxy</td><td><span class="chip up">Collected</span></td><td>Unknown unicast is sent to the spine proxy, not flooded on the BD GIPo. ARP still floods because arpFlood is yes.</td></tr><tr><td>PIM on the BD</td><td class="mono">fvBD.mcastAllow / ipv6McastAllow</td><td class="mono">no / no</td><td><span class="chip up">Collected</span></td><td>IP multicast for this BD also uses the BD GIPo.</td></tr><tr><td>Path attachments</td><td class="mono">fvRsPathAtt.state</td><td>unformed</td><td><span class="chip na">Collected</span></td><td>All four static paths (101/102 vlan-1601, 103/104 vlan-1603) were unformed in the post-check. No vlanCktEp for 1601 or 1603. The packet walk is the mechanism, not a live data plane.</td></tr><tr><td>TEPs</td><td class="mono">topSystem.address</td><td>101 10.0.8.64, 102 10.0.8.67, 103 10.0.8.68, 104 10.0.8.69, 201 10.0.8.65, 202 10.0.8.66</td><td><span class="chip up">Collected</span></td><td>post-t6v4p topSystem.json.</td></tr></tbody></table></div>
+
+    <h3>Collected BD GIPo addresses</h3>
+    <p>Every <span class="mono">fvBD</span> in the v4 post-check, including the system tenants. All five <span class="mono">bcastP</span> values are /28-aligned and sit in 225.0.0.0/15.</p>
+    <div class="table-wrap"><table class="gf-table"><thead><tr><th>DN</th><th>BD</th><th>bcastP (GIPo)</th><th>seg (BD VNID)</th><th>scope (VRF VNID)</th><th>mcastAllow</th><th>unkMacUcastAct</th></tr></thead><tbody><tr><td class="mono">uni/tn-mgmt/BD-inb</td><td>inb</td><td class="mono">225.1.116.112</td><td class="mono">16416666</td><td class="mono">2129920</td><td>no</td><td>proxy</td></tr><tr><td class="mono">uni/tn-common/BD-default</td><td>default</td><td class="mono">225.0.163.224</td><td class="mono">16744306</td><td class="mono">3047424</td><td>no</td><td>proxy</td></tr><tr><td class="mono">uni/tn-infra/BD-ave-ctrl</td><td>ave-ctrl</td><td class="mono">225.1.37.32</td><td class="mono">16220082</td><td class="mono">2457600</td><td>no</td><td>proxy</td></tr><tr><td class="mono">uni/tn-infra/BD-default</td><td>default</td><td class="mono">225.0.0.16</td><td class="mono">16777209</td><td class="mono">16777199</td><td>no</td><td>proxy</td></tr><tr><td class="mono">uni/tn-Cursor_Tenant6/BD-Cursor_Tenant6_BD</td><td>Cursor_Tenant6_BD</td><td class="mono">225.0.42.48</td><td class="mono">16547722</td><td class="mono">2818049</td><td>no</td><td>proxy</td></tr></tbody></table></div>
+
+    <h2 id="ftag">FTAG roots on ARR</h2>
+    <p>From <span class="mono">isisFmcastTree</span> in hw-monitor snapshot 20261114-220835 (14 Nov 2026, 10:08 PM AEDT). The root TEP in the leaf view is the spine that anchors the tree. On the spine that is not the root, <span class="mono">root</span> and <span class="mono">rootPort</span> show the leaf used to reach that spine, which is how a non-root spine stays on the tree. Column headers sort the table.</p>
+    <div class="table-wrap"><table class="gf-table"><thead><tr><th>FTAG</th><th>Usage</th><th>operSt (leaves)</th><th>Root TEP (leaf view)</th><th>Root node</th><th>LEAF-101 rootPort</th><th>Non-root spine toward the root</th></tr></thead><tbody><tr><td class="mono">0</td><td>internal</td><td><span class="chip up">active</span></td><td class="mono">10.0.8.65</td><td>SPINE-201</td><td class="mono">eth1/53.5</td><td>SPINE-202 rootPort eth1/27.38 (via LEAF-101)</td></tr><tr><td class="mono">1</td><td>user</td><td><span class="chip up">active</span></td><td class="mono">10.0.8.65</td><td>SPINE-201</td><td class="mono">eth1/53.5</td><td>SPINE-202 rootPort eth1/29.37 (via LEAF-103)</td></tr><tr><td class="mono">2</td><td>user</td><td><span class="chip up">active</span></td><td class="mono">10.0.8.65</td><td>SPINE-201</td><td class="mono">eth1/53.5</td><td>SPINE-202 rootPort eth1/28.36 (via LEAF-102)</td></tr><tr><td class="mono">3</td><td>user</td><td><span class="chip up">active</span></td><td class="mono">10.0.8.65</td><td>SPINE-201</td><td class="mono">eth1/53.5</td><td>SPINE-202 rootPort eth1/28.36 (via LEAF-102)</td></tr><tr><td class="mono">4</td><td>user</td><td><span class="chip up">active</span></td><td class="mono">10.0.8.65</td><td>SPINE-201</td><td class="mono">eth1/53.5</td><td>SPINE-202 rootPort eth1/29.37 (via LEAF-103)</td></tr><tr><td class="mono">5</td><td>user</td><td><span class="chip up">active</span></td><td class="mono">10.0.8.66</td><td>SPINE-202</td><td class="mono">eth1/54.4</td><td>SPINE-201 rootPort eth1/28.35 (via LEAF-102)</td></tr><tr><td class="mono">6</td><td>user</td><td><span class="chip up">active</span></td><td class="mono">10.0.8.66</td><td>SPINE-202</td><td class="mono">eth1/54.4</td><td>SPINE-201 rootPort eth1/28.35 (via LEAF-102)</td></tr><tr><td class="mono">7</td><td>user</td><td><span class="chip up">active</span></td><td class="mono">10.0.8.66</td><td>SPINE-202</td><td class="mono">eth1/54.4</td><td>SPINE-201 rootPort eth1/29.36 (via LEAF-103)</td></tr><tr><td class="mono">8</td><td>user</td><td><span class="chip up">active</span></td><td class="mono">10.0.8.66</td><td>SPINE-202</td><td class="mono">eth1/54.4</td><td>SPINE-201 rootPort eth1/30.37 (via LEAF-104)</td></tr><tr><td class="mono">9</td><td>user</td><td><span class="chip up">active</span></td><td class="mono">10.0.8.66</td><td>SPINE-202</td><td class="mono">eth1/54.4</td><td>SPINE-201 rootPort eth1/27.38 (via LEAF-101)</td></tr><tr><td class="mono">10</td><td>user</td><td><span class="chip up">active</span></td><td class="mono">10.0.8.66</td><td>SPINE-202</td><td class="mono">eth1/54.4</td><td>SPINE-201 rootPort eth1/27.38 (via LEAF-101)</td></tr><tr><td class="mono">11</td><td>user</td><td><span class="chip up">active</span></td><td class="mono">10.0.8.65</td><td>SPINE-201</td><td class="mono">eth1/53.5</td><td>SPINE-202 rootPort eth1/30.35 (via LEAF-104)</td></tr><tr><td class="mono">12</td><td>user</td><td><span class="chip up">active</span></td><td class="mono">10.0.8.65</td><td>SPINE-201</td><td class="mono">eth1/53.5</td><td>SPINE-202 rootPort eth1/27.38 (via LEAF-101)</td></tr><tr><td class="mono">13</td><td>internal</td><td><span class="chip na">inactive</span></td><td class="mono">0.0.0.0</td><td>none</td><td class="mono">unspecified</td><td>—</td></tr><tr><td class="mono">14</td><td>internal</td><td><span class="chip na">inactive</span></td><td class="mono">0.0.0.0</td><td>none</td><td class="mono">unspecified</td><td>—</td></tr><tr><td class="mono">15</td><td>internal</td><td><span class="chip na">inactive</span></td><td class="mono">0.0.0.0</td><td>none</td><td class="mono">unspecified</td><td>—</td></tr></tbody></table></div>
+
+    <h2 id="objects">Classes and DNs</h2>
+    <p>Verified against the Cisco documents listed below and against the files on the box. Classes that were not pulled are listed so the gap is visible.</p>
+    <div class="table-wrap"><table class="gf-table"><thead><tr><th>Class</th><th>Attributes of interest</th><th>Example DN</th><th>Role and ARR status</th></tr></thead><tbody><tr><td class="mono">fvBD</td><td class="mono">bcastP, seg, scope, mcastAllow, unkMacUcastAct, arpFlood, multiDstPktAct</td><td class="mono">uni/tn-Cursor_Tenant6/BD-Cursor_Tenant6_BD</td><td>Logical bridge domain. bcastP is the BD GIPo /28 base. seg is the BD VNID. scope is the parent VRF VNID.</td></tr><tr><td class="mono">fvRsCtx</td><td class="mono">tDn</td><td class="mono">uni/tn-Cursor_Tenant6/BD-Cursor_Tenant6_BD/rsctx</td><td>BD-to-VRF relation. Cursor_Tenant6_BD is attached to Cursor_Tenant6_VRF.</td></tr><tr><td class="mono">fvCtx</td><td class="mono">seg, knwMcastAct</td><td class="mono">uni/tn-Cursor_Tenant6/ctx-Cursor_Tenant6_VRF</td><td>Logical VRF. seg is the VRF VNID. The collected object has no bcastP, so this class does not give the VRF GIPo.</td></tr><tr><td class="mono">fvCtxDef</td><td class="mono">concrete VRF on the leaf</td><td>sys/… (not collected)</td><td>Concrete VRF programmed on a switch. Official cheat-sheets treat this as the leaf-side VRF. Not pulled. Do not assume it holds bcastP without a read.</td></tr><tr><td class="mono">pimCtxP</td><td class="mono">vrfGipo</td><td>not collected</td><td>Cisco Community guidance: moquery -c pimCtxP returns vrfGipo only if PIM is enabled on the VRF. Not in the collected files. Cursor_Tenant6_BD has mcastAllow no.</td></tr><tr><td class="mono">fvSubnet</td><td class="mono">ip, ctrl</td><td class="mono">uni/tn-Cursor_Tenant6/BD-Cursor_Tenant6_BD/subnet-[10.6.1.1/24]</td><td>BD gateway. Collected as 10.6.1.1/24.</td></tr><tr><td class="mono">l2BD</td><td class="mono">fabEncap, operSt, name, dn</td><td class="mono">topology/pod-1/node-101/sys/ctx-[vxlan-2818049]/bd-[vxlan-16547722]</td><td>Operational BD on the leaf. Instantiated on LEAF-101-104, fabEncap vxlan-16547722, operSt up. accEncap was unknown in the post-check.</td></tr><tr><td class="mono">fabricSetupP</td><td class="mono">tepPool, podId</td><td class="mono">uni/controller/setuppol/setupp-1</td><td>Pod 1 setup policy. tepPool 10.0.0.0/16 is present. This collected object has no gipoPool attribute.</td></tr><tr><td class="mono">isisFmcastTree</td><td class="mono">id, root, rootPort, operSt, usage</td><td class="mono">topology/pod-1/node-101/sys/isis/inst-default/dom-overlay-1/fmtree-5</td><td>One FTAG tree per id 0-15. Collected on every leaf and spine in the hw-monitor snapshot. This is the class behind show isis internal mcast routes ftag.</td></tr><tr><td class="mono">isisOifListLeaf / isisOifListSpine</td><td class="mono">oifList</td><td class="mono">…/fmtree-5/oifleaf-0 or oifspine-0</td><td>Outgoing interface list for a tree or a GIPo. Present in the same IS-IS snapshot.</td></tr><tr><td class="mono">isisDom</td><td class="mono">systemGipo, systemGipoOperSt, sysId</td><td class="mono">topology/pod-1/node-101/sys/isis/inst-default/dom-overlay-1</td><td>Overlay-1 IS-IS domain. systemGipo 225.0.0.16, operational 239.255.255.240.</td></tr><tr><td class="mono">isisGrpRec</td><td class="mono">addr</td><td class="mono">…/db-mcgrp/grp-[225.0.0.0]</td><td>GIPo groups in the IS-IS multicast database. The 10:08 PM snapshot only lists 225.0.0.0, 239.255.255.224 and 239.255.255.240. Cursor_Tenant6_BD&#x27;s 225.0.42.48 is absent because that snapshot was taken before the BD was instantiated on the leaves.</td></tr><tr><td class="mono">fmcastGrp</td><td class="mono">fabric multicast group</td><td>not collected as a class query</td><td>Older references use fmcast.Grp. The collected equivalent in this snapshot is isisGrpRec / isisFmcastTree, not a standalone fmcastGrp file.</td></tr><tr><td class="mono">topSystem</td><td class="mono">address, tepPool, role</td><td class="mono">topology/pod-1/node-101</td><td>Node TEP and role. All six switch TEPs collected.</td></tr></tbody></table></div>
+
+    <h2 id="cli">CLI and API checks</h2>
+    <p>These are the read-only checks that would confirm or fill the gaps above. They were not run for this page.</p>
+    <pre class="cli"># BD GIPo and VNID (APIC)
+moquery -c fvBD -f &#x27;fv.BD.name==&quot;Cursor_Tenant6_BD&quot;&#x27; | grep -E &#x27;dn|name|bcastP|seg|scope|mcastAllow|unkMacUcastAct|arpFlood&#x27;
+# REST equivalent
+# GET /api/mo/uni/tn-Cursor_Tenant6/BD-Cursor_Tenant6_BD.json
+
+# VRF (the collected class has no bcastP)
+moquery -c fvCtx -f &#x27;fv.Ctx.name==&quot;Cursor_Tenant6_VRF&quot;&#x27;
+# VRF GIPo, only if PIM is enabled on the VRF (not collected here)
+moquery -c pimCtxP
+# Concrete VRF on a leaf
+moquery -c fvCtxDef -f &#x27;fv.CtxDef.name==&quot;Cursor_Tenant6_VRF&quot;&#x27;
+
+# Infer the fabric GIPo pool from the infra BD, as in Cisco&#x27;s setup-values note
+moquery -c fvBD | grep -E &#x27;name|bcastP|dn&#x27; | grep -B 2 infra
+# The collected fabricSetupP has tepPool but no gipoPool. A definitive pool
+# read is the APIC setup file, for example:
+#   cat /data/data_admin/sam_exported.config
+# which was not collected.
+
+# FTAG trees and GIPo routes on a leaf or spine
+show isis internal mcast routes ftag
+show isis internal mcast routes gipo
+show forwarding distribution multicast route
+moquery -c isisFmcastTree
+moquery -c isisDom | grep -i gipo
+
+# Operational BD on a leaf
+moquery -c l2BD | grep -E &#x27;Cursor_Tenant6|fabEncap|operSt|dn&#x27;</pre>
+
+    <h2 id="sources">Sources</h2>
+    <p>Official Cisco documentation was used for the allocation rules, the BD versus VRF traffic table, FTAG encoding, root placement and failover. ARR numbers come only from the files named in the values table.</p>
+    <ul><li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l3-configuration/cisco-apic-layer-3-networking-configuration-guide-62x/g_ip_multicast/allocating-vrf-gipo.html">Cisco APIC Layer 3 Networking Configuration Guide, Release 6.2(x) — VRF GIPo allocation</a></li><li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/5x/aci-fundamentals/cisco-aci-fundamentals-52x/m_fundamentals.html">Cisco ACI Fundamentals, Release 5.2(x) — Multicast Tree Topology / FTAG</a></li><li><a href="https://www.cisco.com/c/en/us/support/docs/software/aci-data-center/217712-configure-the-l2-multicast-in-aci.html">Cisco TAC: Configure the L2 Multicast in ACI (Document ID 217712)</a></li><li><a href="https://www.ciscolive.com/c/dam/r/ciscolive/global-event/docs/2025/pdf/BRKDCN-3900.pdf">Cisco Live BRKDCN-3900, Blueprint for ACI Forwarding (2025)</a></li><li><a href="https://community.cisco.com/t5/data-center-switches/aci-bd-multicast-ip-address/td-p/4488340">Cisco Community: ACI BD — Multicast IP Address (GIPo pool and VRF GIPo query)</a></li></ul>
+    <p class="note">Built from the Cursor_Tenant6 v4 post-check files under /workspace/arr/provisioning/Cursor_Tenant6-fix-v4-arr-20261115-0036/post-t6v4p (apply 15 November 2026, 12:47 AM AEDT, payload SHA 2e89245602689a8e0bc1bcd7a3729a05de50115fb648e43e1b6e44d32dc30769) and the hw-monitor IS-IS snapshot 20261114-220835 taken at 14 November 2026, 10:08:35 PM AEDT, files under /workspace/arr/hwmon/20261114-220835. fabricSetupP from /workspace/arr/ltopo/apic/live/fabricSetupP.json. NetBox fabric record from /workspace/arr/ltopo/netbox/aci_fabrics.json (export 14 November 2026, 10:40:27 PM AEDT). No APIC or NetBox writes.</p>
+
+      <p class="meta">Fabric: <strong>ARR-FABRIC</strong> · APIC version: <strong>6.0(2h)</strong></p>
+      <p class="snapshot">Page built: <strong>15 November 2026, 10:48 PM AEDT</strong></p>
+  </main>
+  <footer class="wrap">
+    <p class="footer">Built from the Cursor_Tenant6 v4 post-check files under /workspace/arr/provisioning/Cursor_Tenant6-fix-v4-arr-20261115-0036/post-t6v4p (apply 15 November 2026, 12:47 AM AEDT, payload SHA 2e89245602689a8e0bc1bcd7a3729a05de50115fb648e43e1b6e44d32dc30769) and the hw-monitor IS-IS snapshot 20261114-220835 taken at 14 November 2026, 10:08:35 PM AEDT, files under /workspace/arr/hwmon/20261114-220835. fabricSetupP from /workspace/arr/ltopo/apic/live/fabricSetupP.json. NetBox fabric record from /workspace/arr/ltopo/netbox/aci_fabrics.json (export 14 November 2026, 10:40:27 PM AEDT). No APIC or NetBox writes. No credentials, tokens or session IDs are included.</p>
+  </footer>
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/"}}</script>
+<script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const n=s=>String(s||"").split("?")[0].replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/";const p=n(location.pathname);const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc){const pt=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Melbourne",hour:"2-digit",minute:"2-digit",hour12:false,hourCycle:"h23",timeZoneName:"short"}).formatToParts(new Date(d.updated_utc));const g=t=>(pt.find(x=>x.type===t)||{}).value||"";const tz=(g("timeZoneName")||"AEDT").replace("GMT+11","AEDT").replace("GMT+10","AEST");e.textContent=" (data as of "+g("hour")+":"+g("minute")+" "+tz+")"}}})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script>
+  <script src="sort.js" defer></script>
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:8px 0 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:6px;margin:0;padding:8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
+nav.site.im a.mi{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:auto;min-height:44px;min-width:0;padding:8px 10px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a)}
+nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:visible;text-overflow:unset;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.25;text-align:left}
+nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:22px;height:22px;padding:0 5px;border-radius:999px;font-size:16px;font-weight:800;line-height:1;background:#0f172a;color:#fff}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc;color:#0f172a}
+nav.site.im a.mi.on .im-seq{background:#fff;color:#1d4ed8}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px;flex:none}#sg-link,#tt-btn,#mm-link{height:36px;border-radius:18px}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Cursor_Tenant6","/ARR/provisioning/cursor-tenant6/","🚀"],["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"],["ရှေ့သို့ချီ","/roadmap/forward/","⏩"],["Time Map 2026–2030","/roadmap/forward/time-map/","🗓️"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["ARR-LargeTopology","/ARR-LargeTopology/","🗺️",[["Overview","/ARR-LargeTopology/","🗺️"],["Nodes","/ARR-LargeTopology/nodes.html","🖥️"],["Serials","/ARR-LargeTopology/serials.html","🔢"],["Mgmt IPs","/ARR-LargeTopology/mgmt-ips.html","🌐"],["Links","/ARR-LargeTopology/links.html","🔗"],["Tenants","/ARR-LargeTopology/tenants.html","🏢"],["VRFs","/ARR-LargeTopology/vrfs.html","🧭"],["BDs","/ARR-LargeTopology/bds.html","🌉"],["Subnets","/ARR-LargeTopology/subnets.html","🔢"],["EPGs","/ARR-LargeTopology/epgs.html","🎯"],["Leaf VNIs","/ARR-LargeTopology/vni.html","💠"],["VXLAN","/ARR-LargeTopology/vxlan/","🧵"],["Access policies","/ARR-LargeTopology/access-policies/","🧱"],["BD GIPo & FTAG","/ARR-LargeTopology/bd-gipo-ftag/","📡"],["YAML model","/ARR-LargeTopology/yaml-model/","📄"],["IAC files","/ARR-LargeTopology/iac-files/","📦"],["ARR-netbox","/ARR-LargeTopology/arr-netbox/","🗄️"],["Hardware monitor","/ARR-LargeTopology/hw-monitor/","📟"],["Site map","/ARR-LargeTopology/site-map/","🌳"],["Provisioning","/ARR-LargeTopology/provisioning/","🚀"],["Test explain","/ARR-LargeTopology/test-explain/","🧪"]]],["zFrontier","/zfrontier/","🌠",[["zFrontier","/zfrontier/","🌠"],["Farzad","/zfrontier/farzad/","📺"],["SpaceX vs Tesla shares","/zfrontier/shares/","📈"],["Optimus","/zfrontier/optimus/","🤖"],["Gigafactory","/zfrontier/gigafactory/","🏭"],["FSD versions","/zfrontier/fsd-versions/","🛣️"],["Liquid cooling","/zfrontier/liquid-cooling/","💧"],["SpaceX Tracking","/zfrontier/spacex/","🚀"],["CyberCab","/zfrontier/cybercab/","🚕"],["AI FineTune Pod","/zfrontier/ai-finetune-pod/","🎛️"],["MCP Servers","/zfrontier/mcp-servers/","🔌"],["NaC CLI","/zfrontier/nac-cli/","🧰"],["GPU Workflow","/zfrontier/3gpu-ai-workflow/","🧮"],["MWMESH","/zfrontier/mwmesh/","📡"],["Notebooks","/zfrontier/notebooks/","📓"],["RAG documents","/zfrontier/rag-documents/","📚"],["Foundation-Sec-8B","/zfrontier/foundation-sec-8b/","🛡️"],["Terafab","/zfrontier/terafab/","💠"],["3DiffsVXLAN","/zfrontier/3diffsvxlan/","🔀"],["ARR-LargePod","/zfrontier/arr-largepod/","🏗️"],["ACI GUI Forms","/zfrontier/ACI-GUI-Forms/","📋"],["Nvidia A100 & H100","/zfrontier/Nvidia-A100-H100/","🟩"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"]]],["ACI GUI Forms","/aci-gui-forms/WIP/gui-map/","📝",[["GUI Map","/aci-gui-forms/WIP/gui-map/","🗺️"]]],["ACI GUI","/aci-gui/","🖥️",[["Create Pod Policy Group","/aci-gui/create-pod-policy-group/","🧬"],["Create Bridge Domain (step 3)","/aci-gui/create-bridge-domain-step3/","🌉"],["Create Subnet","/aci-gui/create-subnet/","🔢"],["Create Application Profile","/aci-gui/create-application-profile/","🧩"],["Create Management EPG","/aci-gui/create-management-epg/","🛠️"],["Static Node Management Addresses","/aci-gui/static-node-management-addresses/","📍"],["Create Fabric Policies","/aci-gui/create-fabric-policies/","🧵"],["Create Access Policies","/aci-gui/create-access-policies/","🔐"],["Create VLAN Pool","/aci-gui/create-vlan-pool/","🏷️"],["Create Physical Domain","/aci-gui/create-physical-domain/","🏛️"],["Create Access Interface Policy Group","/aci-gui/create-access-interface-policy-group/","🔌"],["Create PC Interface Policy Group","/aci-gui/create-pc-interface-policy-group/","🔀"],["Interface Wizard for vPC","/aci-gui/interface-wizard-vpc/","🪄"],["Create VMM Domain","/aci-gui/create-vmm-domain/","💻"],["vCenter Networking","/aci-gui/vcenter-networking/","🖥️"],["Create Tenant","/aci-gui/create-tenant/","🏢"],["Create L3Out","/aci-gui/create-l3out/","🌐"],["L3Out Contracts","/aci-gui/l3out-contracts/","📜"],["Create Bridge Domain","/aci-gui/create-bridge-domain/","🌉"],["Bridge Domain","/aci-gui/bridge-domain/","🌉"],["Mgmt Bridge Domain","/aci-gui/mgmt-bridge-domain/","🔧"],["DHCP Relay","/aci-gui/dhcp-relay/","📡"],["Management Application Profile","/aci-gui/management-application-profile/","📦"],["Application Profile (web + app)","/aci-gui/application-profile/","🧩"],["Create VRF","/aci-gui/create-vrf/","🧭"],["Create Endpoint Group","/aci-gui/create-endpoint-group/","🎯"],["Contracts Between Tenants","/aci-gui/contracts-between-tenants/","🤝"],["Create Filter","/aci-gui/create-filter/","🧹"],["Create Contract","/aci-gui/create-contract/","📃"],["Create Management Contracts","/aci-gui/create-management-contracts/","📑"],["Mgmt PortGroup to VM","/aci-gui/mgmt-portgroup-to-vm/","🧷"],["Pod Policy Group","/aci-gui/pod-policy-group/","🕒"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=(seq?String(seq)+'. ':'')+e[0];if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks ›';r2.appendChild(t);
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1))});r2.appendChild(pills);n.appendChild(r2)}}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+</body>
+</html>
