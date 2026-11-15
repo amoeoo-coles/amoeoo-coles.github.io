@@ -1,0 +1,164 @@
+# Network-as-Code (nac-aci data model, apic: root)
+# Environment: ARR-FABRIC — ACI Rack Rental (live APIC at https://192.168.10.1)
+# Source: Restated from the Cursor_Tenant6 fix v4 payload that was POSTed once
+#   to ARR-APIC-01 at 12:47:13 AM AEDT on 15 November 2026 (HTTP 200).
+# Payload SHA-256: 2e89245602689a8e0bc1bcd7a3729a05de50115fb648e43e1b6e44d32dc30769
+# Existing fabric containers uni/infra and uni/infra/funcprof are not restated
+#   as objects; their children appear under access_policies.
+# This file is a published copy of the applied policy, not a new apply.
+---
+apic:
+  access_policies:
+    vlan_pools:
+    - name: Cursor_Tenant6_vlans
+      allocation: static
+      ranges:
+      - from: 1601
+        to: 1603
+        allocation: static
+        role: internal
+    physical_domains:
+    - name: Cursor_Tenant6_phys
+      vlan_pool: Cursor_Tenant6_vlans
+      vlan_pool_allocation: static
+    aaeps:
+    - name: Cursor_Tenant6_aaep
+      description: AAEP for Cursor_Tenant6 N9Kv-01 and N9Kv-03 access on leaf Ethernet1/5
+      physical_domains:
+      - Cursor_Tenant6_phys
+    leaf_interface_policy_groups:
+    - name: Cursor_Tenant6_ipg
+      type: access
+      description: Access non-vPC IPG for Cursor_Tenant6 leaf Ethernet1/5
+      aaep: Cursor_Tenant6_aaep
+    leaf_interface_profiles:
+    - name: Cursor_Tenant6_ifsel_101_102
+      description: Interface profile selecting Ethernet1/5 on LEAF-101/102 for N9Kv-01
+      selectors:
+      - name: eth1-5-n9kv01
+        policy_group: Cursor_Tenant6_ipg
+        port_blocks:
+        - name: eth1-5
+          from_module: 1
+          from_port: 5
+          to_module: 1
+          to_port: 5
+    - name: Cursor_Tenant6_ifsel_103_104
+      description: Interface profile selecting Ethernet1/5 on LEAF-103/104 for N9Kv-03
+      selectors:
+      - name: eth1-5-n9kv03
+        policy_group: Cursor_Tenant6_ipg
+        port_blocks:
+        - name: eth1-5
+          from_module: 1
+          from_port: 5
+          to_module: 1
+          to_port: 5
+    leaf_switch_profiles:
+    - name: Cursor_Tenant6_sw_101
+      description: Switch profile for node 101 (LEAF-101) Cursor_Tenant6
+      interface_profiles:
+      - Cursor_Tenant6_ifsel_101_102
+      selectors:
+      - name: leaf-101
+        node_blocks:
+        - name: leaf-101
+          from: 101
+          to: 101
+    - name: Cursor_Tenant6_sw_102
+      description: Switch profile for node 102 (LEAF-102) Cursor_Tenant6
+      interface_profiles:
+      - Cursor_Tenant6_ifsel_101_102
+      selectors:
+      - name: leaf-102
+        node_blocks:
+        - name: leaf-102
+          from: 102
+          to: 102
+    - name: Cursor_Tenant6_sw_103
+      description: Switch profile for node 103 (LEAF-103) Cursor_Tenant6
+      interface_profiles:
+      - Cursor_Tenant6_ifsel_103_104
+      selectors:
+      - name: leaf-103
+        node_blocks:
+        - name: leaf-103
+          from: 103
+          to: 103
+    - name: Cursor_Tenant6_sw_104
+      description: Switch profile for node 104 (LEAF-104) Cursor_Tenant6
+      interface_profiles:
+      - Cursor_Tenant6_ifsel_103_104
+      selectors:
+      - name: leaf-104
+        node_blocks:
+        - name: leaf-104
+          from: 104
+          to: 104
+  tenants:
+  - name: Cursor_Tenant6
+    description: Cursor Tenant 6 - N9Kv-01 and N9Kv-03 access on ARR-FABRIC via NetBox pipeline
+    vrfs:
+    - name: Cursor_Tenant6_VRF
+      description: Cursor_Tenant6 VRF for N9Kv-01 and N9Kv-03
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+    bridge_domains:
+    - name: Cursor_Tenant6_BD
+      description: Single BD for N9Kv-01 and N9Kv-03
+      vrf: Cursor_Tenant6_VRF
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: proxy
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 10.6.1.1/24
+        description: Cursor_Tenant6 BD gateway 10.6.1.1/24
+        public: false
+        private: true
+        shared: false
+    application_profiles:
+    - name: Cursor_Tenant6_AP
+      description: Application profile for N9Kv-01 and N9Kv-03 EPGs
+      endpoint_groups:
+      - name: N9Kv-01_EPG
+        description: N9Kv-01 on VLAN 1601, static ports LEAF-101/102 Ethernet1/5 (trunk)
+        bridge_domain: Cursor_Tenant6_BD
+        physical_domains:
+        - Cursor_Tenant6_phys
+        static_ports:
+        - pod_id: 1
+          node_id: 101
+          module: 1
+          port: 5
+          vlan: 1601
+          mode: regular
+          deployment_immediacy: immediate
+        - pod_id: 1
+          node_id: 102
+          module: 1
+          port: 5
+          vlan: 1601
+          mode: regular
+          deployment_immediacy: immediate
+      - name: N9Kv-03_EPG
+        description: N9Kv-03 on VLAN 1603, static ports LEAF-103/104 Ethernet1/5 (trunk)
+        bridge_domain: Cursor_Tenant6_BD
+        physical_domains:
+        - Cursor_Tenant6_phys
+        static_ports:
+        - pod_id: 1
+          node_id: 103
+          module: 1
+          port: 5
+          vlan: 1603
+          mode: regular
+          deployment_immediacy: immediate
+        - pod_id: 1
+          node_id: 104
+          module: 1
+          port: 5
+          vlan: 1603
+          mode: regular
+          deployment_immediacy: immediate
