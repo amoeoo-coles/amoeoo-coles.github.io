@@ -92,6 +92,7 @@
   }
 
   function enhance(table) {
+    if (table.classList.contains("no-sort") || table.closest(".no-sort")) return;
     var thead = table.tHead;
     if (!thead) return;
     var ths = Array.prototype.slice.call(thead.querySelectorAll("th"));
