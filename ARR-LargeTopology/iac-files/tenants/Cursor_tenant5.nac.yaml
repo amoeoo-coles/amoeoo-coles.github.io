@@ -1,0 +1,323 @@
+# Network-as-Code (nac-aci data model, apic: root)
+# source: NetBox SSoT http://localhost:8001, exported 15 Nov 2026, 5:46 PM AEDT
+# Read-only export. This file was not applied to the APIC and NetBox was not written.
+---
+apic:
+  tenants:
+  - name: Cursor_tenant5
+    description: Cursor tenant 5 - Web App DB tiers with firewall hops and DMZ L3Out via NetBox pipeline (NaC + Ansible)
+    vrfs:
+    - name: cursor5_vrf
+      description: Single VRF - zones isolated by whitelist, inter-zone only via FW service graph
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: cursor5_app_bd
+      description: App tier
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: proxy
+      limit_ip_learn_to_subnets: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      subnets:
+      - ip: 10.250.52.1/24
+        description: App tier
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    - name: cursor5_db_bd
+      description: DB tier
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: proxy
+      limit_ip_learn_to_subnets: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      subnets:
+      - ip: 10.250.53.1/24
+        description: DB tier
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    - name: cursor5_fw_app_bd
+      description: FW service leg App (PBR dest .34 active .35 standby)
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: flood
+      limit_ip_learn_to_subnets: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      subnets:
+      - ip: 10.250.59.33/28
+        description: FW service leg App (PBR dest .34 active .35 standby)
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    - name: cursor5_fw_db_bd
+      description: FW service leg DB (PBR dest .50 active .51 standby)
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: flood
+      limit_ip_learn_to_subnets: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      subnets:
+      - ip: 10.250.59.49/28
+        description: FW service leg DB (PBR dest .50 active .51 standby)
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    - name: cursor5_fw_dmz_bd
+      description: FW service leg DMZ side (PBR dest .2 active .3 standby)
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: flood
+      limit_ip_learn_to_subnets: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      subnets:
+      - ip: 10.250.59.1/28
+        description: FW service leg DMZ side (PBR dest .2 active .3 standby)
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    - name: cursor5_fw_web_bd
+      description: FW service leg Web (PBR dest .18 active .19 standby)
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: flood
+      limit_ip_learn_to_subnets: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      subnets:
+      - ip: 10.250.59.17/28
+        description: FW service leg Web (PBR dest .18 active .19 standby)
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    - name: cursor5_web_bd
+      description: Web tier (advertised to DMZ via L3Out)
+      vrf: cursor5_vrf
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: proxy
+      limit_ip_learn_to_subnets: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      l3outs:
+      - DMZ_L3Out
+      subnets:
+      - ip: 10.250.51.1/24
+        description: Web tier (advertised to DMZ via L3Out)
+        public: true
+        private: false
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    filters:
+    - name: flt-app-to-db
+      entries:
+      - name: mssql
+        ether_type: ip
+        protocol: tcp
+        destination_from_port: 1433
+        destination_to_port: 1433
+      - name: mysql
+        ether_type: ip
+        protocol: tcp
+        destination_from_port: 3306
+        destination_to_port: 3306
+      - name: postgres
+        ether_type: ip
+        protocol: tcp
+        destination_from_port: 5432
+        destination_to_port: 5432
+    - name: flt-http-https
+      entries:
+      - name: http
+        ether_type: ip
+        protocol: tcp
+        destination_from_port: 80
+        destination_to_port: 80
+      - name: https
+        ether_type: ip
+        protocol: tcp
+        destination_from_port: 443
+        destination_to_port: 443
+    - name: flt-web-to-app
+      entries:
+      - name: http-alt
+        ether_type: ip
+        protocol: tcp
+        destination_from_port: 8080
+        destination_to_port: 8080
+      - name: https
+        ether_type: ip
+        protocol: tcp
+        destination_from_port: 443
+        destination_to_port: 443
+    contracts:
+    - name: app-to-db
+      scope: context
+      subjects:
+      - name: subj
+        apply_both_directions: true
+        reverse_filter_ports: true
+        filters:
+        - filter: flt-app-to-db
+          action: permit
+          apply_direction: both
+    - name: dmz-to-web
+      scope: context
+      subjects:
+      - name: subj
+        apply_both_directions: true
+        reverse_filter_ports: true
+        filters:
+        - filter: flt-http-https
+          action: permit
+          apply_direction: both
+    - name: web-to-app
+      scope: context
+      subjects:
+      - name: subj
+        apply_both_directions: true
+        reverse_filter_ports: true
+        filters:
+        - filter: flt-web-to-app
+          action: permit
+          apply_direction: both
+    application_profiles:
+    - name: cursor5_ap
+      description: Three-tier application (web app db)
+      endpoint_groups:
+      - name: app
+        description: App servers - reached from Web via FW
+        bridge_domain: cursor5_app_bd
+        preferred_group: false
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        contracts:
+          providers:
+          - web-to-app
+          consumers:
+          - app-to-db
+      - name: db
+        description: DB servers - reached from App via FW
+        bridge_domain: cursor5_db_bd
+        preferred_group: false
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        contracts:
+          providers:
+          - app-to-db
+      - name: web
+        description: Web servers - reached from DMZ via FW
+        bridge_domain: cursor5_web_bd
+        preferred_group: false
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        contracts:
+          providers:
+          - dmz-to-web
+          consumers:
+          - web-to-app
+    l3outs:
+    - name: DMZ_L3Out
+      description: DMZ L3Out on LEAF-101 eth1/3 VLAN 3051 (10.250.250.1/30, rtrId 10.255.255.101)
+      vrf: cursor5_vrf
+      domain: cursor5_l3_dom
+      export_route_control: true
+      import_route_control: false
+      external_endpoint_groups:
+      - name: DMZ_ExtEPG
+        description: External EPG for DMZ (0.0.0.0/0 import-security), consumes dmz-to-web
+        preferred_group: false
+        subnets:
+        - name: default
+          prefix: 0.0.0.0/0
+          description: Default external subnet 0.0.0.0/0 (import-security)
+          import_route_control: false
+          export_route_control: false
+          shared_route_control: false
+          import_security: true
+          shared_security: false
+          aggregate_import_route_control: false
+          aggregate_export_route_control: false
+          aggregate_shared_route_control: false
+        contracts:
+          consumers:
+          - dmz-to-web

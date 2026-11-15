@@ -1,0 +1,62 @@
+# Network-as-Code (nac-aci data model, apic: root)
+# source: NetBox SSoT http://localhost:8001, exported 15 Nov 2026, 5:46 PM AEDT
+# Read-only export. This file was not applied to the APIC and NetBox was not written.
+---
+apic:
+  tenants:
+  - name: Cursor_Tenant6
+    description: Cursor Tenant 6 - N9Kv-01 and N9Kv-03 access on ARR-FABRIC via NetBox pipeline
+    vrfs:
+    - name: Cursor_Tenant6_VRF
+      description: Cursor_Tenant6 VRF for N9Kv-01 and N9Kv-03
+      data_plane_learning: true
+      enforcement_direction: ingress
+      enforcement_preference: enforced
+      preferred_group: false
+    bridge_domains:
+    - name: Cursor_Tenant6_BD
+      description: Single BD for N9Kv-01 and N9Kv-03 (10.6.1.1/24)
+      vrf: Cursor_Tenant6_VRF
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: proxy
+      limit_ip_learn_to_subnets: true
+      advertise_host_routes: false
+      ip_dataplane_learning: true
+      unknown_ipv4_multicast: flood
+      unknown_ipv6_multicast: flood
+      multi_destination_flooding: bd-flood
+      clear_remote_mac_entries: false
+      subnets:
+      - ip: 10.6.1.1/24
+        description: Cursor_Tenant6 BD gateway 10.6.1.1/24 (private)
+        public: false
+        private: true
+        shared: false
+        primary_ip: false
+        virtual: false
+        nd_ra_prefix: true
+        no_default_gateway: false
+        igmp_querier: false
+    application_profiles:
+    - name: Cursor_Tenant6_AP
+      description: Application profile for N9Kv-01 and N9Kv-03 EPGs
+      endpoint_groups:
+      - name: N9Kv-01_EPG
+        description: N9Kv-01 on VLAN 1601, static ports LEAF-101/102 Ethernet1/5 (trunk)
+        bridge_domain: Cursor_Tenant6_BD
+        preferred_group: false
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        physical_domains:
+        - Cursor_Tenant6_phys
+      - name: N9Kv-03_EPG
+        description: N9Kv-03 on VLAN 1603, static ports LEAF-103/104 Ethernet1/5 (trunk)
+        bridge_domain: Cursor_Tenant6_BD
+        preferred_group: false
+        flood_in_encap: false
+        intra_epg_isolation: false
+        proxy_arp: false
+        physical_domains:
+        - Cursor_Tenant6_phys
