@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "collected": "17 November 2026, 5:04 AM AEDT",
+  "collected_long": "17 November 2026, 5:04 AM AEDT",
+  "collected_short": "17 Nov 2026, 5:04 AM AEDT",
+  "collected_iso": "2026-11-17T05:04:13.534717+11:00",
+  "source": "Collected on the shared box from read-only Docker, HTTP and GitLab Rails checks: sudo docker ps, sudo docker inspect, sudo docker image inspect, sudo docker stats --no-stream, sudo docker exec gitlab (VERSION, version-manifest, gitlab-ctl status, gitlab-rails runner for runner metadata without credentials), sudo docker exec gitlab-runner (gitlab-runner --version, gitlab-runner verify), curl of http://localhost:8929 /-/health /-/readiness /-/liveness /users/sign_in and /api/v4/version, and a redacted parse of /workspace/gitlab-docker/runner-config/config.toml. Setup notes from /workspace/gitlab-docker/README.md and docker-compose.yml. No container was started or restarted. Credential file contents and runner authentication values were not read into this page.",
+  "setup_dir": "/workspace/gitlab-docker",
+  "not_collected": [
+    "/api/v4/version (unauthenticated HTTP 401); version taken from the VERSION file instead"
+  ],
+  "sources": {
+    "docker_ps": "sudo docker ps -a --format '{{.Names}} {{.Image}} {{.Status}} {{.Ports}}'",
+    "gitlab_inspect": "sudo docker inspect gitlab",
+    "gitlab_image": "sudo docker image inspect of the GitLab image id",
+    "runner_inspect": "sudo docker inspect gitlab-runner",
+    "runner_image": "sudo docker image inspect of the runner image id",
+    "docker_stats": "sudo docker stats --no-stream gitlab gitlab-runner",
+    "gitlab_version": "sudo docker exec gitlab cat /opt/gitlab/embedded/service/gitlab-rails/VERSION and head -1 /opt/gitlab/version-manifest.txt",
+    "gitlab_ctl": "sudo docker exec gitlab gitlab-ctl status",
+    "http": "curl -sS -D - -m 15 http://localhost:8929{path} for /-/health, /-/readiness, /-/liveness, /users/sign_in, /api/v4/version",
+    "runner_version": "sudo docker exec gitlab-runner gitlab-runner --version",
+    "runner_verify": "sudo docker exec gitlab-runner gitlab-runner verify",
+    "runner_toml": "parsed /workspace/gitlab-docker/runner-config/config.toml after stripping credential assignments; those values were not stored",
+    "rails_runner": "sudo docker exec gitlab gitlab-rails runner (Ci::Runner id, description, runner_type, tag_list, run_untagged, online, status, locked, contacted_at, created_at)",
+    "password_file": "tested only whether /workspace/gitlab-docker/config/initial_root_password exists; file contents were not read",
+    "compose": "read /workspace/gitlab-docker/docker-compose.yml and README.md for setup notes"
+  },
+  "path": "/ARR-LargeTopology/gitlab/",
+  "product": "GitLab CE",
+  "gitlab_version": "19.5.5"
+}
