@@ -1,8 +1,50 @@
 # Network-as-Code (nac-aci) model generated from NetBox (ACI plugin, read-only) - same schema as /workspace/aci-nac data/tenants/
-# NetBox data read 10 Nov 2026 08:03:30 AEDT (Melbourne time). Source: NetBox 4.7.3 REST API (http://127.0.0.1:8001), netbox_aci_plugin 0.5.0, GET only
+# NetBox data read 18 Nov 2026 07:28:23 AEDT (Melbourne time). Source: NetBox 4.7.3 REST API (http://127.0.0.1:8001), netbox_aci_plugin 0.5.0, GET only
 ---
 apic:
   tenants:
+  - name: aci_p01_tenant
+    description: ACI Demo Guide Policy pod1 tenant (logical-only, AOAPIC).
+    vrfs:
+    - name: aci_p01_vrf
+    bridge_domains:
+    - name: aci_p01_bd_app
+      vrf: aci_p01_vrf
+      unicast_routing: true
+      arp_flooding: false
+      unknown_unicast: proxy
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 172.16.1.1/24
+        public: false
+        shared: false
+    - name: aci_p01_bd_l2
+      vrf: aci_p01_vrf
+      unicast_routing: false
+      arp_flooding: true
+      unknown_unicast: flood
+      limit_ip_learn_to_subnets: true
+    - name: aci_p01_bd_web
+      vrf: aci_p01_vrf
+      unicast_routing: true
+      arp_flooding: false
+      unknown_unicast: proxy
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 10.0.144.1/29
+        public: true
+        shared: false
+    application_profiles:
+    - name: aci_p01_ap
+      endpoint_groups:
+      - name: aci_p01_epg_app
+        bridge_domain: aci_p01_bd_app
+      - name: aci_p01_epg_web
+        bridge_domain: aci_p01_bd_web
+    - name: aci_p01_ap_L2
+      endpoint_groups:
+      - name: aci_p01_epg_L2
+        bridge_domain: aci_p01_bd_l2
   - name: Cursor_tenant1
     description: Cursor tenant 1 - web tier via Add Tenant portal (NaC + Ansible)
     vrfs:
@@ -166,3 +208,51 @@ apic:
       - name: web
         description: Web servers - reached from DMZ via FW
         bridge_domain: cursor5_web_bd
+  - name: Cursor_Tenant6
+    description: Cursor Tenant 6 - N9Kv-01 and N9Kv-03 access on ARR-FABRIC via NetBox pipeline
+    vrfs:
+    - name: Cursor_Tenant6_VRF
+      description: Cursor_Tenant6 VRF for N9Kv-01 and N9Kv-03
+    bridge_domains:
+    - name: Cursor_Tenant6_BD
+      description: Single BD for N9Kv-01 and N9Kv-03 (10.6.1.1/24)
+      vrf: Cursor_Tenant6_VRF
+      unicast_routing: true
+      arp_flooding: true
+      unknown_unicast: proxy
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 10.6.1.1/24
+        description: Cursor_Tenant6 BD gateway 10.6.1.1/24 (private)
+        public: false
+        shared: false
+    application_profiles:
+    - name: Cursor_Tenant6_AP
+      description: Application profile for N9Kv-01 and N9Kv-03 EPGs
+      endpoint_groups:
+      - name: N9Kv-01_EPG
+        description: N9Kv-01 on VLAN 1601, static ports LEAF-101/102 Ethernet1/5 (trunk)
+        bridge_domain: Cursor_Tenant6_BD
+      - name: N9Kv-03_EPG
+        description: N9Kv-03 on VLAN 1603, static ports LEAF-103/104 Ethernet1/5 (trunk)
+        bridge_domain: Cursor_Tenant6_BD
+  - name: msite_p01_tenant
+    description: ACI Demo Guide Policy Multi-Site tenant (logical-only, AOAPIC).
+    vrfs:
+    - name: msite_p01_vrf
+    bridge_domains:
+    - name: msite_p01_bd
+      vrf: msite_p01_vrf
+      unicast_routing: true
+      arp_flooding: false
+      unknown_unicast: proxy
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 192.168.101.1/24
+        public: false
+        shared: false
+    application_profiles:
+    - name: msite_p01_ap
+      endpoint_groups:
+      - name: msite_p01_epg
+        bridge_domain: msite_p01_bd
