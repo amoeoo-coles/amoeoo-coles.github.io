@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:auto;
+  min-height:44px;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:auto;min-height:44px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:visible;
+  text-overflow:unset;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.25;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:22px;
+  height:22px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:16px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:#1d4ed8!important;
+}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MBPro — 14-inch MacBook Pro (M5 Max) — zFrontier — amoeoo-coles</title>
+<meta name="description" content="Aung's 14-inch MacBook Pro in Silver with M5 Max, 128GB unified memory and 2TB storage (A$10,299.00): specs, local LLMs with LM Studio and AnythingLLM, and how Grok Bot sits alongside.">
+<style>:root{--site-content-max:1200px}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg,#f8fafc);color:var(--ink,#0f172a);font:15px/1.55 system-ui,Segoe UI,Arial,sans-serif}
+main{max-width:var(--site-content-max,1200px);margin:0 auto;padding:18px 18px 64px;min-width:0}
+.tr17{color:var(--muted,#475569)!important}
+.crumb{font-size:13px;color:var(--muted,#475569);margin:0 0 12px}
+.crumb a{color:var(--link,#1d4ed8);text-decoration:none}
+h1{font-size:1.7rem;line-height:1.25;margin:0 0 8px;overflow-wrap:anywhere}
+h2{font-size:1.2rem;margin:1.6rem 0 .6rem}
+h3{font-size:1.02rem;margin:1.1rem 0 .4rem}
+.lede{font-size:1.02rem;color:var(--muted,#475569);margin:0 0 1.1rem;max-width:80ch}
+.kicker{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;color:#fff;margin:0 6px 8px 0}
+.stamp{display:inline-block;font-size:12.5px;color:var(--muted,#475569);background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:8px;padding:3px 9px;margin:0 0 12px}
+.note,.warn,.claim{border-radius:10px;padding:10px 12px;margin:12px 0;border:1px solid var(--line,#e2e8f0);background:var(--card,#fff)}
+.note{border-left:4px solid #2563eb}.warn{border-left:4px solid #d97706}.claim{border-left:4px solid #9333ea}
+.badge{display:inline-block;font:700 10.5px/1.6 system-ui;letter-spacing:.03em;text-transform:uppercase;border-radius:999px;padding:0 7px;margin-right:4px;white-space:nowrap;color:#fff}
+.b-fact{background:#15803d}.b-claim{background:#9333ea}.b-est{background:#b45309}.b-unk{background:#64748b}
+.b-live{background:#15803d}.b-sup{background:#0369a1}.b-ann{background:#9333ea}.b-disp{background:#be185d}.b-none{background:#64748b}
+.kids{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));margin:8px 0 16px}
+.pbox{display:block;text-decoration:none;color:inherit;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:12px 14px;border-top:5px solid var(--c,#2563eb);transition:transform .12s,box-shadow .12s;min-width:0}
+.pbox:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,23,42,.08)}
+.pbox h3{margin:0 0 4px;font-size:1.02rem}.pbox p{margin:0;color:var(--muted,#475569);font-size:13.5px}
+.stats{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));margin:10px 0 16px}
+.stat{background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:12px;padding:10px 12px;min-width:0}
+.stat b{display:block;font-size:1.35rem;line-height:1.2}
+.stat>span{display:block;font-size:12.5px;color:var(--muted,#475569)}
+.stat span.badge{display:inline-block}
+.stat>cite{display:block;font-style:normal;font-size:11.5px;margin-top:4px;overflow-wrap:anywhere}
+.stat cite.src{display:inline}
+.tblwrap{overflow-x:auto;max-width:100%;margin:0 0 16px;border:1px solid var(--line,#e2e8f0);border-radius:10px;background:var(--card,#fff)}
+table.tree{width:100%;min-width:720px;border-collapse:collapse;font-size:13.5px}
+table.tree th,table.tree td{border-bottom:1px solid var(--line,#e2e8f0);padding:7px 9px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+table.tree th{background:var(--th-bg,#f1f5f9);font-size:12px;letter-spacing:.02em;cursor:pointer;white-space:nowrap}
+.filter{width:100%;max-width:360px;padding:7px 10px;border:1px solid var(--line,#e2e8f0);border-radius:8px;margin:0 0 10px;font:inherit;background:var(--card,#fff);color:var(--ink,#0f172a)}
+.help{font-size:13.5px;color:var(--muted,#475569);margin:-4px 0 12px}
+.svgwrap{overflow-x:auto;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:10px;margin:12px 0 20px}
+.svgwrap svg{min-width:900px;width:100%;height:auto;display:block}
+.svgwrap svg text{fill:var(--ink,#0f172a);font-family:system-ui,Arial,sans-serif}
+.svgwrap svg text.mut{fill:var(--muted,#475569)}
+.svgwrap svg .axis{stroke:var(--muted,#94a3b8)}
+.svgwrap svg .card{fill:var(--card,#fff);stroke:var(--line,#cbd5e1)}
+cite.src{font-style:normal;font-size:12px;color:var(--muted,#475569)}
+cite.src a{color:var(--link,#1d4ed8)}
+.asof{font-size:11.5px;color:var(--muted,#475569);white-space:nowrap}
+ol.srcs{font-size:13px;padding-left:1.3rem;overflow-wrap:anywhere}ol.srcs li{margin:0 0 5px}
+.related{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
+.related a{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);text-decoration:none;color:var(--ink,#0f172a);font-size:13px}
+.citygrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));margin:10px 0 18px}
+.city{background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:12px;padding:10px 12px;border-left:5px solid var(--c,#64748b);min-width:0}
+.city h3{margin:0 0 4px;font-size:1rem}.city p{margin:2px 0;font-size:12.5px;color:var(--muted,#475569)}
+ul.tight{margin:6px 0 14px;padding-left:1.2rem}ul.tight li{margin:0 0 5px}
+@media(max-width:430px){main{padding:14px 10px 56px}h1{font-size:1.4rem}.kids,.citygrid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.svgwrap svg{min-width:760px}}
+
+.duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin:10px 0 18px}
+.col{background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:12px 14px;min-width:0;border-top:5px solid var(--c,#2563eb)}
+.col h3{margin:0 0 6px}
+.col .stats{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+.chart{overflow:hidden;margin:8px 0}.chart svg{width:100%;height:auto;display:block}
+.chart svg text{fill:var(--ink,#0f172a);font-family:system-ui,Arial,sans-serif}.chart svg text.mut{fill:var(--muted,#475569)}
+.chart svg .grid{stroke:var(--line,#e2e8f0)}
+.svgwrap svg rect,.svgwrap svg .card{fill:var(--card,#ffffff)}
+html[data-theme="dark"] .svgwrap svg rect,html[data-theme="dark"] .svgwrap svg .card{fill:var(--card,#1e293b)}
+.tag{display:inline-block;font:600 11px/1.6 system-ui;border-radius:999px;padding:0 7px;margin:1px 3px 1px 0;background:var(--th-bg,#f1f5f9);border:1px solid var(--line,#e2e8f0);color:var(--ink,#0f172a);white-space:nowrap}
+ol.steps{padding-left:1.3rem}ol.steps li{margin:0 0 7px}
+.b-ind{background:#0f766e}
+@media(max-width:720px){.duo{grid-template-columns:1fr}}
+
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:10px 0 18px}
+figure.shot{margin:0;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;overflow:hidden;min-width:0}
+figure.shot img{width:100%;height:auto;display:block;background:#f8fafc}
+figure.shot figcaption{font-size:12px;color:var(--muted,#475569);padding:8px 12px 10px;overflow-wrap:anywhere}
+figure.shot figcaption a{color:var(--link,#1d4ed8)}
+figure.shot-logo img{object-fit:contain;padding:28px 24px;background:#fff;max-height:220px;width:auto;margin:0 auto}
+#zf-mbpro-specs,#zf-mbpro-mem{min-width:720px}
+</style>
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+
+<!-- site-menu v1 --><nav class="site"><a href="/">Home</a></nav>
+<main>
+<div class="tr17" style="text-align:right;font-size:13px;margin:0 0 10px"><span class="uv" style="background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></div>
+<nav class="crumb"><a href="/">Home</a> › <a href="/zfrontier/">zFrontier</a> › MBPro</nav>
+<div class="stamp">Last updated 18 Nov 2026 07:38 AEDT (Melbourne time) · facts researched 18 Nov 2026</div>
+
+<span class="kicker" style="background:#0071e3">This machine</span>
+<h1>💻 14-inch MacBook Pro (M5 Max)</h1>
+<p class="lede">Aung’s 14-inch MacBook Pro in Silver, configured with the M5 Max chip (18-core CPU, 40-core GPU, 16-core Neural Engine), 128GB of unified memory, 2TB of storage, the standard Liquid Retina XDR display and a 96W power adapter, at A$10,299.00. This page records that exact configuration, then explains — from official docs, not from unpublished speed tests — how LM Studio and AnythingLLM can run local large language models on this machine, and how Grok Bot sits alongside them.</p>
+
+<div class="note"><p><b>These are Aung’s configured specs.</b> The table below is this machine as configured, not a generic 14-inch base model. The chip, memory, storage, finish, display type, adapter, keyboard and price were supplied with the request and match the Apple Australia configure-to-order page for this combination, opened on 18 Nov 2026, which listed <b>A$10,299.00</b>. Extra facts such as memory bandwidth, display resolution, port speeds, battery size and chassis weight come from Apple’s tech specs and the 3 Mar 2026 newsroom announcement. Numbers Apple does not publish, and tokens-per-second figures I have not measured, are not invented here. <cite class="src">[<a href="https://www.apple.com/au/shop/buy-mac/macbook-pro/14-inch-silver-standard-display-apple-m5-max-chip-18-core-cpu-40-core-gpu-128gb-memory-2tb-storage" title="Apple (AU) store: 14-inch MacBook Pro, Silver, standard display, M5 Max 18-core CPU / 40-core GPU, 128GB, 2TB (read 18 Nov 2026)">1</a>]</cite> <cite class="src">[<a href="https://support.apple.com/en-us/126318" title="Apple Support: MacBook Pro (14-inch, M5 Pro or M5 Max) — Tech Specs (read 18 Nov 2026)">2</a>]</cite></p></div>
+
+<div class="stats">
+<div class="stat"><b>M5 Max</b><span>18-core CPU (6 super cores, 12 performance cores), 40-core GPU, 16-core Neural Engine</span><cite>614GB/s unified memory bandwidth on the 40-core GPU SKU <cite class="src">[<a href="https://support.apple.com/en-us/126318" title="Apple Support: MacBook Pro (14-inch, M5 Pro or M5 Max) — Tech Specs (read 18 Nov 2026)">2</a>]</cite></cite></div>
+<div class="stat"><b>128GB</b><span>Unified memory (shared by CPU, GPU and Neural Engine)</span><cite>Offered only with M5 Max and the 40-core GPU <cite class="src">[<a href="https://support.apple.com/en-us/126318" title="Apple Support: MacBook Pro (14-inch, M5 Pro or M5 Max) — Tech Specs (read 18 Nov 2026)">2</a>]</cite></cite></div>
+<div class="stat"><b>2TB</b><span>SSD storage (M5 Max starts at 2TB; 4TB and 8TB are optional)</span><cite>Apple Support tech specs <cite class="src">[<a href="https://support.apple.com/en-us/126318" title="Apple Support: MacBook Pro (14-inch, M5 Pro or M5 Max) — Tech Specs (read 18 Nov 2026)">2</a>]</cite></cite></div>
+<div class="stat"><b>A$10,299.00</b><span>Configured price on Apple Australia for this exact combination</span><cite>Standard display (not nano-texture); 96W adapter included <cite class="src">[<a href="https://www.apple.com/au/shop/buy-mac/macbook-pro/14-inch-silver-standard-display-apple-m5-max-chip-18-core-cpu-40-core-gpu-128gb-memory-2tb-storage" title="Apple (AU) store configure page for this 14-inch Silver M5 Max configuration (read 18 Nov 2026)">1</a>]</cite></cite></div>
+<div class="stat"><b>14.2-inch</b><span>Liquid Retina XDR, 3024×1964 at 254 ppi, standard glass</span><cite>Nano-texture is a paid option; this machine uses the standard display <cite class="src">[<a href="https://support.apple.com/en-us/126318" title="Apple Support: MacBook Pro (14-inch, M5 Pro or M5 Max) — Tech Specs (read 18 Nov 2026)">2</a>]</cite></cite></div>
+<div class="stat"><b>Four displays</b><span>M5 Max supports up to four external displays, plus the built-in screen</span><cite>Over Thunderbolt and HDMI <cite class="src">[<a href="https://support.apple.com/en-us/126318" title="Apple Support: MacBook Pro (14-inch, M5 Pro or M5 Max) — Tech Specs (read 18 Nov 2026)">2</a>]</cite></cite></div>
+</div>
+
+<h2>Pictures</h2>
+<p>Product photos and app artwork are stored in this page’s <code>img/</code> folder (no hotlinking). Each caption states the source and how the file may be used. Official Apple, LM Studio and AnythingLLM images are copyright of their owners and are used here only to identify the products.</p>
+<div class="gallery">
+<figure class="shot">
+<img src="img/mbpro-14-silver.jpg" width="1600" height="1200" alt="14-inch MacBook Pro in Silver, open, showing the desktop wallpaper">
+<figcaption>14-inch MacBook Pro in Silver. Official Apple product image from the <a href="https://www.apple.com/au/shop/buy-mac/macbook-pro/14-inch-silver-standard-display-apple-m5-max-chip-18-core-cpu-40-core-gpu-128gb-memory-2tb-storage">Apple Australia configure page</a> for this size and finish (Open Graph / store image, retrieved 18 Nov 2026). Copyright Apple; used here for product identification. Resized/compressed for this page.</figcaption>
+</figure>
+<figure class="shot">
+<img src="img/mbpro-14-silver-front.jpg" width="1000" height="1000" alt="Front view of a 14-inch MacBook Pro in Silver, lid open">
+<figcaption>Front view of the 14-inch MacBook Pro (M5 Pro or M5 Max) in Silver. Official image from <a href="https://support.apple.com/en-us/126318">Apple Support tech specs</a> (retrieved 18 Nov 2026). Copyright Apple; used here for product identification. Converted and compressed for this page.</figcaption>
+</figure>
+<figure class="shot">
+<img src="img/mbpro-lmstudio-newsroom.jpg" width="980" height="654" alt="MacBook Pro running LM Studio beside Autodesk Maya, from Apple’s M5 Pro and M5 Max announcement">
+<figcaption>LM Studio running on a MacBook Pro with M5 Pro or M5 Max, alongside Autodesk Maya. Official photograph from <a href="https://www.apple.com/newsroom/2026/03/apple-introduces-macbook-pro-with-all-new-m5-pro-and-m5-max/">Apple’s 3 Mar 2026 newsroom announcement</a>. The chassis in this photo is Space Black; Aung’s machine is Silver. Copyright Apple; used here for product identification. Resized/compressed for this page.</figcaption>
+</figure>
+<figure class="shot shot-logo">
+<img src="img/lmstudio-logo.png" width="1480" height="391" alt="LM Studio official logo, app icon and wordmark">
+<figcaption>LM Studio logo (colour icon and wordmark). Official artwork from the <a href="https://lmstudio.ai/brand">LM Studio brand guidelines</a> (retrieved 18 Nov 2026). Copyright Element Labs / LM Studio; used here to identify the app, placed on a white background and resized. Not a freely licensed Commons file.</figcaption>
+</figure>
+<figure class="shot">
+<img src="img/anythingllm-ui.jpg" width="1200" height="630" alt="AnythingLLM desktop chat window with a workspace sidebar, from the official website">
+<figcaption>AnythingLLM desktop UI, showing a workspace list and a chat. Official share-card / product image from <a href="https://anythingllm.com/">anythingllm.com</a> (retrieved 18 Nov 2026). Copyright Mintplex Labs; used here for product identification. Recompressed for this page.</figcaption>
+</figure>
+<figure class="shot shot-logo">
+<img src="img/anythingllm-logo.png" width="784" height="179" alt="AnythingLLM official wordmark">
+<figcaption>AnythingLLM wordmark. Official logo from the <a href="https://github.com/Mintplex-Labs/anything-llm">AnythingLLM GitHub repository</a> (<code>frontend/src/media/logo/anything-llm-dark.png</code>, retrieved 18 Nov 2026). Copyright Mintplex Labs; used here to identify the app, placed on a white background. Not a freely licensed Commons file.</figcaption>
+</figure>
+</div>
+
+<h2>This machine, as configured</h2>
+<p class="help">Rows marked as Aung’s configuration are the options on this laptop. The other rows are general published specs for 14-inch MacBook Pro with M5 Max, which this configuration inherits.</p>
+<div class="tblwrap">
+<table class="tree" id="zf-mbpro-specs">
+<thead>
+<tr>
+<th onclick="ccSort(document.getElementById('zf-mbpro-specs'),0)">Item</th>
+<th onclick="ccSort(document.getElementById('zf-mbpro-specs'),1)">This machine</th>
+<th onclick="ccSort(document.getElementById('zf-mbpro-specs'),2)">Notes / source</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Model</td><td>14-inch MacBook Pro, Silver</td><td>Aung’s configuration. Finish options are Space Black and Silver. <cite class="src">[<a href="https://www.apple.com/au/shop/buy-mac/macbook-pro/14-inch-silver-standard-display-apple-m5-max-chip-18-core-cpu-40-core-gpu-128gb-memory-2tb-storage" title="Apple (AU) store configure page (read 18 Nov 2026)">1</a>]</cite> <cite class="src">[<a href="https://support.apple.com/en-us/126318" title="Apple Support tech specs (read 18 Nov 2026)">2</a>]</cite></td></tr>
+<tr><td>Configured price</td><td>A$10,299.00</td><td>Aung’s configured price; also the price shown on the Apple Australia page for this exact combination on 18 Nov 2026 (or A$858.25/month for 12 months at 0% p.a.). <cite class="src">[<a href="https://www.apple.com/au/shop/buy-mac/macbook-pro/14-inch-silver-standard-display-apple-m5-max-chip-18-core-cpu-40-core-gpu-128gb-memory-2tb-storage" title="Apple (AU) store configure page (read 18 Nov 2026)">1</a>]</cite></td></tr>
+<tr><td>Chip</td><td>Apple M5 Max, 18-core CPU, 40-core GPU, 16-core Neural Engine</td><td>Aung’s configuration. The 18-core CPU is 6 super cores and 12 performance cores. The 40-core GPU SKU is the one that supports 128GB and is published with 614GB/s memory bandwidth (the 32-core M5 Max SKU is 460GB/s). Each GPU core includes a Neural Accelerator; hardware-accelerated ray tracing is listed. <cite class="src">[<a href="https://support.apple.com/en-us/126318" title="Apple Support tech specs (read 18 Nov 2026)">2</a>]</cite> <cite class="src">[<a href="https://www.apple.com/newsroom/2026/03/apple-introduces-macbook-pro-with-all-new-m5-pro-and-m5-max/" title="Apple Newsroom, 3 Mar 2026: Apple introduces MacBook Pro with all-new M5 Pro and M5 Max (read 18 Nov 2026)">3</a>]</cite></td></tr>
+<tr><td>Apple Intelligence and Siri AI*</td><td>Included on this configuration</td><td>Shown on the Apple Australia summary for this machine. Apple documents that Apple Intelligence and Siri AI feature and language availability can vary by region. <cite class="src">[<a href="https://www.apple.com/au/shop/buy-mac/macbook-pro/14-inch-silver-standard-display-apple-m5-max-chip-18-core-cpu-40-core-gpu-128gb-memory-2tb-storage" title="Apple (AU) store configure page (read 18 Nov 2026)">1</a>]</cite> <cite class="src">[<a href="https://www.apple.com/newsroom/2026/03/apple-introduces-macbook-pro-with-all-new-m5-pro-and-m5-max/" title="Apple Newsroom, 3 Mar 2026 (read 18 Nov 2026)">3</a>]</cite></td></tr>
+<tr><td>Unified memory</td><td>128GB</td><td>Aung’s configuration. 128GB is published only for M5 Max with the 40-core GPU. <cite class="src">[<a href="https://support.apple.com/en-us/126318" title="Apple Support tech specs (read 18 Nov 2026)">2</a>]</cite></td></tr>
+<tr><td>Storage</td><td>2TB SSD</td><td>Aung’s configuration. 2TB is the starting SSD for M5 Max; 4TB and 8TB are optional. <cite class="src">[<a href="https://support.apple.com/en-us/126318" title="Apple Support tech specs (read 18 Nov 2026)">2</a>]</cite></td></tr>
+<tr><td>Display</td><td>Standard 14.2-inch Liquid Retina XDR (not nano-texture)</td><td>Aung’s configuration. 3024-by-1964 at 254 ppi; ProMotion up to 120Hz; XDR brightness 1000 nits sustained full-screen and 1600 nits peak (HDR content only); SDR up to 1000 nits outdoors. Nano-texture is a separate option (A$225 extra on the AU store when checked on 18 Nov 2026). <cite class="src">[<a href="https://support.apple.com/en-us/126318" title="Apple Support tech specs (read 18 Nov 2026)">2</a>]</cite> <cite class="src">[<a href="https://www.apple.com/au/shop/buy-mac/macbook-pro/14-inch-silver-standard-display-apple-m5-max-chip-18-core-cpu-40-core-gpu-128gb-memory-2tb-storage" title="Apple (AU) store configure page (read 18 Nov 2026)">1</a>]</cite></td></tr>
+<tr><td>Power adapter</td><td>96W USB-C Power Adapter, USB-C to MagSafe 3 Cable (2 m)</td><td>Aung’s configuration, and the adapter Apple lists as included with M5 Max. Fast-charge capable with a 96W or higher USB PD source. <cite class="src">[<a href="https://www.apple.com/au/shop/buy-mac/macbook-pro/14-inch-silver-standard-display-apple-m5-max-chip-18-core-cpu-40-core-gpu-128gb-memory-2tb-storage" title="Apple (AU) store configure page (read 18 Nov 2026)">1</a>]</cite> <cite class="src">[<a href="https://support.apple.com/en-us/126318" title="Apple Support tech specs (read 18 Nov 2026)">2</a>]</cite></td></tr>
+<tr><td>Keyboard</td><td>US English backlit Magic Keyboard with Touch ID</td><td>Aung’s configuration. The backlit Magic Keyboard includes Touch ID and a Force Touch trackpad; ANSI layouts have 78 keys. <cite class="src">[<a href="https://www.apple.com/au/shop/buy-mac/macbook-pro/14-inch-silver-standard-display-apple-m5-max-chip-18-core-cpu-40-core-gpu-128gb-memory-2tb-storage" title="Apple (AU) store configure page (read 18 Nov 2026)">1</a>]</cite> <cite class="src">[<a href="https://support.apple.com/en-us/126318" title="Apple Support tech specs (read 18 Nov 2026)">2</a>]</cite></td></tr>
+<tr><td>Ports</td><td>Three Thunderbolt 5 ports, MagSafe 3, 3.5 mm headphone jack, HDMI, SDXC card slot</td><td>Aung’s configuration, matching the published I/O. Thunderbolt 5 (USB-C) is listed with charging, DisplayPort, Thunderbolt 5 and USB 4 at up to 120Gb/s. <cite class="src">[<a href="https://support.apple.com/en-us/126318" title="Apple Support tech specs (read 18 Nov 2026)">2</a>]</cite></td></tr>
+<tr><td>Wireless</td><td>Wi-Fi 7, Bluetooth 6</td><td>Aung’s configuration. Apple’s N1 wireless chip provides Wi-Fi 7 (802.11be), Bluetooth 6 and Thread. <cite class="src">[<a href="https://support.apple.com/en-us/126318" title="Apple Support tech specs (read 18 Nov 2026)">2</a>]</cite> <cite class="src">[<a href="https://www.apple.com/newsroom/2026/03/apple-introduces-macbook-pro-with-all-new-m5-pro-and-m5-max/" title="Apple Newsroom, 3 Mar 2026 (read 18 Nov 2026)">3</a>]</cite></td></tr>
+<tr><td>External displays</td><td>Support for up to four external displays, plus the built-in display at full native resolution</td><td>Aung’s configuration, and the published M5 Max limit (four displays up to 6K at 60Hz or 4K at 144Hz, or two displays up to 8K at 60Hz / 5K at 120Hz / 4K at 240Hz). M5 Pro is limited to three external displays. <cite class="src">[<a href="https://support.apple.com/en-us/126318" title="Apple Support tech specs (read 18 Nov 2026)">2</a>]</cite></td></tr>
+<tr><td>Battery (published)</td><td>72.4-watt-hour; up to 20 hours video streaming and 13 hours wireless web (M5 Max)</td><td>Published M5 Max figures, not a measurement of this unit. <cite class="src">[<a href="https://support.apple.com/en-us/126318" title="Apple Support tech specs (read 18 Nov 2026)">2</a>]</cite></td></tr>
+<tr><td>Size and weight (published)</td><td>1.55 cm × 31.26 cm × 22.12 cm; 1.62 kg (3.6 pounds) for M5 Max</td><td>Published chassis figures for the 14-inch M5 Max. <cite class="src">[<a href="https://support.apple.com/en-us/126318" title="Apple Support tech specs (read 18 Nov 2026)">2</a>]</cite></td></tr>
+<tr><td>Announced</td><td>3 March 2026</td><td>14- and 16-inch MacBook Pro with M5 Pro and M5 Max; pre-order from 4 Mar 2026, availability from 11 Mar 2026. <cite class="src">[<a href="https://www.apple.com/newsroom/2026/03/apple-introduces-macbook-pro-with-all-new-m5-pro-and-m5-max/" title="Apple Newsroom, 3 Mar 2026 (read 18 Nov 2026)">3</a>]</cite></td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Local LLMs on this Mac: LM Studio</h2>
+<p>LM Studio is a desktop app for downloading and running open large language models on your own computer. Its docs describe it as a way to search Hugging Face for models, chat with them, attach documents for offline retrieval-augmented generation (RAG), connect MCP servers, and serve the loaded model on a local OpenAI-compatible (and other) API. It can operate entirely offline once the model files are on disk. <cite class="src">[<a href="https://lmstudio.ai/docs/app" title="LM Studio Docs: Welcome to LM Studio Docs (read 18 Nov 2026)">4</a>]</cite></p>
+<p>On Apple Silicon Macs, LM Studio supports two inference engines: <b>llama.cpp</b> (GGUF files, also used on Windows and Linux) and Apple’s <b>MLX</b>, which is built for Apple Silicon and can use the GPU and unified memory on this chip. Runtimes are installed or updated in the app with ⌘⇧R, or with <code>lms runtime update mlx</code> / <code>lms runtime update llama.cpp</code>. MLX support has shipped in LM Studio since version 0.3.4; the MLX engine (<code>mlx-engine</code>) is open source. You can load MLX and llama.cpp models side by side. <cite class="src">[<a href="https://lmstudio.ai/docs/app" title="LM Studio Docs: Welcome to LM Studio Docs (read 18 Nov 2026)">4</a>]</cite> <cite class="src">[<a href="https://lmstudio.ai/blog/lmstudio-v0.3.4" title="LM Studio blog: LM Studio 0.3.4 ships with Apple MLX (read 18 Nov 2026)">6</a>]</cite> <cite class="src">[<a href="https://github.com/lmstudio-ai/mlx-engine/" title="GitHub: lmstudio-ai/mlx-engine (read 18 Nov 2026)">7</a>]</cite></p>
+<p>System requirements list Apple Silicon Macs on macOS 14.0 or newer, with 16GB of memory recommended (and a note to keep models and context modest on 8GB machines). The requirements page still names M1–M4 explicitly; this M5 Max machine is Apple Silicon with far more than 16GB, and Apple’s own M5 Pro / M5 Max announcement named LM Studio as an app in which LLMs run on the new MacBook Pro. This page does not treat that as a formal “M5 certified” statement in the LM Studio docs, and it does not invent tokens/second for this laptop. <cite class="src">[<a href="https://lmstudio.ai/docs/app/system-requirements" title="LM Studio Docs: System Requirements (read 18 Nov 2026)">5</a>]</cite> <cite class="src">[<a href="https://www.apple.com/newsroom/2026/03/apple-introduces-macbook-pro-with-all-new-m5-pro-and-m5-max/" title="Apple Newsroom, 3 Mar 2026 (read 18 Nov 2026)">3</a>]</cite></p>
+<p>To make a loaded model available to other apps, open LM Studio’s Developer tab and turn on the local server, or run <code>lms server start</code>. The usual OpenAI-compatible base URL on the same Mac is <code>http://localhost:1234/v1</code>. <cite class="src">[<a href="https://lmstudio.ai/docs/developer/core/server" title="LM Studio Docs: LM Studio as a Local LLM API Server (read 18 Nov 2026)">8</a>]</cite></p>
+
+<h2>AnythingLLM, using LM Studio as the local backend</h2>
+<p>AnythingLLM, built by Mintplex Labs, is an all-in-one app for chatting with a local or cloud LLM, storing documents in workspaces, doing RAG (retrieval-augmented generation), and using agents — with a one-click desktop install for macOS, Windows and Linux. The desktop edition is aimed at single-user, on-device use: documents and embeddings can stay on the computer. It has its own built-in local engine, and it can also be pointed at an external provider. <cite class="src">[<a href="https://docs.anythingllm.com/introduction" title="AnythingLLM Docs: What is AnythingLLM? (read 18 Nov 2026)">9</a>]</cite> <cite class="src">[<a href="https://docs.anythingllm.com/installation-desktop/overview" title="AnythingLLM Docs: Desktop Installation Overview (read 18 Nov 2026)">10</a>]</cite></p>
+<p>LM Studio is a supported external LLM provider. AnythingLLM’s docs say you install LM Studio separately, start its built-in inference server, then choose LM Studio as the provider in AnythingLLM’s settings. Official examples use the base path <code>http://localhost:1234/v1</code> and a model name that matches whatever is loaded in LM Studio. You can change the model later in settings (load the new model in LM Studio first). In this setup, LM Studio owns the weights and the GPU/ANE/unified-memory runtime; AnythingLLM owns the workspace, document embedding and the chat/RAG UI. <cite class="src">[<a href="https://docs.anythingllm.com/setup/llm-configuration/local/lmstudio" title="AnythingLLM Docs: LMStudio LLM (read 18 Nov 2026)">11</a>]</cite> <cite class="src">[<a href="https://docs.anythingllm.com/installation-desktop/deep-links" title="AnythingLLM Docs: Deep Links, including the LM Studio provider example (read 18 Nov 2026)">12</a>]</cite></p>
+<p>For documents, AnythingLLM can either attach the full text of a file into the prompt or <em>embed</em> it into a workspace (chunk, vectorise and retrieve only the nearby pieces at question time). Embedding is the RAG path and is what you want for large libraries that would not fit in the model’s context window. <cite class="src">[<a href="https://docs.anythingllm.com/chatting-with-documents/introduction" title="AnythingLLM Docs: Using Documents in AnythingLLM (read 18 Nov 2026)">13</a>]</cite></p>
+
+<h2>What fits in 128GB of unified memory</h2>
+<p>On this Mac the 128GB is <em>unified</em>: the CPU, GPU, Neural Engine, macOS and every app share one pool. A model’s weight file is the starting point, not the whole runtime budget. A useful first estimate is:</p>
+<p style="text-align:center;font-size:1.05rem;margin:12px 0 16px"><b>weight memory ≈ parameter count × (bits per weight ÷ 8)</b></p>
+<p>llama.cpp publishes measured bits-per-weight for its GGUF quant types, and example file sizes for Llama 3.1. Those are the figures used below. Q4_K_M is about 4.8944 bits/weight, Q5_K_M about 5.7036, Q6_K about 6.5633, Q8_0 about 8.5008, and F16 is 16 bits (2 bytes) per weight. <cite class="src">[<a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md" title="llama.cpp tools/quantize README: Memory/Disk Requirements and bits/weight tables (read 18 Nov 2026)">14</a>]</cite></p>
+<p>On top of the weights you still need:</p>
+<ul class="tight">
+<li>the <b>KV cache</b> (key/value cache) for the conversation context, which grows with context length and with the model’s depth — a long context can add many gigabytes;</li>
+<li>macOS, LM Studio or AnythingLLM, and whatever else is open;</li>
+<li>any second model (for example an embedder, or a draft model for speculative decoding) if you load more than one at once.</li>
+</ul>
+<p>So a weight file that already uses most of 128GB will not leave enough room to be useful. The “fits?” column is about whether the <em>weights</em> leave practical headroom on a 128GB unified-memory Mac, not a guarantee, and not a speed rating. Rows labelled <span class="badge b-fact">official</span> use llama.cpp’s published file sizes. Rows labelled <span class="badge b-est">estimated</span> scale those official 70B Q4_K_M figures by the published bits-per-weight ratios, or by parameter count (120B = 70B × 120/70). Actual GGUF or MLX files vary with architecture (dense vs MoE), vocabulary and how the quant was built. MLX 4-bit and 8-bit files follow the same bytes-per-parameter idea, but this table does not invent MLX file sizes.</p>
+<div class="tblwrap">
+<table class="tree" id="zf-mbpro-mem">
+<thead>
+<tr>
+<th onclick="ccSort(document.getElementById('zf-mbpro-mem'),0)">Example</th>
+<th onclick="ccSort(document.getElementById('zf-mbpro-mem'),1)">Format</th>
+<th onclick="ccSort(document.getElementById('zf-mbpro-mem'),2)">Weight-file size</th>
+<th onclick="ccSort(document.getElementById('zf-mbpro-mem'),3)">On 128GB unified memory?</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Llama 3.1 8B</td><td>Q4_K_M GGUF</td><td>4.9 GB <span class="badge b-fact">official</span></td><td>Yes — plenty of headroom for context and the OS.</td></tr>
+<tr><td>Llama 3.1 70B</td><td>Q4_K_M GGUF</td><td>43.1 GB <span class="badge b-fact">official</span></td><td>Yes — a comfortable default; room left for a longish context.</td></tr>
+<tr><td>70B-class (scaled from the 70B official Q4_K_M size)</td><td>Q8_0 GGUF</td><td>about 75 GB <span class="badge b-est">estimated</span></td><td>Yes, if you leave tens of gigabytes for macOS and the KV cache; keep an eye on context length.</td></tr>
+<tr><td>70B-class</td><td>F16 / BF16</td><td>about 141 GB <span class="badge b-est">estimated</span></td><td>No — the weights alone exceed 128GB (llama.cpp’s published 70B “original” size is 280.9 GB, which is 32-bit).</td></tr>
+<tr><td>120B-class (linear scale from 70B)</td><td>Q4_K_M GGUF</td><td>about 74 GB <span class="badge b-est">estimated</span></td><td>Likely yes for the weights, with similar caution as 70B Q8 about context and other apps.</td></tr>
+<tr><td>120B-class (linear scale from 70B)</td><td>Q8_0 GGUF</td><td>about 128 GB <span class="badge b-est">estimated</span></td><td>Impractical — the weights already sit at the 128GB ceiling before the OS or KV cache.</td></tr>
+<tr><td>Llama 3.1 405B</td><td>Q4_K_M GGUF</td><td>249.1 GB <span class="badge b-fact">official</span></td><td>No — the weight file is already nearly twice 128GB.</td></tr>
+</tbody>
+</table>
+</div>
+<p class="help">Worked example for the official 70B Q4_K_M row: 70×10<sup>9</sup> parameters × 4.8944 bits ÷ 8 ≈ 42.8×10<sup>9</sup> bytes, which is consistent with llama.cpp’s published 43.1 GB (the published file is the figure to trust; “70B” is a nominal count and k-quants are not uniform across every tensor). I have not measured tokens/second, time-to-first-token, or thermal limits on this MacBook Pro, and Apple’s “up to 4× faster LLM prompt processing” claim versus M4 Pro / M4 Max is Apple’s published comparison with its own footnotes — not a result from this machine. <cite class="src">[<a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md" title="llama.cpp tools/quantize README (read 18 Nov 2026)">14</a>]</cite> <cite class="src">[<a href="https://www.apple.com/newsroom/2026/03/apple-introduces-macbook-pro-with-all-new-m5-pro-and-m5-max/" title="Apple Newsroom, 3 Mar 2026 (read 18 Nov 2026)">3</a>]</cite></p>
+
+<h2>A short setup walkthrough</h2>
+<ol class="steps">
+<li><b>Install LM Studio</b> for macOS from <a href="https://lmstudio.ai/">lmstudio.ai</a>. macOS 14 or newer is required. <cite class="src">[<a href="https://lmstudio.ai/docs/app" title="LM Studio Docs (read 18 Nov 2026)">4</a>]</cite> <cite class="src">[<a href="https://lmstudio.ai/docs/app/system-requirements" title="LM Studio System Requirements (read 18 Nov 2026)">5</a>]</cite></li>
+<li><b>Install the runtimes</b> with ⌘⇧R. On this Apple Silicon Mac, install (or update) both the MLX runtime and the llama.cpp runtime if you want to try both formats. <cite class="src">[<a href="https://lmstudio.ai/docs/app" title="LM Studio Docs (read 18 Nov 2026)">4</a>]</cite></li>
+<li><b>Download a model</b> in LM Studio’s Hugging Face search. A 70B-class Q4 or Q5 build, or an MLX 4-bit of similar size, is a sensible first large model on 128GB; an 8B model is a good smoke test. Prefer a quant whose weight file leaves tens of gigabytes free (see the table above). Then load it and chat in LM Studio.</li>
+<li><b>Start the local server</b> from the Developer tab, or with <code>lms server start</code>, so other apps can call <code>http://localhost:1234/v1</code>. <cite class="src">[<a href="https://lmstudio.ai/docs/developer/core/server" title="LM Studio as a Local LLM API Server (read 18 Nov 2026)">8</a>]</cite></li>
+<li><b>Install AnythingLLM Desktop</b> from the AnythingLLM site. In settings, set the LLM provider to LM Studio, use base path <code>http://localhost:1234/v1</code>, and pick the model that is loaded in LM Studio. <cite class="src">[<a href="https://docs.anythingllm.com/installation-desktop/overview" title="AnythingLLM Desktop Installation Overview (read 18 Nov 2026)">10</a>]</cite> <cite class="src">[<a href="https://docs.anythingllm.com/setup/llm-configuration/local/lmstudio" title="AnythingLLM: LMStudio LLM (read 18 Nov 2026)">11</a>]</cite> <cite class="src">[<a href="https://docs.anythingllm.com/installation-desktop/deep-links" title="AnythingLLM Deep Links (read 18 Nov 2026)">12</a>]</cite></li>
+<li><b>Create a workspace</b>, upload the documents you want to keep local, and embed them if the library is large. Chat in AnythingLLM while LM Studio keeps serving the model. <cite class="src">[<a href="https://docs.anythingllm.com/chatting-with-documents/introduction" title="AnythingLLM: Using Documents (read 18 Nov 2026)">13</a>]</cite></li>
+</ol>
+
+<h2>How Grok Bot fits alongside</h2>
+<p>Grok Bot is a desktop assistant with its own cloud computer. It is not a local model runner, and this page does not claim that Grok Bot loads LM Studio or AnythingLLM models, or that it serves weights from this MacBook Pro’s unified memory.</p>
+<p>A practical split on this machine is:</p>
+<div class="duo">
+<div class="col" style="--c:#7c3aed">
+<h3>On the Mac, locally</h3>
+<ul class="tight">
+<li><b>LM Studio</b> downloads, loads and serves open models (MLX or GGUF) in unified memory, including a local API on localhost.</li>
+<li><b>AnythingLLM</b> provides workspaces, document RAG and a chat UI, talking to that local server when you point it at LM Studio.</li>
+<li>That path is the one to use when the work should stay <b>private or offline</b> — for example drafts, internal notes or document collections that you do not want sent to a hosted model.</li>
+</ul>
+</div>
+<div class="col" style="--c:#0071e3">
+<h3>With Grok Bot</h3>
+<ul class="tight">
+<li>Grok Bot is the assistant for work that needs its <b>cloud computer and connected tools</b>: web research, email, publishing pages on this site, and scheduled routines.</li>
+<li>It sits <b>alongside</b> the local stack rather than replacing it. You can research or publish with Grok Bot, and still chat with a local model about files that never leave the Mac.</li>
+<li>Nothing on this page is a description of Grok Bot’s internals, billing, or which models it uses in the cloud.</li>
+</ul>
+</div>
+</div>
+
+<div class="warn"><p><b>What is uncertain or easy to misread.</b> (1) A$10,299.00 is the configured price for this exact standard-display combination as shown on Apple Australia on 18 Nov 2026; store prices and delivery estimates change, and nano-texture was listed as a A$225 option that this machine does not use. (2) “Standard display” means the default Liquid Retina XDR glass, not the later PROLED XDR product line and not nano-texture. (3) LM Studio’s requirements page still lists M1–M4 by name; compatibility here is inferred from Apple Silicon support plus Apple naming LM Studio in the M5 Pro / M5 Max announcement, not from a measured run on this unit. (4) The memory table’s official rows are llama.cpp file sizes; estimated rows are scaled from those figures and will not match every GGUF or MLX repo. (5) I have not published tokens/second, power draw or thermals for this laptop. (6) The newsroom LM Studio photograph shows a Space Black chassis; Aung’s machine is Silver.</p></div>
+
+<h2>Sources</h2>
+<p class="help">All links were opened on 18 Nov 2026 (Melbourne time). Prefer the original Apple, LM Studio, AnythingLLM or llama.cpp page if a cached copy and the live page ever disagree.</p>
+<ol class="srcs">
+<li id="src1"><a href="https://www.apple.com/au/shop/buy-mac/macbook-pro/14-inch-silver-standard-display-apple-m5-max-chip-18-core-cpu-40-core-gpu-128gb-memory-2tb-storage">Apple (AU) store: 14-inch MacBook Pro, Silver, standard display, M5 Max 18-core CPU / 40-core GPU, 128GB, 2TB</a> — configured price A$10,299.00, 96W adapter, US English backlit Magic Keyboard with Touch ID, ports, Wi-Fi 7, Bluetooth 6, and up to four external displays.</li>
+<li id="src2"><a href="https://support.apple.com/en-us/126318">Apple Support: MacBook Pro (14-inch, M5 Pro or M5 Max) — Tech Specs</a> — chip options, 614GB/s bandwidth on the 40-core M5 Max, memory and storage matrices, Liquid Retina XDR figures, 96W adapter, Thunderbolt 5 at up to 120Gb/s, N1 / Wi-Fi 7 / Bluetooth 6, M5 Max four-display support, battery, size and weight.</li>
+<li id="src3"><a href="https://www.apple.com/newsroom/2026/03/apple-introduces-macbook-pro-with-all-new-m5-pro-and-m5-max/">Apple Newsroom, 3 March 2026: Apple introduces MacBook Pro with all-new M5 Pro and M5 Max</a> — announcement date, Silver and Space Black, N1 wireless, up to 128GB and 614GB/s on M5 Max, the sentence that LLMs run in apps such as LM Studio, and Apple’s own “up to 4×” LLM prompt-processing comparison (with footnotes).</li>
+<li id="src4"><a href="https://lmstudio.ai/docs/app">LM Studio Docs: Welcome to LM Studio Docs</a> — what the app does, llama.cpp and MLX runtimes, offline use, MCP, and local APIs.</li>
+<li id="src5"><a href="https://lmstudio.ai/docs/app/system-requirements">LM Studio Docs: System Requirements</a> — Apple Silicon, macOS 14.0+, 16GB recommended.</li>
+<li id="src6"><a href="https://lmstudio.ai/blog/lmstudio-v0.3.4">LM Studio blog: LM Studio 0.3.4 ships with Apple MLX</a> — MLX in the app, Hugging Face MLX downloads, local OpenAI-like server, mixing llama.cpp and MLX models.</li>
+<li id="src7"><a href="https://github.com/lmstudio-ai/mlx-engine/">GitHub: lmstudio-ai/mlx-engine</a> — open-source MLX engine used by LM Studio (mlx-lm, mlx-vlm, Outlines).</li>
+<li id="src8"><a href="https://lmstudio.ai/docs/developer/core/server">LM Studio Docs: LM Studio as a Local LLM API Server</a> — Developer tab “Start server”, <code>lms server start</code>, OpenAI-compatible and other endpoints.</li>
+<li id="src9"><a href="https://docs.anythingllm.com/introduction">AnythingLLM Docs: What is AnythingLLM?</a> — product description (RAG, agents, no-code app; Mintplex Labs).</li>
+<li id="src10"><a href="https://docs.anythingllm.com/installation-desktop/overview">AnythingLLM Docs: Desktop Installation Overview</a> — desktop vs Docker, on-device single-user use on macOS.</li>
+<li id="src11"><a href="https://docs.anythingllm.com/setup/llm-configuration/local/lmstudio">AnythingLLM Docs: LMStudio LLM</a> — LM Studio as a provider; start the LM Studio inference server, then connect.</li>
+<li id="src12"><a href="https://docs.anythingllm.com/installation-desktop/deep-links">AnythingLLM Docs: Deep Links</a> — official LM Studio example using <code>http://localhost:1234/v1</code>.</li>
+<li id="src13"><a href="https://docs.anythingllm.com/chatting-with-documents/introduction">AnythingLLM Docs: Using Documents in AnythingLLM</a> — attached documents vs embedded RAG in a workspace.</li>
+<li id="src14"><a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md">llama.cpp tools/quantize README</a> — official GGUF bits/weight values and Llama 3.1 example file sizes (8B / 70B / 405B, Q4_K_M and original).</li>
+<li id="src15"><a href="https://lmstudio.ai/brand">LM Studio brand guidelines</a> — official logo artwork used on this page.</li>
+<li id="src16"><a href="https://anythingllm.com/">AnythingLLM website</a> and the <a href="https://github.com/Mintplex-Labs/anything-llm">AnythingLLM GitHub repository</a> — official UI image and wordmark used on this page.</li>
+</ol>
+
+<h2>Related pages on this site</h2>
+<div class="related">
+<a href="/zfrontier/">🌠 zFrontier hub</a>
+<a href="/zfrontier/Nvidia-A100-H100/">🟩 Nvidia A100 &amp; H100</a>
+<a href="/zfrontier/3gpu-ai-workflow/">🧮 GPU Workflow</a>
+<a href="/zfrontier/rag-documents/">📚 RAG documents</a>
+<a href="/zfrontier/notebooks/">📓 Notebooks</a>
+<a href="/zfrontier/agenticai/">🧠 AgenticAI</a>
+<a href="/zfrontier/MS-02-GPU-Monitoring/">📟 MS-02 GPU Monitoring</a>
+</div>
+
+</main>
+
+<script>
+function ccFilter(q,t){q=(q||'').toLowerCase();t.querySelectorAll('tbody tr').forEach(function(r){r.style.display=r.textContent.toLowerCase().indexOf(q)>=0?'':'none';});}
+function ccSort(t,c){var tb=t.tBodies[0],rows=[].slice.call(tb.rows),ths=t.tHead.rows[0].cells;
+var dir=t.getAttribute('data-dir')==='asc'&&t.getAttribute('data-col')==String(c)?'desc':'asc';
+function key(r){var td=r.cells[c];if(!td)return '';var k=td.getAttribute('data-k');return (k!==null?k:td.textContent).trim().toLowerCase();}
+rows.sort(function(a,b){var x=key(a),y=key(b);var nx=parseFloat(x),ny=parseFloat(y);if(!isNaN(nx)&&!isNaN(ny)&&/^[-0-9.]+$/.test(x)&&/^[-0-9.]+$/.test(y)){x=nx;y=ny;}
+if(x<y)return dir==='asc'?-1:1;if(x>y)return dir==='asc'?1:-1;return 0;});
+rows.forEach(function(r){tb.appendChild(r)});t.setAttribute('data-dir',dir);t.setAttribute('data-col',c);
+for(var i=0;i<ths.length;i++){ths[i].textContent=ths[i].textContent.replace(/ [\u25B2\u25BC]$/,'');if(i===c)ths[i].textContent+=' '+(dir==='asc'?'\u25B2':'\u25BC');}}
+</script>
+
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/+$/,"")||"/"}}</script><script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const p=location.pathname.replace(/\/+$/,"")||"/";const n=s=>String(s||"").split("?")[0].replace(/\/+$/,"")||"/";const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c)}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script>
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:8px 0 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:6px;margin:0;padding:8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
+nav.site.im a.mi{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:auto;min-height:44px;min-width:0;padding:8px 10px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a)}
+nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:visible;text-overflow:unset;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.25;text-align:left}
+nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:22px;height:22px;padding:0 5px;border-radius:999px;font-size:16px;font-weight:800;line-height:1;background:#0f172a;color:#fff}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc;color:#0f172a}
+nav.site.im a.mi.on .im-seq{background:#fff;color:#1d4ed8}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px;flex:none}#sg-link,#tt-btn,#mm-link{height:36px;border-radius:18px}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Cursor_Tenant6","/ARR/provisioning/cursor-tenant6/","🚀"],["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"],["ရှေ့သို့ချီ","/roadmap/forward/","⏩"],["Time Map 2026–2030","/roadmap/forward/time-map/","🗓️"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["ARR-LargeTopology","/ARR-LargeTopology/","🗺️",[["Overview","/ARR-LargeTopology/","🗺️"],["Nodes","/ARR-LargeTopology/nodes.html","🖥️"],["Serials","/ARR-LargeTopology/serials.html","🔢"],["Mgmt IPs","/ARR-LargeTopology/mgmt-ips.html","🌐"],["Links","/ARR-LargeTopology/links.html","🔗"],["Tenants","/ARR-LargeTopology/tenants.html","🏢"],["VRFs","/ARR-LargeTopology/vrfs.html","🧭"],["BDs","/ARR-LargeTopology/bds.html","🌉"],["Subnets","/ARR-LargeTopology/subnets.html","🔢"],["EPGs","/ARR-LargeTopology/epgs.html","🎯"],["Leaf VNIs","/ARR-LargeTopology/vni.html","💠"],["VXLAN","/ARR-LargeTopology/vxlan/","🧵"],["VNI compare","/ARR-LargeTopology/vni-compare/","🔷"],["Access policies","/ARR-LargeTopology/access-policies/","🧱"],["BD GIPo & FTAG","/ARR-LargeTopology/bd-gipo-ftag/","📡"],["IAC files","/ARR-LargeTopology/iac-files/","📦"],["ARR-netbox","/ARR-LargeTopology/arr-netbox/","🗄️"],["Hardware monitor","/ARR-LargeTopology/hw-monitor/","📟"],["Site map","/ARR-LargeTopology/site-map/","🌳"],["Provisioning","/ARR-LargeTopology/provisioning/","🚀"],["Test explain","/ARR-LargeTopology/test-explain/","🧪"],["GitLab","/ARR-LargeTopology/gitlab/","🦊"],["GitLab Runner","/ARR-LargeTopology/gitlab-runner/","🏃"]]],["Terragrunt","/terragrunt/","🧰",[["Terragrunt","/terragrunt/","🧰"]]],["zFrontier","/zfrontier/","🌠",[["zFrontier","/zfrontier/","🌠"],["Farzad","/zfrontier/farzad/","📺"],["SpaceX vs Tesla shares","/zfrontier/shares/","📈"],["Optimus","/zfrontier/optimus/","🤖"],["Gigafactory","/zfrontier/gigafactory/","🏭"],["FSD versions","/zfrontier/fsd-versions/","🛣️"],["Liquid cooling","/zfrontier/liquid-cooling/","💧"],["SpaceX Tracking","/zfrontier/spacex/","🚀"],["CyberCab","/zfrontier/cybercab/","🚕"],["AI FineTune Pod","/zfrontier/ai-finetune-pod/","🎛️"],["MCP Servers","/zfrontier/mcp-servers/","🔌"],["NaC CLI","/zfrontier/nac-cli/","🧰"],["GPU Workflow","/zfrontier/3gpu-ai-workflow/","🧮"],["MWMESH","/zfrontier/mwmesh/","📡"],["Notebooks","/zfrontier/notebooks/","📓"],["RAG documents","/zfrontier/rag-documents/","📚"],["Foundation-Sec-8B","/zfrontier/foundation-sec-8b/","🛡️"],["Terafab","/zfrontier/terafab/","💠"],["3DiffsVXLAN","/zfrontier/3diffsvxlan/","🔀"],["ARR-LargePod","/zfrontier/arr-largepod/","🏗️"],["Nvidia A100 & H100","/zfrontier/Nvidia-A100-H100/","🟩"],["AgenticAI","/zfrontier/agenticai/","🧠"],["MS-02 GPU Monitoring","/zfrontier/MS-02-GPU-Monitoring/","📟"],["MBPro","/zfrontier/MBPro/","💻"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"]]],["ACI GUI Forms","/ACI-GUI-Forms/","📝",[["ACI GUI Forms","/ACI-GUI-Forms/","📝"],["GUI Map","/aci-gui-forms/WIP/gui-map/","🗺️"]]],["ACI GUI","/aci-gui/","🖥️",[["Create Pod Policy Group","/aci-gui/create-pod-policy-group/","🧬"],["Create Bridge Domain (step 3)","/aci-gui/create-bridge-domain-step3/","🌉"],["Create Subnet","/aci-gui/create-subnet/","🔢"],["Create Application Profile","/aci-gui/create-application-profile/","🧩"],["Create Management EPG","/aci-gui/create-management-epg/","🛠️"],["Static Node Management Addresses","/aci-gui/static-node-management-addresses/","📍"],["Create Fabric Policies","/aci-gui/create-fabric-policies/","🧵"],["Create Access Policies","/aci-gui/create-access-policies/","🔐"],["Create VLAN Pool","/aci-gui/create-vlan-pool/","🏷️"],["Create Physical Domain","/aci-gui/create-physical-domain/","🏛️"],["Create Access Interface Policy Group","/aci-gui/create-access-interface-policy-group/","🔌"],["Create PC Interface Policy Group","/aci-gui/create-pc-interface-policy-group/","🔀"],["Interface Wizard for vPC","/aci-gui/interface-wizard-vpc/","🪄"],["Create VMM Domain","/aci-gui/create-vmm-domain/","💻"],["vCenter Networking","/aci-gui/vcenter-networking/","🖥️"],["Create Tenant","/aci-gui/create-tenant/","🏢"],["Create L3Out","/aci-gui/create-l3out/","🌐"],["L3Out Contracts","/aci-gui/l3out-contracts/","📜"],["Create Bridge Domain","/aci-gui/create-bridge-domain/","🌉"],["Bridge Domain","/aci-gui/bridge-domain/","🌉"],["Mgmt Bridge Domain","/aci-gui/mgmt-bridge-domain/","🔧"],["DHCP Relay","/aci-gui/dhcp-relay/","📡"],["Management Application Profile","/aci-gui/management-application-profile/","📦"],["Application Profile (web + app)","/aci-gui/application-profile/","🧩"],["Create VRF","/aci-gui/create-vrf/","🧭"],["Create Endpoint Group","/aci-gui/create-endpoint-group/","🎯"],["Contracts Between Tenants","/aci-gui/contracts-between-tenants/","🤝"],["Create Filter","/aci-gui/create-filter/","🧹"],["Create Contract","/aci-gui/create-contract/","📃"],["Create Management Contracts","/aci-gui/create-management-contracts/","📑"],["Mgmt PortGroup to VM","/aci-gui/mgmt-portgroup-to-vm/","🧷"],["Pod Policy Group","/aci-gui/pod-policy-group/","🕒"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=(seq?String(seq)+'. ':'')+e[0];if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks ›';r2.appendChild(t);
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1))});r2.appendChild(pills);n.appendChild(r2)}}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+</body>
+</html>
