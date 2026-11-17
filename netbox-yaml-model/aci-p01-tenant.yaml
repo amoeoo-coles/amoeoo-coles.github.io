@@ -1,0 +1,47 @@
+# Network-as-Code (nac-aci) model generated from NetBox (ACI plugin, read-only) - same schema as /workspace/aci-nac data/tenants/
+# NetBox data read 18 Nov 2026 07:28:23 AEDT (Melbourne time). Source: NetBox 4.7.3 REST API (http://127.0.0.1:8001), netbox_aci_plugin 0.5.0, GET only
+---
+apic:
+  tenants:
+  - name: aci_p01_tenant
+    description: ACI Demo Guide Policy pod1 tenant (logical-only, AOAPIC).
+    vrfs:
+    - name: aci_p01_vrf
+    bridge_domains:
+    - name: aci_p01_bd_app
+      vrf: aci_p01_vrf
+      unicast_routing: true
+      arp_flooding: false
+      unknown_unicast: proxy
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 172.16.1.1/24
+        public: false
+        shared: false
+    - name: aci_p01_bd_l2
+      vrf: aci_p01_vrf
+      unicast_routing: false
+      arp_flooding: true
+      unknown_unicast: flood
+      limit_ip_learn_to_subnets: true
+    - name: aci_p01_bd_web
+      vrf: aci_p01_vrf
+      unicast_routing: true
+      arp_flooding: false
+      unknown_unicast: proxy
+      limit_ip_learn_to_subnets: true
+      subnets:
+      - ip: 10.0.144.1/29
+        public: true
+        shared: false
+    application_profiles:
+    - name: aci_p01_ap
+      endpoint_groups:
+      - name: aci_p01_epg_app
+        bridge_domain: aci_p01_bd_app
+      - name: aci_p01_epg_web
+        bridge_domain: aci_p01_bd_web
+    - name: aci_p01_ap_L2
+      endpoint_groups:
+      - name: aci_p01_epg_L2
+        bridge_domain: aci_p01_bd_l2
