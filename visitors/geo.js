@@ -560,6 +560,107 @@ function paintIsps(){
   });
 }
 
+
+function countryAnchor(id){
+  var cc=String(id||'').toUpperCase();
+  return /^[A-Z]{2}$/.test(cc)?'country-'+cc.toLowerCase():'';
+}
+function ispOrg(r){
+  return (r&&(r.holder||r.event_title||r.asn))||'';
+}
+function countryDetailRows(visitors){
+  var countries=(visitors&&visitors.countries)||[];
+  var isp=(visitors&&visitors.isps)||{};
+  var rows=isp.rows||[];
+  var by={};
+  var names={};
+  rows.forEach(function(r){
+    var cc=String(r.country||'').toUpperCase();
+    if(!/^[A-Z]{2}$/.test(cc)) return;
+    (by[cc]=by[cc]||[]).push(r);
+    if(r.country_name) names[cc]=r.country_name;
+  });
+  var list=countries.slice().sort(function(a,b){return (b.count||0)-(a.count||0);});
+  var seen={};
+  var out=[];
+  list.forEach(function(c){
+    var cc=String(c.id||'').toUpperCase();
+    if(!/^[A-Z]{2}$/.test(cc)) return;
+    seen[cc]=1;
+    out.push({id:cc,name:c.name||names[cc]||cc,count:c.count});
+  });
+  Object.keys(by).sort().forEach(function(cc){
+    if(seen[cc]) return;
+    out.push({id:cc,name:names[cc]||cc,count:null});
+  });
+  return out;
+}
+function countryIspTable(rows){
+  var data=(rows||[]).slice().sort(function(a,b){return (b.visits||0)-(a.visits||0);});
+  var body=data.map(function(r){
+    return '<tr><td>'+esc(ispOrg(r))+'</td><td><code>'+esc(r.asn||'')+'</code></td><td class="n">'+esc(r.visits==null?'not collected':r.visits)+'</td></tr>';
+  }).join('');
+  return '<div class="wrapt"><table class="geo-t country-isp-t">'+
+    '<thead><tr><th>ISP / organisation</th><th>ASN</th><th class="n">Visits</th></tr></thead>'+
+    '<tbody>'+body+'</tbody></table></div>';
+}
+function countryDetailsHtml(visitors){
+  var asof=(visitors&&visitors.as_of_aedt)||'';
+  var list=countryDetailRows(visitors);
+  var html='<h2 id="country-details-heading">Country details</h2>';
+  html+='<p class="muted">Site-wide unique-visitor counts from GoatCounter location stats, and site-wide ISP/ASN counts collected since 14 Nov 2026, 9:52 PM AEDT. Figures are for the whole site'+(asof?' as of '+esc(asof):'')+'. A country with no collected ISP events shows “not collected”. These blocks stay in place when the range control above changes, so the #country-xx links stay stable. Click a column header to sort a country’s ISP table.</p>';
+  if(!list.length){
+    return html+'<p class="muted">Country details: <span class="na">not collected</span> (no country rows in /data/visitors.json).</p>';
+  }
+  var by={};
+  (((visitors&&visitors.isps)||{}).rows||[]).forEach(function(r){
+    var cc=String(r.country||'').toUpperCase();
+    if(/^[A-Z]{2}$/.test(cc)) (by[cc]=by[cc]||[]).push(r);
+  });
+  list.forEach(function(c){
+    var aid=countryAnchor(c.id);
+    if(!aid) return;
+    var isps=by[c.id]||[];
+    html+='<section class="country-detail" id="'+aid+'">';
+    html+='<h3>'+flag(c.id)+' '+esc(c.name||c.id)+' <span class="geo-cc">'+esc(c.id)+'</span></h3>';
+    html+='<p>Visitors (site-wide): <strong>'+(c.count==null?'not collected':esc(c.count))+'</strong></p>';
+    if(!isps.length) html+='<p class="muted">ISP: <span class="na">not collected</span>.</p>';
+    else html+=countryIspTable(isps);
+    html+='</section>';
+  });
+  return html;
+}
+function ensureCountryDetails(){
+  if(pageMode()!=='full') return null;
+  var el=document.getElementById('country-details');
+  if(!el){
+    el=document.createElement('section');
+    el.id='country-details';
+    el.setAttribute('aria-label','Country details');
+    var isp=document.getElementById('isp');
+    var host=document.querySelector('main')||document.body;
+    if(isp&&isp.parentNode) isp.parentNode.insertBefore(el, isp.nextSibling);
+    else host.appendChild(el);
+  }
+  return el;
+}
+function scrollCountryHash(){
+  var h=(location.hash||'').replace(/^#/,'').toLowerCase();
+  if(!/^country-[a-z]{2}$/.test(h)) return;
+  var el=document.getElementById(h);
+  if(el){
+    el.scrollIntoView({block:'start'});
+  }
+}
+function paintCountryDetails(){
+  if(pageMode()!=='full') return;
+  var host=ensureCountryDetails();
+  if(!host) return;
+  host.innerHTML=countryDetailsHtml(GEO.visitors||{});
+  if(window.ltopoSortInit) window.ltopoSortInit(host);
+  scrollCountryHash();
+}
+
 function injectStyle(){
   if(document.getElementById('geo-style')) return;
   var st=document.createElement('style');
@@ -609,7 +710,14 @@ function injectStyle(){
     '#geo-chart .geo-n{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;font-size:13px;color:var(--ink,#0f172a)}',
     '.geo-more,.geo-csv{margin:10px 0 14px;font-size:14px}',
     '@media (max-width:520px){#geo-chart .geo-bar{grid-template-columns:minmax(6.75rem,min(var(--lab-w),48%)) minmax(36px,1fr) 2.75rem;column-gap:8px}#geo-chart .geo-name{white-space:normal;line-height:1.25}}',
-    '.wrapt{overflow-x:auto}'
+    '.wrapt{overflow-x:auto}',
+    '.country-detail{scroll-margin-top:16px;padding:4px 0 10px}',
+    '.country-detail:target{outline:2px solid #2563eb;border-radius:8px;padding:8px 10px;background:rgba(37,99,235,.12)}',
+    '#country-details .geo-cc{display:inline-block;min-width:2.15em;text-align:center;font:700 11px/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.04em;background:var(--chip,#e2e8f0);color:var(--ink,#0f172a);border-radius:4px;padding:2px 6px;margin-left:6px}',
+    '#country-details .na{font-style:italic}',
+    '#geo .geo-t.country-isp-t, #country-details .geo-t{border-collapse:collapse;width:100%;margin:6px 0}',
+    '#country-details .geo-t th,#country-details .geo-t td{border-bottom:1px solid var(--line,#e2e8f0);padding:6px 8px;font-size:13px;text-align:left;color:var(--ink,#0f172a)}',
+    '#country-details .geo-t th.n,#country-details .geo-t td.n{text-align:right;font-variant-numeric:tabular-nums}'
   ].join('\n');
   document.head.appendChild(st);
 }
@@ -617,6 +725,7 @@ function injectStyle(){
 GEO.openHour=openHour;
 GEO.bind=bindHourClicks;
 GEO.paint=paintCountries;
+GEO.paintCountryDetails=paintCountryDetails;
 window.VisitorGeo=GEO;
 
 function boot(){
@@ -635,6 +744,11 @@ function boot(){
     }
     paintCountries();
     paintIsps();
+    paintCountryDetails();
+    if(!GEO._hashBound){
+      GEO._hashBound=true;
+      window.addEventListener('hashchange',scrollCountryHash);
+    }
     bindHourClicks(document);
     var obs=new MutationObserver(function(){bindHourClicks(document)});
     var roots=['mrtg-graphs','hourly','hourly-table'].map(function(id){return document.getElementById(id)}).filter(Boolean);

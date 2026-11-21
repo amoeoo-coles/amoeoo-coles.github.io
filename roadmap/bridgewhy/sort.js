@@ -93,6 +93,7 @@
 
   function enhance(table) {
     if (table.classList.contains("no-sort") || table.closest(".no-sort")) return;
+    if (table.getAttribute("data-ltopo-enhanced") === "1") return;
     var thead = table.tHead;
     if (!thead) return;
     var ths = Array.prototype.slice.call(thead.querySelectorAll("th"));
@@ -120,18 +121,22 @@
         }
       });
     });
+    table.setAttribute("data-ltopo-enhanced", "1");
   }
 
-  function init() {
+  function init(root) {
     if (!document.getElementById("ltopo-sort-style")) {
       var style = document.createElement("style");
       style.id = "ltopo-sort-style";
       style.textContent = STYLE;
       document.head.appendChild(style);
     }
-    var tables = document.querySelectorAll("table");
+    var scope = root && root.querySelectorAll ? root : document;
+    var tables = scope.tagName === "TABLE" ? [scope] : scope.querySelectorAll("table");
     for (var i = 0; i < tables.length; i++) enhance(tables[i]);
   }
+
+  window.ltopoSortInit = init;
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);
