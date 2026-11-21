@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>POE Node Policy — amoeoo-coles</title>
+<meta name="description" content="POE Node Policy on the APIC Spine Switch Policy Group (infraSpineAccNodePGrp); class poeInstPol.">
+<style>
+
+:root {
+  color-scheme: light dark;
+  --bg: #f4f6f8;
+  --bg-accent: #e8eef4;
+  --card: #ffffff;
+  --ink: #15202b;
+  --muted: #5b6b7c;
+  --line: #d5dee7;
+  --accent: #0e7490;
+  --accent-soft: #e0f4f8;
+  --link: #0e7490;
+  --good: #047857;
+  --warn: #a16207;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --radius: 14px;
+  --mono: "IBM Plex Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+  --sans: "Source Sans 3", "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --apic-bar: #1e3a5f;
+  --apic-ft: #f1f5f9;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+    --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+    --link: #5eead4; --good: #34d399; --warn: #fbbf24;
+    --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+    --apic-bar: #0f2744; --apic-ft: #1a2740;
+  }
+}
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f4f6f8; --bg-accent: #e8eef4; --card: #ffffff; --ink: #15202b;
+  --muted: #5b6b7c; --line: #d5dee7; --accent: #0e7490; --accent-soft: #e0f4f8;
+  --link: #0e7490; --good: #047857; --warn: #a16207;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --apic-bar: #1e3a5f; --apic-ft: #f1f5f9;
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+  --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+  --link: #5eead4; --good: #34d399; --warn: #fbbf24;
+  --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+  --apic-bar: #0f2744; --apic-ft: #1a2740;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--sans);
+  background: radial-gradient(1200px 500px at 10% -10%, var(--bg-accent), transparent 60%), var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  min-height: 100vh;
+}
+a { color: var(--link); }
+code, .dn, .mono { font-family: var(--mono); font-size: 0.92em; }
+main.wrap, footer.wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem; }
+main.wrap { padding-top: 0.4rem; padding-bottom: 2.2rem; }
+footer.wrap { padding-bottom: 3.5rem; }
+.tr17 { margin: 0 0 8px; }
+h1 { font-size: clamp(1.7rem, 3vw, 2.25rem); margin: 0 0 0.35rem; letter-spacing: -0.03em; font-weight: 700; }
+.ver { margin: 0 0 0.85rem; color: var(--muted); font-weight: 650; }
+.lede { font-size: 1.05rem; margin: 0 0 1rem; max-width: 78ch; }
+h2 { font-size: 1.25rem; margin: 2rem 0 0.7rem; letter-spacing: -0.02em; scroll-margin-top: 80px; }
+h3 { font-size: 1.05rem; margin: 1.2rem 0 0.45rem; }
+p, ul, ol { margin: 0 0 0.85rem; }
+ul, ol { padding-left: 1.25rem; }
+li { margin: 0.2rem 0; }
+.kicker {
+  display: inline-block; text-transform: uppercase; letter-spacing: 0.14em;
+  font-size: 0.72rem; color: var(--accent); font-weight: 700; margin: 0 0 0.35rem;
+}
+.note, .muted, .meta, .footer, .snapshot, .cite, .field-help { color: var(--muted); }
+.meta { margin: 0 0 0.25rem; }
+.footer { margin: 0.4rem 0 0; font-size: 0.92rem; }
+.cite, .field-help { font-size: 0.92rem; }
+.na { font-style: italic; color: var(--warn); }
+.callout, .card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 1rem 1.15rem; margin: 0 0 1.1rem;
+}
+.callout .k { margin: 0; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.callout .v { margin: 0.15rem 0 0.4rem; font-weight: 700; font-size: 1.15rem; }
+.table-wrap { overflow-x: auto; margin: 0 0 1rem; }
+table {
+  width: 100%; border-collapse: collapse; background: var(--card);
+  border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+}
+th, td { text-align: left; padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 0.82rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); background: var(--bg-accent); }
+td.num { font-variant-numeric: tabular-nums; width: 3rem; }
+/* APIC dialog replica */
+.apic {
+  max-width: 640px; margin: 0 0 1rem; background: var(--card);
+  border: 1px solid var(--line); border-radius: 6px; box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.apic-title {
+  background: var(--apic-bar); color: #fff; font-weight: 700;
+  padding: 0.55rem 0.85rem; font-size: 0.95rem;
+}
+.apic-body { padding: 0.85rem 1rem 0.4rem; }
+.frow { display: grid; grid-template-columns: 13.5rem 1fr; gap: 0.35rem 0.85rem; margin: 0 0 0.7rem; align-items: start; }
+.frow label { font-weight: 650; padding-top: 0.3rem; }
+.frow label .req { color: #c2410c; margin-left: 0.15rem; }
+.frow .ctrl input, .frow .ctrl select, .frow .ctrl textarea {
+  width: 100%; padding: 0.35rem 0.5rem; border: 1px solid var(--line);
+  border-radius: 4px; background: var(--bg); color: var(--ink); font: inherit;
+}
+.frow .ctrl input:disabled, .frow .ctrl select:disabled, .frow .ctrl textarea:disabled { opacity: 1; }
+.fhelp { grid-column: 2; margin: 0; font-size: 0.82rem; color: var(--muted); }
+.apic-ft {
+  display: flex; justify-content: flex-end; gap: 0.5rem;
+  padding: 0.65rem 1rem; background: var(--apic-ft); border-top: 1px solid var(--line);
+}
+.btn { display: inline-block; padding: 0.28rem 0.85rem; border-radius: 4px; border: 1px solid var(--line); background: var(--card); font-weight: 650; font-size: 0.9rem; }
+.btn.pri { background: #2563eb; color: #fff; border-color: transparent; }
+@media (max-width: 700px) {
+  .frow { grid-template-columns: 1fr; }
+  .fhelp { grid-column: 1; }
+  .frow label { padding-top: 0; }
+}
+
+</style>
+</head>
+<body>
+<main class="wrap">
+<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:#bbb"><a href="/visitors/" style="color:#fff;text-decoration:none"><span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></a><span class="uvt" style="font-size:11px;color:#888"></span></div><!--/arr-uv-tr17-->
+
+
+<p class="kicker">Spine Access Policy Group</p>
+<h1>POE Node Policy</h1>
+<p class="ver">v1 · 21 Nov 2026, 11:52 AM AEDT</p>
+<p class="lede">This name was requested as a Spine Access Policy Group field. According to Cisco Ansible (poe_node_policy, switch_type=leaf) and the Cisco DevNet Terraform spine resource, a POE Node Policy is not a field of infraSpineAccNodePGrp. On the leaf Access Switch Policy Group it is a relation to poeInstPol. Cisco docs use the spelling PoE.</p>
+
+<div class="callout">
+<p class="k">APIC class and DN</p>
+<p class="v"><code>poeInstPol</code></p>
+<p>DN: <code>not collected for a spine object — leaf Terraform relation is to class poeInstPol</code></p>
+<p>On this spine policy group: No — not a field of the Spine Switch Policy Group</p>
+<p>Spine relation: <code>not present on infraSpineAccNodePGrp</code></p>
+<p>Leaf relation: <code>infraRsPoeInstPol (relation_infra_rs_poe_inst_pol)</code></p>
+<p>GUI path: not collected as a spine switch policy group path; leaf-only per Cisco Ansible</p>
+</div>
+
+<h2 id="spine-vs-leaf">Spine-specific differences versus leaf</h2>
+<p>Leaf: present, class poeInstPol. Spine switch policy group: not present. PoE is an access-port power feature; Cisco does not document it on the spine group.</p>
+<p>Matching leaf APG page: <a href="/ACI-GUI-Forms/apg/poe-node-policy/">/ACI-GUI-Forms/apg/poe-node-policy/</a></p>
+
+<div class="callout"><p class="k">Not on the Spine Switch Policy Group</p><p class="v">This policy is not a field of <code>infraSpineAccNodePGrp</code></p><p>Cisco Ansible documents poe_node_policy as available only when switch_type=leaf. The Cisco DevNet Terraform spine resource has no PoE relation. The leaf resource documents relation_infra_rs_poe_inst_pol to class poeInstPol.</p><p>No spine create dialog is shown, because inventing one would be inaccurate. The leaf Access Switch Policy Group form is on the <a href="/ACI-GUI-Forms/apg/poe-node-policy/">matching leaf APG page</a>.</p></div>
+
+
+<h2 id="sources">Sources</h2>
+<ul><li><a href="https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/spine_switch_policy_group">Cisco DevNet Terraform: aci_spine_switch_policy_group</a> — https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/spine_switch_policy_group</li><li><a href="https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/access_switch_policy_group">Cisco DevNet Terraform: aci_access_switch_policy_group</a> — https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/access_switch_policy_group</li><li><a href="https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_access_switch_policy_group_module.html">Cisco Ansible: aci_access_switch_policy_group</a> — https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_access_switch_policy_group_module.html</li></ul>
+
+
+<h2 id="gaps">Gaps and not collected items</h2>
+<ul><li>No spine create dialog exists for this field on infraSpineAccNodePGrp, so none is shown.</li><li>A Cisco GUI procedure for the leaf create dialog was not collected on the leaf APG page either.</li></ul>
+
+</main>
+<footer class="wrap">
+<p class="meta">Facts collected 21 Nov 2026, 11:52 AM AEDT. No live APIC query was used. Unverified values are marked not collected.</p>
+<p class="footer">Pages generated by /workspace/sitetools/aci_gui_forms_spine_apg.py for https://amoeoo-coles.github.io/ACI-GUI-Forms/spine-apg/. No credentials are included.</p>
+</footer>
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/"}}</script>
+<script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const n=s=>String(s||"").split("?")[0].replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/";const p=n(location.pathname);const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc){const pt=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Melbourne",hour:"2-digit",minute:"2-digit",hour12:false,hourCycle:"h23",timeZoneName:"short"}).formatToParts(new Date(d.updated_utc));const g=t=>(pt.find(x=>x.type===t)||{}).value||"";const tz=(g("timeZoneName")||"AEDT").replace("GMT+11","AEDT").replace("GMT+10","AEST");e.textContent=" (data as of "+g("hour")+":"+g("minute")+" "+tz+")"}})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script>
+<script src="/ACI-GUI-Forms/spine-apg/sort.js"></script>
+</body>
+</html>
