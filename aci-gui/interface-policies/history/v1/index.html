@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:auto;
+  min-height:44px;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:auto;min-height:44px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:visible;
+  text-overflow:unset;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.25;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:22px;
+  height:22px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:16px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:#1d4ed8!important;
+}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Note on Interface Policies — ACI GUI</title>
+<meta name="description" content="Field-by-field comparison of the Leaf Access Port Policy Group and the PC Interface Policy Group, including the GUI Advanced Policies section.">
+<style>
+
+:root {
+  color-scheme: light dark;
+  --bg: #f4f6f8;
+  --bg-accent: #e8eef4;
+  --card: #ffffff;
+  --ink: #15202b;
+  --muted: #5b6b7c;
+  --line: #d5dee7;
+  --accent: #0e7490;
+  --accent-soft: #e0f4f8;
+  --link: #0e7490;
+  --good: #047857;
+  --warn: #a16207;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --radius: 14px;
+  --mono: "IBM Plex Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+  --sans: "Source Sans 3", "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1220;
+    --bg-accent: #111827;
+    --card: #152033;
+    --ink: #e6edf5;
+    --muted: #93a4b8;
+    --line: #2a3b52;
+    --accent: #5eead4;
+    --accent-soft: #12313a;
+    --link: #5eead4;
+    --good: #34d399;
+    --warn: #fbbf24;
+    --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+  }
+}
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f4f6f8; --bg-accent: #e8eef4; --card: #ffffff; --ink: #15202b;
+  --muted: #5b6b7c; --line: #d5dee7; --accent: #0e7490; --accent-soft: #e0f4f8;
+  --link: #0e7490; --good: #047857; --warn: #a16207;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+  --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+  --link: #5eead4; --good: #34d399; --warn: #fbbf24;
+  --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--sans);
+  background: radial-gradient(1200px 500px at 10% -10%, var(--bg-accent), transparent 60%), var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  min-height: 100vh;
+}
+a { color: var(--link); }
+main.wrap, footer.wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem; }
+main.wrap { padding-top: 0.4rem; padding-bottom: 2.2rem; }
+footer.wrap { padding-bottom: 3.5rem; }
+.tr17 { margin: 0 0 8px; }
+h1 { font-size: clamp(1.7rem, 3vw, 2.25rem); margin: 0 0 0.35rem; letter-spacing: -0.03em; font-weight: 700; }
+.ver { margin: 0 0 0.85rem; color: var(--muted); font-weight: 650; }
+.lede { font-size: 1.05rem; margin: 0 0 1rem; max-width: 70ch; }
+h2 { font-size: 1.25rem; margin: 2rem 0 0.7rem; letter-spacing: -0.02em; scroll-margin-top: 80px; }
+h3 { font-size: 1.05rem; margin: 1.2rem 0 0.45rem; }
+p, ul, ol { margin: 0 0 0.85rem; }
+ul, ol { padding-left: 1.25rem; }
+li { margin: 0.2rem 0; }
+.kicker {
+  display: inline-block; text-transform: uppercase; letter-spacing: 0.14em;
+  font-size: 0.72rem; color: var(--accent); font-weight: 700; margin: 0 0 0.35rem;
+}
+.callout {
+  background: var(--accent-soft); border: 1px solid var(--line);
+  border-left: 4px solid var(--accent); border-radius: 10px;
+  padding: 12px 14px; margin: 0 0 1rem;
+}
+.callout p { margin: 0; }
+.callout .k { color: var(--muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+.callout .v { font-size: 1.35rem; font-weight: 750; letter-spacing: -0.02em; }
+.note, .muted, .meta, .footer, .snapshot { color: var(--muted); }
+.meta { margin: 0 0 0.25rem; }
+.snapshot { margin: 0; }
+.footer { margin: 0.4rem 0 0; font-size: 0.92rem; }
+.na { color: var(--muted); font-style: italic; }
+.cite { font-size: 0.9rem; color: var(--muted); margin: -0.35rem 0 1rem; }
+pre {
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+  padding: 12px 14px; overflow-x: auto; box-shadow: var(--shadow);
+  font-family: var(--mono); font-size: 0.86rem; line-height: 1.45; margin: 0 0 0.5rem;
+}
+code { font-family: var(--mono); font-size: 0.9em; }
+pre code { font-size: 0.86rem; }
+.table-wrap { overflow-x: auto; margin: 0 0 1rem; }
+table {
+  width: 100%; border-collapse: collapse; font-size: 0.95rem;
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+th, td { border-bottom: 1px solid var(--line); padding: 0.55rem 0.75rem; text-align: left; vertical-align: top; }
+th { font-size: 0.82rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); background: var(--bg-accent); }
+tr:last-child td { border-bottom: 0; }
+.src { font-size: 0.88rem; }
+.src-list { columns: 2; gap: 1.2rem; padding-left: 1.2rem; }
+@media (max-width: 720px) { .src-list { columns: 1; } }
+
+.page-menu { margin: 0 0 1.2rem; padding-left: 1.3rem; }
+.page-menu li { margin: 0 0 0.25rem; }
+td.num, th.num, th.n, td.n { text-align: right; font-variant-numeric: tabular-nums; }
+html[data-theme="light"] .kicker, html[data-theme="dark"] .kicker, .kicker { color: var(--accent) !important; }
+.geo-flag { margin-right: 0.35rem; }
+#geo-table { max-width: 56rem; }
+#geo-table a { text-decoration: none; }
+#geo-table a:hover { text-decoration: underline; }
+#comments { margin: 1.6rem 0 0; }
+#comments-mount { margin-top: 0.8rem; }
+.toc { margin: 0 0 1.2rem; }
+.toc a { margin-right: 0.15rem; }
+.callout { border-left: 4px solid var(--accent, #2563eb); padding: 0.7rem 1rem; margin: 0 0 1.2rem; background: var(--card); border-radius: 0 8px 8px 0; }
+.callout p { margin: 0.35rem 0; }
+.diag { max-width: 100%; overflow-x: auto; margin: 0 0 1.2rem; padding: 0.6rem 0.8rem; border: 1px solid var(--line); border-radius: 10px; background: var(--card); }
+pre.mermaid { margin: 0; background: transparent; color: inherit; overflow: auto; }
+.codebox, pre.yaml { max-width: 100%; overflow-x: auto; }
+.na { font-style: italic; color: var(--muted); }
+table.cmp td:nth-child(2), table.cmp td:nth-child(3),
+table.cmp th:nth-child(2), table.cmp th:nth-child(3) { white-space: nowrap; }
+.src-list { padding-left: 1.3rem; }
+.src-list li { margin: 0 0 0.4rem; }
+
+</style>
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+var b=String.fromCharCode(99,111,108,101,115);sg.href='https://github.com/amoeoo-'+b+'/amoeoo-'+b+'.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+<!-- site-menu v1 --><nav class="site"><a href="/">Home</a></nav>
+
+<main class="wrap">
+<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:#bbb"><a href="/visitors/" style="color:#fff;text-decoration:none"><span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></a><span class="uvt" style="font-size:11px;color:#888"></span></div><!--/arr-uv-tr17-->
+
+<p class="kicker">ACI GUI</p>
+<h1>Note on Interface Policies</h1>
+<p class="ver">v1 · 22 Nov 2026, 8:02 AM AEDT</p>
+
+<p class="lede">A field-by-field comparison of the Leaf Access Port Policy Group and the PC Interface Policy Group, including the GUI section called Advanced Policies. The field list comes from the APIC forms already documented on the <a href="/aci-gui/create-access-interface-policy-group/">Create Access Interface Policy Group</a> and <a href="/aci-gui/create-pc-interface-policy-group/">Create PC Interface Policy Group</a> pages (screenshots from APIC DC3), then checked against Cisco APIC configuration guides. Nothing here was invented. Items that could not be verified are marked <span class="na">not collected</span>.</p>
+
+<p class="toc"><a href="#how-they-differ">How they differ</a> · <a href="#advanced">Why “Advanced Policies”</a> · <a href="#fields">Field comparison</a> · <a href="#diagram">Diagram</a> · <a href="#scenarios">Scenarios</a> · <a href="#sources">Sources</a> · <a href="#not-collected">Not collected</a> · <a href="#versions">Versions</a> · <a href="#visitors-by-country">Visitors by country</a> · <a href="#comments">Comments</a></p>
+
+<ol class="page-menu" aria-label="On this page">
+<li><a href="#how-they-differ">How they differ</a></li>
+<li><a href="#advanced">Why the GUI says Advanced Policies</a></li>
+<li><a href="#fields">Field-by-field comparison</a></li>
+<li><a href="#diagram">Policy chain diagram</a></li>
+<li><a href="#scenarios">Three scenarios</a></li>
+<li><a href="#sources">Sources</a></li>
+<li><a href="#not-collected">Not collected</a></li>
+</ol>
+
+<h2 id="how-they-differ">How they differ</h2>
+<p>A <strong>Leaf Access Port Policy Group</strong> (<code>infraAccPortGrp</code>) applies a set of interface policies to <strong>one physical port</strong> on a leaf. A <strong>PC Interface Policy Group</strong> (<code>infraAccBndlGrp</code>, <code>lagT=link</code>) applies a set of policies to a <strong>port channel</strong>: several ports on the same leaf, bundled as one logical interface for more bandwidth and link redundancy.</p>
+<p>Cisco’s Layer 2 access-interfaces guide describes the policy group as the named object that holds those interface policies (for example a link-level policy or a storm-control policy) and is then selected on the interface. The same guide’s port-channel chapter describes a port channel as a logical interface that bundles physical interfaces, provides redundancy, and load-balances traffic across the members. Starting with APIC 6.1(3), a port channel can have 32 members; FEX and SAN port-channels stay at 16.</p>
+<p>Most policy fields exist on both groups. The important differences are:</p>
+<ul>
+<li><strong>Port Channel Policy</strong> and <strong>PC Member Port Policy Groups</strong> exist only on the PC group (and on a vPC group). They set LACP or static bundling, and per-member LACP rate or priority.</li>
+<li><strong>802.1X Port Authentication</strong>, <strong>PoE Interface</strong>, <strong>DWDM</strong> and <strong>Transceiver policy</strong> appear on the Access Port form, not on the DC3 PC form. Cisco also states that 802.1X is not supported on port channels or virtual port channels.</li>
+<li>On the PC form, several policies sit on a second wizard page titled Advanced Policies. They are the same kind of policy, not a second class of object.</li>
+</ul>
+
+<h2 id="advanced">Why the GUI says “Advanced Policies”</h2>
+<p>On the Create PC Interface Policy Group wizard, the first page holds Name, Description, Attached Entity Profile, CDP, Link Level, LLDP, Port Channel Policy, then CoPP, both data-plane policers, Fibre Channel, L2 Interface, Link Flap and Link Level Flow Control. The second page is titled <strong>Advanced Policies</strong>. That page holds MACsec, MCP, Monitoring, Port Security, SyncE, the NetFlow Monitor Policies table, the PC Member Port Policy Groups table, Priority Flow Control, Slow Drain, Storm Control and STP. The Cisco Live lab LTRDCN-2143 uses the same two-step wizard and sets MCP on the Advanced Policies page.</p>
+<p>Advanced Policies is a <strong>collapsed or second-step GUI section</strong> for policies that many designs leave at their defaults or unselected. It is not a ranking of importance. MCP, Storm Control and STP BPDU Guard are often recommended on edge ports, even though they sit in that later section on the PC form.</p>
+<p>The Create Leaf Access Port Policy Group form on APIC DC3 is a single dialog with a <strong>View Advanced Settings</strong> disclosure. The walk-through already on this site used that disclosure for MCP and L2 Interface. Other Access fields (802.1X, PoE, Storm Control, STP and the rest) are still on that same form. This note does not invent which of those remaining Access fields sit inside the disclosure.</p>
+
+<h2 id="fields">Field-by-field comparison</h2>
+<p>Presence is taken from the DC3 Access and PC forms, with Cisco or Ansible cited where a behaviour is described. “Basic” means the first PC wizard page. “Advanced” means the PC wizard’s Advanced Policies page.</p>
+<div class="table-wrap"><table class="cmp"><thead><tr><th>Field</th><th>Access Port PG</th><th>PC Interface PG</th><th>What it does</th><th>When to use it, and why</th><th>Typical value</th></tr></thead><tbody><tr><td>Name</td><td>Yes</td><td>Yes, basic</td><td>The policy group name. The Access group is class <code>infraAccPortGrp</code>. The PC group is class <code>infraAccBndlGrp</code> with <code>lagT=link</code>.</td><td>Required on every group. Each PC or vPC group identifies one bundle.</td><td>A unique name, for example <code>Leaf101_Access</code> or <code>Leaf101_PC</code>.</td></tr><tr><td>Description</td><td>Yes</td><td>Yes, basic</td><td>Optional text on the policy group object.</td><td>Use when a short note helps operators. It is not required for forwarding.</td><td>Often left as the GUI placeholder “optional”, as on the APIC (DC3) forms already on this site.</td></tr><tr><td>Attached Entity Profile (AAEP; the Access form also labels this Attached Entity Policy)</td><td>Yes</td><td>Yes, basic</td><td>Binds the policy group to an Attachable Access Entity Profile. The AAEP attaches domains (physical, VMM or routed). Each domain references a VLAN pool. Until this chain is complete, an EPG cannot be deployed on the leaf port.</td><td>Required for data traffic in the usual access-policy chain. Cisco’s access-policy troubleshooting guide describes this VLAN pool → domain → AAEP → policy group → interface profile → switch profile path.</td><td>The AAEP that holds the domain for these ports, for example <code>LAB-AAEP</code>.</td></tr><tr><td>CDP Policy</td><td>Yes</td><td>Yes, basic</td><td>Enables or disables Cisco Discovery Protocol on the interface or port channel.</td><td>Use when a neighbour needs CDP (often older Cisco devices). LLDP covers multi-vendor discovery.</td><td>A CDP-enabled policy when neighbours require it, for example <code>aci_lab_cdp</code> on the DC3 forms. Otherwise leave unselected or use a disabled policy.</td></tr><tr><td>LLDP Policy</td><td>Yes</td><td>Yes, basic</td><td>Controls LLDP transmit and receive on the interface or port channel.</td><td>Use for neighbour discovery, cabling checks and many hypervisor or switch attachments. Cisco’s in-band management example requires an enabled LLDP policy on that access group.</td><td>Receive and transmit enabled, for example <code>lldp_enabled</code> with <code>admin_rx_state: true</code> and <code>admin_tx_state: true</code>.</td></tr><tr><td>Link Level Policy</td><td>Yes</td><td>Yes, basic</td><td>Layer 1 settings: auto-negotiation, port speed and link debounce.</td><td>Use to set speed when auto-inherit is not enough, or to change debounce. Cisco recommends Speed <strong>inherit</strong> so APIC uses the inserted transceiver. The Auto speed option is not supported; use Inherit instead.</td><td>Inherit (the Cisco-recommended default), or a fixed-speed policy such as the <code>aci_lab_10G</code> policy used on the DC3 forms.</td></tr><tr><td>Port Channel Policy</td><td>No</td><td>Yes, basic (PC only)</td><td>Defines the bundle mode and LACP options: Static Channel — Mode On, LACP Active, LACP Passive, MAC Pinning, and MAC Pinning-Physical-NIC-load. Also min/max links and related controls.</td><td>Required for a PC (or vPC) group. Use LACP Active for servers and switches that speak LACP. Cisco does not recommend LACP Passive for directly connected hosts (those ports do not start the handshake). Use MAC Pinning when the host cannot run LACP (some hypervisors).</td><td>A policy with <code>mode: active</code> for LACP Active, for example <code>lacp_active</code>.</td></tr><tr><td>PC Member Port Policy Groups</td><td>No</td><td>Yes, advanced (PC only; a table on the form)</td><td>Per-member LACP settings: rate (normal or fast) and priority (1–65535, default 32768). The 6.2 GUI also exposes a Port Channel Member Policy when you create a PC with Configure Interfaces.</td><td>Use when a member needs LACP fast timers or a non-default port priority. Leave the table empty when every member can use the defaults.</td><td>Empty table, as on the DC3 PC form. If needed, a member policy with <code>rate: normal</code> and <code>priority: 32768</code>.</td></tr><tr><td>802.1x Port Authentication</td><td>Yes</td><td>No</td><td>IEEE 802.1X port-based access control. Until the client authenticates, only EAPOL is allowed. Modes include single-host, multi-host, multi-auth and multi-domain; authentication can use EAP or MAB. RADIUS is configured separately.</td><td>Use on a single physical access port that must authenticate the attached device (campus-style or phone plus PC). Cisco: 802.1X is supported only on physical Fabric Access Ports, not on port channels or vPCs. It is also limited to EX/FX-type leaf chassis.</td><td>Leave unselected unless the device needs 802.1X. Then attach a port authentication policy and a working RADIUS configuration.</td></tr><tr><td>PoE Interface</td><td>Yes</td><td>No</td><td>Power over Ethernet settings for a powered device on a PoE-capable leaf port.</td><td>Use when the leaf port must power a camera, phone or access point. The field is on the Access form and in Cisco’s APIC PoE guide (create the policy under Policies &gt; Interface &gt; PoE, then attach it to a Leaf Access Port Policy Group). It is not on the DC3 PC form.</td><td>Leave unselected unless the port supplies power. Then attach a PoE interface policy.</td></tr><tr><td>Transceiver policy</td><td>Yes, APIC 6.0(2h) or later (Ansible). Not visible on the DC3 Access form screenshots already on this site.</td><td>No</td><td>A transceiver policy for ZR or ZR+ optics. Ansible documents the policy name plus type <code>zr</code> or <code>zrp</code>, available from APIC 6.0(2h).</td><td>Use only with those long-reach optics. Whether a given fabric’s GUI shows the field depends on the APIC version. The DC3 Access screenshots used for the existing form page do not show this field; that absence is recorded, not guessed.</td><td>Leave unselected unless ZR/ZR+ optics are in use. Detailed optical parameters are <span class="na">not collected</span> beyond the Ansible name and type.</td></tr><tr><td>DWDM</td><td>Yes</td><td>No</td><td>A DWDM (dense wavelength-division multiplexing) policy attached to the Access group. Ansible exposes this as <code>dwdm</code> on the leaf interface policy group module. The field is on the DC3 Access form and not on the DC3 PC form.</td><td>Use when the port uses DWDM optics that need that policy. Otherwise leave unselected.</td><td>Leave unselected unless DWDM optics require it. Wavelength and ITU-grid settings are <span class="na">not collected</span> from the Cisco pages checked for this note.</td></tr><tr><td>CoPP Policy</td><td>Yes</td><td>Yes, basic</td><td>Attaches a control-plane policing policy to the interface or port channel, so control-plane traffic on that port can be rate-limited. Ansible documents <code>copp_policy</code> on the leaf interface policy group.</td><td>Use when a custom interface CoPP policy is required. Many designs leave the field unselected so the fabric default CoPP remains in effect.</td><td>Leave unselected / “select a value” unless a named CoPP policy is required. Per-protocol rate values for the interface CoPP policy are <span class="na">not collected</span> from the pages checked for this note.</td></tr><tr><td>Ingress Data Plane Policing / Egress Data Plane Policing</td><td>Yes</td><td>Yes, basic</td><td>Data plane policing (DPP) marks or drops traffic that exceeds configured rates on a Cisco ACI fabric access interface. Separate ingress and egress policies can be attached.</td><td>Use when a port must be rate-limited (bandwidth cap or marking). Leave unselected when no interface policer is required. DPP can also be applied at EPG level, which is outside this policy group.</td><td>Leave unselected unless a rate limit is required. Create the DPP policy first (rates, conform/exceed/violate actions, sharing mode), then attach it here.</td></tr><tr><td>Fibre Channel Interface</td><td>Yes</td><td>Yes, basic</td><td>Fibre Channel / FCoE interface settings (for example NP mode on an FCoE NPV port). Cisco’s FCoE guide uses a Fibre Channel Interface Policy together with Priority Flow Control and Slow Drain on those policy groups.</td><td>Use only for FC or FCoE attachments. For ordinary Ethernet servers, leave unselected.</td><td>Leave unselected for Ethernet-only ports. For FCoE NPV, a Fibre Channel policy in NP mode, plus PFC and Slow Drain as in the FCoE guide.</td></tr><tr><td>L2 Interface</td><td>Yes (on the DC3 Access form this was set under View Advanced Settings, together with MCP)</td><td>Yes, basic</td><td>Layer 2 interface behaviour. VLAN scope is global (default: one VLAN ID maps to one EPG per leaf) or port local (the same VLAN ID can be used on different ports of that leaf, with the EPGs in different bridge domains). QinQ edge or core is a separate L2 option for 802.1Q tunnels.</td><td>Use global for the usual one-VLAN-per-EPG-per-leaf design. Use port local only when overlapping VLAN IDs on different ports of the same leaf are required, and only across different bridge domains.</td><td>Global, for example <code>aci_lab_l2global</code> as used on the DC3 forms. NaC default is <code>vlan_scope: global</code> and <code>qinq: disabled</code>.</td></tr><tr><td>Link Flap Policy</td><td>Yes</td><td>Yes, basic</td><td>Limits how many times a link may flap in a configured time span. Exceeding the count error-disables the port until it is manually disabled and re-enabled. Cisco documents that this does not apply to FEX HIF ports or to older leaf models without -EX, -FX, -FX2 or -GX designations.</td><td>Use when a flapping transceiver or cable should take the port out of service instead of destabilising the fabric. Leave unselected if the default flap handling is enough.</td><td>Leave unselected unless a named flap policy is required. The exact default threshold is <span class="na">not collected</span> from the pages checked for this note, beyond Cisco’s error-disable behaviour.</td></tr><tr><td>Link Level Flow Control Policy</td><td>Yes</td><td>Yes, basic</td><td>IEEE 802.3x link-level flow control (pause) on the link. Cisco’s MACsec guide states that PFC and LLFC cannot be used on MACsec-enabled ports.</td><td>Use only when a device requires LLFC. Prefer PFC for lossless FCoE or RoCE designs, and do not combine LLFC with MACsec.</td><td>Leave unselected unless LLFC is required and MACsec is not in use.</td></tr><tr><td>MACsec</td><td>Yes</td><td>Yes, advanced</td><td>Media Access Control Security for the access link. A MACsec interface policy references a parameters policy and a keychain policy.</td><td>Use when the link to a MACsec-capable neighbour must be encrypted. Do not attach PFC or LLFC to a MACsec-enabled policy group.</td><td>Leave unselected unless link encryption is required. Then attach a MACsec interface policy with its parameters and keychain (keys stay in the policy, not in this note).</td></tr><tr><td>NetFlow Monitor Policies</td><td>Yes (a table on the Access form)</td><td>Yes, advanced (a table on the PC form)</td><td>Attaches one or more NetFlow monitor policies so flow records can be exported from the interface or port channel. NaC models this as <code>netflow_monitor_policies</code> on the policy group.</td><td>Use when flow export is required for those ports. Leave the table empty when NetFlow is not used.</td><td>Empty table, as on the DC3 Access and PC forms.</td></tr><tr><td>MCP</td><td>Yes (on the DC3 Access form, under View Advanced Settings)</td><td>Yes, advanced</td><td>Mis-cabling Protocol. A Layer 2 packet used to detect loops that LLDP and STP cannot see. ACI leaf switches do not participate in STP and act as a hub with respect to STP. MCP can be enabled globally and per interface. By default it is disabled globally and enabled on each port; it must be enabled globally to work. Modes include non-strict and strict (early loop detection). From 6.2(3), a loop can suspend one VLAN instead of the whole port when that option is configured.</td><td>Use on edge ports (and usually enable the global MCP instance, including MCP PDU per VLAN, as in Cisco’s recommended APIC settings). Strict mode has limits (not supported on FEX or QinQ edge ports; vPC fast convergence is not supported when strict mode is on).</td><td>An enabled MCP interface policy, for example <code>aci_lab_mcp</code> / <code>mcp_enabled</code> with <code>admin_state: true</code>, plus the global instance enabled.</td></tr><tr><td>Monitoring Policy</td><td>Yes</td><td>Yes, advanced</td><td>Selects a monitoring policy for statistics and faults on the interface. Ansible documents <code>monitoring_policy</code> on the leaf interface policy group.</td><td>Use when the port needs a non-default monitoring policy. Otherwise leave unselected.</td><td>Leave as “select a value”, as on the DC3 forms. The exact default monitoring object is <span class="na">not collected</span> from the pages checked for this note.</td></tr><tr><td>Port Security</td><td>Yes</td><td>Yes, advanced</td><td>Limits how many endpoints (MAC addresses) can be learned on the interface (0–12000). When the limit is reached, protect mode stops new MAC learning. Learning can resume after a timeout (60–3600 seconds; default 60).</td><td>Use when a port should not learn an unbounded number of MACs (for example a single-host edge). Leave unselected when no MAC-count limit is required.</td><td>Leave unselected unless a limit is required. NaC defaults for a port security policy are <code>maximum_endpoints: 0</code> and <code>timeout: 60</code>; treat 0 as the policy default, not as a recommended cap, unless Cisco’s meaning of 0 is confirmed for that release (<span class="na">not collected</span> here beyond the documented range and timeout).</td></tr><tr><td>Priority Flow Control</td><td>Yes</td><td>Yes, advanced</td><td>IEEE 802.1Qbb priority flow control for lossless Ethernet (used with FCoE and often with RoCE). Cisco’s FCoE guide attaches a PFC policy on those policy groups. PFC cannot be used on MACsec-enabled ports.</td><td>Use on FCoE or RoCE ports that need lossless priorities. Leave unselected for ordinary Ethernet edge ports, and do not combine with MACsec.</td><td>Leave unselected unless the port is in an FCoE or RoCE lossless design. Then attach a PFC policy (Cisco’s MACsec notes mention Auto in related LLDP DCBX text).</td></tr><tr><td>Slow Drain</td><td>Yes</td><td>Yes, advanced</td><td>A slow-drain policy used with FCoE when a device is slow to accept frames. Cisco’s FCoE guide attaches Slow Drain together with a Fibre Channel Interface Policy and PFC on those ports.</td><td>Use on FCoE ports. Leave unselected for ordinary Ethernet servers.</td><td>Leave unselected unless FCoE is in use, then attach the Slow Drain policy described in the FCoE guide.</td></tr><tr><td>Storm Control Interface</td><td>Yes</td><td>Yes, advanced</td><td>Limits ingress broadcast, unknown multicast and unknown unicast storms, as a percentage of port bandwidth or as packets per second, over a one-second interval. Traffic above the rate is dropped for the rest of the interval (a shutdown action can also be configured). Storm control is not enabled by default in the ACI fabric. It does not police STP or OSPF traffic.</td><td>Use on edge ports to cap flood traffic. A rate of 100 means no storm control for that type; 0 suppresses all of that type. The max burst rate must be greater than or equal to the rate.</td><td>A named storm-control policy with a rate below 100 (or a PPS rate) chosen for the design. The DC3 forms left this unselected. A single “typical” percentage is not collected here.</td></tr><tr><td>STP Interface Policy</td><td>Yes</td><td>Yes, advanced</td><td>Spanning Tree BPDU Guard and/or BPDU Filter on the interface. ACI leaves do not run STP themselves; they act as a hub with respect to STP. BPDU Guard error-disables a port that receives BPDUs. BPDU Filter drops BPDUs.</td><td>Use BPDU Guard on edge ports that should only connect an end host, not another switch. Use BPDU Filter only with care: it drops BPDUs and does not error-disable the port.</td><td>A policy with BPDU Guard enabled for single-homed edge ports, for example <code>stp_bpdu_guard</code> with <code>bpdu_guard: true</code>.</td></tr><tr><td>SyncE Interface Policy</td><td>Yes</td><td>Yes, advanced</td><td>Synchronous Ethernet timing on the port. Ansible and Cisco document this from APIC 5.2. The policy is created under Policies &gt; Interface &gt; Synchronous Ethernet Interface, then attached to the policy group. Selection Input can make the port a timing source.</td><td>Use only in a SyncE or timing design. Leave unselected on ordinary server and switch attachments.</td><td>Leave unselected unless the port is part of a SyncE design.</td></tr></tbody></table></div>
+
+<h2 id="diagram">Policy chain diagram</h2>
+<p>Two relationships matter. The policy group does not select a port by itself. A leaf switch profile selects the leaf, an interface profile holds a port selector, and that selector points at the policy group. The policy group also points at an AAEP, which points at a domain, which points at a VLAN pool. Cisco’s access-policy troubleshooting guide describes this chain. Hardware comes up after the profiles are in place, but data traffic still needs a tenant application profile, EPG and contract.</p>
+<div class="diag">
+<pre class="mermaid">
+flowchart TB
+  subgraph select [Selecting a port on a leaf]
+    LP["Leaf Switch Profile"]
+    IP["Leaf Interface Profile"]
+    PS["Access Port Selector"]
+    LP --> IP
+    IP --> PS
+  end
+  subgraph apply [Policies and VLANs]
+    PG["Interface Policy Group\nAccess, PC or vPC"]
+    AAEP["Attachable Access Entity Profile"]
+    DOM["Physical, VMM or routed Domain"]
+    VLAN["VLAN pool"]
+    PS --> PG
+    PG --> AAEP
+    AAEP --> DOM
+    DOM --> VLAN
+  end
+</pre>
+</div>
+
+<h2 id="scenarios">Three scenarios</h2>
+<p>The YAML below is NaC-style, with keys checked against the local Cisco NaC access-policy modules already used on the Access and PC form pages (<code>leaf_interface_policy_groups</code>, <code>aaep</code>, <code>lldp_policy</code>, <code>mcp_policy</code>, <code>port_channel_policy</code>, <code>spanning_tree_policy</code>, <code>storm_control_policy</code>, plus the interface policy lists). Values are illustrative. No live inventory and no real addresses are used. APIC credentials, if a pipeline needs them, stay as placeholders such as <code>{{ apic_password }}</code>.</p>
+
+<h3 id="scenario-1">1. Single-homed device — Access Port Policy Group</h3>
+<p>A firewall management port, a bare-metal server with one NIC, or a camera attaches to one leaf port. Use a Leaf Access Port Policy Group with an AAEP, LLDP, MCP (and the global MCP instance), STP BPDU Guard and Storm Control. Add 802.1X or PoE only when that device must authenticate or must be powered from the switch.</p>
+<div class="codebox"><pre class="yaml"><code># Example only. APIC login credentials are not stored here.
+# In a pipeline, use placeholders such as {{ apic_username }} / {{ apic_password }}.
+# Interface IDs below are illustrative, not a live inventory.
+apic:
+  access_policies:
+    # MCP must also be enabled globally (Fabric &gt; Access Policies &gt;
+    # Policies &gt; Global &gt; MCP Instance Policy default). By default MCP is
+    # disabled globally and enabled on each port (Cisco APIC Basic
+    # Configuration Guide, MCP interface policy).
+    mcp:
+      admin_state: true
+      per_vlan: true
+    interface_policies:
+      lldp_policies:
+        - name: lldp_enabled
+          admin_rx_state: true
+          admin_tx_state: true
+      mcp_policies:
+        - name: mcp_enabled
+          admin_state: true
+      spanning_tree_policies:
+        - name: stp_bpdu_guard
+          bpdu_guard: true
+          bpdu_filter: false
+      storm_control_policies:
+        - name: storm_control_edge
+          # Choose a rate below 100 for the design. Cisco documents that
+          # a percentage of 100 means no storm control, and 0 suppresses
+          # all of that traffic type. A specific rate is not collected here.
+          action: drop
+      # Add port_authentication / poe_interface policies only when the
+      # attached device needs 802.1X or PoE. Those fields are Access-only.
+    leaf_interface_policy_groups:
+      - name: Leaf101_Access
+        type: access
+        aaep: LAB-AAEP
+        lldp_policy: lldp_enabled
+        mcp_policy: mcp_enabled
+        spanning_tree_policy: stp_bpdu_guard
+        storm_control_policy: storm_control_edge
+    leaf_interface_profiles:
+      - name: Leaf101_IntProf
+        selectors:
+          - name: eth1-1
+            policy_group: Leaf101_Access
+            port_blocks:
+              - from_card: 1
+                from_port: 1
+                to_port: 1
+    leaf_switch_profiles:
+      - name: Leaf101
+        selectors:
+          - name: Leaf101
+            node_blocks:
+              - from: 101
+                to: 101
+        interface_profiles: [Leaf101_IntProf]</code></pre></div>
+
+<h3 id="scenario-2">2. Server with two to four NICs on one leaf — PC Interface Policy Group</h3>
+<p>The server’s NICs land on the same leaf and should act as one logical link. Use a PC Interface Policy Group with LACP Active, the same AAEP, and the same edge protections (LLDP, MCP, BPDU Guard, Storm Control). The Port Channel Policy is the field that does not exist on the Access group. Member-level LACP rate or priority stays in PC Member Port Policy Groups on the Advanced Policies page, and can be left empty when defaults are enough.</p>
+<div class="codebox"><pre class="yaml"><code># Example only. Credentials stay as placeholders such as {{ apic_password }}.
+# Four member ports on one leaf are illustrative, not a live inventory.
+apic:
+  access_policies:
+    interface_policies:
+      lldp_policies:
+        - name: lldp_enabled
+          admin_rx_state: true
+          admin_tx_state: true
+      mcp_policies:
+        - name: mcp_enabled
+          admin_state: true
+      port_channel_policies:
+        - name: lacp_active
+          mode: active
+          # NaC defaults also record min_links: 1 and max_links: 16.
+          # Cisco APIC 6.1(3) and later can use 32 members on a port channel;
+          # FEX and SAN port-channels remain at 16.
+      spanning_tree_policies:
+        - name: stp_bpdu_guard
+          bpdu_guard: true
+      storm_control_policies:
+        - name: storm_control_edge
+          action: drop
+    leaf_interface_policy_groups:
+      - name: Leaf101_PC
+        type: pc
+        aaep: LAB-AAEP
+        lldp_policy: lldp_enabled
+        port_channel_policy: lacp_active
+        mcp_policy: mcp_enabled
+        spanning_tree_policy: stp_bpdu_guard
+        storm_control_policy: storm_control_edge
+    leaf_interface_profiles:
+      - name: Leaf101_PC_IntProf
+        selectors:
+          - name: eth1-1-to-4
+            policy_group: Leaf101_PC
+            port_blocks:
+              - from_card: 1
+                from_port: 1
+                to_port: 4
+    leaf_switch_profiles:
+      - name: Leaf101
+        selectors:
+          - name: Leaf101
+            node_blocks:
+              - from: 101
+                to: 101
+        interface_profiles: [Leaf101_PC_IntProf]</code></pre></div>
+
+<h3 id="scenario-3">3. Dual-homed across two leaves — vPC Interface Policy Group (not covered in detail)</h3>
+<p>If the server is dual-homed to <strong>two different leaves</strong>, a PC Interface Policy Group is the wrong object. That design needs a <strong>vPC Interface Policy Group</strong> (<code>infraAccBndlGrp</code> with <code>lagT=node</code>, NaC <code>type: vpc</code>) and a vPC pair (protection group) for those two leaves. Cisco’s Layer 2 guide describes the vPC workflow. The vPC group uses the same kind of policy fields as the PC group, plus that pair relationship. This note does not walk through vPC protection groups, peer-link or the interface wizard. The existing <a href="/aci-gui/interface-wizard-vpc/">Interface Wizard for vPC</a> page covers the GUI path.</p>
+<div class="codebox"><pre class="yaml"><code># Dual-homing across two leaves is a vPC Interface Policy Group, not a PC group.
+# type: vpc maps to infraAccBndlGrp with lagT=node. The two leaves must also
+# be a vPC pair (protection group). This note does not cover that setup.
+# See the Interface Wizard for vPC page for the GUI walk-through.
+apic:
+  access_policies:
+    leaf_interface_policy_groups:
+      - name: Leaf101_102_vPC
+        type: vpc
+        aaep: LAB-AAEP
+        port_channel_policy: lacp_active
+        lldp_policy: lldp_enabled
+        mcp_policy: mcp_enabled
+        # Remaining fields follow the PC Interface Policy Group.
+        # The vPC pair itself is not collected in this example.</code></pre></div>
+
+<h2 id="sources">Sources</h2>
+<p>Guides were retrieved for this note. Field presence also comes from the APIC DC3 forms already published on this site.</p>
+<ul class="src-list">
+<li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-61x/access-interfaces-61x.html">Cisco APIC Layer 2 Networking Configuration Guide, Release 6.1(x) — Access Interfaces</a></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-62x/access-interfaces-62x/physical-ports-configuration.html">Cisco APIC Layer 2 Networking Configuration Guide, Release 6.2(x) — Physical ports configuration</a></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-62x/access-interfaces-62x/port-channels.html">Cisco APIC Layer 2 Networking Configuration Guide, Release 6.2(x) — Port channels</a></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-62x/access-interfaces-62x/virtual-port-channels-in-cisco-aci.html">Cisco APIC Layer 2 Networking Configuration Guide, Release 6.2(x) — Virtual port channels in Cisco ACI</a></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/basic-configuration/cisco-apic-basic-configuration-guide-62x/provisioning-core-aci-fabric-services-62x/mis-cabling-protocol-interface-policy.html">Cisco APIC Basic Configuration Guide, Release 6.2(x) — Mis-cabling Protocol Interface policy</a></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/basic-configuration/cisco-apic-basic-configuration-guide-62x/about-cisco-aci-apic-configuration-62x/configure-the-recommended-settings-for-the-cisco-application-policy-infrastructure-controller-settings.html">Cisco APIC Basic Configuration Guide, Release 6.2(x) — Recommended APIC settings</a> (global MCP)</li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-62x/fundamentals-62x.html">Cisco ACI Fundamentals, Release 6.2(x) — MCP modes, and leaves as a hub with respect to STP</a></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/5-x/basic-configuration/cisco-apic-basic-configuration-guide-50x/provisioning-core-aci-fabric-services-50x.html">Cisco APIC Basic Configuration Guide, Release 5.0(x) — Link Level Policies</a></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/basic-configuration/cisco-apic-basic-configuration-guide-60x/provisioning-core-aci-fabric-services-60x.html">Cisco APIC Basic Configuration Guide, Release 6.0(x) — Link Flap policy</a></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/2-x/L2_config/b_Cisco_APIC_Layer_2_Configuration_Guide/b_Cisco_APIC_Layer_2_Configuration_Guide_chapter_01010.html">Cisco APIC Layer 2 Networking Configuration Guide — Traffic Storm Control</a></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/security-configuration/cisco-apic-security-configuration-guide-60x/802-1x-60x.html">Cisco APIC Security Configuration Guide, Release 6.0(x) — 802.1X</a></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/security-configuration/cisco-apic-security-configuration-guide-62x/g_port_security/port-security-port-level.html">Cisco APIC Security Configuration Guide, Release 6.2(x) — Port-level port security</a></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/security-configuration/cisco-apic-security-configuration-guide-62x/data-plane-policing-62x.html">Cisco APIC Security Configuration Guide, Release 6.2(x) — Data Plane Policing</a></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-62x/macsec-62x/configure-macsec-for-access-links-using-the-gui.html">Cisco APIC Layer 2 Networking Configuration Guide, Release 6.2(x) — Configure MACsec for access links</a></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-62x/fcoe-connections-62x/configuring-aci-fcoe-with-gui.html">Cisco APIC Layer 2 Networking Configuration Guide, Release 6.2(x) — FCoE Connections</a> (Fibre Channel, PFC, Slow Drain)</li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/system-management-configuration/cisco-apic-system-management-configuration-guide-61x/synchronous-ethernet-61x.html">Cisco APIC System Management Configuration Guide, Release 6.1(x) — Synchronous Ethernet (SyncE)</a></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/kb/Cisco-APIC-and-Power-Over-Ethernet_orig.html">Cisco APIC and Power Over Ethernet</a></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/aci-virtual-edge/3x/Configuration/cisco-aci-virtual-edge-configuration-guide-32x/Cisco-ACI-Virtual-Edge-Configuration-Guide-32x_chapter_port_channel_virtual_port_channel.html">Cisco ACI Virtual Edge Configuration Guide — Port Channel policy modes (LACP Active, Passive, Static On, MAC Pinning)</a></li>
+<li><a href="https://www.cisco.com/c/en/us/support/docs/cloud-systems-management/application-policy-infrastructure-controller-apic/200305-Configure-Fast-LACP-Timer-in-ACI.html">Configure Fast LACP Timer in ACI</a> (port-channel member policy)</li>
+<li><a href="https://www.cisco.com/c/en/us/support/docs/cloud-systems-management/application-policy-infrastructure-controller-apic/218029-troubleshoot-aci-access-policies.html">Troubleshoot ACI Access Policies</a> (VLAN pool, domain, AAEP, policy group, profiles)</li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/kb/b_APIC_CDP_and_LLDP_Management_Interface.html">Cisco APIC Support for CDP and LLDP</a></li>
+<li><a href="https://www.cisco.com/c/en/us/support/docs/cloud-systems-management/application-policy-infrastructure-controller-apic/221867-configure-in-band-management-in-aci.html">Configure In-Band Management in ACI</a> (LLDP on an Access Port Policy Group)</li>
+<li><a href="https://aci-lab.ciscolive.com/lab/pod6/accesspol/pcpolgrp">Cisco Live LTRDCN-2143 — Create PC Interface Policy Group, including the Advanced Policies step</a></li>
+<li><a href="https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_interface_policy_leaf_policy_group_module.html">Ansible <code>cisco.aci.aci_interface_policy_leaf_policy_group</code></a> (parameter list, including transceiver from 6.0(2h) and SyncE from 5.2)</li>
+<li><a href="/aci-gui/create-access-interface-policy-group/">Create Access Interface Policy Group</a> and <a href="/aci-gui/create-pc-interface-policy-group/">Create PC Interface Policy Group</a> on this site (APIC DC3 form field lists and NaC keys)</li>
+</ul>
+
+<h2 id="not-collected">Not collected</h2>
+<ul>
+<li>Which remaining Access Port fields sit inside the DC3 “View Advanced Settings” disclosure, other than MCP and L2 Interface (those two are documented on the existing Access form page).</li>
+<li>Whether the DC3 APIC version’s Access form included the Transceiver policy field (it is not in the published screenshots; Ansible documents it from 6.0(2h)).</li>
+<li>Detailed DWDM wavelength or ITU-grid settings, interface CoPP per-protocol rates, the exact default link-flap threshold, the exact default monitoring policy object, and Slow Drain timer values beyond their use on FCoE ports.</li>
+<li>A single recommended Storm Control percentage or PPS value. Cisco documents the meaning of 0 and 100; a design-specific rate is not assumed.</li>
+<li>The precise meaning of <code>maximum_endpoints: 0</code> on a NaC port-security policy default, beyond Cisco’s documented 0–12000 range and 60-second default timeout.</li>
+<li>vPC protection-group, peer-link and interface-wizard steps. Those belong on the vPC page, not in this comparison.</li>
+</ul>
+
+<h2 id="versions">Versions</h2>
+<p>This is <strong>v1 · 22 Nov 2026, 8:02 AM AEDT</strong>. Snapshots are under <a href="/aci-gui/interface-policies/history/">history/</a>.</p>
+
+
+<section id="geo" aria-label="Visitors by country">
+<h2 id="visitors-by-country">Visitors by country</h2>
+<p class="muted">Unique-visitor counts by country from GoatCounter location stats, published in <code>/data/visitors.json</code> and refreshed by the site’s visitor-stats workflow. These figures are site-wide (every page on this site), not counts for this page alone. Per-page country counts are <span class="na">not collected</span>: GoatCounter’s stats and export used here record location by day for the whole site, and path counts separately, with no path-and-country breakdown.</p>
+<p class="muted">The Top ISP column is also site-wide. It uses the ASN-level ISP events collected since 14 Nov 2026 (9:52 PM AEDT) and published in the same <code>/data/visitors.json</code> file. The visitor IP is sent only to the lookup service, never stored here or sent to GoatCounter. Past visits cannot be backfilled. A country with no collected ISP events shows <span class="na">not collected</span>. Click a country name for that country’s visitor count and ISP list.</p>
+<p class="muted" id="geo-note">Loading country counts…</p>
+<div class="table-wrap">
+<table id="geo-table">
+<thead><tr><th>Country</th><th>Code</th><th class="n">Visitors</th><th>Top ISP (site-wide)</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<p class="muted">Site-wide country charts and the full ISP lists are on the <a href="/visitors/countries/">Visitors by country</a> page.</p>
+</section>
+
+
+<section id="comments" class="card" aria-label="Comments">
+<h2 id="comments-heading">Comments</h2>
+<p class="muted">Sign in with GitHub to comment. Comments are stored as GitHub Discussions in this site’s repository. If the comments app is not yet installed on that repository, the comments area will say so until it is installed.</p>
+<div id="comments-mount"></div>
+<script>
+(function(){
+  var b=String.fromCharCode(99,111,108,101,115);
+  var repo='amoeoo-'+b+'/amoeoo-'+b+'.github.io';
+  var s=document.createElement('script');
+  s.src='https://giscus.app/client.js';
+  s.setAttribute('data-repo',repo);
+  s.setAttribute('data-repo-id','R_kgDOVM0-Fw');
+  s.setAttribute('data-category','Announcements');
+  s.setAttribute('data-category-id','DIC_kwDOVM0-F84DLoq4');
+  s.setAttribute('data-mapping','pathname');
+  s.setAttribute('data-strict','1');
+  s.setAttribute('data-reactions-enabled','1');
+  s.setAttribute('data-input-position','top');
+  s.setAttribute('data-theme','preferred_color_scheme');
+  s.setAttribute('data-lang','en');
+  s.setAttribute('data-loading','lazy');
+  s.crossOrigin='anonymous';
+  s.async=true;
+  var m=document.getElementById('comments-mount');
+  if(m) m.appendChild(s);
+})();
+</script>
+</section>
+
+<p class="meta">Page: <strong>Note on Interface Policies</strong> · Version: <strong>v1 · 22 Nov 2026, 8:02 AM AEDT</strong></p>
+<p class="snapshot">Field list taken from the APIC Create Leaf Access Port Policy Group and Create PC Interface Policy Group forms already documented on this site, then checked against Cisco APIC guides. Nothing here was invented. Unknown or unverified values are marked <span class="na">not collected</span>. Earlier versions live under <a href="/aci-gui/interface-policies/history/">history/</a>.</p>
+</main>
+<footer class="wrap">
+<p class="footer">This note compares Leaf Access Port and PC Interface Policy Groups. Credentials, if mentioned, are placeholders such as <code>{{ apic_password }}</code>. No APIC password, token or other secret is published. Folder links end with <code>/</code>. Earlier versions: <a href="/aci-gui/interface-policies/history/">history/</a>.</p>
+</footer>
+<script src="/aci-gui/interface-policies/sort.js"></script>
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/"}}</script>
+<script>(function(){var b=String.fromCharCode(99,111,108,101,115);var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';s.setAttribute('data-goatcounter','https://amoeoo-'+b+'.goatcounter.com/count');document.head.appendChild(s);}());</script>
+<script>fetch("/data/visitors.json?"+Date.now()).then(r=>r.json()).then(d=>{const n=s=>String(s||"").split("?")[0].replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/";const p=n(location.pathname);const c=(d.pages||[]).filter(x=>n(x.path)===p).reduce((a,x)=>a+(x.count||0),0);document.querySelectorAll(".uvc").forEach(e=>e.textContent=c);document.querySelectorAll(".uvt").forEach(e=>{if(d.updated_utc){const pt=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Melbourne",hour:"2-digit",minute:"2-digit",hour12:false,hourCycle:"h23",timeZoneName:"short"}).formatToParts(new Date(d.updated_utc));const g=t=>(pt.find(x=>x.type===t)||{}).value||"";const tz=(g("timeZoneName")||"AEDT").replace("GMT+11","AEDT").replace("GMT+10","AEST");e.textContent=" (data as of "+g("hour")+":"+g("minute")+" "+tz+")"}})}).catch(()=>{document.querySelectorAll(".uvc").forEach(e=>e.textContent="0")})</script>
+
+
+<script>
+(function(){
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function flag(id){
+  id=String(id||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(id)) return '';
+  return String.fromCodePoint(127397+id.charCodeAt(0))+String.fromCodePoint(127397+id.charCodeAt(1));
+}
+function ccOf(id){
+  var cc=String(id||'').toUpperCase();
+  return /^[A-Z]{2}$/.test(cc)?cc:'';
+}
+function countryHref(id){
+  var cc=ccOf(id);
+  return cc?'/visitors/countries/#country-'+cc.toLowerCase():'';
+}
+function ispOrg(r){
+  return (r&&(r.holder||r.event_title||r.asn))||'';
+}
+function topIspByCountry(rows){
+  var top={};
+  (rows||[]).forEach(function(r){
+    var cc=ccOf(r.country);
+    if(!cc) return;
+    if(!top[cc]||(+r.visits||0)>(+top[cc].visits||0)) top[cc]=r;
+  });
+  return top;
+}
+var note=document.getElementById('geo-note');
+var tb=document.querySelector('#geo-table tbody');
+if(!tb){return;}
+fetch('/data/visitors.json?'+Date.now()).then(function(r){return r.ok?r.json():Promise.reject()}).then(function(d){
+  var rows=d.countries||[];
+  if(!rows.length){
+    if(note) note.innerHTML='Visitors by country: <span class="na">not collected</span> (no country rows in /data/visitors.json).';
+    return;
+  }
+  var isp=(d.isps&&d.isps.rows)||[];
+  var top=topIspByCountry(isp);
+  rows=rows.slice().sort(function(a,b){return (b.count||0)-(a.count||0);});
+  tb.innerHTML=rows.map(function(r){
+    var id=ccOf(r.id)||String(r.id||'');
+    var name=r.name||id||'Unknown';
+    var fl=flag(id);
+    var href=countryHref(id);
+    var label=(fl?'<span class="geo-flag" aria-hidden="true">'+fl+'</span>':'')+esc(name);
+    var nameHtml=href?'<a href="'+href+'">'+label+'</a>':label;
+    var ispRow=top[id];
+    var ispHtml=ispRow
+      ?esc(ispOrg(ispRow))+(ispRow.asn?' ('+esc(ispRow.asn)+')':'')
+      :'<span class="na">not collected</span>';
+    return '<tr><td>'+nameHtml+'</td><td>'+esc(id||'not collected')+'</td><td class="n">'+esc(r.count==null?'not collected':r.count)+'</td><td>'+ispHtml+'</td></tr>';
+  }).join('');
+  var asof=d.as_of_aedt||'';
+  if(note){
+    note.textContent='Site-wide GoatCounter location data'+(asof?' as of '+asof:'')+'. '+rows.length+' '+(rows.length===1?'country':'countries')+'. Top ISP is the site-wide organisation with the most collected ISP events for that country since 14 Nov 2026.';
+  }
+  if(window.ltopoSortInit) window.ltopoSortInit(document.getElementById('geo-table'));
+}).catch(function(){
+  if(note) note.innerHTML='Visitors by country: <span class="na">not collected</span> (could not load /data/visitors.json).';
+});
+})();
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>
+(function(){
+  function theme(){
+    var t=document.documentElement.getAttribute('data-theme');
+    if(t==='dark'||t==='light') return t==='dark'?'dark':'default';
+    return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'default';
+  }
+  function run(){
+    if(!window.mermaid) return;
+    mermaid.initialize({startOnLoad:false, theme:theme(), securityLevel:'strict'});
+    mermaid.run({querySelector:'.mermaid'});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', run);
+  else run();
+})();
+</script>
+
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:8px 0 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:6px;margin:0;padding:8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
+nav.site.im a.mi{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:auto;min-height:44px;min-width:0;padding:8px 10px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a)}
+nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:visible;text-overflow:unset;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.25;text-align:left}
+nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:22px;height:22px;padding:0 5px;border-radius:999px;font-size:16px;font-weight:800;line-height:1;background:#0f172a;color:#fff}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc;color:#0f172a}
+nav.site.im a.mi.on .im-seq{background:#fff;color:#1d4ed8}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px;flex:none}#sg-link,#tt-btn,#mm-link{height:36px;border-radius:18px}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Cursor_Tenant6","/ARR/provisioning/cursor-tenant6/","🚀"],["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"],["ရှေ့သို့ချီ","/roadmap/forward/","⏩"],["Time Map 2026–2030","/roadmap/forward/time-map/","🗓️"],["BridgeWhy","/roadmap/bridgewhy/","📚"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["ARR-LargeTopology","/ARR-LargeTopology/","🗺️",[["Overview","/ARR-LargeTopology/","🗺️"],["Nodes","/ARR-LargeTopology/nodes.html","🖥️"],["Serials","/ARR-LargeTopology/serials.html","🔢"],["Mgmt IPs","/ARR-LargeTopology/mgmt-ips.html","🌐"],["Links","/ARR-LargeTopology/links.html","🔗"],["Tenants","/ARR-LargeTopology/tenants.html","🏢"],["VRFs","/ARR-LargeTopology/vrfs.html","🧭"],["BDs","/ARR-LargeTopology/bds.html","🌉"],["Subnets","/ARR-LargeTopology/subnets.html","🔢"],["EPGs","/ARR-LargeTopology/epgs.html","🎯"],["Leaf VNIs","/ARR-LargeTopology/vni.html","💠"],["VXLAN","/ARR-LargeTopology/vxlan/","🧵"],["VNI compare","/ARR-LargeTopology/vni-compare/","🔷"],["Access policies","/ARR-LargeTopology/access-policies/","🧱"],["BD GIPo & FTAG","/ARR-LargeTopology/bd-gipo-ftag/","📡"],["IAC files","/ARR-LargeTopology/iac-files/","📦"],["ARR-netbox","/ARR-LargeTopology/arr-netbox/","🗄️"],["Hardware monitor","/ARR-LargeTopology/hw-monitor/","📟"],["Site map","/ARR-LargeTopology/site-map/","🌳"],["Provisioning","/ARR-LargeTopology/provisioning/","🚀"],["Test explain","/ARR-LargeTopology/test-explain/","🧪"],["GitLab","/ARR-LargeTopology/gitlab/","🦊"],["GitLab Runner","/ARR-LargeTopology/gitlab-runner/","🏃"]]],["Terragrunt","/terragrunt/","🧰",[["Terragrunt","/terragrunt/","🧰"]]],["zFrontier","/zfrontier/","🌠",[["zFrontier","/zfrontier/","🌠"],["Farzad","/zfrontier/farzad/","📺"],["SpaceX vs Tesla shares","/zfrontier/shares/","📈"],["Optimus","/zfrontier/optimus/","🤖"],["Gigafactory","/zfrontier/gigafactory/","🏭"],["FSD versions","/zfrontier/fsd-versions/","🛣️"],["Liquid cooling","/zfrontier/liquid-cooling/","💧"],["SpaceX Tracking","/zfrontier/spacex/","🚀"],["CyberCab","/zfrontier/cybercab/","🚕"],["AI FineTune Pod","/zfrontier/ai-finetune-pod/","🎛️"],["MCP Servers","/zfrontier/mcp-servers/","🔌"],["NaC CLI","/zfrontier/nac-cli/","🧰"],["GPU Workflow","/zfrontier/3gpu-ai-workflow/","🧮"],["MWMESH","/zfrontier/mwmesh/","📡"],["Notebooks","/zfrontier/notebooks/","📓"],["RAG documents","/zfrontier/rag-documents/","📚"],["Foundation-Sec-8B","/zfrontier/foundation-sec-8b/","🛡️"],["Terafab","/zfrontier/terafab/","💠"],["3DiffsVXLAN","/zfrontier/3diffsvxlan/","🔀"],["ARR-LargePod","/zfrontier/arr-largepod/","🏗️"],["Nvidia A100 & H100","/zfrontier/Nvidia-A100-H100/","🟩"],["AgenticAI","/zfrontier/agenticai/","🧠"],["MS-02 GPU Monitoring","/zfrontier/MS-02-GPU-Monitoring/","📟"],["MBPro","/zfrontier/MBPro/","💻"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"]]],["ACI GUI Forms","/ACI-GUI-Forms/","📝",[["ACI GUI Forms","/ACI-GUI-Forms/","📝"],["GUI Map","/aci-gui-forms/WIP/gui-map/","🗺️"],["APG Access Policy Group","/ACI-GUI-Forms/apg/","🧩"],["Spine Access Policy Group","/ACI-GUI-Forms/spine-apg/","🛰️"]]],["ACI GUI","/aci-gui/","🖥️",[["Create Pod Policy Group","/aci-gui/create-pod-policy-group/","🧬"],["Create Bridge Domain (step 3)","/aci-gui/create-bridge-domain-step3/","🌉"],["Create Subnet","/aci-gui/create-subnet/","🔢"],["Create Application Profile","/aci-gui/create-application-profile/","🧩"],["Create Management EPG","/aci-gui/create-management-epg/","🛠️"],["Static Node Management Addresses","/aci-gui/static-node-management-addresses/","📍"],["Create Fabric Policies","/aci-gui/create-fabric-policies/","🧵"],["Create Access Policies","/aci-gui/create-access-policies/","🔐"],["Create VLAN Pool","/aci-gui/create-vlan-pool/","🏷️"],["Create Physical Domain","/aci-gui/create-physical-domain/","🏛️"],["Create Access Interface Policy Group","/aci-gui/create-access-interface-policy-group/","🔌"],["Create PC Interface Policy Group","/aci-gui/create-pc-interface-policy-group/","🔀"],["Note on Interface Policies","/aci-gui/interface-policies/","📘"],["Interface Wizard for vPC","/aci-gui/interface-wizard-vpc/","🪄"],["Create VMM Domain","/aci-gui/create-vmm-domain/","💻"],["vCenter Networking","/aci-gui/vcenter-networking/","🖥️"],["Create Tenant","/aci-gui/create-tenant/","🏢"],["Create L3Out","/aci-gui/create-l3out/","🌐"],["L3Out Contracts","/aci-gui/l3out-contracts/","📜"],["Create Bridge Domain","/aci-gui/create-bridge-domain/","🌉"],["Bridge Domain","/aci-gui/bridge-domain/","🌉"],["Mgmt Bridge Domain","/aci-gui/mgmt-bridge-domain/","🔧"],["DHCP Relay","/aci-gui/dhcp-relay/","📡"],["Management Application Profile","/aci-gui/management-application-profile/","📦"],["Application Profile (web + app)","/aci-gui/application-profile/","🧩"],["Create VRF","/aci-gui/create-vrf/","🧭"],["Create Endpoint Group","/aci-gui/create-endpoint-group/","🎯"],["Contracts Between Tenants","/aci-gui/contracts-between-tenants/","🤝"],["Create Filter","/aci-gui/create-filter/","🧹"],["Create Contract","/aci-gui/create-contract/","📃"],["Create Management Contracts","/aci-gui/create-management-contracts/","📑"],["Mgmt PortGroup to VM","/aci-gui/mgmt-portgroup-to-vm/","🧷"],["Pod Policy Group","/aci-gui/pod-policy-group/","🕒"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=(seq?String(seq)+'. ':'')+e[0];if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks ›';r2.appendChild(t);
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1))});r2.appendChild(pills);n.appendChild(r2)}}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+</body>
+</html>
