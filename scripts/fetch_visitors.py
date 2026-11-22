@@ -1299,18 +1299,35 @@ def main():
         out["locations_error"] = str(e)
         countries = prev.get("countries") or []
     out["countries"] = countries
-    for k in ("toprefs", "browsers", "systems"):
+    for k in ("toprefs", "browsers", "systems", "sizes"):
         try:
-            out[k] = [
-                {"name": x.get("name"), "count": x.get("count")}
-                for x in get("/stats/" + k, limit=20, **rng).get("stats", [])
-            ]
+            if k == "sizes":
+                rows = _dim("/stats/sizes", **rng)
+                if rows is None:
+                    raise RuntimeError("sizes endpoint failed")
+                out[k] = rows
+            else:
+                out[k] = [
+                    {"name": x.get("name"), "count": x.get("count")}
+                    for x in get("/stats/" + k, limit=20, **rng).get("stats", [])
+                ]
+                if k == "toprefs":
+                    for row in out[k]:
+                        row["name"] = _clean_ref(row.get("name"))
         except Exception as e:
             if prev.get(k):
                 out[k] = prev[k]
                 out[k + "_error"] = str(e) + " (kept previous)"
             else:
                 out[k + "_error"] = str(e)
+    # GoatCounter locations are country/region totals only. Path-by-country
+    # counts need Individual pageviews, which is currently off, so this stays
+    # a documented gap rather than an empty or invented table.
+    out["country_pages_note"] = (
+        "Top pages per country are not collected: GoatCounter's locations API "
+        "returns country and region totals only, and Individual pageviews is off, "
+        "so path-by-country counts are not available."
+    )
     hour_src = out.get("pages") or []
     write_detail(hour_src, now_utc, now_mel, prev)
     for p in out.get("pages") or []:

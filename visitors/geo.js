@@ -17,6 +17,12 @@ function flag(id){
 function pagePath(){return location.pathname.replace(/\/index\.html$/,'').replace(/\/+$/,'')||'/'}
 function pageMode(){return pagePath()==='/visitors/countries'?'full':'summary'}
 function codeOf(id){var cc=String(id||'').toUpperCase();return /^[A-Z]{2}$/.test(cc)?cc:'··'}
+function countryHref(id){
+  var cc=String(id||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) return '/visitors/countries/';
+  var hash='country-'+cc.toLowerCase();
+  return pageMode()==='full'?'#'+hash:'/visitors/countries/#'+hash;
+}
 function countryLabel(r){
   return '<span class="geo-lab">'+
     '<span class="geo-flag" aria-hidden="true">'+flag(r.id)+'</span>'+
@@ -66,7 +72,7 @@ function countryRows(rows){
   var total=sum(rows);
   return listTable(rows,[
     {t:'#', n:1, f:function(r,i){return i+1}},
-    {t:'Country', f:function(r){return '<button type="button" class="geo-c" data-cc="'+esc(r.id||'')+'">'+countryLabel(r)+'</button>'}},
+    {t:'Country', f:function(r){return '<a class="geo-c" href="'+esc(countryHref(r.id))+'" data-cc="'+esc(r.id||'')+'">'+countryLabel(r)+'</a>'}},
     {t:'Visitors', n:1, f:function(r){return r.count}},
     {t:'%', n:1, f:function(r,i,t){return pct(r.count,t)}},
     {t:'Share', f:function(r,i,t,m){return '<span class="gbar"><i style="width:'+(100*(+r.count||0)/m)+'%"></i></span>'}}
@@ -97,10 +103,10 @@ function barChart(rows, title){
   rows.forEach(function(r){
     var w=Math.max(2, ((+r.count||0)/max)*100);
     var sel=GEO.filter&&GEO.filter===(r.id||'');
-    s+='<div class="geo-bar'+(sel?' on':'')+'" role="listitem" data-cc="'+esc(r.id||'')+'" tabindex="0">';
+    s+='<a class="geo-bar'+(sel?' on':'')+'" role="listitem" data-cc="'+esc(r.id||'')+'" href="'+esc(countryHref(r.id))+'">';
     s+=countryLabel(r);
     s+='<span class="geo-track" aria-hidden="true"><i style="width:'+w+'%"></i></span>';
-    s+='<span class="geo-n">'+esc(r.count)+'</span></div>';
+    s+='<span class="geo-n">'+esc(r.count)+'</span></a>';
   });
   return s+'</div>';
 }
@@ -125,7 +131,7 @@ function countryTable(rows){
   var body=data.map(function(r,i){
     return '<tr>'+
       '<td class="n">'+(i+1)+'</td>'+
-      '<td><button type="button" class="geo-c" data-cc="'+esc(r.id||'')+'">'+countryLabel(r)+'</button></td>'+
+      '<td><a class="geo-c" href="'+esc(countryHref(r.id))+'" data-cc="'+esc(r.id||'')+'">'+countryLabel(r)+'</a></td>'+
       '<td class="n">'+esc(r.count)+'</td>'+
       '<td class="n">'+pct(r.count,total)+'</td>'+
       '<td><span class="gbar"><i style="width:'+(100*(+r.count||0)/max)+'%"></i></span></td></tr>';
@@ -351,15 +357,26 @@ function ensureCountrySection(){
   return el;
 }
 function bindCountryClicks(){
-  function toggle(n){
+  function toggle(n, ev){
     var cc=n.getAttribute('data-cc');
     if(!cc) return;
+    if(pageMode()!=='full'){
+      // Let the href take the browser to /visitors/countries/#country-xx
+      return;
+    }
+    if(ev) ev.preventDefault();
     GEO.filter=(GEO.filter===cc)?null:cc;
+    var aid=countryAnchor(cc);
+    if(aid){
+      if(GEO.filter){ try{history.replaceState(null,'','#'+aid)}catch(e){location.hash=aid} }
+      else { try{history.replaceState(null,'',location.pathname+location.search)}catch(e){} }
+    }
     paintCountries();
+    if(GEO.filter) scrollCountryHash();
   }
   document.querySelectorAll('#geo-chart .geo-bar, #geo-table .geo-c').forEach(function(n){
-    n.addEventListener('click',function(){toggle(n)});
-    n.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle(n)}});
+    n.addEventListener('click',function(ev){toggle(n,ev)});
+    n.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle(n,e)}});
   });
 }
 function paintCountries(){
@@ -624,6 +641,7 @@ function countryDetailsHtml(visitors){
     html+='<section class="country-detail" id="'+aid+'">';
     html+='<h3>'+flag(c.id)+' '+esc(c.name||c.id)+' <span class="geo-cc">'+esc(c.id)+'</span></h3>';
     html+='<p>Visitors (site-wide): <strong>'+(c.count==null?'not collected':esc(c.count))+'</strong></p>';
+    html+='<p class="muted">Top pages for this country: <span class="na">not collected</span> (GoatCounter locations are country totals only; Individual pageviews is off).</p>';
     if(!isps.length) html+='<p class="muted">ISP: <span class="na">not collected</span>.</p>';
     else html+=countryIspTable(isps);
     html+='</section>';
@@ -691,7 +709,8 @@ function injectStyle(){
     '#geo .geo-t th.s:hover,#isp .geo-t th.s:hover{color:var(--link,#1d4ed8)}',
     '#geo .geo-t th.s .ar,#isp .geo-t th.s .ar{opacity:.45;font-size:11px;margin-left:3px}',
     '#geo .geo-t th.s.on .ar,#isp .geo-t th.s.on .ar{opacity:1}',
-    '.geo-c{border:0;background:none;color:inherit;font:inherit;cursor:pointer;padding:0;text-align:left}',
+    '.geo-c{border:0;background:none;color:inherit;font:inherit;cursor:pointer;padding:0;text-align:left;text-decoration:none}',
+    '#geo-chart a.geo-bar{color:inherit;text-decoration:none}',
     '.geo-c:hover .geo-name{text-decoration:underline}',
     '.gbar{display:inline-block;width:80px;max-width:100%;height:8px;background:var(--chip,#e2e8f0);border-radius:99px;vertical-align:middle}',
     '.gbar i{display:block;height:8px;background:#22c55e;border-radius:99px}',
