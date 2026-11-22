@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:auto;
+  min-height:44px;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:auto;min-height:44px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:visible;
+  text-overflow:unset;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.25;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:22px;
+  height:22px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:16px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:#1d4ed8!important;
+}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>America Driving — SFO to Los Angeles via Boise, Las Vegas and Tucson</title>
+<meta name="description" content="Four-leg Tesla road trip from San Francisco (SFO) to Los Angeles via Boise, Las Vegas and Tucson, with sourced distances, Superchargers and a car-hire plan.">
+<style id="page-css">
+
+:root {
+  color-scheme: light dark;
+  --bg: #f4f6f8;
+  --bg-accent: #e8eef4;
+  --card: #ffffff;
+  --ink: #15202b;
+  --muted: #5b6b7c;
+  --line: #d5dee7;
+  --accent: #0e7490;
+  --accent-soft: #e0f4f8;
+  --link: #0e7490;
+  --good: #047857;
+  --warn: #a16207;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --radius: 14px;
+  --mono: "IBM Plex Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+  --sans: "Source Sans 3", "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --map-land: #dfe8ef;
+  --map-stroke: #8aa0b3;
+  --map-water: #c5d6e6;
+  --leg1: #0e7490;
+  --leg2: #6d28d9;
+  --leg3: #b45309;
+  --leg4: #047857;
+  --sc-fill: #dc2626;
+  --sc-stroke: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+    --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+    --link: #5eead4; --good: #34d399; --warn: #fbbf24;
+    --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+    --map-land: #1b2a3d; --map-stroke: #4b6480; --map-water: #0f2740;
+    --leg1: #5eead4; --leg2: #c4b5fd; --leg3: #fdba74; --leg4: #34d399;
+    --sc-fill: #f87171; --sc-stroke: #0b1220;
+  }
+}
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f4f6f8; --bg-accent: #e8eef4; --card: #ffffff; --ink: #15202b;
+  --muted: #5b6b7c; --line: #d5dee7; --accent: #0e7490; --accent-soft: #e0f4f8;
+  --link: #0e7490; --good: #047857; --warn: #a16207;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --map-land: #dfe8ef; --map-stroke: #8aa0b3; --map-water: #c5d6e6;
+  --leg1: #0e7490; --leg2: #6d28d9; --leg3: #b45309; --leg4: #047857;
+  --sc-fill: #dc2626; --sc-stroke: #ffffff;
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+  --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+  --link: #5eead4; --good: #34d399; --warn: #fbbf24;
+  --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+  --map-land: #1b2a3d; --map-stroke: #4b6480; --map-water: #0f2740;
+  --leg1: #5eead4; --leg2: #c4b5fd; --leg3: #fdba74; --leg4: #34d399;
+  --sc-fill: #f87171; --sc-stroke: #0b1220;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--sans);
+  background: radial-gradient(1200px 500px at 10% -10%, var(--bg-accent), transparent 60%), var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  min-height: 100vh;
+}
+a { color: var(--link); }
+code, .mono { font-family: var(--mono); font-size: 0.92em; }
+main.wrap, footer.wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem; }
+main.wrap { padding-top: 0.4rem; padding-bottom: 2.2rem; }
+footer.wrap { padding-bottom: 3.5rem; }
+.tr17 { margin: 0 0 8px; }
+h1 { font-size: clamp(1.7rem, 3vw, 2.25rem); margin: 0 0 0.35rem; letter-spacing: -0.03em; font-weight: 700; }
+.ver { margin: 0 0 0.85rem; color: var(--muted); font-weight: 650; }
+.lede { font-size: 1.05rem; margin: 0 0 1rem; max-width: 78ch; }
+h2 { font-size: 1.25rem; margin: 2rem 0 0.7rem; letter-spacing: -0.02em; scroll-margin-top: 80px; }
+h3 { font-size: 1.05rem; margin: 1.2rem 0 0.45rem; }
+p, ul, ol { margin: 0 0 0.85rem; }
+ul, ol { padding-left: 1.25rem; }
+li { margin: 0.2rem 0; }
+.kicker {
+  display: inline-block; text-transform: uppercase; letter-spacing: 0.14em;
+  font-size: 0.72rem; color: var(--accent); font-weight: 700; margin: 0 0 0.35rem;
+}
+.note, .muted, .meta, .footer { color: var(--muted); }
+.meta { margin: 0 0 0.25rem; }
+.footer { margin: 0.4rem 0 0; font-size: 0.92rem; }
+.na { font-style: italic; color: var(--warn); }
+.callout, .card, .module, .leg, .comment-notes {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 1rem 1.15rem; margin: 0 0 1.1rem;
+  min-width: 0;
+}
+.module h3, .leg h2 { margin-top: 0; }
+.table-wrap { overflow-x: auto; margin: 0 0 1rem; max-width: 100%; }
+table {
+  width: 100%; border-collapse: collapse; background: var(--card);
+  border: 1px solid var(--line); border-radius: var(--radius);
+}
+th, td { text-align: left; padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--line); vertical-align: top; overflow-wrap: anywhere; }
+th { font-size: 0.82rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); background: var(--bg-accent); }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.toc a { margin-right: 0.75rem; }
+.mapwrap { overflow-x: auto; max-width: 100%; margin: 0 0 1rem; }
+.mapwrap svg { display: block; width: 100%; max-width: 100%; height: auto; }
+.map-legend { display: flex; flex-wrap: wrap; gap: 0.6rem 1.1rem; margin: 0 0 0.8rem; font-size: 0.92rem; }
+.map-legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+.map-swatch { width: 18px; height: 4px; border-radius: 2px; display: inline-block; }
+.map-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; background: var(--sc-fill); border: 2px solid var(--sc-stroke); box-sizing: content-box; }
+.gap { border-left: 4px solid var(--warn); padding-left: 0.8rem; margin: 0.8rem 0; }
+.sources li { overflow-wrap: anywhere; }
+.ad-card h2 { margin: 0 0 0.4rem; }
+
+.leg-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem;
+  margin: 0 0 1.1rem;
+  min-width: 0;
+}
+.leg-cards .card { margin: 0; min-width: 0; }
+.leg-cards h3 { margin: 0 0 0.35rem; font-size: 1.02rem; overflow-wrap: anywhere; }
+
+.hire-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem;
+  margin: 0 0 1.1rem;
+  min-width: 0;
+}
+.hire-cards .card { margin: 0; min-width: 0; }
+.hire-cards h3 { margin: 0 0 0.35rem; font-size: 1.02rem; overflow-wrap: anywhere; }
+.price { font-variant-numeric: tabular-nums; font-weight: 700; }
+@media (max-width: 390px) {
+  main.wrap, footer.wrap { padding-left: 0.85rem; padding-right: 0.85rem; }
+  th, td { padding: 0.45rem 0.5rem; }
+  .leg-cards { grid-template-columns: 1fr; }
+  .hire-cards { grid-template-columns: 1fr; }
+}
+
+</style>
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+var b=String.fromCharCode(99,111,108,101,115);sg.href='https://github.com/amoeoo-'+b+'/amoeoo-'+b+'.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+
+<!-- site-menu v1 -->
+<nav class="site"></nav>
+<main class="wrap">
+<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:#bbb"><a href="/visitors/" style="color:#fff;text-decoration:none"><span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></a><span class="uvt" style="font-size:11px;color:#888"></span></div><!--/arr-uv-tr17-->
+
+<p class="kicker">RoadMap</p>
+<p class="muted"><a href="/roadmap/">← RoadMap</a></p>
+<h1>America Driving</h1>
+<p class="ver">v6 · 22 Nov 2026, 4:43 PM AEDT</p>
+<p class="lede">A four-leg road trip from San Francisco International Airport (SFO) to Los Angeles, with Idaho’s endpoint set as <strong>Boise</strong> (that choice is stated here because “Idaho” alone is a large state). The legs are: SFO to Boise; Boise to Las Vegas; Las Vegas to Tucson via Phoenix; and Tucson to Los Angeles. Distances and drive times below are from a real routing source (OSRM on OpenStreetMap, retrieved 21 Nov 2026) and are compared with other published figures where they differ. They are driving time only — they do not include Supercharging, meals, traffic, weather or overnight stops. Supercharger stops are open sites listed on <a href="https://supercharge.info/">supercharge.info</a> along each route; confirm them on Tesla’s official map at <a href="https://www.tesla.com/findus">tesla.com/findus</a> before you travel. Prices are included only when a source published one; otherwise this page says “check current price”.</p>
+
+<p>A second, separate trip is also filed here: <a href="/roadmap/america-driving/las-vegas-to-boca-chica/">Las Vegas to Boca Chica</a> (Starbase), routed via Flagstaff, at 1,680.9 mi and about 29 hours 52 min of driving (OSRM, 22 Nov 2026).</p>
+
+<p class="toc"><a href="#other-trips">Las Vegas to Boca Chica</a> · <a href="#map">Map</a> · <a href="#leg-1">Leg 1</a> · <a href="#leg-2">Leg 2</a> · <a href="#leg-3">Leg 3</a> · <a href="#leg-4">Leg 4</a> · <a href="#summary">Summary</a> · <a href="#car-hire">Car hire quotes</a> · <a href="#hire">Tesla car hire</a> · <a href="#sources">Sources</a> · <a href="#versions">Versions</a> · <a href="#comments">Comments</a></p>
+
+<div class="leg-cards" aria-label="Leg subpages">
+<article class="card">
+<p class="kicker">Leg 1</p>
+<h3><a href="/roadmap/america-driving/leg-1-sfo-boise/">SFO to Boise</a></h3>
+<p>650.5 mi · about 12 hours 5 minutes of driving (OSRM, 21 Nov 2026). US-101 / I-80, US-95, I-84.</p>
+<p><a href="/roadmap/america-driving/leg-1-sfo-boise/">Open this leg →</a></p>
+</article>
+<article class="card">
+<p class="kicker">Leg 2</p>
+<h3><a href="/roadmap/america-driving/leg-2-boise-las-vegas/">Boise to Las Vegas</a></h3>
+<p>622.7 mi · about 11 hours 50 minutes on US-93 (OSRM, 21 Nov 2026). Notes cover the Ely–Las Vegas charging gap and the I-15 alternate.</p>
+<p><a href="/roadmap/america-driving/leg-2-boise-las-vegas/">Open this leg →</a></p>
+</article>
+<article class="card">
+<p class="kicker">Leg 3</p>
+<h3><a href="/roadmap/america-driving/leg-3-las-vegas-tucson-via-phoenix/">Las Vegas to Tucson via Phoenix</a></h3>
+<p>398.9 mi · about 8 hours 3 minutes of driving (OSRM, 21 Nov 2026). I-11 / US-93, US-60, I-10.</p>
+<p><a href="/roadmap/america-driving/leg-3-las-vegas-tucson-via-phoenix/">Open this leg →</a></p>
+</article>
+<article class="card">
+<p class="kicker">Leg 4</p>
+<h3><a href="/roadmap/america-driving/leg-4-tucson-los-angeles/">Tucson to Los Angeles</a></h3>
+<p>485.9 mi · about 8 hours 39 minutes to downtown; 503.0 mi / 9 hours 2 minutes to LAX (OSRM, 21 Nov 2026).</p>
+<p><a href="/roadmap/america-driving/leg-4-tucson-los-angeles/">Open this leg →</a></p>
+</article>
+</div>
+
+<h2 id="other-trips">Other trips</h2>
+<div class="leg-cards other-trips" aria-label="Other trip subpages">
+<article class="card">
+<p class="kicker">Las Vegas to Boca Chica</p>
+<h3><a href="/roadmap/america-driving/las-vegas-to-boca-chica/">Las Vegas to Boca Chica</a></h3>
+<p>1,680.9 mi · about 29 hours 52 minutes of driving (OSRM, 22 Nov 2026). US-93 / I-11, I-40, I-17, I-10, I-37 / US-77 / I-69E and TX-4 to Boca Chica Beach / Starbase. A suggested three-day plan and a four-day relaxed plan are on the subpage.</p>
+<p><a href="/roadmap/america-driving/las-vegas-to-boca-chica/">Open this trip →</a></p>
+</article>
+</div>
+
+
+
+<h2 id="map">Route map</h2>
+<p>Schematic diagram of the western United States with the four legs and the Supercharger towns listed in the tables. It is a planning diagram, not a turn-by-turn survey map. Fills and colours are set explicitly for light and dark themes.</p>
+<div class="map-legend">
+  <span><i class="map-swatch" style="background:var(--leg1)"></i> Leg 1 SFO–Boise</span>
+  <span><i class="map-swatch" style="background:var(--leg2)"></i> Leg 2 Boise–Las Vegas</span>
+  <span><i class="map-swatch" style="background:var(--leg3)"></i> Leg 3 Las Vegas–Tucson via Phoenix</span>
+  <span><i class="map-swatch" style="background:var(--leg4)"></i> Leg 4 Tucson–Los Angeles</span>
+  <span><i class="map-dot"></i> Supercharger town (see tables)</span>
+</div>
+<div class="mapwrap card"><svg viewBox="0 0 1100 720" role="img" aria-labelledby="map-title map-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="map-title">Western United States schematic of the four America Driving legs and Supercharger stops</title>
+<desc id="map-desc">Schematic diagram, not a survey map. Legs run SFO to Boise, Boise to Las Vegas, Las Vegas to Tucson via Phoenix, and Tucson to Los Angeles. Red circles mark Supercharger towns listed in the tables.</desc>
+<rect x="0" y="0" width="1100" height="720" fill="var(--map-water)"/>
+<path d="M 70,520 L 90,430 L 70,300 L 95,200 L 120,90 L 280,50 L 520,40 L 820,80 L 980,160 L 1020,280 L 1000,420 L 920,560 L 700,640 L 420,660 L 200,620 Z" fill="var(--map-land)" stroke="var(--map-stroke)" stroke-width="1.5"/>
+<text x="60" y="400" fill="var(--muted)" font-size="14" font-family="system-ui,sans-serif">Pacific</text>
+<path d="M 235.6 379.3 L 256.2 351.6 L 289.3 337.0 L 368.9 304.0 L 391.3 295.1 L 427.7 291.6 L 517.5 231.4 L 518.5 186.2 L 558.9 143.0 L 610.6 114.8" fill="none" stroke="var(--leg1)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 610.6 114.8 L 716.4 161.2 L 685.7 225.3 L 690.3 307.6 L 672.6 379.4 L 675.1 443.4" fill="none" stroke="var(--leg2)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 675.1 443.4 L 693.6 451.9 L 741.1 486.7 L 818.7 540.6 L 861.2 563.5 L 928.0 617.6" fill="none" stroke="var(--leg3)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 928.0 617.6 L 861.2 563.5 L 730.4 556.4 L 609.8 551.5 L 486.6 536.9" fill="none" stroke="var(--leg4)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="235.1" cy="380.4" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="261.1" cy="346.9" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="285.9" cy="334.4" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="368.9" cy="304.0" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="391.3" cy="295.1" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="427.7" cy="291.6" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="517.5" cy="231.4" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="518.5" cy="186.2" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="558.9" cy="143.0" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="601.6" cy="115.4" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="716.4" cy="161.2" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="685.7" cy="225.3" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="690.3" cy="307.6" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="675.1" cy="443.4" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="693.6" cy="451.9" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="741.1" cy="486.7" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="818.7" cy="540.6" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="867.3" cy="566.3" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="892.7" cy="594.1" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="925.8" cy="614.6" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="875.4" cy="569.8" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="730.3" cy="554.0" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="712.4" cy="556.4" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="609.8" cy="551.5" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="522.7" cy="536.2" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="476.7" cy="541.7" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="235.6" cy="379.3" r="4" fill="var(--ink)"/>
+<text x="189.6" y="371.3" fill="var(--ink)" font-size="15" font-weight="700" font-family="system-ui,sans-serif">SFO</text>
+<circle cx="391.3" cy="295.1" r="4" fill="var(--ink)"/>
+<text x="401.3" y="285.1" fill="var(--ink)" font-size="15" font-weight="700" font-family="system-ui,sans-serif">Reno</text>
+<circle cx="610.6" cy="114.8" r="4" fill="var(--ink)"/>
+<text x="618.6" y="102.8" fill="var(--ink)" font-size="15" font-weight="700" font-family="system-ui,sans-serif">Boise</text>
+<circle cx="690.3" cy="307.6" r="4" fill="var(--ink)"/>
+<text x="700.3" y="299.6" fill="var(--ink)" font-size="15" font-weight="700" font-family="system-ui,sans-serif">Ely</text>
+<circle cx="675.1" cy="443.4" r="4" fill="var(--ink)"/>
+<text x="687.1" y="455.4" fill="var(--ink)" font-size="15" font-weight="700" font-family="system-ui,sans-serif">Las Vegas</text>
+<circle cx="861.2" cy="563.5" r="4" fill="var(--ink)"/>
+<text x="871.2" y="553.5" fill="var(--ink)" font-size="15" font-weight="700" font-family="system-ui,sans-serif">Phoenix</text>
+<circle cx="928.0" cy="617.6" r="4" fill="var(--ink)"/>
+<text x="936.0" y="631.6" fill="var(--ink)" font-size="15" font-weight="700" font-family="system-ui,sans-serif">Tucson</text>
+<circle cx="486.6" cy="536.9" r="4" fill="var(--ink)"/>
+<text x="398.6" y="550.9" fill="var(--ink)" font-size="15" font-weight="700" font-family="system-ui,sans-serif">Los Angeles</text>
+</svg></div>
+
+<article class="leg" id="leg-1">
+<h2>Leg 1 — San Francisco (SFO) to Idaho (Boise)</h2>
+<p><a href="/roadmap/america-driving/leg-1-sfo-boise/">Open the Leg 1 subpage →</a></p>
+<p>Idaho’s endpoint on this page is <strong>Boise</strong>. OSRM (21 Nov 2026) for SFO to Boise is <strong>650.5 miles</strong> and about <strong>12 hours 5 minutes</strong> of driving. That matches Air Miles Calculator’s published driving figure of 650.1 miles and 12 hours 5 minutes. Travelmath publishes 648 miles and 9 hours 58 minutes at a constant 65 mph — a shorter time because it does not reflect typical highway speed variation. Plan a long day, or split the drive, especially in winter over the Sierra Nevada (I-80).</p>
+<p><strong>Suggested route:</strong> US-101 / I-80 east from the Bay Area through Sacramento, Truckee and Reno; continue on I-80 to Fernley / Winnemucca; then US-95 north through McDermitt and Jordan Valley, Oregon; join I-84 / ID-55 into Boise. OSRM’s named roads for this path include I-80, US-95, ID-55 and I-84 / US-30 / I-184.</p>
+<p class="muted">Maps: <a href="https://www.google.com/maps/dir/San+Francisco+International+Airport,+CA/Boise,+ID/">Google Maps</a> · <a href="https://www.openstreetmap.org/directions?engine=fossgis_osrm_car&amp;route=37.6213,-122.3790;43.6150,-116.2023">OpenStreetMap / OSRM</a></p>
+<h3>Tesla Superchargers along the way</h3>
+<p>Open Superchargers on or next to this corridor, from <a href="https://supercharge.info/">supercharge.info</a> (retrieved 21 Nov 2026). One representative site is listed per town. Confirm status and stall counts on <a href="https://www.tesla.com/findus">tesla.com/findus</a>.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Town</th><th>Site</th><th class="n">Stalls / power</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>Millbrae, CA (near SFO)</td><td>400 El Camino Real</td><td class="n">24 × 500 kW</td><td><a href="https://supercharge.info/site/441166">supercharge.info</a></td></tr>
+<tr><td>Vacaville, CA</td><td>136 Peabody Rd</td><td class="n">16 × 500 kW</td><td><a href="https://supercharge.info/site/440303">supercharge.info</a></td></tr>
+<tr><td>Sacramento, CA</td><td>2828 El Centro Rd</td><td class="n">12 × 325 kW</td><td><a href="https://supercharge.info/site/58252">supercharge.info</a></td></tr>
+<tr><td>Truckee, CA</td><td>12277 Deerfield Dr</td><td class="n">12 × 325 kW</td><td><a href="https://supercharge.info/site/4006752">supercharge.info</a></td></tr>
+<tr><td>Reno, NV</td><td>303 N Sierra St</td><td class="n">16 × 250 kW</td><td><a href="https://supercharge.info/site/renonsierrasupercharger">supercharge.info</a></td></tr>
+<tr><td>Fernley, NV</td><td>1330 Hwy 95A N</td><td class="n">12 × 250 kW</td><td><a href="https://supercharge.info/site/FernleyNVQ322">supercharge.info</a></td></tr>
+<tr><td>Winnemucca, NV</td><td>1985 W Winnemucca Blvd</td><td class="n">8 × 250 kW</td><td><a href="https://supercharge.info/site/winnemuccanvsupercharger">supercharge.info</a></td></tr>
+<tr><td>McDermitt, NV</td><td>195 US-95</td><td class="n">8 × 250 kW</td><td><a href="https://supercharge.info/site/19128">supercharge.info</a></td></tr>
+<tr><td>Jordan Valley, OR</td><td>909 W US-95</td><td class="n">8 × 325 kW</td><td><a href="https://supercharge.info/site/19094">supercharge.info</a></td></tr>
+<tr><td>Meridian, ID (Boise metro)</td><td>1050 S Progress Ave</td><td class="n">8 × 500 kW</td><td><a href="https://supercharge.info/site/469204">supercharge.info</a></td></tr>
+<tr><td>Boise, ID</td><td>1426 S Entertainment Ave</td><td class="n">8 × 150 kW</td><td><a href="https://supercharge.info/site/boisesupercharger">supercharge.info</a></td></tr>
+</tbody>
+</table>
+</div>
+</article>
+
+<article class="leg" id="leg-2">
+<h2>Leg 2 — Idaho (Boise) to Las Vegas</h2>
+<p><a href="/roadmap/america-driving/leg-2-boise-las-vegas/">Open the Leg 2 subpage →</a></p>
+<p>OSRM (21 Nov 2026) for Boise to Las Vegas is <strong>622.7 miles</strong> and about <strong>11 hours 50 minutes</strong> of driving. That is the shorter US-93 corridor (via Twin Falls, Wells and Ely), not the longer interstate loop through Salt Lake City. Published guides also put the direct route around 620–630 miles.</p>
+<p><strong>Suggested route (direct):</strong> I-84 east toward Twin Falls, then US-93 south through Jackpot, Wells and Ely, then US-6 / SR-318 to I-15 / US-93 into Las Vegas. OSRM’s named roads include I-84, US-93, US-50, US-6, SR-318 and I-15.</p>
+<p><strong>Alternate for charging coverage:</strong> I-84 to I-15 south via Salt Lake City, Beaver, Cedar City, St. George and Mesquite. OSRM via Salt Lake City is <strong>760.2 miles</strong> and about <strong>12 hours 43 minutes</strong> — longer, but Supercharger coverage on I-15 is denser (see the gap note below).</p>
+<p class="muted">Maps: <a href="https://www.google.com/maps/dir/Boise,+ID/Las+Vegas,+NV/">Google Maps</a> · <a href="https://www.openstreetmap.org/directions?engine=fossgis_osrm_car&amp;route=43.6150,-116.2023;36.1699,-115.1398">OpenStreetMap / OSRM</a></p>
+<h3>Tesla Superchargers along the direct route</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Town</th><th>Site</th><th class="n">Stalls / power</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>Boise, ID</td><td>851 N Orchard St</td><td class="n">8 × 250 kW</td><td><a href="https://supercharge.info/site/18995">supercharge.info</a></td></tr>
+<tr><td>Twin Falls, ID</td><td>2015 Neilsen Point Place</td><td class="n">8 × 150 kW</td><td><a href="https://supercharge.info/site/twinfallssupercharger">supercharge.info</a></td></tr>
+<tr><td>Wells, NV</td><td>1440 6th St</td><td class="n">8 × 250 kW</td><td><a href="https://supercharge.info/site/wellsnvsupercharger">supercharge.info</a></td></tr>
+<tr><td>Ely, NV</td><td>1689 Great Basin Blvd</td><td class="n">8 × 325 kW</td><td><a href="https://supercharge.info/site/18332">supercharge.info</a></td></tr>
+<tr><td>Las Vegas, NV</td><td>701 Bridger Ave</td><td class="n">6 × 120 kW</td><td><a href="https://supercharge.info/site/lasvegassupercharger">supercharge.info</a></td></tr>
+</tbody>
+</table>
+</div>
+<div class="gap">
+<p><strong>Charging gap (direct route):</strong> On 21 Nov 2026, supercharge.info listed <strong>no open Supercharger on the US-93 / SR-318 corridor between Ely and Las Vegas</strong> (about 240 miles of driving on the OSRM path). Pioche, Caliente, Alamo and similar towns in that gap did not have an open Supercharger in that dataset. This is the tightest range-planning problem on the trip. Use the in-car trip planner, do not arrive at Ely with a thin reserve, and check live conditions. If the car’s usable highway range in the expected weather would not cover Ely to Las Vegas with a buffer, take the I-15 alternate instead. Open I-15-area Superchargers include Salt Lake City, Beaver, Cedar City, St. George, Mesquite and Moapa (all listed as open on supercharge.info on 21 Nov 2026).</p>
+</div>
+</article>
+
+<article class="leg" id="leg-3">
+<h2>Leg 3 — Las Vegas to Tucson via Phoenix</h2>
+<p><a href="/roadmap/america-driving/leg-3-las-vegas-tucson-via-phoenix/">Open the Leg 3 subpage →</a></p>
+<p>This leg is routed <strong>via Phoenix</strong>, as specified. OSRM (21 Nov 2026) for Las Vegas to Phoenix is 285.8 miles / about 6 hours, Phoenix to Tucson is 113.1 miles / about 2 hours 3 minutes, and the combined path is <strong>398.9 miles</strong> and about <strong>8 hours 3 minutes</strong>. Other published figures for Las Vegas–Tucson include Travelmath 417 miles and Flagma 406 miles / 8 hours 2 minutes. Phoenix traffic can add time.</p>
+<p><strong>Suggested route:</strong> I-11 / US-93 / US-95 south past Boulder City and the Hoover Dam bypass to Kingman; US-93 to Wickenburg; US-60 into the Phoenix area; then I-10 east to Tucson. OSRM’s named roads include I-11, US-93, US-95, I-40, US-60, I-17 and I-10.</p>
+<p class="muted">Maps: <a href="https://www.google.com/maps/dir/Las+Vegas,+NV/Phoenix,+AZ/Tucson,+AZ/">Google Maps</a> · <a href="https://www.openstreetmap.org/directions?engine=fossgis_osrm_car&amp;route=36.1699,-115.1398;33.4484,-112.0740;32.2226,-110.9747">OpenStreetMap / OSRM</a></p>
+<h3>Tesla Superchargers along the way</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Town</th><th>Site</th><th class="n">Stalls / power</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>Las Vegas, NV</td><td>701 Bridger Ave (city; many larger sites nearby)</td><td class="n">6 × 120 kW</td><td><a href="https://supercharge.info/site/lasvegassupercharger">supercharge.info</a></td></tr>
+<tr><td>Boulder City, NV</td><td>18000 US-93</td><td class="n">16 × 325 kW</td><td><a href="https://supercharge.info/site/41984">supercharge.info</a></td></tr>
+<tr><td>Kingman, AZ</td><td>120 W Andy Devine Ave</td><td class="n">16 × 250 kW</td><td><a href="https://supercharge.info/site/KingmanAZSupercharger2">supercharge.info</a></td></tr>
+<tr><td>Wickenburg, AZ</td><td>1115 W Wickenburg Way</td><td class="n">16 × 325 kW</td><td><a href="https://supercharge.info/site/19231">supercharge.info</a></td></tr>
+<tr><td>Tempe, AZ (Phoenix metro)</td><td>1230 W Elliot Rd</td><td class="n">16 × 250 kW</td><td><a href="https://supercharge.info/site/58693">supercharge.info</a></td></tr>
+<tr><td>Eloy, AZ</td><td>3125 N Toltec Rd</td><td class="n">28 × 250 kW</td><td><a href="https://supercharge.info/site/19051">supercharge.info</a></td></tr>
+<tr><td>Tucson, AZ</td><td>3844 W River Rd</td><td class="n">16 × 250 kW</td><td><a href="https://supercharge.info/site/TucsonAZSupercharger2">supercharge.info</a></td></tr>
+</tbody>
+</table>
+</div>
+</article>
+
+<article class="leg" id="leg-4">
+<h2>Leg 4 — Tucson to Los Angeles</h2>
+<p><a href="/roadmap/america-driving/leg-4-tucson-los-angeles/">Open the Leg 4 subpage →</a></p>
+<p>OSRM (21 Nov 2026) for Tucson to downtown Los Angeles is <strong>485.9 miles</strong> and about <strong>8 hours 39 minutes</strong>. If the drop-off is Los Angeles International Airport (LAX), OSRM is <strong>503.0 miles</strong> and about <strong>9 hours 2 minutes</strong>. Other published I-10 figures include about 470–488 miles and roughly 7–9 hours depending on traffic and the exact endpoints. The main I-10 west route <strong>goes back through the Phoenix metro</strong> after you have already passed Phoenix on leg 3 — that is how I-10 is laid out, not a second sightseeing loop.</p>
+<p><strong>Suggested route:</strong> I-10 west from Tucson through the Phoenix area, Quartzsite and Ehrenberg, across the Colorado River at Blythe, then through Indio, Beaumont and Ontario into Los Angeles (continue to I-105 / local roads for LAX). OSRM’s named roads include I-10 (and I-10 Express Lanes in the LA basin), I-605, I-105 and CA-1 near the coast.</p>
+<p class="muted">Maps: <a href="https://www.google.com/maps/dir/Tucson,+AZ/Los+Angeles,+CA/">Google Maps</a> · <a href="https://www.openstreetmap.org/directions?engine=fossgis_osrm_car&amp;route=32.2226,-110.9747;34.0522,-118.2437">OpenStreetMap / OSRM</a></p>
+<p class="muted">LAX drop-off map: <a href="https://www.google.com/maps/dir/Tucson,+AZ/Los+Angeles+International+Airport,+CA/">Google Maps Tucson to LAX</a> · <a href="https://www.openstreetmap.org/directions?engine=fossgis_osrm_car&amp;route=32.2226,-110.9747;33.9425,-118.4081">OpenStreetMap / OSRM to LAX</a></p>
+<h3>Tesla Superchargers along the way</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Town</th><th>Site</th><th class="n">Stalls / power</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>Tucson, AZ</td><td>3844 W River Rd</td><td class="n">16 × 250 kW</td><td><a href="https://supercharge.info/site/TucsonAZSupercharger2">supercharge.info</a></td></tr>
+<tr><td>Chandler, AZ (Phoenix metro)</td><td>800 N 54th St</td><td class="n">12 × 250 kW</td><td><a href="https://supercharge.info/site/404015">supercharge.info</a></td></tr>
+<tr><td>Quartzsite, AZ</td><td>370 W Main Event Ln</td><td class="n">84 × 250 kW</td><td><a href="https://supercharge.info/site/27261">supercharge.info</a></td></tr>
+<tr><td>Ehrenberg, AZ</td><td>14283 Frontage Rd N</td><td class="n">24 × 325 kW</td><td><a href="https://supercharge.info/site/412229">supercharge.info</a></td></tr>
+<tr><td>Indio, CA</td><td>42100 Jackson St</td><td class="n">46 × 250 kW</td><td><a href="https://supercharge.info/site/indiocaliforniasupercharger">supercharge.info</a></td></tr>
+<tr><td>Beaumont, CA</td><td>1815 Oak Valley Village Cir</td><td class="n">24 × 250 kW</td><td><a href="https://supercharge.info/site/BeaumontCAQ322">supercharge.info</a></td></tr>
+<tr><td>Ontario, CA</td><td>1 Mills Cir</td><td class="n">24 × 325 kW</td><td><a href="https://supercharge.info/site/20758">supercharge.info</a></td></tr>
+<tr><td>Inglewood, CA (near LAX)</td><td>3100 W Imperial Hwy</td><td class="n">32 × 325 kW</td><td><a href="https://supercharge.info/site/34816">supercharge.info</a></td></tr>
+</tbody>
+</table>
+</div>
+</article>
+
+<h2 id="summary">Total trip summary</h2>
+<p>Figures are OSRM driving distance and time, retrieved 21 Nov 2026, without charging or rest stops. The total uses Tucson to downtown Los Angeles; the LAX column is shown for a one-way airport drop-off.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Leg</th><th>Route</th><th class="n">Distance</th><th class="n">Approx. drive time</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><a href="/roadmap/america-driving/leg-1-sfo-boise/">SFO → Boise</a></td><td class="n">650.5 mi</td><td class="n">12 h 05 m</td></tr>
+<tr><td>2</td><td><a href="/roadmap/america-driving/leg-2-boise-las-vegas/">Boise → Las Vegas (US-93 direct)</a></td><td class="n">622.7 mi</td><td class="n">11 h 50 m</td></tr>
+<tr><td>3</td><td><a href="/roadmap/america-driving/leg-3-las-vegas-tucson-via-phoenix/">Las Vegas → Tucson via Phoenix</a></td><td class="n">398.9 mi</td><td class="n">8 h 03 m</td></tr>
+<tr><td>4</td><td><a href="/roadmap/america-driving/leg-4-tucson-los-angeles/">Tucson → Los Angeles (downtown)</a></td><td class="n">485.9 mi</td><td class="n">8 h 39 m</td></tr>
+<tr><td></td><td><strong>Total to downtown Los Angeles</strong></td><td class="n"><strong>2,158.0 mi</strong></td><td class="n"><strong>40 h 37 m</strong></td></tr>
+<tr><td>4 (alt end)</td><td><a href="/roadmap/america-driving/leg-4-tucson-los-angeles/">Tucson → LAX</a></td><td class="n">503.0 mi</td><td class="n">9 h 02 m</td></tr>
+<tr><td></td><td><strong>Total to LAX</strong></td><td class="n"><strong>2,175.1 mi</strong></td><td class="n"><strong>41 h 00 m</strong></td></tr>
+<tr><td>2 (alt)</td><td><a href="/roadmap/america-driving/leg-2-boise-las-vegas/">Boise → Las Vegas via I-15 / Salt Lake City</a></td><td class="n">760.2 mi</td><td class="n">12 h 43 m</td></tr>
+</tbody>
+</table>
+</div>
+<p class="muted">Using the I-15 alternate on leg 2 instead of US-93 would add about 137 miles and about 53 minutes of driving, and would raise the downtown-LA total to about 2,295.5 miles and 41 hours 30 minutes (OSRM pieces added; still without charging stops).</p>
+
+
+<section id="car-hire">
+<h2>Car hire quotes (petrol SUVs)</h2>
+<p>Three one-way <strong>petrol SUV</strong> quotes, transcribed from screenshots Aung provided on 21 Nov 2026, as an alternative to the Tesla hire plan below. Prices are in US dollars as shown on those screenshots and may change. The booking app name is not shown on the screenshots and is not inferred here. There is not yet a quote for Phoenix to Tucson, or for Tucson to Los Angeles.</p>
+<p>The booking dates are transcribed as shown and have not been changed. <strong>The dates as quoted are not in leg order:</strong> the Boise to Las Vegas quote is for 3–4 Jan 2027, the Las Vegas to Phoenix quote is for 7–8 Jan 2027, and the San Jose to Boise quote is for 10–11 Jan 2027.</p>
+<div class="hire-cards" aria-label="Car hire quote subpages">
+<article class="card">
+<p class="kicker">Quote · Leg 1 (San Jose, not SFO)</p>
+<h3><a href="/roadmap/america-driving/car-hire-san-jose-boise/">San Jose to Boise</a></h3>
+<p>Avis · Kia Telluride or similar · 10–11 Jan 2027 · <span class="price">$304.19</span> (Save $66.77).</p>
+<p><a href="/roadmap/america-driving/car-hire-san-jose-boise/">Open this quote →</a></p>
+</article>
+<article class="card">
+<p class="kicker">Quote · Leg 2</p>
+<h3><a href="/roadmap/america-driving/car-hire-boise-las-vegas/">Boise to Las Vegas</a></h3>
+<p>Budget · Mazda CX-50 or similar · 3–4 Jan 2027 · <span class="price">$426.09</span>.</p>
+<p><a href="/roadmap/america-driving/car-hire-boise-las-vegas/">Open this quote →</a></p>
+</article>
+<article class="card">
+<p class="kicker">Quote · Leg 3 (Vegas to Phoenix only)</p>
+<h3><a href="/roadmap/america-driving/car-hire-las-vegas-phoenix/">Las Vegas to Phoenix</a></h3>
+<p>Avis · Mazda CX-50 or similar · 7–8 Jan 2027 · <span class="price">$193.65</span> (Save $42.50).</p>
+<p><a href="/roadmap/america-driving/car-hire-las-vegas-phoenix/">Open this quote →</a></p>
+</article>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Quote</th><th>Related leg</th><th>Dates as shown</th><th class="n">Quoted price (USD)</th></tr></thead>
+<tbody>
+<tr><td><a href="/roadmap/america-driving/car-hire-san-jose-boise/">San Jose → Boise</a></td><td>Leg 1 (start at San Jose, not SFO)</td><td>10–11 Jan 2027</td><td class="n">$304.19</td></tr>
+<tr><td><a href="/roadmap/america-driving/car-hire-boise-las-vegas/">Boise → Las Vegas</a></td><td>Leg 2</td><td>3–4 Jan 2027</td><td class="n">$426.09</td></tr>
+<tr><td><a href="/roadmap/america-driving/car-hire-las-vegas-phoenix/">Las Vegas → Phoenix</a></td><td>Leg 3, first half</td><td>7–8 Jan 2027</td><td class="n">$193.65</td></tr>
+<tr><td colspan="3"><strong>Total of the three quotes as shown</strong></td><td class="n"><strong>$923.93</strong></td></tr>
+</tbody>
+</table>
+</div>
+<p class="muted">The three quoted prices add to $923.93. A booking would still need to be checked at the time you book, because the quotes may change and two further segments (Phoenix to Tucson, Tucson to Los Angeles) have no quote yet.</p>
+</section>
+
+<section id="hire">
+<h2>Tesla car hire plan</h2>
+<p>The intended pattern is a <strong>one-way pickup at SFO and drop-off at LAX</strong>. That is the plan, not a confirmed booking. No rental rate is quoted here because no current, citable price for this trip was found. <strong>Check current price</strong> with the company at the time you book.</p>
+
+<h3>Tesla’s own rentals</h3>
+<p>Check <a href="https://www.tesla.com/">tesla.com</a> for any current official rental or partner programme in the United States. This research could not retrieve tesla.com (the public site returned HTTP 403 to the collector used here) and did not find a published one-way SFO-to-LAX Tesla rental price to cite. If Tesla offers a rental or referral, <strong>check current price</strong> and whether one-way airport drop-off is allowed.</p>
+
+<h3>Hertz and other Tesla rental options</h3>
+<p><a href="https://www.hertz.com/rentacar/rental-car-deals/tesla-car-rentals">Hertz’s Tesla rental page</a> advertises Tesla rentals at selected US locations, including <strong>San Francisco SFO</strong> and <strong>Los Angeles LAX</strong> (also Las Vegas, Phoenix and others). The page highlights the <strong>Tesla Model 3</strong>. Model availability is not guaranteed at both airports on your dates — check the reservation form. <strong>Check current price</strong>; the marketing page did not publish a rate that can be cited here.</p>
+<p><strong>One-way caveat (important):</strong> Hertz’s published one-way rental terms for SFO state: “Tesla reservations are not allowed to return one way.” Source: <a href="https://www.hertz.com/rentacar/reservation/reviewmodifycancel/templates/rentalTerms.jsp?EOAG=SFO&amp;KEYWORD=ONEWAY">Hertz rental terms, SFO, One-Way Rentals</a> (retrieved 21 Nov 2026). The same sentence appears on the Phoenix one-way terms page. So the SFO-pickup / LAX-drop-off plan may not be available on a Hertz Tesla. Confirm this at booking. If one-way is refused, options are a round-trip return to SFO (which does not match this itinerary), a non-Tesla one-way rental (intercity fees may apply — <strong>check current price</strong>), or another operator.</p>
+<p>Other companies and peer-to-peer platforms sometimes list Teslas, including at airports. Availability, one-way permission and fees vary by listing. This page does not invent those prices: <strong>check current price</strong> and the one-way / drop-off rules before you rely on them.</p>
+
+<h3>Supercharging billing (Hertz EV terms)</h3>
+<p>Hertz’s electric-vehicle rental terms (retrieved 21 Nov 2026 from the <a href="https://www.hertz.com/rentacar/reservation/reviewmodifycancel/templates/rentalTerms.jsp?EOAG=LAX&amp;KEYWORD=TESLA">LAX Tesla terms page</a>) say:</p>
+<ul>
+<li>If you use a Tesla Supercharger, the charging cost is billed back to Hertz and added to the rental <strong>with a 2.8% convenience fee</strong>. Charges may appear after the final invoice.</li>
+<li>Hertz says the battery charging limit on a Tesla should be set at <strong>90% maximum</strong>.</li>
+<li>You may incur an <strong>idle fee</strong> if the car stays in a stall after charging finishes; the renter is responsible.</li>
+<li>You are never required to return the vehicle with more than <strong>75% battery charge</strong>.</li>
+<li>Published range figures are not guaranteed. Weather, driving and road conditions affect range; it is the renter’s responsibility to keep enough charge to reach a station or return the car.</li>
+</ul>
+<p>Tesla’s own Supercharger pricing, if you rent outside Hertz, is shown in the car and on Tesla’s site at the time of charging. <strong>Check current price</strong> — this page does not invent a per-kWh rate.</p>
+
+<h3>Range planning tips</h3>
+<ul>
+<li>Use the in-car trip planner and the live map on <a href="https://www.tesla.com/findus">tesla.com/findus</a>; stalls, power and opening status change.</li>
+<li>Treat the <strong>Ely to Las Vegas</strong> stretch on the direct US-93 route as the main risk. If usable highway range plus a reserve will not cover that gap in the expected weather and wind, use the I-15 alternate.</li>
+<li>Winter driving over the Sierra (leg 1) and high desert (legs 1–2) reduces range. Do not plan to arrive at a Supercharger at 0%.</li>
+<li>Arrive with a buffer at smaller sites (some towns have 8 stalls; they can fill). Quartzsite and several California I-10 sites are much larger.</li>
+<li>Allow time for charging in the day plan — the OSRM times above are driving only.</li>
+<li>If the hire car is a Hertz Tesla, set the charge limit to 90% as Hertz asks, and move off the stall when charging ends to avoid idle fees.</li>
+</ul>
+</section>
+
+<section id="sources">
+<h2>Sources</h2>
+<ul class="sources">
+<li>Driving distances and times: OSRM public router (<a href="https://router.project-osrm.org/">router.project-osrm.org</a>) using OpenStreetMap, retrieved 21 Nov 2026. Endpoints: SFO (37.6213, −122.3790), Boise (43.6150, −116.2023), Las Vegas (36.1699, −115.1398), Phoenix (33.4484, −112.0740), Tucson (32.2226, −110.9747), downtown Los Angeles (34.0522, −118.2437), LAX (33.9425, −118.4081).</li>
+<li>Comparison figures: <a href="https://www.travelmath.com/drive-distance/from/SFO/to/Boise,+ID">Travelmath SFO–Boise distance</a> and <a href="https://www.travelmath.com/driving-time/from/SFO/to/Boise,+ID">driving time</a>; <a href="https://www.airmilescalculator.com/distance/sfo-to-boi/">Air Miles Calculator SFO–BOI</a>; <a href="https://www.travelmath.com/distance/from/Las+Vegas,+NV/to/Tucson,+AZ">Travelmath Las Vegas–Tucson</a>.</li>
+<li>Superchargers: <a href="https://supercharge.info/">supercharge.info</a> open-site data, retrieved 21 Nov 2026, filtered to sites along each OSRM route. Official confirmation: <a href="https://www.tesla.com/findus">Tesla Find Us</a> (tesla.com/findus). Individual site links are in the tables.</li>
+<li>Hertz Tesla availability and Model 3 mention: <a href="https://www.hertz.com/rentacar/rental-car-deals/tesla-car-rentals">hertz.com Tesla car rentals</a>.</li>
+<li>Hertz one-way Tesla restriction: <a href="https://www.hertz.com/rentacar/reservation/reviewmodifycancel/templates/rentalTerms.jsp?EOAG=SFO&amp;KEYWORD=ONEWAY">Hertz SFO one-way terms</a>.</li>
+<li>Hertz Supercharging billing, 2.8% fee, 90% limit, idle fees, 75% return charge: <a href="https://www.hertz.com/rentacar/reservation/reviewmodifycancel/templates/rentalTerms.jsp?EOAG=LAX&amp;KEYWORD=TESLA">Hertz LAX Tesla / EV rental terms</a>.</li>
+</ul>
+</section>
+
+
+
+<section id="comments" aria-labelledby="comments-h">
+<h2 id="comments-h">Comments</h2>
+<p>This site does not use a live comment form on the page. The standing pattern, also used on other public pages, is the header control “Have an idea? Suggest on GitHub”, which opens a GitHub issue for the current page. Published notes that Aung asks to add are listed below.</p>
+<div class="comment-notes">
+<p class="muted"><strong>Published notes.</strong> None yet.</p>
+</div>
+</section>
+
+<!--vh-->
+<section aria-label="Versions" id="versions">
+<h2>Versions</h2>
+<p>Each entry is a published version of this page.</p>
+<p>Snapshots from v5 onward are under <a href="/roadmap/america-driving/history/">history/</a>. Earlier versions were published before a history/ folder was kept, so v1–v4 snapshots are <span class="na">not collected</span> there.</p>
+<ul>
+<li><b>v6 (current)</b> · 22 Nov 2026, 4:43 PM AEDT (Melbourne time) · added the Las Vegas to Boca Chica road-trip subpage, with an interactive map, day plans and road tips · <a href="./">this page</a></li>
+<li><b>v5</b> · 21 Nov 2026, 8:06 PM AEDT (Melbourne time) · removed former curriculum-hub references; standalone under Roadmap · <a href="/roadmap/america-driving/history/v5/">history/v5/</a></li>
+<li><b>v4</b> · 21 Nov 2026, 7:43 PM AEDT (Melbourne time) · added three petrol SUV car-hire quote subpages, transcribed from screenshots of 21 Nov 2026</li>
+<li><b>v3</b> · 21 Nov 2026, 7:04 PM AEDT (Melbourne time) · added a subpage with comments for each of the four legs; the America Driving card was removed from its former curriculum hub</li>
+<li><b>v2</b> · 21 Nov 2026, 6:52 PM AEDT (Melbourne time) · moved to /roadmap/america-driving/</li>
+<li><b>v1</b> · 21 Nov 2026, 6:01 PM AEDT (Melbourne time) · First publication of the America Driving overview, with four road-trip legs, Supercharger stops, map and Tesla hire plan · the first published address now redirects here</li>
+</ul>
+</section>
+<!--/vh--></main>
+<footer class="wrap">
+<p class="meta">Page: <strong>America Driving</strong> · Version: <strong>v6 · 22 Nov 2026, 4:43 PM AEDT</strong></p>
+<p class="meta">Parent: <a href="/roadmap/">/roadmap/</a>. The first published address now redirects here. Distances, Superchargers and hire terms are sourced as listed above. Values not found are marked “check current price” or described as a gap. No credentials are included.</p>
+</footer>
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:8px 0 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:6px;margin:0;padding:8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
+nav.site.im a.mi{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:auto;min-height:44px;min-width:0;padding:8px 10px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a)}
+nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:visible;text-overflow:unset;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.25;text-align:left}
+nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:22px;height:22px;padding:0 5px;border-radius:999px;font-size:16px;font-weight:800;line-height:1;background:#0f172a;color:#fff}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc;color:#0f172a}
+nav.site.im a.mi.on .im-seq{background:#fff;color:#1d4ed8}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px;flex:none}#sg-link,#tt-btn,#mm-link{height:36px;border-radius:18px}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Cursor_Tenant6","/ARR/provisioning/cursor-tenant6/","🚀"],["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"],["ရှေ့သို့ချီ","/roadmap/forward/","⏩"],["Time Map 2026–2030","/roadmap/forward/time-map/","🗓️"],["BridgeWhy","/roadmap/bridgewhy/","📚"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["ARR-LargeTopology","/ARR-LargeTopology/","🗺️",[["Overview","/ARR-LargeTopology/","🗺️"],["Nodes","/ARR-LargeTopology/nodes.html","🖥️"],["Serials","/ARR-LargeTopology/serials.html","🔢"],["Mgmt IPs","/ARR-LargeTopology/mgmt-ips.html","🌐"],["Links","/ARR-LargeTopology/links.html","🔗"],["Tenants","/ARR-LargeTopology/tenants.html","🏢"],["VRFs","/ARR-LargeTopology/vrfs.html","🧭"],["BDs","/ARR-LargeTopology/bds.html","🌉"],["Subnets","/ARR-LargeTopology/subnets.html","🔢"],["EPGs","/ARR-LargeTopology/epgs.html","🎯"],["Leaf VNIs","/ARR-LargeTopology/vni.html","💠"],["VXLAN","/ARR-LargeTopology/vxlan/","🧵"],["VNI compare","/ARR-LargeTopology/vni-compare/","🔷"],["Access policies","/ARR-LargeTopology/access-policies/","🧱"],["BD GIPo & FTAG","/ARR-LargeTopology/bd-gipo-ftag/","📡"],["IAC files","/ARR-LargeTopology/iac-files/","📦"],["ARR-netbox","/ARR-LargeTopology/arr-netbox/","🗄️"],["Hardware monitor","/ARR-LargeTopology/hw-monitor/","📟"],["Site map","/ARR-LargeTopology/site-map/","🌳"],["Provisioning","/ARR-LargeTopology/provisioning/","🚀"],["Test explain","/ARR-LargeTopology/test-explain/","🧪"],["GitLab","/ARR-LargeTopology/gitlab/","🦊"],["GitLab Runner","/ARR-LargeTopology/gitlab-runner/","🏃"]]],["Terragrunt","/terragrunt/","🧰",[["Terragrunt","/terragrunt/","🧰"]]],["zFrontier","/zfrontier/","🌠",[["zFrontier","/zfrontier/","🌠"],["Farzad","/zfrontier/farzad/","📺"],["SpaceX vs Tesla shares","/zfrontier/shares/","📈"],["Optimus","/zfrontier/optimus/","🤖"],["Gigafactory","/zfrontier/gigafactory/","🏭"],["FSD versions","/zfrontier/fsd-versions/","🛣️"],["Liquid cooling","/zfrontier/liquid-cooling/","💧"],["SpaceX Tracking","/zfrontier/spacex/","🚀"],["CyberCab","/zfrontier/cybercab/","🚕"],["AI FineTune Pod","/zfrontier/ai-finetune-pod/","🎛️"],["MCP Servers","/zfrontier/mcp-servers/","🔌"],["NaC CLI","/zfrontier/nac-cli/","🧰"],["GPU Workflow","/zfrontier/3gpu-ai-workflow/","🧮"],["MWMESH","/zfrontier/mwmesh/","📡"],["Notebooks","/zfrontier/notebooks/","📓"],["RAG documents","/zfrontier/rag-documents/","📚"],["Foundation-Sec-8B","/zfrontier/foundation-sec-8b/","🛡️"],["Terafab","/zfrontier/terafab/","💠"],["3DiffsVXLAN","/zfrontier/3diffsvxlan/","🔀"],["ARR-LargePod","/zfrontier/arr-largepod/","🏗️"],["Nvidia A100 & H100","/zfrontier/Nvidia-A100-H100/","🟩"],["AgenticAI","/zfrontier/agenticai/","🧠"],["MS-02 GPU Monitoring","/zfrontier/MS-02-GPU-Monitoring/","📟"],["MBPro","/zfrontier/MBPro/","💻"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"]]],["ACI GUI Forms","/ACI-GUI-Forms/","📝",[["ACI GUI Forms","/ACI-GUI-Forms/","📝"],["GUI Map","/aci-gui-forms/WIP/gui-map/","🗺️"],["APG Access Policy Group","/ACI-GUI-Forms/apg/","🧩"],["Spine Access Policy Group","/ACI-GUI-Forms/spine-apg/","🛰️"]]],["ACI GUI","/aci-gui/","🖥️",[["Create Pod Policy Group","/aci-gui/create-pod-policy-group/","🧬"],["Create Bridge Domain (step 3)","/aci-gui/create-bridge-domain-step3/","🌉"],["Create Subnet","/aci-gui/create-subnet/","🔢"],["Create Application Profile","/aci-gui/create-application-profile/","🧩"],["Create Management EPG","/aci-gui/create-management-epg/","🛠️"],["Static Node Management Addresses","/aci-gui/static-node-management-addresses/","📍"],["Create Fabric Policies","/aci-gui/create-fabric-policies/","🧵"],["Create Access Policies","/aci-gui/create-access-policies/","🔐"],["Create VLAN Pool","/aci-gui/create-vlan-pool/","🏷️"],["Create Physical Domain","/aci-gui/create-physical-domain/","🏛️"],["Create Access Interface Policy Group","/aci-gui/create-access-interface-policy-group/","🔌"],["Create PC Interface Policy Group","/aci-gui/create-pc-interface-policy-group/","🔀"],["Note on Interface Policies","/aci-gui/interface-policies/","📘"],["Interface Wizard for vPC","/aci-gui/interface-wizard-vpc/","🪄"],["Create VMM Domain","/aci-gui/create-vmm-domain/","💻"],["vCenter Networking","/aci-gui/vcenter-networking/","🖥️"],["Create Tenant","/aci-gui/create-tenant/","🏢"],["Create L3Out","/aci-gui/create-l3out/","🌐"],["L3Out Contracts","/aci-gui/l3out-contracts/","📜"],["Create Bridge Domain","/aci-gui/create-bridge-domain/","🌉"],["Bridge Domain","/aci-gui/bridge-domain/","🌉"],["Mgmt Bridge Domain","/aci-gui/mgmt-bridge-domain/","🔧"],["DHCP Relay","/aci-gui/dhcp-relay/","📡"],["Management Application Profile","/aci-gui/management-application-profile/","📦"],["Application Profile (web + app)","/aci-gui/application-profile/","🧩"],["Create VRF","/aci-gui/create-vrf/","🧭"],["Create Endpoint Group","/aci-gui/create-endpoint-group/","🎯"],["Contracts Between Tenants","/aci-gui/contracts-between-tenants/","🤝"],["Create Filter","/aci-gui/create-filter/","🧹"],["Create Contract","/aci-gui/create-contract/","📃"],["Create Management Contracts","/aci-gui/create-management-contracts/","📑"],["Mgmt PortGroup to VM","/aci-gui/mgmt-portgroup-to-vm/","🧷"],["Pod Policy Group","/aci-gui/pod-policy-group/","🕒"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=(seq?String(seq)+'. ':'')+e[0];if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks ›';r2.appendChild(t);
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1))});r2.appendChild(pills);n.appendChild(r2)}}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+</body>
+</html>

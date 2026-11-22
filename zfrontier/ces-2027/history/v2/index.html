@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:auto;
+  min-height:44px;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:auto;min-height:44px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:visible;
+  text-overflow:unset;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.25;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:22px;
+  height:22px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:16px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:#1d4ed8!important;
+}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CES 2027 — official dates, Media Days and 3–8 January pages — zFrontier</title>
+<meta name="description" content="CES 2027 in Las Vegas, 6–9 January, with official Media Days on 4–5 January and sourced 3–8 January pages on robots, physical AI, autonomous drones and other frontier technology.">
+<style id="page-css">
+:root {
+  color-scheme: light dark;
+  --site-content-max: 1200px;
+  --bg: #f4f6f8;
+  --bg-accent: #e8eef4;
+  --card: #ffffff;
+  --ink: #15202b;
+  --muted: #5b6b7c;
+  --line: #d5dee7;
+  --accent: #0e7490;
+  --accent-soft: #e0f4f8;
+  --link: #0e7490;
+  --good: #047857;
+  --warn: #a16207;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --radius: 14px;
+  --sans: "Source Sans 3", "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+  --d3: #64748b;
+  --d4: #6d28d9;
+  --d5: #b45309;
+  --d6: #047857;
+  --d7: #1d4ed8;
+  --d8: #9f1239;
+  --t-robot: #0e7490;
+  --t-pai: #7c3aed;
+  --t-drone: #0369a1;
+  --t-front: #b45309;
+  --map-land: #dfe8ef;
+  --map-stroke: #8aa0b3;
+  --map-water: #e8eef4;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+    --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+    --link: #5eead4; --good: #34d399; --warn: #fbbf24;
+    --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+    --d3: #94a3b8; --d4: #c4b5fd; --d5: #fdba74; --d6: #34d399; --d7: #93c5fd; --d8: #f9a8d4;
+    --t-robot: #5eead4; --t-pai: #c4b5fd; --t-drone: #7dd3fc; --t-front: #fdba74;
+    --map-land: #1b2a3d; --map-stroke: #4b6480; --map-water: #0f2740;
+  }
+}
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f4f6f8; --bg-accent: #e8eef4; --card: #ffffff; --ink: #15202b;
+  --muted: #5b6b7c; --line: #d5dee7; --accent: #0e7490; --accent-soft: #e0f4f8;
+  --link: #0e7490; --good: #047857; --warn: #a16207;
+  --d3: #64748b; --d4: #6d28d9; --d5: #b45309; --d6: #047857; --d7: #1d4ed8; --d8: #9f1239;
+  --t-robot: #0e7490; --t-pai: #7c3aed; --t-drone: #0369a1; --t-front: #b45309;
+  --map-land: #dfe8ef; --map-stroke: #8aa0b3; --map-water: #e8eef4;
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+  --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+  --link: #5eead4; --good: #34d399; --warn: #fbbf24;
+  --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+  --d3: #94a3b8; --d4: #c4b5fd; --d5: #fdba74; --d6: #34d399; --d7: #93c5fd; --d8: #f9a8d4;
+  --t-robot: #5eead4; --t-pai: #c4b5fd; --t-drone: #7dd3fc; --t-front: #fdba74;
+  --map-land: #1b2a3d; --map-stroke: #4b6480; --map-water: #0f2740;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--sans);
+  background: radial-gradient(1200px 500px at 10% -10%, var(--bg-accent), transparent 60%), var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  min-height: 100vh;
+}
+a { color: var(--link); }
+code, .mono { font-family: var(--mono); font-size: 0.92em; }
+main.wrap, footer.wrap { max-width: var(--site-content-max); margin: 0 auto; padding: 0 1.5rem; }
+main.wrap { padding-top: 0.4rem; padding-bottom: 2.2rem; }
+footer.wrap { padding-bottom: 3.5rem; }
+.tr17 { margin: 0 0 8px; }
+h1 { font-size: clamp(1.55rem, 3vw, 2.15rem); margin: 0 0 0.35rem; letter-spacing: -0.03em; font-weight: 700; overflow-wrap: anywhere; }
+.ver { margin: 0 0 0.85rem; color: var(--muted); font-weight: 650; }
+.lede { font-size: 1.05rem; margin: 0 0 1rem; max-width: 78ch; }
+h2 { font-size: 1.25rem; margin: 2rem 0 0.7rem; letter-spacing: -0.02em; scroll-margin-top: 80px; overflow-wrap: anywhere; }
+h3 { font-size: 1.05rem; margin: 1.2rem 0 0.45rem; }
+p, ul, ol { margin: 0 0 0.85rem; }
+ul, ol { padding-left: 1.25rem; }
+li { margin: 0.2rem 0; }
+.kicker {
+  display: inline-block; text-transform: uppercase; letter-spacing: 0.14em;
+  font-size: 0.72rem; color: var(--accent); font-weight: 700; margin: 0 0 0.35rem;
+}
+.note, .muted, .meta, .footer { color: var(--muted); }
+.meta { margin: 0 0 0.25rem; }
+.tbc { border-left: 4px solid var(--warn); padding: 0.7rem 0.85rem; margin: 0 0 1rem; background: var(--card); border-radius: 0 var(--radius) var(--radius) 0; }
+.card, .comment-notes, .callout {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 1rem 1.15rem; margin: 0 0 1.1rem; min-width: 0;
+}
+.kids { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin: 0 0 1.1rem; min-width: 0; }
+.pbox {
+  display: block; text-decoration: none; color: inherit; background: var(--card);
+  border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px;
+  border-top: 5px solid var(--c, var(--accent)); min-width: 0; overflow-wrap: anywhere;
+}
+.pbox h3 { margin: 0 0 4px; font-size: 1.02rem; }
+.pbox p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+.table-wrap { overflow-x: auto; margin: 0 0 1rem; max-width: 100%; }
+table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
+th, td { text-align: left; padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--line); vertical-align: top; overflow-wrap: anywhere; }
+th { font-size: 0.82rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); background: var(--bg-accent); }
+.legnav {
+  display: flex; flex-wrap: wrap; gap: 0.55rem 1rem; justify-content: space-between;
+  align-items: flex-start; margin: 1.1rem 0; padding: 0.85rem 0;
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); min-width: 0;
+}
+.legnav a, .legnav .nav-missing { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+.legnav .nav-missing { color: var(--muted); }
+.toc a { margin-right: 0.75rem; }
+.sources li, .trip a { overflow-wrap: anywhere; }
+.mapwrap { overflow-x: auto; max-width: 100%; margin: 0 0 1rem; }
+.mapwrap svg { display: block; width: 100%; max-width: 100%; height: auto; }
+.map-legend { display: flex; flex-wrap: wrap; gap: 0.55rem 1rem; margin: 0 0 0.8rem; font-size: 0.92rem; }
+.chip { display: inline-block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 0.15rem 0.5rem; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+@media (max-width: 390px) {
+  main.wrap, footer.wrap { padding-left: 0.85rem; padding-right: 0.85rem; }
+  th, td { padding: 0.45rem 0.5rem; }
+  .kids { grid-template-columns: 1fr; }
+  .legnav { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+var b=String.fromCharCode(99,111,108,101,115);sg.href='https://github.com/amoeoo-'+b+'/amoeoo-'+b+'.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+
+<!-- site-menu v1 -->
+<nav class="site"></nav>
+<main class="wrap">
+<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:#bbb"><a href="/visitors/" style="color:#fff;text-decoration:none"><span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></a><span class="uvt" style="font-size:11px;color:#888"></span></div><!--/arr-uv-tr17-->
+<p class="kicker">zFrontier</p>
+<p class="muted"><a href="/zfrontier/">← zFrontier</a></p>
+<h1>CES 2027</h1>
+<p class="ver">v2 · 22 Nov 2026, 7:56 AM AEDT</p>
+<p class="lede">A sourced briefing for CES 2027 in Las Vegas, built from official CES and CTA pages retrieved on 21–22 Nov 2026. The official show is <strong>6–9 January 2027</strong>. Official Media Days are <strong>4–5 January</strong> and are media-only. This hub then breaks down <strong>3–8 January</strong>, with topic pages for robots, physical AI, autonomous drones and other frontier technology, and a Robotics &amp; Physical AI highlights section on the 7 and 8 January pages. Keynotes and exhibitors are listed only when a source names them; otherwise the pages say “not collected” or to be confirmed. Saturday 9 January is still a show day and does not yet have its own page here.</p>
+<nav class="legnav" aria-label="Page navigation"><a href="/zfrontier/">← zFrontier hub</a><span><span class="nav-missing">No previous page in this set</span> · <a href="/zfrontier/ces-2027/03-jan/">Next: 3 Jan 2027 →</a></span></nav>
+
+<p class="trip muted">Las Vegas trip context (not CES programming): Aung also has an <a href="/roadmap/america-driving/">America Driving</a> page for a sourced road-trip plan that includes Las Vegas.</p>
+<p class="toc"><a href="#dates">Official dates</a> · <a href="#days">3–8 January</a> · <a href="#venues">Venues</a> · <a href="#hours">Hours</a> · <a href="#register">Registration</a> · <a href="#themes">Themes</a> · <a href="#map">Diagram</a> · <a href="#sources">Sources</a> · <a href="#versions">Versions</a> · <a href="#comments">Comments</a></p>
+
+<h2 id="dates">Official CES 2027 dates</h2>
+<p>CES 2027 takes place <strong>6–9 January 2027 in Las Vegas</strong>, owned and produced by the Consumer Technology Association (CTA) (<a href="https://www.ces.tech/">ces.tech</a>; repeated on CTA press releases). Official CES 2027 <strong>Media Days</strong> are an exclusive media-only event on <strong>Monday 4 January and Tuesday 5 January</strong>, before the show opens (<a href="https://www.ces.tech/press-releases/cta-announces-expanded-official-ces-2027-media-days-schedule">CTA, 17 Nov 2026</a>). CTA says the show floor opens on <strong>6 January at 10 AM PT</strong>. CES is described as celebrating 60 years of innovation in that Media Days release.</p>
+<p>This hub also has a page for <strong>3 January</strong> because a 3–6 January set was requested first. Official sources retrieved on 21–22 Nov 2026 do <strong>not</strong> list 3 January as a Media Day or as a show-floor day. That is stated clearly on the 3 January page. Official show days <strong>7 and 8 January</strong> now have their own pages, with a Robotics &amp; Physical AI highlights section on each. <strong>9 January</strong> is still an official show day (exhibit hours 9 AM–4 PM) but does not yet have its own page in this set. 8 January is the last published day of CES Foundry, not the last day of the show.</p>
+
+<h2 id="days">Day-by-day overview (3–8 January)</h2>
+<div class="kids" aria-label="Date pages"><a class="pbox" style="--c:var(--d3)" href="/zfrontier/ces-2027/03-jan/"><h3>3 Jan 2027 · Sunday</h3><p><span class="chip">To be confirmed</span> No official CES programme listed (as of 21 Nov 2026)</p></a><a class="pbox" style="--c:var(--d4)" href="/zfrontier/ces-2027/04-jan/"><h3>4 Jan 2027 · Monday</h3><p><span class="chip">Media Day</span> Official CES Media Day (credentialed media only)</p></a><a class="pbox" style="--c:var(--d5)" href="/zfrontier/ces-2027/05-jan/"><h3>5 Jan 2027 · Tuesday</h3><p><span class="chip">Media Day + evening keynote</span> Official CES Media Day; first keynote in the evening</p></a><a class="pbox" style="--c:var(--d6)" href="/zfrontier/ces-2027/06-jan/"><h3>6 Jan 2027 · Wednesday</h3><p><span class="chip">Show floor opens</span> First official CES 2027 show day; show floor opens</p></a><a class="pbox" style="--c:var(--d7)" href="/zfrontier/ces-2027/07-jan/"><h3>7 Jan 2027 · Thursday</h3><p><span class="chip">Show day</span> Second official CES 2027 show day; Physical AI sessions</p></a><a class="pbox" style="--c:var(--d8)" href="/zfrontier/ces-2027/08-jan/"><h3>8 Jan 2027 · Friday</h3><p><span class="chip">Show day · Foundry last day</span> Third official CES 2027 show day; last day of CES Foundry</p></a></div>
+<div class="table-wrap"><table>
+<thead><tr><th>Date</th><th>What official sources say</th></tr></thead>
+<tbody>
+<tr><td><a href="/zfrontier/ces-2027/03-jan/">Sun 3 Jan</a></td><td>No official CES 2027 Media Day, keynote or show-floor listing found as of 21 Nov 2026. To be confirmed if CTA later publishes something.</td></tr>
+<tr><td><a href="/zfrontier/ces-2027/04-jan/">Mon 4 Jan</a></td><td>Official Media Day (credentialed media only), mainly at Mandalay Bay. Tech Trends to Watch 3 PM PT; CES Unveiled Las Vegas 4–7 PM PT.</td></tr>
+<tr><td><a href="/zfrontier/ces-2027/05-jan/">Tue 5 Jan</a></td><td>Official Media Day continues. Afternoon media-only press conferences at LVCC (Brunswick, Hisense, Bosch). Evening: Waymo keynote, 6:30 PM, Palazzo Ballroom, The Venetian. Show floor not officially open.</td></tr>
+<tr><td><a href="/zfrontier/ces-2027/06-jan/">Wed 6 Jan</a></td><td>First official show day. Floor opens 10 AM PT, hours 10 AM–6 PM. Published keynotes through the day. CES Foundry also opens (6–8 Jan).</td></tr>
+<tr><td><a href="/zfrontier/ces-2027/07-jan/">Thu 7 Jan</a></td><td>Second official show day. Exhibit hours 9 AM–6 PM. No official keynote listed as of 22 Nov 2026. Official CES Schedule pages list several Physical AI and robotics sessions. CTA lists the Vehicle Tech and Advanced Mobility track on this day.</td></tr>
+<tr><td><a href="/zfrontier/ces-2027/08-jan/">Fri 8 Jan</a></td><td>Third official show day, and the last published day of CES Foundry. Exhibit hours 9 AM–6 PM. No official keynote listed as of 22 Nov 2026. Official sessions include factory, farm robotics and Foundry Stages. The show continues on Sat 9 Jan (9 AM–4 PM), which has no page in this set.</td></tr>
+</tbody>
+</table></div>
+<p>Under each date there are four topic pages: <strong>robots</strong>, <strong>physical AI</strong>, <strong>autonomous drones</strong>, and <strong>other frontier technology</strong> (quantum, space tech, XR, AI chips, based on official 2027 categories). Content is limited to what official sources support; otherwise the page stays short and says the day-specific schedule is to be confirmed.</p>
+
+<h2 id="venues">Venues</h2>
+<ul>
+<li><strong>Las Vegas Convention Center (LVCC)</strong> — North, South, Central and West Halls, plus outdoor spaces. Official 2027 hall themes are on the <a href="https://www.ces.tech/explore-ces/maps-and-locations/lvcc-campus/">LVCC Campus</a> page.</li>
+<li><strong>The Venetian Campus</strong> — smarter living, digital health, Eureka Park startups, and some keynotes (<a href="https://www.ces.tech/explore-ces/maps-and-locations/venetian-campus/">Venetian Campus</a>).</li>
+<li><strong>Mandalay Bay</strong> — official home of Media Days events on 4–5 January (Tech Trends to Watch, Unveiled Las Vegas).</li>
+<li><strong>Fontainebleau Las Vegas</strong> — CES Foundry, 6–8 January, official hub for AI and quantum, “just steps from the Convention Center.”</li>
+<li><strong>ARIA</strong> — C Space activation hours are listed on the official transportation flyer; the WPP keynote is a C Space keynote at ARIA.</li>
+<li><strong>Sphere</strong> — venue named in CTA’s Lenovo keynote release for 6 January at 5 PM.</li>
+</ul>
+
+<h2 id="hours">Hours (as published)</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Day</th><th>Official exhibit hours</th></tr></thead>
+<tbody>
+<tr><td>Wed 6 Jan</td><td>10 AM–6 PM (show floor opens 10 AM PT)</td></tr>
+<tr><td>Thu 7 Jan</td><td>9 AM–6 PM</td></tr>
+<tr><td>Fri 8 Jan</td><td>9 AM–6 PM</td></tr>
+<tr><td>Sat 9 Jan</td><td>9 AM–4 PM</td></tr>
+</tbody>
+</table></div>
+<p>Hours are from official CES PDFs and the Dates and Hours page retrieved 21–22 Nov 2026 (transportation flyer as of 29 Sep 2026, “locations subject to change,” and the Media Days shuttle flyer). Foundry: 10 AM–6 PM on 6 Jan, 9 AM–6 PM on 7–8 Jan, closed 9 Jan. C Space at ARIA: 9 AM–6 PM on 6–8 Jan on the flyer, closed 9 Jan on Dates and Hours. Media Days on 4–5 Jan follow the Media Days schedule, not these exhibit hours.</p>
+
+<h2 id="register">Registration</h2>
+<p>Registration is open (<a href="https://www.ces.tech/">ces.tech</a>). CES is a <strong>trade-only</strong> event for people 18 or older affiliated with the consumer technology industry. It is <strong>not open to the general public</strong> (<a href="https://www.ces.tech/attendee-guides/registration-information/">Registration Information</a>). Attendee, media and exhibitor personnel are separate registration types. CTA says Maritz is the only official registration vendor for CES 2027, and warns about registration scams.</p>
+<p>Pass prices on the official registration page as of 21 Nov 2026: Standard Pass <strong>$149 through 30 Nov</strong>, then $349 from 1 Dec through 9 Jan; Premium Pass $1,450 through 30 Nov, then $1,750. Prices are in US dollars as shown and may change — check the official page when you book. Standard includes exhibit-floor access, keynotes, Great Minds sessions and select conference sessions. Cancellations received in writing by 9 Dec 2026 are refundable less a $50 processing fee; no refunds after that date, per the same page.</p>
+
+<h2 id="themes">Main themes (official 2027 lists)</h2>
+<p>The official conference program says CES 2027 will highlight advancements in AI, enterprise innovation, health, energy future, gaming, manufacturing, robotics, retail, vehicle tech and advanced mobility, wearables and more. Paid tracks include Robotics (full day, LVCC), Vehicle Tech and Advanced Mobility, Artificial Intelligence, XR and Spatial Computing, Quantum Means Business, Novaspace, Manufacturing, The Spoon Food Tech and AgTech summits, and others. The program page itself does not assign those tracks to a calendar day. Official CES Schedule pages and CTA’s 2 Nov 2026 mobility release do name some days: Robotics track sessions retrieved on 22 Nov 2026 include Wednesday 6 January listings; Vehicle Tech and Advanced Mobility is listed for Thursday 7 January; Resilient Communities is listed for Friday 8 January.</p>
+<p>Venue themes are summarised under Venues above. CTA has also announced a “largest mobility footprint ever” at CES 2027 (<a href="https://www.ces.tech/press-releases/largest-mobility-footprint-ever-at-ces-2027">CTA mobility release, 2 Nov 2026</a>).</p>
+
+<h2 id="map">Six days × four topics</h2>
+<p>This is a planning diagram for the pages on this site, not an official CES floor map. Fills and colours are set explicitly for light and dark themes. 3 January is included even though no official programme was found for that day. 9 January is an official show day but has no page in this set.</p>
+<div class="map-legend">
+  <span style="color:var(--d3)">■ 3 Jan — no official programme listed</span>
+  <span style="color:var(--d4)">■ 4 Jan — Media Day</span>
+  <span style="color:var(--d5)">■ 5 Jan — Media Day + evening keynote</span>
+  <span style="color:var(--d6)">■ 6 Jan — show floor opens</span>
+  <span style="color:var(--d7)">■ 7 Jan — show day</span>
+  <span style="color:var(--d8)">■ 8 Jan — show day, Foundry last day</span>
+</div>
+<div class="mapwrap card"><svg viewBox="0 0 1540 580" role="img" aria-labelledby="ces-map-title ces-map-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="ces-map-title">CES 2027 pages: 6 January days by 4 topic tracks</title>
+<desc id="ces-map-desc">A planning diagram, not an official CES floor map. Columns are 3 to 8 January 2027. Rows are Robots, Physical AI, Autonomous drones and other frontier technology. 3 January has no official CES programme listed as of 21 Nov 2026. 4 and 5 January are official Media Days. 6–8 January are official show days. 9 January is also an official show day but does not have its own page in this set.</desc>
+<rect x="0" y="0" width="1540" height="580" fill="var(--map-water)" stroke="none"/>
+<text x="24" y="36" fill="var(--ink)" font-size="18" font-weight="700" font-family="system-ui,sans-serif">CES 2027 · 3–8 January (this page set)</text>
+<text x="24" y="58" fill="var(--muted)" font-size="13" font-family="system-ui,sans-serif">Official show is 6–9 Jan; Media Days are 4–5 Jan. 3 Jan has no official programme listed as of 21 Nov 2026. 9 Jan has hours but no page here yet.</text>
+<a href="/zfrontier/ces-2027/03-jan/"><rect x="190" y="70" width="210" height="48" rx="10" fill="var(--card)" stroke="var(--d3)" stroke-width="2"/>
+<text x="295.0" y="90" text-anchor="middle" fill="var(--ink)" font-size="15" font-weight="700" font-family="system-ui,sans-serif">3 Jan</text>
+<text x="295.0" y="108" text-anchor="middle" fill="var(--muted)" font-size="11" font-family="system-ui,sans-serif">No official programme</text></a>
+<a href="/zfrontier/ces-2027/04-jan/"><rect x="410" y="70" width="210" height="48" rx="10" fill="var(--card)" stroke="var(--d4)" stroke-width="2"/>
+<text x="515.0" y="90" text-anchor="middle" fill="var(--ink)" font-size="15" font-weight="700" font-family="system-ui,sans-serif">4 Jan</text>
+<text x="515.0" y="108" text-anchor="middle" fill="var(--muted)" font-size="11" font-family="system-ui,sans-serif">Media Day</text></a>
+<a href="/zfrontier/ces-2027/05-jan/"><rect x="630" y="70" width="210" height="48" rx="10" fill="var(--card)" stroke="var(--d5)" stroke-width="2"/>
+<text x="735.0" y="90" text-anchor="middle" fill="var(--ink)" font-size="15" font-weight="700" font-family="system-ui,sans-serif">5 Jan</text>
+<text x="735.0" y="108" text-anchor="middle" fill="var(--muted)" font-size="11" font-family="system-ui,sans-serif">Media Day + keynote</text></a>
+<a href="/zfrontier/ces-2027/06-jan/"><rect x="850" y="70" width="210" height="48" rx="10" fill="var(--card)" stroke="var(--d6)" stroke-width="2"/>
+<text x="955.0" y="90" text-anchor="middle" fill="var(--ink)" font-size="15" font-weight="700" font-family="system-ui,sans-serif">6 Jan</text>
+<text x="955.0" y="108" text-anchor="middle" fill="var(--muted)" font-size="11" font-family="system-ui,sans-serif">Show floor opens</text></a>
+<a href="/zfrontier/ces-2027/07-jan/"><rect x="1070" y="70" width="210" height="48" rx="10" fill="var(--card)" stroke="var(--d7)" stroke-width="2"/>
+<text x="1175.0" y="90" text-anchor="middle" fill="var(--ink)" font-size="15" font-weight="700" font-family="system-ui,sans-serif">7 Jan</text>
+<text x="1175.0" y="108" text-anchor="middle" fill="var(--muted)" font-size="11" font-family="system-ui,sans-serif">Show day</text></a>
+<a href="/zfrontier/ces-2027/08-jan/"><rect x="1290" y="70" width="210" height="48" rx="10" fill="var(--card)" stroke="var(--d8)" stroke-width="2"/>
+<text x="1395.0" y="90" text-anchor="middle" fill="var(--ink)" font-size="15" font-weight="700" font-family="system-ui,sans-serif">8 Jan</text>
+<text x="1395.0" y="108" text-anchor="middle" fill="var(--muted)" font-size="11" font-family="system-ui,sans-serif">Foundry last day</text></a>
+<rect x="16" y="130" width="170" height="90" rx="10" fill="var(--card)" stroke="var(--t-robot)" stroke-width="2"/>
+<text x="101" y="180.0" text-anchor="middle" fill="var(--ink)" font-size="14" font-weight="700" font-family="system-ui,sans-serif">Robots</text>
+<a href="/zfrontier/ces-2027/03-jan/robots/"><rect x="190" y="130" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d3)" stroke-width="1.8"/>
+<circle cx="218" cy="175.0" r="7" fill="var(--t-robot)" stroke="var(--card)" stroke-width="2"/>
+<text x="303.0" y="180.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<a href="/zfrontier/ces-2027/04-jan/robots/"><rect x="410" y="130" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d4)" stroke-width="1.8"/>
+<circle cx="438" cy="175.0" r="7" fill="var(--t-robot)" stroke="var(--card)" stroke-width="2"/>
+<text x="523.0" y="180.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<a href="/zfrontier/ces-2027/05-jan/robots/"><rect x="630" y="130" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d5)" stroke-width="1.8"/>
+<circle cx="658" cy="175.0" r="7" fill="var(--t-robot)" stroke="var(--card)" stroke-width="2"/>
+<text x="743.0" y="180.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<a href="/zfrontier/ces-2027/06-jan/robots/"><rect x="850" y="130" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d6)" stroke-width="1.8"/>
+<circle cx="878" cy="175.0" r="7" fill="var(--t-robot)" stroke="var(--card)" stroke-width="2"/>
+<text x="963.0" y="180.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<a href="/zfrontier/ces-2027/07-jan/robots/"><rect x="1070" y="130" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d7)" stroke-width="1.8"/>
+<circle cx="1098" cy="175.0" r="7" fill="var(--t-robot)" stroke="var(--card)" stroke-width="2"/>
+<text x="1183.0" y="180.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<a href="/zfrontier/ces-2027/08-jan/robots/"><rect x="1290" y="130" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d8)" stroke-width="1.8"/>
+<circle cx="1318" cy="175.0" r="7" fill="var(--t-robot)" stroke="var(--card)" stroke-width="2"/>
+<text x="1403.0" y="180.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<rect x="16" y="230" width="170" height="90" rx="10" fill="var(--card)" stroke="var(--t-pai)" stroke-width="2"/>
+<text x="101" y="280.0" text-anchor="middle" fill="var(--ink)" font-size="14" font-weight="700" font-family="system-ui,sans-serif">Physical AI</text>
+<a href="/zfrontier/ces-2027/03-jan/physical-ai/"><rect x="190" y="230" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d3)" stroke-width="1.8"/>
+<circle cx="218" cy="275.0" r="7" fill="var(--t-pai)" stroke="var(--card)" stroke-width="2"/>
+<text x="303.0" y="280.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<a href="/zfrontier/ces-2027/04-jan/physical-ai/"><rect x="410" y="230" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d4)" stroke-width="1.8"/>
+<circle cx="438" cy="275.0" r="7" fill="var(--t-pai)" stroke="var(--card)" stroke-width="2"/>
+<text x="523.0" y="280.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<a href="/zfrontier/ces-2027/05-jan/physical-ai/"><rect x="630" y="230" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d5)" stroke-width="1.8"/>
+<circle cx="658" cy="275.0" r="7" fill="var(--t-pai)" stroke="var(--card)" stroke-width="2"/>
+<text x="743.0" y="280.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<a href="/zfrontier/ces-2027/06-jan/physical-ai/"><rect x="850" y="230" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d6)" stroke-width="1.8"/>
+<circle cx="878" cy="275.0" r="7" fill="var(--t-pai)" stroke="var(--card)" stroke-width="2"/>
+<text x="963.0" y="280.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<a href="/zfrontier/ces-2027/07-jan/physical-ai/"><rect x="1070" y="230" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d7)" stroke-width="1.8"/>
+<circle cx="1098" cy="275.0" r="7" fill="var(--t-pai)" stroke="var(--card)" stroke-width="2"/>
+<text x="1183.0" y="280.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<a href="/zfrontier/ces-2027/08-jan/physical-ai/"><rect x="1290" y="230" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d8)" stroke-width="1.8"/>
+<circle cx="1318" cy="275.0" r="7" fill="var(--t-pai)" stroke="var(--card)" stroke-width="2"/>
+<text x="1403.0" y="280.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<rect x="16" y="330" width="170" height="90" rx="10" fill="var(--card)" stroke="var(--t-drone)" stroke-width="2"/>
+<text x="101" y="380.0" text-anchor="middle" fill="var(--ink)" font-size="14" font-weight="700" font-family="system-ui,sans-serif">Autonomous drones</text>
+<a href="/zfrontier/ces-2027/03-jan/autonomous-drones/"><rect x="190" y="330" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d3)" stroke-width="1.8"/>
+<circle cx="218" cy="375.0" r="7" fill="var(--t-drone)" stroke="var(--card)" stroke-width="2"/>
+<text x="303.0" y="380.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<a href="/zfrontier/ces-2027/04-jan/autonomous-drones/"><rect x="410" y="330" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d4)" stroke-width="1.8"/>
+<circle cx="438" cy="375.0" r="7" fill="var(--t-drone)" stroke="var(--card)" stroke-width="2"/>
+<text x="523.0" y="380.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<a href="/zfrontier/ces-2027/05-jan/autonomous-drones/"><rect x="630" y="330" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d5)" stroke-width="1.8"/>
+<circle cx="658" cy="375.0" r="7" fill="var(--t-drone)" stroke="var(--card)" stroke-width="2"/>
+<text x="743.0" y="380.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<a href="/zfrontier/ces-2027/06-jan/autonomous-drones/"><rect x="850" y="330" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d6)" stroke-width="1.8"/>
+<circle cx="878" cy="375.0" r="7" fill="var(--t-drone)" stroke="var(--card)" stroke-width="2"/>
+<text x="963.0" y="380.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<a href="/zfrontier/ces-2027/07-jan/autonomous-drones/"><rect x="1070" y="330" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d7)" stroke-width="1.8"/>
+<circle cx="1098" cy="375.0" r="7" fill="var(--t-drone)" stroke="var(--card)" stroke-width="2"/>
+<text x="1183.0" y="380.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<a href="/zfrontier/ces-2027/08-jan/autonomous-drones/"><rect x="1290" y="330" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d8)" stroke-width="1.8"/>
+<circle cx="1318" cy="375.0" r="7" fill="var(--t-drone)" stroke="var(--card)" stroke-width="2"/>
+<text x="1403.0" y="380.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<rect x="16" y="430" width="170" height="90" rx="10" fill="var(--card)" stroke="var(--t-front)" stroke-width="2"/>
+<text x="101" y="480.0" text-anchor="middle" fill="var(--ink)" font-size="14" font-weight="700" font-family="system-ui,sans-serif">Frontier tech</text>
+<a href="/zfrontier/ces-2027/03-jan/frontier-tech/"><rect x="190" y="430" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d3)" stroke-width="1.8"/>
+<circle cx="218" cy="475.0" r="7" fill="var(--t-front)" stroke="var(--card)" stroke-width="2"/>
+<text x="303.0" y="480.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<a href="/zfrontier/ces-2027/04-jan/frontier-tech/"><rect x="410" y="430" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d4)" stroke-width="1.8"/>
+<circle cx="438" cy="475.0" r="7" fill="var(--t-front)" stroke="var(--card)" stroke-width="2"/>
+<text x="523.0" y="480.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<a href="/zfrontier/ces-2027/05-jan/frontier-tech/"><rect x="630" y="430" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d5)" stroke-width="1.8"/>
+<circle cx="658" cy="475.0" r="7" fill="var(--t-front)" stroke="var(--card)" stroke-width="2"/>
+<text x="743.0" y="480.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<a href="/zfrontier/ces-2027/06-jan/frontier-tech/"><rect x="850" y="430" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d6)" stroke-width="1.8"/>
+<circle cx="878" cy="475.0" r="7" fill="var(--t-front)" stroke="var(--card)" stroke-width="2"/>
+<text x="963.0" y="480.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<a href="/zfrontier/ces-2027/07-jan/frontier-tech/"><rect x="1070" y="430" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d7)" stroke-width="1.8"/>
+<circle cx="1098" cy="475.0" r="7" fill="var(--t-front)" stroke="var(--card)" stroke-width="2"/>
+<text x="1183.0" y="480.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+<a href="/zfrontier/ces-2027/08-jan/frontier-tech/"><rect x="1290" y="430" width="210" height="90" rx="10" fill="var(--card)" stroke="var(--d8)" stroke-width="1.8"/>
+<circle cx="1318" cy="475.0" r="7" fill="var(--t-front)" stroke="var(--card)" stroke-width="2"/>
+<text x="1403.0" y="480.0" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="system-ui,sans-serif">Open page</text></a>
+</svg></div>
+<section id="sources">
+<h2>Sources</h2>
+<p>Retrieved 21–22 Nov 2026. Official CES/CTA pages take precedence. This site does not invent keynotes, exhibitors or session times. Items that were not found are marked “not collected” or “to be confirmed.”</p>
+<ul class="sources">
+<li>CES homepage (official dates 6–9 Jan 2027, Las Vegas; registration open): <a href="https://www.ces.tech/">https://www.ces.tech/</a></li>
+<li>CES Dates and Hours: <a href="https://www.ces.tech/plan-your-visit/dates-and-hours/">https://www.ces.tech/plan-your-visit/dates-and-hours/</a></li>
+<li>CTA press release, 17 Nov 2026, “CTA Announces Expanded Official CES 2027 Media Days Schedule”: <a href="https://www.ces.tech/press-releases/cta-announces-expanded-official-ces-2027-media-days-schedule">https://www.ces.tech/press-releases/cta-announces-expanded-official-ces-2027-media-days-schedule</a></li>
+<li>CES Media Opportunities (Media Days 4–5 Jan, Tech Trends to Watch, Unveiled Las Vegas): <a href="https://www.ces.tech/media-guides/media-opportunities/">https://www.ces.tech/media-guides/media-opportunities/</a></li>
+<li>CES 2027 Keynotes schedule: <a href="https://www.ces.tech/attend/keynotes/">https://www.ces.tech/attend/keynotes/</a></li>
+<li>CTA press releases for keynote venues: Stellantis / Filosa (<a href="https://www.ces.tech/press-releases/stellantis-to-bring-human-centered-mobility-vision-to-ces-2027-keynote">Stellantis release</a>); WPP / Rose (<a href="https://www.ces.tech/press-releases/wpp-chief-executive-officer-cindy-rose-to-explore-the-importance-of-data-independence-and-trust-in-the-age-of-ai-during-c-space-keynote">WPP release</a>); Lenovo / Yang (<a href="https://www.ces.tech/press-releases/lenovo-takes-ces-2027-keynote-to-new-heights-with-immersive-experience-at-sphere">Lenovo release</a>); Warner Music Group / Kyncl (<a href="https://www.ces.tech/press-releases/warner-music-group-ceo-robert-kyncl-to-cover-the-future-of-music-at-ces-2027">Kyncl release</a>).</li>
+<li>Registration, who can attend, pass prices and refund policy: <a href="https://www.ces.tech/attendee-guides/registration-information/">https://www.ces.tech/attendee-guides/registration-information/</a></li>
+<li>LVCC Campus halls and themes: <a href="https://www.ces.tech/explore-ces/maps-and-locations/lvcc-campus/">https://www.ces.tech/explore-ces/maps-and-locations/lvcc-campus/</a></li>
+<li>Venetian Campus themes (smarter living, digital health, Eureka Park): <a href="https://www.ces.tech/explore-ces/maps-and-locations/venetian-campus/">https://www.ces.tech/explore-ces/maps-and-locations/venetian-campus/</a></li>
+<li>CES Foundry (6–8 Jan 2027, Fontainebleau Las Vegas; AI and quantum): <a href="https://www.ces.tech/explore-ces/ces-foundry/">https://www.ces.tech/explore-ces/ces-foundry/</a></li>
+<li>CES show floor tours, including The Next Wave of Physical AI (LVCC North Hall and Venetian; 1.5 hours; calendar start times not listed on that page): <a href="https://www.ces.tech/explore-ces/show-floor-tours/">https://www.ces.tech/explore-ces/show-floor-tours/</a></li>
+<li>CES Robotics topic page: <a href="https://www.ces.tech/topics/robotics/">https://www.ces.tech/topics/robotics/</a></li>
+<li>CES 2027 conference program (track list; calendar day is taken from official schedule pages or CTA releases when those name a day): <a href="https://www.ces.tech/attend/conference-program/">https://www.ces.tech/attend/conference-program/</a></li>
+<li>CTA press release, 2 Nov 2026, “Largest Mobility Footprint Ever at CES 2027” (Vehicle Tech and Advanced Mobility track on Thursday 7 Jan; Resilient Communities track on Friday 8 Jan): <a href="https://www.ces.tech/press-releases/largest-mobility-footprint-ever-at-ces-2027">https://www.ces.tech/press-releases/largest-mobility-footprint-ever-at-ces-2027</a></li>
+<li>Exhibit hours (transportation flyer, as of 29 Sep 2026, locations subject to change): <a href="https://www.ces.tech/media/02tnll0c/final-ces-2027-transportation-flyer-10-5.pdf">https://www.ces.tech/media/02tnll0c/final-ces-2027-transportation-flyer-10-5.pdf</a>; also the Media Days shuttle flyer: <a href="https://www.ces.tech/media/kyeokwbt/cesmediadaysshuttleflyer_2027.pdf">https://www.ces.tech/media/kyeokwbt/cesmediadaysshuttleflyer_2027.pdf</a></li>
+<li>Official CES 2027 exhibitor directory (listings change): <a href="https://exhibitors.ces.tech/">https://exhibitors.ces.tech/</a>; listing PDF as of 21 Nov 2026: <a href="https://exhibitors.ces.tech/8_0/exhibitor/exhibitor-list.cfm?export=pdf">https://exhibitors.ces.tech/8_0/exhibitor/exhibitor-list.cfm?export=pdf</a></li>
+<li>Official CES Schedule: <a href="https://www.ces.tech/schedule/the-self-driving-kitchen-how-ai-and-robotics-will-change-the-home-kitchen/">The Self-Driving Kitchen</a>; <a href="https://www.ces.tech/schedule/physical-ai-in-food-the-rise-of-the-robotic-food-chain/">Physical AI in Food</a>; <a href="https://www.ces.tech/schedule/physical-ai-moves-into-the-real-world/">Physical AI Moves Into the Real World</a>; <a href="https://www.ces.tech/schedule/reality-rewired-where-digital-intelligence-meets-the-physical-world-presented-by-ucf/">Reality, Rewired (UCF)</a>; <a href="https://www.ces.tech/schedule/physical-ai-in-action-scaling-intelligent-robotics/">Physical AI in Action</a>; <a href="https://www.ces.tech/schedule/the-autonomous-frontline-how-agentic-ai-will-redefine-work-presented-by-zebra-technologies/">The Autonomous Frontline (Zebra)</a>; <a href="https://www.ces.tech/schedule/humans-at-the-center-orchestrating-the-autonomous-factory/">Humans at the Center: Orchestrating the Autonomous Factory</a>; <a href="https://www.ces.tech/schedule/the-new-farm-workforce-robots-autonomy-and-the-labor-crunch/">The New Farm Workforce</a>; <a href="https://www.ces.tech/schedule/humanoids-enter-the-workforce/">Humanoids Enter the Workforce (6 Jan Robotics track example)</a>.</li><li>Schaeffler’s own CES 2027 page (booth 6240, West Hall; 6–9 Jan agenda, including the 7 Jan 10:30 AM Physical AI / humanoid panel and the 8 Jan 1:30 PM Humanoid Robotics presentation): <a href="https://www.schaeffler.us/us/news_media/dates-events/ces/">https://www.schaeffler.us/us/news_media/dates-events/ces/</a></li><li>HERE Technologies CES 2027 page (booth 3526, West Hall; Foundry panel Friday 8 Jan, 11:00 AM, Fontainebleau): <a href="https://www.here.com/learn/events/ces-2027">https://www.here.com/learn/events/ces-2027</a></li>
+</ul>
+</section>
+
+<nav class="legnav" aria-label="Page navigation"><a href="/zfrontier/">← zFrontier hub</a><span><span class="nav-missing">No previous page in this set</span> · <a href="/zfrontier/ces-2027/03-jan/">Next: 3 Jan 2027 →</a></span></nav>
+
+<section id="comments" aria-labelledby="comments-h">
+<h2 id="comments-h">Comments</h2>
+<p>This site does not use a live comment form on the page. The standing pattern, also used on other public pages, is the header control “Have an idea? Suggest on GitHub”, which opens a GitHub issue for the current page. Published notes that Aung asks to add are listed below.</p>
+<div class="comment-notes">
+<p class="muted"><strong>Published notes.</strong> None yet.</p>
+</div>
+</section>
+
+
+
+<!--vh-->
+<section aria-label="Versions" id="versions">
+<h2>Versions</h2>
+<p>Each entry is a published version of this page.</p>
+<ul>
+<li><b>v2 (current)</b> · 22 Nov 2026, 7:56 AM AEDT (Melbourne time) · Added 7 and 8 January date pages and topic subpages, with Robotics &amp; Physical AI highlights from official CES Schedule pages. Saved the previous hub as history/v1/. 9 January still has no page in this set. · <a href="./">this page</a></li><li><b>v1</b> · 21 Nov 2026, 8:14 PM AEDT (Melbourne time) · First publication: CES 2027 hub under zFrontier, with official dates, Media Days, 3–6 January pages and 16 topic subpages · <a href="/zfrontier/ces-2027/history/v1/">history/v1/</a></li>
+</ul>
+</section>
+<!--/vh--></main>
+<footer class="wrap">
+<p class="meta">Page: <strong>CES 2027</strong> · Version: <strong>v2 · 22 Nov 2026, 7:56 AM AEDT</strong></p>
+<p class="meta">Parent: <a href="/zfrontier/">/zfrontier/</a>. Figures and times are from official CES/CTA sources retrieved 21–22 Nov 2026, or are marked “not collected” or to be confirmed. No credentials are included.</p>
+</footer>
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:8px 0 10px;gap:8px;font:600 12.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:6px;margin:0;padding:8px;border-left:3px solid var(--menu-on,#2563eb);background:var(--menu-sub,rgba(37,99,235,.08));border-radius:8px}
+nav.site.im a.mi{display:flex;align-items:center;gap:6px;box-sizing:border-box;width:100%;height:auto;min-height:44px;min-width:0;padding:8px 10px;border-radius:18px;border:1px solid var(--menu-pill-bd,#3a4456);background:var(--menu-pill,#1b2330);color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:var(--menu-hover,#26344a)}
+nav.site.im a.mi.on{background:var(--menu-on,#2563eb);border-color:var(--menu-on,#2563eb);color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:visible;text-overflow:unset;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.25;text-align:left}
+nav.site.im a.mi.sm{font-size:12px}nav.site.im a.mi.sm.on{background:#1d4ed8}
+nav.site.im a.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:16px;height:16px;padding:0 5px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;background:#93c5fd;color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:22px;height:22px;padding:0 5px;border-radius:999px;font-size:16px;font-weight:800;line-height:1;background:#0f172a;color:#fff}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc;color:#0f172a}
+nav.site.im a.mi.on .im-seq{background:#fff;color:#1d4ed8}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:36px;flex:none}#sg-link,#tt-btn,#mm-link{height:36px;border-radius:18px}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Cursor_Tenant6","/ARR/provisioning/cursor-tenant6/","🚀"],["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"],["ရှေ့သို့ချီ","/roadmap/forward/","⏩"],["Time Map 2026–2030","/roadmap/forward/time-map/","🗓️"],["BridgeWhy","/roadmap/bridgewhy/","📚"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["ARR-LargeTopology","/ARR-LargeTopology/","🗺️",[["Overview","/ARR-LargeTopology/","🗺️"],["Nodes","/ARR-LargeTopology/nodes.html","🖥️"],["Serials","/ARR-LargeTopology/serials.html","🔢"],["Mgmt IPs","/ARR-LargeTopology/mgmt-ips.html","🌐"],["Links","/ARR-LargeTopology/links.html","🔗"],["Tenants","/ARR-LargeTopology/tenants.html","🏢"],["VRFs","/ARR-LargeTopology/vrfs.html","🧭"],["BDs","/ARR-LargeTopology/bds.html","🌉"],["Subnets","/ARR-LargeTopology/subnets.html","🔢"],["EPGs","/ARR-LargeTopology/epgs.html","🎯"],["Leaf VNIs","/ARR-LargeTopology/vni.html","💠"],["VXLAN","/ARR-LargeTopology/vxlan/","🧵"],["VNI compare","/ARR-LargeTopology/vni-compare/","🔷"],["Access policies","/ARR-LargeTopology/access-policies/","🧱"],["BD GIPo & FTAG","/ARR-LargeTopology/bd-gipo-ftag/","📡"],["IAC files","/ARR-LargeTopology/iac-files/","📦"],["ARR-netbox","/ARR-LargeTopology/arr-netbox/","🗄️"],["Hardware monitor","/ARR-LargeTopology/hw-monitor/","📟"],["Site map","/ARR-LargeTopology/site-map/","🌳"],["Provisioning","/ARR-LargeTopology/provisioning/","🚀"],["Test explain","/ARR-LargeTopology/test-explain/","🧪"],["GitLab","/ARR-LargeTopology/gitlab/","🦊"],["GitLab Runner","/ARR-LargeTopology/gitlab-runner/","🏃"]]],["Terragrunt","/terragrunt/","🧰",[["Terragrunt","/terragrunt/","🧰"]]],["zFrontier","/zfrontier/","🌠",[["zFrontier","/zfrontier/","🌠"],["Farzad","/zfrontier/farzad/","📺"],["SpaceX vs Tesla shares","/zfrontier/shares/","📈"],["Optimus","/zfrontier/optimus/","🤖"],["Gigafactory","/zfrontier/gigafactory/","🏭"],["FSD versions","/zfrontier/fsd-versions/","🛣️"],["Liquid cooling","/zfrontier/liquid-cooling/","💧"],["SpaceX Tracking","/zfrontier/spacex/","🚀"],["CyberCab","/zfrontier/cybercab/","🚕"],["AI FineTune Pod","/zfrontier/ai-finetune-pod/","🎛️"],["MCP Servers","/zfrontier/mcp-servers/","🔌"],["NaC CLI","/zfrontier/nac-cli/","🧰"],["GPU Workflow","/zfrontier/3gpu-ai-workflow/","🧮"],["MWMESH","/zfrontier/mwmesh/","📡"],["Notebooks","/zfrontier/notebooks/","📓"],["RAG documents","/zfrontier/rag-documents/","📚"],["Foundation-Sec-8B","/zfrontier/foundation-sec-8b/","🛡️"],["Terafab","/zfrontier/terafab/","💠"],["3DiffsVXLAN","/zfrontier/3diffsvxlan/","🔀"],["ARR-LargePod","/zfrontier/arr-largepod/","🏗️"],["Nvidia A100 & H100","/zfrontier/Nvidia-A100-H100/","🟩"],["AgenticAI","/zfrontier/agenticai/","🧠"],["MS-02 GPU Monitoring","/zfrontier/MS-02-GPU-Monitoring/","📟"],["MBPro","/zfrontier/MBPro/","💻"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"]]],["ACI GUI Forms","/ACI-GUI-Forms/","📝",[["ACI GUI Forms","/ACI-GUI-Forms/","📝"],["GUI Map","/aci-gui-forms/WIP/gui-map/","🗺️"],["APG Access Policy Group","/ACI-GUI-Forms/apg/","🧩"],["Spine Access Policy Group","/ACI-GUI-Forms/spine-apg/","🛰️"]]],["ACI GUI","/aci-gui/","🖥️",[["Create Pod Policy Group","/aci-gui/create-pod-policy-group/","🧬"],["Create Bridge Domain (step 3)","/aci-gui/create-bridge-domain-step3/","🌉"],["Create Subnet","/aci-gui/create-subnet/","🔢"],["Create Application Profile","/aci-gui/create-application-profile/","🧩"],["Create Management EPG","/aci-gui/create-management-epg/","🛠️"],["Static Node Management Addresses","/aci-gui/static-node-management-addresses/","📍"],["Create Fabric Policies","/aci-gui/create-fabric-policies/","🧵"],["Create Access Policies","/aci-gui/create-access-policies/","🔐"],["Create VLAN Pool","/aci-gui/create-vlan-pool/","🏷️"],["Create Physical Domain","/aci-gui/create-physical-domain/","🏛️"],["Create Access Interface Policy Group","/aci-gui/create-access-interface-policy-group/","🔌"],["Create PC Interface Policy Group","/aci-gui/create-pc-interface-policy-group/","🔀"],["Note on Interface Policies","/aci-gui/interface-policies/","📘"],["Interface Wizard for vPC","/aci-gui/interface-wizard-vpc/","🪄"],["Create VMM Domain","/aci-gui/create-vmm-domain/","💻"],["vCenter Networking","/aci-gui/vcenter-networking/","🖥️"],["Create Tenant","/aci-gui/create-tenant/","🏢"],["Create L3Out","/aci-gui/create-l3out/","🌐"],["L3Out Contracts","/aci-gui/l3out-contracts/","📜"],["Create Bridge Domain","/aci-gui/create-bridge-domain/","🌉"],["Bridge Domain","/aci-gui/bridge-domain/","🌉"],["Mgmt Bridge Domain","/aci-gui/mgmt-bridge-domain/","🔧"],["DHCP Relay","/aci-gui/dhcp-relay/","📡"],["Management Application Profile","/aci-gui/management-application-profile/","📦"],["Application Profile (web + app)","/aci-gui/application-profile/","🧩"],["Create VRF","/aci-gui/create-vrf/","🧭"],["Create Endpoint Group","/aci-gui/create-endpoint-group/","🎯"],["Contracts Between Tenants","/aci-gui/contracts-between-tenants/","🤝"],["Create Filter","/aci-gui/create-filter/","🧹"],["Create Contract","/aci-gui/create-contract/","📃"],["Create Management Contracts","/aci-gui/create-management-contracts/","📑"],["Mgmt PortGroup to VM","/aci-gui/mgmt-portgroup-to-vm/","🧷"],["Pod Policy Group","/aci-gui/pod-policy-group/","🕒"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq){var a=document.createElement('a');a.className=cls+(on?' on':'');a.href=e[1];a.title=(seq?String(seq)+'. ':'')+e[0];if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}return a}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){var r2=document.createElement('div');r2.className='im-sub';var t=document.createElement('a');t.className='sl';t.href=G[gi][1];t.textContent=G[gi][0]+' tasks ›';r2.appendChild(t);
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1))});r2.appendChild(pills);n.appendChild(r2)}}});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+</body>
+</html>
