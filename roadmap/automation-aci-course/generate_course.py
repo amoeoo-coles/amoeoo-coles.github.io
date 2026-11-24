@@ -43,6 +43,20 @@ def theme_toggle() -> str:
     return (WORK / "theme-toggle.html").read_text()
 
 
+def uv_chip() -> str:
+    return (WORK / "partials" / "uv-chip.html").read_text()
+
+
+def visitor_record_scripts() -> str:
+    """Existing site visitor recording + badge fetch. No new third-party services."""
+    parts = [
+        (WORK / "partials" / "goatcounter.html").read_text(),
+        (WORK / "partials" / "isp-asn.html").read_text(),
+        (WORK / "partials" / "uv-badge.html").read_text(),
+    ]
+    return "\n".join(parts)
+
+
 def page_css() -> str:
     base = (WORK / "base-page.css").read_text()
     extra = r"""
@@ -778,6 +792,7 @@ def chrome_open(title: str, description: str, h1: str, lede: str, menu: list[tup
 {theme_toggle()}
 {course_nav(current_path, "top")}
 <main class="wrap">
+{uv_chip()}
 <p class="kicker">Automation ACI Course</p>
 <h1>{esc(h1)}</h1>
 <p class="ver">{esc(VERSION)}</p>
@@ -794,6 +809,7 @@ def chrome_close(page_title: str, current_path: str) -> str:
 <p class="meta">This course is a hidden study area and is not listed in the public site menu or the public RoadMap page. Folder links end with <code>/</code>. Credentials in playbooks are placeholders. No playbook on these pages is meant to be run against a production APIC. Use the left and right arrow keys to move to the previous or next page.</p>
 </footer>
 {page_script()}
+{visitor_record_scripts()}
 </body>
 </html>
 """
@@ -1065,15 +1081,19 @@ def write_hub() -> None:
             f"<ul>\n{kids}\n</ul></li>"
         )
     blocks.append("</ul>")
+    n_sec = len(COURSE["sections"])
+    n_les = sum(len(s["lessons"]) for s in COURSE["sections"])
+    n_quiz = sum(1 for s in COURSE["sections"] if s.get("quiz"))
     lede = (
-        "A hidden study course on Cisco ACI automation. There are 10 sections, 75 lessons and 9 quizzes. "
+        f"A hidden study course on Cisco ACI automation. There are {n_sec} sections, {n_les} lessons and {n_quiz} quizzes. "
         "Each lesson has expandable study notes and an Ansible playbook that uses the cisco.aci collection. "
         "This area is not listed on the public RoadMap page or in the site menu. "
-        "Use the navigation bar or the Outline control to move between pages."
+        "Use the navigation bar or the Outline control to move between pages. "
+        'A hidden course visitor tracking view is at <a href="/roadmap/automation-aci-course/visitors/">visitors/</a>.'
     )
     body = chrome_open(
         "Automation ACI Course",
-        "Hidden Automation ACI Course: 10 sections, 75 lessons and Ansible examples.",
+        f"Hidden Automation ACI Course: {n_sec} sections, {n_les} lessons and Ansible examples.",
         "Automation ACI Course",
         lede,
         [],
@@ -1154,16 +1174,13 @@ def history_page() -> str:
 {theme_toggle()}
 {nav}
 <main class="wrap">
+{uv_chip()}
 <p class="kicker">Automation ACI Course</p>
 <h1>Automation ACI Course · page history</h1>
 <p class="ver">{esc(VERSION)}</p>
 <p class="lede">Version history for the course hub. The current hub is <strong>{esc(VERSION)}</strong>.</p>
 <h2 id="versions">Versions</h2>
-<ul>
-<li><a href="/roadmap/automation-aci-course/history/v3/">{esc(VERSION)}</a> — real multiple-choice quizzes for sections 1–9, with Check, score and Reset.</li>
-<li><a href="/roadmap/automation-aci-course/history/v2/">v2 · 24 Nov 2026, 3:55 PM AEDT</a> — navigation bar, nested course lists, and tighter code-box spacing.</li>
-<li><a href="/roadmap/automation-aci-course/history/v1/">v1 · 24 Nov 2026, 2:00 PM AEDT</a> — first publication of the hidden course.</li>
-</ul>
+{history_list()}
 </main>
 <footer class="wrap">
 <p class="meta">Page: <strong>Automation ACI Course · page history</strong> · Version: <strong>{esc(VERSION)}</strong></p>
@@ -1171,9 +1188,243 @@ def history_page() -> str:
 <p class="meta">Parent: <a href="{HUB_PATH}">{HUB_PATH}</a>. This course is a hidden study area and is not listed in the public site menu or the public RoadMap page.</p>
 </footer>
 {page_script()}
+{visitor_record_scripts()}
 </body>
 </html>
 """
+
+
+
+def history_list() -> str:
+    slug = VERSION.split("·", 1)[0].strip()
+    blurbs = {
+        "v5": "new Shared Services section (four lessons and a quiz), with visitor recording on the new pages.",
+        "v4": "visitor badge and GoatCounter recording on every course page, plus a hidden course visitor tracking view at visitors/. Per-visit time, country, ISP and visitor IPs remain not collected by the existing pipeline.",
+        "v3": "real multiple-choice quizzes for sections 1–9, with Check, score and Reset.",
+        "v2": "navigation bar, nested course lists, and tighter code-box spacing.",
+        "v1": "first publication of the hidden course.",
+    }
+    frozen = [
+        ("v5 · 25 Nov 2026, 1:10 AM AEDT", blurbs["v5"]),
+        ("v4 · 25 Nov 2026, 12:40 AM AEDT", blurbs["v4"]),
+        ("v3 · 24 Nov 2026, 9:15 PM AEDT", blurbs["v3"]),
+        ("v2 · 24 Nov 2026, 3:55 PM AEDT", blurbs["v2"]),
+        ("v1 · 24 Nov 2026, 2:00 PM AEDT", blurbs["v1"]),
+    ]
+    rows = [(VERSION, blurbs.get(slug, "current published course pages."))]
+    for label, note in frozen:
+        if label.split("·", 1)[0].strip() == slug:
+            continue
+        # Do not link a future version that has not been generated yet.
+        future = {"v5": 5, "v4": 4, "v3": 3, "v2": 2, "v1": 1}
+        cur = future.get(slug, 0)
+        other = future.get(label.split("·", 1)[0].strip(), 0)
+        if other > cur:
+            continue
+        rows.append((label, note))
+    lis = []
+    for label, note in rows:
+        href = "/roadmap/automation-aci-course/history/" + label.split("·", 1)[0].strip() + "/"
+        lis.append(f'<li><a href="{href}">{esc(label)}</a> — {esc(note)}</li>')
+    return "<ul>\n" + "\n".join(lis) + "\n</ul>\n"
+
+
+
+def write_visitors_stub() -> None:
+    """Placeholder until the hourly fetch_visitors workflow overwrites it."""
+    dest = DEST / "visitors"
+    dest.mkdir(parents=True, exist_ok=True)
+    data = {
+        "source": "GoatCounter aggregates via scripts/fetch_visitors.py (path prefix /roadmap/automation-aci-course only)",
+        "prefix": "/roadmap/automation-aci-course",
+        "updated_utc": "",
+        "as_of_aedt": "",
+        "timezone": "Australia/Melbourne",
+        "metric": "GoatCounter visitor count: each visitor counted once per page per day.",
+        "total": 0,
+        "days": [],
+        "pages": [],
+        "countries": [],
+        "countries_note": "Course-specific country totals are not collected until the visitor-stats workflow has a path-filtered locations result for this prefix. Site-wide country totals stay on /visitors/countries/ and are not shown here as course visits.",
+        "isps": [],
+        "isps_note": "Course-specific ISP totals are not collected. Existing ISP events are site-wide GoatCounter isp/* events and are not tagged with the course page path. Visitor IPs are never stored, so a masked-IP column cannot be filled.",
+        "per_visit_note": "Per-visit rows (time, page, country, ISP, masked IP) are not collected. The existing pipeline publishes aggregates only, and never stores visitor IPs. GoatCounter Individual pageviews is off, and even if it were enabled it would not include IP addresses.",
+        "note": "GoatCounter recording was added to these course pages in v4. There are no /roadmap/automation-aci-course visits in this snapshot yet, so counts start from now.",
+    }
+    (dest / "data.json").write_text(json.dumps(data, indent=1) + "\n", encoding="utf-8")
+
+
+def write_visitors_page() -> None:
+    write_visitors_stub()
+    dest = DEST / "visitors"
+    dest.mkdir(parents=True, exist_ok=True)
+    if (WORK / "sort.js").exists():
+        shutil.copy2(WORK / "sort.js", dest / "sort.js")
+    body = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+{HIDDEN}
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Automation ACI Course · visitor tracking</title>
+<meta name="description" content="Hidden visitor tracking view for the Automation ACI Course, using the site’s existing GoatCounter pipeline only.">
+{theme_boot()}
+<style>
+{page_css()}
+table {{ width:100%; border-collapse:collapse; }}
+th, td {{ text-align:left; vertical-align:top; padding:0.45rem 0.55rem; border-bottom:1px solid var(--line,#d5dee7); }}
+th {{ background:var(--th-bg,var(--card,#f1f5f9)); }}
+.na {{ color:var(--muted,#5b6b7c); }}
+.note, .lede {{ max-width:80ch; }}
+.callout {{ border-left:4px solid var(--accent,#0e7490); padding:0.7rem 0.9rem; margin:0.8rem 0 1.1rem; max-width:80ch; }}
+</style>
+</head>
+<body>
+{theme_toggle()}
+<main class="wrap">
+{uv_chip()}
+<p class="kicker">Automation ACI Course</p>
+<h1>Automation ACI Course · visitor tracking</h1>
+<p class="ver">{esc(VERSION)}</p>
+<p class="lede">This hidden view reuses the site’s existing visitor pipeline only: the visitor badge, GoatCounter page counts, and the already-deployed country/ISP event mechanism. It does not add a new geolocation or analytics service, and it never publishes visitor IP addresses.</p>
+<p class="callout">A per-visit table with time, page, country, ISP and a masked IP is <strong>not collected</strong>. GoatCounter and the published JSON files store aggregates only. Visitor IPs are sent only to the existing lookup (geojs.io, with ipwho.is as fallback) when the ISP event script runs, and are never stored here or sent to GoatCounter. Past visits cannot be backfilled.</p>
+<p class="note">The visitor-stats workflow runs about hourly (GitHub Actions at minute 7 and 37, best-effort) and writes <code>/data/visitors.json</code>. This page also reads <code>data.json</code> in this folder, when present, and <code>/visitors/detail.json</code> for hourly page totals. Figures below are unique visitors per page per Melbourne day (or hour, where noted).</p>
+<p class="note" id="as-of">Loading visitor data…</p>
+
+<h2 id="visits">Visit rows</h2>
+<p class="note">The columns requested for this view are time (AEDT), page, country, ISP and masked IP. The existing pipeline cannot fill country, ISP or IP on a per-visit or per-page-hour row. When hourly course-page totals exist in <code>/visitors/detail.json</code>, they are listed as aggregates, with those fields marked not collected.</p>
+<table id="visit-rows">
+<thead><tr><th>Time (AEDT)</th><th>Page</th><th>Country</th><th>ISP</th><th>Masked IP</th><th>Visitors</th></tr></thead>
+<tbody></tbody>
+</table>
+
+<h2 id="pages">Totals by course page</h2>
+<table id="page-totals">
+<thead><tr><th>Page</th><th>Title</th><th>Unique visitors</th></tr></thead>
+<tbody></tbody>
+</table>
+
+<h2 id="countries">Totals by country</h2>
+<p class="note" id="countries-note"></p>
+<table id="country-totals">
+<thead><tr><th>Country</th><th>Unique visitors</th></tr></thead>
+<tbody></tbody>
+</table>
+
+<h2 id="isps">Totals by ISP</h2>
+<p class="note" id="isps-note"></p>
+<table id="isp-totals">
+<thead><tr><th>ISP</th><th>ASN</th><th>Country</th><th>Unique visitors</th></tr></thead>
+<tbody></tbody>
+</table>
+
+<h2 id="not-collected">Not collected</h2>
+<ul>
+<li>Per-visit timestamps (only daily or hourly aggregates are published).</li>
+<li>Country or ISP for a specific course page visit.</li>
+<li>Visitor IP addresses, including masked IPs — they are never stored in this pipeline.</li>
+<li>Course-specific ISP totals (ISP events are site-wide and are not tagged with a course path).</li>
+<li>Course-specific country totals, unless the visitor-stats workflow receives a path-filtered locations result for this prefix.</li>
+</ul>
+
+<section id="versions">
+<h2>Versions</h2>
+<p>This is <strong>{esc(VERSION)}</strong>. Course history is under <a href="/roadmap/automation-aci-course/history/">history/</a>.</p>
+</section>
+</main>
+<footer class="wrap">
+<p class="meta">Page: <strong>Automation ACI Course · visitor tracking</strong> · Version: <strong>{esc(VERSION)}</strong></p>
+<p class="meta">This page is hidden and is not listed in the public site menu or the public RoadMap. It only uses already-published visitor JSON from the existing GoatCounter pipeline. Folder links end with <code>/</code>. No credentials, tokens or raw visitor IPs are included. Course hub: <a href="{HUB_PATH}">{HUB_PATH}</a>.</p>
+</footer>
+<script src="/roadmap/automation-aci-course/visitors/sort.js"></script>
+<script>
+(function(){{
+  var PREFIX = "/roadmap/automation-aci-course";
+  var NA = '<span class="na">not collected</span>';
+  function norm(s){{
+    return String(s||"").split("?")[0].replace(/\\/index\\.html$/i,"").replace(/\\/+$/,"")||"/";
+  }}
+  function isCourse(p){{
+    var n = norm(p);
+    return n === PREFIX || n.indexOf(PREFIX + "/") === 0;
+  }}
+  function esc(s){{
+    return String(s==null?"":s).replace(/[&<>"]/g, function(c){{return {{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}}[c];}});
+  }}
+  function row(cells){{
+    return "<tr>" + cells.map(function(c){{return "<td>"+c+"</td>";}}).join("") + "</tr>";
+  }}
+  function fill(id, html){{
+    var tb = document.querySelector("#"+id+" tbody");
+    if (tb) tb.innerHTML = html || row([NA]);
+  }}
+  function load(url){{
+    return fetch(url + (url.indexOf("?")>=0?"&":"?") + Date.now(), {{cache:"no-store"}}).then(function(r){{
+      return r.ok ? r.json() : null;
+    }}).catch(function(){{return null;}});
+  }}
+  Promise.all([
+    load("./data.json"),
+    load("/data/visitors.json"),
+    load("/visitors/detail.json")
+  ]).then(function(res){{
+    var local = res[0] || {{}};
+    var site = res[1] || {{}};
+    var detail = res[2] || {{}};
+    var asOf = local.as_of_aedt || site.as_of_aedt || "";
+    var el = document.getElementById("as-of");
+    if (el) el.textContent = asOf ? ("Data as of " + asOf + " (Melbourne time).") : "A dated visitor snapshot is not collected yet.";
+
+    var pages = (local.pages && local.pages.length) ? local.pages : (site.pages||[]).filter(function(p){{return isCourse(p.path);}});
+    pages = pages.slice().sort(function(a,b){{return (b.count||0)-(a.count||0) || String(a.path).localeCompare(String(b.path));}});
+    fill("page-totals", pages.length ? pages.map(function(p){{
+      return row([esc(p.path||""), esc(p.title||""), String(p.count||0)]);
+    }}).join("") : row([NA, "No course-path visits are in the published snapshot yet.", NA]));
+
+    var cnote = document.getElementById("countries-note");
+    var countries = local.countries || [];
+    if (cnote) cnote.innerHTML = local.countries_note || (countries.length ? "Path-filtered country totals for this course prefix." : "Course-specific country totals are not collected.");
+    fill("country-totals", countries.length ? countries.map(function(c){{
+      return row([esc(c.name||c.id||""), String(c.count||0)]);
+    }}).join("") : row([NA, NA]));
+
+    var inote = document.getElementById("isps-note");
+    var isps = local.isps || [];
+    if (inote) inote.innerHTML = local.isps_note || "Course-specific ISP totals are not collected.";
+    fill("isp-totals", isps.length ? isps.map(function(r){{
+      return row([esc(r.holder||r.event_title||""), esc(r.asn||""), esc(r.country_name||r.country||""), String(r.visits||r.count||0)]);
+    }}).join("") : row([NA, NA, NA, NA]));
+
+    var hours = (detail.hour_pages && typeof detail.hour_pages === "object") ? detail.hour_pages : {{}};
+    var visits = [];
+    Object.keys(hours).forEach(function(key){{
+      var parts = String(key).split("|");
+      var day = parts[0], hour = parts[1];
+      var list = hours[key] || [];
+      list.forEach(function(item){{
+        var path = item.path || item.name || "";
+        if (!isCourse(path)) return;
+        visits.push({{
+          time: day + " " + String(hour).padStart(2,"0") + ":00 AEDT",
+          path: path,
+          count: item.count || item.visitors || 0
+        }});
+      }});
+    }});
+    visits.sort(function(a,b){{return a.time<b.time?1:a.time>b.time?-1:0;}});
+    fill("visit-rows", visits.length ? visits.map(function(v){{
+      return row([esc(v.time), esc(v.path), NA, NA, NA, String(v.count)]);
+    }}).join("") : row([NA, NA, NA, NA, NA, "No hourly course-path aggregates are in the published snapshot yet."]));
+    if (window.ltopoSortInit) window.ltopoSortInit();
+  }});
+}})();
+</script>
+{visitor_record_scripts()}
+</body>
+</html>
+"""
+    (dest / "index.html").write_text(body, encoding="utf-8")
 
 
 def write_course_json() -> None:
@@ -1185,9 +1436,14 @@ def write_course_json() -> None:
         shutil.copy2(WORK / "quizzes.json", DEST / "quizzes.json")
     for fn in ("outline.py", "playbooks.py", "notes.py", "notes_gists.py"):
         shutil.copy2(WORK / fn, DEST / fn)
-    for fn in ("theme-boot.html", "theme-toggle.html", "base-page.css"):
+    for fn in ("theme-boot.html", "theme-toggle.html", "base-page.css", "sort.js"):
         if (WORK / fn).exists():
             shutil.copy2(WORK / fn, DEST / fn)
+    if (WORK / "partials").is_dir():
+        (DEST / "partials").mkdir(exist_ok=True)
+        for src in (WORK / "partials").iterdir():
+            if src.is_file():
+                shutil.copy2(src, DEST / "partials" / src.name)
 
 
 def load_quizzes() -> dict:
@@ -1221,6 +1477,7 @@ def main():
         if sec.get("quiz"):
             write_quiz(sec, sec["quiz"])
     write_hub()
+    write_visitors_page()
     write_course_json()
     print("Wrote course under", DEST)
     print("pages", len(COURSE["pages"]))

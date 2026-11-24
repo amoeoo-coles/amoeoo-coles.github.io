@@ -1363,6 +1363,7 @@ def main():
     print("countries", len(countries), "pages", len(out.get("pages", [])), "has_total", bool(out.get("total")), "as_of", out["as_of_aedt"])
     write_daily(total, total_src, now_utc, now_mel)
     write_arr_visitors(out.get("pages") or [], now_utc, now_mel, out.get("countries") or [])
+    write_aci_course_visitors(out.get("pages") or [], now_utc, now_mel, out.get("countries") or [])
 
 
 def _norm_arr_path(p):
@@ -1494,6 +1495,104 @@ def write_arr_visitors(pages, now_utc, now_mel, site_countries=None):
         json.dump(versions, f, indent=1)
         f.write("\n")
     print("ARR/visitors total", total, "pages", len(arr_pages), "days", len(days), "countries", len(countries))
+
+
+COURSE_PREFIX = "/roadmap/automation-aci-course"
+
+
+def _norm_course_path(p):
+    p = str(p or "").split("?")[0].replace("/index.html", "").rstrip("/")
+    return p or "/"
+
+
+def is_aci_course_path(p):
+    n = _norm_course_path(p)
+    return n == COURSE_PREFIX or n.startswith(COURSE_PREFIX + "/")
+
+
+def write_aci_course_visitors(pages, now_utc, now_mel, site_countries=None):
+    """Write aggregate course visitor counts. Never stores raw hits or IP addresses."""
+    out_dir = "roadmap/automation-aci-course/visitors"
+    os.makedirs(out_dir, exist_ok=True)
+    course_pages = []
+    day_totals = {}
+    total = 0
+    for p in pages or []:
+        if not is_aci_course_path(p.get("path")):
+            continue
+        rec = {
+            "path": _norm_course_path(p.get("path")),
+            "title": p.get("title") or "",
+            "count": int(p.get("count") or 0),
+            "days": p.get("days") or {},
+        }
+        course_pages.append(rec)
+        total += rec["count"]
+        for day, n in (rec["days"] or {}).items():
+            day_totals[day] = day_totals.get(day, 0) + int(n or 0)
+    course_pages.sort(key=lambda x: (-x["count"], x["path"]))
+    days = [{"day": d, "visitors": day_totals[d]} for d in sorted(day_totals)]
+
+    countries, countries_note = [], (
+        "Course-specific country totals are not collected until GoatCounter returns a "
+        "path-filtered locations list for this prefix. Site-wide country totals stay on "
+        "/visitors/countries/ and are not shown here as course visits."
+    )
+    try:
+        end = (now_utc + dt.timedelta(hours=1)).strftime("%Y-%m-%dT%H:00:00Z")
+        filtered = get("/stats/locations", limit=100, filter=COURSE_PREFIX, start="2026-11-07T00:00:00Z", end=end).get("stats", [])
+        rows = [{"id": c.get("id"), "name": c.get("name"), "count": int(c.get("count") or 0)} for c in filtered if int(c.get("count") or 0)]
+        site_ids = {c.get("id") for c in (site_countries or [])}
+        site_total = sum(int(c.get("count") or 0) for c in (site_countries or []))
+        filt_total = sum(r["count"] for r in rows)
+        if rows and not (site_total and filt_total == site_total and {r["id"] for r in rows} == site_ids):
+            countries = rows
+            countries_note = "Path-filtered country totals for the /roadmap/automation-aci-course prefix."
+        elif rows:
+            countries_note = (
+                "GoatCounter did not return a path-filtered country list for this course prefix; "
+                "site-wide country totals stay on /visitors/countries/ and are not copied here."
+            )
+    except Exception:
+        countries_note = "Course-specific country totals are not available from this refresh."
+
+    note = ""
+    if total == 0:
+        note = (
+            "GoatCounter recording was added to these course pages in v4 (25 Nov 2026). "
+            "There are no /roadmap/automation-aci-course visits in this snapshot yet, so counts start from now."
+        )
+
+    data = {
+        "source": "GoatCounter aggregates via scripts/fetch_visitors.py (path prefix /roadmap/automation-aci-course only)",
+        "prefix": COURSE_PREFIX,
+        "updated_utc": now_utc.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "as_of_aedt": now_mel.strftime("%Y-%m-%d %H:%M %Z"),
+        "timezone": "Australia/Melbourne",
+        "metric": METRIC,
+        "total": total,
+        "days": days,
+        "pages": course_pages,
+        "countries": countries,
+        "countries_note": countries_note,
+        "isps": [],
+        "isps_note": (
+            "Course-specific ISP totals are not collected. Existing ISP events are site-wide "
+            "GoatCounter isp/* events and are not tagged with the course page path. "
+            "Visitor IPs are never stored, so a masked-IP column cannot be filled."
+        ),
+        "per_visit_note": (
+            "Per-visit rows (time, page, country, ISP, masked IP) are not collected. "
+            "The existing pipeline publishes aggregates only and never stores visitor IPs."
+        ),
+        "note": note,
+    }
+    data_path = os.path.join(out_dir, "data.json")
+    with open(data_path, "w") as f:
+        json.dump(data, f, indent=1)
+        f.write("\n")
+    print("ACI course visitors total", total, "pages", len(course_pages), "days", len(days), "countries", len(countries))
+
 
 
 if __name__ == "__main__":
