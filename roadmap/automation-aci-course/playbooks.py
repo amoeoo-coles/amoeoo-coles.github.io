@@ -1,4 +1,4 @@
-"""Playbook text for all 75 lessons. Module and parameter names checked against cisco.aci 3.0.0 ansible-doc."""
+"""Playbook text for all 79 lessons. Module and parameter names checked against cisco.aci 3.0.0 ansible-doc."""
 from __future__ import annotations
 
 LOGIN_COMMENT = (
@@ -928,7 +928,109 @@ def build_all():
             "method: get",
         ]))
 
-    missing = [i for i in range(1, 76) if i not in P]
+    P[76] = lab("Lesson 76 — shared L3Out contract and external subnet scopes (lab only)", "lesson-76-shared-l3out.yml",
+        _task("Create a global-scope shared-services contract in tenant common", "aci_contract", [
+            "tenant: common",
+            "contract: Shared-L3Out-Ct",
+            "scope: global",
+            "state: present",
+        ])
+        + _task("Provide the contract on the shared external EPG", "aci_l3out_extepg_to_contract", [
+            "tenant: common",
+            "l3out: Shared-L3Out",
+            "extepg: Shared-ExtEPG",
+            "contract: Shared-L3Out-Ct",
+            "contract_type: provider",
+            "state: present",
+        ])
+        + _task("Mark the external prefix for classification and inter-tenant sharing", "aci_l3out_extsubnet", [
+            "tenant: common",
+            "l3out: Shared-L3Out",
+            "extepg: Shared-ExtEPG",
+            "network: 10.100.0.0/16",
+            "scope:",
+            "  - import-security",
+            "  - shared-rtctrl",
+            "  - shared-security",
+            "state: present",
+        ])
+        + _task("Export the contract into a consumer tenant as a contract interface", "aci_contract_export", [
+            "tenant: common",
+            "destination_tenant: Example-Consumer",
+            "contract: Shared-L3Out-Ct",
+            "name: Shared-L3Out-Ct-If",
+            "state: present",
+        ]))
+
+    P[77] = lab("Lesson 77 — shared VRF provider subnet, contract export and consume (lab only)", "lesson-77-shared-vrf.yml",
+        _task("Place the provider subnet under the EPG with public and shared scope", "aci_epg_subnet", [
+            "tenant: Example-Provider",
+            "ap: Prov-AP",
+            "epg: Prov-EPG",
+            "gateway: 10.1.1.1",
+            "mask: 24",
+            "scope:",
+            "  - public",
+            "  - shared",
+            "state: present",
+        ])
+        + _task("Create a global-scope shared-services contract in the provider tenant", "aci_contract", [
+            "tenant: Example-Provider",
+            "contract: Shared-Ct",
+            "scope: global",
+            "state: present",
+        ])
+        + _task("Provide the contract on the provider EPG", "aci_epg_to_contract", [
+            "tenant: Example-Provider",
+            "ap: Prov-AP",
+            "epg: Prov-EPG",
+            "contract: Shared-Ct",
+            "contract_type: provider",
+            "state: present",
+        ])
+        + _task("Export the contract into the consumer tenant", "aci_contract_export", [
+            "tenant: Example-Provider",
+            "destination_tenant: Example-Consumer",
+            "contract: Shared-Ct",
+            "name: Shared-Ct-If",
+            "state: present",
+        ])
+        + _task("Consume the contract interface on the consumer EPG", "aci_epg_to_contract_interface", [
+            "tenant: Example-Consumer",
+            "ap: Cons-AP",
+            "epg: Cons-EPG",
+            "contract_interface: Shared-Ct-If",
+            "state: present",
+        ]))
+
+    P[78] = lab("Lesson 78 — bridge-domain and EPG subnet shared-between-VRFs flags (lab only)", "lesson-78-shared-bridge-domains.yml",
+        _task("Set Shared between VRFs on a BD subnet in tenant common (example)", "aci_bd_subnet", [
+            "tenant: common",
+            "bd: Shared-BD",
+            "gateway: 10.2.2.1",
+            "mask: 24",
+            "scope:",
+            "  - public",
+            "  - shared",
+            "state: present",
+        ])
+        + _task("For inter-VRF shared services, also place the provider subnet under the EPG", "aci_epg_subnet", [
+            "tenant: Example-Provider",
+            "ap: Prov-AP",
+            "epg: Prov-EPG",
+            "gateway: 10.2.2.1",
+            "mask: 24",
+            "scope:",
+            "  - public",
+            "  - shared",
+            "state: present",
+        ]))
+
+    P[79] = query("Lesson 79 — query L4-7 devices and service graph templates (read-only)", "lesson-79-shared-l4-7-services.yml",
+        _task("Query L4-7 device clusters", "aci_l4l7_device", ["state: query"])
+        + _task("Query L4-7 service graph templates", "aci_l4l7_service_graph_template", ["state: query"]))
+
+    missing = [i for i in range(1, 80) if i not in P]
     if missing:
         raise SystemExit(f"missing playbooks: {missing}")
     return P

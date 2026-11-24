@@ -1,0 +1,51 @@
+# Lesson 76 — shared L3Out contract and external subnet scopes (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 76 — shared L3Out contract and external subnet scopes (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Create a global-scope shared-services contract in tenant common
+      cisco.aci.aci_contract:
+        <<: *aci_login
+        tenant: common
+        contract: Shared-L3Out-Ct
+        scope: global
+        state: present
+    - name: Provide the contract on the shared external EPG
+      cisco.aci.aci_l3out_extepg_to_contract:
+        <<: *aci_login
+        tenant: common
+        l3out: Shared-L3Out
+        extepg: Shared-ExtEPG
+        contract: Shared-L3Out-Ct
+        contract_type: provider
+        state: present
+    - name: Mark the external prefix for classification and inter-tenant sharing
+      cisco.aci.aci_l3out_extsubnet:
+        <<: *aci_login
+        tenant: common
+        l3out: Shared-L3Out
+        extepg: Shared-ExtEPG
+        network: 10.100.0.0/16
+        scope:
+          - import-security
+          - shared-rtctrl
+          - shared-security
+        state: present
+    - name: Export the contract into a consumer tenant as a contract interface
+      cisco.aci.aci_contract_export:
+        <<: *aci_login
+        tenant: common
+        destination_tenant: Example-Consumer
+        contract: Shared-L3Out-Ct
+        name: Shared-L3Out-Ct-If
+        state: present

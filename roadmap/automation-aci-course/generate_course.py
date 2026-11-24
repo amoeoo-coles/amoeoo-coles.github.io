@@ -427,6 +427,9 @@ def build_course() -> dict:
         "path": HUB_PATH,
         "position": "Course hub",
     }]
+    n_sec = len(SECTIONS)
+    n_les = sum(len(s["lessons"]) for s in SECTIONS)
+    n_quiz = sum(1 for s in SECTIONS if s.get("quiz"))
     sections = []
     for sec in SECTIONS:
         sec_path = f"{HUB_PATH}{sec['slug']}/"
@@ -438,7 +441,7 @@ def build_course() -> dict:
             "title": f"[{sec['n']}] {sec['title']}",
             "section_title": sec["title"],
             "path": sec_path,
-            "position": f"Section {sec['n']} of 10",
+            "position": f"Section {sec['n']} of {n_sec}",
         })
         lessons = []
         for n, slug, title in sec["lessons"]:
@@ -464,7 +467,7 @@ def build_course() -> dict:
                 "title": f"({n:02d}) {title}",
                 "lesson_title": title,
                 "path": les_path,
-                "position": f"Lesson {n} of 75 · Section {sec['n']}",
+                "position": f"Lesson {n} of {n_les} · Section {sec['n']}",
             })
         quiz = None
         if sec["quiz"]:
@@ -485,7 +488,7 @@ def build_course() -> dict:
                 "section_n": sec["n"],
                 "title": f"ACI Core Quiz #{qn}",
                 "path": q_path,
-                "position": f"Quiz {qn} of 9 · Section {sec['n']}",
+                "position": f"Quiz {qn} of {n_quiz} · Section {sec['n']}",
             })
         sections.append({
             "n": sec["n"],
@@ -1205,7 +1208,7 @@ def history_list() -> str:
         "v1": "first publication of the hidden course.",
     }
     frozen = [
-        ("v5 · 25 Nov 2026, 1:10 AM AEDT", blurbs["v5"]),
+        ("v5 · 25 Nov 2026, 12:48 AM AEDT", blurbs["v5"]),
         ("v4 · 25 Nov 2026, 12:40 AM AEDT", blurbs["v4"]),
         ("v3 · 24 Nov 2026, 9:15 PM AEDT", blurbs["v3"]),
         ("v2 · 24 Nov 2026, 3:55 PM AEDT", blurbs["v2"]),

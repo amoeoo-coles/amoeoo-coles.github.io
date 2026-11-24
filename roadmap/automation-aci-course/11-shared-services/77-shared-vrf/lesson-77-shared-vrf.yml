@@ -1,0 +1,59 @@
+# Lesson 77 — shared VRF provider subnet, contract export and consume (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 77 — shared VRF provider subnet, contract export and consume (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Place the provider subnet under the EPG with public and shared scope
+      cisco.aci.aci_epg_subnet:
+        <<: *aci_login
+        tenant: Example-Provider
+        ap: Prov-AP
+        epg: Prov-EPG
+        gateway: 10.1.1.1
+        mask: 24
+        scope:
+          - public
+          - shared
+        state: present
+    - name: Create a global-scope shared-services contract in the provider tenant
+      cisco.aci.aci_contract:
+        <<: *aci_login
+        tenant: Example-Provider
+        contract: Shared-Ct
+        scope: global
+        state: present
+    - name: Provide the contract on the provider EPG
+      cisco.aci.aci_epg_to_contract:
+        <<: *aci_login
+        tenant: Example-Provider
+        ap: Prov-AP
+        epg: Prov-EPG
+        contract: Shared-Ct
+        contract_type: provider
+        state: present
+    - name: Export the contract into the consumer tenant
+      cisco.aci.aci_contract_export:
+        <<: *aci_login
+        tenant: Example-Provider
+        destination_tenant: Example-Consumer
+        contract: Shared-Ct
+        name: Shared-Ct-If
+        state: present
+    - name: Consume the contract interface on the consumer EPG
+      cisco.aci.aci_epg_to_contract_interface:
+        <<: *aci_login
+        tenant: Example-Consumer
+        ap: Cons-AP
+        epg: Cons-EPG
+        contract_interface: Shared-Ct-If
+        state: present

@@ -157,6 +157,18 @@ SECTIONS = [
         ],
         "quiz": None,
     },
+    {
+        "n": 11,
+        "slug": "11-shared-services",
+        "title": "Shared Services",
+        "lessons": [
+            (76, "76-shared-l3out", "Shared L3Out"),
+            (77, "77-shared-vrf", "Shared VRF"),
+            (78, "78-shared-bridge-domains", "Shared Bridge Domains"),
+            (79, "79-shared-l4-7-services", "Shared L4-7 Services"),
+        ],
+        "quiz": 10,
+    },
 ]
 
 

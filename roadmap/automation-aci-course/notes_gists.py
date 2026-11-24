@@ -48,6 +48,22 @@ COMMON_SOURCES = {
         "Ansible cisco.aci collection documentation",
         "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/index.html",
     ),
+    "shared_l3": (
+        "Cisco APIC Layer 3 Networking Configuration Guide, Release 6.0(x) — Shared Services",
+        "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l3-configuration/cisco-apic-layer-3-networking-configuration-guide-60x/shared-l3out-layer3-config-60x.html",
+    ),
+    "shared_fund": (
+        "Cisco ACI Fundamentals, Release 6.0(x) — Networking and Management Connectivity (shared services contracts)",
+        "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x/networking-and-mgmt-connectivity-60x.html",
+    ),
+    "inter_vrf": (
+        "Cisco — Inter-VRF Communication",
+        "https://www.cisco.com/c/en/us/support/docs/cloud-systems-management/application-policy-infrastructure-controller-apic/213462-inter-vrf-communication.html",
+    ),
+    "l4l7": (
+        "Cisco ACI Fundamentals, Release 6.0(x) — Layer 4 to Layer 7 Service Insertion",
+        "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x/l4l7-60x.pdf",
+    ),
     "ipg-note": (
         "Note on Interface Policies (this site)",
         "/aci-gui/interface-policies/",
@@ -1351,5 +1367,185 @@ GISTS[75] = {
         ("Common pitfalls", [[
             "Chasing every fault at the same severity without first checking whether it is expected in a lab (for example an unused feature).",
         ]]),
+    ],
+}
+
+GISTS[76] = {
+    "sources": ["shared_l3", "shared_fund", "l3", "ansible"],
+    "topics": [
+        ("Concept", [
+            "A shared Layer 3 Out (L3Out, class <code>l3extOut</code>) gives routed connectivity to an external network as a shared service across VRF instances or tenants. An external EPG (<code>l3extInstP</code>) on that L3Out controls which prefixes are shared from both a routing perspective and a contract perspective. A contract under the external EPG determines which VRF instances or tenants those routes should be leaked to.",
+            "Cisco documents that an L3Out can be provisioned as a shared service in any tenant (a user tenant, or <code>common</code>, <code>infra</code>, or <code>mgmt</code>). An EPG in any tenant can use a shared-services contract to connect to that external EPG, regardless of where the external EPG is provisioned. Sharing one external EPG is more efficient because it consumes only one session on the switch, no matter how many EPGs use it.",
+        ]),
+        ("Tenant common versus inter-tenant designs", [
+            "Two common designs appear in official material:",
+            [
+                "Place the shared L3Out and its contract in tenant <code>common</code>. Consumer tenants can use that contract without a separate export step, because objects in <code>common</code> are visible to other tenants.",
+                "Place the shared L3Out in a provider tenant (it does not have to be <code>common</code>). Export the shared-services contract from the tenant that contains the external EPG, and import it into each consumer tenant.",
+            ],
+            "Cisco’s Shared Services chapter states there is no tenant-type limitation: the provider and consumer can be any mix of user, <code>common</code>, <code>infra</code>, or <code>mgmt</code> tenants. Consumer EPGs may be in different bridge domains and different VRF instances and still share the same external EPG.",
+        ]),
+        ("Route leaking, contracts and subnet flags", [
+            "The shared-service contract is provided by the external EPG and consumed by the internal EPGs (or the other way around in some designs). For a contract that must be used across tenants, set the contract scope to <code>global</code> (Ansible <code>cisco.aci.aci_contract</code> uses <code>scope: global</code>; the APIC default is VRF/<code>context</code>).",
+            "On the external EPG subnet, the scope flags that matter for sharing are documented on <code>l3extSubnet</code> and in <code>cisco.aci.aci_l3out_extsubnet</code>:",
+            [
+                "<code>import-security</code> — classifies traffic into this external EPG so contracts apply.",
+                "<code>shared-rtctrl</code> — controls which external prefixes are advertised to other tenants for shared services.",
+                "<code>shared-security</code> — installs the classifier for those leaked prefixes in the VRF where the routes are leaked.",
+            ],
+            "On a BD or EPG subnet that should be leaked toward a shared L3Out, Cisco’s wording is: a subnet that is advertised into a consumer or provider EPG of an L3Out must be set to shared; a subnet that is exported to an L3Out must be set to public. In the GUI those flags are typically “Shared between VRFs” and “Advertised Externally”. Do not use taboo contracts with a shared L3Out; Cisco says that configuration is not supported.",
+        ]),
+        ("Object hierarchy", [
+            "Example distinguished names for a lab-style shared L3Out in tenant <code>common</code> (names are examples only):",
+            [
+                "<code>uni/tn-common</code> — tenant",
+                "<code>uni/tn-common/ctx-Shared-VRF</code> — VRF (<code>fvCtx</code>)",
+                "<code>uni/tn-common/out-Shared-L3Out</code> — L3Out (<code>l3extOut</code>)",
+                "<code>uni/tn-common/out-Shared-L3Out/instP-Shared-ExtEPG</code> — external EPG (<code>l3extInstP</code>)",
+                "<code>uni/tn-common/out-Shared-L3Out/instP-Shared-ExtEPG/extsubnet-[10.100.0.0/16]</code> — external subnet with shared-rtctrl / shared-security",
+                "<code>uni/tn-common/brc-Shared-L3Out-Ct</code> — contract (<code>vzBrCP</code>), typically scope global",
+            ],
+        ]),
+        ("APIC GUI path", [
+            "Tenant (common or the provider tenant) → Networking → L3Outs, then the external EPG and subnet scope checkboxes. Tenant → Contracts to create or export the contract. Exact menu labels can vary by APIC release and are not collected as screenshots here.",
+        ]),
+        ("Suggested CLI", [
+            ("pre", "moquery -c l3extOut\nmoquery -d uni/tn-common/out-Shared-L3Out"),
+        ]),
+        ("Common pitfalls", [[
+            "Forgetting <code>shared-rtctrl</code> and <code>shared-security</code> on the external prefix, so routes or classifiers are missing in the consumer VRF.",
+            "Using a contract whose scope is only VRF or tenant, then expecting another tenant to consume it.",
+            "Using a taboo contract with a shared L3Out (not supported).",
+            "Advertising the same external prefix from two shared L3Outs in the same VRF (Cisco requires those prefixes to be unique).",
+        ]]),
+    ],
+}
+
+GISTS[77] = {
+    "sources": ["shared_fund", "inter_vrf", "shared_l3", "security", "ansible"],
+    "topics": [
+        ("Concept", [
+            "Shared VRF communication in this course means inter-VRF (and often inter-tenant) connectivity inside the fabric, not a single VRF that every tenant is forced to use. Routes are leaked between VRF instances when a shared-services contract is in place and the provider subnets are marked so they can be advertised across VRFs.",
+            "Cisco’s fundamentals guide says contracts are required for shared-service inter-VRF traffic even when a VRF is unenforced. The VRF of a provider EPG cannot be in unenforced mode while providing a shared service.",
+        ]),
+        ("Tenant common versus inter-tenant designs", [
+            [
+                "Contract in tenant <code>common</code>: both VRFs (which may still live in different user tenants) provide or consume that common contract. The Cisco inter-VRF note says you can skip the export/import step when the contract lives in <code>common</code>.",
+                "Contract in the provider tenant: create the contract with global scope, provide it on the provider EPG, export it with a contract interface (<code>vzCPIf</code>) into the consumer tenant, then consume that contract interface on the consumer EPG.",
+            ],
+            "Ansible uses <code>cisco.aci.aci_contract_export</code> to create the contract interface in the destination tenant, and <code>cisco.aci.aci_epg_to_contract_interface</code> to consume it. The module documentation describes the exported contract as a contract with global scope.",
+        ]),
+        ("Route leaking and the “shared between VRFs” flags", [
+            "For shared services that export subnets into a different VRF, Cisco’s fundamentals guide requires the subnet to be configured under the EPG (not only under the bridge domain), with the scope set to Advertised Externally and Shared Between VRFs. In Ansible, <code>cisco.aci.aci_epg_subnet</code> (and <code>aci_bd_subnet</code>) use a list scope: <code>public</code> for advertised externally and <code>shared</code> for shared between VRFs. <code>private</code> and <code>public</code> are mutually exclusive; either may be combined with <code>shared</code>.",
+            "Subnets leaked between VRFs must be disjoint. Cisco also states that a shared service is supported only with non-overlapping, non-duplicate subnets.",
+        ]),
+        ("Object hierarchy", [
+            [
+                "<code>uni/tn-Example-Provider</code> — provider tenant",
+                "<code>uni/tn-Example-Provider/ctx-Prov-VRF</code> — provider VRF",
+                "<code>uni/tn-Example-Provider/ap-Prov-AP/epg-Prov-EPG</code> — provider EPG",
+                "<code>uni/tn-Example-Provider/ap-Prov-AP/epg-Prov-EPG/subnet-[10.1.1.1/24]</code> — provider EPG subnet with public + shared scope",
+                "<code>uni/tn-Example-Provider/brc-Shared-Ct</code> — contract, scope global",
+                "<code>uni/tn-Example-Consumer/cif-Shared-Ct-If</code> — contract interface imported into the consumer tenant",
+                "<code>uni/tn-Example-Consumer/ap-Cons-AP/epg-Cons-EPG</code> — consumer EPG that consumes the contract interface",
+            ],
+        ]),
+        ("APIC GUI path", [
+            "Provider tenant → Application Profiles → EPG → Subnets (Advertised Externally, Shared between VRFs). Provider tenant → Contracts, then Actions / Export Contract (labels vary). Consumer tenant → Application Profiles → EPG → Contracts / Consumed Contract Interface. Screenshots are not collected.",
+        ]),
+        ("Suggested CLI", [
+            ("pre", "moquery -c vzBrCP\nmoquery -c vzCPIf\nmoquery -c fvSubnet"),
+        ]),
+        ("Common pitfalls", [[
+            "Putting the provider subnet only under the BD when Cisco requires it under the EPG for this inter-VRF shared-service case.",
+            "Leaving the provider VRF in unenforced mode.",
+            "Overlapping subnets in the two VRFs.",
+            "Exporting the contract but consuming the original contract name instead of the contract interface in the consumer tenant.",
+        ]]),
+    ],
+}
+
+GISTS[78] = {
+    "sources": ["shared_fund", "shared_l3", "l3", "ansible"],
+    "topics": [
+        ("Concept", [
+            "A bridge domain (<code>fvBD</code>) is always associated with one VRF. “Shared bridge domains” in this lesson means two related, officially documented ideas: a BD (and its subnet) that participates in inter-VRF shared services through the Shared Between VRFs / Advertised Externally flags, and a BD that is defined in tenant <code>common</code> so that the common tenant’s applications can use it. It does not mean one BD object is attached to two VRFs at once — that is not how the policy model works.",
+        ]),
+        ("Tenant common versus inter-tenant designs", [
+            [
+                "A BD in tenant <code>common</code> stays in a VRF that also lives in <code>common</code> (or is referenced according to your APIC release). User-tenant EPGs do not automatically “join” that BD; inter-tenant data-plane sharing still uses contracts and, when VRFs differ, subnet leaking.",
+                "Inter-tenant / inter-VRF: each tenant typically keeps its own BD and VRF. The provider side marks the subnet as shared (and public if it must also go to an L3Out). Cisco’s shared-services guidance for leaking into a different VRF is to configure that provider subnet under the EPG.",
+            ],
+        ]),
+        ("Subnet flags and route leaking", [
+            "On a BD subnet, Ansible <code>cisco.aci.aci_bd_subnet</code> accepts <code>scope: [private, shared]</code> or <code>scope: [public, shared]</code>. <code>shared</code> is the “Shared between VRFs” flag; <code>public</code> is “Advertised Externally”. Use the EPG subnet module instead when you are following Cisco’s inter-VRF shared-service rule (provider subnet under the EPG).",
+            "A BD may also be associated with an L3Out (<code>fvBD</code> to <code>l3extOut</code>, Ansible <code>aci_bd_to_l3out</code>) so that its public subnets can be advertised externally. Whether a particular lab BD should be bound to a shared L3Out is a design choice; do not invent a binding that you have not planned.",
+        ]),
+        ("Object hierarchy", [
+            [
+                "<code>uni/tn-common/BD-Shared-BD</code> — example BD in tenant common",
+                "<code>uni/tn-common/BD-Shared-BD/subnet-[10.2.2.1/24]</code> — BD subnet (scope flags as required)",
+                "<code>uni/tn-Example-Provider/ap-Prov-AP/epg-Prov-EPG/subnet-[10.2.2.1/24]</code> — the same prefix placed under the EPG when leaking across VRFs, if you follow the fundamentals guide",
+            ],
+        ]),
+        ("APIC GUI path", [
+            "Tenant → Networking → Bridge Domains → Subnets, and Tenant → Application Profiles → EPG → Subnets. Look for the Advertised Externally and Shared between VRFs checkboxes. Screenshots are not collected.",
+        ]),
+        ("Suggested CLI", [
+            ("pre", "moquery -c fvBD\nmoquery -c fvSubnet"),
+        ]),
+        ("Common pitfalls", [[
+            "Assuming a BD can belong to two VRFs at the same time.",
+            "Setting Shared between VRFs on a BD subnet and expecting inter-VRF shared services to work without the EPG subnet and contract that Cisco documents for that case.",
+            "Overlapping subnets between the VRF instances that should leak routes.",
+        ]]),
+    ],
+}
+
+GISTS[79] = {
+    "sources": ["l4l7", "shared_fund", "ansible"],
+    "topics": [
+        ("Concept", [
+            "The APIC can insert Layer 4 to Layer 7 services (firewalls, load balancers and similar appliances) using a service graph. Cisco’s fundamentals guide describes a service graph as the set of network or service functions that an application needs, rendered on one or more service devices (device clusters). After the graph is configured, the APIC programs the fabric — and, when the device is managed, can also program the appliance — so that traffic follows the graph.",
+            "The same guide distinguishes administration: shared services that are available to the entire fabric are administered by the fabric administrator; services for a single tenant are administered by that tenant administrator.",
+        ]),
+        ("Tenant common versus inter-tenant designs", [
+            [
+                "Device cluster and graph in tenant <code>common</code> (or another shared provider tenant), so more than one consumer tenant can use the service.",
+                "Device cluster owned by one tenant and exported so other tenants can import and use it. Older L4–L7 deployment material describes export of device clusters and the <code>nw-svc-devshare</code> privilege to share them, with <code>nw-svc-policy</code> required on tenants that use an imported cluster. Confirm the privilege names for your APIC release before you rely on them; this course does not invent a privileges screenshot.",
+            ],
+            "A consumer tenant typically attaches the graph to a contract subject between two EPGs (or an EPG and an external EPG). Ansible has <code>cisco.aci.aci_contract_subject_to_service_graph</code> for that binding, and <code>cisco.aci.aci_l4l7_device</code> for the device cluster. A complete hardware bill of materials and a vendor device package procedure are not collected here.",
+        ]),
+        ("Contracts and where L4–L7 meets shared routing", [
+            "The contract between the consumer and provider EPGs is still what classifies the traffic that the graph should see. If those EPGs are in different tenants or VRFs, the same global-scope contract, contract export, and subnet “shared between VRFs” rules from the earlier lessons still apply. This lesson does not treat a service graph as a substitute for those flags.",
+        ]),
+        ("Object hierarchy", [
+            [
+                "<code>uni/tn-common/lDevVip-Shared-FW</code> — example L4–L7 device cluster (<code>vnsLDevVip</code>) in tenant common",
+                "<code>uni/tn-common/lDevVip-Shared-FW/lIf-external</code> and <code>.../lIf-internal</code> — logical interfaces (names vary)",
+                "A service graph template and a graph instance under the tenant (class names such as <code>vnsAbsGraph</code> / <code>vnsGraphInst</code>; confirm on your APIC)",
+                "The contract subject that references the graph, under <code>uni/tn-.../brc-.../subj-...</code>",
+            ],
+        ]),
+        ("APIC GUI path", [
+            "Tenant → Services → L4-L7 → Devices (device clusters), Service Graph Templates, and Deployed Graph Instances. Exact labels vary by release. Screenshots are not collected.",
+        ]),
+        ("Suggested CLI", [
+            ("pre", "moquery -c vnsLDevVip\nmoquery -c vnsAbsGraph"),
+        ]),
+        ("Common pitfalls", [[
+            "Deploying a graph without a contract subject that actually steers the interesting traffic into it.",
+            "Leaving consumer and provider in different VRFs without the shared-services contract and subnet flags from the earlier lessons.",
+            "Creating a managed device cluster when no device package or reachable appliance is present (the playbook for this lesson is a read-only query).",
+        ]]),
+        ("Not a live lab recording", [
+            "No appliance model, management IP, or device-package version is collected here. The playbook only queries L4–L7 devices.",
+        ]),
+    ],
+    "not_collected": [
+        "Exact numeric defaults and scale limits that vary by APIC release, unless a cited source states them.",
+        "Lab screenshots and lab output from a live APIC.",
+        "A specific L4–L7 vendor, device package, or management address.",
+        "Privilege-name confirmation for nw-svc-devshare / nw-svc-policy on your APIC release, beyond the historical deployment-guide wording cited in the notes.",
     ],
 }
