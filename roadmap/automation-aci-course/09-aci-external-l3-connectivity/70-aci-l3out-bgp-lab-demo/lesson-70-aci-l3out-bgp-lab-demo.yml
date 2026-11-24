@@ -1,0 +1,31 @@
+# Lesson 70 — L3Out BGP lab (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 70 — L3Out BGP lab (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Create a BGP L3Out
+      cisco.aci.aci_l3out:
+        <<: *aci_login
+        tenant: Example-Tenant
+        l3out: Example-BGP-L3Out
+        vrf: Example-VRF
+        domain: Example-L3Dom
+        l3protocol:
+          - bgp
+        state: present
+    - name: Remove the example BGP L3Out (cleanup)
+      cisco.aci.aci_l3out:
+        <<: *aci_login
+        tenant: Example-Tenant
+        l3out: Example-BGP-L3Out
+        state: absent

@@ -1,0 +1,24 @@
+# Lesson 75 — miscellaneous class queries (read-only)
+# Read-only example. It only queries the APIC; it does not change fabric policy.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 75 — miscellaneous class queries (read-only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Query tenants
+      cisco.aci.aci_tenant:
+        <<: *aci_login
+        state: query
+    - name: Query health / faults (first page)
+      cisco.aci.aci_rest:
+        <<: *aci_login
+        path: /api/class/faultInst.json?page-size=10
+        method: get

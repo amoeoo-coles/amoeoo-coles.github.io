@@ -1,0 +1,46 @@
+# Lesson 68 — L3Out static route lab (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 68 — L3Out static route lab (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Add a static route on logical node 101
+      cisco.aci.aci_l3out_static_routes:
+        <<: *aci_login
+        tenant: Example-Tenant
+        l3out: Example-L3Out
+        logical_node: Example-NP
+        node_id: 101
+        pod_id: 1
+        prefix: 10.200.0.0/16
+        state: present
+    - name: Add a next-hop for the static route
+      cisco.aci.aci_l3out_static_routes_nexthop:
+        <<: *aci_login
+        tenant: Example-Tenant
+        l3out: Example-L3Out
+        node_profile: Example-NP
+        node_id: 101
+        pod_id: 1
+        prefix: 10.200.0.0/16
+        nexthop: 10.0.1.2
+        state: present
+    - name: Remove the example static route (cleanup)
+      cisco.aci.aci_l3out_static_routes:
+        <<: *aci_login
+        tenant: Example-Tenant
+        l3out: Example-L3Out
+        logical_node: Example-NP
+        node_id: 101
+        pod_id: 1
+        prefix: 10.200.0.0/16
+        state: absent

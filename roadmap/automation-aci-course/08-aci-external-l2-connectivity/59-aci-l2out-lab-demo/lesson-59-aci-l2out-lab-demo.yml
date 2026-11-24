@@ -1,0 +1,37 @@
+# Lesson 59 — L2Out lab (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 59 — L2Out lab (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Create an L2Out
+      cisco.aci.aci_l2out:
+        <<: *aci_login
+        tenant: Example-Tenant
+        l2out: Example-L2Out
+        bd: Example-BD
+        domain: Example-L2Dom
+        vlan: 301
+        state: present
+    - name: Create an external EPG on the L2Out
+      cisco.aci.aci_l2out_extepg:
+        <<: *aci_login
+        tenant: Example-Tenant
+        l2out: Example-L2Out
+        extepg: Example-L2-ExtEPG
+        state: present
+    - name: Remove the example L2Out (cleanup)
+      cisco.aci.aci_l2out:
+        <<: *aci_login
+        tenant: Example-Tenant
+        l2out: Example-L2Out
+        state: absent

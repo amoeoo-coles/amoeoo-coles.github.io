@@ -1,0 +1,59 @@
+# Lesson 66 — L3Out configuration steps, core objects (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 66 — L3Out configuration steps, core objects (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Create the L3Out
+      cisco.aci.aci_l3out:
+        <<: *aci_login
+        tenant: Example-Tenant
+        l3out: Example-L3Out
+        vrf: Example-VRF
+        domain: Example-L3Dom
+        l3protocol:
+          - static
+        state: present
+    - name: Create a logical node profile
+      cisco.aci.aci_l3out_logical_node_profile:
+        <<: *aci_login
+        tenant: Example-Tenant
+        l3out: Example-L3Out
+        node_profile: Example-NP
+        state: present
+    - name: Add leaf 101 with a router-id
+      cisco.aci.aci_l3out_logical_node:
+        <<: *aci_login
+        tenant: Example-Tenant
+        l3out: Example-L3Out
+        node_profile: Example-NP
+        pod_id: 1
+        node_id: 101
+        router_id: 10.0.255.101
+        state: present
+    - name: Create an external EPG
+      cisco.aci.aci_l3out_extepg:
+        <<: *aci_login
+        tenant: Example-Tenant
+        l3out: Example-L3Out
+        extepg: Example-ExtEPG
+        state: present
+    - name: Add an import-security subnet
+      cisco.aci.aci_l3out_extsubnet:
+        <<: *aci_login
+        tenant: Example-Tenant
+        l3out: Example-L3Out
+        extepg: Example-ExtEPG
+        network: 10.100.0.0/24
+        scope:
+          - import-security
+        state: present

@@ -1,0 +1,29 @@
+# Lesson 52 — VRF unenforced option (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 52 — VRF unenforced option (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Show how to set the example VRF to unenforced
+      cisco.aci.aci_vrf:
+        <<: *aci_login
+        tenant: Example-Tenant
+        vrf: Example-VRF
+        policy_control_preference: unenforced
+        state: present
+    - name: Return the example VRF to enforced
+      cisco.aci.aci_vrf:
+        <<: *aci_login
+        tenant: Example-Tenant
+        vrf: Example-VRF
+        policy_control_preference: enforced
+        state: present

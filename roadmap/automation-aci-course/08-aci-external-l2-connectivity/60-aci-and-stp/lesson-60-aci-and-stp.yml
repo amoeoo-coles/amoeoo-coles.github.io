@@ -1,0 +1,26 @@
+# Lesson 60 — spanning-tree interface policy (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 60 — spanning-tree interface policy (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Create an STP interface policy
+      cisco.aci.aci_interface_policy_spanning_tree:
+        <<: *aci_login
+        stp_policy: Example-STP-Edge
+        description: Example STP interface policy
+        state: present
+    - name: Remove the example STP policy (cleanup)
+      cisco.aci.aci_interface_policy_spanning_tree:
+        <<: *aci_login
+        stp_policy: Example-STP-Edge
+        state: absent

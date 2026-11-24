@@ -1,0 +1,42 @@
+# Lesson 36 — deploy a contract on provider and consumer EPGs (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 36 — deploy a contract on provider and consumer EPGs (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Provide the contract on EPG WEB
+      cisco.aci.aci_epg_to_contract:
+        <<: *aci_login
+        tenant: Example-Tenant
+        ap: Example-AP
+        epg: WEB
+        contract: CTX-WEB
+        contract_type: provider
+        state: present
+    - name: Consume the contract on EPG APP
+      cisco.aci.aci_epg_to_contract:
+        <<: *aci_login
+        tenant: Example-Tenant
+        ap: Example-AP
+        epg: APP
+        contract: CTX-WEB
+        contract_type: consumer
+        state: present
+    - name: Remove the provider binding (cleanup)
+      cisco.aci.aci_epg_to_contract:
+        <<: *aci_login
+        tenant: Example-Tenant
+        ap: Example-AP
+        epg: WEB
+        contract: CTX-WEB
+        contract_type: provider
+        state: absent

@@ -1,0 +1,32 @@
+# Lesson 64 — MP-BGP route-reflector (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 64 — MP-BGP route-reflector (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Set the BGP AS number for the fabric RR policy
+      cisco.aci.aci_bgp_rr_asn:
+        <<: *aci_login
+        asn: 65001
+        state: present
+    - name: Add spine 201 as a route-reflector node
+      cisco.aci.aci_bgp_rr_node:
+        <<: *aci_login
+        node_id: 201
+        pod_id: 1
+        state: present
+    - name: Remove the example RR node (cleanup)
+      cisco.aci.aci_bgp_rr_node:
+        <<: *aci_login
+        node_id: 201
+        pod_id: 1
+        state: absent

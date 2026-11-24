@@ -1,0 +1,33 @@
+# Lesson 25 — AEP and domain association (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 25 — AEP and domain association (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Create an attachable entity profile
+      cisco.aci.aci_aep:
+        <<: *aci_login
+        aep: Example-AEP
+        description: Example AEP
+        state: present
+    - name: Associate the AEP with a physical domain
+      cisco.aci.aci_aep_to_domain:
+        <<: *aci_login
+        aep: Example-AEP
+        domain: Example-PhysDom
+        domain_type: phys
+        state: present
+    - name: Remove the example AEP (cleanup)
+      cisco.aci.aci_aep:
+        <<: *aci_login
+        aep: Example-AEP
+        state: absent

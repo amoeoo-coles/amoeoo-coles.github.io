@@ -1,0 +1,20 @@
+# Lesson 45 — query a BD and its VRF relation (read-only)
+# Read-only example. It only queries the APIC; it does not change fabric policy.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 45 — query a BD and its VRF relation (read-only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Fetch Example-BD with child relations
+      cisco.aci.aci_rest:
+        <<: *aci_login
+        path: /api/mo/uni/tn-Example-Tenant/BD-Example-BD.json?query-target=subtree
+        method: get

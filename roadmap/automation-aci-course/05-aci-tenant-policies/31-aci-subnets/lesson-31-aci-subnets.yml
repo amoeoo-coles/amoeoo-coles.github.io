@@ -1,0 +1,34 @@
+# Lesson 31 — BD subnet (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 31 — BD subnet (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Add a private gateway subnet to the BD
+      cisco.aci.aci_bd_subnet:
+        <<: *aci_login
+        tenant: Example-Tenant
+        bd: Example-BD
+        gateway: 10.0.0.1
+        mask: 24
+        scope:
+          - private
+        preferred: true
+        state: present
+    - name: Remove the example subnet (cleanup)
+      cisco.aci.aci_bd_subnet:
+        <<: *aci_login
+        tenant: Example-Tenant
+        bd: Example-BD
+        gateway: 10.0.0.1
+        mask: 24
+        state: absent

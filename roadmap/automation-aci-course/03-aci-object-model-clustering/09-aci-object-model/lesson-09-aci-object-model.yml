@@ -1,0 +1,24 @@
+# Lesson 09 — query the policy universe (read-only)
+# Read-only example. It only queries the APIC; it does not change fabric policy.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 09 — query the policy universe (read-only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Get the policy universe root
+      cisco.aci.aci_rest:
+        <<: *aci_login
+        path: /api/mo/uni.json?query-target=self
+        method: get
+    - name: List tenant objects under uni
+      cisco.aci.aci_tenant:
+        <<: *aci_login
+        state: query

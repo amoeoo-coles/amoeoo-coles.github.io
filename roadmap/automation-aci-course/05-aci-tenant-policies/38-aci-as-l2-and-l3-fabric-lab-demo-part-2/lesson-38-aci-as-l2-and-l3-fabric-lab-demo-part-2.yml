@@ -1,0 +1,39 @@
+# Lesson 38 — L2/L3 fabric lab, subnet + AP + EPG (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 38 — L2/L3 fabric lab, subnet + AP + EPG (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Add the example subnet
+      cisco.aci.aci_bd_subnet:
+        <<: *aci_login
+        tenant: Example-Tenant
+        bd: Example-BD
+        gateway: 10.0.0.1
+        mask: 24
+        scope:
+          - private
+        state: present
+    - name: Create the application profile and WEB EPG
+      cisco.aci.aci_ap:
+        <<: *aci_login
+        tenant: Example-Tenant
+        ap: Example-AP
+        state: present
+    - name: Create EPG WEB
+      cisco.aci.aci_epg:
+        <<: *aci_login
+        tenant: Example-Tenant
+        ap: Example-AP
+        epg: WEB
+        bd: Example-BD
+        state: present

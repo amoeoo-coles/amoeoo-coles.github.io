@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- site-hidden-page: no menu, noindex, skip inject -->
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>(45) ACI Endpoint Forwarding Deep-Dive (Part 1) — Automation ACI Course</title>
+<meta name="description" content="Hidden study notes and an Ansible example for ACI Endpoint Forwarding Deep-Dive (Part 1).">
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:auto;
+  min-height:44px;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:auto;min-height:44px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:visible;
+  text-overflow:unset;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.25;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:22px;
+  height:22px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:16px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:#1d4ed8!important;
+}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+<style>
+
+
+:root {
+  color-scheme: light dark;
+  --bg: #f4f6f8;
+  --bg-accent: #e8eef4;
+  --card: #ffffff;
+  --ink: #15202b;
+  --muted: #5b6b7c;
+  --line: #d5dee7;
+  --accent: #0e7490;
+  --accent-soft: #e0f4f8;
+  --link: #0e7490;
+  --good: #047857;
+  --warn: #a16207;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --radius: 14px;
+  --mono: "IBM Plex Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+  --sans: "Source Sans 3", "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1220;
+    --bg-accent: #111827;
+    --card: #152033;
+    --ink: #e6edf5;
+    --muted: #93a4b8;
+    --line: #2a3b52;
+    --accent: #5eead4;
+    --accent-soft: #12313a;
+    --link: #5eead4;
+    --good: #34d399;
+    --warn: #fbbf24;
+    --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+  }
+}
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f4f6f8; --bg-accent: #e8eef4; --card: #ffffff; --ink: #15202b;
+  --muted: #5b6b7c; --line: #d5dee7; --accent: #0e7490; --accent-soft: #e0f4f8;
+  --link: #0e7490; --good: #047857; --warn: #a16207;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+  --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+  --link: #5eead4; --good: #34d399; --warn: #fbbf24;
+  --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--sans);
+  background: radial-gradient(1200px 500px at 10% -10%, var(--bg-accent), transparent 60%), var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  min-height: 100vh;
+}
+a { color: var(--link); }
+main.wrap, footer.wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem; }
+main.wrap { padding-top: 0.4rem; padding-bottom: 2.2rem; }
+footer.wrap { padding-bottom: 3.5rem; }
+.tr17 { margin: 0 0 8px; }
+h1 { font-size: clamp(1.7rem, 3vw, 2.25rem); margin: 0 0 0.35rem; letter-spacing: -0.03em; font-weight: 700; }
+.ver { margin: 0 0 0.85rem; color: var(--muted); font-weight: 650; }
+.lede { font-size: 1.05rem; margin: 0 0 1rem; max-width: 70ch; }
+h2 { font-size: 1.25rem; margin: 2rem 0 0.7rem; letter-spacing: -0.02em; scroll-margin-top: 80px; }
+h3 { font-size: 1.05rem; margin: 1.2rem 0 0.45rem; }
+p, ul, ol { margin: 0 0 0.85rem; }
+ul, ol { padding-left: 1.25rem; }
+li { margin: 0.2rem 0; }
+.kicker {
+  display: inline-block; text-transform: uppercase; letter-spacing: 0.14em;
+  font-size: 0.72rem; color: var(--accent); font-weight: 700; margin: 0 0 0.35rem;
+}
+.callout {
+  background: var(--accent-soft); border: 1px solid var(--line);
+  border-left: 4px solid var(--accent); border-radius: 10px;
+  padding: 12px 14px; margin: 0 0 1rem;
+}
+.callout p { margin: 0; }
+.callout .k { color: var(--muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+.callout .v { font-size: 1.35rem; font-weight: 750; letter-spacing: -0.02em; }
+.note, .muted, .meta, .footer, .snapshot { color: var(--muted); }
+.meta { margin: 0 0 0.25rem; }
+.snapshot { margin: 0; }
+.footer { margin: 0.4rem 0 0; font-size: 0.92rem; }
+.na { color: var(--muted); font-style: italic; }
+.cite { font-size: 0.9rem; color: var(--muted); margin: -0.35rem 0 1rem; }
+pre {
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+  padding: 12px 14px; overflow-x: auto; box-shadow: var(--shadow);
+  font-family: var(--mono); font-size: 0.86rem; line-height: 1.45; margin: 0 0 0.5rem;
+}
+code { font-family: var(--mono); font-size: 0.9em; }
+pre code { font-size: 0.86rem; }
+.table-wrap { overflow-x: auto; margin: 0 0 1rem; }
+table {
+  width: 100%; border-collapse: collapse; font-size: 0.95rem;
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+th, td { border-bottom: 1px solid var(--line); padding: 0.55rem 0.75rem; text-align: left; vertical-align: top; }
+th { font-size: 0.82rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); background: var(--bg-accent); }
+tr:last-child td { border-bottom: 0; }
+.src { font-size: 0.88rem; }
+.src-list { columns: 2; gap: 1.2rem; padding-left: 1.2rem; }
+@media (max-width: 720px) { .src-list { columns: 1; } }
+
+.page-menu { margin: 0 0 1.2rem; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 0 0 1.2rem; }
+.kpi { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; padding: 10px 12px; box-shadow: var(--shadow); }
+.kpi b { display: block; font-size: 1.4rem; letter-spacing: -0.03em; line-height: 1.2; }
+.kpi span { color: var(--muted); font-size: 0.82rem; }
+td.num, th.num, th.n, td.n { text-align: right; font-variant-numeric: tabular-nums; }
+html[data-theme="light"] .kicker, html[data-theme="dark"] .kicker, .kicker { color: var(--accent) !important; }
+td.nw, .nw { white-space: nowrap; }
+.geo-flag { margin-right: 0.35rem; }
+#geo-table { max-width: 56rem; }
+#geo-table a { text-decoration: none; }
+#geo-table a:hover { text-decoration: underline; }
+#comments { margin: 1.6rem 0 0; }
+#comments-mount { margin-top: 0.8rem; }
+.desc { max-width: 52rem; }
+
+
+.ai-note {
+  border-left: 4px solid var(--accent, #0e7490);
+  padding: 0.55rem 0.8rem;
+  margin: 0.8rem 0 1.1rem;
+  background: var(--bg-accent, #e8eef4);
+  max-width: 78ch;
+}
+details.topic {
+  border: 1px solid var(--line, #d5dee7);
+  border-radius: 8px;
+  background: var(--card, #fff);
+  margin: 0 0 0.6rem;
+  padding: 0;
+}
+details.topic summary {
+  cursor: pointer;
+  font-weight: 650;
+  padding: 0.65rem 0.85rem;
+  list-style: none;
+}
+details.topic summary::-webkit-details-marker { display: none; }
+details.topic summary::after {
+  content: "▸";
+  float: right;
+  color: var(--muted, #5b6b7c);
+}
+details.topic[open] summary::after { content: "▾"; }
+details.topic .topic-body { padding: 0 0.85rem 0.85rem; max-width: 78ch; }
+details.topic .topic-body > :first-child { margin-top: 0; }
+.codebox {
+  border-radius: 8px;
+  overflow: hidden;
+  background: #0b1220;
+  color: #e2e8f0;
+  margin: 1rem 0 1.2rem;
+  border: 1px solid #1f2937;
+}
+.codebox-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0.75rem;
+  background: #111827;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  color: #cbd5e1;
+}
+.codebox-tab .fname { font-weight: 650; color: #f8fafc; }
+.codebox-tab a, .codebox-tab button {
+  margin-left: auto;
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 0.2rem 0.55rem;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+.codebox-tab a { margin-left: 0.4rem; }
+.codebox-tab button.copy-btn { margin-left: auto; }
+.codebox-tab button.copy-btn:hover, .codebox-tab a:hover { background: #334155; }
+.codebox pre { margin: 0; overflow: auto; background: #0b1220; color: #e2e8f0; }
+.codebox ol.lines {
+  list-style: none;
+  margin: 0;
+  padding: 0.55rem 0 0.7rem;
+  counter-reset: ln;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.codebox ol.lines li {
+  counter-increment: ln;
+  padding: 0 1rem 0 3.3rem;
+  position: relative;
+  white-space: pre;
+}
+.codebox ol.lines li::before {
+  content: counter(ln);
+  position: absolute;
+  left: 0;
+  width: 2.7rem;
+  text-align: right;
+  color: #64748b;
+}
+.course-tree { max-width: 80ch; }
+.course-tree h3 { margin: 1.1rem 0 0.3rem; }
+.lesson-list { padding-left: 1.3rem; }
+.lesson-list li { margin: 0.15rem 0; }
+.page-menu { margin: 0 0 1.2rem; padding-left: 1.3rem; }
+.kicker { text-transform: uppercase; letter-spacing: .06em; font-size: .8rem; color: var(--muted); }
+.ver { color: var(--muted); font-size: 0.95rem; }
+.lede { max-width: 78ch; }
+footer.wrap .meta, p.meta { color: var(--muted); font-size: 0.92rem; }
+code, .dn { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.92em; }
+
+</style>
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+<main class="wrap">
+<p class="kicker">Automation ACI Course</p>
+<h1>(45) ACI Endpoint Forwarding Deep-Dive (Part 1)</h1>
+<p class="ver">v1 · 24 Nov 2026, 2:00 PM AEDT</p>
+<p class="ai-note">Study notes written with AI assistance from public Cisco documentation. Verify against your APIC version before use.</p>
+<p class="lede">Lesson (45) in section [6] ACI EP Learning &amp; Forwarding. Expand the topic sections for study notes. The Ansible example uses the cisco.aci collection. This playbook is a <strong>read-only query</strong> example.</p>
+<ol class="page-menu" aria-label="On this page">
+<li><a href="#notes">Study notes</a></li>
+<li><a href="#ansible">Ansible playbook</a></li>
+<li><a href="#inventory">Inventory and vars</a></li>
+<li><a href="#sources">Sources</a></li>
+<li><a href="#not-collected">Not collected</a></li>
+</ol>
+<h2 id="notes">Study notes</h2>
+<details class="topic" id="forwarding-deep-dive-part-1">
+<summary>Forwarding deep-dive, part 1</summary>
+<div class="topic-body">
+<p>Walk one packet in your mind: host in EPG WEB, BD Example-BD, VRF Example-VRF, destination in another EPG of the same VRF. The leaf applies the zoning-rule / contract, looks up the destination endpoint, and encapsulates to the remote TEP if the lookup hits.</p>
+<p>The lesson playbook fetches the Example-BD subtree so you can see the VRF relation, subnets and attached EPGs in one REST call.</p>
+</div>
+</details>
+<details class="topic" id="suggested-objects">
+<summary>Suggested objects</summary>
+<div class="topic-body">
+<pre>moquery -d uni/tn-Example-Tenant/BD-Example-BD</pre>
+</div>
+</details>
+<details class="topic" id="common-pitfalls">
+<summary>Common pitfalls</summary>
+<div class="topic-body">
+<ul><li>Forgetting that two EPGs in the same BD still need a contract in an enforced VRF if they are different EPGs.</li></ul>
+</div>
+</details>
+<h2 id="ansible">Ansible playbook</h2>
+<p>This is a <strong>read-only</strong> example. It only queries the APIC. The collection is <code>cisco.aci</code>. Connection parameters use the placeholders <code>{{ apic_host }}</code>, <code>{{ apic_username }}</code> and <code>{{ apic_password }}</code>.</p>
+
+<figure class="codebox">
+  <div class="codebox-tab">
+    <span class="fname">lesson-45-aci-endpoint-forwarding-deep-dive-part-1.yml</span>
+    <button type="button" class="copy-btn">Copy</button>
+    <a href="./lesson-45-aci-endpoint-forwarding-deep-dive-part-1.yml" download="lesson-45-aci-endpoint-forwarding-deep-dive-part-1.yml">Download</a>
+  </div>
+  <textarea class="codebox-raw" hidden># Lesson 45 — query a BD and its VRF relation (read-only)
+# Read-only example. It only queries the APIC; it does not change fabric policy.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 45 — query a BD and its VRF relation (read-only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &amp;aci_login
+      host: &quot;{{ apic_host }}&quot;
+      username: &quot;{{ apic_username }}&quot;
+      password: &quot;{{ apic_password }}&quot;
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Fetch Example-BD with child relations
+      cisco.aci.aci_rest:
+        &lt;&lt;: *aci_login
+        path: /api/mo/uni/tn-Example-Tenant/BD-Example-BD.json?query-target=subtree
+        method: get
+</textarea>
+  <pre><ol class="lines">
+<li># Lesson 45 — query a BD and its VRF relation (read-only)</li>
+<li># Read-only example. It only queries the APIC; it does not change fabric policy.</li>
+<li># Credentials are placeholders. Never put a real password, token, or APIC address in this file.</li>
+<li>---</li>
+<li>- name: Lesson 45 — query a BD and its VRF relation (read-only)</li>
+<li>  hosts: localhost</li>
+<li>  connection: local</li>
+<li>  gather_facts: false</li>
+<li>  vars:</li>
+<li>    aci_login: &amp;aci_login</li>
+<li>      host: &quot;{{ apic_host }}&quot;</li>
+<li>      username: &quot;{{ apic_username }}&quot;</li>
+<li>      password: &quot;{{ apic_password }}&quot;</li>
+<li>      validate_certs: false  # lab only; do not disable certificate verification in production</li>
+<li>  tasks:</li>
+<li>    - name: Fetch Example-BD with child relations</li>
+<li>      cisco.aci.aci_rest:</li>
+<li>        &lt;&lt;: *aci_login</li>
+<li>        path: /api/mo/uni/tn-Example-Tenant/BD-Example-BD.json?query-target=subtree</li>
+<li>        method: get</li>
+  </ol></pre>
+</figure>
+<h2 id="inventory">Inventory and vars</h2>
+<p>Example files that stay next to the playbook. Fill in a private copy; never commit a real password.</p>
+
+<figure class="codebox">
+  <div class="codebox-tab">
+    <span class="fname">vars.example.yml</span>
+    <button type="button" class="copy-btn">Copy</button>
+    <a href="./vars.example.yml" download="vars.example.yml">Download</a>
+  </div>
+  <textarea class="codebox-raw" hidden># vars.example.yml — placeholders only. Do not store real passwords in git.
+# Copy this file, fill in values locally, and keep the filled copy off the site.
+apic_host: apic.example.invalid
+apic_username: ansible_user
+apic_password: &quot;CHANGE_ME&quot;
+</textarea>
+  <pre><ol class="lines">
+<li># vars.example.yml — placeholders only. Do not store real passwords in git.</li>
+<li># Copy this file, fill in values locally, and keep the filled copy off the site.</li>
+<li>apic_host: apic.example.invalid</li>
+<li>apic_username: ansible_user</li>
+<li>apic_password: &quot;CHANGE_ME&quot;</li>
+  </ol></pre>
+</figure>
+
+<figure class="codebox">
+  <div class="codebox-tab">
+    <span class="fname">inventory.example.yml</span>
+    <button type="button" class="copy-btn">Copy</button>
+    <a href="./inventory.example.yml" download="inventory.example.yml">Download</a>
+  </div>
+  <textarea class="codebox-raw" hidden># inventory.example.yml — the cisco.aci modules run on the control node
+# and talk to the APIC API. There is no need to SSH to the APIC.
+all:
+  hosts:
+    localhost:
+      ansible_connection: local
+</textarea>
+  <pre><ol class="lines">
+<li># inventory.example.yml — the cisco.aci modules run on the control node</li>
+<li># and talk to the APIC API. There is no need to SSH to the APIC.</li>
+<li>all:</li>
+<li>  hosts:</li>
+<li>    localhost:</li>
+<li>      ansible_connection: local</li>
+  </ol></pre>
+</figure>
+<h2 id="sources">Sources</h2>
+<ul>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html">Cisco ACI Fundamentals, Release 6.0(x)</a></li>
+</ul>
+<h2 id="not-collected">Not collected</h2>
+<p>Numbers, limits and version-specific defaults that were not taken from a cited source are omitted or marked “not collected”. This page does not invent screenshots or lab results.</p>
+<ul>
+<li>Exact numeric defaults and scale limits that vary by APIC release, unless a cited source states them.</li>
+<li>Lab screenshots and lab output from a live APIC.</li>
+</ul>
+
+</main>
+<footer class="wrap">
+<p class="meta">Page: <strong>(45) ACI Endpoint Forwarding Deep-Dive (Part 1)</strong> · Version: <strong>v1 · 24 Nov 2026, 2:00 PM AEDT</strong></p>
+<p class="meta">Previous: <a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/44-aci-endpoint-forwarding-overview/">(44) ACI Endpoint Forwarding Overview</a> · Next: <a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/46-aci-endpoint-forwarding-deep-dive-part-2/">(46) ACI Endpoint Forwarding Deep-Dive (Part 2)</a> · Course hub: <a href="/roadmap/automation-aci-course/">/roadmap/automation-aci-course/</a></p>
+<p class="meta">This course is a hidden study area and is not listed in the public site menu or the public RoadMap page. Folder links end with <code>/</code>. Credentials in playbooks are placeholders. No playbook on these pages is meant to be run against a production APIC.</p>
+</footer>
+<script>
+(function(){
+  document.querySelectorAll(".codebox").forEach(function(box){
+    var btn = box.querySelector(".copy-btn");
+    var raw = box.getAttribute("data-raw") || "";
+    if (!btn) return;
+    btn.addEventListener("click", function(){
+      var text = raw.replace(/\u0000/g, "");
+      function done(){
+        var old = btn.textContent;
+        btn.textContent = "Copied";
+        setTimeout(function(){ btn.textContent = old; }, 1500);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(function(){ fallback(); });
+      } else { fallback(); }
+      function fallback(){
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

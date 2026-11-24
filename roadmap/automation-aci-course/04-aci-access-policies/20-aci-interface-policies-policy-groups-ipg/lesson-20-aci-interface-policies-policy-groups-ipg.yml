@@ -1,0 +1,41 @@
+# Lesson 20 — access and PC interface policy groups (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 20 — access and PC interface policy groups (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Create an access (single-port) policy group
+      cisco.aci.aci_interface_policy_leaf_policy_group:
+        <<: *aci_login
+        policy_group: Example-Access-IPG
+        lag_type: leaf
+        description: Example Leaf Access Port Policy Group
+        state: present
+    - name: Create a port-channel policy group
+      cisco.aci.aci_interface_policy_leaf_policy_group:
+        <<: *aci_login
+        policy_group: Example-PC-IPG
+        lag_type: link
+        description: Example PC Interface Policy Group
+        state: present
+    - name: Remove the example access policy group (cleanup)
+      cisco.aci.aci_interface_policy_leaf_policy_group:
+        <<: *aci_login
+        policy_group: Example-Access-IPG
+        lag_type: leaf
+        state: absent
+    - name: Remove the example PC policy group (cleanup)
+      cisco.aci.aci_interface_policy_leaf_policy_group:
+        <<: *aci_login
+        policy_group: Example-PC-IPG
+        lag_type: link
+        state: absent

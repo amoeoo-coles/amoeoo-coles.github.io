@@ -1,0 +1,40 @@
+# Lesson 21 — port-channel policy and PC IPG (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 21 — port-channel policy and PC IPG (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Create an LACP active port-channel policy
+      cisco.aci.aci_interface_policy_port_channel:
+        <<: *aci_login
+        port_channel: Example-LACP-Active
+        mode: active
+        description: Example LACP policy
+        state: present
+    - name: Create a PC interface policy group that uses it
+      cisco.aci.aci_interface_policy_leaf_policy_group:
+        <<: *aci_login
+        policy_group: Example-PC-IPG
+        lag_type: link
+        port_channel_policy: Example-LACP-Active
+        state: present
+    - name: Remove the example PC policy group (cleanup)
+      cisco.aci.aci_interface_policy_leaf_policy_group:
+        <<: *aci_login
+        policy_group: Example-PC-IPG
+        lag_type: link
+        state: absent
+    - name: Remove the example LACP policy (cleanup)
+      cisco.aci.aci_interface_policy_port_channel:
+        <<: *aci_login
+        port_channel: Example-LACP-Active
+        state: absent

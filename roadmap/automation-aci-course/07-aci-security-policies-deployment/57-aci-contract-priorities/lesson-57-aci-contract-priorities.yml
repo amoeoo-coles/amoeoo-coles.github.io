@@ -1,0 +1,23 @@
+# Lesson 57 — contract / subject priority (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 57 — contract / subject priority (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Set a contract subject priority
+      cisco.aci.aci_contract_subject:
+        <<: *aci_login
+        tenant: Example-Tenant
+        contract: CTX-WEB
+        subject: SUBJ-WEB
+        priority: level1
+        state: present

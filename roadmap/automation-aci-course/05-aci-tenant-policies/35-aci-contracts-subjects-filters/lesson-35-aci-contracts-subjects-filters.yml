@@ -1,0 +1,52 @@
+# Lesson 35 — contract, subject and filter (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 35 — contract, subject and filter (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Create a filter
+      cisco.aci.aci_filter:
+        <<: *aci_login
+        tenant: Example-Tenant
+        filter: FLT-WEB
+        state: present
+    - name: Add a TCP destination-port 80 entry
+      cisco.aci.aci_filter_entry:
+        <<: *aci_login
+        tenant: Example-Tenant
+        filter: FLT-WEB
+        entry: TCP-80
+        ether_type: ip
+        ip_protocol: tcp
+        destination_port_start: 80
+        destination_port_end: 80
+        state: present
+    - name: Create a contract
+      cisco.aci.aci_contract:
+        <<: *aci_login
+        tenant: Example-Tenant
+        contract: CTX-WEB
+        scope: context
+        state: present
+    - name: Create a subject that uses the filter
+      cisco.aci.aci_contract_subject:
+        <<: *aci_login
+        tenant: Example-Tenant
+        contract: CTX-WEB
+        subject: SUBJ-WEB
+        state: present
+    - name: Remove the example contract (cleanup)
+      cisco.aci.aci_contract:
+        <<: *aci_login
+        tenant: Example-Tenant
+        contract: CTX-WEB
+        state: absent

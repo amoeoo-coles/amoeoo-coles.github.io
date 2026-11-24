@@ -1,0 +1,35 @@
+# Lesson 19 — interface profile and port block (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 19 — interface profile and port block (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Create an interface profile
+      cisco.aci.aci_interface_policy_leaf_profile:
+        <<: *aci_login
+        interface_profile: Example-If-Profile
+        description: Example leaf interface profile
+        state: present
+    - name: Add a port block for 1/1-1/4
+      cisco.aci.aci_access_port_block_to_access_port:
+        <<: *aci_login
+        interface_profile: Example-If-Profile
+        access_port_selector: Example-Selector
+        port_blk: block1
+        from_port: 1
+        to_port: 4
+        state: present
+    - name: Remove the example profile (cleanup)
+      cisco.aci.aci_interface_policy_leaf_profile:
+        <<: *aci_login
+        interface_profile: Example-If-Profile
+        state: absent

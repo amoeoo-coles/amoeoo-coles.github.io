@@ -1,0 +1,37 @@
+# Lesson 23 — VLAN pool and encap block (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 23 — VLAN pool and encap block (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Create a static VLAN pool
+      cisco.aci.aci_vlan_pool:
+        <<: *aci_login
+        pool: Example-VLAN-Pool
+        pool_allocation_mode: static
+        description: Example static pool for a physical domain
+        state: present
+    - name: Add VLAN 200-299 to the pool
+      cisco.aci.aci_vlan_pool_encap_block:
+        <<: *aci_login
+        pool: Example-VLAN-Pool
+        pool_allocation_mode: static
+        block_start: 200
+        block_end: 299
+        allocation_mode: static
+        state: present
+    - name: Remove the example pool (cleanup, also removes blocks)
+      cisco.aci.aci_vlan_pool:
+        <<: *aci_login
+        pool: Example-VLAN-Pool
+        pool_allocation_mode: static
+        state: absent

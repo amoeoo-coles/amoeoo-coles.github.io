@@ -1,0 +1,37 @@
+# Lesson 07 — register an example leaf (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 07 — register an example leaf (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+    - name: Register an example leaf (placeholder serial)
+      cisco.aci.aci_fabric_node:
+        <<: *aci_login
+        pod_id: 1
+        node_id: 101
+        serial: ABCDEFGHIJK
+        switch: LEAF101
+        role: leaf
+        state: present
+    - name: Query the node after registration
+      cisco.aci.aci_fabric_node:
+        <<: *aci_login
+        pod_id: 1
+        node_id: 101
+        state: query
+    - name: Remove the example registration (cleanup)
+      cisco.aci.aci_fabric_node:
+        <<: *aci_login
+        pod_id: 1
+        node_id: 101
+        serial: ABCDEFGHIJK
+        state: absent
