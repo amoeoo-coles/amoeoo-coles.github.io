@@ -189,6 +189,27 @@ details.topic .topic-body > :first-child { margin-top: 0; }
 .course-tree ul li,
 .section-children ul li { margin: 0.15rem 0; }
 .page-menu { margin: 0 0 1.2rem; padding-left: 1.3rem; }
+.diagram {
+  margin: 0.85rem 0 1.2rem;
+  max-width: 100%;
+}
+.diagram svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 42rem;
+  background: var(--card, #fff);
+  border: 1px solid var(--line, #d5dee7);
+  border-radius: 10px;
+}
+.diagram figcaption {
+  margin: 0.45rem 0 0;
+  font-size: 0.92rem;
+  color: var(--muted, #5b6b7c);
+  max-width: 78ch;
+}
+details.topic .topic-body:has(.diagram) { max-width: 100%; }
+
 .kicker { text-transform: uppercase; letter-spacing: .06em; font-size: .8rem; color: var(--muted); }
 .ver { color: var(--muted); font-size: 0.95rem; }
 .lede { max-width: 78ch; }
@@ -1201,6 +1222,7 @@ def history_page() -> str:
 def history_list() -> str:
     slug = VERSION.split("·", 1)[0].strip()
     blurbs = {
+        "v6": "lesson 80, a five-tenant shared topology (common VRF, common BD-default, local BDs, and a shared L3Out) with inline diagrams.",
         "v5": "new Shared Services section (four lessons and a quiz), with visitor recording on the new pages.",
         "v4": "visitor badge and GoatCounter recording on every course page, plus a hidden course visitor tracking view at visitors/. Per-visit time, country, ISP and visitor IPs remain not collected by the existing pipeline.",
         "v3": "real multiple-choice quizzes for sections 1–9, with Check, score and Reset.",
@@ -1208,6 +1230,7 @@ def history_list() -> str:
         "v1": "first publication of the hidden course.",
     }
     frozen = [
+        ("v6 · 25 Nov 2026, 7:40 AM AEDT", blurbs["v6"]),
         ("v5 · 25 Nov 2026, 12:48 AM AEDT", blurbs["v5"]),
         ("v4 · 25 Nov 2026, 12:40 AM AEDT", blurbs["v4"]),
         ("v3 · 24 Nov 2026, 9:15 PM AEDT", blurbs["v3"]),
@@ -1219,7 +1242,7 @@ def history_list() -> str:
         if label.split("·", 1)[0].strip() == slug:
             continue
         # Do not link a future version that has not been generated yet.
-        future = {"v5": 5, "v4": 4, "v3": 3, "v2": 2, "v1": 1}
+        future = {"v6": 6, "v5": 5, "v4": 4, "v3": 3, "v2": 2, "v1": 1}
         cur = future.get(slug, 0)
         other = future.get(label.split("·", 1)[0].strip(), 0)
         if other > cur:

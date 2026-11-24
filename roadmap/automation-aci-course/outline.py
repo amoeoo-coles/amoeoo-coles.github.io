@@ -166,6 +166,7 @@ SECTIONS = [
             (77, "77-shared-vrf", "Shared VRF"),
             (78, "78-shared-bridge-domains", "Shared Bridge Domains"),
             (79, "79-shared-l4-7-services", "Shared L4-7 Services"),
+            (80, "80-five-tenant-shared-topology", "Five-tenant shared topology"),
         ],
         "quiz": 10,
     },

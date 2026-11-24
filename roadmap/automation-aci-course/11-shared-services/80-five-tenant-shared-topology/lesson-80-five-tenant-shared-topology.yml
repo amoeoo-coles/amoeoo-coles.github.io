@@ -1,0 +1,197 @@
+# Lesson 80 — five-tenant shared topology (lab only)
+# Lab only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: Lesson 80 — five-tenant shared topology (lab only)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: false  # lab only; do not disable certificate verification in production
+  tasks:
+
+    - name: Ensure VRF default exists in tenant common (DN uni/tn-common/ctx-default)
+      cisco.aci.aci_vrf:
+        <<: *aci_login
+        tenant: common
+        vrf: default
+        state: present
+
+    - name: Ensure BD-default in tenant common, associated with ctx-default
+      cisco.aci.aci_bd:
+        <<: *aci_login
+        tenant: common
+        bd: default
+        vrf: default
+        enable_routing: true
+        state: present
+
+    - name: Add example Subnet B on common BD-default (gateway owned by common)
+      cisco.aci.aci_bd_subnet:
+        <<: *aci_login
+        tenant: common
+        bd: default
+        gateway: 10.0.2.1
+        mask: 24
+        scope:
+          - private
+        state: present
+
+    - name: Add example Subnet C on common BD-default (gateway owned by common)
+      cisco.aci.aci_bd_subnet:
+        <<: *aci_login
+        tenant: common
+        bd: default
+        gateway: 10.0.3.1
+        mask: 24
+        scope:
+          - private
+        state: present
+
+    - name: Create a shared L3Out in tenant common on ctx-default
+      cisco.aci.aci_l3out:
+        <<: *aci_login
+        tenant: common
+        l3out: Shared-L3Out
+        vrf: default
+        domain: Example-L3Dom
+        l3protocol:
+          - static
+        state: present
+
+    - name: Create example user tenants Tenant1 to Tenant5
+      cisco.aci.aci_tenant:
+        <<: *aci_login
+        tenant: "{{ item }}"
+        state: present
+      loop:
+        - Tenant1
+        - Tenant2
+        - Tenant3
+        - Tenant4
+        - Tenant5
+
+    - name: Create a local BD in each user tenant, associated with ctx-default
+      cisco.aci.aci_bd:
+        <<: *aci_login
+        tenant: "{{ item.tenant }}"
+        bd: "{{ item.bd }}"
+        vrf: default
+        enable_routing: true
+        state: present
+      loop:
+        - {tenant: Tenant1, bd: BD1}
+        - {tenant: Tenant2, bd: BD2}
+        - {tenant: Tenant3, bd: BD3}
+        - {tenant: Tenant4, bd: BD4}
+        - {tenant: Tenant5, bd: BD5}
+
+    - name: Add an example subnet on each local BD
+      cisco.aci.aci_bd_subnet:
+        <<: *aci_login
+        tenant: "{{ item.tenant }}"
+        bd: "{{ item.bd }}"
+        gateway: "{{ item.gateway }}"
+        mask: 24
+        scope:
+          - private
+        state: present
+      loop:
+        - {tenant: Tenant1, bd: BD1, gateway: 10.1.1.1}
+        - {tenant: Tenant2, bd: BD2, gateway: 10.1.2.1}
+        - {tenant: Tenant3, bd: BD3, gateway: 10.1.3.1}
+        - {tenant: Tenant4, bd: BD4, gateway: 10.1.4.1}
+        - {tenant: Tenant5, bd: BD5, gateway: 10.1.5.1}
+
+    - name: Create an application profile in each user tenant
+      cisco.aci.aci_ap:
+        <<: *aci_login
+        tenant: "{{ item }}"
+        ap: AP1
+        state: present
+      loop:
+        - Tenant1
+        - Tenant2
+        - Tenant3
+        - Tenant4
+        - Tenant5
+
+    - name: Create two local EPGs on each tenant's local BD
+      cisco.aci.aci_epg:
+        <<: *aci_login
+        tenant: "{{ item.tenant }}"
+        ap: AP1
+        epg: "{{ item.epg }}"
+        bd: "{{ item.bd }}"
+        state: present
+      loop:
+        - {tenant: Tenant1, epg: EPG1, bd: BD1}
+        - {tenant: Tenant1, epg: EPG2, bd: BD1}
+        - {tenant: Tenant2, epg: EPG1, bd: BD2}
+        - {tenant: Tenant2, epg: EPG2, bd: BD2}
+        - {tenant: Tenant3, epg: EPG1, bd: BD3}
+        - {tenant: Tenant3, epg: EPG2, bd: BD3}
+        - {tenant: Tenant4, epg: EPG1, bd: BD4}
+        - {tenant: Tenant4, epg: EPG2, bd: BD4}
+        - {tenant: Tenant5, epg: EPG1, bd: BD5}
+        - {tenant: Tenant5, epg: EPG2, bd: BD5}
+
+    - name: Create two EPGs in each tenant on common BD-default
+      cisco.aci.aci_epg:
+        <<: *aci_login
+        tenant: "{{ item.tenant }}"
+        ap: AP1
+        epg: "{{ item.epg }}"
+        bd: default
+        state: present
+      loop:
+        - {tenant: Tenant1, epg: EPG3}
+        - {tenant: Tenant1, epg: EPG4}
+        - {tenant: Tenant2, epg: EPG3}
+        - {tenant: Tenant2, epg: EPG4}
+        - {tenant: Tenant3, epg: EPG3}
+        - {tenant: Tenant3, epg: EPG4}
+        - {tenant: Tenant4, epg: EPG3}
+        - {tenant: Tenant4, epg: EPG4}
+        - {tenant: Tenant5, epg: EPG3}
+        - {tenant: Tenant5, epg: EPG4}
+
+    - name: Create a contract in tenant common (shared-BD EPGs still need contracts)
+      cisco.aci.aci_contract:
+        <<: *aci_login
+        tenant: common
+        contract: Shared-BD-Ct
+        scope: context
+        state: present
+
+    - name: Add a subject to the common contract
+      cisco.aci.aci_contract_subject:
+        <<: *aci_login
+        tenant: common
+        contract: Shared-BD-Ct
+        subject: Shared-BD-Subj
+        state: present
+
+    - name: Example — provide the common contract on Tenant1 EPG3 (shared BD)
+      cisco.aci.aci_epg_to_contract:
+        <<: *aci_login
+        tenant: Tenant1
+        ap: AP1
+        epg: EPG3
+        contract: Shared-BD-Ct
+        contract_type: provider
+        state: present
+
+    - name: Example — consume the common contract on Tenant2 EPG3 (shared BD)
+      cisco.aci.aci_epg_to_contract:
+        <<: *aci_login
+        tenant: Tenant2
+        ap: AP1
+        epg: EPG3
+        contract: Shared-BD-Ct
+        contract_type: consumer
+        state: present
