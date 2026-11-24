@@ -248,9 +248,18 @@ def extra_css():
 #station-map svg.leaflet-attribution-flag { width: 12px; height: 8px; max-width: 12px; display: inline; vertical-align: baseline; }
 #station-map .leaflet-control-attribution { height: auto; line-height: 1.3; }
 @media (max-width: 390px) { #station-map { height: 220px; } }
-.station-grid { display: grid; grid-template-columns: 1fr; gap: 0.35rem 1.4rem; margin: 0 0 1.2rem; padding: 0; list-style: none; }
-@media (min-width: 800px) { .station-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-.station-grid a { display: block; padding: 0.2rem 0; }
+.station-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.15rem 1.4rem;
+  margin: 0 0 1.2rem;
+  padding-left: 1.4rem;
+}
+@media (min-width: 800px) {
+  .station-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.station-grid li { margin: 0; }
+.station-grid a { display: inline; }
 table.sched td.time, table.sched th.time { white-space: nowrap; font-variant-numeric: tabular-nums; }
 .nowrap, .time { white-space: nowrap; }
 .facts dt { font-weight: 700; margin: 0.7rem 0 0.15rem; }
