@@ -66,7 +66,10 @@ def load_chrome() -> tuple[str, str, str]:
     )
 
     foot_src = CHROME_FOOT_SOURCE.read_text(encoding="utf-8")
-    foot_start = foot_src.index('<script async="" data-goatcounter')
+    goat_marker = '<script async="" data-goatcounter'
+    if goat_marker not in foot_src:
+        foot_src = CHROME_HEAD_SOURCE.read_text(encoding="utf-8")
+    foot_start = foot_src.index(goat_marker)
     footer = foot_src[foot_start:]
     return head_and_tt, topbar, footer
 
