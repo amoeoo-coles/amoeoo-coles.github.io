@@ -181,10 +181,10 @@ def chrome_close(page_title: str, nav_html: str) -> str:
 (function(){{
   document.querySelectorAll(".codebox").forEach(function(box){{
     var btn = box.querySelector(".copy-btn");
-    var raw = box.getAttribute("data-raw") || "";
+    var rawEl = box.querySelector(".codebox-raw");
     if (!btn) return;
     btn.addEventListener("click", function(){{
-      var text = raw.replace(/\\u0000/g, "");
+      var text = rawEl ? rawEl.value : "";
       function done(){{
         var old = btn.textContent;
         btn.textContent = "Copied";
