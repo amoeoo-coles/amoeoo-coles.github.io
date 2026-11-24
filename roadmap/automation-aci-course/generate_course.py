@@ -215,7 +215,8 @@ code, .dn { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.
   line-height: 1.3;
 }
 .nav-btn .nav-title { font-weight: 650; }
-.nav-btn.next { justify-self: end; text-align: right; }
+.nav-btn.prev, .nav-btn.next { width: 100%; max-width: 100%; justify-self: stretch; box-sizing: border-box; }
+.nav-btn.next { text-align: right; }
 .nav-btn.is-disabled {
   opacity: 0.42;
   pointer-events: none;
