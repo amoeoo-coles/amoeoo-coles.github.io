@@ -1,0 +1,2415 @@
+{
+  "1": [
+    {
+      "prompt": "What is Cisco Application Centric Infrastructure (ACI)?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A chassis-based hardware load-balancer that replaces every leaf switch."
+        },
+        {
+          "id": "b",
+          "text": "Cisco’s software-defined networking architecture for the data centre: an APIC cluster holds desired-state policy, and a leaf-spine Clos fabric enforces that policy in the data plane."
+        },
+        {
+          "id": "c",
+          "text": "A WAN overlay that replaces IPsec with VXLAN between campus sites only."
+        },
+        {
+          "id": "d",
+          "text": "A hypervisor that virtualizes the Nexus 9000 supervisor."
+        }
+      ],
+      "answer": "b",
+      "explanation": "ACI is Cisco’s SDN architecture for the data centre. A cluster of APICs holds the desired-state policy, and leaf and spine switches form a Clos fabric that enforces that policy. You describe the connectivity and policy an application needs (tenants, endpoint groups, contracts) rather than only configuring each hop’s VLAN and ACL by hand.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "1-1"
+    },
+    {
+      "prompt": "Does tenant (user) traffic transit the APIC?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Yes. Every east-west packet hairpins through the APIC so contracts can be evaluated."
+        },
+        {
+          "id": "b",
+          "text": "Yes. The APIC is the default gateway for every bridge domain."
+        },
+        {
+          "id": "c",
+          "text": "No. User traffic does not transit the APIC. The APIC is the management and policy point of control; the switches run the data-plane tables."
+        },
+        {
+          "id": "d",
+          "text": "Only when the destination endpoint is on a different leaf."
+        }
+      ],
+      "answer": "c",
+      "explanation": "The APIC is the management and policy point of control. Switches still run the data-plane tables that implement EPGs and contracts. A common pitfall is assuming the APIC is in the packet path. User traffic does not transit the APIC.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "1-2"
+    },
+    {
+      "prompt": "Which distinguished name (DN) is the root of the ACI policy universe, and what is an example tenant DN?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The root is fabric/ (class fabricNode). An example tenant is fabric/tn-Example-Tenant."
+        },
+        {
+          "id": "b",
+          "text": "The root is /api/mo (class topRoot). Tenants live under /api/class/fvTenant."
+        },
+        {
+          "id": "c",
+          "text": "The root is topology/pod-1. An example tenant is topology/pod-1/tn-Example-Tenant."
+        },
+        {
+          "id": "d",
+          "text": "The root is uni (class polUni). An example tenant DN is uni/tn-Example-Tenant (class fvTenant)."
+        }
+      ],
+      "answer": "d",
+      "explanation": "The policy universe root DN is uni, class polUni. An example tenant DN is uni/tn-Example-Tenant, class fvTenant. Inventory objects such as topology/pod-1 are a different tree from the policy universe.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "1-3"
+    },
+    {
+      "prompt": "In a standard ACI leaf-spine Clos fabric, where do servers and other endpoints attach?",
+      "options": [
+        {
+          "id": "a",
+          "text": "To leaves. Spines provide full-mesh connectivity between leaves and do not typically connect to servers in the standard Clos design."
+        },
+        {
+          "id": "b",
+          "text": "Only to spine switches, because spines have the highest bandwidth."
+        },
+        {
+          "id": "c",
+          "text": "Equally to leaves and spines; the APIC load-balances attachments."
+        },
+        {
+          "id": "d",
+          "text": "Only to the APIC cluster, which then tunnels traffic to a leaf."
+        }
+      ],
+      "answer": "a",
+      "explanation": "Leaves are the attachment point for servers, routers and other endpoints. Spines provide the full-mesh connectivity between leaves and do not typically connect to servers in the standard ACI Clos design.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "1-4"
+    },
+    {
+      "prompt": "Which statement describes a standard ACI two-tier Clos fabric?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Leaves form a spanning-tree ring, and spines are used only for out-of-band management."
+        },
+        {
+          "id": "b",
+          "text": "Every leaf has links to every spine, and leaves do not connect to each other for fabric forwarding. Fabric links are not a spanning-tree topology."
+        },
+        {
+          "id": "c",
+          "text": "A partial leaf-to-spine mesh is recommended to save ports."
+        },
+        {
+          "id": "d",
+          "text": "Every leaf must also have a direct leaf-to-leaf link for east-west traffic."
+        }
+      ],
+      "answer": "b",
+      "explanation": "A standard ACI fabric is a two-tier Clos: every leaf has links to every spine, and leaves do not connect to each other for fabric forwarding. Fabric links are not a spanning-tree topology. Building a partial mesh “to save ports” is a common pitfall; the design assumes a full leaf-to-spine mesh.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "1-5"
+    },
+    {
+      "prompt": "How should you keep the data, control and management planes separate when you study ACI?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The APIC is the data plane; IS-IS and COOP run only as APIC processes; leaves have no control plane."
+        },
+        {
+          "id": "b",
+          "text": "The management plane is VXLAN between leaves; the data plane is the APIC GUI."
+        },
+        {
+          "id": "c",
+          "text": "Data plane: tenant and infrastructure packets forwarded by leaves and spines (VXLAN-encapsulated across the fabric). Control plane: fabric protocols such as IS-IS, COOP and MP-BGP. Management plane: the APIC cluster, in-band or out-of-band management, and the APIs you use from Ansible."
+        },
+        {
+          "id": "d",
+          "text": "COOP is used only for NTP, and MP-BGP is used only for APIC cluster heartbeats."
+        }
+      ],
+      "answer": "c",
+      "explanation": "Keep the three planes separate. The data plane is tenant and infrastructure packets forwarded by leaves and spines, VXLAN-encapsulated across the fabric. The control plane includes IS-IS for underlay reachability, COOP for endpoint mapping, and MP-BGP for external routes in the overlay. The management plane is the APIC cluster, in-band or out-of-band management, and the APIs (including Ansible).",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "1-6"
+    },
+    {
+      "prompt": "What does this Ansible task do?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It registers a new APIC into the cluster and assigns it node ID 1."
+        },
+        {
+          "id": "b",
+          "text": "It changes the admin password to the value of {{ apic_password }}."
+        },
+        {
+          "id": "c",
+          "text": "It upgrades the APIC firmware to the latest release."
+        },
+        {
+          "id": "d",
+          "text": "It performs a read-only query of APIC system information, using placeholders for the host and credentials."
+        }
+      ],
+      "answer": "d",
+      "explanation": "cisco.aci.aci_system with state: query is a read-only query of APIC system information. The host, username and password are placeholders ({{ apic_host }}, {{ apic_username }}, {{ apic_password }}). This task does not register a controller, change a password, or upgrade firmware.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_system module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_system_module.html"
+      },
+      "snippet": "- name: Query APIC system information\n  cisco.aci.aci_system:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    validate_certs: false\n    state: query",
+      "id": "1-7"
+    },
+    {
+      "prompt": "When you run cisco.aci modules from a control node, which address should Ansible target?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The APIC management address, represented in these examples as {{ apic_host }}. Do not send automation traffic to a leaf data-plane TEP."
+        },
+        {
+          "id": "b",
+          "text": "Every leaf TEP, so policy is pushed hop by hop."
+        },
+        {
+          "id": "c",
+          "text": "A spine’s VXLAN GIPo address."
+        },
+        {
+          "id": "d",
+          "text": "The infrastructure VLAN broadcast address."
+        }
+      ],
+      "answer": "a",
+      "explanation": "A common pitfall is sending automation traffic to a leaf data-plane TEP. Ansible should target the APIC management address ({{ apic_host }} in these examples). The cisco.aci modules talk to the APIC API from the control node.",
+      "source": {
+        "label": "Ansible cisco.aci collection documentation",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/index.html"
+      },
+      "id": "1-8"
+    },
+    {
+      "prompt": "What is the mgmt tenant used for?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It is the only place user EPGs may be created."
+        },
+        {
+          "id": "b",
+          "text": "The mgmt tenant (uni/tn-mgmt) holds in-band and out-of-band management endpoint groups. Do not confuse it with a user tenant such as uni/tn-Example-Tenant."
+        },
+        {
+          "id": "c",
+          "text": "It is an alias of uni/infra and holds VLAN pools."
+        },
+        {
+          "id": "d",
+          "text": "It stores vCenter credentials for every VMM domain."
+        }
+      ],
+      "answer": "b",
+      "explanation": "The mgmt tenant (uni/tn-mgmt) holds in-band and out-of-band management EPGs. Do not confuse it with a user tenant such as uni/tn-Example-Tenant. Changing mgmt tenant objects casually can lock you out of the controllers.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "1-9"
+    },
+    {
+      "prompt": "Which statement about adopting ACI is consistent with Cisco ACI Fundamentals?",
+      "options": [
+        {
+          "id": "a",
+          "text": "ACI removes the need to understand forwarding, encapsulation and failure domains."
+        },
+        {
+          "id": "b",
+          "text": "Contracts, VRFs and bridge-domain settings no longer decide whether two endpoints can talk."
+        },
+        {
+          "id": "c",
+          "text": "Common reasons include a single policy model for physical and virtual endpoints, consistent enforcement across the fabric, and a programmable northbound API on the APIC (REST, and tools such as the cisco.aci Ansible collection). It still changes only where you express policy and how the fabric programs switches."
+        },
+        {
+          "id": "d",
+          "text": "ACI is only a VLAN fabric with an API, and policy lives solely as local VLANs on each leaf."
+        }
+      ],
+      "answer": "c",
+      "explanation": "Cisco ACI Fundamentals describes a single policy model for physical and virtual endpoints, consistent enforcement, and a programmable northbound API. ACI does not remove the need to understand forwarding, encapsulation and failure domains. Treating ACI as “just a VLAN fabric with an API” is a common pitfall: contracts, VRFs and bridge-domain settings still decide whether two endpoints can talk.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "1-10"
+    }
+  ],
+  "2": [
+    {
+      "prompt": "A new ACI-mode leaf is cabled only to another leaf, with no path to a spine or to an APIC. What should you expect?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The APIC will discover it immediately, because any leaf-to-leaf cable is enough."
+        },
+        {
+          "id": "b",
+          "text": "The leaf will register itself with node ID 101 automatically."
+        },
+        {
+          "id": "c",
+          "text": "Discovery will fail. A leaf needs a path into the already-discovered fabric, usually via spines (or to an APIC at time zero)."
+        },
+        {
+          "id": "d",
+          "text": "The spine COOP database will proxy discovery for the isolated leaf."
+        }
+      ],
+      "answer": "c",
+      "explanation": "A common pitfall is cabling a new leaf only to another leaf and expecting discovery. A leaf needs a path into the already-discovered fabric, usually via spines, or to an APIC at time zero.",
+      "source": {
+        "label": "Cisco APIC Installation, ACI Upgrade and Downgrade Guide",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all-in-one-and-upgrade-downgrade/cisco-apic-installation-aci-upgrade-downgrade-guide.html"
+      },
+      "id": "2-1"
+    },
+    {
+      "prompt": "When you register a newly discovered switch, which identifiers does the APIC use, and which managed object represents the node?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Only a hostname; the object is fvTenant."
+        },
+        {
+          "id": "b",
+          "text": "A MAC address and a VLAN ID; the object is fvnsVlanInstP."
+        },
+        {
+          "id": "c",
+          "text": "Only the TEP address; the object is tunnelIf."
+        },
+        {
+          "id": "d",
+          "text": "A serial number, node ID, name and role, programmed as a fabricNode object (for example topology/pod-1/node-101 for leaf 101)."
+        }
+      ],
+      "answer": "d",
+      "explanation": "The APIC discovers a switch and shows it as a node that can be registered with a serial number, node ID, name and role. Switches appear among fabricNode objects under topology/pod-1. Ansible aci_fabric_node exposes serial, node_id, pod_id and role.",
+      "source": {
+        "label": "Cisco APIC Installation, ACI Upgrade and Downgrade Guide",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all-in-one-and-upgrade-downgrade/cisco-apic-installation-aci-upgrade-downgrade-guide.html"
+      },
+      "id": "2-2"
+    },
+    {
+      "prompt": "When are the TEP pool and the infrastructure VLAN set?",
+      "options": [
+        {
+          "id": "a",
+          "text": "During first-time APIC setup (the setup wizard or appliance console), as part of fabric initial setup, along with forming or joining the APIC cluster."
+        },
+        {
+          "id": "b",
+          "text": "Automatically the first time you create a user tenant."
+        },
+        {
+          "id": "c",
+          "text": "Only when you configure an L3Out."
+        },
+        {
+          "id": "d",
+          "text": "They are fixed by the switch hardware and cannot be set on the APIC."
+        }
+      ],
+      "answer": "a",
+      "explanation": "Fabric initial setup includes forming or joining the APIC cluster, setting the TEP pool and infrastructure VLAN during first-time APIC setup, and then registering switches. Time, DNS, NTP and the fabric BGP AS used later for MP-BGP route reflectors are also part of a complete bring-up. Exact default VLAN IDs and TEP pool sizes are release- and setup-specific.",
+      "source": {
+        "label": "Cisco APIC Installation, ACI Upgrade and Downgrade Guide",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all-in-one-and-upgrade-downgrade/cisco-apic-installation-aci-upgrade-downgrade-guide.html"
+      },
+      "id": "2-3"
+    },
+    {
+      "prompt": "Why is overlapping the TEP pool with tenant or external IP space a problem?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It is not a problem; the APIC translates every overlap automatically."
+        },
+        {
+          "id": "b",
+          "text": "Re-using a TEP pool that overlaps tenant or external IP space can break addressing and should not be done without a design review."
+        },
+        {
+          "id": "c",
+          "text": "It only matters for IPv6."
+        },
+        {
+          "id": "d",
+          "text": "The TEP pool is only used by the APIC GUI, so overlap is cosmetic."
+        }
+      ],
+      "answer": "b",
+      "explanation": "A common initial-setup pitfall is re-using a TEP pool that overlaps tenant or external IP space without a design review. TEP addresses are used in the underlay, including for VXLAN encapsulation between leaves.",
+      "source": {
+        "label": "Cisco APIC Installation, ACI Upgrade and Downgrade Guide",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all-in-one-and-upgrade-downgrade/cisco-apic-installation-aci-upgrade-downgrade-guide.html"
+      },
+      "id": "2-4"
+    },
+    {
+      "prompt": "What does this lab-only Ansible task do?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It queries inventory only; state: present never changes fabric membership."
+        },
+        {
+          "id": "b",
+          "text": "It assigns the leaf a tenant default gateway."
+        },
+        {
+          "id": "c",
+          "text": "It registers an example leaf in pod 1 with node ID 101 and role leaf. The serial is a placeholder ({{ leaf_serial }}). This is a lab example and must not be run against a production APIC."
+        },
+        {
+          "id": "d",
+          "text": "It upgrades the leaf from NX-OS standalone mode to ACI mode."
+        }
+      ],
+      "answer": "c",
+      "explanation": "cisco.aci.aci_fabric_node with state: present registers a node using pod_id, node_id, serial, a switch name and role. The lesson playbook uses a placeholder serial and then cleans the object up. Never put a real production serial or management IP in these examples, and do not run the lab registration playbook against a production cluster.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_fabric_node module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_fabric_node_module.html"
+      },
+      "snippet": "- name: Register an example leaf (placeholder serial)\n  cisco.aci.aci_fabric_node:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    pod_id: 1\n    node_id: 101\n    serial: \"{{ leaf_serial }}\"\n    switch: LEAF101\n    role: leaf\n    state: present",
+      "id": "2-5"
+    },
+    {
+      "prompt": "After a switch shows as registered in Fabric → Inventory, does that prove it is cabled correctly?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Yes. Registered always means every spine link is up."
+        },
+        {
+          "id": "b",
+          "text": "Yes, but only for spines, not for leaves."
+        },
+        {
+          "id": "c",
+          "text": "Registration is impossible until every spine link is up, so the question never arises."
+        },
+        {
+          "id": "d",
+          "text": "No. A node can be registered and still have missing spine links. Treat “registered” and “cabled correctly” as separate checks."
+        }
+      ],
+      "answer": "d",
+      "explanation": "A common pitfall in the initialization checks is treating “registered” as “cabled correctly.” A node can be registered and still have missing spine links. Also confirm cluster health under System → Controllers and do not skip NTP.",
+      "source": {
+        "label": "Cisco APIC Installation, ACI Upgrade and Downgrade Guide",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all-in-one-and-upgrade-downgrade/cisco-apic-installation-aci-upgrade-downgrade-guide.html"
+      },
+      "id": "2-6"
+    },
+    {
+      "prompt": "Where do you typically register fabric members after the first-boot APIC setup wizard?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Fabric → Inventory (Fabric Membership, or a similar “nodes pending registration” view)."
+        },
+        {
+          "id": "b",
+          "text": "Tenants → common → Networking."
+        },
+        {
+          "id": "c",
+          "text": "Virtual Networking → VMM domains."
+        },
+        {
+          "id": "d",
+          "text": "Admin → AAA only."
+        }
+      ],
+      "answer": "a",
+      "explanation": "The first-boot APIC setup wizard (or the appliance console) collects cluster and fabric identifiers. After that, Fabric → Inventory is used to register members. The wording may be “nodes pending registration” or similar, and after registration the node appears in the pod inventory.",
+      "source": {
+        "label": "Cisco APIC Installation, ACI Upgrade and Downgrade Guide",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all-in-one-and-upgrade-downgrade/cisco-apic-installation-aci-upgrade-downgrade-guide.html"
+      },
+      "id": "2-7"
+    },
+    {
+      "prompt": "Why is consistent time (NTP) part of a complete ACI bring-up?",
+      "options": [
+        {
+          "id": "a",
+          "text": "NTP is optional and used only for the APIC wallpaper clock."
+        },
+        {
+          "id": "b",
+          "text": "Skipping NTP makes later certificates, logs and some protocols harder to troubleshoot because time is not consistent across the cluster and the fabric."
+        },
+        {
+          "id": "c",
+          "text": "Without NTP the TEP pool cannot be entered."
+        },
+        {
+          "id": "d",
+          "text": "NTP is required only on leaves that attach to servers, not on APICs."
+        }
+      ],
+      "answer": "b",
+      "explanation": "Time, DNS and NTP are part of a complete bring-up, following the installation guide for that release. Skipping NTP makes later certificates, logs and some protocols harder to troubleshoot without consistent time.",
+      "source": {
+        "label": "Cisco APIC Installation, ACI Upgrade and Downgrade Guide",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all-in-one-and-upgrade-downgrade/cisco-apic-installation-aci-upgrade-downgrade-guide.html"
+      },
+      "id": "2-8"
+    }
+  ],
+  "3": [
+    {
+      "prompt": "What is the Management Information Tree (MIT) in ACI?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A spanning-tree instance that runs on every spine."
+        },
+        {
+          "id": "b",
+          "text": "The VXLAN underlay routing table."
+        },
+        {
+          "id": "c",
+          "text": "A Git repository the APIC uses to version switch images."
+        },
+        {
+          "id": "d",
+          "text": "The tree of managed objects that stores ACI policy. The policy universe root is DN uni, class polUni. Every tenant, VRF, BD, EPG and access-policy object has a distinguished name in that tree."
+        }
+      ],
+      "answer": "d",
+      "explanation": "ACI stores policy as a tree of managed objects (the MIT). The policy universe root is DN uni, class polUni. The same tree is what Visore, moquery, the GUI’s API inspector, and aci_rest all read.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "3-1"
+    },
+    {
+      "prompt": "How does a distinguished name (DN) differ from a relative name (RN)?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A DN uniquely identifies an object as a path of relative names, for example uni/tn-Example-Tenant/ap-Example-AP/epg-WEB. An RN is one path segment, such as tn-Example-Tenant. Names are unique per parent, not globally."
+        },
+        {
+          "id": "b",
+          "text": "They are two names for the same string; either can be used in a REST path."
+        },
+        {
+          "id": "c",
+          "text": "The RN is the full path, and the DN is only the class name."
+        },
+        {
+          "id": "d",
+          "text": "DNs exist only on leaves; RNs exist only on the APIC."
+        }
+      ],
+      "answer": "a",
+      "explanation": "A distinguished name uniquely identifies a managed object in the MIT as a path of relative names. Confusing the RN (for example tn-Example-Tenant) with the full DN is a common pitfall. Names are unique per parent, not globally, so two tenants can use the same EPG name.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "3-2"
+    },
+    {
+      "prompt": "Where do VLAN pools and physical domains live, and where does Fabric → Inventory live?",
+      "options": [
+        {
+          "id": "a",
+          "text": "VLAN pools live under a user tenant; inventory lives under uni/infra."
+        },
+        {
+          "id": "b",
+          "text": "VLAN pools and physical domains are access policies under uni/infra (Fabric → Access Policies). Fabric → Inventory is the topology/ tree, not uni/."
+        },
+        {
+          "id": "c",
+          "text": "Both live under uni/tn-common."
+        },
+        {
+          "id": "d",
+          "text": "Both live under topology/pod-1/node-1."
+        }
+      ],
+      "answer": "b",
+      "explanation": "A practical GUI map: Access Policies live under Fabric, not under a user tenant, and are rooted at uni/infra. Tenant policy lives under Tenants (uni/tn-Example-Tenant). Fabric → Inventory is the topology/ tree, not uni/. Looking for VLAN pools under a tenant is a common pitfall.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "3-3"
+    },
+    {
+      "prompt": "You copy the APIC GUI URL from the browser address bar and use it as an object DN in a REST call. What is wrong with that?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Nothing; GUI URLs are MIT distinguished names."
+        },
+        {
+          "id": "b",
+          "text": "It works only if you replace https with http."
+        },
+        {
+          "id": "c",
+          "text": "GUI URLs are not the same as MIT DNs. Obtain the DN from the API inspector, a “show DN” or Visore control, downloaded JSON, or the dn property in moquery output."
+        },
+        {
+          "id": "d",
+          "text": "It works only for objects under uni/infra."
+        }
+      ],
+      "answer": "c",
+      "explanation": "A common pitfall is copying a URL from the browser address bar and assuming it is a DN. GUI URLs are not the same as MIT DNs. Open the object and use the API inspector / “show DN” / Visore link offered by your APIC version, or read the dn property from JSON or moquery.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "3-4"
+    },
+    {
+      "prompt": "What is the Object Store Browser (Visore)?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The GUI form that creates and deletes tenants."
+        },
+        {
+          "id": "b",
+          "text": "A packet-capture tool that runs on spines."
+        },
+        {
+          "id": "c",
+          "text": "The firmware upgrade wizard."
+        },
+        {
+          "id": "d",
+          "text": "The APIC’s HTML interface for running class and DN queries against the MIT. It is the GUI equivalent of moquery and of aci_rest GET calls with a /api/class/ or /api/mo/ path, and it is for read-only browsing."
+        }
+      ],
+      "answer": "d",
+      "explanation": "Visore is the APIC’s HTML interface for class and DN queries against the MIT — the GUI equivalent of moquery and of aci_rest GET calls. A typical starting query is a class such as fvTenant or a DN such as uni/tn-Example-Tenant. Do not confuse Visore (read-only browsing) with the GUI form that changes an object.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "3-5"
+    },
+    {
+      "prompt": "This REST call is issued through cisco.aci.aci_rest. What does it do?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It is a read-only class query for application EPGs named WEB, using a query-target-filter. It is a close REST equivalent of moquery -c fvAEPg with a name filter."
+        },
+        {
+          "id": "b",
+          "text": "It deletes every tenant whose name is WEB."
+        },
+        {
+          "id": "c",
+          "text": "It creates an EPG named WEB."
+        },
+        {
+          "id": "d",
+          "text": "It returns the APIC cluster health score only."
+        }
+      ],
+      "answer": "a",
+      "explanation": "moquery is the APIC CLI tool for querying managed objects by class (-c) or DN (-d), with optional filters. A close REST equivalent of a name filter is /api/class/fvAEPg.json?query-target-filter=eq(fvAEPg.name,\"WEB\"). method: get with aci_rest is a read-only query. Filter syntax (fv.AEPg versus fvAEPg) depends on context; check a known-good example on your APIC version.",
+      "source": {
+        "label": "Ansible cisco.aci collection documentation",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/index.html"
+      },
+      "snippet": "- name: Query EPGs named WEB\n  cisco.aci.aci_rest:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    path: /api/class/fvAEPg.json?query-target-filter=eq(fvAEPg.name,\"WEB\")\n    method: get",
+      "id": "3-6"
+    },
+    {
+      "prompt": "Which moquery form queries by class, and which queries by distinguished name?",
+      "options": [
+        {
+          "id": "a",
+          "text": "moquery -d fvTenant queries the class; moquery -c uni/tn-Example-Tenant queries the DN."
+        },
+        {
+          "id": "b",
+          "text": "moquery -c fvTenant queries class fvTenant; moquery -d uni/tn-Example-Tenant queries that DN."
+        },
+        {
+          "id": "c",
+          "text": "Both -c and -d always query by DN."
+        },
+        {
+          "id": "d",
+          "text": "moquery has no DN form; you must use only Visore."
+        }
+      ],
+      "answer": "b",
+      "explanation": "Useful patterns include moquery -c fvTenant (class) and moquery -d uni/tn-Example-Tenant (DN). Expecting moquery on a leaf to see the whole MIT the same way the APIC does is a common pitfall.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "3-7"
+    },
+    {
+      "prompt": "You need to change tenant policy. Which interface should you use as the desired-state source, and why is a persistent change on the switch CLI a pitfall?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Use the switch NX-OS CLI to write tenant policy; the APIC will learn it automatically."
+        },
+        {
+          "id": "b",
+          "text": "Use Visore to POST changes; it is the write API."
+        },
+        {
+          "id": "c",
+          "text": "Use the APIC and its API (or Ansible) to change policy. A persistent configuration change on the switch CLI can later be overwritten, because the APIC is the desired-state source for policy. Use switch CLI to verify forwarding tables, LLDP and data-plane counters."
+        },
+        {
+          "id": "d",
+          "text": "Only acidiag can change policy."
+        }
+      ],
+      "answer": "c",
+      "explanation": "Use the APIC and its API (or Ansible) to change policy. Use switch CLI to verify forwarding tables, LLDP and data-plane counters. Use moquery or Visore when you need the precise managed object behind a GUI form. Making a persistent configuration change on the switch CLI that the APIC will later overwrite is a common pitfall.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "3-8"
+    },
+    {
+      "prompt": "If the APIC cluster is temporarily unreachable, what happens to already-programmed forwarding on the leaves and spines, and what can you no longer do?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The data plane stops immediately, but you can still make policy changes on any leaf CLI."
+        },
+        {
+          "id": "b",
+          "text": "COOP on the spines takes over as a writeable policy controller."
+        },
+        {
+          "id": "c",
+          "text": "All contracts are lifted until an APIC returns."
+        },
+        {
+          "id": "d",
+          "text": "The data plane on leaves and spines continues to forward already-programmed policy, but you cannot make policy changes without an available APIC."
+        }
+      ],
+      "answer": "d",
+      "explanation": "A cluster of APICs provides availability of the management and policy plane. The data plane on leaves and spines continues to forward already-programmed policy if the APIC cluster is temporarily unreachable, but you cannot make policy changes without an available APIC. Exact supported cluster sizes are release-specific and are not collected as a single number here.",
+      "source": {
+        "label": "Cisco APIC Installation, ACI Upgrade and Downgrade Guide",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all-in-one-and-upgrade-downgrade/cisco-apic-installation-aci-upgrade-downgrade-guide.html"
+      },
+      "id": "3-9"
+    },
+    {
+      "prompt": "Which class is commonly used to inspect APIC cluster members, and which Ansible module can query fabric-wide system information?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Cluster members are visible as infraWiNode objects and through aci_system queries."
+        },
+        {
+          "id": "b",
+          "text": "Cluster members appear as fvAEPg objects; use aci_epg."
+        },
+        {
+          "id": "c",
+          "text": "Cluster members are vzBrCP objects; use aci_contract."
+        },
+        {
+          "id": "d",
+          "text": "Cluster members exist only as Linux processes and have no managed-object class."
+        }
+      ],
+      "answer": "a",
+      "explanation": "Cluster members appear as infrastructure objects such as infraWiNode. Fabric-wide system information is also available through the APIC APIs and the aci_system Ansible module (state: query). Health and fit state should be read from your APIC version’s cluster view.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_system module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_system_module.html"
+      },
+      "id": "3-10"
+    }
+  ],
+  "4": [
+    {
+      "prompt": "What do ACI access policies describe, and where do they live?",
+      "options": [
+        {
+          "id": "a",
+          "text": "They describe how leaf ports attach to the outside world (switches, interfaces, interface policies, VLAN pools and domains). They live under uni/infra, not under a user tenant."
+        },
+        {
+          "id": "b",
+          "text": "They describe tenant VRFs and contracts, and they live under uni/tn-common."
+        },
+        {
+          "id": "c",
+          "text": "They describe only APIC cluster membership, under topology/pod-1."
+        },
+        {
+          "id": "d",
+          "text": "They are stored on each host NIC as LLDP TLVs."
+        }
+      ],
+      "answer": "a",
+      "explanation": "Access policies describe how leaf ports attach to the outside world: which switches and interfaces, which interface policies apply, and which VLAN pools and domains those ports may use. They live under uni/infra, not under a user tenant. A complete chain is usually switch profile → interface profile → access port selector / port block → interface policy group → AEP → domain → VLAN pool, plus the tenant EPG binding.",
+      "source": {
+        "label": "Cisco APIC Layer 2 Networking Configuration Guide, Release 6.1(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-61x.html"
+      },
+      "id": "4-1"
+    },
+    {
+      "prompt": "A switch profile has been created, and so has an interface profile with port blocks, but no leaf receives the interfaces. What is a likely cause?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The APIC never applies interface profiles to leaves."
+        },
+        {
+          "id": "b",
+          "text": "The interface profile was not associated with the switch profile, so no leaf receives those interfaces."
+        },
+        {
+          "id": "c",
+          "text": "Port blocks can be used only on spines."
+        },
+        {
+          "id": "d",
+          "text": "You must reboot every leaf after creating a selector."
+        }
+      ],
+      "answer": "b",
+      "explanation": "A leaf switch profile (infraNodeP, Ansible aci_switch_policy_leaf_profile) names a set of leaf nodes. A leaf interface profile (infraAccPortP) holds selectors and port blocks, but a common pitfall is creating an interface profile and never associating it with a switch profile, so no leaf receives the interfaces.",
+      "source": {
+        "label": "Cisco APIC Layer 2 Networking Configuration Guide, Release 6.1(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-61x.html"
+      },
+      "id": "4-2"
+    },
+    {
+      "prompt": "In cisco.aci.aci_interface_policy_leaf_policy_group, what do the lag_type values leaf, link and node mean?",
+      "options": [
+        {
+          "id": "a",
+          "text": "leaf means a spine, link means an APIC, and node means a FEX."
+        },
+        {
+          "id": "b",
+          "text": "They are interchangeable labels for the same access port policy group."
+        },
+        {
+          "id": "c",
+          "text": "leaf is a Leaf Access Port Policy Group (one physical port), link is a PC Interface Policy Group (port-channel on a single leaf), and node is a vPC policy group."
+        },
+        {
+          "id": "d",
+          "text": "link and node are used only for L3Out routed ports."
+        }
+      ],
+      "answer": "c",
+      "explanation": "A Leaf Access Port Policy Group (infraAccPortGrp) applies policies to one physical port. A PC Interface Policy Group (infraAccBndlGrp, lag type link) applies policies to a port-channel on a single leaf. A vPC policy group uses the same bundle class with lag type node. The required parameter lag_type is leaf (access port), link (port-channel) or node (vPC).",
+      "source": {
+        "label": "Ansible cisco.aci.aci_interface_policy_leaf_policy_group module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_interface_policy_leaf_policy_group_module.html"
+      },
+      "snippet": "- name: Create an access (single-port) policy group\n  cisco.aci.aci_interface_policy_leaf_policy_group:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    policy_group: Example-Access-IPG\n    lag_type: leaf\n    state: present\n- name: Create a port-channel policy group\n  cisco.aci.aci_interface_policy_leaf_policy_group:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    policy_group: Example-PC-IPG\n    lag_type: link\n    state: present",
+      "id": "4-3"
+    },
+    {
+      "prompt": "What is required before a vPC interface policy group (lag_type: node) will work as intended?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Nothing; the vPC IPG creates the leaf pair automatically."
+        },
+        {
+          "id": "b",
+          "text": "A port-channel policy group with lag_type: link on only one of the two leaves."
+        },
+        {
+          "id": "c",
+          "text": "An L3Out with l3protocol: bgp."
+        },
+        {
+          "id": "d",
+          "text": "A vPC protection group that pairs the two leaves (switch-level), plus the vPC IPG applied to the member ports on both leaves. Building the vPC IPG before the protection group exists is a pitfall."
+        }
+      ],
+      "answer": "d",
+      "explanation": "A vPC presents ports on two leaves as one logical port-channel to the attached device. A protection group pairs the two leaves (Ansible aci_switch_policy_vpc_protection_group with switch_1_id, switch_2_id, pod_id and a protection group ID). A vPC interface policy group (lag_type: node) is applied to the member ports on both leaves. Trying to build a vPC IPG without first pairing the two leaves in a protection group is a common pitfall.",
+      "source": {
+        "label": "Cisco APIC Layer 2 Networking Configuration Guide, Release 6.2(x) — Virtual port channels in Cisco ACI",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-62x/access-interfaces-62x/virtual-port-channels-in-cisco-aci.html"
+      },
+      "id": "4-4"
+    },
+    {
+      "prompt": "Which statement about VLAN pools is correct?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A VLAN pool (fvnsVlanInstP) is a set of VLAN encapsulations a domain is allowed to use. Pools have an allocation mode of static or dynamic. Physical domains typically use a static pool; the VLAN used in an EPG static path must be in the pool attached to that domain."
+        },
+        {
+          "id": "b",
+          "text": "VLAN pools live under each EPG and are always dynamic."
+        },
+        {
+          "id": "c",
+          "text": "A VLAN that is missing from the pool is still deployed if you type it on a static path."
+        },
+        {
+          "id": "d",
+          "text": "Allocation mode is only a GUI label and has no effect."
+        }
+      ],
+      "answer": "a",
+      "explanation": "A VLAN pool is a set of VLAN encapsulations that a domain is allowed to use, with allocation mode static or dynamic. Physical domains typically use a static pool; some VMM integrations use dynamic allocation. Using a VLAN in an EPG static path that is not in the pool attached to that domain means the path will not deploy cleanly.",
+      "source": {
+        "label": "Cisco APIC Layer 2 Networking Configuration Guide, Release 6.1(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-61x.html"
+      },
+      "id": "4-5"
+    },
+    {
+      "prompt": "What does this lab-only playbook fragment create?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A dynamic VMM pool from VLAN 1 to 4094."
+        },
+        {
+          "id": "b",
+          "text": "A static VLAN pool named Example-VLAN-Pool and an encapsulation block for VLANs 200–299."
+        },
+        {
+          "id": "c",
+          "text": "A tenant subnet 200.0.0.0/299."
+        },
+        {
+          "id": "d",
+          "text": "A spine switch profile."
+        }
+      ],
+      "answer": "b",
+      "explanation": "aci_vlan_pool creates the pool (here pool_allocation_mode: static). aci_vlan_pool_encap_block adds the encap block with block_start and block_end (200–299). The example DN form is uni/infra/vlanns-[Example-VLAN-Pool]-static.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_vlan_pool module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_vlan_pool_module.html"
+      },
+      "snippet": "- name: Create a static VLAN pool\n  cisco.aci.aci_vlan_pool:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    pool: Example-VLAN-Pool\n    pool_allocation_mode: static\n    state: present\n- name: Add VLAN 200-299 to the pool\n  cisco.aci.aci_vlan_pool_encap_block:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    pool: Example-VLAN-Pool\n    pool_allocation_mode: static\n    block_start: 200\n    block_end: 299\n    allocation_mode: static\n    state: present",
+      "id": "4-6"
+    },
+    {
+      "prompt": "What does a domain do, and which domain_type values does cisco.aci.aci_domain use?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A domain is a tenant VRF. domain_type is always tenant."
+        },
+        {
+          "id": "b",
+          "text": "A domain is an APIC cluster member. domain_type is apic or leaf."
+        },
+        {
+          "id": "c",
+          "text": "A domain ties a VLAN (or VXLAN/VLAN) pool to a class of attachment. aci_domain requires domain_type with choices such as phys, vmm, l2dom, l3dom or fc."
+        },
+        {
+          "id": "d",
+          "text": "A domain replaces the AEP, so AEPs are optional for every port."
+        }
+      ],
+      "answer": "c",
+      "explanation": "A domain ties a VLAN (or VXLAN/VLAN) pool to a class of attachment: physical (phys), VMM (vmm), L2 external (l2dom), L3 external (l3dom) or Fibre Channel (fc). Ansible aci_domain requires domain_type with those choices. Leaving the domain without a VLAN pool, or without an AEP association, means EPG path bindings have no allowed encaps.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_domain module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_domain_module.html"
+      },
+      "id": "4-7"
+    },
+    {
+      "prompt": "What is an Attachable Entity Profile (AEP), and how does it fit in the access-policy chain?",
+      "options": [
+        {
+          "id": "a",
+          "text": "An AEP is a tenant contract used instead of a domain."
+        },
+        {
+          "id": "b",
+          "text": "An AEP is a spine loopback address."
+        },
+        {
+          "id": "c",
+          "text": "An AEP is created automatically for every EPG and cannot be referenced by an IPG."
+        },
+        {
+          "id": "d",
+          "text": "An AEP (infraAttEntityP) groups domains and is referenced by interface policy groups. The IPG points at the AEP, and the AEP points at one or more domains (and therefore their VLAN pools)."
+        }
+      ],
+      "answer": "d",
+      "explanation": "An AEP groups domains and is referenced by interface policy groups. It is the “what can attach here” object for a set of ports. Ansible modules include aci_aep and aci_aep_to_domain. A common pitfall is creating the AEP and the domain but never attaching the AEP to the interface policy group. Enabling the infrastructure VLAN on an AEP without a design reason is also a pitfall; that option is reserved for specific infrastructure attachments.",
+      "source": {
+        "label": "Cisco APIC Layer 2 Networking Configuration Guide, Release 6.1(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-61x.html"
+      },
+      "id": "4-8"
+    },
+    {
+      "prompt": "Which statement about a Fabric Extender (FEX) in ACI is correct?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A FEX can be attached to an ACI leaf, subject to the hardware and software Cisco supports for that release. A FEX is not a full leaf: policy is still defined on the parent leaf."
+        },
+        {
+          "id": "b",
+          "text": "A FEX is a full leaf and holds its own independent APIC policy store."
+        },
+        {
+          "id": "c",
+          "text": "Every Nexus FEX model that works in NX-OS standalone mode is automatically supported in ACI mode."
+        },
+        {
+          "id": "d",
+          "text": "FEX host ports cannot be represented in interface profiles."
+        }
+      ],
+      "answer": "a",
+      "explanation": "A FEX can be attached to an ACI leaf, subject to supported hardware and software combinations. A FEX is not a full leaf: policy is still defined on the parent leaf, and host ports on the FEX are represented through FEX-aware interface profiles and policy groups. Do not assume every Nexus FEX model that works in NX-OS standalone mode is supported in ACI mode; check the compatibility list for your release.",
+      "source": {
+        "label": "Cisco APIC Layer 2 Networking Configuration Guide, Release 6.1(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-61x.html"
+      },
+      "id": "4-9"
+    },
+    {
+      "prompt": "A port-channel in ACI bundles ports on which device, and which lag_type is used for a single-leaf PC policy group?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It bundles ports on two leaves; lag_type is node."
+        },
+        {
+          "id": "b",
+          "text": "It bundles two or more ports on the same leaf into one logical interface; the PC interface policy group uses lag_type: link. A vPC (two leaves) needs lag_type: node and a protection group."
+        },
+        {
+          "id": "c",
+          "text": "It bundles APIC in-band ports only; lag_type is leaf."
+        },
+        {
+          "id": "d",
+          "text": "Port-channels are configured only on spines."
+        }
+      ],
+      "answer": "b",
+      "explanation": "A port-channel bundles two or more ports on the same leaf into one logical interface, providing redundancy and load-balancing across members. You typically create a port-channel policy (LACP mode; Ansible aci_interface_policy_port_channel, with modes such as active, passive, off, mac-pin, mac-pin-nicload) and attach it to a PC interface policy group (lag_type: link). Forgetting that a vPC needs lag_type: node and a protection group is a common pitfall.",
+      "source": {
+        "label": "Cisco APIC Layer 2 Networking Configuration Guide, Release 6.2(x) — Port channels",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-62x/access-interfaces-62x/port-channels.html"
+      },
+      "id": "4-10"
+    }
+  ],
+  "5": [
+    {
+      "prompt": "What is the usual tenant policy stack, and how is it different from access policies?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Tenant policies are VLAN pools and AEPs under uni/infra."
+        },
+        {
+          "id": "b",
+          "text": "Tenant policies describe the logical network: tenant → VRF (context) → bridge domain and subnet → application profile → EPG, plus contracts. That is separate from the access-policy chain that attaches those EPGs to ports."
+        },
+        {
+          "id": "c",
+          "text": "The only tenant object is the APIC admin user."
+        },
+        {
+          "id": "d",
+          "text": "Tenant policies replace access policies, so domains are not used."
+        }
+      ],
+      "answer": "b",
+      "explanation": "Tenant policies describe the logical network and are separate from the access-policy chain that attaches EPGs to ports. Example DNs include uni/tn-Example-Tenant (fvTenant), .../ctx-Example-VRF (fvCtx), .../BD-Example-BD (fvBD), .../ap-Example-AP (fvAp) and .../ap-Example-AP/epg-WEB (fvAEPg).",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "5-1"
+    },
+    {
+      "prompt": "Which built-in tenants are commonly present, and what is a user tenant for?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The only built-in tenant is Example-Tenant."
+        },
+        {
+          "id": "b",
+          "text": "infra and mgmt are VRFs, not tenants."
+        },
+        {
+          "id": "c",
+          "text": "Common built-in tenants include common, infra and mgmt. A user tenant such as Example-Tenant holds application VRFs, BDs and EPGs. A tenant (fvTenant) is the primary administrative container for policy."
+        },
+        {
+          "id": "d",
+          "text": "All objects must be placed in common, and user tenants cannot hold a VRF."
+        }
+      ],
+      "answer": "c",
+      "explanation": "A tenant is the primary administrative container for policy. Common built-in tenants include common, infra and mgmt. Placing objects in common “for convenience” without understanding that other tenants can consume common contracts and objects is a pitfall.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "5-2"
+    },
+    {
+      "prompt": "What is a VRF (context) in ACI, and what does policy_control_preference: unenforced mean?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A VRF is a VLAN pool. unenforced means the VRF is deleted."
+        },
+        {
+          "id": "b",
+          "text": "A VRF is an L2Out. unenforced means BPDU Guard is off."
+        },
+        {
+          "id": "c",
+          "text": "VRFs exist only in the common tenant, and unenforced is the only production setting."
+        },
+        {
+          "id": "d",
+          "text": "A VRF (fvCtx) is the Layer 3 isolation domain inside a tenant. With policy_control_preference: unenforced, the VRF does not require contracts for forwarding between its EPGs — so you are not testing the usual contract model."
+        }
+      ],
+      "answer": "d",
+      "explanation": "A VRF, also called a context (fvCtx), is the Layer 3 isolation domain inside a tenant. Bridge domains and L3Outs are associated with a VRF. Policy control preference can be enforced (the usual contract model) or unenforced (contracts are not required for forwarding inside that VRF). Leaving a VRF unenforced in a lab and then assuming contracts are being tested is a common pitfall.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "5-3"
+    },
+    {
+      "prompt": "Which statement about a bridge domain (BD) is correct?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A BD (fvBD) is a Layer 2 forwarding construct inside a VRF. It can hold subnets when routed, and it controls unknown unicast, ARP and multidestination (BUM) behaviour."
+        },
+        {
+          "id": "b",
+          "text": "A BD is a physical leaf switch."
+        },
+        {
+          "id": "c",
+          "text": "A BD can belong to several VRFs at once."
+        },
+        {
+          "id": "d",
+          "text": "A BD is only an alias for an EPG."
+        }
+      ],
+      "answer": "a",
+      "explanation": "A bridge domain is a Layer 2 forwarding construct inside a VRF. Ansible aci_bd includes enable_routing, arp_flooding, l2_unknown_unicast (proxy or flood), l3_unknown_multicast and multi_dest (bd-flood, drop, encap-flood). Defaults can vary by release. Creating a BD with routing disabled and then adding a gateway subnet, or the reverse, without a clear L2-only versus L3 design is a pitfall.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "5-4"
+    },
+    {
+      "prompt": "Look at this aci_bd_subnet task. Which statement is correct?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The module uses a single CIDR field named prefix: 10.0.0.1/24. Scope private means the subnet will be advertised out of every L3Out."
+        },
+        {
+          "id": "b",
+          "text": "aci_bd_subnet uses separate gateway and mask fields (here 10.0.0.1 and 24), not a combined CIDR field. Scope private does not, by itself, advertise the subnet externally; a public scope is used when the subnet should be advertised, subject to L3Out route control."
+        },
+        {
+          "id": "c",
+          "text": "mask: 24 is invalid; you must write mask: 255.255.255.0 only."
+        },
+        {
+          "id": "d",
+          "text": "preferred: true makes the subnet a spine anycast address only."
+        }
+      ],
+      "answer": "b",
+      "explanation": "Ansible aci_bd_subnet uses gateway (for example 10.0.0.1) and mask (for example 24), not a combined CIDR field. Scope choices include private, public and shared. A common pitfall is expecting a private subnet to be advertised out of an L3Out without also setting the appropriate scope and route-control policy. Shared is used when the subnet is shared across VRFs according to a shared-service design.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_bd_subnet module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_bd_subnet_module.html"
+      },
+      "snippet": "- name: Add a private gateway subnet to the BD\n  cisco.aci.aci_bd_subnet:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    tenant: Example-Tenant\n    bd: Example-BD\n    gateway: 10.0.0.1\n    mask: 24\n    scope:\n      - private\n    preferred: true\n    state: present",
+      "id": "5-5"
+    },
+    {
+      "prompt": "What is an application profile (fvAp), and what does it not do by itself?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It is the default gateway for every EPG it contains."
+        },
+        {
+          "id": "b",
+          "text": "It replaces the VRF."
+        },
+        {
+          "id": "c",
+          "text": "It is a container for EPGs that belong together. It does not by itself provide connectivity; EPGs, BDs and contracts do."
+        },
+        {
+          "id": "d",
+          "text": "It is an access-policy object under uni/infra."
+        }
+      ],
+      "answer": "c",
+      "explanation": "An application profile is a container for EPGs that belong together, for example the tiers of one application. Example DN: uni/tn-Example-Tenant/ap-Example-AP. Ansible: aci_ap.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "5-6"
+    },
+    {
+      "prompt": "In an enforced VRF, when do endpoints need a contract?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Endpoints in the same EPG always need a contract, and endpoints in different EPGs never do."
+        },
+        {
+          "id": "b",
+          "text": "Contracts are never required inside a tenant."
+        },
+        {
+          "id": "c",
+          "text": "A contract is required only for traffic that stays on one leaf."
+        },
+        {
+          "id": "d",
+          "text": "Endpoints in the same EPG can typically communicate without a contract, subject to intra-EPG isolation. Endpoints in different EPGs of an enforced VRF need a contract (or a preferred-group / unenforced design). The EPG is associated with a bridge domain."
+        }
+      ],
+      "answer": "d",
+      "explanation": "An EPG (fvAEPg) groups endpoints that share the same policy. Endpoints in the same EPG can typically communicate without a contract, unless intra-EPG isolation is enabled. Endpoints in different EPGs of an enforced VRF need a contract (or a preferred-group / unenforced design). Creating the EPG but not binding it to a domain and encapsulation means no endpoint can join it on a leaf port.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "5-7"
+    },
+    {
+      "prompt": "A static path uses VLAN 201, but the path does not deploy cleanly. Which access-policy checks should you make?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The domain binding on the EPG must use a VLAN that exists in the domain’s VLAN pool, and the leaf port must be in an IPG whose AEP includes that domain."
+        },
+        {
+          "id": "b",
+          "text": "None; any VLAN number can be used on any port."
+        },
+        {
+          "id": "c",
+          "text": "Only the tenant name matters; pools are ignored for static paths."
+        },
+        {
+          "id": "d",
+          "text": "VLAN 201 must be configured in the NX-OS VLAN database on the spine."
+        }
+      ],
+      "answer": "a",
+      "explanation": "Physical endpoints are commonly attached with a static path binding (leaf/port or PC/vPC path plus VLAN encap). The domain binding (aci_epg_to_domain, for example domain_type: phys, encap: vlan-201) must use a VLAN that exists in the domain’s VLAN pool. The leaf port must also be in an IPG whose AEP includes that domain. Path attachments appear as fvRsPathAtt; a domain association is fvRsDomAtt.",
+      "source": {
+        "label": "Cisco APIC Layer 2 Networking Configuration Guide, Release 6.1(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-61x.html"
+      },
+      "id": "5-8"
+    },
+    {
+      "prompt": "What do this contract, subject and filter example create?",
+      "options": [
+        {
+          "id": "a",
+          "text": "An L3Out that advertises TCP/80."
+        },
+        {
+          "id": "b",
+          "text": "A filter FLT-WEB with a TCP destination-port 80 entry, a contract CTX-WEB with scope context (VRF), and a subject SUBJ-WEB. The filter still has to be associated with the subject for traffic to match."
+        },
+        {
+          "id": "c",
+          "text": "A VLAN pool from 80 to 80."
+        },
+        {
+          "id": "d",
+          "text": "A complete provider and consumer attachment on two EPGs; no further deployment steps are needed."
+        }
+      ],
+      "answer": "b",
+      "explanation": "A contract (vzBrCP) allows traffic between EPGs in an enforced VRF. It contains subjects (vzSubj) that use filters (vzFilter) and filter entries (vzEntry). aci_filter_entry here matches IPv4 TCP destination port 80. aci_contract scope includes context, tenant, application-profile and global. A common pitfall is creating a filter entry but forgetting to associate the filter with a subject, or the subject with the contract. This fragment also does not yet provide or consume the contract on EPGs.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_contract module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_contract_module.html"
+      },
+      "snippet": "- name: Add a TCP destination-port 80 entry\n  cisco.aci.aci_filter_entry:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    tenant: Example-Tenant\n    filter: FLT-WEB\n    entry: TCP-80\n    ether_type: ip\n    ip_protocol: tcp\n    destination_port_start: 80\n    destination_port_end: 80\n    state: present\n- name: Create a contract\n  cisco.aci.aci_contract:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    tenant: Example-Tenant\n    contract: CTX-WEB\n    scope: context\n    state: present",
+      "id": "5-9"
+    },
+    {
+      "prompt": "How is a contract deployed between two EPGs, and why does scope matter?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Both EPGs must be providers and never consumers."
+        },
+        {
+          "id": "b",
+          "text": "Contracts deploy automatically to every EPG in the fabric when the filter is created."
+        },
+        {
+          "id": "c",
+          "text": "One EPG (or L3Out external EPG) provides the contract and another consumes it (aci_epg_to_contract with contract_type provider or consumer). Using scope: application-profile fails when the two EPGs are in different application profiles."
+        },
+        {
+          "id": "d",
+          "text": "Scope is ignored if the contract name starts with CTX-."
+        }
+      ],
+      "answer": "c",
+      "explanation": "One EPG provides the contract; another consumes it. After deployment, the fabric programs zoning-rules. Providing and consuming the contract under the wrong EPGs, or under a contract scope that cannot see both EPGs, is a pitfall — including scope: application-profile when the two EPGs are in different application profiles.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_epg_to_contract module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_epg_to_contract_module.html"
+      },
+      "id": "5-10"
+    }
+  ],
+  "6": [
+    {
+      "prompt": "How is a tenant Ethernet frame forwarded between leaves in ACI?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It is sent as a raw VLAN-tagged frame on a leaf-to-leaf cable; other leaves see the same inner VLAN on the wire."
+        },
+        {
+          "id": "b",
+          "text": "The APIC encapsulates every frame and hairpins it through the cluster."
+        },
+        {
+          "id": "c",
+          "text": "Between leaves, ACI encapsulates tenant Ethernet frames in VXLAN. The outer packet is forwarded in the underlay using TEP addresses."
+        },
+        {
+          "id": "d",
+          "text": "Only multicast frames are encapsulated; unicast uses spanning tree."
+        }
+      ],
+      "answer": "c",
+      "explanation": "Between leaves, ACI encapsulates tenant Ethernet frames in VXLAN. The outer packet is forwarded in the underlay using TEP addresses. A common pitfall is capturing only the inner VLAN on a host NIC and assuming that VLAN is what other leaves see on the wire.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "6-1"
+    },
+    {
+      "prompt": "A server will attach with LACP across two leaves. Which ACI policy group and lag_type match that teaming mode?",
+      "options": [
+        {
+          "id": "a",
+          "text": "An access IPG with lag_type: leaf."
+        },
+        {
+          "id": "b",
+          "text": "A single-leaf PC IPG with lag_type: link."
+        },
+        {
+          "id": "c",
+          "text": "No policy group is needed if the server uses switch-independent teaming."
+        },
+        {
+          "id": "d",
+          "text": "A vPC IPG with lag_type: node, and the server must use a teaming mode that matches (LACP when the policy uses mode active or passive)."
+        }
+      ],
+      "answer": "d",
+      "explanation": "Endpoints may be attached on a single port (access IPG, lag_type: leaf), bundled on one leaf (PC IPG, link), or bundled across two leaves (vPC IPG, node). The server must use a teaming mode that matches the ACI policy group: LACP for mode active or passive, or a pinning mode when the policy uses MAC pinning. Configuring LACP on the fabric and switch-independent teaming on the server is a pitfall.",
+      "source": {
+        "label": "Cisco APIC Layer 2 Networking Configuration Guide, Release 6.2(x) — Virtual port channels in Cisco ACI",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-62x/access-interfaces-62x/virtual-port-channels-in-cisco-aci.html"
+      },
+      "id": "6-2"
+    },
+    {
+      "prompt": "Two ports on two different leaves both use encapsulation vlan-201. Does that alone make them one fabric-wide broadcast domain?",
+      "options": [
+        {
+          "id": "a",
+          "text": "No. The VLAN on a static path or EPG domain binding is an encapsulation on that port (or PC), not a fabric-wide VLAN. Broadcast domain membership follows the BD and EPG design, not the number 201 alone."
+        },
+        {
+          "id": "b",
+          "text": "Yes. VLAN 201 is a single fabric-wide broadcast domain, as on a campus NX-OS VLAN database."
+        },
+        {
+          "id": "c",
+          "text": "Yes, but only if both leaves are spines."
+        },
+        {
+          "id": "d",
+          "text": "VLAN IDs cannot be reused on different leaves under any design."
+        }
+      ],
+      "answer": "a",
+      "explanation": "The VLAN on a static path or EPG domain binding is an encapsulation on that port, not a fabric-wide VLAN in the NX-OS VLAN-database sense. The same VLAN ID can be reused on different leaves only when the access-policy and domain design allows it — do not assume reuse is always safe. The VLAN must exist in the domain’s VLAN pool. Scope is “this domain / this AEP / this port binding,” not “the whole fabric.”",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "6-3"
+    },
+    {
+      "prompt": "How do leaves learn local endpoints, and which objects can you query?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Endpoints appear only after you create a static ARP entry on the APIC."
+        },
+        {
+          "id": "b",
+          "text": "Leaves learn local endpoints from data-plane traffic (and, in some attachments, from control-plane or VMM information). Learned endpoints appear as fvCEp (and fvIp for IP addresses). The rest of the fabric locates a remote MAC or IP through COOP on the spines."
+        },
+        {
+          "id": "c",
+          "text": "Only spines learn endpoints; leaves never store them."
+        },
+        {
+          "id": "d",
+          "text": "fvCEp objects exist only for L3Out peer IPs."
+        }
+      ],
+      "answer": "b",
+      "explanation": "Leaves learn local endpoints from data-plane traffic (and, in some attachments, from control-plane or VMM information). Query fvCEp, and on a switch use show endpoints. A common pitfall is expecting an endpoint to appear before the host has sent traffic (or before the hypervisor has advertised it in a VMM design). Timer defaults are version-specific and are not collected here.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "6-4"
+    },
+    {
+      "prompt": "When is an IP address typically learned on an endpoint, and what is a silent-host pitfall?",
+      "options": [
+        {
+          "id": "a",
+          "text": "IPs are never learned; only MACs exist in ACI."
+        },
+        {
+          "id": "b",
+          "text": "Every IP in the BD subnet is pre-programmed as soon as the subnet is created."
+        },
+        {
+          "id": "c",
+          "text": "IP addresses are learned in addition to MACs, typically when the host ARPs or sends IP traffic, and are represented as fvIp objects. Silent hosts that never ARP can be slow to appear as IP endpoints."
+        },
+        {
+          "id": "d",
+          "text": "IP learning happens only on spines, never on leaves."
+        }
+      ],
+      "answer": "c",
+      "explanation": "IP addresses are learned in addition to MACs, typically when the host ARPs or sends IP traffic, and are represented as fvIp objects attached to the endpoint. Whether a BD learns IPs, limits IP learning, or uses subnet-scoped learning depends on the BD and VRF settings. Silent hosts that never ARP can be slow to appear as IP endpoints.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "6-5"
+    },
+    {
+      "prompt": "Once a remote endpoint is known, how is unicast forwarded, and what happens if the destination is unknown?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Unicast is always flooded to every port in the fabric."
+        },
+        {
+          "id": "b",
+          "text": "Unknown unicast is always dropped, and proxy mode cannot be used."
+        },
+        {
+          "id": "c",
+          "text": "The APIC performs a DNS lookup and then programs a GRE tunnel."
+        },
+        {
+          "id": "d",
+          "text": "Unicast traffic is encapsulated to the remote leaf TEP that owns the endpoint. If the destination is unknown, the BD’s unknown-unicast mode matters: hardware-proxy (proxy) versus flood. ARP behaviour is controlled separately (arp_flooding and related first-hop settings)."
+        }
+      ],
+      "answer": "d",
+      "explanation": "Once an endpoint is known, unicast is encapsulated to the remote leaf TEP that owns it. If the destination is unknown, the BD’s l2_unknown_unicast mode matters (proxy versus flood). ARP behaviour is controlled separately. Troubleshooting a “routing” problem that is actually an unknown-unicast or contract issue, or the reverse, is a common pitfall.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "6-6"
+    },
+    {
+      "prompt": "Two EPGs are associated with the same bridge domain in an enforced VRF, but they have no contract. Can their endpoints talk?",
+      "options": [
+        {
+          "id": "a",
+          "text": "No. Two EPGs in the same BD still need a contract in an enforced VRF if they are different EPGs."
+        },
+        {
+          "id": "b",
+          "text": "Yes. Sharing a BD always allows all communication, even without a contract."
+        },
+        {
+          "id": "c",
+          "text": "Yes, but only for IPv6."
+        },
+        {
+          "id": "d",
+          "text": "No, because two EPGs cannot share a BD."
+        }
+      ],
+      "answer": "a",
+      "explanation": "Walk one packet: the leaf applies the zoning-rule / contract, looks up the destination endpoint, and encapsulates to the remote TEP if the lookup hits. A common pitfall is forgetting that two EPGs in the same BD still need a contract in an enforced VRF if they are different EPGs.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "6-7"
+    },
+    {
+      "prompt": "Which statement about BUM (broadcast, unknown unicast and multicast) forwarding in a BD is correct?",
+      "options": [
+        {
+          "id": "a",
+          "text": "BD flood is the same as a campus switch VLAN flood to every port that uses the same VLAN ID, even in other BDs."
+        },
+        {
+          "id": "b",
+          "text": "BUM traffic in a BD is controlled by BD flags such as multi_dest (bd-flood, drop, encap-flood) and by unknown-unicast mode. Flooding, when used, is constrained by the BD and the fabric’s multidestination forwarding, not by every port that happens to use the same VLAN ID."
+        },
+        {
+          "id": "c",
+          "text": "BUM is always dropped in ACI and cannot be flooded."
+        },
+        {
+          "id": "d",
+          "text": "BUM is forwarded only through the APIC."
+        }
+      ],
+      "answer": "b",
+      "explanation": "BUM traffic in a BD is controlled by flags such as multi_dest and unknown-unicast mode. Flooding is not a VLAN-wide flood across the whole fabric: it is constrained by the BD and the fabric’s multidestination forwarding (including GIPo / FTAG trees as described in ACI Fundamentals). Equating “VLAN flood” from a campus switch with BD flood in ACI is a pitfall.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "6-8"
+    },
+    {
+      "prompt": "What is the role of IGMP snooping in a BD, and how is L3 multicast (PIM) different?",
+      "options": [
+        {
+          "id": "a",
+          "text": "IGMP snooping is a fabric-wide routing protocol that replaces PIM."
+        },
+        {
+          "id": "b",
+          "text": "IGMP snooping is configured only on the APIC OOB interface."
+        },
+        {
+          "id": "c",
+          "text": "Multicast inside a BD often involves IGMP snooping (an IGMP snoop policy can be attached to a BD). L3 multicast (PIM) is a separate design in the VRF."
+        },
+        {
+          "id": "d",
+          "text": "PIM and IGMP snooping are the same object class."
+        }
+      ],
+      "answer": "c",
+      "explanation": "Multicast inside a BD often involves IGMP snooping. L3 multicast (PIM) is a separate design in the VRF and is not covered in depth in that lesson; treat PIM-specific defaults as not collected unless you are reading the multicast guide for your release. Disabling flooding and also leaving multicast unexamined can break a protocol that relied on a flood or on IGMP.",
+      "source": {
+        "label": "Cisco ACI Fundamentals, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html"
+      },
+      "id": "6-9"
+    },
+    {
+      "prompt": "This read-only task queries bridge domains. Which BD properties that control unknown unicast, ARP and BUM would you inspect in the result?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Only the tenant name; BD forwarding flags are not exposed by aci_bd."
+        },
+        {
+          "id": "b",
+          "text": "The VLAN ID of every host NIC, which is the same as the BD flood domain."
+        },
+        {
+          "id": "c",
+          "text": "The APIC cluster size and the TEP pool."
+        },
+        {
+          "id": "d",
+          "text": "l2_unknown_unicast (proxy or flood), arp_flooding, and multi_dest (bd-flood, drop, or encap-flood). Those flags live on the BD object."
+        }
+      ],
+      "answer": "d",
+      "explanation": "The BD object itself (aci_bd query) shows l2_unknown_unicast, arp_flooding and multi_dest. Endpoint location is on fvCEp. This is a read-only query and uses credential placeholders.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_bd module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_bd_module.html"
+      },
+      "snippet": "- name: Query bridge domains\n  cisco.aci.aci_bd:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    tenant: Example-Tenant\n    state: query",
+      "id": "6-10"
+    }
+  ],
+  "7": [
+    {
+      "prompt": "When you provide and consume a contract, what does the APIC program on the leaves, and which objects do you still edit at the tenant level?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The APIC writes iptables on the APIC itself, and tenant objects are no longer used."
+        },
+        {
+          "id": "b",
+          "text": "Nothing is programmed until you edit zoning-rules on the switch CLI."
+        },
+        {
+          "id": "c",
+          "text": "Only spines receive zoning-rules; leaves never do."
+        },
+        {
+          "id": "d",
+          "text": "The APIC programs zoning-rules on the leaves that have endpoints in those EPGs. At the tenant level you still edit the contract, subjects, filters and EPG attachments."
+        }
+      ],
+      "answer": "d",
+      "explanation": "When you provide and consume a contract, the APIC programs policy on the leaves that have endpoints in those EPGs. The implementation on the leaf is a set of zoning-rules. The tenant-level objects you continue to edit are still the contract, subjects, filters and EPG attachments. A common pitfall is looking only at the GUI contract and never confirming a zoning-rule was programmed on the leaf that actually forwards the traffic.",
+      "source": {
+        "label": "Cisco APIC Security Configuration Guide, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/security-configuration/cisco-apic-security-configuration-guide-60x.html"
+      },
+      "id": "7-1"
+    },
+    {
+      "prompt": "What is a zoning-rule, and how do you inspect it?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Zoning-rules are the leaf-level policy entries that implement contracts. Inspect them with show zoning-rule on a leaf (for example fabric 101 show zoning-rule from the APIC) and as actrlRule managed objects. A rule has source and destination EPG identifiers (class IDs / pcTag values), a filter or contract ID, an action (permit or deny), and a priority."
+        },
+        {
+          "id": "b",
+          "text": "A zoning-rule is a VLAN pool. You inspect it only in the tenant GUI."
+        },
+        {
+          "id": "c",
+          "text": "A zoning-rule is a static route. You inspect it with show ip route only."
+        },
+        {
+          "id": "d",
+          "text": "Zoning-rules are created by editing them directly on the switch CLI as the desired-state source."
+        }
+      ],
+      "answer": "a",
+      "explanation": "Zoning-rules implement contracts on the leaf. They are commonly inspected with the NX-OS style command show zoning-rule and as actrlRule objects. Do not invent the numeric priority scale; read it from the security guide or from the rule itself on your APIC version. Pitfalls include reading zoning-rules on the wrong leaf (rules are programmed where the endpoints live) and editing a zoning-rule on the switch CLI.",
+      "source": {
+        "label": "Cisco APIC Security Configuration Guide, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/security-configuration/cisco-apic-security-configuration-guide-60x.html"
+      },
+      "id": "7-2"
+    },
+    {
+      "prompt": "What does policy_control_preference: enforced on a VRF mean?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Contracts are ignored, and every EPG can talk to every other EPG."
+        },
+        {
+          "id": "b",
+          "text": "Traffic between EPGs is subject to contracts. This is the usual starting point for almost every production tenant."
+        },
+        {
+          "id": "c",
+          "text": "Only intra-EPG traffic is filtered."
+        },
+        {
+          "id": "d",
+          "text": "The VRF is disabled."
+        }
+      ],
+      "answer": "b",
+      "explanation": "With policy_control_preference: enforced on the VRF (the usual design), traffic between EPGs is subject to contracts. Changing enforcement on a live VRF as a shortcut instead of designing the contracts you actually need is a pitfall.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_vrf module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_vrf_module.html"
+      },
+      "snippet": "- name: Set the example VRF to enforced\n  cisco.aci.aci_vrf:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    tenant: Example-Tenant\n    vrf: Example-VRF\n    policy_control_preference: enforced\n    state: present",
+      "id": "7-3"
+    },
+    {
+      "prompt": "You are testing contracts in a lab, but traffic between EPGs is allowed even without a contract. Which VRF setting would explain that?",
+      "options": [
+        {
+          "id": "a",
+          "text": "policy_control_preference: enforced."
+        },
+        {
+          "id": "b",
+          "text": "The VRF has no name."
+        },
+        {
+          "id": "c",
+          "text": "policy_control_preference: unenforced, which means the VRF does not require contracts for forwarding between its EPGs. Do not leave a production VRF unenforced by accident, and do not conclude that “contracts do nothing” while the VRF is unenforced."
+        },
+        {
+          "id": "d",
+          "text": "Contracts always apply, so this cannot happen."
+        }
+      ],
+      "answer": "c",
+      "explanation": "With policy_control_preference: unenforced, the VRF does not require contracts for forwarding between its EPGs. That can be useful in a tightly controlled lab, but it removes the contract model you are usually trying to learn or enforce. A common pitfall is testing contracts while the VRF is unenforced and concluding that “contracts do nothing.”",
+      "source": {
+        "label": "Ansible cisco.aci.aci_vrf module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_vrf_module.html"
+      },
+      "id": "7-4"
+    },
+    {
+      "prompt": "What does intra-EPG isolation do, and what is the cisco.aci.aci_epg default if the property is unset at creation?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Isolation is always enforced, and the default is enforced."
+        },
+        {
+          "id": "b",
+          "text": "Isolation blocks traffic between different EPGs only."
+        },
+        {
+          "id": "c",
+          "text": "Isolation replaces the VRF preferred group and cannot be combined with a contract."
+        },
+        {
+          "id": "d",
+          "text": "By default, endpoints in the same EPG can communicate without a contract. Intra-EPG isolation (intra_epg_isolation: enforced) changes that so they cannot talk unless you add an intra-EPG contract (or an equivalent design). The APIC defaults to unenforced isolation when the property is unset at creation, as documented by the cisco.aci module."
+        }
+      ],
+      "answer": "d",
+      "explanation": "By default, endpoints in the same EPG can communicate without a contract. Intra-EPG isolation changes that. Enabling isolation on an EPG that contains clustered servers that must still talk to each other, without also adding the required intra-EPG contract, is a pitfall.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_epg module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_epg_module.html"
+      },
+      "id": "7-5"
+    },
+    {
+      "prompt": "How does a VRF preferred group change the contract model?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Members of the preferred group can communicate without a contract; communication with EPGs outside the group still follows the contract model. Putting almost every EPG in the preferred group undermines the contract model you thought you still had."
+        },
+        {
+          "id": "b",
+          "text": "Every EPG in the VRF is denied, including preferred-group members."
+        },
+        {
+          "id": "c",
+          "text": "Preferred group is another name for unenforced and always disables all contracts."
+        },
+        {
+          "id": "d",
+          "text": "Preferred group applies only to L2Outs."
+        }
+      ],
+      "answer": "a",
+      "explanation": "A VRF can include a preferred group of EPGs (and the VRF has a preferred-group setting). Members can communicate without a contract; communication with EPGs outside the group still follows the contract model. Confirm the exact member flags on your APIC version. Ansible exposes preferred_group on aci_vrf and aci_epg.",
+      "source": {
+        "label": "Cisco APIC Security Configuration Guide, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/security-configuration/cisco-apic-security-configuration-guide-60x.html"
+      },
+      "id": "7-6"
+    },
+    {
+      "prompt": "A lab provides contract CTX-WEB on EPG WEB and consumes it on EPG APP, but a host in APP still cannot reach WEB. Which of these is a documented pitfall?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Using placeholders such as {{ apic_password }} in Ansible."
+        },
+        {
+          "id": "b",
+          "text": "Running only the provider task (or otherwise attaching the contract on only one EPG) and then testing from a host in APP."
+        },
+        {
+          "id": "c",
+          "text": "Querying the APIC with state: query."
+        },
+        {
+          "id": "d",
+          "text": "Using a contract name that contains a hyphen."
+        }
+      ],
+      "answer": "b",
+      "explanation": "The lab provides CTX-WEB on EPG WEB and consumes it on EPG APP. A documented pitfall is running only the provider task and then testing from a host in APP. Create the EPGs, filter and contract before the attachment playbook will do anything useful. After attachment, inspect zoning-rules on a leaf that has a reason to program the policy.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_epg_to_contract module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_epg_to_contract_module.html"
+      },
+      "snippet": "- name: Provide CTX-WEB on EPG WEB\n  cisco.aci.aci_epg_to_contract:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    tenant: Example-Tenant\n    ap: Example-AP\n    epg: WEB\n    contract: CTX-WEB\n    contract_type: provider\n    state: present\n- name: Consume CTX-WEB on EPG APP\n  cisco.aci.aci_epg_to_contract:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    tenant: Example-Tenant\n    ap: Example-AP\n    epg: APP\n    contract: CTX-WEB\n    contract_type: consumer\n    state: present",
+      "id": "7-7"
+    },
+    {
+      "prompt": "You query zoning-rules immediately on a leaf that has never had either EPG deployed to it, and no permit rule appears. What should you check?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Nothing; zoning-rules are always programmed on every leaf in the fabric."
+        },
+        {
+          "id": "b",
+          "text": "Only the APIC admin password needs to be re-entered."
+        },
+        {
+          "id": "c",
+          "text": "Check that the VRF is enforced, both EPGs exist, and at least one of the leaves has a reason to program the policy (endpoints or a policy deployed to the leaf). Querying zoning-rules on a leaf that has never had either EPG deployed is a pitfall."
+        },
+        {
+          "id": "d",
+          "text": "You must reboot the APIC cluster before any zoning-rule appears."
+        }
+      ],
+      "answer": "c",
+      "explanation": "After the contract is attached, query actrlRule or run show zoning-rule on the relevant leaf. If no rule appears, check that the VRF is enforced, both EPGs exist, and at least one of the leaves has a reason to program the policy. This course does not invent sample command output.",
+      "source": {
+        "label": "Cisco APIC Security Configuration Guide, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/security-configuration/cisco-apic-security-configuration-guide-60x.html"
+      },
+      "id": "7-8"
+    },
+    {
+      "prompt": "Which priority values does cisco.aci.aci_contract_subject accept, and how should you read the numeric values in show zoning-rule?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It accepts any integer 1–65535, and the mapping is always priority = level number."
+        },
+        {
+          "id": "b",
+          "text": "Priority is not supported on subjects."
+        },
+        {
+          "id": "c",
+          "text": "The only valid value is emergency, which always wins."
+        },
+        {
+          "id": "d",
+          "text": "It accepts level1, level2, level3 and unspecified. How those levels map to the numeric values shown in show zoning-rule should be read from the security guide or from the programmed rule, not invented."
+        }
+      ],
+      "answer": "d",
+      "explanation": "When several contracts or filters could match, the leaf uses a priority to choose a zoning-rule. Ansible aci_contract_subject accepts priority values level1, level2, level3 and unspecified. This page does not invent the numeric mapping. Adding a more specific permit and a broader deny without checking which priority wins on the leaf is a pitfall. Taboo contracts and implicit deny behaviour also participate in the priority model — confirm in the security guide for your release.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_contract_subject module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_contract_subject_module.html"
+      },
+      "id": "7-9"
+    }
+  ],
+  "8": [
+    {
+      "prompt": "How does an L2Out differ from an EPG static path (“EPG Out”)?",
+      "options": [
+        {
+          "id": "a",
+          "text": "An L2Out is a dedicated external L2 object (l2extOut) with its own external EPG, used when you want an external L2 connection modelled like an L3Out. An EPG static path binds an existing application EPG to a leaf port or PC with a VLAN, which is often enough when the external network should be in the same EPG as the servers. Choose based on the design; there is no single “always use L2Out” rule collected here."
+        },
+        {
+          "id": "b",
+          "text": "They are two names for the same object; you must always use both."
+        },
+        {
+          "id": "c",
+          "text": "An L2Out is only for spines, and EPG Out is only for APICs."
+        },
+        {
+          "id": "d",
+          "text": "EPG Out is the only way to extend a bridge domain; L2Out is deprecated."
+        }
+      ],
+      "answer": "a",
+      "explanation": "You can extend a bridge domain to an external Layer 2 network in two common ways: an L2Out (aci_l2out, external EPG aci_l2out_extepg) or an EPG static path (fvRsPathAtt). Building both an L2Out and a static path for the same VLAN and BD without intending to can create a loop or an unexpected broadcast domain.",
+      "source": {
+        "label": "Cisco APIC Layer 2 Networking Configuration Guide, Release 6.1(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-61x.html"
+      },
+      "id": "8-1"
+    },
+    {
+      "prompt": "An L2Out lab creates Example-L2Out associated with Example-BD, an L2 domain and VLAN 301, plus an external EPG. What else is still required for the path to deploy?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Nothing; the L2Out object alone brings the port up."
+        },
+        {
+          "id": "b",
+          "text": "The access-policy chain (L2 domain, VLAN pool, AEP, ports). The VLAN must be in the L2 domain’s pool."
+        },
+        {
+          "id": "c",
+          "text": "An MP-BGP route reflector on every leaf."
+        },
+        {
+          "id": "d",
+          "text": "A PIM anycast RP in the VRF."
+        }
+      ],
+      "answer": "b",
+      "explanation": "The lab playbook creates the L2Out and an external EPG, but you still need the access-policy chain (L2 domain, VLAN pool, AEP, ports) for the path to deploy. Using a VLAN that is not in the L2 domain’s pool is a pitfall. Also consider STP or MCP on a port that now faces a campus switch.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_l2out module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_l2out_module.html"
+      },
+      "id": "8-2"
+    },
+    {
+      "prompt": "Do ACI fabric links run spanning tree?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Yes. Spine links are a spanning-tree topology, and you must set a root bridge on a spine."
+        },
+        {
+          "id": "b",
+          "text": "STP runs only on vPC peer links inside the fabric."
+        },
+        {
+          "id": "c",
+          "text": "No. ACI fabric links are not a spanning-tree topology. On edge ports that face a Layer 2 network which still runs STP, you typically apply an STP interface policy (BPDU Guard, BPDU Filter, or other options documented for your release) through the interface policy group."
+        },
+        {
+          "id": "d",
+          "text": "STP is mandatory on every fabric port, including leaf-to-spine links."
+        }
+      ],
+      "answer": "c",
+      "explanation": "ACI fabric links are not a spanning-tree topology. On edge ports that face an L2 network which still runs STP, apply an STP interface policy through the IPG. Ansible aci_interface_policy_spanning_tree uses stp_policy for the policy name, plus optional bpdu_guard and bpdu_filter. Confirm option types in ansible-doc. Enabling BPDU Filter on a port that still needed Guard, or expecting STP to run across spine links, are pitfalls.",
+      "source": {
+        "label": "Cisco APIC Layer 2 Networking Configuration Guide, Release 6.1(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-61x.html"
+      },
+      "id": "8-3"
+    },
+    {
+      "prompt": "What does this Ansible task configure?",
+      "options": [
+        {
+          "id": "a",
+          "text": "An L3Out BGP peer."
+        },
+        {
+          "id": "b",
+          "text": "A contract filter for BPDUs."
+        },
+        {
+          "id": "c",
+          "text": "A spine fabric policy that turns on STP on all fabric ports."
+        },
+        {
+          "id": "d",
+          "text": "An STP interface policy named Example-STP, with BPDU Guard enabled, to be attached to an interface policy group."
+        }
+      ],
+      "answer": "d",
+      "explanation": "aci_interface_policy_spanning_tree creates an STP interface policy. Attach it to the IPG (often in the Advanced Policies / later section of a PC form). The cisco.aci module documents bpdu_guard and bpdu_filter as booleans (true or false, default false).",
+      "source": {
+        "label": "Ansible cisco.aci.aci_interface_policy_spanning_tree module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_interface_policy_spanning_tree_module.html"
+      },
+      "snippet": "- name: Create an STP interface policy\n  cisco.aci.aci_interface_policy_spanning_tree:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    stp_policy: Example-STP\n    bpdu_guard: true\n    state: present",
+      "id": "8-4"
+    },
+    {
+      "prompt": "What is Mis-Cabling Protocol (MCP) in ACI?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Cisco’s ACI mechanism for detecting loops or cabling mistakes on edge ports. It is configured as an interface policy and applied through an interface policy group."
+        },
+        {
+          "id": "b",
+          "text": "A routing protocol that replaces OSPF on L3Outs."
+        },
+        {
+          "id": "c",
+          "text": "A tool that automatically registers new leaves."
+        },
+        {
+          "id": "d",
+          "text": "The APIC cluster heartbeat."
+        }
+      ],
+      "answer": "a",
+      "explanation": "MCP is Cisco’s ACI mechanism for detecting loops or cabling mistakes on edge ports. The Cisco basic-configuration guide has a chapter on the MCP interface policy. Leaving MCP disabled on ports that face a Layer 2 campus or a mis-cabled server is a pitfall. Do not invent timer defaults; they are version-specific if you need to change them.",
+      "source": {
+        "label": "Cisco APIC Basic Configuration Guide, Release 6.2(x) — Mis-Cabling Protocol interface policy",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/basic-configuration/cisco-apic-basic-configuration-guide-62x/provisioning-core-aci-fabric-services-62x/mis-cabling-protocol-interface-policy.html"
+      },
+      "id": "8-5"
+    },
+    {
+      "prompt": "In cisco.aci.aci_interface_policy_mcp, what is the admin_state parameter, and what default does the module document when the property is unset at creation?",
+      "options": [
+        {
+          "id": "a",
+          "text": "admin_state is a string AS number. There is no default."
+        },
+        {
+          "id": "b",
+          "text": "admin_state is a boolean. The module documents that the APIC defaults to true when the property is unset at creation."
+        },
+        {
+          "id": "c",
+          "text": "admin_state is the MCP timer in seconds, default 0."
+        },
+        {
+          "id": "d",
+          "text": "admin_state is ignored unless the policy is applied to a spine."
+        }
+      ],
+      "answer": "b",
+      "explanation": "Ansible aci_interface_policy_mcp uses mcp as the policy name and admin_state as a boolean. The module documents that the APIC defaults to true when the property is unset at creation. Attach the policy to the IPG; on a PC policy group, MCP may sit on the Advanced Policies page.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_interface_policy_mcp module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_interface_policy_mcp_module.html"
+      },
+      "snippet": "- name: Create an MCP interface policy\n  cisco.aci.aci_interface_policy_mcp:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    mcp: Example-MCP\n    admin_state: true\n    state: present",
+      "id": "8-6"
+    },
+    {
+      "prompt": "Why can building both an L2Out and a static path for the same VLAN and bridge domain be a problem?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The APIC forbids both objects existing in the same tenant, so the second call always fails cleanly."
+        },
+        {
+          "id": "b",
+          "text": "It only affects the mgmt tenant."
+        },
+        {
+          "id": "c",
+          "text": "You can create a loop or an unexpected broadcast domain if you did not intend both attachments."
+        },
+        {
+          "id": "d",
+          "text": "It disables MCP globally."
+        }
+      ],
+      "answer": "c",
+      "explanation": "A common pitfall is building both an L2Out and a static path for the same VLAN and BD without intending to, and creating a loop or an unexpected broadcast domain. Also remember STP or MCP on a port that now faces a campus switch.",
+      "source": {
+        "label": "Cisco APIC Layer 2 Networking Configuration Guide, Release 6.1(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-61x.html"
+      },
+      "id": "8-7"
+    },
+    {
+      "prompt": "Which Ansible modules are used for an L2Out and its external EPG?",
+      "options": [
+        {
+          "id": "a",
+          "text": "aci_l3out and aci_l3out_extepg only."
+        },
+        {
+          "id": "b",
+          "text": "aci_vlan_pool only."
+        },
+        {
+          "id": "c",
+          "text": "aci_system and aci_fabric_node."
+        },
+        {
+          "id": "d",
+          "text": "aci_l2out for the L2Out and aci_l2out_extepg for the external EPG."
+        }
+      ],
+      "answer": "d",
+      "explanation": "L2Out objects are created with aci_l2out, and the external EPG with aci_l2out_extepg. EPG Out / static path attachments are fvRsPathAtt objects. Confirm the L2Out DN in Visore rather than inventing a prefix if your APIC shows a different RN form.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_l2out module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_l2out_module.html"
+      },
+      "id": "8-8"
+    }
+  ],
+  "9": [
+    {
+      "prompt": "What is an L3Out, and which Ansible module parameter selects the routing method?",
+      "options": [
+        {
+          "id": "a",
+          "text": "An L3Out is a VLAN pool. l3protocol is always vxlan."
+        },
+        {
+          "id": "b",
+          "text": "An L3Out (l3extOut) connects a VRF to an external Layer 3 network. It is associated with a VRF and an L3 domain. cisco.aci.aci_l3out uses l3protocol with values such as static, ospf, bgp, eigrp, or pim."
+        },
+        {
+          "id": "c",
+          "text": "An L3Out is only an in-band management EPG. There is no protocol parameter."
+        },
+        {
+          "id": "d",
+          "text": "An L3Out replaces the VRF, and l3protocol is always isis."
+        }
+      ],
+      "answer": "b",
+      "explanation": "An L3Out connects a VRF to an external Layer 3 network, associated with a VRF and an L3 domain, and uses a routing protocol or static routes. External networks are represented as external EPGs with subnets that also control route import, export and security. A typical DN is uni/tn-Example-Tenant/out-Example-L3Out. A common pitfall is creating the L3Out but forgetting the external EPG subnet with import-security, so routed traffic is not admitted even though the route exists.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_l3out module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_l3out_module.html"
+      },
+      "id": "9-1"
+    },
+    {
+      "prompt": "Which interface_type values does cisco.aci.aci_l3out_interface use, and when is each typical?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Only access, trunk and fex."
+        },
+        {
+          "id": "b",
+          "text": "leaf, link and node, as on an access IPG."
+        },
+        {
+          "id": "c",
+          "text": "l3-port (routed port, typically a pure L3 handoff), sub-interface (adds an encapsulation), and ext-svi (SVI, used when the same BD or a VLAN is shared with L2 attachments)."
+        },
+        {
+          "id": "d",
+          "text": "Only loopback."
+        }
+      ],
+      "answer": "c",
+      "explanation": "aci_l3out_interface uses interface_type with choices l3-port, sub-interface and ext-svi. Other parameters include encap, encap_scope (vrf or local), mode (regular, native, untagged), address, node_id, pod_id and path_ep. A pitfall is using an SVI encap that collides with a static path VLAN on the same leaf without a deliberate design.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_l3out_interface module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_l3out_interface_module.html"
+      },
+      "id": "9-2"
+    },
+    {
+      "prompt": "Where is the MP-BGP route-reflector policy configured, and why does it matter for an L3Out?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Inside each tenant L3Out object only. It never needs a fabric-wide policy."
+        },
+        {
+          "id": "b",
+          "text": "Only on the external router; the fabric has no BGP AS."
+        },
+        {
+          "id": "c",
+          "text": "Only on leaf loopbacks that face servers."
+        },
+        {
+          "id": "d",
+          "text": "Inside the fabric, MP-BGP distributes external routes between leaves. Spine switches are typically configured as BGP route reflectors for that address family. This is a fabric-wide policy, not an object inside one tenant L3Out. Standing up an L3Out and wondering why routes are not seen on a remote leaf before the RR policy is in place is a pitfall."
+        }
+      ],
+      "answer": "d",
+      "explanation": "MP-BGP distributes external routes between leaves, and spines are typically the route reflectors. Ansible modules are aci_bgp_rr_asn (asn) and aci_bgp_rr_node (node_id, pod_id). The lab uses AS 65001 only as an example. Choose an AS number as part of fabric design, and do not use a production AS number in a lab playbook that might be run in the wrong fabric.",
+      "source": {
+        "label": "Cisco APIC Layer 3 Networking Configuration Guide, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l3-configuration/cisco-apic-layer-3-networking-configuration-guide-60x.html"
+      },
+      "id": "9-3"
+    },
+    {
+      "prompt": "What does this fabric RR example do?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It sets the fabric BGP AS number to 65001 (an example value) and adds node 201 in pod 1 as a route-reflector node."
+        },
+        {
+          "id": "b",
+          "text": "It creates a tenant BGP peer to 65001."
+        },
+        {
+          "id": "c",
+          "text": "It advertises 0.0.0.0/0 from every L3Out."
+        },
+        {
+          "id": "d",
+          "text": "It disables MP-BGP in the fabric."
+        }
+      ],
+      "answer": "a",
+      "explanation": "aci_bgp_rr_asn sets the AS number for the fabric RR policy. aci_bgp_rr_node adds a route-reflector node (here spine 201 in the lesson example). This is fabric policy, not a tenant L3Out neighbor.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_bgp_rr_asn module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_bgp_rr_asn_module.html"
+      },
+      "snippet": "- name: Set the BGP AS number for the fabric RR policy\n  cisco.aci.aci_bgp_rr_asn:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    asn: 65001\n    state: present\n- name: Add spine 201 as a route-reflector node\n  cisco.aci.aci_bgp_rr_node:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    node_id: 201\n    pod_id: 1\n    state: present",
+      "id": "9-4"
+    },
+    {
+      "prompt": "Which mental tree of L3Out objects is a useful way to remember the model?",
+      "options": [
+        {
+          "id": "a",
+          "text": "L3Out → VLAN pool → AEP only."
+        },
+        {
+          "id": "b",
+          "text": "L3Out → logical node profile → logical node (leaf + router-id) → logical interface profile → L3 interface (routed / SVI / sub-interface) and, in parallel, external EPG → external subnets (route-control and security scopes). Protocol attachments hang off the appropriate profile or interface."
+        },
+        {
+          "id": "c",
+          "text": "L3Out → contract → filter only."
+        },
+        {
+          "id": "d",
+          "text": "L3Out has no child objects; everything is a property of the VRF."
+        }
+      ],
+      "answer": "b",
+      "explanation": "A useful mental tree is L3Out → logical node profile → logical node (leaf + router-id) → logical interface profile → L3 interface, and in parallel external EPG → external subnets. Creating an external EPG with no subnet, or a node profile with no router-id, and assuming routing will come up is a pitfall. Confirm RNs in Visore; you can fetch the subtree with GET /api/mo/uni/tn-Example-Tenant/out-Example-L3Out.json?query-target=subtree.",
+      "source": {
+        "label": "Cisco APIC Layer 3 Networking Configuration Guide, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l3-configuration/cisco-apic-layer-3-networking-configuration-guide-60x.html"
+      },
+      "id": "9-5"
+    },
+    {
+      "prompt": "Which practical order of L3Out steps matches the course, and what does this fragment still leave out?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Create contracts first, then the L3 domain last. The fragment already forms a live IGP adjacency."
+        },
+        {
+          "id": "b",
+          "text": "Register a new spine, then create the tenant last. The fragment advertises every subnet automatically."
+        },
+        {
+          "id": "c",
+          "text": "A practical order is: access-policy L3 domain / VLAN pool / AEP, fabric MP-BGP RR if needed, L3Out tied to the VRF and domain, logical node profile and node (router-id), logical interface profile and interface, protocol or static routes, external EPG and subnets, then contracts with internal EPGs. This fragment creates the L3Out, a node profile, leaf 101 with router-id 10.0.255.101, an external EPG and an import-security subnet. It stops short of a live IGP adjacency."
+        },
+        {
+          "id": "d",
+          "text": "Only an external EPG is required; node profiles are optional in every design."
+        }
+      ],
+      "answer": "c",
+      "explanation": "That step order is the one taught in the configuration-steps lesson. The lab playbook stops short of a live IGP adjacency so it can run as a syntax-checked example. Pitfalls include advertising or accepting routes before import-security (and, when needed, export-rtctrl) is set, and re-using a router-id such as 10.0.255.101 in two L3Outs or two VRFs without a plan.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_l3out module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_l3out_module.html"
+      },
+      "snippet": "- name: Create the L3Out\n  cisco.aci.aci_l3out:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    tenant: Example-Tenant\n    l3out: Example-L3Out\n    vrf: Example-VRF\n    domain: Example-L3Dom\n    l3protocol:\n      - static\n    state: present\n- name: Add an import-security subnet\n  cisco.aci.aci_l3out_extsubnet:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    tenant: Example-Tenant\n    l3out: Example-L3Out\n    extepg: Example-ExtEPG\n    network: 10.100.0.0/24\n    scope:\n      - import-security\n    state: present",
+      "id": "9-6"
+    },
+    {
+      "prompt": "Which cisco.aci modules add a static route and a next-hop on an L3Out logical node?",
+      "options": [
+        {
+          "id": "a",
+          "text": "aci_bd_subnet and aci_epg."
+        },
+        {
+          "id": "b",
+          "text": "aci_vlan_pool_encap_block only."
+        },
+        {
+          "id": "c",
+          "text": "aci_interface_policy_mcp."
+        },
+        {
+          "id": "d",
+          "text": "aci_l3out_static_routes adds a prefix on a logical node (node_profile, node_id, pod_id, prefix). aci_l3out_static_routes_nexthop adds a next-hop (nexthop, plus the same node and prefix keys)."
+        }
+      ],
+      "answer": "d",
+      "explanation": "The static routing lab uses those two modules, with example prefix 10.200.0.0/16 and next-hop 10.0.1.2 as placeholders. Pitfalls include pointing the next-hop at an address that is not reachable on that L3Out interface, and forgetting to export or advertise the internal subnet, or to import-security the external prefix, depending on the design.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_l3out_static_routes module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_l3out_static_routes_module.html"
+      },
+      "id": "9-7"
+    },
+    {
+      "prompt": "For an OSPF or BGP L3Out, which mismatches are common reasons an adjacency or session will not come up?",
+      "options": [
+        {
+          "id": "a",
+          "text": "For OSPF: area type or area ID mismatch, or a network-type mismatch (broadcast versus point-to-point). For BGP: a mismatched remote ASN, or expecting eBGP to come up before the L3 interface address and the peer IP are on the same link (or otherwise reachable). Confirm knobs in the Layer 3 guide for your release; this course does not invent area or timer defaults."
+        },
+        {
+          "id": "b",
+          "text": "OSPF and BGP never require matching parameters on the external router."
+        },
+        {
+          "id": "c",
+          "text": "Only the APIC GUI theme must match."
+        },
+        {
+          "id": "d",
+          "text": "Adjacencies form automatically as soon as the L3Out object exists, even with no interface or router-id."
+        }
+      ],
+      "answer": "a",
+      "explanation": "Set l3protocol: [ospf] or [bgp] on the L3Out, then attach the appropriate protocol or peer objects (for example aci_l3out_logical_interface_profile_ospf_policy, aci_l3out_bgp_protocol_profile, aci_l3out_bgp_peer with peer_ip and remote_asn). Area type, area ID and network type must match the external router for OSPF. BGP needs a matching remote ASN and a reachable peer. EIGRP similarly needs a matching AS and, when used, matching interface authentication. Exact default hello/hold timers are not collected here.",
+      "source": {
+        "label": "Cisco APIC Layer 3 Networking Configuration Guide, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l3-configuration/cisco-apic-layer-3-networking-configuration-guide-60x.html"
+      },
+      "id": "9-8"
+    },
+    {
+      "prompt": "What does import-security on an external EPG subnet do, and why can advertisement succeed while the data plane still fails?",
+      "options": [
+        {
+          "id": "a",
+          "text": "import-security is only a descriptive label and has no data-plane effect."
+        },
+        {
+          "id": "b",
+          "text": "import-security is the security classification of inbound prefixes. Advertisement can work while the data plane fails because import-security was omitted. export-rtctrl is used to export or advertise, and import-rtctrl, shared-rtctrl and shared-security are used in route-control and shared-service designs."
+        },
+        {
+          "id": "c",
+          "text": "import-security always advertises 0.0.0.0/0 to the Internet."
+        },
+        {
+          "id": "d",
+          "text": "import-security is used only on BD subnets, not on L3Out external EPGs."
+        }
+      ],
+      "answer": "b",
+      "explanation": "External EPG subnets use scope values on aci_l3out_extsubnet: import-security (security classification of inbound prefixes), export-rtctrl (export / advertise), import-rtctrl, shared-rtctrl and shared-security. Those can be combined as a list. A common pitfall is advertisement working but data-plane failing because import-security was omitted. Using 0.0.0.0/0 as import-security without intending to classify all external prefixes that way is another pitfall.",
+      "source": {
+        "label": "Ansible cisco.aci.aci_l3out_extsubnet module",
+        "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_l3out_extsubnet_module.html"
+      },
+      "snippet": "- name: Add an export-rtctrl subnet for route control\n  cisco.aci.aci_l3out_extsubnet:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    tenant: Example-Tenant\n    l3out: Example-L3Out\n    extepg: Example-ExtEPG\n    network: 10.0.0.0/24\n    scope:\n      - export-rtctrl\n      - import-security\n    state: present",
+      "id": "9-9"
+    },
+    {
+      "prompt": "On a leaf, how is a tenant VRF typically named in the switch CLI when you inspect routes, and what is a common pitfall?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The VRF is always named default, so show ip route is enough."
+        },
+        {
+          "id": "b",
+          "text": "VRFs cannot be shown on the leaf CLI."
+        },
+        {
+          "id": "c",
+          "text": "The VRF name in switch CLI is often tenant:vrf (for example Example-Tenant:Example-VRF). Confirm the exact form on your leaf software. A common pitfall is reading the default VRF route table on the leaf instead of the tenant VRF."
+        },
+        {
+          "id": "d",
+          "text": "You must use the APIC GUI; the leaf has no IP routing table."
+        }
+      ],
+      "answer": "c",
+      "explanation": "A suggested check after the route-control labs is: moquery -d uni/tn-Example-Tenant/out-Example-L3Out and fabric 101 show ip route vrf Example-Tenant:Example-VRF. The VRF name in switch CLI is often tenant:vrf. Confirm the exact form on your leaf software, and do not read the default VRF route table by mistake.",
+      "source": {
+        "label": "Cisco APIC Layer 3 Networking Configuration Guide, Release 6.0(x)",
+        "url": "https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l3-configuration/cisco-apic-layer-3-networking-configuration-guide-60x.html"
+      },
+      "id": "9-10"
+    }
+  ]
+}

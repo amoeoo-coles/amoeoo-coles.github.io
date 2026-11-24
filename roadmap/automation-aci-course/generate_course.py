@@ -20,6 +20,11 @@ AI_NOTE = (
     "Study notes written with AI assistance from public Cisco documentation. "
     "Verify against your APIC version before use."
 )
+QUIZ_AI_NOTE = (
+    "This is an AI-assisted study quiz based on public Cisco ACI/APIC and cisco.aci Ansible documentation. "
+    "Verify answers against your APIC version before you rely on them."
+)
+QUIZZES: dict = {}
 HUB_PATH = "/roadmap/automation-aci-course/"
 
 VERSION = "v2 · 24 Nov 2026, 4:10 PM AEDT"  # overwritten by --version
@@ -289,6 +294,113 @@ code, .dn { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.
   .nav-mid { grid-area: mid; flex-direction: row; justify-content: center; min-width: 0; }
   .course-outline { padding-left: 1rem; padding-right: 1rem; }
 }
+
+/* Interactive study quiz */
+.quiz-app { max-width: 78ch; }
+.q-card {
+  border: 1px solid var(--line, #d5dee7);
+  border-radius: 8px;
+  background: var(--card, #fff);
+  padding: 0.9rem 1rem 1rem;
+  margin: 0 0 1rem;
+}
+.q-card fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.q-card legend {
+  font-weight: 650;
+  padding: 0;
+  margin: 0 0 0.65rem;
+  float: none;
+  width: 100%;
+}
+.q-num { color: var(--muted, #5b6b7c); font-weight: 600; margin-right: 0.35rem; }
+.quiz-snippet {
+  margin: 0 0 0.75rem;
+  padding: 0.55rem 0.75rem;
+  overflow: auto;
+  background: #0b1220;
+  color: #e2e8f0;
+  border-radius: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.5;
+  white-space: pre;
+  max-width: 100%;
+}
+.q-options {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.q-option {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+  border: 1px solid var(--line, #d5dee7);
+  border-radius: 8px;
+  padding: 0.45rem 0.65rem;
+  cursor: pointer;
+}
+.q-option:focus-within { outline: 2px solid var(--accent, #0e7490); outline-offset: 1px; }
+.q-option input { margin-top: 0.25rem; flex: none; }
+.q-option .opt-id { font-weight: 700; min-width: 1.2rem; }
+.q-actions { margin-top: 0.7rem; display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.quiz-btn {
+  font: inherit;
+  font-weight: 650;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 1px solid var(--line, #d5dee7);
+  border-radius: 8px;
+  background: var(--card, #fff);
+  color: var(--ink, #15202b);
+  padding: 0.4rem 0.8rem;
+}
+.quiz-btn.primary {
+  background: var(--accent, #0e7490);
+  color: #fff;
+  border-color: var(--accent, #0e7490);
+}
+html[data-theme="dark"] .quiz-btn.primary { color: #042f2e; }
+.quiz-btn:focus-visible { outline: 2px solid var(--accent, #0e7490); outline-offset: 2px; }
+.q-feedback {
+  margin: 0.65rem 0 0;
+  padding: 0.55rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid var(--line, #d5dee7);
+  border-left-width: 4px;
+}
+.q-feedback .verdict { font-weight: 700; margin: 0 0 0.3rem; }
+.q-feedback .src { margin: 0.35rem 0 0; }
+.q-feedback.is-correct,
+.q-option.is-correct {
+  border-color: var(--good, #047857);
+  background: color-mix(in srgb, var(--good, #047857) 14%, var(--card, #fff));
+}
+.q-feedback.is-wrong,
+.q-option.is-wrong {
+  border-color: #b91c1c;
+  background: color-mix(in srgb, #b91c1c 12%, var(--card, #fff));
+}
+html[data-theme="dark"] .q-feedback.is-wrong,
+html[data-theme="dark"] .q-option.is-wrong {
+  border-color: #fca5a5;
+  background: color-mix(in srgb, #fca5a5 16%, var(--card, #152033));
+}
+.quiz-score {
+  border: 1px solid var(--line, #d5dee7);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  background: var(--bg-accent, #e8eef4);
+  margin: 1rem 0 0;
+}
+.quiz-score .score-line { margin: 0; font-weight: 650; }
+@media (max-width: 420px) {
+  .q-card { padding: 0.75rem; }
+  .quiz-snippet { font-size: 12px; }
+}
 """
     return base + extra
 
@@ -344,11 +456,14 @@ def build_course() -> dict:
         if sec["quiz"]:
             qn = sec["quiz"]
             q_path = f"{sec_path}quiz-{qn}/"
+            questions = QUIZZES.get(qn)
+            if not questions:
+                raise SystemExit(f"quizzes.json has no questions for quiz {qn}")
             quiz = {
                 "n": qn,
                 "title": f"ACI Core Quiz #{qn}",
                 "path": q_path,
-                "questions": "not collected (awaiting approval)",
+                "questions": questions,
             }
             pages.append({
                 "kind": "quiz",
@@ -518,15 +633,133 @@ def page_script() -> str:
     }
     if (href) { ev.preventDefault(); window.location.href = href; }
   });
+
+  var app = document.getElementById("quiz-app");
+  if (app) {
+    var dataEl = document.getElementById("quiz-data");
+    var form = document.getElementById("quiz-form");
+    var questions = [];
+    try { questions = JSON.parse(dataEl ? dataEl.textContent : "[]"); } catch (e) { questions = []; }
+    var cards = Array.prototype.slice.call(app.querySelectorAll(".q-card"));
+    var scoreBox = document.getElementById("quiz-score");
+    var scoreLine = scoreBox ? scoreBox.querySelector(".score-line") : null;
+    var checked = [];
+
+    function escHtml(s){
+      return String(s == null ? "" : s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+    function selected(card){
+      var input = card.querySelector('input[type="radio"]:checked');
+      return input ? input.value : null;
+    }
+    function setFeedback(card, html, kind){
+      var box = card.querySelector(".q-feedback");
+      if (!box) return;
+      box.hidden = !html;
+      box.classList.remove("is-correct", "is-wrong");
+      if (kind) box.classList.add(kind);
+      box.innerHTML = html || "";
+    }
+    function clearMarks(card){
+      card.querySelectorAll(".q-option").forEach(function(lab){
+        lab.classList.remove("is-correct", "is-wrong");
+      });
+    }
+    function grade(index, showNeedSelect){
+      var item = questions[index];
+      var card = cards[index];
+      if (!item || !card) return;
+      var choice = selected(card);
+      if (!choice) {
+        if (showNeedSelect) {
+          setFeedback(card, "<p class=\"verdict\">Select an answer, then Check.</p>", "");
+        }
+        return;
+      }
+      clearMarks(card);
+      var ok = choice === item.answer;
+      checked[index] = ok;
+      card.querySelectorAll(".q-option").forEach(function(lab){
+        var input = lab.querySelector("input");
+        if (!input) return;
+        if (input.value === item.answer) lab.classList.add("is-correct");
+        else if (input.value === choice && !ok) lab.classList.add("is-wrong");
+      });
+      var src = item.source || {};
+      var srcHtml = "";
+      if (src.url && src.label) {
+        srcHtml = '<p class="src">Source: <a href="' + escHtml(src.url) + '">' + escHtml(src.label) + "</a></p>";
+      }
+      var expl = item.explanation ? "<p>" + escHtml(item.explanation) + "</p>" : "";
+      var verdict = ok ? "Correct." : "Not quite. The correct answer is " + escHtml(String(item.answer).toUpperCase()) + ".";
+      setFeedback(card, '<p class="verdict">' + verdict + "</p>" + expl + srcHtml, ok ? "is-correct" : "is-wrong");
+      updateScore();
+    }
+    function updateScore(){
+      if (!scoreLine) return;
+      var total = questions.length;
+      var done = 0, right = 0;
+      for (var i = 0; i < total; i++) {
+        if (typeof checked[i] === "boolean") {
+          done += 1;
+          if (checked[i]) right += 1;
+        }
+      }
+      if (done === 0) {
+        scoreLine.textContent = "Select an answer for each question, then choose Check. Your score appears here after you check answers.";
+      } else if (done < total) {
+        scoreLine.textContent = "Score so far: " + right + " of " + done + " checked. " + (total - done) + " not yet checked.";
+      } else {
+        scoreLine.textContent = "Final score: " + right + " of " + total + ".";
+      }
+    }
+    function resetQuiz(){
+      checked = [];
+      cards.forEach(function(card){
+        card.querySelectorAll('input[type="radio"]').forEach(function(input){ input.checked = false; });
+        clearMarks(card);
+        setFeedback(card, "", "");
+      });
+      updateScore();
+      var first = app.querySelector('input[type="radio"]');
+      if (first && first.focus) first.focus();
+    }
+    if (form) {
+      form.addEventListener("submit", function(ev){ ev.preventDefault(); });
+    }
+    app.querySelectorAll(".q-check").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var idx = parseInt(btn.getAttribute("data-index"), 10);
+        grade(idx, true);
+      });
+    });
+    var checkAll = document.getElementById("quiz-check-all");
+    if (checkAll) {
+      checkAll.addEventListener("click", function(){
+        cards.forEach(function(_c, i){ grade(i, true); });
+        if (scoreBox && scoreBox.scrollIntoView) scoreBox.scrollIntoView({block: "nearest"});
+      });
+    }
+    var resetBtn = document.getElementById("quiz-reset");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", resetQuiz);
+    }
+    updateScore();
+  }
 })();
 </script>
 """
 
 
-def chrome_open(title: str, description: str, h1: str, lede: str, menu: list[tuple[str, str]], show_ai: bool, current_path: str) -> str:
+def chrome_open(title: str, description: str, h1: str, lede: str, menu: list[tuple[str, str]], show_ai: bool, current_path: str, ai_note: str | None = None) -> str:
     items = "\n".join(f'<li><a href="{esc(href)}">{esc(label)}</a></li>' for href, label in menu)
     menu_html = f'<ol class="page-menu" aria-label="On this page">\n{items}\n</ol>\n' if menu else ""
-    ai = f'<p class="ai-note">{esc(AI_NOTE)}</p>\n' if show_ai else ""
+    note = AI_NOTE if ai_note is None else ai_note
+    ai = f'<p class="ai-note">{esc(note)}</p>\n' if show_ai else ""
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -688,34 +921,92 @@ def write_lesson(sec: dict, les: dict) -> None:
     (dest / "index.html").write_text(body)
 
 
+def render_quiz_form(questions: list[dict]) -> str:
+    total = len(questions)
+    cards = []
+    for i, item in enumerate(questions):
+        n = i + 1
+        qid = item.get("id") or f"q{n}"
+        name = f"q-{n}"
+        snippet = ""
+        if item.get("snippet"):
+            snippet = f'<pre class="quiz-snippet" tabindex="0">{esc(item["snippet"])}</pre>\n'
+        opts = []
+        for opt in item["options"]:
+            oid = opt["id"]
+            opts.append(
+                "<li>"
+                f'<label class="q-option" for="{esc(name)}-{esc(oid)}">'
+                f'<input type="radio" id="{esc(name)}-{esc(oid)}" name="{esc(name)}" value="{esc(oid)}">'
+                f'<span class="opt-id">{esc(oid.upper())}</span>'
+                f'<span class="opt-text">{esc(opt["text"])}</span>'
+                "</label></li>"
+            )
+        cards.append(
+            f'<article class="q-card" id="{esc(qid)}" data-index="{i}">\n'
+            f"<fieldset>\n"
+            f'<legend><span class="q-num">Question {n} of {total}.</span> {esc(item["prompt"])}</legend>\n'
+            f"{snippet}"
+            f'<ul class="q-options">\n{"".join(opts)}\n</ul>\n'
+            "</fieldset>\n"
+            '<div class="q-actions">'
+            f'<button type="button" class="quiz-btn primary q-check" data-index="{i}">Check</button>'
+            "</div>\n"
+            '<div class="q-feedback" hidden aria-live="polite"></div>\n'
+            "</article>"
+        )
+    data = json.dumps(questions, ensure_ascii=False).replace("</", "<\\/")
+    return (
+        f'<div id="quiz-app" data-total="{total}">\n'
+        f'<script type="application/json" id="quiz-data">{data}</script>\n'
+        '<form id="quiz-form" action="#" method="get">\n'
+        + "\n".join(cards)
+        + """
+<div class="quiz-score" id="quiz-score">
+  <p class="score-line">Select an answer for each question, then choose Check. Your score appears here after you check answers.</p>
+  <div class="q-actions">
+    <button type="button" class="quiz-btn primary" id="quiz-check-all">Check remaining</button>
+    <button type="button" class="quiz-btn" id="quiz-reset">Reset</button>
+  </div>
+</div>
+</form>
+</div>
+"""
+    )
+
+
 def write_quiz(sec: dict, quiz: dict) -> None:
     href = quiz["path"]
     title = quiz["title"]
     dest = DEST / sec["slug"] / f"quiz-{quiz['n']}"
     dest.mkdir(parents=True, exist_ok=True)
+    questions = quiz["questions"]
     covered = "\n".join(
         f'<li><a href="{esc(les["path"])}">{esc(les["label"])}</a></li>'
         for les in sec["lessons"]
     )
     lede = (
-        f"Placeholder quiz for section [{sec['n']}] {esc(sec['title'])}. "
-        "Questions are <strong>not collected (awaiting approval)</strong>."
+        f"Study quiz for section [{sec['n']}] {esc(sec['title'])}, with {len(questions)} "
+        "multiple-choice questions. Choose an answer, then Check, to see whether you are "
+        "correct and to read a short explanation with a source link. Your score is shown "
+        "at the end. Use Reset to start again. This page runs entirely in your browser."
     )
     body = chrome_open(
         f"{title} — Automation ACI Course",
-        f"Placeholder quiz covering section {sec['n']}.",
+        f"AI-assisted study quiz covering section {sec['n']} of the Automation ACI Course.",
         title,
         lede,
-        [("#covered", "Lessons covered"), ("#questions", "Questions")],
-        show_ai=False,
+        [("#covered", "Lessons covered"), ("#questions", "Questions"), ("#quiz-score", "Score")],
+        show_ai=True,
         current_path=href,
+        ai_note=QUIZ_AI_NOTE,
     )
     body += (
         f'<h2 id="covered">Lessons covered</h2>\n'
         f'<ul class="section-children"><li><a class="sec-title" href="{esc(sec["path"])}">[{sec["n"]}] {esc(sec["title"])}</a>\n'
         f"<ul>\n{covered}\n</ul></li></ul>\n"
         '<h2 id="questions">Questions</h2>\n'
-        "<p>Questions are not collected (awaiting approval). This page is a placeholder that lists the lessons the quiz will cover.</p>\n"
+        + render_quiz_form(questions)
     )
     body += chrome_close(title, href)
     (dest / "index.html").write_text(body)
@@ -732,7 +1023,10 @@ def write_section(sec: dict) -> None:
     )
     if sec.get("quiz"):
         q = sec["quiz"]
-        child_lis += f'\n<li><a href="{esc(q["path"])}">{esc(q["title"])}</a> (placeholder; questions are not collected, awaiting approval)</li>'
+        child_lis += (
+            f'\n<li><a href="{esc(q["path"])}">{esc(q["title"])}</a> '
+            f'({len(q["questions"])} questions)</li>'
+        )
     lede = f"Section [{sec['n']}] of the Automation ACI Course, with its lesson and quiz pages listed as child links."
     body = chrome_open(
         f"{title} — Automation ACI Course",
@@ -762,14 +1056,17 @@ def write_hub() -> None:
         )
         if sec.get("quiz"):
             q = sec["quiz"]
-            kids += f'\n<li><a href="{esc(q["path"])}">{esc(q["title"])}</a> (placeholder)</li>'
+            kids += (
+                f'\n<li><a href="{esc(q["path"])}">{esc(q["title"])}</a> '
+                f'({len(q["questions"])} questions)</li>'
+            )
         blocks.append(
             f'<li><a class="sec-title" href="{esc(sec["path"])}">[{sec["n"]}] {esc(sec["title"])}</a>\n'
             f"<ul>\n{kids}\n</ul></li>"
         )
     blocks.append("</ul>")
     lede = (
-        "A hidden study course on Cisco ACI automation. There are 10 sections, 75 lessons and 9 quiz placeholders. "
+        "A hidden study course on Cisco ACI automation. There are 10 sections, 75 lessons and 9 quizzes. "
         "Each lesson has expandable study notes and an Ansible playbook that uses the cisco.aci collection. "
         "This area is not listed on the public RoadMap page or in the site menu. "
         "Use the navigation bar or the Outline control to move between pages."
@@ -795,13 +1092,17 @@ def write_hub() -> None:
     write_history()
 
 
+def version_slug(version: str) -> str:
+    return version.split("·", 1)[0].strip()
+
+
 def write_history() -> None:
     hist = DEST / "history"
     hist.mkdir(exist_ok=True)
-    # Do not overwrite history/v1 — it is the published v1 snapshot.
-    v2 = hist / "v2"
-    v2.mkdir(exist_ok=True)
-    shutil.copy2(DEST / "index.html", v2 / "index.html")
+    # Write only this version's snapshot. Do not overwrite older history/vN folders.
+    snap = hist / version_slug(VERSION)
+    snap.mkdir(exist_ok=True)
+    shutil.copy2(DEST / "index.html", snap / "index.html")
     (hist / "index.html").write_text(history_page())
 
 
@@ -859,7 +1160,8 @@ def history_page() -> str:
 <p class="lede">Version history for the course hub. The current hub is <strong>{esc(VERSION)}</strong>.</p>
 <h2 id="versions">Versions</h2>
 <ul>
-<li><a href="/roadmap/automation-aci-course/history/v2/">{esc(VERSION)}</a> — navigation bar, nested course lists, and tighter code-box spacing.</li>
+<li><a href="/roadmap/automation-aci-course/history/v3/">{esc(VERSION)}</a> — real multiple-choice quizzes for sections 1–9, with Check, score and Reset.</li>
+<li><a href="/roadmap/automation-aci-course/history/v2/">v2 · 24 Nov 2026, 3:55 PM AEDT</a> — navigation bar, nested course lists, and tighter code-box spacing.</li>
 <li><a href="/roadmap/automation-aci-course/history/v1/">v1 · 24 Nov 2026, 2:00 PM AEDT</a> — first publication of the hidden course.</li>
 </ul>
 </main>
@@ -879,6 +1181,8 @@ def write_course_json() -> None:
     (WORK / "course.json").write_text(text)
     (DEST / "course.json").write_text(text)
     shutil.copy2(WORK / "generate_course.py", DEST / "generate_course.py")
+    if (WORK / "quizzes.json").exists():
+        shutil.copy2(WORK / "quizzes.json", DEST / "quizzes.json")
     for fn in ("outline.py", "playbooks.py", "notes.py", "notes_gists.py"):
         shutil.copy2(WORK / fn, DEST / fn)
     for fn in ("theme-boot.html", "theme-toggle.html", "base-page.css"):
@@ -886,12 +1190,27 @@ def write_course_json() -> None:
             shutil.copy2(WORK / fn, DEST / fn)
 
 
+def load_quizzes() -> dict:
+    raw = json.loads((WORK / "quizzes.json").read_text())
+    out = {}
+    for key, questions in raw.items():
+        n = int(key)
+        if not isinstance(questions, list) or not (8 <= len(questions) <= 10):
+            raise SystemExit(f"Quiz {n} must have 8–10 questions, got {0 if not isinstance(questions, list) else len(questions)}")
+        out[n] = questions
+    return out
+
+
 def main():
-    global VERSION, COURSE
+    global VERSION, COURSE, REPO, DEST, QUIZZES
     ap = argparse.ArgumentParser()
     ap.add_argument("--version", default=VERSION)
+    ap.add_argument("--repo", default=str(REPO), help="Path to the github.io repository checkout")
     args = ap.parse_args()
     VERSION = args.version
+    REPO = Path(args.repo)
+    DEST = REPO / "roadmap" / "automation-aci-course"
+    QUIZZES = load_quizzes()
     DEST.mkdir(parents=True, exist_ok=True)
     (WORK / "playbooks").mkdir(exist_ok=True)
     COURSE = build_course()

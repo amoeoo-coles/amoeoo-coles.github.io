@@ -930,6 +930,113 @@ code, .dn { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.
   .course-outline { padding-left: 1rem; padding-right: 1rem; }
 }
 
+/* Interactive study quiz */
+.quiz-app { max-width: 78ch; }
+.q-card {
+  border: 1px solid var(--line, #d5dee7);
+  border-radius: 8px;
+  background: var(--card, #fff);
+  padding: 0.9rem 1rem 1rem;
+  margin: 0 0 1rem;
+}
+.q-card fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.q-card legend {
+  font-weight: 650;
+  padding: 0;
+  margin: 0 0 0.65rem;
+  float: none;
+  width: 100%;
+}
+.q-num { color: var(--muted, #5b6b7c); font-weight: 600; margin-right: 0.35rem; }
+.quiz-snippet {
+  margin: 0 0 0.75rem;
+  padding: 0.55rem 0.75rem;
+  overflow: auto;
+  background: #0b1220;
+  color: #e2e8f0;
+  border-radius: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.5;
+  white-space: pre;
+  max-width: 100%;
+}
+.q-options {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.q-option {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+  border: 1px solid var(--line, #d5dee7);
+  border-radius: 8px;
+  padding: 0.45rem 0.65rem;
+  cursor: pointer;
+}
+.q-option:focus-within { outline: 2px solid var(--accent, #0e7490); outline-offset: 1px; }
+.q-option input { margin-top: 0.25rem; flex: none; }
+.q-option .opt-id { font-weight: 700; min-width: 1.2rem; }
+.q-actions { margin-top: 0.7rem; display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.quiz-btn {
+  font: inherit;
+  font-weight: 650;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 1px solid var(--line, #d5dee7);
+  border-radius: 8px;
+  background: var(--card, #fff);
+  color: var(--ink, #15202b);
+  padding: 0.4rem 0.8rem;
+}
+.quiz-btn.primary {
+  background: var(--accent, #0e7490);
+  color: #fff;
+  border-color: var(--accent, #0e7490);
+}
+html[data-theme="dark"] .quiz-btn.primary { color: #042f2e; }
+.quiz-btn:focus-visible { outline: 2px solid var(--accent, #0e7490); outline-offset: 2px; }
+.q-feedback {
+  margin: 0.65rem 0 0;
+  padding: 0.55rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid var(--line, #d5dee7);
+  border-left-width: 4px;
+}
+.q-feedback .verdict { font-weight: 700; margin: 0 0 0.3rem; }
+.q-feedback .src { margin: 0.35rem 0 0; }
+.q-feedback.is-correct,
+.q-option.is-correct {
+  border-color: var(--good, #047857);
+  background: color-mix(in srgb, var(--good, #047857) 14%, var(--card, #fff));
+}
+.q-feedback.is-wrong,
+.q-option.is-wrong {
+  border-color: #b91c1c;
+  background: color-mix(in srgb, #b91c1c 12%, var(--card, #fff));
+}
+html[data-theme="dark"] .q-feedback.is-wrong,
+html[data-theme="dark"] .q-option.is-wrong {
+  border-color: #fca5a5;
+  background: color-mix(in srgb, #fca5a5 16%, var(--card, #152033));
+}
+.quiz-score {
+  border: 1px solid var(--line, #d5dee7);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  background: var(--bg-accent, #e8eef4);
+  margin: 1rem 0 0;
+}
+.quiz-score .score-line { margin: 0; font-weight: 650; }
+@media (max-width: 420px) {
+  .q-card { padding: 0.75rem; }
+  .quiz-snippet { font-size: 12px; }
+}
+
 </style>
 </head>
 <body>
@@ -1096,7 +1203,7 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
 <main class="wrap">
 <p class="kicker">Automation ACI Course</p>
 <h1>(52) ACI Policy Enforcement Options (Part 2)</h1>
-<p class="ver">v2 · 24 Nov 2026, 3:55 PM AEDT</p>
+<p class="ver">v3 · 24 Nov 2026, 9:15 PM AEDT</p>
 <p class="ai-note">Study notes written with AI assistance from public Cisco documentation. Verify against your APIC version before use.</p>
 <p class="lede">Lesson (52) in section [7] ACI Security Policies Deployment. Expand the topic sections for study notes. The Ansible example uses the cisco.aci collection. This playbook is a <strong>lab-only configuration</strong> example.</p>
 <ol class="page-menu" aria-label="On this page">
@@ -1208,7 +1315,7 @@ all:
 
 </main>
 <footer class="wrap">
-<p class="meta">Page: <strong>(52) ACI Policy Enforcement Options (Part 2)</strong> · Version: <strong>v2 · 24 Nov 2026, 3:55 PM AEDT</strong></p>
+<p class="meta">Page: <strong>(52) ACI Policy Enforcement Options (Part 2)</strong> · Version: <strong>v3 · 24 Nov 2026, 9:15 PM AEDT</strong></p>
 
 <nav class="course-nav is-bottom" aria-label="Course">
   <div class="course-nav-bar">
@@ -1289,6 +1396,123 @@ all:
     }
     if (href) { ev.preventDefault(); window.location.href = href; }
   });
+
+  var app = document.getElementById("quiz-app");
+  if (app) {
+    var dataEl = document.getElementById("quiz-data");
+    var form = document.getElementById("quiz-form");
+    var questions = [];
+    try { questions = JSON.parse(dataEl ? dataEl.textContent : "[]"); } catch (e) { questions = []; }
+    var cards = Array.prototype.slice.call(app.querySelectorAll(".q-card"));
+    var scoreBox = document.getElementById("quiz-score");
+    var scoreLine = scoreBox ? scoreBox.querySelector(".score-line") : null;
+    var checked = [];
+
+    function escHtml(s){
+      return String(s == null ? "" : s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+    function selected(card){
+      var input = card.querySelector('input[type="radio"]:checked');
+      return input ? input.value : null;
+    }
+    function setFeedback(card, html, kind){
+      var box = card.querySelector(".q-feedback");
+      if (!box) return;
+      box.hidden = !html;
+      box.classList.remove("is-correct", "is-wrong");
+      if (kind) box.classList.add(kind);
+      box.innerHTML = html || "";
+    }
+    function clearMarks(card){
+      card.querySelectorAll(".q-option").forEach(function(lab){
+        lab.classList.remove("is-correct", "is-wrong");
+      });
+    }
+    function grade(index, showNeedSelect){
+      var item = questions[index];
+      var card = cards[index];
+      if (!item || !card) return;
+      var choice = selected(card);
+      if (!choice) {
+        if (showNeedSelect) {
+          setFeedback(card, "<p class=\"verdict\">Select an answer, then Check.</p>", "");
+        }
+        return;
+      }
+      clearMarks(card);
+      var ok = choice === item.answer;
+      checked[index] = ok;
+      card.querySelectorAll(".q-option").forEach(function(lab){
+        var input = lab.querySelector("input");
+        if (!input) return;
+        if (input.value === item.answer) lab.classList.add("is-correct");
+        else if (input.value === choice && !ok) lab.classList.add("is-wrong");
+      });
+      var src = item.source || {};
+      var srcHtml = "";
+      if (src.url && src.label) {
+        srcHtml = '<p class="src">Source: <a href="' + escHtml(src.url) + '">' + escHtml(src.label) + "</a></p>";
+      }
+      var expl = item.explanation ? "<p>" + escHtml(item.explanation) + "</p>" : "";
+      var verdict = ok ? "Correct." : "Not quite. The correct answer is " + escHtml(String(item.answer).toUpperCase()) + ".";
+      setFeedback(card, '<p class="verdict">' + verdict + "</p>" + expl + srcHtml, ok ? "is-correct" : "is-wrong");
+      updateScore();
+    }
+    function updateScore(){
+      if (!scoreLine) return;
+      var total = questions.length;
+      var done = 0, right = 0;
+      for (var i = 0; i < total; i++) {
+        if (typeof checked[i] === "boolean") {
+          done += 1;
+          if (checked[i]) right += 1;
+        }
+      }
+      if (done === 0) {
+        scoreLine.textContent = "Select an answer for each question, then choose Check. Your score appears here after you check answers.";
+      } else if (done < total) {
+        scoreLine.textContent = "Score so far: " + right + " of " + done + " checked. " + (total - done) + " not yet checked.";
+      } else {
+        scoreLine.textContent = "Final score: " + right + " of " + total + ".";
+      }
+    }
+    function resetQuiz(){
+      checked = [];
+      cards.forEach(function(card){
+        card.querySelectorAll('input[type="radio"]').forEach(function(input){ input.checked = false; });
+        clearMarks(card);
+        setFeedback(card, "", "");
+      });
+      updateScore();
+      var first = app.querySelector('input[type="radio"]');
+      if (first && first.focus) first.focus();
+    }
+    if (form) {
+      form.addEventListener("submit", function(ev){ ev.preventDefault(); });
+    }
+    app.querySelectorAll(".q-check").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var idx = parseInt(btn.getAttribute("data-index"), 10);
+        grade(idx, true);
+      });
+    });
+    var checkAll = document.getElementById("quiz-check-all");
+    if (checkAll) {
+      checkAll.addEventListener("click", function(){
+        cards.forEach(function(_c, i){ grade(i, true); });
+        if (scoreBox && scoreBox.scrollIntoView) scoreBox.scrollIntoView({block: "nearest"});
+      });
+    }
+    var resetBtn = document.getElementById("quiz-reset");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", resetQuiz);
+    }
+    updateScore();
+  }
 })();
 </script>
 
