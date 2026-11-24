@@ -710,6 +710,8 @@ details.topic summary::after {
 details.topic[open] summary::after { content: "▾"; }
 details.topic .topic-body { padding: 0 0.85rem 0.85rem; max-width: 78ch; }
 details.topic .topic-body > :first-child { margin-top: 0; }
+
+/* Program-style code box: tight lines, no inherited list gaps. */
 .codebox {
   border-radius: 8px;
   overflow: hidden;
@@ -728,7 +730,7 @@ details.topic .topic-body > :first-child { margin-top: 0; }
   font-size: 12px;
   color: #cbd5e1;
 }
-.codebox-tab .fname { font-weight: 650; color: #f8fafc; }
+.codebox-tab .fname { font-weight: 650; color: #f8fafc; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .codebox-tab a, .codebox-tab button {
   margin-left: auto;
   background: #1e293b;
@@ -739,45 +741,193 @@ details.topic .topic-body > :first-child { margin-top: 0; }
   font: inherit;
   cursor: pointer;
   text-decoration: none;
+  flex: none;
 }
 .codebox-tab a { margin-left: 0.4rem; }
 .codebox-tab button.copy-btn { margin-left: auto; }
 .codebox-tab button.copy-btn:hover, .codebox-tab a:hover { background: #334155; }
-.codebox pre { margin: 0; overflow: auto; background: #0b1220; color: #e2e8f0; }
+.codebox-body {
+  margin: 0;
+  overflow: auto;
+  background: #0b1220;
+  color: #e2e8f0;
+}
 .codebox ol.lines {
   list-style: none;
-  margin: 0;
-  padding: 0.55rem 0 0.7rem;
+  margin: 0 !important;
+  padding: 0.45rem 0 0.55rem !important;
   counter-reset: ln;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 12.5px;
   line-height: 1.5;
+  white-space: normal;
 }
 .codebox ol.lines li {
-  counter-increment: ln;
-  padding: 0 1rem 0 3.3rem;
+  display: block;
+  box-sizing: border-box;
+  margin: 0 !important;
+  padding: 0 1rem 0 3.3rem !important;
+  border: 0;
+  line-height: 1.5;
+  min-height: 0;
   position: relative;
   white-space: pre;
-  color: #e2e8f0;
+  color: #e2e8f0 !important;
+  background: transparent !important;
 }
 .codebox ol.lines li::before {
   content: counter(ln);
+  counter-increment: ln;
   position: absolute;
   left: 0;
   width: 2.7rem;
   text-align: right;
   color: #64748b;
+  line-height: 1.5;
+}
+
+/* Nested course lists — no extra ol numbering. */
+.course-tree, .course-tree ul,
+.section-children, .section-children ul,
+.outline-tree, .outline-tree ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 .course-tree { max-width: 80ch; }
-.course-tree h3 { margin: 1.1rem 0 0.3rem; }
-.lesson-list { padding-left: 1.3rem; }
-.lesson-list li { margin: 0.15rem 0; }
+.course-tree > li,
+.section-children > li {
+  margin: 0.85rem 0 1.1rem;
+}
+.course-tree .sec-title,
+.section-children .sec-title { font-weight: 700; }
+.course-tree ul,
+.section-children ul {
+  padding-left: 1.15rem;
+  margin: 0.35rem 0 0;
+  border-left: 2px solid var(--line, #d5dee7);
+}
+.course-tree ul li,
+.section-children ul li { margin: 0.15rem 0; }
 .page-menu { margin: 0 0 1.2rem; padding-left: 1.3rem; }
 .kicker { text-transform: uppercase; letter-spacing: .06em; font-size: .8rem; color: var(--muted); }
 .ver { color: var(--muted); font-size: 0.95rem; }
 .lede { max-width: 78ch; }
 footer.wrap .meta, p.meta { color: var(--muted); font-size: 0.92rem; }
 code, .dn { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.92em; }
+
+/* Course navigation bar */
+.course-nav {
+  background: var(--bg, #fff);
+  border-bottom: 1px solid var(--line, #d5dee7);
+  z-index: 30;
+}
+.course-nav.is-top { position: sticky; top: 0; }
+.course-nav.is-bottom {
+  position: static;
+  border-bottom: 0;
+  border-top: 1px solid var(--line, #d5dee7);
+  margin: 1.4rem 0 0.6rem;
+}
+.course-nav-bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 0.45rem 0.6rem;
+  align-items: center;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0.4rem 1.5rem;
+  box-sizing: border-box;
+}
+.nav-btn {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-decoration: none;
+  border: 1px solid var(--line, #d5dee7);
+  border-radius: 8px;
+  padding: 0.4rem 0.65rem;
+  background: var(--card, #fff);
+  color: var(--link, #1d4ed8);
+  font-size: 0.88rem;
+  line-height: 1.3;
+}
+.nav-btn .nav-title { font-weight: 650; }
+.nav-btn.next { justify-self: end; text-align: right; }
+.nav-btn.is-disabled {
+  opacity: 0.42;
+  pointer-events: none;
+  color: var(--muted, #5b6b7c);
+  cursor: not-allowed;
+}
+.nav-mid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  text-align: center;
+  min-width: 9rem;
+}
+.nav-pos {
+  font-size: 0.78rem;
+  color: var(--muted, #5b6b7c);
+  white-space: nowrap;
+}
+.outline-toggle {
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 650;
+  cursor: pointer;
+  border: 1px solid var(--line, #d5dee7);
+  border-radius: 8px;
+  background: var(--card, #fff);
+  color: var(--ink, #15202b);
+  padding: 0.2rem 0.55rem;
+}
+.outline-toggle[aria-expanded="true"] { background: var(--bg-accent, #e8eef4); }
+.course-outline {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0.35rem 1.5rem 0.9rem;
+  box-sizing: border-box;
+  max-height: min(70vh, 28rem);
+  overflow: auto;
+}
+.course-outline[hidden] { display: none !important; }
+.outline-tree a {
+  display: block;
+  padding: 0.12rem 0.35rem;
+  border-radius: 4px;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.outline-tree ul {
+  padding-left: 1.05rem;
+  border-left: 2px solid var(--line, #d5dee7);
+  margin: 0.15rem 0 0.25rem 0.2rem;
+}
+.outline-tree a[aria-current="page"] {
+  font-weight: 750;
+  background: var(--bg-accent, #e8eef4);
+  color: var(--ink, #15202b);
+}
+@media (max-width: 720px) {
+  .course-nav-bar {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "prev next"
+      "mid mid";
+    padding: 0.4rem 1rem;
+  }
+  .nav-btn.prev { grid-area: prev; }
+  .nav-btn.next { grid-area: next; }
+  .nav-mid { grid-area: mid; flex-direction: row; justify-content: center; min-width: 0; }
+  .course-outline { padding-left: 1rem; padding-right: 1rem; }
+}
 
 </style>
 </head>
@@ -811,10 +961,141 @@ apply(preferred());
 function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
 place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
 })();</script>
+
+<nav class="course-nav is-top" aria-label="Course">
+  <div class="course-nav-bar">
+    <a class="nav-btn prev" href="/roadmap/automation-aci-course/05-aci-tenant-policies/27-aci-tenant-policies-overview/">← Previous: <span class="nav-title">(27) ACI Tenant Policies Overview</span></a>
+    <div class="nav-mid">
+      <span class="nav-pos">Lesson 28 of 75 · Section 5</span>
+      <button type="button" class="outline-toggle" aria-expanded="false" aria-controls="course-outline">Outline</button>
+    </div>
+    <a class="nav-btn next" href="/roadmap/automation-aci-course/05-aci-tenant-policies/29-aci-vrfs/">Next: <span class="nav-title">(29) ACI VRFs</span> →</a>
+  </div>
+  <div id="course-outline" class="course-outline" hidden>
+<ul class="outline-tree">
+<li><a href="/roadmap/automation-aci-course/">Automation ACI Course</a><ul>
+<li><a href="/roadmap/automation-aci-course/01-aci-overview-basic-concepts/">[1] ACI Overview &amp; Basic Concepts</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/01-aci-overview-basic-concepts/01-what-and-why-cisco-aci/">(01) What and Why Cisco ACI?</a></li>
+<li><a href="/roadmap/automation-aci-course/01-aci-overview-basic-concepts/02-aci-fabric-components-apics/">(02) ACI Fabric Components - APICs</a></li>
+<li><a href="/roadmap/automation-aci-course/01-aci-overview-basic-concepts/03-aci-fabric-components-n9k-switches/">(03) ACI Fabric Components - N9K Switches</a></li>
+<li><a href="/roadmap/automation-aci-course/01-aci-overview-basic-concepts/04-aci-leaf-spine-topology/">(04) ACI Leaf-Spine Topology</a></li>
+<li><a href="/roadmap/automation-aci-course/01-aci-overview-basic-concepts/05-aci-data-control-management-plane/">(05) ACI Data, Control &amp; Management Plane</a></li>
+<li><a href="/roadmap/automation-aci-course/01-aci-overview-basic-concepts/quiz-1/">ACI Core Quiz #1</a></li>
+</ul></li>
+<li><a href="/roadmap/automation-aci-course/02-bring-up-the-aci-fabric/">[2] Bring Up the ACI Fabric</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/02-bring-up-the-aci-fabric/06-aci-fabric-discovery/">(06) ACI Fabric Discovery</a></li>
+<li><a href="/roadmap/automation-aci-course/02-bring-up-the-aci-fabric/07-aci-fabric-initial-setup/">(07) ACI Fabric Initial Setup</a></li>
+<li><a href="/roadmap/automation-aci-course/02-bring-up-the-aci-fabric/08-aci-initialization-lab-demo/">(08) ACI Initialization LAB Demo</a></li>
+<li><a href="/roadmap/automation-aci-course/02-bring-up-the-aci-fabric/quiz-2/">ACI Core Quiz #2</a></li>
+</ul></li>
+<li><a href="/roadmap/automation-aci-course/03-aci-object-model-clustering/">[3] ACI Object Model &amp; Clustering</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/03-aci-object-model-clustering/09-aci-object-model/">(09) ACI Object Model</a></li>
+<li><a href="/roadmap/automation-aci-course/03-aci-object-model-clustering/10-aci-gui-overview/">(10) ACI GUI Overview</a></li>
+<li><a href="/roadmap/automation-aci-course/03-aci-object-model-clustering/11-aci-obtaining-the-dn-from-gui/">(11) ACI Obtaining the DN from GUI</a></li>
+<li><a href="/roadmap/automation-aci-course/03-aci-object-model-clustering/12-aci-object-store-browser-visore/">(12) ACI Object Store Browser (Visore)</a></li>
+<li><a href="/roadmap/automation-aci-course/03-aci-object-model-clustering/13-aci-cli-types/">(13) ACI CLI Types</a></li>
+<li><a href="/roadmap/automation-aci-course/03-aci-object-model-clustering/14-aci-moquery/">(14) ACI Moquery</a></li>
+<li><a href="/roadmap/automation-aci-course/03-aci-object-model-clustering/15-aci-apic-clustering/">(15) ACI APIC Clustering</a></li>
+<li><a href="/roadmap/automation-aci-course/03-aci-object-model-clustering/quiz-3/">ACI Core Quiz #3</a></li>
+</ul></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/">[4] ACI Access Policies</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/16-aci-access-policies-overview/">(16) ACI Access Policies Overview</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/17-aci-switch-profiles-selectors/">(17) ACI Switch Profiles &amp; Selectors</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/18-aci-switch-policies-policy-groups/">(18) ACI Switch Policies &amp; Policy Groups</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/19-aci-interface-profiles-selectors/">(19) ACI Interface Profiles &amp; Selectors</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/20-aci-interface-policies-policy-groups-ipg/">(20) ACI Interface Policies &amp; Policy Groups (IPG)</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/21-aci-port-channels-pc/">(21) ACI Port-Channels (PC)</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/22-aci-virtual-port-channels-vpc/">(22) ACI Virtual Port-Channels (VPC)</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/23-aci-vlan-pools/">(23) ACI VLAN Pools</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/24-aci-domains/">(24) ACI Domains</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/25-aci-attachable-entity-profiles-aeps/">(25) ACI Attachable Entity Profiles (AEPs)</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/26-aci-and-fabric-extenders-fex/">(26) ACI &amp; Fabric Extenders (FEX)</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/quiz-4/">ACI Core Quiz #4</a></li>
+</ul></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/">[5] ACI Tenant Policies</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/27-aci-tenant-policies-overview/">(27) ACI Tenant Policies Overview</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/28-aci-tenants/" aria-current="page">(28) ACI Tenants</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/29-aci-vrfs/">(29) ACI VRFs</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/30-aci-bridge-domains-bds/">(30) ACI Bridge Domains (BDs)</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/31-aci-subnets/">(31) ACI Subnets</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/32-aci-application-profiles-ap/">(32) ACI Application Profiles (AP)</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/33-aci-endpoint-groups-epg/">(33) ACI Endpoint Groups (EPG)</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/34-aci-attaching-endpoints-to-epgs/">(34) ACI Attaching Endpoints to EPGs</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/35-aci-contracts-subjects-filters/">(35) ACI Contracts, Subjects &amp; Filters</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/36-aci-contracts-deployment/">(36) ACI Contracts Deployment</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/37-aci-as-l2-and-l3-fabric-lab-demo-part-1/">(37) ACI as L2 &amp; L3 Fabric (LAB Demo Part 1)</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/38-aci-as-l2-and-l3-fabric-lab-demo-part-2/">(38) ACI as L2 &amp; L3 Fabric (LAB Demo Part 2)</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/quiz-5/">ACI Core Quiz #5</a></li>
+</ul></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/">[6] ACI EP Learning &amp; Forwarding</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/39-aci-packet-encapsulation-format/">(39) ACI Packet Encapsulation &amp; Format</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/40-aci-endpoint-types-servers-nic-teaming/">(40) ACI Endpoint Types &amp; Servers NIC Teaming</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/41-aci-vlan-types-vlan-scope/">(41) ACI VLAN Types &amp; VLAN Scope</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/42-aci-endpoint-learning-part-1/">(42) ACI Endpoint Learning (Part 1)</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/43-aci-endpoint-learning-part-2/">(43) ACI Endpoint Learning (Part 2)</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/44-aci-endpoint-forwarding-overview/">(44) ACI Endpoint Forwarding Overview</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/45-aci-endpoint-forwarding-deep-dive-part-1/">(45) ACI Endpoint Forwarding Deep-Dive (Part 1)</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/46-aci-endpoint-forwarding-deep-dive-part-2/">(46) ACI Endpoint Forwarding Deep-Dive (Part 2)</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/47-aci-bum-forwarding-part-1/">(47) ACI BUM Forwarding (Part 1)</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/48-aci-bum-forwarding-part-2/">(48) ACI BUM Forwarding (Part 2)</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/quiz-6/">ACI Core Quiz #6</a></li>
+</ul></li>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/">[7] ACI Security Policies Deployment</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/49-aci-policy-deployment-overview/">(49) ACI Policy Deployment Overview</a></li>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/50-aci-zoning-rules/">(50) ACI Zoning-Rules</a></li>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/51-aci-policy-enforcement-options-part-1/">(51) ACI Policy Enforcement Options (Part 1)</a></li>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/52-aci-policy-enforcement-options-part-2/">(52) ACI Policy Enforcement Options (Part 2)</a></li>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/53-aci-policy-enforcement-options-part-3/">(53) ACI Policy Enforcement Options (Part 3)</a></li>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/54-aci-policy-enforcement-options-part-4/">(54) ACI Policy Enforcement Options (Part 4)</a></li>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/55-aci-policy-enforcement-lab-demo-part-1/">(55) ACI Policy Enforcement LAB Demo (Part 1)</a></li>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/56-aci-policy-enforcement-lab-demo-part-2/">(56) ACI Policy Enforcement LAB Demo (Part 2)</a></li>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/57-aci-contract-priorities/">(57) ACI Contract Priorities</a></li>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/quiz-7/">ACI Core Quiz #7</a></li>
+</ul></li>
+<li><a href="/roadmap/automation-aci-course/08-aci-external-l2-connectivity/">[8] ACI External L2 Connectivity</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/08-aci-external-l2-connectivity/58-aci-l2out-vs-epg-out/">(58) ACI L2Out vs. EPG Out</a></li>
+<li><a href="/roadmap/automation-aci-course/08-aci-external-l2-connectivity/59-aci-l2out-lab-demo/">(59) ACI L2Out LAB Demo</a></li>
+<li><a href="/roadmap/automation-aci-course/08-aci-external-l2-connectivity/60-aci-and-stp/">(60) ACI &amp; STP</a></li>
+<li><a href="/roadmap/automation-aci-course/08-aci-external-l2-connectivity/61-aci-loop-detection/">(61) ACI Loop Detection</a></li>
+<li><a href="/roadmap/automation-aci-course/08-aci-external-l2-connectivity/quiz-8/">ACI Core Quiz #8</a></li>
+</ul></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/">[9] ACI External L3 Connectivity</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/62-aci-l3out-overview/">(62) ACI L3Out Overview</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/63-aci-l3out-interface-types/">(63) ACI L3Out Interface Types</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/64-aci-mp-bgp-route-reflector-rr/">(64) ACI MP-BGP Route-Reflector (RR)</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/65-aci-l3out-object-model/">(65) ACI L3Out Object Model</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/66-aci-l3out-configuration-steps/">(66) ACI L3Out Configuration Steps</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/67-aci-l3out-eigrp-lab-demo/">(67) ACI L3Out EIGRP LAB Demo</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/68-aci-l3out-static-routing-lab-demo/">(68) ACI L3Out Static Routing LAB Demo</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/69-aci-l3out-ospf-lab-demo/">(69) ACI L3Out OSPF LAB Demo</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/70-aci-l3out-bgp-lab-demo/">(70) ACI L3Out BGP LAB Demo</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/71-aci-l3out-route-control/">(71) ACI L3Out Route Control</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/72-aci-l3out-route-control-lab-demo-part-1/">(72) ACI L3Out Route Control LAB Demo (Part 1)</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/73-aci-l3out-route-control-lab-demo-part-2/">(73) ACI L3Out Route Control LAB Demo (Part 2)</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/74-aci-l3out-route-control-lab-demo-part-3/">(74) ACI L3Out Route Control LAB Demo (Part 3)</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/quiz-9/">ACI Core Quiz #9</a></li>
+</ul></li>
+<li><a href="/roadmap/automation-aci-course/10-aci-additional-learning-topics/">[10] ACI Additional Learning Topics</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/10-aci-additional-learning-topics/75-miscellaneous-aci-topics/">(75) Miscellaneous ACI Topics</a></li>
+</ul></li>
+</ul></li></ul>
+</div>
+</nav>
+
 <main class="wrap">
 <p class="kicker">Automation ACI Course</p>
 <h1>(28) ACI Tenants</h1>
-<p class="ver">v1 · 24 Nov 2026, 2:00 PM AEDT</p>
+<p class="ver">v2 · 24 Nov 2026, 3:52 PM AEDT</p>
 <p class="ai-note">Study notes written with AI assistance from public Cisco documentation. Verify against your APIC version before use.</p>
 <p class="lede">Lesson (28) in section [5] ACI Tenant Policies. Expand the topic sections for study notes. The Ansible example uses the cisco.aci collection. This playbook is a <strong>lab-only configuration</strong> example.</p>
 <ol class="page-menu" aria-label="On this page">
@@ -885,34 +1166,7 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
         tenant: Example-Tenant
         state: absent
 </textarea>
-  <pre><ol class="lines">
-<li># Lesson 28 — tenant (lab only)</li>
-<li># Lab only. Do not run this playbook against a production APIC.</li>
-<li># Credentials are placeholders. Never put a real password, token, or APIC address in this file.</li>
-<li>---</li>
-<li>- name: Lesson 28 — tenant (lab only)</li>
-<li>  hosts: localhost</li>
-<li>  connection: local</li>
-<li>  gather_facts: false</li>
-<li>  vars:</li>
-<li>    aci_login: &amp;aci_login</li>
-<li>      host: &quot;{{ apic_host }}&quot;</li>
-<li>      username: &quot;{{ apic_username }}&quot;</li>
-<li>      password: &quot;{{ apic_password }}&quot;</li>
-<li>      validate_certs: false  # lab only; do not disable certificate verification in production</li>
-<li>  tasks:</li>
-<li>    - name: Create Example-Tenant</li>
-<li>      cisco.aci.aci_tenant:</li>
-<li>        &lt;&lt;: *aci_login</li>
-<li>        tenant: Example-Tenant</li>
-<li>        description: Example tenant for this course</li>
-<li>        state: present</li>
-<li>    - name: Remove Example-Tenant (cleanup)</li>
-<li>      cisco.aci.aci_tenant:</li>
-<li>        &lt;&lt;: *aci_login</li>
-<li>        tenant: Example-Tenant</li>
-<li>        state: absent</li>
-  </ol></pre>
+  <div class="codebox-body"><ol class="lines"><li># Lesson 28 — tenant (lab only)</li><li># Lab only. Do not run this playbook against a production APIC.</li><li># Credentials are placeholders. Never put a real password, token, or APIC address in this file.</li><li>---</li><li>- name: Lesson 28 — tenant (lab only)</li><li>  hosts: localhost</li><li>  connection: local</li><li>  gather_facts: false</li><li>  vars:</li><li>    aci_login: &amp;aci_login</li><li>      host: &quot;{{ apic_host }}&quot;</li><li>      username: &quot;{{ apic_username }}&quot;</li><li>      password: &quot;{{ apic_password }}&quot;</li><li>      validate_certs: false  # lab only; do not disable certificate verification in production</li><li>  tasks:</li><li>    - name: Create Example-Tenant</li><li>      cisco.aci.aci_tenant:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: Example-Tenant</li><li>        description: Example tenant for this course</li><li>        state: present</li><li>    - name: Remove Example-Tenant (cleanup)</li><li>      cisco.aci.aci_tenant:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: Example-Tenant</li><li>        state: absent</li></ol></div>
 </figure>
 <h2 id="inventory">Inventory and vars</h2>
 <p>Example files that stay next to the playbook. Fill in a private copy; never commit a real password.</p>
@@ -929,13 +1183,7 @@ apic_host: apic.example.invalid
 apic_username: ansible_user
 apic_password: &quot;CHANGE_ME&quot;
 </textarea>
-  <pre><ol class="lines">
-<li># vars.example.yml — placeholders only. Do not store real passwords in git.</li>
-<li># Copy this file, fill in values locally, and keep the filled copy off the site.</li>
-<li>apic_host: apic.example.invalid</li>
-<li>apic_username: ansible_user</li>
-<li>apic_password: &quot;CHANGE_ME&quot;</li>
-  </ol></pre>
+  <div class="codebox-body"><ol class="lines"><li># vars.example.yml — placeholders only. Do not store real passwords in git.</li><li># Copy this file, fill in values locally, and keep the filled copy off the site.</li><li>apic_host: apic.example.invalid</li><li>apic_username: ansible_user</li><li>apic_password: &quot;CHANGE_ME&quot;</li></ol></div>
 </figure>
 
 <figure class="codebox">
@@ -951,17 +1199,10 @@ all:
     localhost:
       ansible_connection: local
 </textarea>
-  <pre><ol class="lines">
-<li># inventory.example.yml — the cisco.aci modules run on the control node</li>
-<li># and talk to the APIC API. There is no need to SSH to the APIC.</li>
-<li>all:</li>
-<li>  hosts:</li>
-<li>    localhost:</li>
-<li>      ansible_connection: local</li>
-  </ol></pre>
+  <div class="codebox-body"><ol class="lines"><li># inventory.example.yml — the cisco.aci modules run on the control node</li><li># and talk to the APIC API. There is no need to SSH to the APIC.</li><li>all:</li><li>  hosts:</li><li>    localhost:</li><li>      ansible_connection: local</li></ol></div>
 </figure>
 <h2 id="sources">Sources</h2>
-<ul>
+<ul class="src-list">
 <li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-60x.html">Cisco ACI Fundamentals, Release 6.0(x)</a></li>
 <li><a href="https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/index.html">Ansible cisco.aci collection documentation</a></li>
 </ul>
@@ -974,10 +1215,23 @@ all:
 
 </main>
 <footer class="wrap">
-<p class="meta">Page: <strong>(28) ACI Tenants</strong> · Version: <strong>v1 · 24 Nov 2026, 2:00 PM AEDT</strong></p>
-<p class="meta">Previous: <a href="/roadmap/automation-aci-course/05-aci-tenant-policies/27-aci-tenant-policies-overview/">(27) ACI Tenant Policies Overview</a> · Next: <a href="/roadmap/automation-aci-course/05-aci-tenant-policies/29-aci-vrfs/">(29) ACI VRFs</a> · Course hub: <a href="/roadmap/automation-aci-course/">/roadmap/automation-aci-course/</a></p>
-<p class="meta">This course is a hidden study area and is not listed in the public site menu or the public RoadMap page. Folder links end with <code>/</code>. Credentials in playbooks are placeholders. No playbook on these pages is meant to be run against a production APIC.</p>
+<p class="meta">Page: <strong>(28) ACI Tenants</strong> · Version: <strong>v2 · 24 Nov 2026, 3:52 PM AEDT</strong></p>
+
+<nav class="course-nav is-bottom" aria-label="Course">
+  <div class="course-nav-bar">
+    <a class="nav-btn prev" href="/roadmap/automation-aci-course/05-aci-tenant-policies/27-aci-tenant-policies-overview/">← Previous: <span class="nav-title">(27) ACI Tenant Policies Overview</span></a>
+    <div class="nav-mid">
+      <span class="nav-pos">Lesson 28 of 75 · Section 5</span>
+      <button type="button" class="outline-toggle" aria-expanded="false" aria-controls="course-outline">Outline</button>
+    </div>
+    <a class="nav-btn next" href="/roadmap/automation-aci-course/05-aci-tenant-policies/29-aci-vrfs/">Next: <span class="nav-title">(29) ACI VRFs</span> →</a>
+  </div>
+  
+</nav>
+
+<p class="meta">This course is a hidden study area and is not listed in the public site menu or the public RoadMap page. Folder links end with <code>/</code>. Credentials in playbooks are placeholders. No playbook on these pages is meant to be run against a production APIC. Use the left and right arrow keys to move to the previous or next page.</p>
 </footer>
+
 <script>
 (function(){
   document.querySelectorAll(".codebox").forEach(function(box){
@@ -1005,7 +1259,45 @@ all:
       }
     });
   });
+
+  var outline = document.getElementById("course-outline");
+  var toggles = document.querySelectorAll(".outline-toggle");
+  function setOpen(open){
+    if (!outline) return;
+    if (open) outline.removeAttribute("hidden");
+    else outline.setAttribute("hidden", "");
+    toggles.forEach(function(btn){ btn.setAttribute("aria-expanded", open ? "true" : "false"); });
+    if (open) {
+      var cur = outline.querySelector('[aria-current="page"]');
+      if (cur && cur.scrollIntoView) cur.scrollIntoView({block: "nearest"});
+    }
+  }
+  toggles.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var open = outline && !outline.hasAttribute("hidden");
+      setOpen(!open);
+      if (!open && btn.closest(".is-bottom") && outline) {
+        outline.scrollIntoView({block: "nearest"});
+      }
+    });
+  });
+
+  document.addEventListener("keydown", function(ev){
+    if (ev.altKey || ev.ctrlKey || ev.metaKey || ev.shiftKey) return;
+    var tag = (ev.target && ev.target.tagName) ? ev.target.tagName.toLowerCase() : "";
+    if (tag === "input" || tag === "textarea" || tag === "select" || (ev.target && ev.target.isContentEditable)) return;
+    var href = null;
+    if (ev.key === "ArrowLeft") {
+      var prev = document.querySelector(".course-nav.is-top a.nav-btn.prev");
+      if (prev) href = prev.getAttribute("href");
+    } else if (ev.key === "ArrowRight") {
+      var next = document.querySelector(".course-nav.is-top a.nav-btn.next");
+      if (next) href = next.getAttribute("href");
+    }
+    if (href) { ev.preventDefault(); window.location.href = href; }
+  });
 })();
 </script>
+
 </body>
 </html>
