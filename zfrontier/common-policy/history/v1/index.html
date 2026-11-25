@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- site-hidden-page: no menu, noindex, skip inject -->
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cisco Common Policy Integration Guide</title>
+<meta name="description" content="Hidden zFrontier summary of the Cisco Common Policy Integration Guide (ISE 3.4 Patch 1, ACI, Catalyst Center / SD-Access, SD-WAN, FMC, vCenter) with original multi-site topology and workload classification flow diagrams.">
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:auto;
+  min-height:44px;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:auto;min-height:44px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:visible;
+  text-overflow:unset;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.25;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:22px;
+  height:22px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:16px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:#1d4ed8!important;
+}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f4f6f8;
+  --bg-accent: #e8eef4;
+  --card: #ffffff;
+  --ink: #15202b;
+  --muted: #5b6b7c;
+  --line: #d5dee7;
+  --accent: #0f766e;
+  --accent-soft: #e0f4f8;
+  --link: #0e7490;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --radius: 14px;
+  --sans: "Segoe UI", system-ui, sans-serif;
+  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+    --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+    --link: #5eead4;
+    --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+  }
+}
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f4f6f8; --bg-accent: #e8eef4; --card: #ffffff; --ink: #15202b;
+  --muted: #5b6b7c; --line: #d5dee7; --accent: #0f766e; --accent-soft: #e0f4f8;
+  --link: #0e7490;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+  --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+  --link: #5eead4;
+  --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--sans);
+  background: radial-gradient(1200px 500px at 10% -10%, var(--bg-accent), transparent 60%), var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  min-height: 100vh;
+}
+a { color: var(--link); }
+main.wrap, footer.wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem; }
+main.wrap { padding-top: 0.4rem; padding-bottom: 2.2rem; }
+footer.wrap { padding-bottom: 3.5rem; }
+.tr17 { margin: 0 0 8px; }
+h1 { font-size: clamp(1.7rem, 3vw, 2.25rem); margin: 0 0 0.35rem; letter-spacing: -0.03em; font-weight: 700; }
+.ver { margin: 0 0 0.85rem; color: var(--muted); font-weight: 650; }
+.lede { font-size: 1.05rem; margin: 0 0 1rem; max-width: 72ch; }
+h2 { font-size: 1.25rem; margin: 2rem 0 0.7rem; letter-spacing: -0.02em; scroll-margin-top: 80px; }
+h3 { font-size: 1.05rem; margin: 1.4rem 0 0.5rem; scroll-margin-top: 80px; }
+p, ul, ol { margin: 0 0 0.85rem; }
+ul, ol { padding-left: 1.25rem; }
+li { margin: 0.2rem 0; }
+.kicker {
+  display: inline-block; text-transform: uppercase; letter-spacing: 0.14em;
+  font-size: 0.72rem; color: var(--accent); font-weight: 700; margin: 0 0 0.35rem;
+}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker,
+.kicker { color: var(--accent) !important; }
+.page-menu { margin: 0 0 1.2rem; padding-left: 2.4rem; }
+.page-menu ol { margin: 0.25rem 0 0.4rem; padding-left: 1.6rem; }
+#comments { margin: 1.6rem 0 0; }
+#comments-mount { margin-top: 0.8rem; }
+.meta { font-size: 0.95rem; color: var(--muted); margin: 0 0 0.55rem; }
+.meta strong { color: var(--ink); }
+code { font-family: var(--mono); font-size: 0.9em; }
+.note {
+  background: var(--accent-soft);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin: 0 0 1rem;
+}
+.note strong { color: var(--ink); }
+.diag {
+  overflow-x: auto;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.7rem;
+  margin: 0 0 1rem;
+  box-shadow: var(--shadow);
+}
+.diag svg { display: block; width: 100%; height: auto; max-width: 1100px; }
+figcaption {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin: 0.2rem 0 1rem;
+}
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+table.data th, table.data td {
+  border: 1px solid var(--line);
+  padding: 0.45rem 0.6rem;
+  text-align: left;
+  vertical-align: top;
+}
+table.data th { background: var(--th-bg, #f1f5f9); font-weight: 700; }
+table.data caption {
+  text-align: left;
+  font-weight: 700;
+  margin: 0 0 0.45rem;
+  color: var(--ink);
+}
+.scroll { overflow-x: auto; margin: 0 0 1rem; }
+.steps { counter-reset: step; list-style: none; padding-left: 0; }
+.steps li {
+  position: relative;
+  padding: 0.55rem 0.7rem 0.55rem 3rem;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 10px;
+  margin: 0 0 0.5rem;
+}
+.steps li::before {
+  counter-increment: step;
+  content: counter(step);
+  position: absolute;
+  left: 0.7rem; top: 0.55rem;
+  width: 1.55rem; height: 1.55rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex; align-items: center; justify-content: center;
+}
+html[data-theme="dark"] .steps li::before { color: #042f2e; }
+.codebox {
+  border-radius: 8px;
+  overflow: hidden;
+  background: #0b1220;
+  color: #e2e8f0;
+  margin: 0.6rem 0 1.1rem;
+  border: 1px solid #1f2937;
+}
+.codebox-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0.75rem;
+  background: #111827;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: #cbd5e1;
+}
+.codebox-tab .fname { font-weight: 650; color: #f8fafc; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.codebox-tab a, .codebox-tab button {
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 0.2rem 0.55rem;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  flex: none;
+}
+.codebox-tab button.copy-btn { margin-left: auto; }
+.codebox-tab a { margin-left: 0; }
+.codebox-tab button.copy-btn:hover, .codebox-tab a:hover { background: #334155; }
+.codebox-body { margin: 0; overflow: auto; background: #0b1220; color: #e2e8f0; max-height: 28rem; }
+.codebox ol.lines {
+  list-style: none;
+  margin: 0 !important;
+  padding: 0.45rem 0 0.55rem !important;
+  counter-reset: ln;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.5;
+  white-space: normal;
+}
+.codebox ol.lines li {
+  display: block;
+  box-sizing: border-box;
+  margin: 0 !important;
+  padding: 0 1rem 0 3.3rem !important;
+  border: 0;
+  line-height: 1.5;
+  position: relative;
+  white-space: pre;
+  color: #e2e8f0 !important;
+  background: transparent !important;
+}
+.codebox ol.lines li::before {
+  content: counter(ln);
+  counter-increment: ln;
+  position: absolute;
+  left: 0;
+  width: 2.7rem;
+  text-align: right;
+  color: #64748b;
+  line-height: 1.5;
+}
+html[data-theme="dark"] .diag svg rect.panel { fill: var(--card); stroke: var(--line); }
+html[data-theme="dark"] .diag svg text.ink { fill: var(--ink); }
+html[data-theme="dark"] .diag svg text.muted { fill: var(--muted); }
+html[data-theme="dark"] .diag svg .arrowhead { fill: var(--muted); }
+</style>
+
+
+
+<style>
+.pill-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+  margin: 0.75rem 0 1.25rem;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  box-shadow: var(--shadow);
+}
+.card h3 { margin-top: 0; font-size: 1rem; }
+.card p:last-child, .card ul:last-child { margin-bottom: 0; }
+.diag svg rect.zone { fill: #f8fafc; stroke: #cbd5e1; }
+.diag svg rect.site-box { fill: #ffffff; stroke: #94a3b8; }
+.diag svg rect.ctrl { fill: #e0f2fe; stroke: #0284c7; }
+.diag svg rect.ise { fill: #ede9fe; stroke: #7c3aed; }
+.diag svg rect.fw { fill: #ffedd5; stroke: #ea580c; }
+.diag svg rect.cloud { fill: #ecfeff; stroke: #0891b2; }
+.diag svg rect.sda { fill: #dcfce7; stroke: #16a34a; }
+.diag svg rect.sdwan { fill: #dbeafe; stroke: #2563eb; }
+.diag svg rect.flow-aci { fill: #e0f2fe; stroke: #0284c7; }
+.diag svg rect.flow-nonaci { fill: #fef3c7; stroke: #d97706; }
+.diag svg rect.flow-mid { fill: #ede9fe; stroke: #7c3aed; }
+.diag svg rect.flow-ise { fill: #ccfbf1; stroke: #0f766e; }
+html[data-theme="dark"] .diag svg rect.zone { fill: #0f172a; stroke: #334155; }
+html[data-theme="dark"] .diag svg rect.site-box { fill: #1e293b; stroke: #475569; }
+html[data-theme="dark"] .diag svg rect.ctrl { fill: #0c4a6e; stroke: #38bdf8; }
+html[data-theme="dark"] .diag svg rect.ise { fill: #2e1065; stroke: #a78bfa; }
+html[data-theme="dark"] .diag svg rect.fw { fill: #431407; stroke: #fb923c; }
+html[data-theme="dark"] .diag svg rect.cloud { fill: #083344; stroke: #22d3ee; }
+html[data-theme="dark"] .diag svg rect.sda { fill: #052e16; stroke: #4ade80; }
+html[data-theme="dark"] .diag svg rect.sdwan { fill: #172554; stroke: #60a5fa; }
+html[data-theme="dark"] .diag svg rect.flow-aci { fill: #0c4a6e; stroke: #38bdf8; }
+html[data-theme="dark"] .diag svg rect.flow-nonaci { fill: #451a03; stroke: #fbbf24; }
+html[data-theme="dark"] .diag svg rect.flow-mid { fill: #2e1065; stroke: #a78bfa; }
+html[data-theme="dark"] .diag svg rect.flow-ise { fill: #042f2e; stroke: #2dd4bf; }
+</style>
+
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+
+<main class="wrap">
+<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:var(--muted,#888)"><a href="/visitors/" style="color:inherit;text-decoration:none"><span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></a><span class="uvt" style="font-size:11px;color:var(--muted,#888)"></span></div><!--/arr-uv-tr17-->
+
+<p class="kicker">Hidden page</p>
+<h1>Cisco Common Policy Integration Guide</h1>
+<p class="ver"><a href="/zfrontier/common-policy/history/">v1 · 25 Nov 2026, 10:58 PM AEDT</a></p>
+<p class="lede">Summary of Cisco’s validated Common Policy Integration Guide (January 14, 2026), covering multi-domain Security Group Tag (SGT) context exchange and policy enforcement with Cisco ISE 3.4 Patch 1 as the central hub across Cisco ACI, Catalyst Center / SD-Access, Cisco SD-WAN, Secure Firewall Management Center (FMC), and VMware vCenter / public clouds. Both architecture diagrams below are original drawings.</p>
+
+<ol class="page-menu" aria-label="On this page">
+<li><a href="#overview">Overview and architecture</a></li>
+<li><a href="#specs">Validated hardware and software</a></li>
+<li><a href="#topology">Multi-site Common Policy topology</a></li>
+<li><a href="#use-cases">Solution use cases and verified scale</a></li>
+<li><a href="#integrations">ISE domain integrations</a>
+<ol>
+<li><a href="#ise-aci">ISE and Cisco ACI integration</a></li>
+<li><a href="#sgt-domain-rules">Inbound and outbound SGT domain rules</a></li>
+<li><a href="#workload-classification">Workload connectors and classification flow</a></li>
+<li><a href="#ise-controllers">Catalyst Center, SD-WAN Manager, and FMC</a></li>
+</ol>
+</li>
+<li><a href="#enforcement">Policy enforcement points</a>
+<ol>
+<li><a href="#pep-aci">ACI leaf policy enforcement</a></li>
+<li><a href="#pep-sda">SD-Access Border Nodes</a></li>
+<li><a href="#pep-sdwan">SD-WAN Edge</a></li>
+<li><a href="#pep-ftd">Firewall Threat Defense (FTD)</a></li>
+</ol>
+</li>
+<li><a href="#troubleshooting">Workload reports and troubleshooting</a></li>
+<li><a href="#references">References</a></li>
+<li><a href="#not-collected">Not collected</a></li>
+<li><a href="#comments">Comments</a></li>
+<li><a href="#versions">Versions</a></li>
+</ol>
+
+<h2 id="overview">Overview and architecture</h2>
+<p>Hybrid workforces, distributed applications across private data centers and public clouds, and growing IoT footprints create siloed security domains when campus, WAN, data center, and cloud platforms each maintain independent policy models. Cisco’s Common Policy architecture solves this by using <strong>Cisco Identity Services Engine (ISE 3.4 Patch 1)</strong> as a central context hub that collects identity and workload metadata, normalizes it into <strong>Security Group Tags (SGTs)</strong>, and distributes IP-to-SGT bindings across domains.</p>
+<div class="pill-grid">
+  <div class="card">
+    <h3>ISE ACI Connector</h3>
+    <p>Builds a direct connection to Cisco APIC to discover Endpoint Groups (EPGs) and Endpoint Security Groups (ESGs) and map their endpoints to SGTs. Campus and non-ACI SGTs shared back to APIC become External EPGs (EEPGs) on an L3Out so ACI contracts enforce policy.</p>
+  </div>
+  <div class="card">
+    <h3>ISE Workload Connector</h3>
+    <p>Connects to on-premises VMware vCenter and public clouds (AWS, Azure, GCP) to import VM and workload attributes and assign primary and secondary SGTs through ordered Workload Classification rules.</p>
+  </div>
+  <div class="card">
+    <h3>pxGrid &amp; SXP Distribution</h3>
+    <p>Publishes normalized IP-to-SGT context over <strong>pxGrid</strong> to Catalyst Center, SD-WAN Manager, FMC, and APIC, and over <strong>SXP</strong> to TrustSec listeners such as SD-Access Border Nodes.</p>
+  </div>
+</div>
+<div class="note">
+  <strong>Cross-domain enforcement example from the guide:</strong> Campus users classified as <code>Employees</code> are permitted by the firewall to reach a data center <code>web-app</code> SGT (while <code>Contractors</code> are permitted to a cloud <code>cloud-app</code> SGT), and APIC simultaneously enforces a consumed/provided contract on the ACI leaf between the <code>Employees</code> EEPG and the <code>web-app</code> EPG.
+</div>
+
+<h2 id="specs">Validated hardware and software</h2>
+<p>The solution profile was validated with the following platforms and software releases reported in the Cisco guide (click any column header to sort).</p>
+<div class="scroll">
+<table class="data">
+<caption>Validated hardware and software matrix</caption>
+<thead>
+<tr><th>Role</th><th>Model / Platform</th><th>Hardware / Appliance</th><th>Software Version(s)</th></tr>
+</thead>
+<tbody>
+<tr><td>Catalyst Center Controller</td><td>DN2-HW-APL</td><td>Catalyst Center Appliance 3-Node Cluster</td><td>2.3.7.7, 2.3.7.9</td></tr>
+<tr><td>Identity Management, RADIUS Server</td><td>ISE-VM-K9, SNS-3600, SNS-3700</td><td>Cisco ISE Virtual Appliance &amp; SNS Appliances</td><td>ISE 3.4 Patch 1</td></tr>
+<tr><td>Cisco SD-WAN Controller / Manager</td><td>SD-WAN Manager</td><td>Cisco SD-WAN Manager</td><td>20.15.1 (SGT ID-based FW supported since 20.10.1)</td></tr>
+<tr><td>Cisco SD-WAN Edge</td><td>C8300, C8500</td><td>Cisco Edge Services Router</td><td>17.9.5f, 17.12.4b, 17.15.1a</td></tr>
+<tr><td>Core and Distribution Node</td><td>C9500H, C9600</td><td>Cisco Catalyst 9500 / 9600 Series Switches</td><td>17.9.6a, 17.12.4 / 17.12.5, 17.15.1 / 17.15.3</td></tr>
+<tr><td>Campus Access Node</td><td>C9300-48P, C9300-24P</td><td>Cisco Catalyst 9300 Series Switches</td><td>17.9.6a, 17.12.4 / 17.12.5, 17.15.1 / 17.15.3</td></tr>
+<tr><td>Wireless Controller</td><td>C9800-40-K9</td><td>Cisco Catalyst 9800 Series Wireless Controller</td><td>17.9.6, 17.12.4 / 17.12.5, 17.15.1 / 17.15.3</td></tr>
+<tr><td>Access Points</td><td>9120-AXI, 9130-AXI</td><td>Cisco Catalyst Access Points</td><td>17.9.6, 17.12.4 / 17.12.5, 17.15.1 / 17.15.3</td></tr>
+<tr><td>Firewall Security Appliance</td><td>FPR2110</td><td>Firepower 2100 Threat Defense (FTD)</td><td>7.2.5</td></tr>
+<tr><td>Firewall Management</td><td>FMCv</td><td>Cisco Secure Firewall Management Center Virtual</td><td>7.2.5 (pxGrid 2.0 supported since 6.7)</td></tr>
+<tr><td>ACI Controller</td><td>APIC-SERVER-M3</td><td>Cisco APIC Appliance</td><td>6.1.2</td></tr>
+<tr><td>ACI Fabric Switches</td><td>N9K-C93240YC-FX2, N9K-C9332C</td><td>Cisco Nexus 9000 ACI-Mode Switches</td><td>16.1.2 (APIC 6.1.2)</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="topology">Multi-site Common Policy topology</h2>
+<p>The validated test bed spans three autonomous Cisco ACI data center fabrics (two single-pod sites and one Multi-Pod fabric joined by an IPN), an SD-Access Transit and campus sites (Main, Transit, and Branch), a central SD-WAN WAN fabric, a Firepower (FTD) boundary to a Non-SDA TrustSec domain, vCenter workloads, and FMC. The three ACI fabrics connect across Layer 3-only L3Out paths with unique IP subnets per fabric (with L3Out border leaves deployable in both pods of the Multi-Pod fabric). SD-Access Main and Branch sites integrate with SD-WAN Edges via eBGP, VRF-lite, and inline SGT, while ISE PSNs run per-VN SXP connections to the SD-Access Main Border Nodes.</p>
+<figure class="diag" aria-label="Multi-site Common Policy topology diagram">
+<svg class="arch" viewBox="0 0 1160 830" width="1160" height="830" role="img" aria-label="Original multi-site Common Policy topology showing three ACI data center sites, ISE PAN/MNT/PSN+pxGrid, Catalyst Center, vCenter, FMC, SD-WAN cloud, SDA Transit, SDA sites, Firewall, Non-SDA TrustSec, pxGrid dashed connections, and red Policy Enforcement Point markers.">
+<defs>
+  <marker id="arr-solid" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569" class="arrowhead"/>
+  </marker>
+  <marker id="arr-px" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#7c3aed"/>
+  </marker>
+  <marker id="arr-sxp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#d97706"/>
+  </marker>
+  <marker id="arr-cc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#0891b2"/>
+  </marker>
+</defs>
+
+<rect class="panel" x="0" y="0" width="1160" height="830" rx="16" fill="#f8fafc" stroke="#e2e8f0"/>
+<text class="ink" x="22" y="28" font-size="14" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">Multi-site Common Policy topology (original drawing)</text>
+<text class="muted" x="22" y="47" font-size="11.5" font-family="Segoe UI, system-ui, sans-serif">ACI data centers, SD-Access, SD-WAN, vCenter, FMC, and TrustSec via Cisco ISE.</text>
+
+<!-- Legend -->
+<rect class="site-box" x="635" y="12" width="505" height="62" rx="10" stroke-width="1.2"/>
+<text class="ink" x="648" y="30" font-size="11" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">Legend</text>
+<line x1="705" y1="26" x2="755" y2="26" stroke="#7c3aed" stroke-width="2" stroke-dasharray="6,4"/>
+<text class="ink" x="763" y="30" font-size="10.5" font-family="Segoe UI, system-ui, sans-serif">pxGrid (ISE ↔ Catalyst Center, APIC, FMC, vCenter)</text>
+<circle cx="715" cy="48" r="6" fill="#dc2626" stroke="#ffffff" stroke-width="1.5"/>
+<text class="ink" x="728" y="52" font-size="10.5" font-family="Segoe UI, system-ui, sans-serif">Policy Enforcement Point (PEP)</text>
+<line x1="922" y1="48" x2="962" y2="48" stroke="#d97706" stroke-width="2" stroke-dasharray="8,3,2,3"/>
+<text class="ink" x="968" y="52" font-size="10.5" font-family="Segoe UI, system-ui, sans-serif">SXP</text>
+<line x1="1008" y1="48" x2="1044" y2="48" stroke="#0891b2" stroke-width="2" stroke-dasharray="4,3"/>
+<text class="ink" x="1050" y="52" font-size="10.5" font-family="Segoe UI, system-ui, sans-serif">Cloud Conn.</text>
+
+<!-- ================= DC SITE 1 ================= -->
+<rect class="zone" x="20" y="88" width="350" height="252" rx="12" stroke-width="1.5"/>
+<text class="ink" x="34" y="108" font-size="12.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">DC Site 1 (ACI)</text>
+<!-- Spines -->
+<rect class="ctrl" x="100" y="118" width="76" height="28" rx="6" stroke-width="1.4"/>
+<text class="ink" x="138" y="136" text-anchor="middle" font-size="11" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">Spine 1</text>
+<rect class="ctrl" x="210" y="118" width="76" height="28" rx="6" stroke-width="1.4"/>
+<text class="ink" x="248" y="136" text-anchor="middle" font-size="11" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">Spine 2</text>
+<!-- Fabric lines DC1 -->
+<g stroke="#64748b" stroke-width="1.2">
+  <line x1="138" y1="146" x2="68" y2="176"/><line x1="138" y1="146" x2="148" y2="176"/><line x1="138" y1="146" x2="228" y2="176"/><line x1="138" y1="146" x2="308" y2="176"/>
+  <line x1="248" y1="146" x2="68" y2="176"/><line x1="248" y1="146" x2="148" y2="176"/><line x1="248" y1="146" x2="228" y2="176"/><line x1="248" y1="146" x2="308" y2="176"/>
+</g>
+<!-- Leaves + PEP markers -->
+<rect class="ctrl" x="38" y="176" width="60" height="30" rx="6" stroke-width="1.4"/>
+<text class="ink" x="68" y="195" text-anchor="middle" font-size="10.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">Leaf 1</text>
+<circle cx="96" cy="178" r="5.5" fill="#dc2626" stroke="#ffffff" stroke-width="1.4"/>
+<rect class="ctrl" x="118" y="176" width="60" height="30" rx="6" stroke-width="1.4"/>
+<text class="ink" x="148" y="195" text-anchor="middle" font-size="10.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">Leaf 2</text>
+<circle cx="176" cy="178" r="5.5" fill="#dc2626" stroke="#ffffff" stroke-width="1.4"/>
+<rect class="ctrl" x="198" y="176" width="60" height="30" rx="6" stroke-width="1.4"/>
+<text class="ink" x="228" y="195" text-anchor="middle" font-size="10.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">Leaf 3</text>
+<circle cx="256" cy="178" r="5.5" fill="#dc2626" stroke="#ffffff" stroke-width="1.4"/>
+<rect class="ctrl" x="278" y="176" width="60" height="30" rx="6" stroke-width="1.4"/>
+<text class="ink" x="308" y="195" text-anchor="middle" font-size="10.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">Leaf 4</text>
+<circle cx="336" cy="178" r="5.5" fill="#dc2626" stroke="#ffffff" stroke-width="1.4"/>
+
+<!-- DC1 Controllers & ISE -->
+<rect class="ctrl" x="34" y="226" width="112" height="34" rx="7" stroke-width="1.4"/>
+<text class="ink" x="90" y="247" text-anchor="middle" font-size="10.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">Catalyst Center</text>
+<rect class="ctrl" x="158" y="226" width="84" height="34" rx="7" stroke-width="1.4"/>
+<text class="ink" x="200" y="247" text-anchor="middle" font-size="10.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">APIC (DC1)</text>
+
+<rect class="ise" x="34" y="276" width="86" height="44" rx="7" stroke-width="1.5"/>
+<text class="ink" x="77" y="295" text-anchor="middle" font-size="10.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">ISE PAN</text>
+<text class="muted" x="77" y="310" text-anchor="middle" font-size="9.5" font-family="Segoe UI, system-ui, sans-serif">Policy Admin</text>
+
+<rect class="ise" x="130" y="276" width="86" height="44" rx="7" stroke-width="1.5"/>
+<text class="ink" x="173" y="295" text-anchor="middle" font-size="10.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">ISE MNT</text>
+<text class="muted" x="173" y="310" text-anchor="middle" font-size="9.5" font-family="Segoe UI, system-ui, sans-serif">Monitoring</text>
+
+<rect class="ise" x="226" y="276" width="128" height="44" rx="7" stroke-width="1.5"/>
+<text class="ink" x="290" y="295" text-anchor="middle" font-size="10.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">ISE PSN + pxGrid</text>
+<text class="muted" x="290" y="310" text-anchor="middle" font-size="9.5" font-family="Segoe UI, system-ui, sans-serif">Hub · SXP · pxGrid</text>
+
+<!-- ================= DC SITE 2 (MULTI-POD) ================= -->
+<rect class="zone" x="385" y="88" width="355" height="252" rx="12" stroke-width="1.5"/>
+<text class="ink" x="399" y="108" font-size="12.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">DC Site 2 (ACI Multi-Pod)</text>
+
+<!-- Pod 1 -->
+<rect class="site-box" x="397" y="118" width="156" height="122" rx="8" stroke-width="1.2"/>
+<text class="muted" x="475" y="133" text-anchor="middle" font-size="10.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">Pod 1</text>
+<rect class="ctrl" x="410" y="142" width="54" height="24" rx="5" stroke-width="1.2"/>
+<text class="ink" x="437" y="158" text-anchor="middle" font-size="9.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">Spine 1</text>
+<rect class="ctrl" x="486" y="142" width="54" height="24" rx="5" stroke-width="1.2"/>
+<text class="ink" x="513" y="158" text-anchor="middle" font-size="9.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">Spine 2</text>
+<g stroke="#64748b" stroke-width="1.1">
+  <line x1="437" y1="166" x2="437" y2="196"/><line x1="437" y1="166" x2="513" y2="196"/>
+  <line x1="513" y1="166" x2="437" y2="196"/><line x1="513" y1="166" x2="513" y2="196"/>
+</g>
+<rect class="ctrl" x="410" y="196" width="54" height="28" rx="5" stroke-width="1.2"/>
+<text class="ink" x="437" y="214" text-anchor="middle" font-size="9.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">Leaf 1</text>
+<circle cx="462" cy="198" r="5" fill="#dc2626" stroke="#ffffff" stroke-width="1.3"/>
+<rect class="ctrl" x="486" y="196" width="54" height="28" rx="5" stroke-width="1.2"/>
+<text class="ink" x="513" y="214" text-anchor="middle" font-size="9.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">Leaf 2</text>
+<circle cx="538" cy="198" r="5" fill="#dc2626" stroke="#ffffff" stroke-width="1.3"/>
+
+<!-- Pod 2 -->
+<rect class="site-box" x="571" y="118" width="156" height="122" rx="8" stroke-width="1.2"/>
+<text class="muted" x="649" y="133" text-anchor="middle" font-size="10.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">Pod 2</text>
+<rect class="ctrl" x="584" y="142" width="54" height="24" rx="5" stroke-width="1.2"/>
+<text class="ink" x="611" y="158" text-anchor="middle" font-size="9.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">Spine 1</text>
+<rect class="ctrl" x="660" y="142" width="54" height="24" rx="5" stroke-width="1.2"/>
+<text class="ink" x="687" y="158" text-anchor="middle" font-size="9.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">Spine 2</text>
+<g stroke="#64748b" stroke-width="1.1">
+  <line x1="611" y1="166" x2="611" y2="196"/><line x1="611" y1="166" x2="687" y2="196"/>
+  <line x1="687" y1="166" x2="611" y2="196"/><line x1="687" y1="166" x2="687" y2="196"/>
+</g>
+<rect class="ctrl" x="584" y="196" width="54" height="28" rx="5" stroke-width="1.2"/>
+<text class="ink" x="611" y="214" text-anchor="middle" font-size="9.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">Leaf 1</text>
+<circle cx="636" cy="198" r="5" fill="#dc2626" stroke="#ffffff" stroke-width="1.3"/>
+<rect class="ctrl" x="660" y="196" width="54" height="28" rx="5" stroke-width="1.2"/>
+<text class="ink" x="687" y="214" text-anchor="middle" font-size="9.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">Leaf 2</text>
+<circle cx="712" cy="198" r="5" fill="#dc2626" stroke="#ffffff" stroke-width="1.3"/>
+
+<!-- IPN joining Pod 1 and Pod 2 -->
+<rect class="cloud" x="518" y="254" width="88" height="28" rx="8" stroke-width="1.4"/>
+<text class="ink" x="562" y="272" text-anchor="middle" font-size="10.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">IPN</text>
+<path d="M513 166 L513 246 L530 254" fill="none" stroke="#0891b2" stroke-width="1.4"/>
+<path d="M611 166 L611 246 L594 254" fill="none" stroke="#0891b2" stroke-width="1.4"/>
+
+<!-- DC2 APIC -->
+<rect class="ctrl" x="420" y="292" width="90" height="34" rx="7" stroke-width="1.4"/>
+<text class="ink" x="465" y="313" text-anchor="middle" font-size="10.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">APIC (DC2)</text>
+
+<!-- ================= DC SITE 3 ================= -->
+<rect class="zone" x="755" y="88" width="235" height="252" rx="12" stroke-width="1.5"/>
+<text class="ink" x="769" y="108" font-size="12.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">DC Site 3 (ACI)</text>
+<rect class="ctrl" x="795" y="120" width="66" height="26" rx="6" stroke-width="1.4"/>
+<text class="ink" x="828" y="137" text-anchor="middle" font-size="10.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">Spine 1</text>
+<rect class="ctrl" x="885" y="120" width="66" height="26" rx="6" stroke-width="1.4"/>
+<text class="ink" x="918" y="137" text-anchor="middle" font-size="10.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">Spine 2</text>
+<g stroke="#64748b" stroke-width="1.1">
+  <line x1="828" y1="146" x2="790" y2="178"/><line x1="828" y1="146" x2="844" y2="178"/><line x1="828" y1="146" x2="898" y2="178"/><line x1="828" y1="146" x2="952" y2="178"/>
+  <line x1="918" y1="146" x2="790" y2="178"/><line x1="918" y1="146" x2="844" y2="178"/><line x1="918" y1="146" x2="898" y2="178"/><line x1="918" y1="146" x2="952" y2="178"/>
+</g>
+<rect class="ctrl" x="768" y="178" width="44" height="28" rx="5" stroke-width="1.3"/>
+<text class="ink" x="790" y="196" text-anchor="middle" font-size="9.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">L1</text>
+<circle cx="810" cy="180" r="5" fill="#dc2626" stroke="#ffffff" stroke-width="1.3"/>
+<rect class="ctrl" x="822" y="178" width="44" height="28" rx="5" stroke-width="1.3"/>
+<text class="ink" x="844" y="196" text-anchor="middle" font-size="9.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">L2</text>
+<circle cx="864" cy="180" r="5" fill="#dc2626" stroke="#ffffff" stroke-width="1.3"/>
+<rect class="ctrl" x="876" y="178" width="44" height="28" rx="5" stroke-width="1.3"/>
+<text class="ink" x="898" y="196" text-anchor="middle" font-size="9.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">L3</text>
+<circle cx="918" cy="180" r="5" fill="#dc2626" stroke="#ffffff" stroke-width="1.3"/>
+<rect class="ctrl" x="930" y="178" width="44" height="28" rx="5" stroke-width="1.3"/>
+<text class="ink" x="952" y="196" text-anchor="middle" font-size="9.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">L4</text>
+<circle cx="972" cy="180" r="5" fill="#dc2626" stroke="#ffffff" stroke-width="1.3"/>
+
+<rect class="ctrl" x="828" y="292" width="90" height="34" rx="7" stroke-width="1.4"/>
+<text class="ink" x="873" y="313" text-anchor="middle" font-size="10.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">APIC (DC3)</text>
+
+<!-- ================= vCenter & FMC ================= -->
+<rect class="cloud" x="1008" y="96" width="132" height="72" rx="20" stroke-width="1.5"/>
+<text class="ink" x="1074" y="126" text-anchor="middle" font-size="11.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">vCenter Cloud</text>
+<text class="muted" x="1074" y="144" text-anchor="middle" font-size="9.5" font-family="Segoe UI, system-ui, sans-serif">Cloud Connection</text>
+<text class="muted" x="1074" y="157" text-anchor="middle" font-size="9.5" font-family="Segoe UI, system-ui, sans-serif">to APICs</text>
+
+<rect class="fw" x="1008" y="218" width="132" height="58" rx="10" stroke-width="1.5"/>
+<text class="ink" x="1074" y="244" text-anchor="middle" font-size="11.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">FMC</text>
+<text class="muted" x="1074" y="261" text-anchor="middle" font-size="9.5" font-family="Segoe UI, system-ui, sans-serif">Firewall Mgmt Center</text>
+
+<!-- Cloud Connection lines from vCenter to APICs -->
+<path d="M1008 132 L996 132 L996 309 L918 309" fill="none" stroke="#0891b2" stroke-width="1.5" stroke-dasharray="4,3"/>
+<path d="M996 286 L510 286 L510 309" fill="none" stroke="#0891b2" stroke-width="1.4" stroke-dasharray="4,3"/>
+<path d="M996 268 L260 268 L260 243 L242 243" fill="none" stroke="#0891b2" stroke-width="1.4" stroke-dasharray="4,3"/>
+
+<!-- ================= pxGrid Control Bus ================= -->
+<!-- Dashed purple bus connecting ISE PSN+pxGrid to Catalyst Center, APICs, FMC, vCenter, SD-WAN -->
+<path d="M290 320 L290 356 L1074 356 L1074 276" fill="none" stroke="#7c3aed" stroke-width="1.9" stroke-dasharray="6,4"/>
+<path d="M90 260 L90 356 L290 356" fill="none" stroke="#7c3aed" stroke-width="1.8" stroke-dasharray="6,4"/>
+<path d="M200 260 L200 356" fill="none" stroke="#7c3aed" stroke-width="1.8" stroke-dasharray="6,4"/>
+<path d="M465 326 L465 356" fill="none" stroke="#7c3aed" stroke-width="1.8" stroke-dasharray="6,4"/>
+<path d="M873 326 L873 356" fill="none" stroke="#7c3aed" stroke-width="1.8" stroke-dasharray="6,4"/>
+<path d="M1074 168 L1120 168 L1120 356 L1074 356" fill="none" stroke="#7c3aed" stroke-width="1.6" stroke-dasharray="6,4"/>
+<path d="M500 356 L500 388" fill="none" stroke="#7c3aed" stroke-width="1.8" stroke-dasharray="6,4"/>
+<text class="muted" x="640" y="351" font-size="10" font-weight="700" fill="#7c3aed" font-family="Segoe UI, system-ui, sans-serif">pxGrid context bus</text>
+
+<!-- ================= SD-WAN CLOUD (MIDDLE) ================= -->
+<rect class="sdwan" x="145" y="384" width="690" height="114" rx="28" stroke-width="1.7"/>
+<text class="ink" x="490" y="446" text-anchor="middle" font-size="14" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">SD-WAN Cloud</text>
+<text class="muted" x="490" y="463" text-anchor="middle" font-size="10.5" font-family="Segoe UI, system-ui, sans-serif">SD-WAN Manager · OMP IP-SGT distribution · Identity-Based Firewall</text>
+
+<!-- WAN Edge Routers on SD-WAN Cloud perimeter (with PEP red markers) -->
+<!-- Top WAN Edges -->
+<rect class="site-box" x="195" y="374" width="76" height="28" rx="6" stroke-width="1.4"/>
+<text class="ink" x="233" y="392" text-anchor="middle" font-size="9.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">WAN Edge</text>
+<circle cx="269" cy="376" r="5.5" fill="#dc2626" stroke="#ffffff" stroke-width="1.4"/>
+
+<rect class="site-box" x="530" y="374" width="76" height="28" rx="6" stroke-width="1.4"/>
+<text class="ink" x="568" y="392" text-anchor="middle" font-size="9.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">WAN Edge</text>
+<circle cx="604" cy="376" r="5.5" fill="#dc2626" stroke="#ffffff" stroke-width="1.4"/>
+
+<rect class="site-box" x="720" y="374" width="76" height="28" rx="6" stroke-width="1.4"/>
+<text class="ink" x="758" y="392" text-anchor="middle" font-size="9.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">WAN Edge</text>
+<circle cx="794" cy="376" r="5.5" fill="#dc2626" stroke="#ffffff" stroke-width="1.4"/>
+
+<!-- Bottom WAN Edges -->
+<rect class="site-box" x="195" y="482" width="76" height="28" rx="6" stroke-width="1.4"/>
+<text class="ink" x="233" y="500" text-anchor="middle" font-size="9.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">WAN Edge</text>
+<circle cx="269" cy="484" r="5.5" fill="#dc2626" stroke="#ffffff" stroke-width="1.4"/>
+
+<rect class="site-box" x="452" y="482" width="76" height="28" rx="6" stroke-width="1.4"/>
+<text class="ink" x="490" y="500" text-anchor="middle" font-size="9.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">WAN Edge</text>
+<circle cx="526" cy="484" r="5.5" fill="#dc2626" stroke="#ffffff" stroke-width="1.4"/>
+
+<rect class="site-box" x="720" y="482" width="76" height="28" rx="6" stroke-width="1.4"/>
+<text class="ink" x="758" y="500" text-anchor="middle" font-size="9.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">WAN Edge</text>
+<circle cx="794" cy="484" r="5.5" fill="#dc2626" stroke="#ffffff" stroke-width="1.4"/>
+
+<!-- Right WAN Edge -->
+<rect class="site-box" x="790" y="427" width="70" height="28" rx="6" stroke-width="1.4"/>
+<text class="ink" x="825" y="445" text-anchor="middle" font-size="9.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">WAN Edge</text>
+<circle cx="858" cy="429" r="5.5" fill="#dc2626" stroke="#ffffff" stroke-width="1.4"/>
+
+<!-- DC L3Out data links to SD-WAN WAN Edges -->
+<path d="M308 206 L362 206 L362 344 L216 344 L216 374" fill="none" stroke="#475569" stroke-width="1.6"/>
+<path d="M513 224 L568 374" fill="none" stroke="#475569" stroke-width="1.6"/>
+<path d="M611 224 L568 374" fill="none" stroke="#475569" stroke-width="1.6"/>
+<path d="M844 206 L758 374" fill="none" stroke="#475569" stroke-width="1.6"/>
+
+<!-- SXP link from ISE PSN toward SD-WAN edge -->
+<path d="M320 320 L320 368 L242 368 L242 374" fill="none" stroke="#d97706" stroke-width="2" stroke-dasharray="8,3,2,3" marker-end="url(#arr-sxp)"/>
+<text class="muted" x="328" y="343" font-size="9.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">SXP</text>
+
+<!-- Firewall + Non-SDA TrustSec -->
+<line x1="860" y1="441" x2="892" y2="441" stroke="#475569" stroke-width="1.8"/>
+<rect class="fw" x="892" y="415" width="96" height="52" rx="8" stroke-width="1.5"/>
+<text class="ink" x="940" y="439" text-anchor="middle" font-size="11" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">Firewall</text>
+<text class="muted" x="940" y="454" text-anchor="middle" font-size="9.5" font-family="Segoe UI, system-ui, sans-serif">FTD (SGT ACL)</text>
+<circle cx="984" cy="417" r="6" fill="#dc2626" stroke="#ffffff" stroke-width="1.5"/>
+
+<line x1="988" y1="441" x2="1016" y2="441" stroke="#475569" stroke-width="1.8"/>
+<rect class="cloud" x="1016" y="408" width="124" height="66" rx="22" stroke-width="1.5"/>
+<text class="ink" x="1078" y="437" text-anchor="middle" font-size="11" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">Non-SDA</text>
+<text class="ink" x="1078" y="452" text-anchor="middle" font-size="11" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">TrustSec</text>
+
+<!-- ================= SDA TRANSIT ================= -->
+<rect class="zone" x="285" y="532" width="540" height="82" rx="14" stroke-width="1.5"/>
+<text class="ink" x="303" y="553" font-size="11.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">SDA Transit (IP Network)</text>
+<rect class="sda" x="455" y="556" width="220" height="42" rx="8" stroke-width="1.5"/>
+<text class="ink" x="565" y="575" text-anchor="middle" font-size="11" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">Transit Control Plane (TC)</text>
+<text class="muted" x="565" y="590" text-anchor="middle" font-size="9.5" font-family="Segoe UI, system-ui, sans-serif">LISP / Inline SGT</text>
+
+<!-- SD-WAN to SDA sites & Transit -->
+<line x1="233" y1="510" x2="170" y2="668" stroke="#475569" stroke-width="1.6"/>
+<line x1="490" y1="510" x2="490" y2="532" stroke="#475569" stroke-width="1.6"/>
+<line x1="758" y1="510" x2="985" y2="668" stroke="#475569" stroke-width="1.6"/>
+<!-- Transit to sites -->
+<line x1="350" y1="614" x2="210" y2="668" stroke="#16a34a" stroke-width="1.5"/>
+<line x1="565" y1="614" x2="510" y2="668" stroke="#16a34a" stroke-width="1.5"/>
+<line x1="565" y1="614" x2="640" y2="668" stroke="#16a34a" stroke-width="1.5"/>
+<line x1="760" y1="614" x2="945" y2="668" stroke="#16a34a" stroke-width="1.5"/>
+
+<!-- ================= SDA TRANSIT SITE ================= -->
+<rect class="zone" x="22" y="646" width="286" height="162" rx="12" stroke-width="1.5"/>
+<text class="ink" x="36" y="667" font-size="12" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">SDA Transit Site</text>
+<rect class="sda" x="92" y="684" width="146" height="42" rx="8" stroke-width="1.5"/>
+<text class="ink" x="165" y="709" text-anchor="middle" font-size="11.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">BN | CP | EN</text>
+<circle cx="235" cy="686" r="5.5" fill="#dc2626" stroke="#ffffff" stroke-width="1.4"/>
+<line x1="165" y1="726" x2="165" y2="754" stroke="#475569" stroke-width="1.4"/>
+<rect class="site-box" x="125" y="754" width="80" height="32" rx="6" stroke-width="1.3"/>
+<text class="ink" x="165" y="774" text-anchor="middle" font-size="10.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">AP</text>
+
+<!-- ================= SDA MAIN SITE ================= -->
+<rect class="zone" x="326" y="646" width="498" height="162" rx="12" stroke-width="1.5"/>
+<text class="ink" x="342" y="667" font-size="12" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">SDA Main Site</text>
+<text class="muted" x="452" y="667" font-size="10" font-family="Segoe UI, system-ui, sans-serif">eBGP · VRF-Lite · Inline SGT · SXP listener (per VN)</text>
+
+<rect class="sda" x="440" y="678" width="110" height="34" rx="7" stroke-width="1.5"/>
+<text class="ink" x="495" y="699" text-anchor="middle" font-size="11" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">BN | CP</text>
+<circle cx="548" cy="680" r="5.5" fill="#dc2626" stroke="#ffffff" stroke-width="1.4"/>
+
+<rect class="sda" x="595" y="678" width="110" height="34" rx="7" stroke-width="1.5"/>
+<text class="ink" x="650" y="699" text-anchor="middle" font-size="11" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">BN | CP</text>
+<circle cx="703" cy="680" r="5.5" fill="#dc2626" stroke="#ffffff" stroke-width="1.4"/>
+
+<!-- Links to 3 ENs -->
+<g stroke="#64748b" stroke-width="1.2">
+  <line x1="495" y1="712" x2="415" y2="732"/><line x1="495" y1="712" x2="575" y2="732"/><line x1="495" y1="712" x2="735" y2="732"/>
+  <line x1="650" y1="712" x2="415" y2="732"/><line x1="650" y1="712" x2="575" y2="732"/><line x1="650" y1="712" x2="735" y2="732"/>
+</g>
+<rect class="sda" x="370" y="732" width="90" height="28" rx="6" stroke-width="1.3"/>
+<text class="ink" x="415" y="750" text-anchor="middle" font-size="10.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">EN 1</text>
+<rect class="sda" x="530" y="732" width="90" height="28" rx="6" stroke-width="1.3"/>
+<text class="ink" x="575" y="750" text-anchor="middle" font-size="10.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">EN 2</text>
+<rect class="sda" x="690" y="732" width="90" height="28" rx="6" stroke-width="1.3"/>
+<text class="ink" x="735" y="750" text-anchor="middle" font-size="10.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">EN 3</text>
+
+<!-- APs -->
+<line x1="415" y1="760" x2="415" y2="774" stroke="#475569" stroke-width="1.2"/>
+<line x1="575" y1="760" x2="575" y2="774" stroke="#475569" stroke-width="1.2"/>
+<line x1="735" y1="760" x2="735" y2="774" stroke="#475569" stroke-width="1.2"/>
+<rect class="site-box" x="382" y="774" width="66" height="24" rx="5" stroke-width="1.2"/>
+<text class="ink" x="415" y="790" text-anchor="middle" font-size="9.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">APs</text>
+<rect class="site-box" x="542" y="774" width="66" height="24" rx="5" stroke-width="1.2"/>
+<text class="ink" x="575" y="790" text-anchor="middle" font-size="9.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">APs</text>
+<rect class="site-box" x="702" y="774" width="66" height="24" rx="5" stroke-width="1.2"/>
+<text class="ink" x="735" y="790" text-anchor="middle" font-size="9.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">APs</text>
+
+<!-- ================= SDA BRANCH ================= -->
+<rect class="zone" x="842" y="646" width="296" height="162" rx="12" stroke-width="1.5"/>
+<text class="ink" x="856" y="667" font-size="12" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">SDA Branch</text>
+<rect class="sda" x="915" y="684" width="146" height="42" rx="8" stroke-width="1.5"/>
+<text class="ink" x="988" y="709" text-anchor="middle" font-size="11.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">BN | CP | EN</text>
+<circle cx="1058" cy="686" r="5.5" fill="#dc2626" stroke="#ffffff" stroke-width="1.4"/>
+<line x1="988" y1="726" x2="988" y2="754" stroke="#475569" stroke-width="1.4"/>
+<rect class="site-box" x="948" y="754" width="80" height="32" rx="6" stroke-width="1.3"/>
+<text class="ink" x="988" y="774" text-anchor="middle" font-size="10.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">AP</text>
+</svg>
+<figcaption>Original multi-site Common Policy topology diagram. Red circles mark Policy Enforcement Points (DC ACI leaves, SD-WAN edges, SD-Access border nodes, and Firewall). Dashed purple lines show pxGrid control-plane integration with ISE.</figcaption>
+</figure>
+
+<h2 id="use-cases">Solution use cases and verified scale</h2>
+<div class="scroll">
+<table class="data">
+<caption>Validated solution use cases</caption>
+<thead>
+<tr><th>Category</th><th>Validated Use Case</th><th>Primary Mechanism</th></tr>
+</thead>
+<tbody>
+<tr><td>ISE integrations</td><td>ISE and ACI integration</td><td>ISE ACI Connector + pxGrid</td></tr>
+<tr><td>ISE integrations</td><td>ACI Multi-Tenant and Multi-VRF</td><td>Tenant / VRF / L3Out scoping</td></tr>
+<tr><td>ISE integrations</td><td>Context exchange between ACI fabrics</td><td>ISE hub + Outbound SGT domain rules (EEPGs)</td></tr>
+<tr><td>ISE integrations</td><td>ISE and Catalyst Center integration</td><td>pxGrid + Catalyst Center as TrustSec PAP</td></tr>
+<tr><td>ISE integrations</td><td>ISE and SD-WAN Manager integration</td><td>pxGrid SXP topic + OMP IP-SGT distribution</td></tr>
+<tr><td>ISE integrations</td><td>ISE and Secure Firewall Management Center integration</td><td>pxGrid 2.0 Identity Source</td></tr>
+<tr><td>Policy enforcement</td><td>Policy enforcement on ACI leaf switches</td><td>EEPG-to-EPG contracts (Ingress / Egress)</td></tr>
+<tr><td>Policy enforcement</td><td>Policy enforcement on SD-Access Border nodes</td><td>SXP listener + CTS Role-Based ACLs on SVIs</td></tr>
+<tr><td>Policy enforcement</td><td>Policy enforcement on SD-WAN Edge nodes</td><td>Unified Security Policy / NG Firewall Identity lists</td></tr>
+<tr><td>Policy enforcement</td><td>Policy enforcement on Firepower appliances</td><td>FTD Access Policy Dynamic Attributes (SGT)</td></tr>
+<tr><td>Network robustness</td><td>Link failures and node failures</td><td>Redundant spines, leaves, borders, and PSNs</td></tr>
+<tr><td>Day-n operations</td><td>Add, remove, and modify configurations</td><td>Dynamic EPG/SGT updates and rule changes</td></tr>
+<tr><td>IPv6 scenarios</td><td>Context exchange for IPv6 bindings</td><td>Dual-stack IPv4 + IPv6 SGT bindings</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="scroll">
+<table class="data">
+<caption>Verified scale limits per ACI fabric</caption>
+<thead>
+<tr><th>Parameter</th><th>Verified Scale</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>ACI tenants</td><td>10</td><td>Per ACI fabric</td></tr>
+<tr><td>ACI VRFs</td><td>50</td><td>Per ACI fabric</td></tr>
+<tr><td>EPGs and ESGs</td><td>1,000</td><td>Discovered and mapped per fabric</td></tr>
+<tr><td>Max IPv4 + IPv6 bindings combined</td><td>64,000</td><td>Maximum IP-SGT bindings ACI can receive from ISE</td></tr>
+<tr><td>Number of endpoints</td><td>32,000</td><td>ACI fabric endpoint scale tested</td></tr>
+<tr><td>Number of SGTs from ISE to L3Out as EEPG</td><td>500</td><td>Shared outbound per L3Out</td></tr>
+<tr><td>Number of mappings per EEPG</td><td>8,000</td><td>IP-SGT bindings per External EPG</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="integrations">ISE domain integrations</h2>
+
+<h3 id="ise-aci">ISE and Cisco ACI integration</h3>
+<p>ISE 3.4 Patch 1 and ACI 6.1(2) support multiple single-pod or Multi-Pod ACI fabrics, multi-tenant/multi-VRF designs, multiple or shared L3Outs, inter-VRF, cross-fabric ACI context exchange, and learning ACI contracts directly inside ISE.</p>
+<ul>
+  <li><strong>ISE prerequisites:</strong> Enable pxGrid and SXP services (<code>Administration &gt; Deployment &gt; Deployment Node</code>), configure DNS to resolve APIC node hostnames, and remove any legacy ACI integration.</li>
+  <li><strong>ACI prerequisites:</strong> Pre-configure tenants, VRFs, EPGs/ESGs, L3Outs, and contracts in APIC, and ensure DNS resolves ISE pxGrid hostnames.</li>
+  <li><strong>Setup workflow:</strong> Add a <code>Cisco ACI</code> connection under <code>Work Centers &gt; Workload Connections</code>, import APIC certificates to the ISE Trusted Certificate Store if validating certs, choose the SGT naming convention (Connection Name, Tenant, VRF, App Profile, EPG Type), select EPGs/ESGs (leaving none selected leaves the connection suspended), optionally reserve per-DC SGT numbering ranges (e.g. <code>3100s</code> for DC1, <code>3200s</code> for DC2), and verify under APIC <code>Integrations &gt; ISE Integrations</code>.</li>
+</ul>
+
+<h3 id="sgt-domain-rules">Inbound and outbound SGT domain rules</h3>
+<ul>
+  <li><strong>Inbound SGT domain rules:</strong> Map incoming IP-SGT bindings from connectors into specific SGT domains. If no inbound rule matches, bindings enter the <code>Default</code> SGT domain (always enabled). For SD-WAN integration, the SGT domain name is matched to the target SD-WAN VPN number (for example, domain <code>1</code> maps bindings to SD-WAN <code>VPN 1</code>).</li>
+  <li><strong>Outbound SGT domain rules:</strong> By default, ACI learns no context from ISE. Under <code>Work Centers &gt; Inbound &amp; Outbound SGT Domain Rules &gt; Outbound SGT Domain Rules</code>, administrators select a target ACI connection and L3Outs, match SGT domains and SGT names (such as <code>Employees</code>, <code>Contractors</code>, <code>Developers</code>, or SGTs learned from another ACI fabric), and attach Consumed and Provided Contracts. ISE automatically creates the matching EEPGs on the chosen ACI L3Outs and binds the contracts.</li>
+</ul>
+
+<h3 id="workload-classification">Workload connectors and classification flow</h3>
+<p>ISE connects to VMware vCenter (and AWS, Azure, or GCP) via <code>Work Centers &gt; Integrations &gt; Workload Connections</code> to import workload IPs and metadata attributes (such as guest OS type or tags). Administrators then build ordered rules under <code>Work Centers &gt; Workload Connectors &gt; Workload Classification</code>.</p>
+<figure class="diag" aria-label="Workload Classification flow diagram">
+<svg class="arch" viewBox="0 0 1100 610" width="1100" height="610" role="img" aria-label="Original Workload Classification flow showing ACI and non-ACI external workload branches setting primary and secondary SGTs, resolving multi-rule matches into one primary SGT and an ordered secondary list, and storing the SGT binding in Cisco ISE.">
+<defs>
+  <marker id="flow-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569" class="arrowhead"/>
+  </marker>
+</defs>
+
+<rect class="panel" x="0" y="0" width="1100" height="610" rx="16" fill="#f8fafc" stroke="#e2e8f0"/>
+<text class="ink" x="24" y="28" font-size="14" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">Workload Classification flow — Primary and Secondary SGT resolution (original drawing)</text>
+<text class="muted" x="24" y="47" font-size="11.5" font-family="Segoe UI, system-ui, sans-serif">How Cisco ISE classifies external workloads from ACI and non-ACI connectors into one Primary SGT and an ordered list of Secondary SGTs.</text>
+
+<!-- Left Branch: ACI -->
+<rect class="flow-aci" x="40" y="78" width="290" height="62" rx="10" stroke-width="1.6"/>
+<text class="ink" x="185" y="105" text-anchor="middle" font-size="12.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">External Workload from</text>
+<text class="ink" x="185" y="123" text-anchor="middle" font-size="12.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">ACI connections</text>
+
+<line x1="185" y1="140" x2="185" y2="176" stroke="#475569" stroke-width="1.8" marker-end="url(#flow-arr)"/>
+
+<rect class="flow-aci" x="40" y="178" width="290" height="68" rx="10" stroke-width="1.6"/>
+<text class="ink" x="185" y="206" text-anchor="middle" font-size="12.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">Set Primary SGT</text>
+<text class="muted" x="185" y="225" text-anchor="middle" font-size="11" font-family="Segoe UI, system-ui, sans-serif">(SGT derived from EPG / ESG)</text>
+
+<line x1="185" y1="246" x2="185" y2="282" stroke="#475569" stroke-width="1.8" marker-end="url(#flow-arr)"/>
+
+<rect class="flow-aci" x="40" y="284" width="290" height="72" rx="10" stroke-width="1.6"/>
+<text class="ink" x="185" y="313" text-anchor="middle" font-size="12.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">Set Secondary SGTs</text>
+<text class="muted" x="185" y="331" text-anchor="middle" font-size="10.5" font-family="Segoe UI, system-ui, sans-serif">(Optional, order of assignment</text>
+<text class="muted" x="185" y="345" text-anchor="middle" font-size="10.5" font-family="Segoe UI, system-ui, sans-serif">maintained)</text>
+
+<!-- Right Branch: non-ACI -->
+<rect class="flow-nonaci" x="770" y="78" width="290" height="62" rx="10" stroke-width="1.6"/>
+<text class="ink" x="915" y="105" text-anchor="middle" font-size="12.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">External Workload from</text>
+<text class="ink" x="915" y="123" text-anchor="middle" font-size="12.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">non-ACI connections</text>
+
+<line x1="915" y1="140" x2="915" y2="176" stroke="#475569" stroke-width="1.8" marker-end="url(#flow-arr)"/>
+
+<rect class="flow-nonaci" x="770" y="178" width="290" height="68" rx="10" stroke-width="1.6"/>
+<text class="ink" x="915" y="206" text-anchor="middle" font-size="12.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">Set Primary SGT</text>
+<text class="muted" x="915" y="225" text-anchor="middle" font-size="11" font-family="Segoe UI, system-ui, sans-serif">(vCenter, AWS, Azure, GCP rules)</text>
+
+<line x1="915" y1="246" x2="915" y2="282" stroke="#475569" stroke-width="1.8" marker-end="url(#flow-arr)"/>
+
+<rect class="flow-nonaci" x="770" y="284" width="290" height="72" rx="10" stroke-width="1.6"/>
+<text class="ink" x="915" y="313" text-anchor="middle" font-size="12.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">Set Secondary SGTs</text>
+<text class="muted" x="915" y="331" text-anchor="middle" font-size="10.5" font-family="Segoe UI, system-ui, sans-serif">(Optional, order maintained)</text>
+
+<!-- Center Resolution Column -->
+<rect class="flow-mid" x="395" y="156" width="310" height="60" rx="10" stroke-width="1.6"/>
+<text class="ink" x="550" y="183" text-anchor="middle" font-size="12.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">Primary SGT</text>
+<text class="muted" x="550" y="202" text-anchor="middle" font-size="11" font-family="Segoe UI, system-ui, sans-serif">(from first matched rule)</text>
+
+<rect class="flow-mid" x="395" y="236" width="310" height="62" rx="10" stroke-width="1.6"/>
+<text class="ink" x="550" y="263" text-anchor="middle" font-size="12.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">Primary SGTs</text>
+<text class="muted" x="550" y="282" text-anchor="middle" font-size="11" font-family="Segoe UI, system-ui, sans-serif">(from subsequent rules)</text>
+
+<rect class="flow-mid" x="395" y="318" width="310" height="60" rx="10" stroke-width="1.6"/>
+<text class="ink" x="550" y="345" text-anchor="middle" font-size="12.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">Secondary SGTs</text>
+<text class="muted" x="550" y="364" text-anchor="middle" font-size="11" font-family="Segoe UI, system-ui, sans-serif">(All Matched Rules)</text>
+
+<!-- Arrows from left/right to center boxes -->
+<path d="M330 202 L393 186" fill="none" stroke="#475569" stroke-width="1.7" marker-end="url(#flow-arr)"/>
+<path d="M770 202 L707 186" fill="none" stroke="#475569" stroke-width="1.7" marker-end="url(#flow-arr)"/>
+<path d="M770 226 L707 264" fill="none" stroke="#475569" stroke-width="1.7" marker-end="url(#flow-arr)"/>
+<path d="M330 320 L393 345" fill="none" stroke="#475569" stroke-width="1.7" marker-end="url(#flow-arr)"/>
+<path d="M770 320 L707 345" fill="none" stroke="#475569" stroke-width="1.7" marker-end="url(#flow-arr)"/>
+
+<!-- Arrows down to SGT binding -->
+<path d="M550 216 L550 234" fill="none" stroke="#64748b" stroke-width="1.2" stroke-dasharray="3,3"/>
+<path d="M395 186 L365 186 L365 456 L403 456" fill="none" stroke="#475569" stroke-width="1.7" marker-end="url(#flow-arr)"/>
+<path d="M705 267 L735 267 L735 456 L697 456" fill="none" stroke="#475569" stroke-width="1.7" marker-end="url(#flow-arr)"/>
+<line x1="550" y1="378" x2="550" y2="424" stroke="#475569" stroke-width="1.8" marker-end="url(#flow-arr)"/>
+
+<!-- Bottom convergence: SGT binding -->
+<rect class="flow-ise" x="405" y="426" width="290" height="62" rx="12" stroke-width="2"/>
+<text class="ink" x="550" y="454" text-anchor="middle" font-size="13.5" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">SGT binding</text>
+<text class="muted" x="550" y="473" text-anchor="middle" font-size="11.5" font-family="Segoe UI, system-ui, sans-serif">(Stored in ISE)</text>
+
+<!-- Downstream distribution callouts -->
+<line x1="470" y1="488" x2="310" y2="528" stroke="#0f766e" stroke-width="1.6" marker-end="url(#flow-arr)"/>
+<line x1="630" y1="488" x2="790" y2="528" stroke="#0f766e" stroke-width="1.6" marker-end="url(#flow-arr)"/>
+
+<rect class="site-box" x="65" y="530" width="440" height="54" rx="10" stroke-width="1.3"/>
+<text class="ink" x="285" y="553" text-anchor="middle" font-size="11" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">pxGrid session topic</text>
+<text class="muted" x="285" y="571" text-anchor="middle" font-size="10.5" font-family="Segoe UI, system-ui, sans-serif">Security Group (Primary SGT) + Secondary Security Groups [ordered array]</text>
+
+<rect class="site-box" x="595" y="530" width="440" height="54" rx="10" stroke-width="1.3"/>
+<text class="ink" x="815" y="553" text-anchor="middle" font-size="11" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">SXP &amp; Inbound SGT Domain Rules</text>
+<text class="muted" x="815" y="571" text-anchor="middle" font-size="10.5" font-family="Segoe UI, system-ui, sans-serif">Publishes IP-to-SGT mapping (Primary SGT) into assigned SGT domains</text>
+</svg>
+<figcaption>Original Workload Classification flow diagram. ACI workloads always derive their Primary SGT from their EPG or ESG; non-ACI workloads take their Primary SGT from the first matching rule, with any later matched primary SGTs appended to Secondary SGTs in execution order.</figcaption>
+</figure>
+<p>Classification rules assign a primary SGT and optional secondary SGTs to external workloads. The primary SGT is labeled <code>Security Group</code> in the pxGrid session topic and is the tag used to publish IP-to-SGT mappings over SXP. Secondary SGTs are published on the pxGrid session topic as an ordered array named <code>Secondary Security Groups</code>. When multiple rules match and specify primary SGTs, only the first matched rule’s SGT acts as the primary SGT; subsequent matched rules’ primary SGTs are appended in rule-execution order to the end of the secondary list alongside those rules’ secondary SGTs. Inbound SGT domain rules assign the resulting IP bindings to their target SGT domains. Note that for any workload learned from a Cisco ACI connection, the primary SGT is always the SGT derived from its EPG or ESG.</p>
+
+<h3 id="ise-controllers">Catalyst Center, SD-WAN Manager, and FMC</h3>
+<ul>
+  <li><strong>Catalyst Center:</strong> Configured as the TrustSec Policy Administration Point (PAP); security groups, access contracts, and policies become read-only in ISE while Catalyst Center authors them.</li>
+  <li><strong>SD-WAN Manager:</strong> Integrated from <code>Administration &gt; Integration Management &gt; Identity Services Engine</code> (supported since SD-WAN 20.10.1 / IOS XE 17.10.1a). SGTs are sent to SD-WAN Manager for policy authoring and IP-SGT mappings go to SD-WAN Controller (verified via <code>show idmgr pxgrid-status</code>, which shows SXP websocket connection to <code>/topic/com.cisco.ise.sxp.binding</code> on port 8910).</li>
+  <li><strong>Secure FMC:</strong> Integrated via pxGrid 2.0 (supported since FMC 6.7) under <code>Integration &gt; Identity Sources &gt; Identity Services Engine</code>. ISE pushes subscribed ACI EPG/ESG SGTs and bindings to FMC for FTD enforcement.</li>
+</ul>
+
+<h2 id="enforcement">Policy enforcement points</h2>
+
+<h3 id="pep-aci">ACI leaf policy enforcement</h3>
+<p>Campus 802.1X/MAB IP-SGT bindings learned by ISE are pushed to ACI via Outbound SGT domain rules, creating EEPGs on the L3Out. Policy control enforcement direction is set to <code>Ingress</code> (default) or <code>Egress</code> on the ACI VRF. In the guide’s example, the <code>Employees</code> EEPG consumes contract <code>ALLOW_WEB_SSH</code> (TCP 22, 80, 443) provided by the <code>WEB</code> EPG; if data center endpoints also initiate connections to campus, a reverse Provided/Consumed contract is added.</p>
+
+<h3 id="pep-sda">SD-Access Border Nodes</h3>
+<p>To filter outbound campus-to-DC traffic on SD-Access Border Nodes, ISE PSNs push ACI-learned IP-SGT bindings over per-VRF SXP sessions. Border Nodes act as <strong>SXP listeners</strong> (campus host bindings already arrive at ISE via RADIUS from SD-Access Edge Nodes), and CTS role-based enforcement is enabled on the SVIs facing the fusion router.</p>
+<figure class="codebox">
+  <div class="codebox-tab">
+    <span class="fname">sda-border-sxp-and-verify.txt</span>
+    <button type="button" class="copy-btn">Copy</button>
+  </div>
+  <textarea class="codebox-raw" hidden>! Example SXP &amp; CTS configuration on SD-Access Border Node (from Cisco guide)
+interface Loopback 51
+ vrf forwarding VN1
+ ip address 51.51.51.1 255.255.255.255
+
+cts sxp enable
+cts sxp default password 7 060506324F41
+cts sxp connection peer 111.30.0.85 source 51.51.51.1 password default mode local listener hold-time 0 0 vrf VN1
+cts sxp connection peer 111.30.0.86 source 51.51.51.1 password default mode local listener hold-time 0 0 vrf VN1
+
+cts role-based enforcement
+cts role-based enforcement vlan-list 2003,2005
+
+! Verification commands
+S5-FB1# show cts role-based permissions
+S5-FB1# show cts role-based counters
+S5-FB1# show cts role-based sgt-map vrf VN1 all | i 111.1.1.101</textarea>
+  <div class="codebox-body"><ol class="lines"><li>! Example SXP &amp; CTS configuration on SD-Access Border Node (from Cisco guide)</li><li>interface Loopback 51</li><li> vrf forwarding VN1</li><li> ip address 51.51.51.1 255.255.255.255</li><li>&nbsp;</li><li>cts sxp enable</li><li>cts sxp default password 7 060506324F41</li><li>cts sxp connection peer 111.30.0.85 source 51.51.51.1 password default mode local listener hold-time 0 0 vrf VN1</li><li>cts sxp connection peer 111.30.0.86 source 51.51.51.1 password default mode local listener hold-time 0 0 vrf VN1</li><li>&nbsp;</li><li>cts role-based enforcement</li><li>cts role-based enforcement vlan-list 2003,2005</li><li>&nbsp;</li><li>! Verification commands</li><li>S5-FB1# show cts role-based permissions</li><li>S5-FB1# show cts role-based counters</li><li>S5-FB1# show cts role-based sgt-map vrf VN1 all | i 111.1.1.101</li></ol></div>
+</figure>
+
+<h3 id="pep-sdwan">SD-WAN Edge</h3>
+<p>Inbound SGT domain rules route IP-SGT bindings to matching SD-WAN VPN numbers (e.g., SGT domain <code>1</code> maps to <code>VPN 1</code>), distributed by SD-WAN Controller over OMP. On SD-WAN Manager, create a Unified Security Policy (<code>Configuration &gt; Security &gt; Add Unified Security Policy</code>) with an NG Firewall rule using an Identity destination list (selecting the SGT), apply it to the service VPN zone pair, and attach the Security Policy to the device template.</p>
+<figure class="codebox">
+  <div class="codebox-tab">
+    <span class="fname">sdwan-verify.txt</span>
+    <button type="button" class="copy-btn">Copy</button>
+  </div>
+  <textarea class="codebox-raw" hidden>sdwan-controller# show idmgr pxgrid-status
+sdwan-controller# show idmgr omp ip-sgt-bindings | inc 111.11.0.31
+S3-CE1# show cts role-based sgt-map vrf 1 summary
+S3-CE1# show cts role-based sgt-map vrf 1 all | inc 111.11.0.31</textarea>
+  <div class="codebox-body"><ol class="lines"><li>sdwan-controller# show idmgr pxgrid-status</li><li>sdwan-controller# show idmgr omp ip-sgt-bindings | inc 111.11.0.31</li><li>S3-CE1# show cts role-based sgt-map vrf 1 summary</li><li>S3-CE1# show cts role-based sgt-map vrf 1 all | inc 111.11.0.31</li></ol></div>
+</figure>
+
+<h3 id="pep-ftd">Firewall Threat Defense (FTD)</h3>
+<p>Once FMC integrates with ISE over pxGrid 2.0, Access Control Policy rules can match SGTs directly under the <strong>Dynamic Attributes</strong> tab (for example, permitting <code>Contractors</code>, <code>Developers</code>, and <code>Employees</code> to ACI-learned <code>DB_prod_EPG</code>). Verification uses FTD <code>packet-tracer</code> (displaying <code>src sgt</code> / <code>dst sgt</code> and <code>sxp</code> source type in the Snort firewall phase) and FMC <code>Analysis &gt; Connection Events &gt; Table View</code>.</p>
+
+<h2 id="troubleshooting">Workload reports and troubleshooting</h2>
+<p>ISE Workload Reports display workloads received from ACI and vCenter along with how each IP-SGT binding was classified, and can be exported for auditing. For campus-to-data-center troubleshooting, the guide defines a four-step verification flow:</p>
+<ol class="steps">
+  <li><strong>Verify campus host SGT assignment:</strong> On the SD-Access Edge switch, run <code>show authentication sessions interface gigabitEthernet 1/0/1 details</code> and confirm the returned <code>SGT Value</code> and VRF.</li>
+  <li><strong>Check ISE IP-SGT bindings:</strong> Confirm that valid IP-to-SGT bindings exist in ISE for both the campus endpoint and the data center workload.</li>
+  <li><strong>Check ACI EEPG bindings:</strong> Verify the campus host IP appears inside the target ACI EEPG’s SGT bindings on the L3Out.</li>
+  <li><strong>Verify ACI contracts:</strong> Confirm that matching Consumed and Provided contracts are attached to the EEPG and destination EPG respectively.</li>
+</ol>
+
+<h2 id="references">References</h2>
+<p>Official Cisco documentation for the Common Policy solution and its component integrations (verified via Cisco documentation search; Cisco CDN returned HTTP 403 to direct automated <code>curl</code> requests from this box, so the guide content was retrieved and verified via web fetch and search).</p>
+<ul>
+  <li><a href="https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/catalyst-center/cisco-validated-solution-profiles/common-policy-integration-guide.pdf">Cisco Common Policy Integration Guide (PDF, January 14, 2026)</a></li>
+  <li><a href="https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/catalyst-center/cisco-validated-solution-profiles/common-policy-integration-guide.html">Cisco Common Policy Integration Guide (HTML)</a></li>
+  <li><a href="https://www.cisco.com/c/en/us/td/docs/security/ise/articles/common_policy.html">Cisco ISE — Common Policy: Workload Connectors</a></li>
+  <li><a href="https://www.cisco.com/c/en/us/support/docs/security/identity-services-engine/226296-configure-ise-workload-connector.html">Configure ISE Workload Connector Integration with VMware vCenter</a></li>
+  <li><a href="https://www.cisco.com/c/en/us/td/docs/security/ise/performance_and_scalability/b_ise_perf_and_scale.html">Performance and Scalability Guide for Cisco Identity Services Engine</a></li>
+  <li><a href="https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/catalyst-center/3-3-x/install-guide/3rdgen/cisco-catalyst-center-33x-3rdgen-install-guide/g_complete_first_time_setup_2_x_x_3rdgen/t_ise_dnac_integration.html">Integrate Cisco ISE with Catalyst Center</a></li>
+  <li><a href="https://www.cisco.com/c/en/us/td/docs/routers/sdwan/configuration/Cloud-Guide/cloud-guide/integrate-cisco-ise/configure-ise-integration.html">Configure Cisco ISE integration in SD-WAN Manager</a></li>
+  <li><a href="https://www.cisco.com/c/en/us/support/docs/security/identity-services-engine-32/220856-configure-and-troubleshoot-ise-3-2-with.html">Configure and Troubleshoot ISE 3.2 with FMC 7.2.4 Integration</a></li>
+</ul>
+
+<h2 id="not-collected">Not collected</h2>
+<ul>
+  <li><strong>Original vendor figures:</strong> Cisco’s original PDF diagrams and reference screenshots were not copied or traced; both diagrams on this page are original SVG drawings.</li>
+  <li><strong>Production addressing &amp; credentials:</strong> Real customer IPs, certificates, SXP passwords, and production policy names are not collected. The CLI snippets quote only the example lab values printed in the Cisco guide.</li>
+  <li><strong>Standalone URL for SD-Access | SD-WAN Pairwise Guide:</strong> Cited by title in the PDF’s Technical References (<em>Cisco SD-Access | SD-WAN Independent Domain Pairwise Integration Prescriptive Deployment Guide</em>); a standalone Cisco.com URL was not collected in search results.</li>
+  <li><strong>Live lab execution output:</strong> This page summarizes the published Cisco validated profile; no live Catalyst Center, ISE, APIC, SD-WAN, or FMC commands were executed for this summary.</li>
+</ul>
+
+<h2 id="comments">Comments</h2>
+<div id="comments-mount"></div>
+<script>
+(function(){
+  var b=String.fromCharCode(99,111,108,101,115);
+  var repo='amoeoo-'+b+'/amoeoo-'+b+'.github.io';
+  var s=document.createElement('script');
+  s.src='https://giscus.app/client.js';
+  s.setAttribute('data-repo',repo);
+  s.setAttribute('data-repo-id','R_kgDOVM0-Fw');
+  s.setAttribute('data-category','Announcements');
+  s.setAttribute('data-category-id','DIC_kwDOVM0-F84DLoq4');
+  s.setAttribute('data-mapping','pathname');
+  s.setAttribute('data-strict','1');
+  s.setAttribute('data-reactions-enabled','1');
+  s.setAttribute('data-input-position','top');
+  s.setAttribute('data-theme','preferred_color_scheme');
+  s.setAttribute('data-lang','en');
+  s.setAttribute('data-loading','lazy');
+  s.crossOrigin='anonymous';
+  s.async=true;
+  var m=document.getElementById('comments-mount');
+  if(m) m.appendChild(s);
+})();
+</script>
+
+<section id="versions">
+<h2>Versions</h2>
+<p>This is <strong>v1 · 25 Nov 2026, 10:58 PM AEDT</strong>. Snapshots are under <a href="/zfrontier/common-policy/history/">history/</a>.</p>
+<ul>
+<li><a href="/zfrontier/common-policy/history/v1/">v1 · 25 Nov 2026, 10:58 PM AEDT</a> — first publication of the hidden Common Policy page, with original multi-site topology and workload classification flow diagrams.</li>
+</ul>
+</section>
+
+</main>
+<footer class="wrap">
+<p class="meta">Page: <strong>Cisco Common Policy Integration Guide</strong> · Version: <strong>v1 · 25 Nov 2026, 10:58 PM AEDT</strong></p>
+<p class="meta">This page is hidden and is not listed in the public site menu or the public zFrontier index. Folder links end with <code>/</code>. Diagrams are original drawings.</p>
+</footer>
+
+<script>
+(function(){
+  document.querySelectorAll(".codebox").forEach(function(box){
+    var btn = box.querySelector(".copy-btn");
+    var rawEl = box.querySelector(".codebox-raw");
+    if (!btn) return;
+    btn.addEventListener("click", function(){
+      var text = rawEl ? rawEl.value : "";
+      function done(){
+        var old = btn.textContent;
+        btn.textContent = "Copied";
+        setTimeout(function(){ btn.textContent = old; }, 1500);
+      }
+      function fallback(){
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(function(){ fallback(); });
+      } else { fallback(); }
+    });
+  });
+})();
+</script>
+<script src="/zfrontier/common-policy/sort.js"></script>
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/"}}</script>
+<script>(function(){var b=String.fromCharCode(99,111,108,101,115);var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';s.setAttribute('data-goatcounter','https://amoeoo-'+b+'.goatcounter.com/count');document.head.appendChild(s);}());</script>
+
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+
+<!-- uv-badge v2 -->
+<style id="uv-badge-style">
+.uv-pop{position:relative;display:inline-block;vertical-align:middle}
+.uv-pop .uv-card{display:none;position:absolute;right:0;top:calc(100% + 6px);z-index:80;min-width:228px;padding:10px 12px;border-radius:10px;background:var(--card,#0f172a);color:var(--ink,#e2e8f0);border:1px solid var(--line,#334155);box-shadow:0 10px 28px rgba(0,0,0,.28);font:12px/1.4 system-ui,Arial,sans-serif;text-align:left;white-space:normal}
+.uv-pop.open .uv-card{display:block}
+.uv-card svg{display:block;width:204px;height:44px;margin:6px 0 8px}
+.uv-card .uv-k{font-weight:700;margin:0 0 2px}
+.uv-card .uv-m{color:var(--muted,#94a3b8);font-size:11px}
+.uv-card a{color:var(--link,#8ecbff)}
+</style>
+<script id="uv-badge">(function(){
+function norm(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function tzParts(iso){
+  var pt=new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'2-digit',minute:'2-digit',hour12:false,hourCycle:'h23',timeZoneName:'short',day:'2-digit',month:'short'}).formatToParts(new Date(iso));
+  var g=function(t){return (pt.find(function(x){return x.type===t})||{}).value||''};
+  var tz=(g('timeZoneName')||'AEDT').replace('GMT+11','AEDT').replace('GMT+10','AEST');
+  return {hh:g('hour'),mm:g('minute'),tz:tz,day:g('day'),mon:g('month')};
+}
+function last30(daysMap){
+  var out=[], now=new Date();
+  var fmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'});
+  for(var i=29;i>=0;i--){
+    var d=new Date(now.getTime()-i*86400000);
+    var key=fmt.format(d);
+    out.push({day:key,count:+((daysMap||{})[key]||0)});
+  }
+  return out;
+}
+function spark(series){
+  var w=204,h=44,p=2;
+  var max=Math.max.apply(null,series.map(function(x){return x.count}).concat([1]));
+  var n=series.length||1;
+  var pts=series.map(function(x,i){
+    var X=p+(i*(w-2*p)/Math.max(1,n-1));
+    var Y=h-p-((x.count/max)*(h-2*p));
+    return X.toFixed(1)+','+Y.toFixed(1);
+  }).join(' ');
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true"><polyline fill="none" stroke="#22c55e" stroke-width="2" points="'+pts+'"/></svg>';
+}
+function fillStats(d){
+  var total=(d.total&& (d.total.total||d.total.total_utc))||0;
+  var cc=(d.countries||[]).length;
+  var asof=d.as_of_aedt||'';
+  document.querySelectorAll('.im-stat-vis').forEach(function(e){e.textContent=total||'0'});
+  document.querySelectorAll('.im-stat-cc').forEach(function(e){e.textContent=cc||'0'});
+  document.querySelectorAll('.im-stat-asof').forEach(function(e){e.textContent=asof||'n/a'});
+}
+function attachPopover(d, count, series){
+  document.querySelectorAll('.uv').forEach(function(uv){
+    if(uv.closest('.uv-pop')) return;
+    var wrap=document.createElement('span');wrap.className='uv-pop';
+    uv.parentNode.insertBefore(wrap,uv);wrap.appendChild(uv);
+    var card=document.createElement('div');card.className='uv-card';card.setAttribute('role','dialog');
+    var last=series.length?series[series.length-1].count:0;
+    card.innerHTML='<p class="uv-k">This page: '+count+' unique visitors</p>'+spark(series)+'<p class="uv-m">Last 30 days (this page). Today so far: '+last+'.</p><p><a href="/visitors/">Full visitor stats \u203A</a></p>';
+    wrap.appendChild(card);
+    function tog(ev){ev.preventDefault();ev.stopPropagation();document.querySelectorAll('.uv-pop.open').forEach(function(x){if(x!==wrap)x.classList.remove('open')});wrap.classList.toggle('open')}
+    uv.addEventListener('click',tog);
+    uv.style.cursor='pointer';
+    uv.title='Click for a 30-day sparkline';
+  });
+  document.addEventListener('click',function(){document.querySelectorAll('.uv-pop.open').forEach(function(x){x.classList.remove('open')})});
+}
+function apply(d){
+  var p=norm(location.pathname);
+  var page=(d.pages||[]).filter(function(x){return norm(x.path)===p});
+  var c=page.reduce(function(a,x){return a+(+x.count||0)},0);
+  var days={};
+  page.forEach(function(x){var m=x.days||{};Object.keys(m).forEach(function(k){days[k]=(days[k]||0)+(+m[k]||0)})});
+  document.querySelectorAll('.uvc').forEach(function(e){e.textContent=c});
+  document.querySelectorAll('.uvt').forEach(function(e){
+    if(d.updated_utc){var t=tzParts(d.updated_utc);e.textContent=' (data as of '+t.hh+':'+t.mm+' '+t.tz+')'}
+  });
+  fillStats(d);
+  attachPopover(d,c,last30(days));
+}
+function fail(){
+  document.querySelectorAll('.uvc').forEach(function(e){if(e.textContent==='\u2026'||e.textContent==='...') e.textContent='n/a'});
+  document.querySelectorAll('.im-stat-vis,.im-stat-cc,.im-stat-asof').forEach(function(e){if(e.textContent==='\u2026') e.textContent='n/a'});
+}
+if(!window.__visitorsData){
+  var ac=typeof AbortController==='function'?new AbortController():null;
+  var timer=setTimeout(function(){try{ac&&ac.abort()}catch(e){}},8000);
+  window.__visitorsData=fetch('/data/visitors.json?'+Date.now(),ac?{signal:ac.signal}:undefined).then(function(r){
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('visitors.json '+r.status);
+    return r.json();
+  });
+}
+window.__visitorsData.then(apply).catch(function(){fail()});
+})();</script>
+
+
+</body>
+</html>
