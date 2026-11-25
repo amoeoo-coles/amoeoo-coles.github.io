@@ -1,0 +1,2727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- site-hidden-page: no menu, noindex, skip inject -->
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Multi-VRF Firewall Insertion</title>
+<meta name="description" content="Hidden zFrontier page for a two-VRF firewall service-insertion design: original physical, logical and example-addressing diagrams, plus a numbered Cisco ACI Ansible playbook series with data-driven model files.">
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:auto;
+  min-height:44px;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:auto;min-height:44px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:visible;
+  text-overflow:unset;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.25;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:22px;
+  height:22px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:16px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:#1d4ed8!important;
+}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f4f6f8;
+  --bg-accent: #e8eef4;
+  --card: #ffffff;
+  --ink: #15202b;
+  --muted: #5b6b7c;
+  --line: #d5dee7;
+  --accent: #0f766e;
+  --accent-soft: #e0f4f8;
+  --link: #0e7490;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --radius: 14px;
+  --sans: "Segoe UI", system-ui, sans-serif;
+  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+    --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+    --link: #5eead4;
+    --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+  }
+}
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f4f6f8; --bg-accent: #e8eef4; --card: #ffffff; --ink: #15202b;
+  --muted: #5b6b7c; --line: #d5dee7; --accent: #0f766e; --accent-soft: #e0f4f8;
+  --link: #0e7490;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+  --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+  --link: #5eead4;
+  --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--sans);
+  background: radial-gradient(1200px 500px at 10% -10%, var(--bg-accent), transparent 60%), var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  min-height: 100vh;
+}
+a { color: var(--link); }
+main.wrap, footer.wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem; }
+main.wrap { padding-top: 0.4rem; padding-bottom: 2.2rem; }
+footer.wrap { padding-bottom: 3.5rem; }
+.tr17 { margin: 0 0 8px; }
+h1 { font-size: clamp(1.7rem, 3vw, 2.25rem); margin: 0 0 0.35rem; letter-spacing: -0.03em; font-weight: 700; }
+.ver { margin: 0 0 0.85rem; color: var(--muted); font-weight: 650; }
+.lede { font-size: 1.05rem; margin: 0 0 1rem; max-width: 72ch; }
+h2 { font-size: 1.25rem; margin: 2rem 0 0.7rem; letter-spacing: -0.02em; scroll-margin-top: 80px; }
+h3 { font-size: 1.05rem; margin: 1.4rem 0 0.5rem; scroll-margin-top: 80px; }
+p, ul, ol { margin: 0 0 0.85rem; }
+ul, ol { padding-left: 1.25rem; }
+li { margin: 0.2rem 0; }
+.kicker {
+  display: inline-block; text-transform: uppercase; letter-spacing: 0.14em;
+  font-size: 0.72rem; color: var(--accent); font-weight: 700; margin: 0 0 0.35rem;
+}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker,
+.kicker { color: var(--accent) !important; }
+.page-menu { margin: 0 0 1.2rem; padding-left: 2.4rem; }
+.page-menu ol { margin: 0.25rem 0 0.4rem; padding-left: 1.6rem; }
+#comments { margin: 1.6rem 0 0; }
+#comments-mount { margin-top: 0.8rem; }
+.meta { font-size: 0.95rem; color: var(--muted); margin: 0 0 0.55rem; }
+.meta strong { color: var(--ink); }
+code { font-family: var(--mono); font-size: 0.9em; }
+.note {
+  background: var(--accent-soft);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin: 0 0 1rem;
+}
+.note strong { color: var(--ink); }
+.diag {
+  overflow-x: auto;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.7rem;
+  margin: 0 0 1rem;
+  box-shadow: var(--shadow);
+}
+.diag svg { display: block; width: 100%; height: auto; max-width: 1100px; }
+figcaption {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin: 0.2rem 0 1rem;
+}
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+table.data th, table.data td {
+  border: 1px solid var(--line);
+  padding: 0.45rem 0.6rem;
+  text-align: left;
+  vertical-align: top;
+}
+table.data th { background: var(--th-bg, #f1f5f9); font-weight: 700; }
+table.data caption {
+  text-align: left;
+  font-weight: 700;
+  margin: 0 0 0.45rem;
+  color: var(--ink);
+}
+.scroll { overflow-x: auto; margin: 0 0 1rem; }
+.steps { counter-reset: step; list-style: none; padding-left: 0; }
+.steps li {
+  position: relative;
+  padding: 0.55rem 0.7rem 0.55rem 3rem;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 10px;
+  margin: 0 0 0.5rem;
+}
+.steps li::before {
+  counter-increment: step;
+  content: counter(step);
+  position: absolute;
+  left: 0.7rem; top: 0.55rem;
+  width: 1.55rem; height: 1.55rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex; align-items: center; justify-content: center;
+}
+html[data-theme="dark"] .steps li::before { color: #042f2e; }
+.codebox {
+  border-radius: 8px;
+  overflow: hidden;
+  background: #0b1220;
+  color: #e2e8f0;
+  margin: 0.6rem 0 1.1rem;
+  border: 1px solid #1f2937;
+}
+.codebox-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0.75rem;
+  background: #111827;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: #cbd5e1;
+}
+.codebox-tab .fname { font-weight: 650; color: #f8fafc; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.codebox-tab a, .codebox-tab button {
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 0.2rem 0.55rem;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  flex: none;
+}
+.codebox-tab button.copy-btn { margin-left: auto; }
+.codebox-tab a { margin-left: 0; }
+.codebox-tab button.copy-btn:hover, .codebox-tab a:hover { background: #334155; }
+.codebox-body { margin: 0; overflow: auto; background: #0b1220; color: #e2e8f0; max-height: 28rem; }
+.codebox ol.lines {
+  list-style: none;
+  margin: 0 !important;
+  padding: 0.45rem 0 0.55rem !important;
+  counter-reset: ln;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.5;
+  white-space: normal;
+}
+.codebox ol.lines li {
+  display: block;
+  box-sizing: border-box;
+  margin: 0 !important;
+  padding: 0 1rem 0 3.3rem !important;
+  border: 0;
+  line-height: 1.5;
+  position: relative;
+  white-space: pre;
+  color: #e2e8f0 !important;
+  background: transparent !important;
+}
+.codebox ol.lines li::before {
+  content: counter(ln);
+  counter-increment: ln;
+  position: absolute;
+  left: 0;
+  width: 2.7rem;
+  text-align: right;
+  color: #64748b;
+  line-height: 1.5;
+}
+html[data-theme="dark"] .diag svg rect.panel { fill: var(--card); stroke: var(--line); }
+html[data-theme="dark"] .diag svg text.ink { fill: var(--ink); }
+html[data-theme="dark"] .diag svg text.muted { fill: var(--muted); }
+html[data-theme="dark"] .diag svg .arrowhead { fill: var(--muted); }
+</style>
+
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+<main class="wrap">
+
+<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:var(--muted,#888)"><a href="/visitors/" style="color:inherit;text-decoration:none"><span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></a><span class="uvt" style="font-size:11px;color:var(--muted,#888)"></span></div><!--/arr-uv-tr17-->
+
+
+<p class="kicker">Hidden page</p>
+<h1>Multi-VRF Firewall Insertion</h1>
+<p class="ver"><a href="/zfrontier/multi-vrf-firewall-insertion/history/">v2 · 25 Nov 2026, 8:36 PM AEDT</a></p>
+<p class="lede">This hidden page describes a two-VRF firewall service-insertion design for Cisco ACI. Each VRF is its own Layer 3 routing and security domain. Inside a VRF, an application endpoint group consumes a contract from a database endpoint group, and policy-based redirect steers the matching traffic through a firewall. The three diagrams are original drawings. They are not copies of a vendor or third-party figure. The Ansible series that follows is a numbered, data-driven example and has been syntax-checked only. A hidden visitor tracking view is at <a href="/zfrontier/multi-vrf-firewall-insertion/visitors/">visitors/</a>.</p>
+
+<ol class="page-menu" aria-label="On this page">
+<li><a href="#overview">Overview</a></li>
+<li><a href="#physical">Physical topology</a></li>
+<li><a href="#logical">Logical topology</a></li>
+<li><a href="#addressing">Example IP addressing</a></li>
+<li><a href="#ansible">Ansible series</a>
+<ol>
+<li><a href="#models">Model files</a></li>
+<li><a href="#pb-access">01 — Access policies</a></li>
+<li><a href="#pb-tenant-vrf">02 — Tenant, VRFs and bridge domains</a></li>
+<li><a href="#pb-epg">03 — Application profile and EPGs</a></li>
+<li><a href="#pb-l4l7">04 — L4-L7 devices</a></li>
+<li><a href="#pb-pbr">05 — PBR redirect policies</a></li>
+<li><a href="#pb-graph">06 — Service graph and contracts</a></li>
+<li><a href="#pb-validate">07 — Validate (read-only)</a></li>
+</ol>
+</li>
+<li><a href="#how-to">How to use the playbooks</a></li>
+<li><a href="#references">References</a></li>
+<li><a href="#not-collected">Not collected</a></li>
+<li><a href="#comments">Comments</a></li>
+<li><a href="#versions">Versions</a></li>
+</ol>
+
+<h2 id="overview">Overview</h2>
+<p>The design uses two VRFs, named VRF-1 and VRF-2 in the example objects. Traffic stays inside the VRF that sourced it. Nothing is leaked or shared between the two VRFs unless a later design explicitly adds that path — this page does not.</p>
+<p>In each VRF an Application EPG acts as the consumer: it starts the conversation. A Database EPG acts as the provider: it offers the service. A contract names the permitted traffic, through a subject and a filter. The subject is also bound to a service graph. When the contract is applied, the fabric can redirect matching flows to a firewall before they reach the provider, and again on the return path.</p>
+<p>Policy-based redirect (PBR) is the insertion method used here. The graph node is a routed, go-to firewall function in redirect mode. The consumer-side connector points at the firewall’s external interface and a next-hop in the application bridge domain. The provider-side connector points at the internal interface and a next-hop in the database bridge domain. The firewall itself still permits or denies the session according to its own policy; the fabric only steers the packets to it.</p>
+<p>VLANs 301 and 302 belong to VRF-1 (consumer and provider). VLANs 303 and 304 belong to VRF-2. A single physical firewall appliance is attached to the leaf pair on Port-Channel 1, built as a vPC in the example. That appliance is presented to the fabric as two logical devices, one per VRF, each with an External and an Internal interface.</p>
+<p class="note"><strong>Example only.</strong> Node IDs, ports, the vPC protection group, subnets, firewall interface IPs and MAC addresses on this page are illustrations. Production port-channel, vPC, VLAN and firewall interface details depend on the service-insertion design actually used in that fabric.</p>
+
+<h2 id="physical">Physical topology</h2>
+<p>The fabric sketch shows an example spine pair and the leaf pair 101 and 102. Those two leaves form an explicit vPC protection group. Eth1/1 on both leaves is a member of vPC Port-Channel 1, which is the attachment to the firewall. Application and database servers sit on example access ports: Eth1/10 and Eth1/11 on each leaf. Interface and node identifiers are labelled as examples.</p>
+<figure class="diag" aria-label="Physical topology diagram"><svg class="arch" viewBox="0 0 1100 720" width="1100" height="720" role="img" aria-label="Example physical topology of an ACI leaf pair, a firewall on vPC Po1, and application and database servers.">
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155" class="arrowhead"/>
+  </marker>
+  <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#0f766e"/>
+  </marker>
+  <marker id="arr-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#c2410c"/>
+  </marker>
+</defs>
+<rect class="panel" x="0" y="0" width="1100" height="720" rx="16" fill="#f8fafc" stroke="#e2e8f0"/><text class="muted" x="24" y="28" text-anchor="start" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">Example physical topology — node IDs, ports and the vPC are examples</text><text class="muted" x="24" y="46" text-anchor="start" font-size="11" font-weight="500" fill="#64748b" font-family="Segoe UI, system-ui, sans-serif">Original drawing. Production port-channel, vPC and firewall attachment depend on the service-insertion design.</text><rect class="box" x="290" y="64" width="180" height="56" rx="8" fill="#e0f2fe" stroke="#0369a1" stroke-width="1.6"/>
+<text class="ink" x="380.0" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">Spine-201</text>
+<text class="muted" x="380.0" y="102" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">example node 201</text><rect class="box" x="630" y="64" width="180" height="56" rx="8" fill="#e0f2fe" stroke="#0369a1" stroke-width="1.6"/>
+<text class="ink" x="720.0" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">Spine-202</text>
+<text class="muted" x="720.0" y="102" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">example node 202</text><text class="muted" x="550" y="58" text-anchor="middle" font-size="11" font-weight="600" fill="#0369a1" font-family="Segoe UI, system-ui, sans-serif">ACI fabric (example)</text><path d="M380 120 L230 200" fill="none" stroke="#64748b" stroke-width="2"/><path d="M380 120 L870 200" fill="none" stroke="#64748b" stroke-width="2"/><path d="M720 120 L230 200" fill="none" stroke="#64748b" stroke-width="2"/><path d="M720 120 L870 200" fill="none" stroke="#64748b" stroke-width="2"/><rect class="box" x="120" y="200" width="220" height="86" rx="10" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.6"/>
+<text class="ink" x="230.0" y="222" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">Leaf-101</text>
+<text class="muted" x="230.0" y="238" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">example node 101</text>
+<text class="muted" x="230.0" y="252" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">vPC member</text><rect class="box" x="760" y="200" width="220" height="86" rx="10" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.6"/>
+<text class="ink" x="870.0" y="222" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">Leaf-102</text>
+<text class="muted" x="870.0" y="238" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">example node 102</text>
+<text class="muted" x="870.0" y="252" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">vPC member</text><line x1="340" y1="243" x2="760" y2="243" stroke="#b45309" stroke-width="2.4" stroke-dasharray="7 5"/><text class="muted" x="550" y="234" text-anchor="middle" font-size="11" font-weight="600" fill="#b45309" font-family="Segoe UI, system-ui, sans-serif">vPC peer  ·  protection group VPC-101-102 (example id 101)</text><path d="M200 286 L200 350 L390 360" fill="none" stroke="#c2410c" stroke-width="3"/><path d="M900 286 L900 350 L710 360" fill="none" stroke="#c2410c" stroke-width="3"/><text class="muted" x="200" y="320" text-anchor="middle" font-size="11" font-weight="600" fill="#c2410c" font-family="Segoe UI, system-ui, sans-serif">Eth1/1</text><text class="muted" x="900" y="320" text-anchor="middle" font-size="11" font-weight="600" fill="#c2410c" font-family="Segoe UI, system-ui, sans-serif">Eth1/1</text><text class="muted" x="550" y="348" text-anchor="middle" font-size="12" font-weight="700" fill="#c2410c" font-family="Segoe UI, system-ui, sans-serif">Po1  ·  vPC  ·  IPG-FW-Po1  (example)</text><rect class="box" x="300" y="360" width="500" height="150" rx="14" fill="#fff7ed" stroke="#c2410c" stroke-width="2"/><text class="muted" x="550" y="384" text-anchor="middle" font-size="14" font-weight="700" fill="#9a3412" font-family="Segoe UI, system-ui, sans-serif">Firewall appliance (example physical device)</text><text class="muted" x="550" y="400" text-anchor="middle" font-size="11" font-weight="500" fill="#9a3412" font-family="Segoe UI, system-ui, sans-serif">Attached to the leaf pair on Port-Channel 1 / vPC</text><rect class="box" x="320" y="412" width="220" height="82" rx="8" fill="#ffedd5" stroke="#c2410c" stroke-width="1.6"/>
+<text class="ink" x="430.0" y="434" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">FW-VRF1  (logical)</text>
+<text class="muted" x="430.0" y="450" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">External  ·  VLAN 301</text>
+<text class="muted" x="430.0" y="464" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">Internal  ·  VLAN 302</text><rect class="box" x="560" y="412" width="220" height="82" rx="8" fill="#ffedd5" stroke="#c2410c" stroke-width="1.6"/>
+<text class="ink" x="670.0" y="434" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">FW-VRF2  (logical)</text>
+<text class="muted" x="670.0" y="450" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">External  ·  VLAN 303</text>
+<text class="muted" x="670.0" y="464" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">Internal  ·  VLAN 304</text><path d="M160 286 L160 548" fill="none" stroke="#1d4ed8" stroke-width="2"/><path d="M230 286 L230 400 L340 400 L340 548" fill="none" stroke="#7c3aed" stroke-width="2"/><path d="M940 286 L940 548" fill="none" stroke="#1d4ed8" stroke-width="2"/><path d="M870 286 L870 400 L760 400 L760 548" fill="none" stroke="#7c3aed" stroke-width="2"/><text class="muted" x="160" y="540" text-anchor="middle" font-size="10" font-weight="600" fill="#1d4ed8" font-family="Segoe UI, system-ui, sans-serif">Eth1/10</text><text class="muted" x="340" y="540" text-anchor="middle" font-size="10" font-weight="600" fill="#7c3aed" font-family="Segoe UI, system-ui, sans-serif">Eth1/11</text><text class="muted" x="760" y="540" text-anchor="middle" font-size="10" font-weight="600" fill="#7c3aed" font-family="Segoe UI, system-ui, sans-serif">Eth1/11</text><text class="muted" x="940" y="540" text-anchor="middle" font-size="10" font-weight="600" fill="#1d4ed8" font-family="Segoe UI, system-ui, sans-serif">Eth1/10</text><rect class="box" x="80" y="552" width="160" height="92" rx="8" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.6"/>
+<text class="ink" x="160.0" y="574" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">App server</text>
+<text class="muted" x="160.0" y="590" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">VRF 1 consumer</text>
+<text class="muted" x="160.0" y="604" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">Leaf-101 Eth1/10</text>
+<text class="muted" x="160.0" y="618" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">VLAN 301</text><rect class="box" x="260" y="552" width="160" height="92" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.6"/>
+<text class="ink" x="340.0" y="574" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">DB server</text>
+<text class="muted" x="340.0" y="590" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">VRF 1 provider</text>
+<text class="muted" x="340.0" y="604" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">Leaf-101 Eth1/11</text>
+<text class="muted" x="340.0" y="618" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">VLAN 302</text><rect class="box" x="680" y="552" width="160" height="92" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.6"/>
+<text class="ink" x="760.0" y="574" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">DB server</text>
+<text class="muted" x="760.0" y="590" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">VRF 2 provider</text>
+<text class="muted" x="760.0" y="604" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">Leaf-102 Eth1/11</text>
+<text class="muted" x="760.0" y="618" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">VLAN 304</text><rect class="box" x="860" y="552" width="160" height="92" rx="8" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.6"/>
+<text class="ink" x="940.0" y="574" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">App server</text>
+<text class="muted" x="940.0" y="590" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">VRF 2 consumer</text>
+<text class="muted" x="940.0" y="604" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">Leaf-102 Eth1/10</text>
+<text class="muted" x="940.0" y="618" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">VLAN 303</text><text class="muted" x="24" y="700" text-anchor="start" font-size="11" font-weight="500" fill="#64748b" font-family="Segoe UI, system-ui, sans-serif">Example only. Leaf-101/102, Eth1/1 (Po1 members) and Eth1/10–11 (servers) are sample interface and node IDs.</text></svg></figure>
+<figcaption>Example physical topology. The firewall appliance faces the leaf pair on Po1/vPC. Two logical firewall contexts, one per VRF, share that attachment.</figcaption>
+
+<h2 id="logical">Logical topology</h2>
+<p>The tenant holds both VRFs, but each VRF remains an independent routing and security domain. Inside a VRF the application bridge domain and EPG sit on the consumer side, the database bridge domain and EPG sit on the provider side, and the contract with its service graph sits between them. The redirect path is the same in both VRFs: consumer EPG to the firewall’s external interface, through the firewall, then from the internal interface to the provider EPG. A divider down the middle marks the isolation: this example has no inter-VRF contract, no shared service or leaked route.</p>
+<figure class="diag" aria-label="Logical topology diagram"><svg class="arch" viewBox="0 0 1100 760" width="1100" height="760" role="img" aria-label="Example logical topology with two isolated VRFs, consumer and provider EPGs, contracts and a PBR path through a firewall.">
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155" class="arrowhead"/>
+  </marker>
+  <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#0f766e"/>
+  </marker>
+  <marker id="arr-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#c2410c"/>
+  </marker>
+</defs>
+<rect class="panel" x="0" y="0" width="1100" height="760" rx="16" fill="#f8fafc" stroke="#e2e8f0"/><text class="muted" x="24" y="28" text-anchor="start" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">Example logical topology — tenant, VRFs, contracts and PBR</text><text class="muted" x="24" y="46" text-anchor="start" font-size="11" font-weight="500" fill="#64748b" font-family="Segoe UI, system-ui, sans-serif">Original drawing. Each VRF is its own L3 routing and security domain.</text><rect class="box" x="20" y="60" width="1060" height="680" rx="16" fill="#ffffff" stroke="#0f766e" stroke-width="2"/><text class="muted" x="40" y="86" text-anchor="start" font-size="16" font-weight="700" fill="#0f766e" font-family="Segoe UI, system-ui, sans-serif">Tenant  ·  Example-FW-Insertion</text><rect x="528" y="104" width="44" height="616" rx="8" fill="#f1f5f9" stroke="#94a3b8" stroke-dasharray="5 4"/><text class="muted" x="550" y="300" text-anchor="middle" font-size="11" font-weight="700" fill="#475569" font-family="Segoe UI, system-ui, sans-serif" transform="rotate(-90 550 300)">VRF isolation — no inter-VRF traffic unless explicitly designed</text><rect class="box" x="36" y="104" width="480" height="616" rx="14" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.6"/><rect class="box" x="584" y="104" width="480" height="616" rx="14" fill="#f8fafc" stroke="#1d4ed8" stroke-width="1.6"/><text class="muted" x="276" y="132" text-anchor="middle" font-size="18" font-weight="800" fill="#0f766e" font-family="Segoe UI, system-ui, sans-serif">VRF-1</text><text class="muted" x="276" y="150" text-anchor="middle" font-size="11" font-weight="500" fill="#0f766e" font-family="Segoe UI, system-ui, sans-serif">Independent L3 domain</text><text class="muted" x="824" y="132" text-anchor="middle" font-size="18" font-weight="800" fill="#1d4ed8" font-family="Segoe UI, system-ui, sans-serif">VRF-2</text><text class="muted" x="824" y="150" text-anchor="middle" font-size="11" font-weight="500" fill="#1d4ed8" font-family="Segoe UI, system-ui, sans-serif">Independent L3 domain</text><rect class="box" x="56" y="176" width="200" height="86" rx="8" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.6"/>
+<text class="ink" x="156.0" y="198" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">BD-VRF1-App</text>
+<text class="muted" x="156.0" y="214" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">VLAN 301  ·  example</text>
+<text class="muted" x="156.0" y="228" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">10.1.1.0/24</text><line x1="156" y1="262" x2="156" y2="292" stroke="#1d4ed8" stroke-width="2" marker-end="url(#arr)"/><rect class="box" x="56" y="296" width="200" height="86" rx="8" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="1.6"/>
+<text class="ink" x="156.0" y="318" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">EPG-VRF1-App</text>
+<text class="muted" x="156.0" y="334" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">Consumer EPG</text>
+<text class="muted" x="156.0" y="348" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">initiates the conversation</text><rect class="box" x="296" y="176" width="200" height="86" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.6"/>
+<text class="ink" x="396.0" y="198" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">BD-VRF1-DB</text>
+<text class="muted" x="396.0" y="214" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">VLAN 302  ·  example</text>
+<text class="muted" x="396.0" y="228" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">10.1.2.0/24</text><line x1="396" y1="262" x2="396" y2="292" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr)"/><rect class="box" x="296" y="296" width="200" height="86" rx="8" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1.6"/>
+<text class="ink" x="396.0" y="318" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">EPG-VRF1-DB</text>
+<text class="muted" x="396.0" y="334" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">Provider EPG</text>
+<text class="muted" x="396.0" y="348" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">offers the service</text><rect class="box" x="126" y="408" width="300" height="70" rx="8" fill="#fefce8" stroke="#a16207" stroke-width="1.6"/>
+<text class="ink" x="276.0" y="430" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">Ctr-VRF1-App-to-DB</text>
+<text class="muted" x="276.0" y="446" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">Service graph  ·  SG-FW-PBR-VRF1</text>
+<text class="muted" x="276.0" y="460" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">filter: example TCP 1521</text><path d="M156 382 L156 408" fill="none" stroke="#c2410c" stroke-width="2" marker-end="url(#arr-orange)"/><path d="M396 382 L396 408" fill="none" stroke="#c2410c" stroke-width="2"/><rect class="box" x="126" y="500" width="300" height="100" rx="10" fill="#fff7ed" stroke="#c2410c" stroke-width="1.6"/>
+<text class="ink" x="276.0" y="522" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">FW-VRF1</text>
+<text class="muted" x="276.0" y="538" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">PBR redirect  ·  go-to / routed</text>
+<text class="muted" x="276.0" y="552" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">External (consumer-side) → Internal (provider-side)</text><text class="muted" x="276" y="494" text-anchor="middle" font-size="10" font-weight="700" fill="#c2410c" font-family="Segoe UI, system-ui, sans-serif">consumer  →  FW external  →  FW internal  →  provider</text><text class="muted" x="276" y="628" text-anchor="middle" font-size="10" font-weight="500" fill="#9a3412" font-family="Segoe UI, system-ui, sans-serif">Matching traffic is steered through the firewall; the firewall permits or denies it.</text><text class="muted" x="276" y="648" text-anchor="middle" font-size="10" font-weight="500" fill="#9a3412" font-family="Segoe UI, system-ui, sans-serif">Return traffic follows the same graph in the reverse direction.</text><line x1="256" y1="339" x2="296" y2="339" stroke="#a16207" stroke-width="1.6" stroke-dasharray="4 3"/><rect class="box" x="604" y="176" width="200" height="86" rx="8" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.6"/>
+<text class="ink" x="704.0" y="198" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">BD-VRF2-App</text>
+<text class="muted" x="704.0" y="214" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">VLAN 303  ·  example</text>
+<text class="muted" x="704.0" y="228" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">10.2.1.0/24</text><line x1="704" y1="262" x2="704" y2="292" stroke="#1d4ed8" stroke-width="2" marker-end="url(#arr)"/><rect class="box" x="604" y="296" width="200" height="86" rx="8" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="1.6"/>
+<text class="ink" x="704.0" y="318" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">EPG-VRF2-App</text>
+<text class="muted" x="704.0" y="334" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">Consumer EPG</text>
+<text class="muted" x="704.0" y="348" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">initiates the conversation</text><rect class="box" x="844" y="176" width="200" height="86" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.6"/>
+<text class="ink" x="944.0" y="198" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">BD-VRF2-DB</text>
+<text class="muted" x="944.0" y="214" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">VLAN 304  ·  example</text>
+<text class="muted" x="944.0" y="228" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">10.2.2.0/24</text><line x1="944" y1="262" x2="944" y2="292" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr)"/><rect class="box" x="844" y="296" width="200" height="86" rx="8" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1.6"/>
+<text class="ink" x="944.0" y="318" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">EPG-VRF2-DB</text>
+<text class="muted" x="944.0" y="334" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">Provider EPG</text>
+<text class="muted" x="944.0" y="348" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">offers the service</text><rect class="box" x="674" y="408" width="300" height="70" rx="8" fill="#fefce8" stroke="#a16207" stroke-width="1.6"/>
+<text class="ink" x="824.0" y="430" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">Ctr-VRF2-App-to-DB</text>
+<text class="muted" x="824.0" y="446" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">Service graph  ·  SG-FW-PBR-VRF2</text>
+<text class="muted" x="824.0" y="460" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">filter: example TCP 1521</text><path d="M704 382 L704 408" fill="none" stroke="#c2410c" stroke-width="2" marker-end="url(#arr-orange)"/><path d="M944 382 L944 408" fill="none" stroke="#c2410c" stroke-width="2"/><rect class="box" x="674" y="500" width="300" height="100" rx="10" fill="#fff7ed" stroke="#c2410c" stroke-width="1.6"/>
+<text class="ink" x="824.0" y="522" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">FW-VRF2</text>
+<text class="muted" x="824.0" y="538" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">PBR redirect  ·  go-to / routed</text>
+<text class="muted" x="824.0" y="552" text-anchor="middle" font-size="11" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">External (consumer-side) → Internal (provider-side)</text><text class="muted" x="824" y="494" text-anchor="middle" font-size="10" font-weight="700" fill="#c2410c" font-family="Segoe UI, system-ui, sans-serif">consumer  →  FW external  →  FW internal  →  provider</text><text class="muted" x="824" y="628" text-anchor="middle" font-size="10" font-weight="500" fill="#9a3412" font-family="Segoe UI, system-ui, sans-serif">Matching traffic is steered through the firewall; the firewall permits or denies it.</text><text class="muted" x="824" y="648" text-anchor="middle" font-size="10" font-weight="500" fill="#9a3412" font-family="Segoe UI, system-ui, sans-serif">Return traffic follows the same graph in the reverse direction.</text><line x1="804" y1="339" x2="844" y2="339" stroke="#a16207" stroke-width="1.6" stroke-dasharray="4 3"/><text class="muted" x="40" y="724" text-anchor="start" font-size="11" font-weight="500" fill="#64748b" font-family="Segoe UI, system-ui, sans-serif">Application profiles, contracts and graphs stay inside the tenant. Nothing is shared between VRF-1 and VRF-2 in this example.</text></svg></figure>
+<figcaption>Example logical topology for tenant Example-FW-Insertion, with a PBR service graph in each VRF.</figcaption>
+
+<h2 id="addressing">Example IP addressing</h2>
+<p>The table and the drawing use private RFC1918 subnets so the playbooks have concrete values to consume. They are not a production addressing plan. Each bridge domain has a gateway on the .1 address. The firewall interface in that bridge domain uses a .10 address. The PBR destination is that interface IP, with a placeholder MAC address.</p>
+
+<div class="scroll">
+<table class="data">
+<caption>Example addressing for VLANs 301–304. All subnets, gateway IPs, firewall IPs and MAC addresses are illustrations only.</caption>
+<thead><tr><th>VRF</th><th>Role</th><th>VLAN</th><th>Bridge domain</th><th>EPG</th><th>Example subnet</th><th>Example gateway</th><th>Firewall interface</th><th>Example interface IP</th><th>PBR next-hop MAC (placeholder)</th></tr></thead>
+<tbody>
+<tr><td>VRF-1</td><td>Consumer / App</td><td>301</td><td>BD-VRF1-App</td><td>EPG-VRF1-App</td><td>10.1.1.0/24</td><td>10.1.1.1/24</td><td>FW-VRF1 External</td><td>10.1.1.10</td><td>00:50:56:01:01:0A</td></tr>
+<tr><td>VRF-1</td><td>Provider / DB</td><td>302</td><td>BD-VRF1-DB</td><td>EPG-VRF1-DB</td><td>10.1.2.0/24</td><td>10.1.2.1/24</td><td>FW-VRF1 Internal</td><td>10.1.2.10</td><td>00:50:56:01:01:0B</td></tr>
+<tr><td>VRF-2</td><td>Consumer / App</td><td>303</td><td>BD-VRF2-App</td><td>EPG-VRF2-App</td><td>10.2.1.0/24</td><td>10.2.1.1/24</td><td>FW-VRF2 External</td><td>10.2.1.10</td><td>00:50:56:01:01:0C</td></tr>
+<tr><td>VRF-2</td><td>Provider / DB</td><td>304</td><td>BD-VRF2-DB</td><td>EPG-VRF2-DB</td><td>10.2.2.0/24</td><td>10.2.2.1/24</td><td>FW-VRF2 Internal</td><td>10.2.2.10</td><td>00:50:56:01:01:0D</td></tr>
+</tbody>
+</table>
+</div>
+
+<figure class="diag" aria-label="Example addressing diagram"><svg class="arch" viewBox="0 0 1100 620" width="1100" height="620" role="img" aria-label="Example RFC1918 addressing for VLANs 301 to 304, with firewall interface IPs and placeholder PBR next-hop MAC addresses.">
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155" class="arrowhead"/>
+  </marker>
+  <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#0f766e"/>
+  </marker>
+  <marker id="arr-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#c2410c"/>
+  </marker>
+</defs>
+<rect class="panel" x="0" y="0" width="1100" height="620" rx="16" fill="#f8fafc" stroke="#e2e8f0"/><text class="muted" x="24" y="28" text-anchor="start" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">Example addressing — RFC1918 subnets, not a production plan</text><text class="muted" x="24" y="46" text-anchor="start" font-size="11" font-weight="500" fill="#64748b" font-family="Segoe UI, system-ui, sans-serif">Original drawing. PBR next-hop IP and MAC values are placeholders.</text><rect x="24" y="60" width="1052" height="40" rx="8" fill="#fef3c7" stroke="#d97706"/><text class="muted" x="550" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e" font-family="Segoe UI, system-ui, sans-serif">EXAMPLE ADDRESSING  ·  do not use these subnets, IPs or MACs in a live fabric without review</text><rect class="box" x="24" y="120" width="1052" height="100" rx="12" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.6"/><text class="muted" x="44" y="148" text-anchor="start" font-size="15" font-weight="800" fill="#1d4ed8" font-family="Segoe UI, system-ui, sans-serif">VRF-1  ·  VLAN 301  ·  Consumer / App</text><text class="muted" x="44" y="170" text-anchor="start" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">BD-VRF1-App</text><text class="muted" x="44" y="190" text-anchor="start" font-size="12" font-weight="500" fill="#334155" font-family="Segoe UI, system-ui, sans-serif">Subnet 10.1.1.0/24    Gateway 10.1.1.1/24    (example, private)</text><text class="muted" x="44" y="210" text-anchor="start" font-size="12" font-weight="600" fill="#9a3412" font-family="Segoe UI, system-ui, sans-serif">FW-VRF1 External  ·  10.1.1.10    PBR next-hop MAC  00:50:56:01:01:0A  (placeholder)</text><rect class="box" x="820" y="138" width="232" height="64" rx="8" fill="#fff7ed" stroke="#c2410c" stroke-width="1.6"/>
+<text class="ink" x="936.0" y="160" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">FW-VRF1 External</text>
+<text class="muted" x="936.0" y="176" text-anchor="middle" font-size="10" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">10.1.1.10  ·  00:50:56:01:01:0A</text><rect class="box" x="24" y="232" width="1052" height="100" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.6"/><text class="muted" x="44" y="260" text-anchor="start" font-size="15" font-weight="800" fill="#7c3aed" font-family="Segoe UI, system-ui, sans-serif">VRF-1  ·  VLAN 302  ·  Provider / DB</text><text class="muted" x="44" y="282" text-anchor="start" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">BD-VRF1-DB</text><text class="muted" x="44" y="302" text-anchor="start" font-size="12" font-weight="500" fill="#334155" font-family="Segoe UI, system-ui, sans-serif">Subnet 10.1.2.0/24    Gateway 10.1.2.1/24    (example, private)</text><text class="muted" x="44" y="322" text-anchor="start" font-size="12" font-weight="600" fill="#9a3412" font-family="Segoe UI, system-ui, sans-serif">FW-VRF1 Internal  ·  10.1.2.10    PBR next-hop MAC  00:50:56:01:01:0B  (placeholder)</text><rect class="box" x="820" y="250" width="232" height="64" rx="8" fill="#fff7ed" stroke="#c2410c" stroke-width="1.6"/>
+<text class="ink" x="936.0" y="272" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">FW-VRF1 Internal</text>
+<text class="muted" x="936.0" y="288" text-anchor="middle" font-size="10" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">10.1.2.10  ·  00:50:56:01:01:0B</text><rect class="box" x="24" y="344" width="1052" height="100" rx="12" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.6"/><text class="muted" x="44" y="372" text-anchor="start" font-size="15" font-weight="800" fill="#1d4ed8" font-family="Segoe UI, system-ui, sans-serif">VRF-2  ·  VLAN 303  ·  Consumer / App</text><text class="muted" x="44" y="394" text-anchor="start" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">BD-VRF2-App</text><text class="muted" x="44" y="414" text-anchor="start" font-size="12" font-weight="500" fill="#334155" font-family="Segoe UI, system-ui, sans-serif">Subnet 10.2.1.0/24    Gateway 10.2.1.1/24    (example, private)</text><text class="muted" x="44" y="434" text-anchor="start" font-size="12" font-weight="600" fill="#9a3412" font-family="Segoe UI, system-ui, sans-serif">FW-VRF2 External  ·  10.2.1.10    PBR next-hop MAC  00:50:56:01:01:0C  (placeholder)</text><rect class="box" x="820" y="362" width="232" height="64" rx="8" fill="#fff7ed" stroke="#c2410c" stroke-width="1.6"/>
+<text class="ink" x="936.0" y="384" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">FW-VRF2 External</text>
+<text class="muted" x="936.0" y="400" text-anchor="middle" font-size="10" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">10.2.1.10  ·  00:50:56:01:01:0C</text><rect class="box" x="24" y="456" width="1052" height="100" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.6"/><text class="muted" x="44" y="484" text-anchor="start" font-size="15" font-weight="800" fill="#7c3aed" font-family="Segoe UI, system-ui, sans-serif">VRF-2  ·  VLAN 304  ·  Provider / DB</text><text class="muted" x="44" y="506" text-anchor="start" font-size="13" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">BD-VRF2-DB</text><text class="muted" x="44" y="526" text-anchor="start" font-size="12" font-weight="500" fill="#334155" font-family="Segoe UI, system-ui, sans-serif">Subnet 10.2.2.0/24    Gateway 10.2.2.1/24    (example, private)</text><text class="muted" x="44" y="546" text-anchor="start" font-size="12" font-weight="600" fill="#9a3412" font-family="Segoe UI, system-ui, sans-serif">FW-VRF2 Internal  ·  10.2.2.10    PBR next-hop MAC  00:50:56:01:01:0D  (placeholder)</text><rect class="box" x="820" y="474" width="232" height="64" rx="8" fill="#fff7ed" stroke="#c2410c" stroke-width="1.6"/>
+<text class="ink" x="936.0" y="496" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink,#0f172a)" font-family="Segoe UI, system-ui, sans-serif">FW-VRF2 Internal</text>
+<text class="muted" x="936.0" y="512" text-anchor="middle" font-size="10" fill="#475569" font-family="Segoe UI, system-ui, sans-serif">10.2.2.10  ·  00:50:56:01:01:0D</text><text class="muted" x="24" y="600" text-anchor="start" font-size="11" font-weight="500" fill="#64748b" font-family="Segoe UI, system-ui, sans-serif">Each PBR policy in the example series uses the firewall interface IP and MAC in that bridge domain as its redirect destination.</text></svg></figure>
+<figcaption>Example addressing for the four bridge domains, with placeholder PBR next-hop IP and MAC values.</figcaption>
+
+<h2 id="ansible">Ansible series</h2>
+<p>Run the playbooks in this order. Steps 01–06 would change fabric policy if they were pointed at an APIC. Step 07 only queries. Do not run any of them against a production APIC.</p>
+<ol class="steps">
+<li><a href="#pb-access">01-access-policies.yml</a> — static VLAN pool 301–304, physical domain, AAEP, vPC Po1 and server access ports.</li>
+<li><a href="#pb-tenant-vrf">02-tenant-vrf-bd.yml</a> — tenant, two VRFs, four bridge domains and example subnets.</li>
+<li><a href="#pb-epg">03-app-profile-epg.yml</a> — application profile, EPGs, domain bindings and example static paths.</li>
+<li><a href="#pb-l4l7">04-l4l7-device.yml</a> — logical and concrete firewall devices and their External/Internal interfaces.</li>
+<li><a href="#pb-pbr">05-pbr-redirect.yml</a> — PBR policies and example next-hop destinations.</li>
+<li><a href="#pb-graph">06-service-graph-contract.yml</a> — filter, contract, service graph, device selection and EPG bindings.</li>
+<li><a href="#pb-validate">07-validate.yml</a> — read-only queries, including an <code>aci_rest</code> GET of the tenant tree.</li>
+</ol>
+<p>The series is data-driven. Object names, VLANs, example subnets and PBR destinations live in YAML model files under <code>vars/</code> and <code>group_vars/</code>. The playbooks loop over those models rather than hard-coding each object twice. Login values stay as placeholders: the password is always <code>{{ apic_password }}</code> and is never stored in this repository.</p>
+<p>The modules used here are from the <code>cisco.aci</code> collection version 3.0.0, checked with <code>ansible-doc</code>. The destination module name is <code>aci_l4l7_policy_based_redirect_destination</code> (singular). Every playbook in the series was passed with <code>ansible-playbook --syntax-check</code>. Nothing was run against an APIC.</p>
+<h3 id="models">Model files</h3>
+<p>Download the whole series from <a href="/zfrontier/multi-vrf-firewall-insertion/ansible/">ansible/</a>, or copy a single file below.</p>
+<h3 id="model-inventory-yml">Example inventory</h3>
+<p>Path: <code>ansible/inventory.yml</code>.</p>
+
+<figure class="codebox" id="file-inventory-yml">
+  <div class="codebox-tab">
+    <span class="fname">inventory.yml</span>
+    <button type="button" class="copy-btn">Copy</button>
+    <a href="/zfrontier/multi-vrf-firewall-insertion/ansible/inventory.yml" download="inventory.yml">Download</a>
+  </div>
+  <textarea class="codebox-raw" hidden># Example inventory. No real APIC addresses are stored here.
+# Override ansible_host / connection at runtime if you need to.
+all:
+  children:
+    apic:
+      hosts:
+        lab-apic:
+          ansible_connection: local
+          ansible_python_interpreter: python3
+</textarea>
+  <div class="codebox-body"><ol class="lines"><li># Example inventory. No real APIC addresses are stored here.</li><li># Override ansible_host / connection at runtime if you need to.</li><li>all:</li><li>  children:</li><li>    apic:</li><li>      hosts:</li><li>        lab-apic:</li><li>          ansible_connection: local</li><li>          ansible_python_interpreter: python3</li></ol></div>
+</figure>
+
+<h3 id="model-group_vars-apic-yml">Placeholder APIC login variables</h3>
+<p>Path: <code>ansible/group_vars/apic.yml</code>.</p>
+
+<figure class="codebox" id="file-group_vars-apic-yml">
+  <div class="codebox-tab">
+    <span class="fname">group_vars/apic.yml</span>
+    <button type="button" class="copy-btn">Copy</button>
+    <a href="/zfrontier/multi-vrf-firewall-insertion/ansible/group_vars/apic.yml" download="apic.yml">Download</a>
+  </div>
+  <textarea class="codebox-raw" hidden># Placeholder login variables for the example APIC group.
+# Supply real values only at runtime, for example:
+#   ansible-playbook 07-validate.yml \
+#     -e apic_host=apic.example.invalid \
+#     -e apic_username=admin \
+#     -e apic_password=&#x27;...&#x27;
+# Never commit a real password, token, or a reachable production APIC address.
+# apic_password must be provided at runtime; it is not set in this repository.
+
+apic_host: apic.example.invalid
+apic_username: admin
+apic_validate_certs: true
+</textarea>
+  <div class="codebox-body"><ol class="lines"><li># Placeholder login variables for the example APIC group.</li><li># Supply real values only at runtime, for example:</li><li>#   ansible-playbook 07-validate.yml \</li><li>#     -e apic_host=apic.example.invalid \</li><li>#     -e apic_username=admin \</li><li>#     -e apic_password=&#x27;...&#x27;</li><li># Never commit a real password, token, or a reachable production APIC address.</li><li># apic_password must be provided at runtime; it is not set in this repository.</li><li>&nbsp;</li><li>apic_host: apic.example.invalid</li><li>apic_username: admin</li><li>apic_validate_certs: true</li></ol></div>
+</figure>
+
+<h3 id="model-vars-access-yml">Access-policy model</h3>
+<p>Path: <code>ansible/vars/access.yml</code>.</p>
+
+<figure class="codebox" id="file-vars-access-yml">
+  <div class="codebox-tab">
+    <span class="fname">vars/access.yml</span>
+    <button type="button" class="copy-btn">Copy</button>
+    <a href="/zfrontier/multi-vrf-firewall-insertion/ansible/vars/access.yml" download="access.yml">Download</a>
+  </div>
+  <textarea class="codebox-raw" hidden># Example access-policy model for multi-VRF firewall insertion.
+# Node IDs, ports, the vPC protection group and the VLAN range are examples only.
+# Production port-channel, vPC, VLAN and firewall interface details depend on
+# the service-insertion design actually used in that fabric.
+
+vlan_pool: VLAN-Pool-FW-Insert
+vlan_pool_mode: static
+vlan_block_start: 301
+vlan_block_end: 304
+
+phys_domain: Phys-Dom-FW-Insert
+aaep: AAEP-FW-Insert
+
+pod_id: 1
+leaf_1_id: 101
+leaf_2_id: 102
+vpc_protection_group: VPC-101-102
+vpc_protection_group_id: 101
+
+lacp_policy: LACP-Active-FW
+vpc_ipg: IPG-FW-Po1
+access_ipg: IPG-Server-Access
+
+leaf_profile: Leaf-101-102-SWP
+leaf_selector: Leaf-101-102
+fw_interface_profile: Leaf-101-102-FW-IntP
+fw_port_selector: FW-Po1-ports
+# Example: Eth1/1 on both leaves is a member of vPC Po1 to the firewall.
+fw_from_card: &quot;1&quot;
+fw_from_port: &quot;1&quot;
+fw_to_card: &quot;1&quot;
+fw_to_port: &quot;1&quot;
+
+server_interface_profile: Leaf-101-102-Server-IntP
+# Example access ports that hang the application and database servers.
+# Each item is applied as its own interface selector and static path later.
+server_ports:
+  - selector: VRF1-App-eth1-10
+    leaf: 101
+    from_card: &quot;1&quot;
+    from_port: &quot;10&quot;
+    to_card: &quot;1&quot;
+    to_port: &quot;10&quot;
+    vlan: 301
+  - selector: VRF1-DB-eth1-11
+    leaf: 101
+    from_card: &quot;1&quot;
+    from_port: &quot;11&quot;
+    to_card: &quot;1&quot;
+    to_port: &quot;11&quot;
+    vlan: 302
+  - selector: VRF2-App-eth1-10
+    leaf: 102
+    from_card: &quot;1&quot;
+    from_port: &quot;10&quot;
+    to_card: &quot;1&quot;
+    to_port: &quot;10&quot;
+    vlan: 303
+  - selector: VRF2-DB-eth1-11
+    leaf: 102
+    from_card: &quot;1&quot;
+    from_port: &quot;11&quot;
+    to_card: &quot;1&quot;
+    to_port: &quot;11&quot;
+    vlan: 304
+</textarea>
+  <div class="codebox-body"><ol class="lines"><li># Example access-policy model for multi-VRF firewall insertion.</li><li># Node IDs, ports, the vPC protection group and the VLAN range are examples only.</li><li># Production port-channel, vPC, VLAN and firewall interface details depend on</li><li># the service-insertion design actually used in that fabric.</li><li>&nbsp;</li><li>vlan_pool: VLAN-Pool-FW-Insert</li><li>vlan_pool_mode: static</li><li>vlan_block_start: 301</li><li>vlan_block_end: 304</li><li>&nbsp;</li><li>phys_domain: Phys-Dom-FW-Insert</li><li>aaep: AAEP-FW-Insert</li><li>&nbsp;</li><li>pod_id: 1</li><li>leaf_1_id: 101</li><li>leaf_2_id: 102</li><li>vpc_protection_group: VPC-101-102</li><li>vpc_protection_group_id: 101</li><li>&nbsp;</li><li>lacp_policy: LACP-Active-FW</li><li>vpc_ipg: IPG-FW-Po1</li><li>access_ipg: IPG-Server-Access</li><li>&nbsp;</li><li>leaf_profile: Leaf-101-102-SWP</li><li>leaf_selector: Leaf-101-102</li><li>fw_interface_profile: Leaf-101-102-FW-IntP</li><li>fw_port_selector: FW-Po1-ports</li><li># Example: Eth1/1 on both leaves is a member of vPC Po1 to the firewall.</li><li>fw_from_card: &quot;1&quot;</li><li>fw_from_port: &quot;1&quot;</li><li>fw_to_card: &quot;1&quot;</li><li>fw_to_port: &quot;1&quot;</li><li>&nbsp;</li><li>server_interface_profile: Leaf-101-102-Server-IntP</li><li># Example access ports that hang the application and database servers.</li><li># Each item is applied as its own interface selector and static path later.</li><li>server_ports:</li><li>  - selector: VRF1-App-eth1-10</li><li>    leaf: 101</li><li>    from_card: &quot;1&quot;</li><li>    from_port: &quot;10&quot;</li><li>    to_card: &quot;1&quot;</li><li>    to_port: &quot;10&quot;</li><li>    vlan: 301</li><li>  - selector: VRF1-DB-eth1-11</li><li>    leaf: 101</li><li>    from_card: &quot;1&quot;</li><li>    from_port: &quot;11&quot;</li><li>    to_card: &quot;1&quot;</li><li>    to_port: &quot;11&quot;</li><li>    vlan: 302</li><li>  - selector: VRF2-App-eth1-10</li><li>    leaf: 102</li><li>    from_card: &quot;1&quot;</li><li>    from_port: &quot;10&quot;</li><li>    to_card: &quot;1&quot;</li><li>    to_port: &quot;10&quot;</li><li>    vlan: 303</li><li>  - selector: VRF2-DB-eth1-11</li><li>    leaf: 102</li><li>    from_card: &quot;1&quot;</li><li>    from_port: &quot;11&quot;</li><li>    to_card: &quot;1&quot;</li><li>    to_port: &quot;11&quot;</li><li>    vlan: 304</li></ol></div>
+</figure>
+
+<h3 id="model-vars-tenant-yml">Tenant, VRF, BD and EPG model</h3>
+<p>Path: <code>ansible/vars/tenant.yml</code>.</p>
+
+<figure class="codebox" id="file-vars-tenant-yml">
+  <div class="codebox-tab">
+    <span class="fname">vars/tenant.yml</span>
+    <button type="button" class="copy-btn">Copy</button>
+    <a href="/zfrontier/multi-vrf-firewall-insertion/ansible/vars/tenant.yml" download="tenant.yml">Download</a>
+  </div>
+  <textarea class="codebox-raw" hidden># Example tenant, VRF, bridge-domain and EPG model.
+# Subnets are RFC1918 examples and are labelled as such on the page.
+# They are not a production addressing plan.
+
+tenant: Example-FW-Insertion
+tenant_description: Example tenant for two-VRF firewall service insertion
+
+vrfs:
+  - name: VRF-1
+    description: Independent L3 routing and security domain 1
+    app:
+      bd: BD-VRF1-App
+      vlan: 301
+      gateway: 10.1.1.1
+      mask: 24
+      subnet_name: sn-vrf1-app
+      epg: EPG-VRF1-App
+      role: consumer
+    db:
+      bd: BD-VRF1-DB
+      vlan: 302
+      gateway: 10.1.2.1
+      mask: 24
+      subnet_name: sn-vrf1-db
+      epg: EPG-VRF1-DB
+      role: provider
+  - name: VRF-2
+    description: Independent L3 routing and security domain 2
+    app:
+      bd: BD-VRF2-App
+      vlan: 303
+      gateway: 10.2.1.1
+      mask: 24
+      subnet_name: sn-vrf2-app
+      epg: EPG-VRF2-App
+      role: consumer
+    db:
+      bd: BD-VRF2-DB
+      vlan: 304
+      gateway: 10.2.2.1
+      mask: 24
+      subnet_name: sn-vrf2-db
+      epg: EPG-VRF2-DB
+      role: provider
+
+app_profile: AP-FW-Insert
+
+# Example static path bindings for the four server ports (see vars/access.yml).
+# interface_mode &quot;regular&quot; is the APIC value for a tagged/802.1Q path.
+epg_static_paths:
+  - epg: EPG-VRF1-App
+    leafs: [101]
+    interface: &quot;1/10&quot;
+    encap_id: 301
+  - epg: EPG-VRF1-DB
+    leafs: [101]
+    interface: &quot;1/11&quot;
+    encap_id: 302
+  - epg: EPG-VRF2-App
+    leafs: [102]
+    interface: &quot;1/10&quot;
+    encap_id: 303
+  - epg: EPG-VRF2-DB
+    leafs: [102]
+    interface: &quot;1/11&quot;
+    encap_id: 304
+</textarea>
+  <div class="codebox-body"><ol class="lines"><li># Example tenant, VRF, bridge-domain and EPG model.</li><li># Subnets are RFC1918 examples and are labelled as such on the page.</li><li># They are not a production addressing plan.</li><li>&nbsp;</li><li>tenant: Example-FW-Insertion</li><li>tenant_description: Example tenant for two-VRF firewall service insertion</li><li>&nbsp;</li><li>vrfs:</li><li>  - name: VRF-1</li><li>    description: Independent L3 routing and security domain 1</li><li>    app:</li><li>      bd: BD-VRF1-App</li><li>      vlan: 301</li><li>      gateway: 10.1.1.1</li><li>      mask: 24</li><li>      subnet_name: sn-vrf1-app</li><li>      epg: EPG-VRF1-App</li><li>      role: consumer</li><li>    db:</li><li>      bd: BD-VRF1-DB</li><li>      vlan: 302</li><li>      gateway: 10.1.2.1</li><li>      mask: 24</li><li>      subnet_name: sn-vrf1-db</li><li>      epg: EPG-VRF1-DB</li><li>      role: provider</li><li>  - name: VRF-2</li><li>    description: Independent L3 routing and security domain 2</li><li>    app:</li><li>      bd: BD-VRF2-App</li><li>      vlan: 303</li><li>      gateway: 10.2.1.1</li><li>      mask: 24</li><li>      subnet_name: sn-vrf2-app</li><li>      epg: EPG-VRF2-App</li><li>      role: consumer</li><li>    db:</li><li>      bd: BD-VRF2-DB</li><li>      vlan: 304</li><li>      gateway: 10.2.2.1</li><li>      mask: 24</li><li>      subnet_name: sn-vrf2-db</li><li>      epg: EPG-VRF2-DB</li><li>      role: provider</li><li>&nbsp;</li><li>app_profile: AP-FW-Insert</li><li>&nbsp;</li><li># Example static path bindings for the four server ports (see vars/access.yml).</li><li># interface_mode &quot;regular&quot; is the APIC value for a tagged/802.1Q path.</li><li>epg_static_paths:</li><li>  - epg: EPG-VRF1-App</li><li>    leafs: [101]</li><li>    interface: &quot;1/10&quot;</li><li>    encap_id: 301</li><li>  - epg: EPG-VRF1-DB</li><li>    leafs: [101]</li><li>    interface: &quot;1/11&quot;</li><li>    encap_id: 302</li><li>  - epg: EPG-VRF2-App</li><li>    leafs: [102]</li><li>    interface: &quot;1/10&quot;</li><li>    encap_id: 303</li><li>  - epg: EPG-VRF2-DB</li><li>    leafs: [102]</li><li>    interface: &quot;1/11&quot;</li><li>    encap_id: 304</li></ol></div>
+</figure>
+
+<h3 id="model-vars-l4l7-yml">L4-L7, PBR and contract model</h3>
+<p>Path: <code>ansible/vars/l4l7.yml</code>.</p>
+
+<figure class="codebox" id="file-vars-l4l7-yml">
+  <div class="codebox-tab">
+    <span class="fname">vars/l4l7.yml</span>
+    <button type="button" class="copy-btn">Copy</button>
+    <a href="/zfrontier/multi-vrf-firewall-insertion/ansible/vars/l4l7.yml" download="l4l7.yml">Download</a>
+  </div>
+  <textarea class="codebox-raw" hidden># Example L4-L7 device, PBR and service-graph model.
+# Firewall interface IP addresses and MAC addresses are placeholders.
+# Production port-channel, vPC, VLAN and firewall interface details depend on
+# the service-insertion design actually used in that fabric.
+
+# One physical firewall appliance, presented as two logical devices (one per VRF).
+# Both concrete devices attach to the same example vPC policy group (Po1).
+firewall_cluster:
+  concrete_device: FW-Appliance-1
+  vpc_node_id: &quot;101-102&quot;
+  vpc_ipg: IPG-FW-Po1
+  pod_id: 1
+  physical_domain: Phys-Dom-FW-Insert
+
+# Example application filter: TCP destination port 1521. This is an illustration
+# only; replace it with the ports the contract should actually permit.
+example_filter: flt-example-tcp
+example_filter_entry: tcp-1521
+example_ether_type: ip
+example_ip_protocol: tcp
+example_dst_port: &quot;1521&quot;
+
+vrf_services:
+  - vrf: VRF-1
+    logical_device: FW-VRF1
+    concrete_device: FW-VRF1-CDev
+    external_lif: External
+    internal_lif: Internal
+    external_cif: cif-external
+    internal_cif: cif-internal
+    external_encap: vlan-301
+    internal_encap: vlan-302
+    consumer_epg: EPG-VRF1-App
+    provider_epg: EPG-VRF1-DB
+    consumer_bd: BD-VRF1-App
+    provider_bd: BD-VRF1-DB
+    pbr_consumer:
+      name: PBR-VRF1-App
+      dest_name: FW-VRF1-External
+      ip: 10.1.1.10
+      mac: &quot;00:50:56:01:01:0A&quot;
+    pbr_provider:
+      name: PBR-VRF1-DB
+      dest_name: FW-VRF1-Internal
+      ip: 10.1.2.10
+      mac: &quot;00:50:56:01:01:0B&quot;
+    graph: SG-FW-PBR-VRF1
+    graph_node: N1
+    contract: Ctr-VRF1-App-to-DB
+    subject: subj-app-to-db
+  - vrf: VRF-2
+    logical_device: FW-VRF2
+    concrete_device: FW-VRF2-CDev
+    external_lif: External
+    internal_lif: Internal
+    external_cif: cif-external
+    internal_cif: cif-internal
+    external_encap: vlan-303
+    internal_encap: vlan-304
+    consumer_epg: EPG-VRF2-App
+    provider_epg: EPG-VRF2-DB
+    consumer_bd: BD-VRF2-App
+    provider_bd: BD-VRF2-DB
+    pbr_consumer:
+      name: PBR-VRF2-App
+      dest_name: FW-VRF2-External
+      ip: 10.2.1.10
+      mac: &quot;00:50:56:01:01:0C&quot;
+    pbr_provider:
+      name: PBR-VRF2-DB
+      dest_name: FW-VRF2-Internal
+      ip: 10.2.2.10
+      mac: &quot;00:50:56:01:01:0D&quot;
+    graph: SG-FW-PBR-VRF2
+    graph_node: N1
+    contract: Ctr-VRF2-App-to-DB
+    subject: subj-app-to-db
+</textarea>
+  <div class="codebox-body"><ol class="lines"><li># Example L4-L7 device, PBR and service-graph model.</li><li># Firewall interface IP addresses and MAC addresses are placeholders.</li><li># Production port-channel, vPC, VLAN and firewall interface details depend on</li><li># the service-insertion design actually used in that fabric.</li><li>&nbsp;</li><li># One physical firewall appliance, presented as two logical devices (one per VRF).</li><li># Both concrete devices attach to the same example vPC policy group (Po1).</li><li>firewall_cluster:</li><li>  concrete_device: FW-Appliance-1</li><li>  vpc_node_id: &quot;101-102&quot;</li><li>  vpc_ipg: IPG-FW-Po1</li><li>  pod_id: 1</li><li>  physical_domain: Phys-Dom-FW-Insert</li><li>&nbsp;</li><li># Example application filter: TCP destination port 1521. This is an illustration</li><li># only; replace it with the ports the contract should actually permit.</li><li>example_filter: flt-example-tcp</li><li>example_filter_entry: tcp-1521</li><li>example_ether_type: ip</li><li>example_ip_protocol: tcp</li><li>example_dst_port: &quot;1521&quot;</li><li>&nbsp;</li><li>vrf_services:</li><li>  - vrf: VRF-1</li><li>    logical_device: FW-VRF1</li><li>    concrete_device: FW-VRF1-CDev</li><li>    external_lif: External</li><li>    internal_lif: Internal</li><li>    external_cif: cif-external</li><li>    internal_cif: cif-internal</li><li>    external_encap: vlan-301</li><li>    internal_encap: vlan-302</li><li>    consumer_epg: EPG-VRF1-App</li><li>    provider_epg: EPG-VRF1-DB</li><li>    consumer_bd: BD-VRF1-App</li><li>    provider_bd: BD-VRF1-DB</li><li>    pbr_consumer:</li><li>      name: PBR-VRF1-App</li><li>      dest_name: FW-VRF1-External</li><li>      ip: 10.1.1.10</li><li>      mac: &quot;00:50:56:01:01:0A&quot;</li><li>    pbr_provider:</li><li>      name: PBR-VRF1-DB</li><li>      dest_name: FW-VRF1-Internal</li><li>      ip: 10.1.2.10</li><li>      mac: &quot;00:50:56:01:01:0B&quot;</li><li>    graph: SG-FW-PBR-VRF1</li><li>    graph_node: N1</li><li>    contract: Ctr-VRF1-App-to-DB</li><li>    subject: subj-app-to-db</li><li>  - vrf: VRF-2</li><li>    logical_device: FW-VRF2</li><li>    concrete_device: FW-VRF2-CDev</li><li>    external_lif: External</li><li>    internal_lif: Internal</li><li>    external_cif: cif-external</li><li>    internal_cif: cif-internal</li><li>    external_encap: vlan-303</li><li>    internal_encap: vlan-304</li><li>    consumer_epg: EPG-VRF2-App</li><li>    provider_epg: EPG-VRF2-DB</li><li>    consumer_bd: BD-VRF2-App</li><li>    provider_bd: BD-VRF2-DB</li><li>    pbr_consumer:</li><li>      name: PBR-VRF2-App</li><li>      dest_name: FW-VRF2-External</li><li>      ip: 10.2.1.10</li><li>      mac: &quot;00:50:56:01:01:0C&quot;</li><li>    pbr_provider:</li><li>      name: PBR-VRF2-DB</li><li>      dest_name: FW-VRF2-Internal</li><li>      ip: 10.2.2.10</li><li>      mac: &quot;00:50:56:01:01:0D&quot;</li><li>    graph: SG-FW-PBR-VRF2</li><li>    graph_node: N1</li><li>    contract: Ctr-VRF2-App-to-DB</li><li>    subject: subj-app-to-db</li></ol></div>
+</figure>
+
+<h3 id="model-ansible-cfg">Ansible configuration</h3>
+<p>Path: <code>ansible/ansible.cfg</code>.</p>
+
+<figure class="codebox" id="file-ansible-cfg">
+  <div class="codebox-tab">
+    <span class="fname">ansible.cfg</span>
+    <button type="button" class="copy-btn">Copy</button>
+    <a href="/zfrontier/multi-vrf-firewall-insertion/ansible/ansible.cfg" download="ansible.cfg">Download</a>
+  </div>
+  <textarea class="codebox-raw" hidden>[defaults]
+inventory = inventory.yml
+retry_files_enabled = false
+interpreter_python = auto_silent
+host_key_checking = false
+stdout_callback = default
+# These playbooks are examples only. Run ansible-playbook --syntax-check
+# before anything else. Do not point them at a production APIC.
+</textarea>
+  <div class="codebox-body"><ol class="lines"><li>[defaults]</li><li>inventory = inventory.yml</li><li>retry_files_enabled = false</li><li>interpreter_python = auto_silent</li><li>host_key_checking = false</li><li>stdout_callback = default</li><li># These playbooks are examples only. Run ansible-playbook --syntax-check</li><li># before anything else. Do not point them at a production APIC.</li></ol></div>
+</figure>
+
+<h3 id="model-README-md">How to syntax-check the series</h3>
+<p>Path: <code>ansible/README.md</code>.</p>
+
+<figure class="codebox" id="file-README-md">
+  <div class="codebox-tab">
+    <span class="fname">README.md</span>
+    <button type="button" class="copy-btn">Copy</button>
+    <a href="/zfrontier/multi-vrf-firewall-insertion/ansible/README.md" download="README.md">Download</a>
+  </div>
+  <textarea class="codebox-raw" hidden># Multi-VRF firewall insertion — example Ansible series
+
+These files are an example, data-driven series for a two-VRF firewall
+service-insertion design. They target the Cisco ACI `cisco.aci` collection
+and are published with the hidden page at
+`/zfrontier/multi-vrf-firewall-insertion/`.
+
+## Safety
+
+- Credentials are placeholders only. The password is always `{{ apic_password }}`
+  and must be supplied at runtime. Do not write a real password, token or
+  production APIC address into these files.
+- Playbooks 01-06 would change fabric policy if they were run. Playbook 07 is
+  read-only.
+- Do not run any of these playbooks against a production APIC. Start with
+  `ansible-playbook --syntax-check` on each file.
+- Node IDs, ports, VLANs, subnets, firewall IP addresses and MAC addresses are
+  **example addressing**. Production port-channel, vPC, VLAN and firewall
+  interface details depend on the service-insertion design used in that fabric.
+
+## Layout
+
+- `inventory.yml` — example inventory (`lab-apic`, local connection).
+- `group_vars/apic.yml` — placeholder `apic_host`, `apic_username` and
+  `apic_validate_certs`. `apic_password` is not set here.
+- `vars/access.yml` — VLAN pool, physical domain, AAEP, vPC Po1, server ports.
+- `vars/tenant.yml` — tenant, VRFs, bridge domains, subnets, EPGs.
+- `vars/l4l7.yml` — logical/concrete devices, PBR destinations, graphs, contracts.
+- `01-access-policies.yml` … `07-validate.yml` — run in that order.
+
+## Syntax check
+
+From this directory, with `cisco.aci` installed:
+
+```bash
+for f in 0*.yml; do
+  ansible-playbook --syntax-check &quot;$f&quot;
+done
+```
+
+To pass login values at runtime (lab only):
+
+```bash
+ansible-playbook 07-validate.yml \
+  -e apic_host=apic.example.invalid \
+  -e apic_username=admin \
+  -e apic_password=&#x27;...&#x27;
+```
+
+The collection used to author and syntax-check this series is `cisco.aci` 3.0.0.
+Module names follow that collection. Note that the destination module is
+`aci_l4l7_policy_based_redirect_destination` (singular).
+</textarea>
+  <div class="codebox-body"><ol class="lines"><li># Multi-VRF firewall insertion — example Ansible series</li><li>&nbsp;</li><li>These files are an example, data-driven series for a two-VRF firewall</li><li>service-insertion design. They target the Cisco ACI `cisco.aci` collection</li><li>and are published with the hidden page at</li><li>`/zfrontier/multi-vrf-firewall-insertion/`.</li><li>&nbsp;</li><li>## Safety</li><li>&nbsp;</li><li>- Credentials are placeholders only. The password is always `{{ apic_password }}`</li><li>  and must be supplied at runtime. Do not write a real password, token or</li><li>  production APIC address into these files.</li><li>- Playbooks 01-06 would change fabric policy if they were run. Playbook 07 is</li><li>  read-only.</li><li>- Do not run any of these playbooks against a production APIC. Start with</li><li>  `ansible-playbook --syntax-check` on each file.</li><li>- Node IDs, ports, VLANs, subnets, firewall IP addresses and MAC addresses are</li><li>  **example addressing**. Production port-channel, vPC, VLAN and firewall</li><li>  interface details depend on the service-insertion design used in that fabric.</li><li>&nbsp;</li><li>## Layout</li><li>&nbsp;</li><li>- `inventory.yml` — example inventory (`lab-apic`, local connection).</li><li>- `group_vars/apic.yml` — placeholder `apic_host`, `apic_username` and</li><li>  `apic_validate_certs`. `apic_password` is not set here.</li><li>- `vars/access.yml` — VLAN pool, physical domain, AAEP, vPC Po1, server ports.</li><li>- `vars/tenant.yml` — tenant, VRFs, bridge domains, subnets, EPGs.</li><li>- `vars/l4l7.yml` — logical/concrete devices, PBR destinations, graphs, contracts.</li><li>- `01-access-policies.yml` … `07-validate.yml` — run in that order.</li><li>&nbsp;</li><li>## Syntax check</li><li>&nbsp;</li><li>From this directory, with `cisco.aci` installed:</li><li>&nbsp;</li><li>```bash</li><li>for f in 0*.yml; do</li><li>  ansible-playbook --syntax-check &quot;$f&quot;</li><li>done</li><li>```</li><li>&nbsp;</li><li>To pass login values at runtime (lab only):</li><li>&nbsp;</li><li>```bash</li><li>ansible-playbook 07-validate.yml \</li><li>  -e apic_host=apic.example.invalid \</li><li>  -e apic_username=admin \</li><li>  -e apic_password=&#x27;...&#x27;</li><li>```</li><li>&nbsp;</li><li>The collection used to author and syntax-check this series is `cisco.aci` 3.0.0.</li><li>Module names follow that collection. Note that the destination module is</li><li>`aci_l4l7_policy_based_redirect_destination` (singular).</li></ol></div>
+</figure>
+
+<h3 id="pb-access">01 — Access policies</h3>
+<p>VLAN pool 301–304 (static), physical domain, AAEP, vPC protection group, Po1 interface policy group and the example server access ports.</p>
+
+<figure class="codebox" id="file-01-access-policies-yml">
+  <div class="codebox-tab">
+    <span class="fname">01-access-policies.yml</span>
+    <button type="button" class="copy-btn">Copy</button>
+    <a href="/zfrontier/multi-vrf-firewall-insertion/ansible/01-access-policies.yml" download="01-access-policies.yml">Download</a>
+  </div>
+  <textarea class="codebox-raw" hidden># 01 — Access policies: VLAN pool 301-304, physical domain, AAEP, vPC Po1 and server ports
+# Lab / example only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+# Production port-channel, vPC, VLAN and firewall interface details depend on the service-insertion design.
+---
+- name: 01 — Access policies for multi-VRF firewall insertion (example)
+  hosts: apic
+  connection: local
+  gather_facts: false
+  vars_files:
+    - vars/access.yml
+  vars:
+    aci_login: &amp;aci_login
+      host: &quot;{{ apic_host }}&quot;
+      username: &quot;{{ apic_username }}&quot;
+      password: &quot;{{ apic_password }}&quot;
+      validate_certs: &quot;{{ apic_validate_certs }}&quot;
+  tasks:
+    - name: Create a static VLAN pool for the insertion VLANs
+      cisco.aci.aci_vlan_pool:
+        &lt;&lt;: *aci_login
+        pool: &quot;{{ vlan_pool }}&quot;
+        pool_allocation_mode: &quot;{{ vlan_pool_mode }}&quot;
+        description: Example static pool for VLANs 301-304
+        state: present
+
+    - name: Add the static encap block 301-304
+      cisco.aci.aci_vlan_pool_encap_block:
+        &lt;&lt;: *aci_login
+        pool: &quot;{{ vlan_pool }}&quot;
+        pool_allocation_mode: &quot;{{ vlan_pool_mode }}&quot;
+        block_start: &quot;{{ vlan_block_start }}&quot;
+        block_end: &quot;{{ vlan_block_end }}&quot;
+        allocation_mode: static
+        state: present
+
+    - name: Create the physical domain
+      cisco.aci.aci_domain:
+        &lt;&lt;: *aci_login
+        domain: &quot;{{ phys_domain }}&quot;
+        domain_type: phys
+        state: present
+
+    - name: Bind the VLAN pool to the physical domain
+      cisco.aci.aci_domain_to_vlan_pool:
+        &lt;&lt;: *aci_login
+        domain: &quot;{{ phys_domain }}&quot;
+        domain_type: phys
+        pool: &quot;{{ vlan_pool }}&quot;
+        pool_allocation_mode: static
+        state: present
+
+    - name: Create the attachable access entity profile
+      cisco.aci.aci_aep:
+        &lt;&lt;: *aci_login
+        aep: &quot;{{ aaep }}&quot;
+        description: Example AAEP for firewall Po1 and server access ports
+        state: present
+
+    - name: Bind the physical domain to the AAEP
+      cisco.aci.aci_aep_to_domain:
+        &lt;&lt;: *aci_login
+        aep: &quot;{{ aaep }}&quot;
+        domain: &quot;{{ phys_domain }}&quot;
+        domain_type: phys
+        state: present
+
+    - name: Create an LACP active port-channel policy
+      cisco.aci.aci_interface_policy_port_channel:
+        &lt;&lt;: *aci_login
+        port_channel: &quot;{{ lacp_policy }}&quot;
+        mode: active
+        description: Example LACP policy for the firewall vPC
+        state: present
+
+    - name: Create the explicit vPC protection group for the leaf pair
+      cisco.aci.aci_switch_policy_vpc_protection_group:
+        &lt;&lt;: *aci_login
+        protection_group: &quot;{{ vpc_protection_group }}&quot;
+        protection_group_id: &quot;{{ vpc_protection_group_id }}&quot;
+        pod_id: &quot;{{ pod_id }}&quot;
+        switch_1_id: &quot;{{ leaf_1_id }}&quot;
+        switch_2_id: &quot;{{ leaf_2_id }}&quot;
+        state: present
+
+    - name: Create the vPC interface policy group for firewall Po1
+      cisco.aci.aci_interface_policy_leaf_policy_group:
+        &lt;&lt;: *aci_login
+        policy_group: &quot;{{ vpc_ipg }}&quot;
+        lag_type: node
+        aep: &quot;{{ aaep }}&quot;
+        port_channel_policy: &quot;{{ lacp_policy }}&quot;
+        description: Example vPC IPG for the firewall on Po1
+        state: present
+
+    - name: Create an access (non-LAG) interface policy group for servers
+      cisco.aci.aci_interface_policy_leaf_policy_group:
+        &lt;&lt;: *aci_login
+        policy_group: &quot;{{ access_ipg }}&quot;
+        lag_type: leaf
+        aep: &quot;{{ aaep }}&quot;
+        description: Example access IPG for application and database servers
+        state: present
+
+    - name: Create the leaf switch profile
+      cisco.aci.aci_switch_policy_leaf_profile:
+        &lt;&lt;: *aci_login
+        leaf_profile: &quot;{{ leaf_profile }}&quot;
+        description: Example switch profile for leaves 101 and 102
+        state: present
+
+    - name: Add a leaf selector for nodes 101-102
+      cisco.aci.aci_switch_leaf_selector:
+        &lt;&lt;: *aci_login
+        leaf_profile: &quot;{{ leaf_profile }}&quot;
+        leaf: &quot;{{ leaf_selector }}&quot;
+        leaf_node_blk: &quot;blk-{{ leaf_1_id }}-{{ leaf_2_id }}&quot;
+        from: &quot;{{ leaf_1_id }}&quot;
+        to: &quot;{{ leaf_2_id }}&quot;
+        state: present
+
+    - name: Create the firewall interface profile
+      cisco.aci.aci_interface_policy_leaf_profile:
+        &lt;&lt;: *aci_login
+        interface_profile: &quot;{{ fw_interface_profile }}&quot;
+        type: leaf
+        description: Example interface profile for the firewall vPC members
+        state: present
+
+    - name: Associate the firewall interface profile with the switch profile
+      cisco.aci.aci_interface_selector_to_switch_policy_leaf_profile:
+        &lt;&lt;: *aci_login
+        leaf_profile: &quot;{{ leaf_profile }}&quot;
+        interface_selector: &quot;{{ fw_interface_profile }}&quot;
+        state: present
+
+    - name: Select Eth1/1 on both leaves as vPC members of Po1
+      cisco.aci.aci_access_port_to_interface_policy_leaf_profile:
+        &lt;&lt;: *aci_login
+        interface_profile: &quot;{{ fw_interface_profile }}&quot;
+        access_port_selector: &quot;{{ fw_port_selector }}&quot;
+        policy_group: &quot;{{ vpc_ipg }}&quot;
+        interface_type: vpc
+        from_card: &quot;{{ fw_from_card }}&quot;
+        from_port: &quot;{{ fw_from_port }}&quot;
+        to_card: &quot;{{ fw_to_card }}&quot;
+        to_port: &quot;{{ fw_to_port }}&quot;
+        port_blk: fw-po1-eth1-1
+        state: present
+
+    - name: Create the server interface profile
+      cisco.aci.aci_interface_policy_leaf_profile:
+        &lt;&lt;: *aci_login
+        interface_profile: &quot;{{ server_interface_profile }}&quot;
+        type: leaf
+        description: Example interface profile for application and database servers
+        state: present
+
+    - name: Associate the server interface profile with the switch profile
+      cisco.aci.aci_interface_selector_to_switch_policy_leaf_profile:
+        &lt;&lt;: *aci_login
+        leaf_profile: &quot;{{ leaf_profile }}&quot;
+        interface_selector: &quot;{{ server_interface_profile }}&quot;
+        state: present
+
+    - name: Select the example server access ports
+      cisco.aci.aci_access_port_to_interface_policy_leaf_profile:
+        &lt;&lt;: *aci_login
+        interface_profile: &quot;{{ server_interface_profile }}&quot;
+        access_port_selector: &quot;{{ item.selector }}&quot;
+        policy_group: &quot;{{ access_ipg }}&quot;
+        interface_type: switch_port
+        from_card: &quot;{{ item.from_card }}&quot;
+        from_port: &quot;{{ item.from_port }}&quot;
+        to_card: &quot;{{ item.to_card }}&quot;
+        to_port: &quot;{{ item.to_port }}&quot;
+        port_blk: &quot;{{ item.selector }}-blk&quot;
+        state: present
+      loop: &quot;{{ server_ports }}&quot;
+      loop_control:
+        label: &quot;{{ item.selector }}&quot;
+</textarea>
+  <div class="codebox-body"><ol class="lines"><li># 01 — Access policies: VLAN pool 301-304, physical domain, AAEP, vPC Po1 and server ports</li><li># Lab / example only. Do not run this playbook against a production APIC.</li><li># Credentials are placeholders. Never put a real password, token, or APIC address in this file.</li><li># Production port-channel, vPC, VLAN and firewall interface details depend on the service-insertion design.</li><li>---</li><li>- name: 01 — Access policies for multi-VRF firewall insertion (example)</li><li>  hosts: apic</li><li>  connection: local</li><li>  gather_facts: false</li><li>  vars_files:</li><li>    - vars/access.yml</li><li>  vars:</li><li>    aci_login: &amp;aci_login</li><li>      host: &quot;{{ apic_host }}&quot;</li><li>      username: &quot;{{ apic_username }}&quot;</li><li>      password: &quot;{{ apic_password }}&quot;</li><li>      validate_certs: &quot;{{ apic_validate_certs }}&quot;</li><li>  tasks:</li><li>    - name: Create a static VLAN pool for the insertion VLANs</li><li>      cisco.aci.aci_vlan_pool:</li><li>        &lt;&lt;: *aci_login</li><li>        pool: &quot;{{ vlan_pool }}&quot;</li><li>        pool_allocation_mode: &quot;{{ vlan_pool_mode }}&quot;</li><li>        description: Example static pool for VLANs 301-304</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Add the static encap block 301-304</li><li>      cisco.aci.aci_vlan_pool_encap_block:</li><li>        &lt;&lt;: *aci_login</li><li>        pool: &quot;{{ vlan_pool }}&quot;</li><li>        pool_allocation_mode: &quot;{{ vlan_pool_mode }}&quot;</li><li>        block_start: &quot;{{ vlan_block_start }}&quot;</li><li>        block_end: &quot;{{ vlan_block_end }}&quot;</li><li>        allocation_mode: static</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Create the physical domain</li><li>      cisco.aci.aci_domain:</li><li>        &lt;&lt;: *aci_login</li><li>        domain: &quot;{{ phys_domain }}&quot;</li><li>        domain_type: phys</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Bind the VLAN pool to the physical domain</li><li>      cisco.aci.aci_domain_to_vlan_pool:</li><li>        &lt;&lt;: *aci_login</li><li>        domain: &quot;{{ phys_domain }}&quot;</li><li>        domain_type: phys</li><li>        pool: &quot;{{ vlan_pool }}&quot;</li><li>        pool_allocation_mode: static</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Create the attachable access entity profile</li><li>      cisco.aci.aci_aep:</li><li>        &lt;&lt;: *aci_login</li><li>        aep: &quot;{{ aaep }}&quot;</li><li>        description: Example AAEP for firewall Po1 and server access ports</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Bind the physical domain to the AAEP</li><li>      cisco.aci.aci_aep_to_domain:</li><li>        &lt;&lt;: *aci_login</li><li>        aep: &quot;{{ aaep }}&quot;</li><li>        domain: &quot;{{ phys_domain }}&quot;</li><li>        domain_type: phys</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Create an LACP active port-channel policy</li><li>      cisco.aci.aci_interface_policy_port_channel:</li><li>        &lt;&lt;: *aci_login</li><li>        port_channel: &quot;{{ lacp_policy }}&quot;</li><li>        mode: active</li><li>        description: Example LACP policy for the firewall vPC</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Create the explicit vPC protection group for the leaf pair</li><li>      cisco.aci.aci_switch_policy_vpc_protection_group:</li><li>        &lt;&lt;: *aci_login</li><li>        protection_group: &quot;{{ vpc_protection_group }}&quot;</li><li>        protection_group_id: &quot;{{ vpc_protection_group_id }}&quot;</li><li>        pod_id: &quot;{{ pod_id }}&quot;</li><li>        switch_1_id: &quot;{{ leaf_1_id }}&quot;</li><li>        switch_2_id: &quot;{{ leaf_2_id }}&quot;</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Create the vPC interface policy group for firewall Po1</li><li>      cisco.aci.aci_interface_policy_leaf_policy_group:</li><li>        &lt;&lt;: *aci_login</li><li>        policy_group: &quot;{{ vpc_ipg }}&quot;</li><li>        lag_type: node</li><li>        aep: &quot;{{ aaep }}&quot;</li><li>        port_channel_policy: &quot;{{ lacp_policy }}&quot;</li><li>        description: Example vPC IPG for the firewall on Po1</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Create an access (non-LAG) interface policy group for servers</li><li>      cisco.aci.aci_interface_policy_leaf_policy_group:</li><li>        &lt;&lt;: *aci_login</li><li>        policy_group: &quot;{{ access_ipg }}&quot;</li><li>        lag_type: leaf</li><li>        aep: &quot;{{ aaep }}&quot;</li><li>        description: Example access IPG for application and database servers</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Create the leaf switch profile</li><li>      cisco.aci.aci_switch_policy_leaf_profile:</li><li>        &lt;&lt;: *aci_login</li><li>        leaf_profile: &quot;{{ leaf_profile }}&quot;</li><li>        description: Example switch profile for leaves 101 and 102</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Add a leaf selector for nodes 101-102</li><li>      cisco.aci.aci_switch_leaf_selector:</li><li>        &lt;&lt;: *aci_login</li><li>        leaf_profile: &quot;{{ leaf_profile }}&quot;</li><li>        leaf: &quot;{{ leaf_selector }}&quot;</li><li>        leaf_node_blk: &quot;blk-{{ leaf_1_id }}-{{ leaf_2_id }}&quot;</li><li>        from: &quot;{{ leaf_1_id }}&quot;</li><li>        to: &quot;{{ leaf_2_id }}&quot;</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Create the firewall interface profile</li><li>      cisco.aci.aci_interface_policy_leaf_profile:</li><li>        &lt;&lt;: *aci_login</li><li>        interface_profile: &quot;{{ fw_interface_profile }}&quot;</li><li>        type: leaf</li><li>        description: Example interface profile for the firewall vPC members</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Associate the firewall interface profile with the switch profile</li><li>      cisco.aci.aci_interface_selector_to_switch_policy_leaf_profile:</li><li>        &lt;&lt;: *aci_login</li><li>        leaf_profile: &quot;{{ leaf_profile }}&quot;</li><li>        interface_selector: &quot;{{ fw_interface_profile }}&quot;</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Select Eth1/1 on both leaves as vPC members of Po1</li><li>      cisco.aci.aci_access_port_to_interface_policy_leaf_profile:</li><li>        &lt;&lt;: *aci_login</li><li>        interface_profile: &quot;{{ fw_interface_profile }}&quot;</li><li>        access_port_selector: &quot;{{ fw_port_selector }}&quot;</li><li>        policy_group: &quot;{{ vpc_ipg }}&quot;</li><li>        interface_type: vpc</li><li>        from_card: &quot;{{ fw_from_card }}&quot;</li><li>        from_port: &quot;{{ fw_from_port }}&quot;</li><li>        to_card: &quot;{{ fw_to_card }}&quot;</li><li>        to_port: &quot;{{ fw_to_port }}&quot;</li><li>        port_blk: fw-po1-eth1-1</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Create the server interface profile</li><li>      cisco.aci.aci_interface_policy_leaf_profile:</li><li>        &lt;&lt;: *aci_login</li><li>        interface_profile: &quot;{{ server_interface_profile }}&quot;</li><li>        type: leaf</li><li>        description: Example interface profile for application and database servers</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Associate the server interface profile with the switch profile</li><li>      cisco.aci.aci_interface_selector_to_switch_policy_leaf_profile:</li><li>        &lt;&lt;: *aci_login</li><li>        leaf_profile: &quot;{{ leaf_profile }}&quot;</li><li>        interface_selector: &quot;{{ server_interface_profile }}&quot;</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Select the example server access ports</li><li>      cisco.aci.aci_access_port_to_interface_policy_leaf_profile:</li><li>        &lt;&lt;: *aci_login</li><li>        interface_profile: &quot;{{ server_interface_profile }}&quot;</li><li>        access_port_selector: &quot;{{ item.selector }}&quot;</li><li>        policy_group: &quot;{{ access_ipg }}&quot;</li><li>        interface_type: switch_port</li><li>        from_card: &quot;{{ item.from_card }}&quot;</li><li>        from_port: &quot;{{ item.from_port }}&quot;</li><li>        to_card: &quot;{{ item.to_card }}&quot;</li><li>        to_port: &quot;{{ item.to_port }}&quot;</li><li>        port_blk: &quot;{{ item.selector }}-blk&quot;</li><li>        state: present</li><li>      loop: &quot;{{ server_ports }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.selector }}&quot;</li></ol></div>
+</figure>
+
+<h3 id="pb-tenant-vrf">02 — Tenant, VRFs and bridge domains</h3>
+<p>The example tenant, two isolated VRFs, four bridge domains and their example RFC1918 subnets.</p>
+
+<figure class="codebox" id="file-02-tenant-vrf-bd-yml">
+  <div class="codebox-tab">
+    <span class="fname">02-tenant-vrf-bd.yml</span>
+    <button type="button" class="copy-btn">Copy</button>
+    <a href="/zfrontier/multi-vrf-firewall-insertion/ansible/02-tenant-vrf-bd.yml" download="02-tenant-vrf-bd.yml">Download</a>
+  </div>
+  <textarea class="codebox-raw" hidden># 02 — Tenant, VRFs and bridge domains (with example RFC1918 subnets)
+# Lab / example only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: 02 — Tenant, VRFs and bridge domains (example)
+  hosts: apic
+  connection: local
+  gather_facts: false
+  vars_files:
+    - vars/tenant.yml
+  vars:
+    aci_login: &amp;aci_login
+      host: &quot;{{ apic_host }}&quot;
+      username: &quot;{{ apic_username }}&quot;
+      password: &quot;{{ apic_password }}&quot;
+      validate_certs: &quot;{{ apic_validate_certs }}&quot;
+  tasks:
+    - name: Create the example tenant
+      cisco.aci.aci_tenant:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        description: &quot;{{ tenant_description }}&quot;
+        state: present
+
+    - name: Create each VRF as an independent routing and security domain
+      cisco.aci.aci_vrf:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        vrf: &quot;{{ item.name }}&quot;
+        description: &quot;{{ item.description }}&quot;
+        policy_control_preference: enforced
+        state: present
+      loop: &quot;{{ vrfs }}&quot;
+      loop_control:
+        label: &quot;{{ item.name }}&quot;
+
+    - name: Create the application (consumer) bridge domain in each VRF
+      cisco.aci.aci_bd:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        vrf: &quot;{{ item.name }}&quot;
+        bd: &quot;{{ item.app.bd }}&quot;
+        enable_routing: true
+        arp_flooding: true
+        l2_unknown_unicast: proxy
+        description: &quot;Example consumer BD, VLAN {{ item.app.vlan }}&quot;
+        state: present
+      loop: &quot;{{ vrfs }}&quot;
+      loop_control:
+        label: &quot;{{ item.app.bd }}&quot;
+
+    - name: Create the database (provider) bridge domain in each VRF
+      cisco.aci.aci_bd:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        vrf: &quot;{{ item.name }}&quot;
+        bd: &quot;{{ item.db.bd }}&quot;
+        enable_routing: true
+        arp_flooding: true
+        l2_unknown_unicast: proxy
+        description: &quot;Example provider BD, VLAN {{ item.db.vlan }}&quot;
+        state: present
+      loop: &quot;{{ vrfs }}&quot;
+      loop_control:
+        label: &quot;{{ item.db.bd }}&quot;
+
+    - name: Add the example consumer subnet (RFC1918, illustration only)
+      cisco.aci.aci_bd_subnet:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        bd: &quot;{{ item.app.bd }}&quot;
+        gateway: &quot;{{ item.app.gateway }}&quot;
+        mask: &quot;{{ item.app.mask }}&quot;
+        subnet_name: &quot;{{ item.app.subnet_name }}&quot;
+        scope:
+          - private
+        description: Example addressing only
+        state: present
+      loop: &quot;{{ vrfs }}&quot;
+      loop_control:
+        label: &quot;{{ item.app.subnet_name }}&quot;
+
+    - name: Add the example provider subnet (RFC1918, illustration only)
+      cisco.aci.aci_bd_subnet:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        bd: &quot;{{ item.db.bd }}&quot;
+        gateway: &quot;{{ item.db.gateway }}&quot;
+        mask: &quot;{{ item.db.mask }}&quot;
+        subnet_name: &quot;{{ item.db.subnet_name }}&quot;
+        scope:
+          - private
+        description: Example addressing only
+        state: present
+      loop: &quot;{{ vrfs }}&quot;
+      loop_control:
+        label: &quot;{{ item.db.subnet_name }}&quot;
+</textarea>
+  <div class="codebox-body"><ol class="lines"><li># 02 — Tenant, VRFs and bridge domains (with example RFC1918 subnets)</li><li># Lab / example only. Do not run this playbook against a production APIC.</li><li># Credentials are placeholders. Never put a real password, token, or APIC address in this file.</li><li>---</li><li>- name: 02 — Tenant, VRFs and bridge domains (example)</li><li>  hosts: apic</li><li>  connection: local</li><li>  gather_facts: false</li><li>  vars_files:</li><li>    - vars/tenant.yml</li><li>  vars:</li><li>    aci_login: &amp;aci_login</li><li>      host: &quot;{{ apic_host }}&quot;</li><li>      username: &quot;{{ apic_username }}&quot;</li><li>      password: &quot;{{ apic_password }}&quot;</li><li>      validate_certs: &quot;{{ apic_validate_certs }}&quot;</li><li>  tasks:</li><li>    - name: Create the example tenant</li><li>      cisco.aci.aci_tenant:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        description: &quot;{{ tenant_description }}&quot;</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Create each VRF as an independent routing and security domain</li><li>      cisco.aci.aci_vrf:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        vrf: &quot;{{ item.name }}&quot;</li><li>        description: &quot;{{ item.description }}&quot;</li><li>        policy_control_preference: enforced</li><li>        state: present</li><li>      loop: &quot;{{ vrfs }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.name }}&quot;</li><li>&nbsp;</li><li>    - name: Create the application (consumer) bridge domain in each VRF</li><li>      cisco.aci.aci_bd:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        vrf: &quot;{{ item.name }}&quot;</li><li>        bd: &quot;{{ item.app.bd }}&quot;</li><li>        enable_routing: true</li><li>        arp_flooding: true</li><li>        l2_unknown_unicast: proxy</li><li>        description: &quot;Example consumer BD, VLAN {{ item.app.vlan }}&quot;</li><li>        state: present</li><li>      loop: &quot;{{ vrfs }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.app.bd }}&quot;</li><li>&nbsp;</li><li>    - name: Create the database (provider) bridge domain in each VRF</li><li>      cisco.aci.aci_bd:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        vrf: &quot;{{ item.name }}&quot;</li><li>        bd: &quot;{{ item.db.bd }}&quot;</li><li>        enable_routing: true</li><li>        arp_flooding: true</li><li>        l2_unknown_unicast: proxy</li><li>        description: &quot;Example provider BD, VLAN {{ item.db.vlan }}&quot;</li><li>        state: present</li><li>      loop: &quot;{{ vrfs }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.db.bd }}&quot;</li><li>&nbsp;</li><li>    - name: Add the example consumer subnet (RFC1918, illustration only)</li><li>      cisco.aci.aci_bd_subnet:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        bd: &quot;{{ item.app.bd }}&quot;</li><li>        gateway: &quot;{{ item.app.gateway }}&quot;</li><li>        mask: &quot;{{ item.app.mask }}&quot;</li><li>        subnet_name: &quot;{{ item.app.subnet_name }}&quot;</li><li>        scope:</li><li>          - private</li><li>        description: Example addressing only</li><li>        state: present</li><li>      loop: &quot;{{ vrfs }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.app.subnet_name }}&quot;</li><li>&nbsp;</li><li>    - name: Add the example provider subnet (RFC1918, illustration only)</li><li>      cisco.aci.aci_bd_subnet:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        bd: &quot;{{ item.db.bd }}&quot;</li><li>        gateway: &quot;{{ item.db.gateway }}&quot;</li><li>        mask: &quot;{{ item.db.mask }}&quot;</li><li>        subnet_name: &quot;{{ item.db.subnet_name }}&quot;</li><li>        scope:</li><li>          - private</li><li>        description: Example addressing only</li><li>        state: present</li><li>      loop: &quot;{{ vrfs }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.db.subnet_name }}&quot;</li></ol></div>
+</figure>
+
+<h3 id="pb-epg">03 — Application profile and EPGs</h3>
+<p>Application profile, consumer and provider EPGs, physical-domain bindings and example static paths.</p>
+
+<figure class="codebox" id="file-03-app-profile-epg-yml">
+  <div class="codebox-tab">
+    <span class="fname">03-app-profile-epg.yml</span>
+    <button type="button" class="copy-btn">Copy</button>
+    <a href="/zfrontier/multi-vrf-firewall-insertion/ansible/03-app-profile-epg.yml" download="03-app-profile-epg.yml">Download</a>
+  </div>
+  <textarea class="codebox-raw" hidden># 03 — Application profile, consumer and provider EPGs, domain and static path bindings
+# Lab / example only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: 03 — Application profile and EPGs (example)
+  hosts: apic
+  connection: local
+  gather_facts: false
+  vars_files:
+    - vars/access.yml
+    - vars/tenant.yml
+  vars:
+    aci_login: &amp;aci_login
+      host: &quot;{{ apic_host }}&quot;
+      username: &quot;{{ apic_username }}&quot;
+      password: &quot;{{ apic_password }}&quot;
+      validate_certs: &quot;{{ apic_validate_certs }}&quot;
+  tasks:
+    - name: Create the application profile
+      cisco.aci.aci_ap:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        ap: &quot;{{ app_profile }}&quot;
+        description: Example application profile holding App and DB EPGs
+        state: present
+
+    - name: Create the application (consumer) EPG in each VRF
+      cisco.aci.aci_epg:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        ap: &quot;{{ app_profile }}&quot;
+        epg: &quot;{{ item.app.epg }}&quot;
+        bd: &quot;{{ item.app.bd }}&quot;
+        description: &quot;Consumer EPG in {{ item.name }}, VLAN {{ item.app.vlan }}&quot;
+        state: present
+      loop: &quot;{{ vrfs }}&quot;
+      loop_control:
+        label: &quot;{{ item.app.epg }}&quot;
+
+    - name: Create the database (provider) EPG in each VRF
+      cisco.aci.aci_epg:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        ap: &quot;{{ app_profile }}&quot;
+        epg: &quot;{{ item.db.epg }}&quot;
+        bd: &quot;{{ item.db.bd }}&quot;
+        description: &quot;Provider EPG in {{ item.name }}, VLAN {{ item.db.vlan }}&quot;
+        state: present
+      loop: &quot;{{ vrfs }}&quot;
+      loop_control:
+        label: &quot;{{ item.db.epg }}&quot;
+
+    - name: Bind each consumer EPG to the physical domain with its VLAN encap
+      cisco.aci.aci_epg_to_domain:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        ap: &quot;{{ app_profile }}&quot;
+        epg: &quot;{{ item.app.epg }}&quot;
+        domain: &quot;{{ phys_domain }}&quot;
+        domain_type: phys
+        encap: &quot;{{ item.app.vlan }}&quot;
+        deploy_immediacy: immediate
+        resolution_immediacy: immediate
+        state: present
+      loop: &quot;{{ vrfs }}&quot;
+      loop_control:
+        label: &quot;{{ item.app.epg }} vlan-{{ item.app.vlan }}&quot;
+
+    - name: Bind each provider EPG to the physical domain with its VLAN encap
+      cisco.aci.aci_epg_to_domain:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        ap: &quot;{{ app_profile }}&quot;
+        epg: &quot;{{ item.db.epg }}&quot;
+        domain: &quot;{{ phys_domain }}&quot;
+        domain_type: phys
+        encap: &quot;{{ item.db.vlan }}&quot;
+        deploy_immediacy: immediate
+        resolution_immediacy: immediate
+        state: present
+      loop: &quot;{{ vrfs }}&quot;
+      loop_control:
+        label: &quot;{{ item.db.epg }} vlan-{{ item.db.vlan }}&quot;
+
+    - name: Bind the example server static paths to their EPGs
+      cisco.aci.aci_static_binding_to_epg:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        ap: &quot;{{ app_profile }}&quot;
+        epg: &quot;{{ item.epg }}&quot;
+        pod_id: &quot;{{ pod_id }}&quot;
+        leafs: &quot;{{ item.leafs }}&quot;
+        interface: &quot;{{ item.interface }}&quot;
+        encap_id: &quot;{{ item.encap_id }}&quot;
+        interface_type: switch_port
+        interface_mode: regular
+        deploy_immediacy: immediate
+        state: present
+      loop: &quot;{{ epg_static_paths }}&quot;
+      loop_control:
+        label: &quot;{{ item.epg }} leaf {{ item.leafs }} {{ item.interface }}&quot;
+</textarea>
+  <div class="codebox-body"><ol class="lines"><li># 03 — Application profile, consumer and provider EPGs, domain and static path bindings</li><li># Lab / example only. Do not run this playbook against a production APIC.</li><li># Credentials are placeholders. Never put a real password, token, or APIC address in this file.</li><li>---</li><li>- name: 03 — Application profile and EPGs (example)</li><li>  hosts: apic</li><li>  connection: local</li><li>  gather_facts: false</li><li>  vars_files:</li><li>    - vars/access.yml</li><li>    - vars/tenant.yml</li><li>  vars:</li><li>    aci_login: &amp;aci_login</li><li>      host: &quot;{{ apic_host }}&quot;</li><li>      username: &quot;{{ apic_username }}&quot;</li><li>      password: &quot;{{ apic_password }}&quot;</li><li>      validate_certs: &quot;{{ apic_validate_certs }}&quot;</li><li>  tasks:</li><li>    - name: Create the application profile</li><li>      cisco.aci.aci_ap:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        ap: &quot;{{ app_profile }}&quot;</li><li>        description: Example application profile holding App and DB EPGs</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Create the application (consumer) EPG in each VRF</li><li>      cisco.aci.aci_epg:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        ap: &quot;{{ app_profile }}&quot;</li><li>        epg: &quot;{{ item.app.epg }}&quot;</li><li>        bd: &quot;{{ item.app.bd }}&quot;</li><li>        description: &quot;Consumer EPG in {{ item.name }}, VLAN {{ item.app.vlan }}&quot;</li><li>        state: present</li><li>      loop: &quot;{{ vrfs }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.app.epg }}&quot;</li><li>&nbsp;</li><li>    - name: Create the database (provider) EPG in each VRF</li><li>      cisco.aci.aci_epg:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        ap: &quot;{{ app_profile }}&quot;</li><li>        epg: &quot;{{ item.db.epg }}&quot;</li><li>        bd: &quot;{{ item.db.bd }}&quot;</li><li>        description: &quot;Provider EPG in {{ item.name }}, VLAN {{ item.db.vlan }}&quot;</li><li>        state: present</li><li>      loop: &quot;{{ vrfs }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.db.epg }}&quot;</li><li>&nbsp;</li><li>    - name: Bind each consumer EPG to the physical domain with its VLAN encap</li><li>      cisco.aci.aci_epg_to_domain:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        ap: &quot;{{ app_profile }}&quot;</li><li>        epg: &quot;{{ item.app.epg }}&quot;</li><li>        domain: &quot;{{ phys_domain }}&quot;</li><li>        domain_type: phys</li><li>        encap: &quot;{{ item.app.vlan }}&quot;</li><li>        deploy_immediacy: immediate</li><li>        resolution_immediacy: immediate</li><li>        state: present</li><li>      loop: &quot;{{ vrfs }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.app.epg }} vlan-{{ item.app.vlan }}&quot;</li><li>&nbsp;</li><li>    - name: Bind each provider EPG to the physical domain with its VLAN encap</li><li>      cisco.aci.aci_epg_to_domain:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        ap: &quot;{{ app_profile }}&quot;</li><li>        epg: &quot;{{ item.db.epg }}&quot;</li><li>        domain: &quot;{{ phys_domain }}&quot;</li><li>        domain_type: phys</li><li>        encap: &quot;{{ item.db.vlan }}&quot;</li><li>        deploy_immediacy: immediate</li><li>        resolution_immediacy: immediate</li><li>        state: present</li><li>      loop: &quot;{{ vrfs }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.db.epg }} vlan-{{ item.db.vlan }}&quot;</li><li>&nbsp;</li><li>    - name: Bind the example server static paths to their EPGs</li><li>      cisco.aci.aci_static_binding_to_epg:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        ap: &quot;{{ app_profile }}&quot;</li><li>        epg: &quot;{{ item.epg }}&quot;</li><li>        pod_id: &quot;{{ pod_id }}&quot;</li><li>        leafs: &quot;{{ item.leafs }}&quot;</li><li>        interface: &quot;{{ item.interface }}&quot;</li><li>        encap_id: &quot;{{ item.encap_id }}&quot;</li><li>        interface_type: switch_port</li><li>        interface_mode: regular</li><li>        deploy_immediacy: immediate</li><li>        state: present</li><li>      loop: &quot;{{ epg_static_paths }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.epg }} leaf {{ item.leafs }} {{ item.interface }}&quot;</li></ol></div>
+</figure>
+
+<h3 id="pb-l4l7">04 — L4-L7 devices</h3>
+<p>One physical firewall presented as two logical devices, concrete interfaces on the vPC, and External/Internal logical interfaces.</p>
+
+<figure class="codebox" id="file-04-l4l7-device-yml">
+  <div class="codebox-tab">
+    <span class="fname">04-l4l7-device.yml</span>
+    <button type="button" class="copy-btn">Copy</button>
+    <a href="/zfrontier/multi-vrf-firewall-insertion/ansible/04-l4l7-device.yml" download="04-l4l7-device.yml">Download</a>
+  </div>
+  <textarea class="codebox-raw" hidden># 04 — L4-L7 logical devices, concrete devices and cluster interfaces
+# Lab / example only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+# The firewall is modelled as two logical devices (one per VRF) on one physical
+# appliance attached to the example vPC policy group for Po1.
+---
+- name: 04 — L4-L7 devices and interfaces (example)
+  hosts: apic
+  connection: local
+  gather_facts: false
+  vars_files:
+    - vars/tenant.yml
+    - vars/l4l7.yml
+  vars:
+    aci_login: &amp;aci_login
+      host: &quot;{{ apic_host }}&quot;
+      username: &quot;{{ apic_username }}&quot;
+      password: &quot;{{ apic_password }}&quot;
+      validate_certs: &quot;{{ apic_validate_certs }}&quot;
+  tasks:
+    - name: Create a physical go-to firewall logical device for each VRF
+      cisco.aci.aci_l4l7_device:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        name: &quot;{{ item.logical_device }}&quot;
+        device_type: physical
+        function_type: go_to
+        service_type: fw
+        context_aware: single
+        managed: false
+        domain: &quot;{{ firewall_cluster.physical_domain }}&quot;
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.logical_device }}&quot;
+
+    - name: Create the concrete device under each logical device
+      cisco.aci.aci_l4l7_concrete_device:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        logical_device: &quot;{{ item.logical_device }}&quot;
+        name: &quot;{{ item.concrete_device }}&quot;
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.concrete_device }}&quot;
+
+    - name: Add the consumer-side (external) concrete interface on the vPC
+      cisco.aci.aci_l4l7_concrete_interface:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        logical_device: &quot;{{ item.logical_device }}&quot;
+        concrete_device: &quot;{{ item.concrete_device }}&quot;
+        name: &quot;{{ item.external_cif }}&quot;
+        pod_id: &quot;{{ firewall_cluster.pod_id }}&quot;
+        node_id: &quot;{{ firewall_cluster.vpc_node_id }}&quot;
+        interface: &quot;{{ firewall_cluster.vpc_ipg }}&quot;
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.external_cif }}&quot;
+
+    - name: Add the provider-side (internal) concrete interface on the vPC
+      cisco.aci.aci_l4l7_concrete_interface:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        logical_device: &quot;{{ item.logical_device }}&quot;
+        concrete_device: &quot;{{ item.concrete_device }}&quot;
+        name: &quot;{{ item.internal_cif }}&quot;
+        pod_id: &quot;{{ firewall_cluster.pod_id }}&quot;
+        node_id: &quot;{{ firewall_cluster.vpc_node_id }}&quot;
+        interface: &quot;{{ firewall_cluster.vpc_ipg }}&quot;
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.internal_cif }}&quot;
+
+    - name: Create the External logical interface
+      cisco.aci.aci_l4l7_logical_interface:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        logical_device: &quot;{{ item.logical_device }}&quot;
+        logical_interface: &quot;{{ item.external_lif }}&quot;
+        encap: &quot;{{ item.external_encap }}&quot;
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.external_lif }}&quot;
+
+    - name: Create the Internal logical interface
+      cisco.aci.aci_l4l7_logical_interface:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        logical_device: &quot;{{ item.logical_device }}&quot;
+        logical_interface: &quot;{{ item.internal_lif }}&quot;
+        encap: &quot;{{ item.internal_encap }}&quot;
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.internal_lif }}&quot;
+
+    - name: Attach the external concrete interface to the External logical interface
+      cisco.aci.aci_l4l7_concrete_interface_attachment:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        logical_device: &quot;{{ item.logical_device }}&quot;
+        logical_interface: &quot;{{ item.external_lif }}&quot;
+        concrete_device: &quot;{{ item.concrete_device }}&quot;
+        concrete_interface: &quot;{{ item.external_cif }}&quot;
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.logical_device }} {{ item.external_lif }}&quot;
+
+    - name: Attach the internal concrete interface to the Internal logical interface
+      cisco.aci.aci_l4l7_concrete_interface_attachment:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        logical_device: &quot;{{ item.logical_device }}&quot;
+        logical_interface: &quot;{{ item.internal_lif }}&quot;
+        concrete_device: &quot;{{ item.concrete_device }}&quot;
+        concrete_interface: &quot;{{ item.internal_cif }}&quot;
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.logical_device }} {{ item.internal_lif }}&quot;
+</textarea>
+  <div class="codebox-body"><ol class="lines"><li># 04 — L4-L7 logical devices, concrete devices and cluster interfaces</li><li># Lab / example only. Do not run this playbook against a production APIC.</li><li># Credentials are placeholders. Never put a real password, token, or APIC address in this file.</li><li># The firewall is modelled as two logical devices (one per VRF) on one physical</li><li># appliance attached to the example vPC policy group for Po1.</li><li>---</li><li>- name: 04 — L4-L7 devices and interfaces (example)</li><li>  hosts: apic</li><li>  connection: local</li><li>  gather_facts: false</li><li>  vars_files:</li><li>    - vars/tenant.yml</li><li>    - vars/l4l7.yml</li><li>  vars:</li><li>    aci_login: &amp;aci_login</li><li>      host: &quot;{{ apic_host }}&quot;</li><li>      username: &quot;{{ apic_username }}&quot;</li><li>      password: &quot;{{ apic_password }}&quot;</li><li>      validate_certs: &quot;{{ apic_validate_certs }}&quot;</li><li>  tasks:</li><li>    - name: Create a physical go-to firewall logical device for each VRF</li><li>      cisco.aci.aci_l4l7_device:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        name: &quot;{{ item.logical_device }}&quot;</li><li>        device_type: physical</li><li>        function_type: go_to</li><li>        service_type: fw</li><li>        context_aware: single</li><li>        managed: false</li><li>        domain: &quot;{{ firewall_cluster.physical_domain }}&quot;</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.logical_device }}&quot;</li><li>&nbsp;</li><li>    - name: Create the concrete device under each logical device</li><li>      cisco.aci.aci_l4l7_concrete_device:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        logical_device: &quot;{{ item.logical_device }}&quot;</li><li>        name: &quot;{{ item.concrete_device }}&quot;</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.concrete_device }}&quot;</li><li>&nbsp;</li><li>    - name: Add the consumer-side (external) concrete interface on the vPC</li><li>      cisco.aci.aci_l4l7_concrete_interface:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        logical_device: &quot;{{ item.logical_device }}&quot;</li><li>        concrete_device: &quot;{{ item.concrete_device }}&quot;</li><li>        name: &quot;{{ item.external_cif }}&quot;</li><li>        pod_id: &quot;{{ firewall_cluster.pod_id }}&quot;</li><li>        node_id: &quot;{{ firewall_cluster.vpc_node_id }}&quot;</li><li>        interface: &quot;{{ firewall_cluster.vpc_ipg }}&quot;</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.external_cif }}&quot;</li><li>&nbsp;</li><li>    - name: Add the provider-side (internal) concrete interface on the vPC</li><li>      cisco.aci.aci_l4l7_concrete_interface:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        logical_device: &quot;{{ item.logical_device }}&quot;</li><li>        concrete_device: &quot;{{ item.concrete_device }}&quot;</li><li>        name: &quot;{{ item.internal_cif }}&quot;</li><li>        pod_id: &quot;{{ firewall_cluster.pod_id }}&quot;</li><li>        node_id: &quot;{{ firewall_cluster.vpc_node_id }}&quot;</li><li>        interface: &quot;{{ firewall_cluster.vpc_ipg }}&quot;</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.internal_cif }}&quot;</li><li>&nbsp;</li><li>    - name: Create the External logical interface</li><li>      cisco.aci.aci_l4l7_logical_interface:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        logical_device: &quot;{{ item.logical_device }}&quot;</li><li>        logical_interface: &quot;{{ item.external_lif }}&quot;</li><li>        encap: &quot;{{ item.external_encap }}&quot;</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.external_lif }}&quot;</li><li>&nbsp;</li><li>    - name: Create the Internal logical interface</li><li>      cisco.aci.aci_l4l7_logical_interface:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        logical_device: &quot;{{ item.logical_device }}&quot;</li><li>        logical_interface: &quot;{{ item.internal_lif }}&quot;</li><li>        encap: &quot;{{ item.internal_encap }}&quot;</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.internal_lif }}&quot;</li><li>&nbsp;</li><li>    - name: Attach the external concrete interface to the External logical interface</li><li>      cisco.aci.aci_l4l7_concrete_interface_attachment:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        logical_device: &quot;{{ item.logical_device }}&quot;</li><li>        logical_interface: &quot;{{ item.external_lif }}&quot;</li><li>        concrete_device: &quot;{{ item.concrete_device }}&quot;</li><li>        concrete_interface: &quot;{{ item.external_cif }}&quot;</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.logical_device }} {{ item.external_lif }}&quot;</li><li>&nbsp;</li><li>    - name: Attach the internal concrete interface to the Internal logical interface</li><li>      cisco.aci.aci_l4l7_concrete_interface_attachment:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        logical_device: &quot;{{ item.logical_device }}&quot;</li><li>        logical_interface: &quot;{{ item.internal_lif }}&quot;</li><li>        concrete_device: &quot;{{ item.concrete_device }}&quot;</li><li>        concrete_interface: &quot;{{ item.internal_cif }}&quot;</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.logical_device }} {{ item.internal_lif }}&quot;</li></ol></div>
+</figure>
+
+<h3 id="pb-pbr">05 — PBR redirect policies</h3>
+<p>Policy-based redirect policies and example next-hop IP/MAC destinations for each firewall interface.</p>
+
+<figure class="codebox" id="file-05-pbr-redirect-yml">
+  <div class="codebox-tab">
+    <span class="fname">05-pbr-redirect.yml</span>
+    <button type="button" class="copy-btn">Copy</button>
+    <a href="/zfrontier/multi-vrf-firewall-insertion/ansible/05-pbr-redirect.yml" download="05-pbr-redirect.yml">Download</a>
+  </div>
+  <textarea class="codebox-raw" hidden># 05 — Policy-based redirect (PBR) policies and next-hop destinations
+# Lab / example only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+# Next-hop IP and MAC values are example placeholders, not production addresses.
+---
+- name: 05 — PBR redirect policies and destinations (example)
+  hosts: apic
+  connection: local
+  gather_facts: false
+  vars_files:
+    - vars/tenant.yml
+    - vars/l4l7.yml
+  vars:
+    aci_login: &amp;aci_login
+      host: &quot;{{ apic_host }}&quot;
+      username: &quot;{{ apic_username }}&quot;
+      password: &quot;{{ apic_password }}&quot;
+      validate_certs: &quot;{{ apic_validate_certs }}&quot;
+  tasks:
+    - name: Create the consumer-side L3 redirect policy for each VRF
+      cisco.aci.aci_l4l7_policy_based_redirect:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        policy_name: &quot;{{ item.pbr_consumer.name }}&quot;
+        destination_type: l3
+        hash_algorithm: ip_and_protocol
+        description: &quot;Example PBR to the {{ item.vrf }} firewall external interface&quot;
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.pbr_consumer.name }}&quot;
+
+    - name: Create the provider-side L3 redirect policy for each VRF
+      cisco.aci.aci_l4l7_policy_based_redirect:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        policy_name: &quot;{{ item.pbr_provider.name }}&quot;
+        destination_type: l3
+        hash_algorithm: ip_and_protocol
+        description: &quot;Example PBR to the {{ item.vrf }} firewall internal interface&quot;
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.pbr_provider.name }}&quot;
+
+    - name: Add the example consumer-side next-hop (firewall external IP and MAC)
+      cisco.aci.aci_l4l7_policy_based_redirect_destination:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        policy: &quot;{{ item.pbr_consumer.name }}&quot;
+        destination_name: &quot;{{ item.pbr_consumer.dest_name }}&quot;
+        destination_type: l3
+        ip: &quot;{{ item.pbr_consumer.ip }}&quot;
+        mac: &quot;{{ item.pbr_consumer.mac }}&quot;
+        logical_device: &quot;{{ item.logical_device }}&quot;
+        concrete_device: &quot;{{ item.concrete_device }}&quot;
+        concrete_interface: &quot;{{ item.external_cif }}&quot;
+        pod_id: &quot;{{ firewall_cluster.pod_id }}&quot;
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.pbr_consumer.dest_name }} {{ item.pbr_consumer.ip }}&quot;
+
+    - name: Add the example provider-side next-hop (firewall internal IP and MAC)
+      cisco.aci.aci_l4l7_policy_based_redirect_destination:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        policy: &quot;{{ item.pbr_provider.name }}&quot;
+        destination_name: &quot;{{ item.pbr_provider.dest_name }}&quot;
+        destination_type: l3
+        ip: &quot;{{ item.pbr_provider.ip }}&quot;
+        mac: &quot;{{ item.pbr_provider.mac }}&quot;
+        logical_device: &quot;{{ item.logical_device }}&quot;
+        concrete_device: &quot;{{ item.concrete_device }}&quot;
+        concrete_interface: &quot;{{ item.internal_cif }}&quot;
+        pod_id: &quot;{{ firewall_cluster.pod_id }}&quot;
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.pbr_provider.dest_name }} {{ item.pbr_provider.ip }}&quot;
+</textarea>
+  <div class="codebox-body"><ol class="lines"><li># 05 — Policy-based redirect (PBR) policies and next-hop destinations</li><li># Lab / example only. Do not run this playbook against a production APIC.</li><li># Credentials are placeholders. Never put a real password, token, or APIC address in this file.</li><li># Next-hop IP and MAC values are example placeholders, not production addresses.</li><li>---</li><li>- name: 05 — PBR redirect policies and destinations (example)</li><li>  hosts: apic</li><li>  connection: local</li><li>  gather_facts: false</li><li>  vars_files:</li><li>    - vars/tenant.yml</li><li>    - vars/l4l7.yml</li><li>  vars:</li><li>    aci_login: &amp;aci_login</li><li>      host: &quot;{{ apic_host }}&quot;</li><li>      username: &quot;{{ apic_username }}&quot;</li><li>      password: &quot;{{ apic_password }}&quot;</li><li>      validate_certs: &quot;{{ apic_validate_certs }}&quot;</li><li>  tasks:</li><li>    - name: Create the consumer-side L3 redirect policy for each VRF</li><li>      cisco.aci.aci_l4l7_policy_based_redirect:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        policy_name: &quot;{{ item.pbr_consumer.name }}&quot;</li><li>        destination_type: l3</li><li>        hash_algorithm: ip_and_protocol</li><li>        description: &quot;Example PBR to the {{ item.vrf }} firewall external interface&quot;</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.pbr_consumer.name }}&quot;</li><li>&nbsp;</li><li>    - name: Create the provider-side L3 redirect policy for each VRF</li><li>      cisco.aci.aci_l4l7_policy_based_redirect:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        policy_name: &quot;{{ item.pbr_provider.name }}&quot;</li><li>        destination_type: l3</li><li>        hash_algorithm: ip_and_protocol</li><li>        description: &quot;Example PBR to the {{ item.vrf }} firewall internal interface&quot;</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.pbr_provider.name }}&quot;</li><li>&nbsp;</li><li>    - name: Add the example consumer-side next-hop (firewall external IP and MAC)</li><li>      cisco.aci.aci_l4l7_policy_based_redirect_destination:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        policy: &quot;{{ item.pbr_consumer.name }}&quot;</li><li>        destination_name: &quot;{{ item.pbr_consumer.dest_name }}&quot;</li><li>        destination_type: l3</li><li>        ip: &quot;{{ item.pbr_consumer.ip }}&quot;</li><li>        mac: &quot;{{ item.pbr_consumer.mac }}&quot;</li><li>        logical_device: &quot;{{ item.logical_device }}&quot;</li><li>        concrete_device: &quot;{{ item.concrete_device }}&quot;</li><li>        concrete_interface: &quot;{{ item.external_cif }}&quot;</li><li>        pod_id: &quot;{{ firewall_cluster.pod_id }}&quot;</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.pbr_consumer.dest_name }} {{ item.pbr_consumer.ip }}&quot;</li><li>&nbsp;</li><li>    - name: Add the example provider-side next-hop (firewall internal IP and MAC)</li><li>      cisco.aci.aci_l4l7_policy_based_redirect_destination:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        policy: &quot;{{ item.pbr_provider.name }}&quot;</li><li>        destination_name: &quot;{{ item.pbr_provider.dest_name }}&quot;</li><li>        destination_type: l3</li><li>        ip: &quot;{{ item.pbr_provider.ip }}&quot;</li><li>        mac: &quot;{{ item.pbr_provider.mac }}&quot;</li><li>        logical_device: &quot;{{ item.logical_device }}&quot;</li><li>        concrete_device: &quot;{{ item.concrete_device }}&quot;</li><li>        concrete_interface: &quot;{{ item.internal_cif }}&quot;</li><li>        pod_id: &quot;{{ firewall_cluster.pod_id }}&quot;</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.pbr_provider.dest_name }} {{ item.pbr_provider.ip }}&quot;</li></ol></div>
+</figure>
+
+<h3 id="pb-graph">06 — Service graph and contracts</h3>
+<p>Filter, contract and subject, the one-node routed service graph, device selection with PBR, and consumer/provider bindings.</p>
+
+<figure class="codebox" id="file-06-service-graph-contract-yml">
+  <div class="codebox-tab">
+    <span class="fname">06-service-graph-contract.yml</span>
+    <button type="button" class="copy-btn">Copy</button>
+    <a href="/zfrontier/multi-vrf-firewall-insertion/ansible/06-service-graph-contract.yml" download="06-service-graph-contract.yml">Download</a>
+  </div>
+  <textarea class="codebox-raw" hidden># 06 — Service graph template, device selection policy, contract, subject, filter and EPG bindings
+# Lab / example only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: 06 — Service graph, contracts and PBR device selection (example)
+  hosts: apic
+  connection: local
+  gather_facts: false
+  vars_files:
+    - vars/tenant.yml
+    - vars/l4l7.yml
+  vars:
+    aci_login: &amp;aci_login
+      host: &quot;{{ apic_host }}&quot;
+      username: &quot;{{ apic_username }}&quot;
+      password: &quot;{{ apic_password }}&quot;
+      validate_certs: &quot;{{ apic_validate_certs }}&quot;
+  tasks:
+    - name: Create the example TCP filter
+      cisco.aci.aci_filter:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        filter: &quot;{{ example_filter }}&quot;
+        description: Example filter; replace the port with the ports you actually need
+        state: present
+
+    - name: Add the example TCP destination-port entry
+      cisco.aci.aci_filter_entry:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        filter: &quot;{{ example_filter }}&quot;
+        entry: &quot;{{ example_filter_entry }}&quot;
+        ether_type: &quot;{{ example_ether_type }}&quot;
+        ip_protocol: &quot;{{ example_ip_protocol }}&quot;
+        destination_port: &quot;{{ example_dst_port }}&quot;
+        stateful: true
+        state: present
+
+    - name: Create a VRF-scoped contract for each VRF
+      cisco.aci.aci_contract:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        contract: &quot;{{ item.contract }}&quot;
+        scope: context
+        description: &quot;Example contract for {{ item.vrf }} App (consumer) to DB (provider)&quot;
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.contract }}&quot;
+
+    - name: Create the contract subject
+      cisco.aci.aci_contract_subject:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        contract: &quot;{{ item.contract }}&quot;
+        subject: &quot;{{ item.subject }}&quot;
+        apply_both_direction: both
+        reverse_filter: true
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.contract }} {{ item.subject }}&quot;
+
+    - name: Bind the example filter to the subject
+      cisco.aci.aci_contract_subject_to_filter:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        contract: &quot;{{ item.contract }}&quot;
+        subject: &quot;{{ item.subject }}&quot;
+        filter: &quot;{{ example_filter }}&quot;
+        action: permit
+        direction: both
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.contract }} {{ example_filter }}&quot;
+
+    - name: Create the one-node routed firewall service graph template
+      cisco.aci.aci_l4l7_service_graph_template:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        service_graph: &quot;{{ item.graph }}&quot;
+        type: legacy
+        filter_between_nodes: allow-all
+        description: &quot;Example PBR service graph for {{ item.vrf }}&quot;
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.graph }}&quot;
+
+    - name: Add consumer terminal node T1
+      cisco.aci.aci_l4l7_service_graph_template_term_node:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        service_graph: &quot;{{ item.graph }}&quot;
+        node_name: T1
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.graph }} T1&quot;
+
+    - name: Add provider terminal node T2
+      cisco.aci.aci_l4l7_service_graph_template_term_node:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        service_graph: &quot;{{ item.graph }}&quot;
+        node_name: T2
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.graph }} T2&quot;
+
+    - name: Add the firewall function node in redirect (PBR) mode
+      cisco.aci.aci_l4l7_service_graph_template_node:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        service_graph: &quot;{{ item.graph }}&quot;
+        node: &quot;{{ item.graph_node }}&quot;
+        device: &quot;{{ item.logical_device }}&quot;
+        function_type: go_to
+        functional_template_type: fw_routed
+        routing_mode: redirect
+        managed: false
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.graph }} {{ item.graph_node }}&quot;
+
+    - name: Add the consumer functional connector on the firewall node
+      cisco.aci.aci_l4l7_service_graph_template_functional_connection:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        service_graph: &quot;{{ item.graph }}&quot;
+        node: &quot;{{ item.graph_node }}&quot;
+        connection_name: consumer
+        connection_type: redir
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.graph }} consumer&quot;
+
+    - name: Add the provider functional connector on the firewall node
+      cisco.aci.aci_l4l7_service_graph_template_functional_connection:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        service_graph: &quot;{{ item.graph }}&quot;
+        node: &quot;{{ item.graph_node }}&quot;
+        connection_name: provider
+        connection_type: redir
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.graph }} provider&quot;
+
+    - name: Create the consumer-side graph connection C1
+      cisco.aci.aci_l4l7_service_graph_template_connection:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        service_graph: &quot;{{ item.graph }}&quot;
+        connection_name: C1
+        connector_direction: consumer
+        adjacency_type: l3
+        unicast_route: true
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.graph }} C1&quot;
+
+    - name: Create the provider-side graph connection C2
+      cisco.aci.aci_l4l7_service_graph_template_connection:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        service_graph: &quot;{{ item.graph }}&quot;
+        connection_name: C2
+        connector_direction: provider
+        adjacency_type: l3
+        unicast_route: true
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.graph }} C2&quot;
+
+    - name: Attach C1 to consumer terminal T1
+      cisco.aci.aci_l4l7_service_graph_template_connection_to_connector:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        service_graph: &quot;{{ item.graph }}&quot;
+        connection_name: C1
+        direction: consumer
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.graph }} C1-T1&quot;
+
+    - name: Attach C1 to the firewall node consumer connector
+      cisco.aci.aci_l4l7_service_graph_template_connection_to_connector:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        service_graph: &quot;{{ item.graph }}&quot;
+        connection_name: C1
+        connected_node: &quot;{{ item.graph_node }}&quot;
+        direction: consumer
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.graph }} C1-N1&quot;
+
+    - name: Attach C2 to the firewall node provider connector
+      cisco.aci.aci_l4l7_service_graph_template_connection_to_connector:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        service_graph: &quot;{{ item.graph }}&quot;
+        connection_name: C2
+        connected_node: &quot;{{ item.graph_node }}&quot;
+        direction: provider
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.graph }} C2-N1&quot;
+
+    - name: Attach C2 to provider terminal T2
+      cisco.aci.aci_l4l7_service_graph_template_connection_to_connector:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        service_graph: &quot;{{ item.graph }}&quot;
+        connection_name: C2
+        direction: provider
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.graph }} C2-T2&quot;
+
+    - name: Bind the service graph to the contract subject
+      cisco.aci.aci_contract_subject_to_service_graph:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        contract: &quot;{{ item.contract }}&quot;
+        subject: &quot;{{ item.subject }}&quot;
+        service_graph: &quot;{{ item.graph }}&quot;
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.contract }} {{ item.graph }}&quot;
+
+    - name: Create the device selection policy for the graph node
+      cisco.aci.aci_l4l7_device_selection_policy:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        contract: &quot;{{ item.contract }}&quot;
+        graph: &quot;{{ item.graph }}&quot;
+        node: &quot;{{ item.graph_node }}&quot;
+        device: &quot;{{ item.logical_device }}&quot;
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.contract }} {{ item.graph }}&quot;
+
+    - name: Bind the consumer connector to the external interface, consumer BD and PBR policy
+      cisco.aci.aci_l4l7_device_selection_interface_context:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        contract: &quot;{{ item.contract }}&quot;
+        graph: &quot;{{ item.graph }}&quot;
+        node: &quot;{{ item.graph_node }}&quot;
+        context: consumer
+        logical_device: &quot;{{ item.logical_device }}&quot;
+        logical_interface: &quot;{{ item.external_lif }}&quot;
+        bridge_domain: &quot;{{ item.consumer_bd }}&quot;
+        redirect_policy: &quot;{{ item.pbr_consumer.name }}&quot;
+        l3_destination: true
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.graph }} consumer&quot;
+
+    - name: Bind the provider connector to the internal interface, provider BD and PBR policy
+      cisco.aci.aci_l4l7_device_selection_interface_context:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        contract: &quot;{{ item.contract }}&quot;
+        graph: &quot;{{ item.graph }}&quot;
+        node: &quot;{{ item.graph_node }}&quot;
+        context: provider
+        logical_device: &quot;{{ item.logical_device }}&quot;
+        logical_interface: &quot;{{ item.internal_lif }}&quot;
+        bridge_domain: &quot;{{ item.provider_bd }}&quot;
+        redirect_policy: &quot;{{ item.pbr_provider.name }}&quot;
+        l3_destination: true
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.graph }} provider&quot;
+
+    - name: Bind the application EPG as the contract consumer
+      cisco.aci.aci_epg_to_contract:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        ap: &quot;{{ app_profile }}&quot;
+        epg: &quot;{{ item.consumer_epg }}&quot;
+        contract: &quot;{{ item.contract }}&quot;
+        contract_type: consumer
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.consumer_epg }} consumer of {{ item.contract }}&quot;
+
+    - name: Bind the database EPG as the contract provider
+      cisco.aci.aci_epg_to_contract:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        ap: &quot;{{ app_profile }}&quot;
+        epg: &quot;{{ item.provider_epg }}&quot;
+        contract: &quot;{{ item.contract }}&quot;
+        contract_type: provider
+        state: present
+      loop: &quot;{{ vrf_services }}&quot;
+      loop_control:
+        label: &quot;{{ item.provider_epg }} provider of {{ item.contract }}&quot;
+</textarea>
+  <div class="codebox-body"><ol class="lines"><li># 06 — Service graph template, device selection policy, contract, subject, filter and EPG bindings</li><li># Lab / example only. Do not run this playbook against a production APIC.</li><li># Credentials are placeholders. Never put a real password, token, or APIC address in this file.</li><li>---</li><li>- name: 06 — Service graph, contracts and PBR device selection (example)</li><li>  hosts: apic</li><li>  connection: local</li><li>  gather_facts: false</li><li>  vars_files:</li><li>    - vars/tenant.yml</li><li>    - vars/l4l7.yml</li><li>  vars:</li><li>    aci_login: &amp;aci_login</li><li>      host: &quot;{{ apic_host }}&quot;</li><li>      username: &quot;{{ apic_username }}&quot;</li><li>      password: &quot;{{ apic_password }}&quot;</li><li>      validate_certs: &quot;{{ apic_validate_certs }}&quot;</li><li>  tasks:</li><li>    - name: Create the example TCP filter</li><li>      cisco.aci.aci_filter:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        filter: &quot;{{ example_filter }}&quot;</li><li>        description: Example filter; replace the port with the ports you actually need</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Add the example TCP destination-port entry</li><li>      cisco.aci.aci_filter_entry:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        filter: &quot;{{ example_filter }}&quot;</li><li>        entry: &quot;{{ example_filter_entry }}&quot;</li><li>        ether_type: &quot;{{ example_ether_type }}&quot;</li><li>        ip_protocol: &quot;{{ example_ip_protocol }}&quot;</li><li>        destination_port: &quot;{{ example_dst_port }}&quot;</li><li>        stateful: true</li><li>        state: present</li><li>&nbsp;</li><li>    - name: Create a VRF-scoped contract for each VRF</li><li>      cisco.aci.aci_contract:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        contract: &quot;{{ item.contract }}&quot;</li><li>        scope: context</li><li>        description: &quot;Example contract for {{ item.vrf }} App (consumer) to DB (provider)&quot;</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.contract }}&quot;</li><li>&nbsp;</li><li>    - name: Create the contract subject</li><li>      cisco.aci.aci_contract_subject:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        contract: &quot;{{ item.contract }}&quot;</li><li>        subject: &quot;{{ item.subject }}&quot;</li><li>        apply_both_direction: both</li><li>        reverse_filter: true</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.contract }} {{ item.subject }}&quot;</li><li>&nbsp;</li><li>    - name: Bind the example filter to the subject</li><li>      cisco.aci.aci_contract_subject_to_filter:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        contract: &quot;{{ item.contract }}&quot;</li><li>        subject: &quot;{{ item.subject }}&quot;</li><li>        filter: &quot;{{ example_filter }}&quot;</li><li>        action: permit</li><li>        direction: both</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.contract }} {{ example_filter }}&quot;</li><li>&nbsp;</li><li>    - name: Create the one-node routed firewall service graph template</li><li>      cisco.aci.aci_l4l7_service_graph_template:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        service_graph: &quot;{{ item.graph }}&quot;</li><li>        type: legacy</li><li>        filter_between_nodes: allow-all</li><li>        description: &quot;Example PBR service graph for {{ item.vrf }}&quot;</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.graph }}&quot;</li><li>&nbsp;</li><li>    - name: Add consumer terminal node T1</li><li>      cisco.aci.aci_l4l7_service_graph_template_term_node:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        service_graph: &quot;{{ item.graph }}&quot;</li><li>        node_name: T1</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.graph }} T1&quot;</li><li>&nbsp;</li><li>    - name: Add provider terminal node T2</li><li>      cisco.aci.aci_l4l7_service_graph_template_term_node:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        service_graph: &quot;{{ item.graph }}&quot;</li><li>        node_name: T2</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.graph }} T2&quot;</li><li>&nbsp;</li><li>    - name: Add the firewall function node in redirect (PBR) mode</li><li>      cisco.aci.aci_l4l7_service_graph_template_node:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        service_graph: &quot;{{ item.graph }}&quot;</li><li>        node: &quot;{{ item.graph_node }}&quot;</li><li>        device: &quot;{{ item.logical_device }}&quot;</li><li>        function_type: go_to</li><li>        functional_template_type: fw_routed</li><li>        routing_mode: redirect</li><li>        managed: false</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.graph }} {{ item.graph_node }}&quot;</li><li>&nbsp;</li><li>    - name: Add the consumer functional connector on the firewall node</li><li>      cisco.aci.aci_l4l7_service_graph_template_functional_connection:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        service_graph: &quot;{{ item.graph }}&quot;</li><li>        node: &quot;{{ item.graph_node }}&quot;</li><li>        connection_name: consumer</li><li>        connection_type: redir</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.graph }} consumer&quot;</li><li>&nbsp;</li><li>    - name: Add the provider functional connector on the firewall node</li><li>      cisco.aci.aci_l4l7_service_graph_template_functional_connection:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        service_graph: &quot;{{ item.graph }}&quot;</li><li>        node: &quot;{{ item.graph_node }}&quot;</li><li>        connection_name: provider</li><li>        connection_type: redir</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.graph }} provider&quot;</li><li>&nbsp;</li><li>    - name: Create the consumer-side graph connection C1</li><li>      cisco.aci.aci_l4l7_service_graph_template_connection:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        service_graph: &quot;{{ item.graph }}&quot;</li><li>        connection_name: C1</li><li>        connector_direction: consumer</li><li>        adjacency_type: l3</li><li>        unicast_route: true</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.graph }} C1&quot;</li><li>&nbsp;</li><li>    - name: Create the provider-side graph connection C2</li><li>      cisco.aci.aci_l4l7_service_graph_template_connection:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        service_graph: &quot;{{ item.graph }}&quot;</li><li>        connection_name: C2</li><li>        connector_direction: provider</li><li>        adjacency_type: l3</li><li>        unicast_route: true</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.graph }} C2&quot;</li><li>&nbsp;</li><li>    - name: Attach C1 to consumer terminal T1</li><li>      cisco.aci.aci_l4l7_service_graph_template_connection_to_connector:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        service_graph: &quot;{{ item.graph }}&quot;</li><li>        connection_name: C1</li><li>        direction: consumer</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.graph }} C1-T1&quot;</li><li>&nbsp;</li><li>    - name: Attach C1 to the firewall node consumer connector</li><li>      cisco.aci.aci_l4l7_service_graph_template_connection_to_connector:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        service_graph: &quot;{{ item.graph }}&quot;</li><li>        connection_name: C1</li><li>        connected_node: &quot;{{ item.graph_node }}&quot;</li><li>        direction: consumer</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.graph }} C1-N1&quot;</li><li>&nbsp;</li><li>    - name: Attach C2 to the firewall node provider connector</li><li>      cisco.aci.aci_l4l7_service_graph_template_connection_to_connector:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        service_graph: &quot;{{ item.graph }}&quot;</li><li>        connection_name: C2</li><li>        connected_node: &quot;{{ item.graph_node }}&quot;</li><li>        direction: provider</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.graph }} C2-N1&quot;</li><li>&nbsp;</li><li>    - name: Attach C2 to provider terminal T2</li><li>      cisco.aci.aci_l4l7_service_graph_template_connection_to_connector:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        service_graph: &quot;{{ item.graph }}&quot;</li><li>        connection_name: C2</li><li>        direction: provider</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.graph }} C2-T2&quot;</li><li>&nbsp;</li><li>    - name: Bind the service graph to the contract subject</li><li>      cisco.aci.aci_contract_subject_to_service_graph:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        contract: &quot;{{ item.contract }}&quot;</li><li>        subject: &quot;{{ item.subject }}&quot;</li><li>        service_graph: &quot;{{ item.graph }}&quot;</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.contract }} {{ item.graph }}&quot;</li><li>&nbsp;</li><li>    - name: Create the device selection policy for the graph node</li><li>      cisco.aci.aci_l4l7_device_selection_policy:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        contract: &quot;{{ item.contract }}&quot;</li><li>        graph: &quot;{{ item.graph }}&quot;</li><li>        node: &quot;{{ item.graph_node }}&quot;</li><li>        device: &quot;{{ item.logical_device }}&quot;</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.contract }} {{ item.graph }}&quot;</li><li>&nbsp;</li><li>    - name: Bind the consumer connector to the external interface, consumer BD and PBR policy</li><li>      cisco.aci.aci_l4l7_device_selection_interface_context:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        contract: &quot;{{ item.contract }}&quot;</li><li>        graph: &quot;{{ item.graph }}&quot;</li><li>        node: &quot;{{ item.graph_node }}&quot;</li><li>        context: consumer</li><li>        logical_device: &quot;{{ item.logical_device }}&quot;</li><li>        logical_interface: &quot;{{ item.external_lif }}&quot;</li><li>        bridge_domain: &quot;{{ item.consumer_bd }}&quot;</li><li>        redirect_policy: &quot;{{ item.pbr_consumer.name }}&quot;</li><li>        l3_destination: true</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.graph }} consumer&quot;</li><li>&nbsp;</li><li>    - name: Bind the provider connector to the internal interface, provider BD and PBR policy</li><li>      cisco.aci.aci_l4l7_device_selection_interface_context:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        contract: &quot;{{ item.contract }}&quot;</li><li>        graph: &quot;{{ item.graph }}&quot;</li><li>        node: &quot;{{ item.graph_node }}&quot;</li><li>        context: provider</li><li>        logical_device: &quot;{{ item.logical_device }}&quot;</li><li>        logical_interface: &quot;{{ item.internal_lif }}&quot;</li><li>        bridge_domain: &quot;{{ item.provider_bd }}&quot;</li><li>        redirect_policy: &quot;{{ item.pbr_provider.name }}&quot;</li><li>        l3_destination: true</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.graph }} provider&quot;</li><li>&nbsp;</li><li>    - name: Bind the application EPG as the contract consumer</li><li>      cisco.aci.aci_epg_to_contract:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        ap: &quot;{{ app_profile }}&quot;</li><li>        epg: &quot;{{ item.consumer_epg }}&quot;</li><li>        contract: &quot;{{ item.contract }}&quot;</li><li>        contract_type: consumer</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.consumer_epg }} consumer of {{ item.contract }}&quot;</li><li>&nbsp;</li><li>    - name: Bind the database EPG as the contract provider</li><li>      cisco.aci.aci_epg_to_contract:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        ap: &quot;{{ app_profile }}&quot;</li><li>        epg: &quot;{{ item.provider_epg }}&quot;</li><li>        contract: &quot;{{ item.contract }}&quot;</li><li>        contract_type: provider</li><li>        state: present</li><li>      loop: &quot;{{ vrf_services }}&quot;</li><li>      loop_control:</li><li>        label: &quot;{{ item.provider_epg }} provider of {{ item.contract }}&quot;</li></ol></div>
+</figure>
+
+<h3 id="pb-validate">07 — Validate (read-only)</h3>
+<p>Query-only checks of the tenant, VRFs, EPGs, L4-L7 devices, PBR policies, graphs and contracts. It does not change fabric policy.</p>
+
+<figure class="codebox" id="file-07-validate-yml">
+  <div class="codebox-tab">
+    <span class="fname">07-validate.yml</span>
+    <button type="button" class="copy-btn">Copy</button>
+    <a href="/zfrontier/multi-vrf-firewall-insertion/ansible/07-validate.yml" download="07-validate.yml">Download</a>
+  </div>
+  <textarea class="codebox-raw" hidden># 07 — Read-only validation queries
+# Read-only example. It only queries the APIC; it does not change fabric policy.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: 07 — Validate the example firewall-insertion objects (read-only)
+  hosts: apic
+  connection: local
+  gather_facts: false
+  vars_files:
+    - vars/access.yml
+    - vars/tenant.yml
+    - vars/l4l7.yml
+  vars:
+    aci_login: &amp;aci_login
+      host: &quot;{{ apic_host }}&quot;
+      username: &quot;{{ apic_username }}&quot;
+      password: &quot;{{ apic_password }}&quot;
+      validate_certs: &quot;{{ apic_validate_certs }}&quot;
+  tasks:
+    - name: Query the example tenant
+      cisco.aci.aci_tenant:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        state: query
+
+    - name: Query VRFs in the example tenant
+      cisco.aci.aci_vrf:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        state: query
+
+    - name: Query bridge domains in the example tenant
+      cisco.aci.aci_bd:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        state: query
+
+    - name: Query application profiles in the example tenant
+      cisco.aci.aci_ap:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        ap: &quot;{{ app_profile }}&quot;
+        state: query
+
+    - name: Query EPGs in the example application profile
+      cisco.aci.aci_epg:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        ap: &quot;{{ app_profile }}&quot;
+        state: query
+
+    - name: Query L4-L7 logical devices in the example tenant
+      cisco.aci.aci_l4l7_device:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        state: query
+
+    - name: Query PBR policies in the example tenant
+      cisco.aci.aci_l4l7_policy_based_redirect:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        state: query
+
+    - name: Query service graph templates in the example tenant
+      cisco.aci.aci_l4l7_service_graph_template:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        state: query
+
+    - name: Query contracts in the example tenant
+      cisco.aci.aci_contract:
+        &lt;&lt;: *aci_login
+        tenant: &quot;{{ tenant }}&quot;
+        state: query
+
+    - name: Query the example tenant managed object tree (read-only)
+      cisco.aci.aci_rest:
+        &lt;&lt;: *aci_login
+        method: get
+        path: &quot;/api/mo/uni/tn-{{ tenant }}.json?rsp-subtree=children&quot;
+
+    - name: Query the example VLAN pool
+      cisco.aci.aci_vlan_pool:
+        &lt;&lt;: *aci_login
+        pool: &quot;{{ vlan_pool }}&quot;
+        pool_allocation_mode: &quot;{{ vlan_pool_mode }}&quot;
+        state: query
+
+    - name: Query the example vPC interface policy group
+      cisco.aci.aci_interface_policy_leaf_policy_group:
+        &lt;&lt;: *aci_login
+        policy_group: &quot;{{ vpc_ipg }}&quot;
+        lag_type: node
+        state: query
+</textarea>
+  <div class="codebox-body"><ol class="lines"><li># 07 — Read-only validation queries</li><li># Read-only example. It only queries the APIC; it does not change fabric policy.</li><li># Credentials are placeholders. Never put a real password, token, or APIC address in this file.</li><li>---</li><li>- name: 07 — Validate the example firewall-insertion objects (read-only)</li><li>  hosts: apic</li><li>  connection: local</li><li>  gather_facts: false</li><li>  vars_files:</li><li>    - vars/access.yml</li><li>    - vars/tenant.yml</li><li>    - vars/l4l7.yml</li><li>  vars:</li><li>    aci_login: &amp;aci_login</li><li>      host: &quot;{{ apic_host }}&quot;</li><li>      username: &quot;{{ apic_username }}&quot;</li><li>      password: &quot;{{ apic_password }}&quot;</li><li>      validate_certs: &quot;{{ apic_validate_certs }}&quot;</li><li>  tasks:</li><li>    - name: Query the example tenant</li><li>      cisco.aci.aci_tenant:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        state: query</li><li>&nbsp;</li><li>    - name: Query VRFs in the example tenant</li><li>      cisco.aci.aci_vrf:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        state: query</li><li>&nbsp;</li><li>    - name: Query bridge domains in the example tenant</li><li>      cisco.aci.aci_bd:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        state: query</li><li>&nbsp;</li><li>    - name: Query application profiles in the example tenant</li><li>      cisco.aci.aci_ap:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        ap: &quot;{{ app_profile }}&quot;</li><li>        state: query</li><li>&nbsp;</li><li>    - name: Query EPGs in the example application profile</li><li>      cisco.aci.aci_epg:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        ap: &quot;{{ app_profile }}&quot;</li><li>        state: query</li><li>&nbsp;</li><li>    - name: Query L4-L7 logical devices in the example tenant</li><li>      cisco.aci.aci_l4l7_device:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        state: query</li><li>&nbsp;</li><li>    - name: Query PBR policies in the example tenant</li><li>      cisco.aci.aci_l4l7_policy_based_redirect:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        state: query</li><li>&nbsp;</li><li>    - name: Query service graph templates in the example tenant</li><li>      cisco.aci.aci_l4l7_service_graph_template:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        state: query</li><li>&nbsp;</li><li>    - name: Query contracts in the example tenant</li><li>      cisco.aci.aci_contract:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: &quot;{{ tenant }}&quot;</li><li>        state: query</li><li>&nbsp;</li><li>    - name: Query the example tenant managed object tree (read-only)</li><li>      cisco.aci.aci_rest:</li><li>        &lt;&lt;: *aci_login</li><li>        method: get</li><li>        path: &quot;/api/mo/uni/tn-{{ tenant }}.json?rsp-subtree=children&quot;</li><li>&nbsp;</li><li>    - name: Query the example VLAN pool</li><li>      cisco.aci.aci_vlan_pool:</li><li>        &lt;&lt;: *aci_login</li><li>        pool: &quot;{{ vlan_pool }}&quot;</li><li>        pool_allocation_mode: &quot;{{ vlan_pool_mode }}&quot;</li><li>        state: query</li><li>&nbsp;</li><li>    - name: Query the example vPC interface policy group</li><li>      cisco.aci.aci_interface_policy_leaf_policy_group:</li><li>        &lt;&lt;: *aci_login</li><li>        policy_group: &quot;{{ vpc_ipg }}&quot;</li><li>        lag_type: node</li><li>        state: query</li></ol></div>
+</figure>
+
+
+<h2 id="how-to">How to use the playbooks</h2>
+<p>The files are also published as downloads under <a href="/zfrontier/multi-vrf-firewall-insertion/ansible/">ansible/</a>. From that folder, with the <code>cisco.aci</code> collection installed, syntax-check every playbook before considering a lab run:</p>
+
+<figure class="codebox">
+  <div class="codebox-tab">
+    <span class="fname">syntax-check.sh</span>
+    <button type="button" class="copy-btn">Copy</button>
+    
+  </div>
+  <textarea class="codebox-raw" hidden>for f in 0*.yml; do
+  ansible-playbook --syntax-check &quot;$f&quot;
+done
+</textarea>
+  <div class="codebox-body"><ol class="lines"><li>for f in 0*.yml; do</li><li>  ansible-playbook --syntax-check &quot;$f&quot;</li><li>done</li></ol></div>
+</figure>
+
+<p>Login values are not stored in the repository. <code>group_vars/apic.yml</code> sets <code>apic_host</code> to <code>apic.example.invalid</code> and leaves <code>apic_password</code> unset. If you ever run a playbook in a lab, pass the values on the command line or from an untracked file, for example:</p>
+
+<figure class="codebox">
+  <div class="codebox-tab">
+    <span class="fname">runtime-example.txt</span>
+    <button type="button" class="copy-btn">Copy</button>
+    
+  </div>
+  <textarea class="codebox-raw" hidden>ansible-playbook 07-validate.yml \
+  -e apic_host=apic.example.invalid \
+  -e apic_username=admin \
+  -e apic_password=&#x27;...&#x27;
+</textarea>
+  <div class="codebox-body"><ol class="lines"><li>ansible-playbook 07-validate.yml \</li><li>  -e apic_host=apic.example.invalid \</li><li>  -e apic_username=admin \</li><li>  -e apic_password=&#x27;...&#x27;</li></ol></div>
+</figure>
+
+<p><code>07-validate.yml</code> is the only playbook that is written as a read-only query. Playbooks 01–06 are examples of policy that would be created, and are not meant to be applied to a production fabric. Certificate verification defaults to enabled (<code>apic_validate_certs: true</code>).</p>
+<p>This series was syntax-checked with Ansible core 2.22.0 and <code>cisco.aci</code> 3.0.0. All seven playbooks returned a passing syntax-check.</p>
+
+<h2 id="references">References</h2>
+<p>These are official Cisco documents for Layer 4–7 service graphs and policy-based redirect. They are the public references for the ideas on this page, not sources for the drawings.</p>
+<ul>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l4-l7-services-deployment/cisco-apic-layer-4-to-layer-7-services-deployment-guide-60x.html">Cisco APIC Layer 4 to Layer 7 Services Deployment Guide, Release 6.0(x)</a></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/whitepapers/cisco-aci-policy-based-redirect-service-graph-design-white-paper.html">Cisco ACI Policy-Based Redirect Service Graph Design White Paper</a></li>
+<li><a href="https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/index.html">Ansible cisco.aci collection documentation</a></li>
+</ul>
+
+<h2 id="not-collected">Not collected</h2>
+<ul>
+<li>The source diagrams provided for this brief are not published here and were not traced or embedded. The three drawings on this page were built from scratch.</li>
+<li>A production addressing plan, real firewall interface IPs, or real MAC addresses.</li>
+<li>Firewall vendor configuration (security policy, routing, high availability or context setup on the appliance itself).</li>
+<li>Inter-VRF sharing, a shared services VRF, or a copy service graph.</li>
+<li>Live APIC output or screenshots. The playbooks have been syntax-checked only and have not been applied to a fabric.</li>
+</ul>
+
+<h2 id="comments">Comments</h2>
+<div id="comments-mount"></div>
+<script>
+(function(){
+  var b=String.fromCharCode(99,111,108,101,115);
+  var repo='amoeoo-'+b+'/amoeoo-'+b+'.github.io';
+  var s=document.createElement('script');
+  s.src='https://giscus.app/client.js';
+  s.setAttribute('data-repo',repo);
+  s.setAttribute('data-repo-id','R_kgDOVM0-Fw');
+  s.setAttribute('data-category','Announcements');
+  s.setAttribute('data-category-id','DIC_kwDOVM0-F84DLoq4');
+  s.setAttribute('data-mapping','pathname');
+  s.setAttribute('data-strict','1');
+  s.setAttribute('data-reactions-enabled','1');
+  s.setAttribute('data-input-position','top');
+  s.setAttribute('data-theme','preferred_color_scheme');
+  s.setAttribute('data-lang','en');
+  s.setAttribute('data-loading','lazy');
+  s.crossOrigin='anonymous';
+  s.async=true;
+  var m=document.getElementById('comments-mount');
+  if(m) m.appendChild(s);
+})();
+</script>
+
+
+
+<section id="versions">
+<h2>Versions</h2>
+<p>This is <strong>v2 · 25 Nov 2026, 8:36 PM AEDT</strong>. Snapshots are under <a href="/zfrontier/multi-vrf-firewall-insertion/history/">history/</a>.</p>
+<ul>
+<li><a href="/zfrontier/multi-vrf-firewall-insertion/history/v2/">v2 · 25 Nov 2026, 8:36 PM AEDT</a> — added the hidden visitor tracking view at <a href="/zfrontier/multi-vrf-firewall-insertion/visitors/">visitors/</a>, modelled on the ACI course visitors page.</li>
+<li><a href="/zfrontier/multi-vrf-firewall-insertion/history/v1/">v1 · 25 Nov 2026, 7:58 PM AEDT</a> — first publication of the hidden Multi-VRF Firewall Insertion page, with original diagrams and the Ansible series.</li>
+</ul>
+</section>
+
+</main>
+<footer class="wrap">
+<p class="meta">Page: <strong>Multi-VRF Firewall Insertion</strong> · Version: <strong>v2 · 25 Nov 2026, 8:36 PM AEDT</strong></p>
+<p class="meta">This page is hidden and is not listed in the public site menu or the public zFrontier index. Folder links end with <code>/</code>. Credentials in playbooks are placeholders. No playbook on this page is meant to be run against a production APIC. Node IDs, subnets and firewall addresses are examples only. A hidden visitor tracking view is at <a href="/zfrontier/multi-vrf-firewall-insertion/visitors/">visitors/</a>.</p>
+</footer>
+
+<script>
+(function(){
+  document.querySelectorAll(".codebox").forEach(function(box){
+    var btn = box.querySelector(".copy-btn");
+    var rawEl = box.querySelector(".codebox-raw");
+    if (!btn) return;
+    btn.addEventListener("click", function(){
+      var text = rawEl ? rawEl.value : "";
+      function done(){
+        var old = btn.textContent;
+        btn.textContent = "Copied";
+        setTimeout(function(){ btn.textContent = old; }, 1500);
+      }
+      function fallback(){
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(function(){ fallback(); });
+      } else { fallback(); }
+    });
+  });
+})();
+</script>
+
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/"}}</script>
+<script>(function(){var b=String.fromCharCode(99,111,108,101,115);var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';s.setAttribute('data-goatcounter','https://amoeoo-'+b+'.goatcounter.com/count');document.head.appendChild(s);}());</script>
+
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+
+<!-- uv-badge v2 -->
+<style id="uv-badge-style">
+.uv-pop{position:relative;display:inline-block;vertical-align:middle}
+.uv-pop .uv-card{display:none;position:absolute;right:0;top:calc(100% + 6px);z-index:80;min-width:228px;padding:10px 12px;border-radius:10px;background:var(--card,#0f172a);color:var(--ink,#e2e8f0);border:1px solid var(--line,#334155);box-shadow:0 10px 28px rgba(0,0,0,.28);font:12px/1.4 system-ui,Arial,sans-serif;text-align:left;white-space:normal}
+.uv-pop.open .uv-card{display:block}
+.uv-card svg{display:block;width:204px;height:44px;margin:6px 0 8px}
+.uv-card .uv-k{font-weight:700;margin:0 0 2px}
+.uv-card .uv-m{color:var(--muted,#94a3b8);font-size:11px}
+.uv-card a{color:var(--link,#8ecbff)}
+</style>
+<script id="uv-badge">(function(){
+function norm(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function tzParts(iso){
+  var pt=new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'2-digit',minute:'2-digit',hour12:false,hourCycle:'h23',timeZoneName:'short',day:'2-digit',month:'short'}).formatToParts(new Date(iso));
+  var g=function(t){return (pt.find(function(x){return x.type===t})||{}).value||''};
+  var tz=(g('timeZoneName')||'AEDT').replace('GMT+11','AEDT').replace('GMT+10','AEST');
+  return {hh:g('hour'),mm:g('minute'),tz:tz,day:g('day'),mon:g('month')};
+}
+function last30(daysMap){
+  var out=[], now=new Date();
+  var fmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'});
+  for(var i=29;i>=0;i--){
+    var d=new Date(now.getTime()-i*86400000);
+    var key=fmt.format(d);
+    out.push({day:key,count:+((daysMap||{})[key]||0)});
+  }
+  return out;
+}
+function spark(series){
+  var w=204,h=44,p=2;
+  var max=Math.max.apply(null,series.map(function(x){return x.count}).concat([1]));
+  var n=series.length||1;
+  var pts=series.map(function(x,i){
+    var X=p+(i*(w-2*p)/Math.max(1,n-1));
+    var Y=h-p-((x.count/max)*(h-2*p));
+    return X.toFixed(1)+','+Y.toFixed(1);
+  }).join(' ');
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true"><polyline fill="none" stroke="#22c55e" stroke-width="2" points="'+pts+'"/></svg>';
+}
+function fillStats(d){
+  var total=(d.total&& (d.total.total||d.total.total_utc))||0;
+  var cc=(d.countries||[]).length;
+  var asof=d.as_of_aedt||'';
+  document.querySelectorAll('.im-stat-vis').forEach(function(e){e.textContent=total||'0'});
+  document.querySelectorAll('.im-stat-cc').forEach(function(e){e.textContent=cc||'0'});
+  document.querySelectorAll('.im-stat-asof').forEach(function(e){e.textContent=asof||'n/a'});
+}
+function attachPopover(d, count, series){
+  document.querySelectorAll('.uv').forEach(function(uv){
+    if(uv.closest('.uv-pop')) return;
+    var wrap=document.createElement('span');wrap.className='uv-pop';
+    uv.parentNode.insertBefore(wrap,uv);wrap.appendChild(uv);
+    var card=document.createElement('div');card.className='uv-card';card.setAttribute('role','dialog');
+    var last=series.length?series[series.length-1].count:0;
+    card.innerHTML='<p class="uv-k">This page: '+count+' unique visitors</p>'+spark(series)+'<p class="uv-m">Last 30 days (this page). Today so far: '+last+'.</p><p><a href="/visitors/">Full visitor stats \u203A</a></p>';
+    wrap.appendChild(card);
+    function tog(ev){ev.preventDefault();ev.stopPropagation();document.querySelectorAll('.uv-pop.open').forEach(function(x){if(x!==wrap)x.classList.remove('open')});wrap.classList.toggle('open')}
+    uv.addEventListener('click',tog);
+    uv.style.cursor='pointer';
+    uv.title='Click for a 30-day sparkline';
+  });
+  document.addEventListener('click',function(){document.querySelectorAll('.uv-pop.open').forEach(function(x){x.classList.remove('open')})});
+}
+function apply(d){
+  var p=norm(location.pathname);
+  var page=(d.pages||[]).filter(function(x){return norm(x.path)===p});
+  var c=page.reduce(function(a,x){return a+(+x.count||0)},0);
+  var days={};
+  page.forEach(function(x){var m=x.days||{};Object.keys(m).forEach(function(k){days[k]=(days[k]||0)+(+m[k]||0)})});
+  document.querySelectorAll('.uvc').forEach(function(e){e.textContent=c});
+  document.querySelectorAll('.uvt').forEach(function(e){
+    if(d.updated_utc){var t=tzParts(d.updated_utc);e.textContent=' (data as of '+t.hh+':'+t.mm+' '+t.tz+')'}
+  });
+  fillStats(d);
+  attachPopover(d,c,last30(days));
+}
+function fail(){
+  document.querySelectorAll('.uvc').forEach(function(e){if(e.textContent==='\u2026'||e.textContent==='...') e.textContent='n/a'});
+  document.querySelectorAll('.im-stat-vis,.im-stat-cc,.im-stat-asof').forEach(function(e){if(e.textContent==='\u2026') e.textContent='n/a'});
+}
+if(!window.__visitorsData){
+  var ac=typeof AbortController==='function'?new AbortController():null;
+  var timer=setTimeout(function(){try{ac&&ac.abort()}catch(e){}},8000);
+  window.__visitorsData=fetch('/data/visitors.json?'+Date.now(),ac?{signal:ac.signal}:undefined).then(function(r){
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('visitors.json '+r.status);
+    return r.json();
+  });
+}
+window.__visitorsData.then(apply).catch(function(){fail()});
+})();</script>
+
+</body>
+</html>
