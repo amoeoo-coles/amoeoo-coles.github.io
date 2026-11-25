@@ -1,0 +1,97 @@
+# 02 — Tenant, VRFs and bridge domains (with example RFC1918 subnets)
+# Lab / example only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: 02 — Tenant, VRFs and bridge domains (example)
+  hosts: apic
+  connection: local
+  gather_facts: false
+  vars_files:
+    - vars/tenant.yml
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: "{{ apic_validate_certs }}"
+  tasks:
+    - name: Create the example tenant
+      cisco.aci.aci_tenant:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        description: "{{ tenant_description }}"
+        state: present
+
+    - name: Create each VRF as an independent routing and security domain
+      cisco.aci.aci_vrf:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        vrf: "{{ item.name }}"
+        description: "{{ item.description }}"
+        policy_control_preference: enforced
+        state: present
+      loop: "{{ vrfs }}"
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: Create the application (consumer) bridge domain in each VRF
+      cisco.aci.aci_bd:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        vrf: "{{ item.name }}"
+        bd: "{{ item.app.bd }}"
+        enable_routing: true
+        arp_flooding: true
+        l2_unknown_unicast: proxy
+        description: "Example consumer BD, VLAN {{ item.app.vlan }}"
+        state: present
+      loop: "{{ vrfs }}"
+      loop_control:
+        label: "{{ item.app.bd }}"
+
+    - name: Create the database (provider) bridge domain in each VRF
+      cisco.aci.aci_bd:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        vrf: "{{ item.name }}"
+        bd: "{{ item.db.bd }}"
+        enable_routing: true
+        arp_flooding: true
+        l2_unknown_unicast: proxy
+        description: "Example provider BD, VLAN {{ item.db.vlan }}"
+        state: present
+      loop: "{{ vrfs }}"
+      loop_control:
+        label: "{{ item.db.bd }}"
+
+    - name: Add the example consumer subnet (RFC1918, illustration only)
+      cisco.aci.aci_bd_subnet:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        bd: "{{ item.app.bd }}"
+        gateway: "{{ item.app.gateway }}"
+        mask: "{{ item.app.mask }}"
+        subnet_name: "{{ item.app.subnet_name }}"
+        scope:
+          - private
+        description: Example addressing only
+        state: present
+      loop: "{{ vrfs }}"
+      loop_control:
+        label: "{{ item.app.subnet_name }}"
+
+    - name: Add the example provider subnet (RFC1918, illustration only)
+      cisco.aci.aci_bd_subnet:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        bd: "{{ item.db.bd }}"
+        gateway: "{{ item.db.gateway }}"
+        mask: "{{ item.db.mask }}"
+        subnet_name: "{{ item.db.subnet_name }}"
+        scope:
+          - private
+        description: Example addressing only
+        state: present
+      loop: "{{ vrfs }}"
+      loop_control:
+        label: "{{ item.db.subnet_name }}"

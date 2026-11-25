@@ -1,0 +1,126 @@
+# 04 — L4-L7 logical devices, concrete devices and cluster interfaces
+# Lab / example only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+# The firewall is modelled as two logical devices (one per VRF) on one physical
+# appliance attached to the example vPC policy group for Po1.
+---
+- name: 04 — L4-L7 devices and interfaces (example)
+  hosts: apic
+  connection: local
+  gather_facts: false
+  vars_files:
+    - vars/tenant.yml
+    - vars/l4l7.yml
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: "{{ apic_validate_certs }}"
+  tasks:
+    - name: Create a physical go-to firewall logical device for each VRF
+      cisco.aci.aci_l4l7_device:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        name: "{{ item.logical_device }}"
+        device_type: physical
+        function_type: go_to
+        service_type: fw
+        context_aware: single
+        managed: false
+        domain: "{{ firewall_cluster.physical_domain }}"
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.logical_device }}"
+
+    - name: Create the concrete device under each logical device
+      cisco.aci.aci_l4l7_concrete_device:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        logical_device: "{{ item.logical_device }}"
+        name: "{{ item.concrete_device }}"
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.concrete_device }}"
+
+    - name: Add the consumer-side (external) concrete interface on the vPC
+      cisco.aci.aci_l4l7_concrete_interface:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        logical_device: "{{ item.logical_device }}"
+        concrete_device: "{{ item.concrete_device }}"
+        name: "{{ item.external_cif }}"
+        pod_id: "{{ firewall_cluster.pod_id }}"
+        node_id: "{{ firewall_cluster.vpc_node_id }}"
+        interface: "{{ firewall_cluster.vpc_ipg }}"
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.external_cif }}"
+
+    - name: Add the provider-side (internal) concrete interface on the vPC
+      cisco.aci.aci_l4l7_concrete_interface:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        logical_device: "{{ item.logical_device }}"
+        concrete_device: "{{ item.concrete_device }}"
+        name: "{{ item.internal_cif }}"
+        pod_id: "{{ firewall_cluster.pod_id }}"
+        node_id: "{{ firewall_cluster.vpc_node_id }}"
+        interface: "{{ firewall_cluster.vpc_ipg }}"
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.internal_cif }}"
+
+    - name: Create the External logical interface
+      cisco.aci.aci_l4l7_logical_interface:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        logical_device: "{{ item.logical_device }}"
+        logical_interface: "{{ item.external_lif }}"
+        encap: "{{ item.external_encap }}"
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.external_lif }}"
+
+    - name: Create the Internal logical interface
+      cisco.aci.aci_l4l7_logical_interface:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        logical_device: "{{ item.logical_device }}"
+        logical_interface: "{{ item.internal_lif }}"
+        encap: "{{ item.internal_encap }}"
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.internal_lif }}"
+
+    - name: Attach the external concrete interface to the External logical interface
+      cisco.aci.aci_l4l7_concrete_interface_attachment:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        logical_device: "{{ item.logical_device }}"
+        logical_interface: "{{ item.external_lif }}"
+        concrete_device: "{{ item.concrete_device }}"
+        concrete_interface: "{{ item.external_cif }}"
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.logical_device }} {{ item.external_lif }}"
+
+    - name: Attach the internal concrete interface to the Internal logical interface
+      cisco.aci.aci_l4l7_concrete_interface_attachment:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        logical_device: "{{ item.logical_device }}"
+        logical_interface: "{{ item.internal_lif }}"
+        concrete_device: "{{ item.concrete_device }}"
+        concrete_interface: "{{ item.internal_cif }}"
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.logical_device }} {{ item.internal_lif }}"

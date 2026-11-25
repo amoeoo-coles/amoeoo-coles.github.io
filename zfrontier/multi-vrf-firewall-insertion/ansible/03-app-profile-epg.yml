@@ -1,0 +1,101 @@
+# 03 — Application profile, consumer and provider EPGs, domain and static path bindings
+# Lab / example only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: 03 — Application profile and EPGs (example)
+  hosts: apic
+  connection: local
+  gather_facts: false
+  vars_files:
+    - vars/access.yml
+    - vars/tenant.yml
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: "{{ apic_validate_certs }}"
+  tasks:
+    - name: Create the application profile
+      cisco.aci.aci_ap:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        ap: "{{ app_profile }}"
+        description: Example application profile holding App and DB EPGs
+        state: present
+
+    - name: Create the application (consumer) EPG in each VRF
+      cisco.aci.aci_epg:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        ap: "{{ app_profile }}"
+        epg: "{{ item.app.epg }}"
+        bd: "{{ item.app.bd }}"
+        description: "Consumer EPG in {{ item.name }}, VLAN {{ item.app.vlan }}"
+        state: present
+      loop: "{{ vrfs }}"
+      loop_control:
+        label: "{{ item.app.epg }}"
+
+    - name: Create the database (provider) EPG in each VRF
+      cisco.aci.aci_epg:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        ap: "{{ app_profile }}"
+        epg: "{{ item.db.epg }}"
+        bd: "{{ item.db.bd }}"
+        description: "Provider EPG in {{ item.name }}, VLAN {{ item.db.vlan }}"
+        state: present
+      loop: "{{ vrfs }}"
+      loop_control:
+        label: "{{ item.db.epg }}"
+
+    - name: Bind each consumer EPG to the physical domain with its VLAN encap
+      cisco.aci.aci_epg_to_domain:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        ap: "{{ app_profile }}"
+        epg: "{{ item.app.epg }}"
+        domain: "{{ phys_domain }}"
+        domain_type: phys
+        encap: "{{ item.app.vlan }}"
+        deploy_immediacy: immediate
+        resolution_immediacy: immediate
+        state: present
+      loop: "{{ vrfs }}"
+      loop_control:
+        label: "{{ item.app.epg }} vlan-{{ item.app.vlan }}"
+
+    - name: Bind each provider EPG to the physical domain with its VLAN encap
+      cisco.aci.aci_epg_to_domain:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        ap: "{{ app_profile }}"
+        epg: "{{ item.db.epg }}"
+        domain: "{{ phys_domain }}"
+        domain_type: phys
+        encap: "{{ item.db.vlan }}"
+        deploy_immediacy: immediate
+        resolution_immediacy: immediate
+        state: present
+      loop: "{{ vrfs }}"
+      loop_control:
+        label: "{{ item.db.epg }} vlan-{{ item.db.vlan }}"
+
+    - name: Bind the example server static paths to their EPGs
+      cisco.aci.aci_static_binding_to_epg:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        ap: "{{ app_profile }}"
+        epg: "{{ item.epg }}"
+        pod_id: "{{ pod_id }}"
+        leafs: "{{ item.leafs }}"
+        interface: "{{ item.interface }}"
+        encap_id: "{{ item.encap_id }}"
+        interface_type: switch_port
+        interface_mode: regular
+        deploy_immediacy: immediate
+        state: present
+      loop: "{{ epg_static_paths }}"
+      loop_control:
+        label: "{{ item.epg }} leaf {{ item.leafs }} {{ item.interface }}"

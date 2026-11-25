@@ -1,0 +1,181 @@
+# 01 — Access policies: VLAN pool 301-304, physical domain, AAEP, vPC Po1 and server ports
+# Lab / example only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+# Production port-channel, vPC, VLAN and firewall interface details depend on the service-insertion design.
+---
+- name: 01 — Access policies for multi-VRF firewall insertion (example)
+  hosts: apic
+  connection: local
+  gather_facts: false
+  vars_files:
+    - vars/access.yml
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: "{{ apic_validate_certs }}"
+  tasks:
+    - name: Create a static VLAN pool for the insertion VLANs
+      cisco.aci.aci_vlan_pool:
+        <<: *aci_login
+        pool: "{{ vlan_pool }}"
+        pool_allocation_mode: "{{ vlan_pool_mode }}"
+        description: Example static pool for VLANs 301-304
+        state: present
+
+    - name: Add the static encap block 301-304
+      cisco.aci.aci_vlan_pool_encap_block:
+        <<: *aci_login
+        pool: "{{ vlan_pool }}"
+        pool_allocation_mode: "{{ vlan_pool_mode }}"
+        block_start: "{{ vlan_block_start }}"
+        block_end: "{{ vlan_block_end }}"
+        allocation_mode: static
+        state: present
+
+    - name: Create the physical domain
+      cisco.aci.aci_domain:
+        <<: *aci_login
+        domain: "{{ phys_domain }}"
+        domain_type: phys
+        state: present
+
+    - name: Bind the VLAN pool to the physical domain
+      cisco.aci.aci_domain_to_vlan_pool:
+        <<: *aci_login
+        domain: "{{ phys_domain }}"
+        domain_type: phys
+        pool: "{{ vlan_pool }}"
+        pool_allocation_mode: static
+        state: present
+
+    - name: Create the attachable access entity profile
+      cisco.aci.aci_aep:
+        <<: *aci_login
+        aep: "{{ aaep }}"
+        description: Example AAEP for firewall Po1 and server access ports
+        state: present
+
+    - name: Bind the physical domain to the AAEP
+      cisco.aci.aci_aep_to_domain:
+        <<: *aci_login
+        aep: "{{ aaep }}"
+        domain: "{{ phys_domain }}"
+        domain_type: phys
+        state: present
+
+    - name: Create an LACP active port-channel policy
+      cisco.aci.aci_interface_policy_port_channel:
+        <<: *aci_login
+        port_channel: "{{ lacp_policy }}"
+        mode: active
+        description: Example LACP policy for the firewall vPC
+        state: present
+
+    - name: Create the explicit vPC protection group for the leaf pair
+      cisco.aci.aci_switch_policy_vpc_protection_group:
+        <<: *aci_login
+        protection_group: "{{ vpc_protection_group }}"
+        protection_group_id: "{{ vpc_protection_group_id }}"
+        pod_id: "{{ pod_id }}"
+        switch_1_id: "{{ leaf_1_id }}"
+        switch_2_id: "{{ leaf_2_id }}"
+        state: present
+
+    - name: Create the vPC interface policy group for firewall Po1
+      cisco.aci.aci_interface_policy_leaf_policy_group:
+        <<: *aci_login
+        policy_group: "{{ vpc_ipg }}"
+        lag_type: node
+        aep: "{{ aaep }}"
+        port_channel_policy: "{{ lacp_policy }}"
+        description: Example vPC IPG for the firewall on Po1
+        state: present
+
+    - name: Create an access (non-LAG) interface policy group for servers
+      cisco.aci.aci_interface_policy_leaf_policy_group:
+        <<: *aci_login
+        policy_group: "{{ access_ipg }}"
+        lag_type: leaf
+        aep: "{{ aaep }}"
+        description: Example access IPG for application and database servers
+        state: present
+
+    - name: Create the leaf switch profile
+      cisco.aci.aci_switch_policy_leaf_profile:
+        <<: *aci_login
+        leaf_profile: "{{ leaf_profile }}"
+        description: Example switch profile for leaves 101 and 102
+        state: present
+
+    - name: Add a leaf selector for nodes 101-102
+      cisco.aci.aci_switch_leaf_selector:
+        <<: *aci_login
+        leaf_profile: "{{ leaf_profile }}"
+        leaf: "{{ leaf_selector }}"
+        leaf_node_blk: "blk-{{ leaf_1_id }}-{{ leaf_2_id }}"
+        from: "{{ leaf_1_id }}"
+        to: "{{ leaf_2_id }}"
+        state: present
+
+    - name: Create the firewall interface profile
+      cisco.aci.aci_interface_policy_leaf_profile:
+        <<: *aci_login
+        interface_profile: "{{ fw_interface_profile }}"
+        type: leaf
+        description: Example interface profile for the firewall vPC members
+        state: present
+
+    - name: Associate the firewall interface profile with the switch profile
+      cisco.aci.aci_interface_selector_to_switch_policy_leaf_profile:
+        <<: *aci_login
+        leaf_profile: "{{ leaf_profile }}"
+        interface_selector: "{{ fw_interface_profile }}"
+        state: present
+
+    - name: Select Eth1/1 on both leaves as vPC members of Po1
+      cisco.aci.aci_access_port_to_interface_policy_leaf_profile:
+        <<: *aci_login
+        interface_profile: "{{ fw_interface_profile }}"
+        access_port_selector: "{{ fw_port_selector }}"
+        policy_group: "{{ vpc_ipg }}"
+        interface_type: vpc
+        from_card: "{{ fw_from_card }}"
+        from_port: "{{ fw_from_port }}"
+        to_card: "{{ fw_to_card }}"
+        to_port: "{{ fw_to_port }}"
+        port_blk: fw-po1-eth1-1
+        state: present
+
+    - name: Create the server interface profile
+      cisco.aci.aci_interface_policy_leaf_profile:
+        <<: *aci_login
+        interface_profile: "{{ server_interface_profile }}"
+        type: leaf
+        description: Example interface profile for application and database servers
+        state: present
+
+    - name: Associate the server interface profile with the switch profile
+      cisco.aci.aci_interface_selector_to_switch_policy_leaf_profile:
+        <<: *aci_login
+        leaf_profile: "{{ leaf_profile }}"
+        interface_selector: "{{ server_interface_profile }}"
+        state: present
+
+    - name: Select the example server access ports
+      cisco.aci.aci_access_port_to_interface_policy_leaf_profile:
+        <<: *aci_login
+        interface_profile: "{{ server_interface_profile }}"
+        access_port_selector: "{{ item.selector }}"
+        policy_group: "{{ access_ipg }}"
+        interface_type: switch_port
+        from_card: "{{ item.from_card }}"
+        from_port: "{{ item.from_port }}"
+        to_card: "{{ item.to_card }}"
+        to_port: "{{ item.to_port }}"
+        port_blk: "{{ item.selector }}-blk"
+        state: present
+      loop: "{{ server_ports }}"
+      loop_control:
+        label: "{{ item.selector }}"

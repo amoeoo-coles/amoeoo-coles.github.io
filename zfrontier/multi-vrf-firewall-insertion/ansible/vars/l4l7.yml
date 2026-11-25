@@ -1,0 +1,77 @@
+# Example L4-L7 device, PBR and service-graph model.
+# Firewall interface IP addresses and MAC addresses are placeholders.
+# Production port-channel, vPC, VLAN and firewall interface details depend on
+# the service-insertion design actually used in that fabric.
+
+# One physical firewall appliance, presented as two logical devices (one per VRF).
+# Both concrete devices attach to the same example vPC policy group (Po1).
+firewall_cluster:
+  concrete_device: FW-Appliance-1
+  vpc_node_id: "101-102"
+  vpc_ipg: IPG-FW-Po1
+  pod_id: 1
+  physical_domain: Phys-Dom-FW-Insert
+
+# Example application filter: TCP destination port 1521. This is an illustration
+# only; replace it with the ports the contract should actually permit.
+example_filter: flt-example-tcp
+example_filter_entry: tcp-1521
+example_ether_type: ip
+example_ip_protocol: tcp
+example_dst_port: "1521"
+
+vrf_services:
+  - vrf: VRF-1
+    logical_device: FW-VRF1
+    concrete_device: FW-VRF1-CDev
+    external_lif: External
+    internal_lif: Internal
+    external_cif: cif-external
+    internal_cif: cif-internal
+    external_encap: vlan-301
+    internal_encap: vlan-302
+    consumer_epg: EPG-VRF1-App
+    provider_epg: EPG-VRF1-DB
+    consumer_bd: BD-VRF1-App
+    provider_bd: BD-VRF1-DB
+    pbr_consumer:
+      name: PBR-VRF1-App
+      dest_name: FW-VRF1-External
+      ip: 10.1.1.10
+      mac: "00:50:56:01:01:0A"
+    pbr_provider:
+      name: PBR-VRF1-DB
+      dest_name: FW-VRF1-Internal
+      ip: 10.1.2.10
+      mac: "00:50:56:01:01:0B"
+    graph: SG-FW-PBR-VRF1
+    graph_node: N1
+    contract: Ctr-VRF1-App-to-DB
+    subject: subj-app-to-db
+  - vrf: VRF-2
+    logical_device: FW-VRF2
+    concrete_device: FW-VRF2-CDev
+    external_lif: External
+    internal_lif: Internal
+    external_cif: cif-external
+    internal_cif: cif-internal
+    external_encap: vlan-303
+    internal_encap: vlan-304
+    consumer_epg: EPG-VRF2-App
+    provider_epg: EPG-VRF2-DB
+    consumer_bd: BD-VRF2-App
+    provider_bd: BD-VRF2-DB
+    pbr_consumer:
+      name: PBR-VRF2-App
+      dest_name: FW-VRF2-External
+      ip: 10.2.1.10
+      mac: "00:50:56:01:01:0C"
+    pbr_provider:
+      name: PBR-VRF2-DB
+      dest_name: FW-VRF2-Internal
+      ip: 10.2.2.10
+      mac: "00:50:56:01:01:0D"
+    graph: SG-FW-PBR-VRF2
+    graph_node: N1
+    contract: Ctr-VRF2-App-to-DB
+    subject: subj-app-to-db

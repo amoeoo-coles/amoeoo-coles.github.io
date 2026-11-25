@@ -1,0 +1,65 @@
+# Example access-policy model for multi-VRF firewall insertion.
+# Node IDs, ports, the vPC protection group and the VLAN range are examples only.
+# Production port-channel, vPC, VLAN and firewall interface details depend on
+# the service-insertion design actually used in that fabric.
+
+vlan_pool: VLAN-Pool-FW-Insert
+vlan_pool_mode: static
+vlan_block_start: 301
+vlan_block_end: 304
+
+phys_domain: Phys-Dom-FW-Insert
+aaep: AAEP-FW-Insert
+
+pod_id: 1
+leaf_1_id: 101
+leaf_2_id: 102
+vpc_protection_group: VPC-101-102
+vpc_protection_group_id: 101
+
+lacp_policy: LACP-Active-FW
+vpc_ipg: IPG-FW-Po1
+access_ipg: IPG-Server-Access
+
+leaf_profile: Leaf-101-102-SWP
+leaf_selector: Leaf-101-102
+fw_interface_profile: Leaf-101-102-FW-IntP
+fw_port_selector: FW-Po1-ports
+# Example: Eth1/1 on both leaves is a member of vPC Po1 to the firewall.
+fw_from_card: "1"
+fw_from_port: "1"
+fw_to_card: "1"
+fw_to_port: "1"
+
+server_interface_profile: Leaf-101-102-Server-IntP
+# Example access ports that hang the application and database servers.
+# Each item is applied as its own interface selector and static path later.
+server_ports:
+  - selector: VRF1-App-eth1-10
+    leaf: 101
+    from_card: "1"
+    from_port: "10"
+    to_card: "1"
+    to_port: "10"
+    vlan: 301
+  - selector: VRF1-DB-eth1-11
+    leaf: 101
+    from_card: "1"
+    from_port: "11"
+    to_card: "1"
+    to_port: "11"
+    vlan: 302
+  - selector: VRF2-App-eth1-10
+    leaf: 102
+    from_card: "1"
+    from_port: "10"
+    to_card: "1"
+    to_port: "10"
+    vlan: 303
+  - selector: VRF2-DB-eth1-11
+    leaf: 102
+    from_card: "1"
+    from_port: "11"
+    to_card: "1"
+    to_port: "11"
+    vlan: 304

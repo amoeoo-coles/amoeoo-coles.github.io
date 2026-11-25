@@ -1,0 +1,80 @@
+# 05 — Policy-based redirect (PBR) policies and next-hop destinations
+# Lab / example only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+# Next-hop IP and MAC values are example placeholders, not production addresses.
+---
+- name: 05 — PBR redirect policies and destinations (example)
+  hosts: apic
+  connection: local
+  gather_facts: false
+  vars_files:
+    - vars/tenant.yml
+    - vars/l4l7.yml
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: "{{ apic_validate_certs }}"
+  tasks:
+    - name: Create the consumer-side L3 redirect policy for each VRF
+      cisco.aci.aci_l4l7_policy_based_redirect:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        policy_name: "{{ item.pbr_consumer.name }}"
+        destination_type: l3
+        hash_algorithm: ip_and_protocol
+        description: "Example PBR to the {{ item.vrf }} firewall external interface"
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.pbr_consumer.name }}"
+
+    - name: Create the provider-side L3 redirect policy for each VRF
+      cisco.aci.aci_l4l7_policy_based_redirect:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        policy_name: "{{ item.pbr_provider.name }}"
+        destination_type: l3
+        hash_algorithm: ip_and_protocol
+        description: "Example PBR to the {{ item.vrf }} firewall internal interface"
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.pbr_provider.name }}"
+
+    - name: Add the example consumer-side next-hop (firewall external IP and MAC)
+      cisco.aci.aci_l4l7_policy_based_redirect_destination:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        policy: "{{ item.pbr_consumer.name }}"
+        destination_name: "{{ item.pbr_consumer.dest_name }}"
+        destination_type: l3
+        ip: "{{ item.pbr_consumer.ip }}"
+        mac: "{{ item.pbr_consumer.mac }}"
+        logical_device: "{{ item.logical_device }}"
+        concrete_device: "{{ item.concrete_device }}"
+        concrete_interface: "{{ item.external_cif }}"
+        pod_id: "{{ firewall_cluster.pod_id }}"
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.pbr_consumer.dest_name }} {{ item.pbr_consumer.ip }}"
+
+    - name: Add the example provider-side next-hop (firewall internal IP and MAC)
+      cisco.aci.aci_l4l7_policy_based_redirect_destination:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        policy: "{{ item.pbr_provider.name }}"
+        destination_name: "{{ item.pbr_provider.dest_name }}"
+        destination_type: l3
+        ip: "{{ item.pbr_provider.ip }}"
+        mac: "{{ item.pbr_provider.mac }}"
+        logical_device: "{{ item.logical_device }}"
+        concrete_device: "{{ item.concrete_device }}"
+        concrete_interface: "{{ item.internal_cif }}"
+        pod_id: "{{ firewall_cluster.pod_id }}"
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.pbr_provider.dest_name }} {{ item.pbr_provider.ip }}"

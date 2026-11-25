@@ -1,0 +1,94 @@
+# 07 — Read-only validation queries
+# Read-only example. It only queries the APIC; it does not change fabric policy.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: 07 — Validate the example firewall-insertion objects (read-only)
+  hosts: apic
+  connection: local
+  gather_facts: false
+  vars_files:
+    - vars/access.yml
+    - vars/tenant.yml
+    - vars/l4l7.yml
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: "{{ apic_validate_certs }}"
+  tasks:
+    - name: Query the example tenant
+      cisco.aci.aci_tenant:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        state: query
+
+    - name: Query VRFs in the example tenant
+      cisco.aci.aci_vrf:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        state: query
+
+    - name: Query bridge domains in the example tenant
+      cisco.aci.aci_bd:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        state: query
+
+    - name: Query application profiles in the example tenant
+      cisco.aci.aci_ap:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        ap: "{{ app_profile }}"
+        state: query
+
+    - name: Query EPGs in the example application profile
+      cisco.aci.aci_epg:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        ap: "{{ app_profile }}"
+        state: query
+
+    - name: Query L4-L7 logical devices in the example tenant
+      cisco.aci.aci_l4l7_device:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        state: query
+
+    - name: Query PBR policies in the example tenant
+      cisco.aci.aci_l4l7_policy_based_redirect:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        state: query
+
+    - name: Query service graph templates in the example tenant
+      cisco.aci.aci_l4l7_service_graph_template:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        state: query
+
+    - name: Query contracts in the example tenant
+      cisco.aci.aci_contract:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        state: query
+
+    - name: Query the example tenant managed object tree (read-only)
+      cisco.aci.aci_rest:
+        <<: *aci_login
+        method: get
+        path: "/api/mo/uni/tn-{{ tenant }}.json?rsp-subtree=children"
+
+    - name: Query the example VLAN pool
+      cisco.aci.aci_vlan_pool:
+        <<: *aci_login
+        pool: "{{ vlan_pool }}"
+        pool_allocation_mode: "{{ vlan_pool_mode }}"
+        state: query
+
+    - name: Query the example vPC interface policy group
+      cisco.aci.aci_interface_policy_leaf_policy_group:
+        <<: *aci_login
+        policy_group: "{{ vpc_ipg }}"
+        lag_type: node
+        state: query

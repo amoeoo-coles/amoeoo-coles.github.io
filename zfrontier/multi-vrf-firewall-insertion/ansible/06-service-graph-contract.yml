@@ -1,0 +1,318 @@
+# 06 — Service graph template, device selection policy, contract, subject, filter and EPG bindings
+# Lab / example only. Do not run this playbook against a production APIC.
+# Credentials are placeholders. Never put a real password, token, or APIC address in this file.
+---
+- name: 06 — Service graph, contracts and PBR device selection (example)
+  hosts: apic
+  connection: local
+  gather_facts: false
+  vars_files:
+    - vars/tenant.yml
+    - vars/l4l7.yml
+  vars:
+    aci_login: &aci_login
+      host: "{{ apic_host }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      validate_certs: "{{ apic_validate_certs }}"
+  tasks:
+    - name: Create the example TCP filter
+      cisco.aci.aci_filter:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        filter: "{{ example_filter }}"
+        description: Example filter; replace the port with the ports you actually need
+        state: present
+
+    - name: Add the example TCP destination-port entry
+      cisco.aci.aci_filter_entry:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        filter: "{{ example_filter }}"
+        entry: "{{ example_filter_entry }}"
+        ether_type: "{{ example_ether_type }}"
+        ip_protocol: "{{ example_ip_protocol }}"
+        destination_port: "{{ example_dst_port }}"
+        stateful: true
+        state: present
+
+    - name: Create a VRF-scoped contract for each VRF
+      cisco.aci.aci_contract:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        contract: "{{ item.contract }}"
+        scope: context
+        description: "Example contract for {{ item.vrf }} App (consumer) to DB (provider)"
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.contract }}"
+
+    - name: Create the contract subject
+      cisco.aci.aci_contract_subject:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        contract: "{{ item.contract }}"
+        subject: "{{ item.subject }}"
+        apply_both_direction: both
+        reverse_filter: true
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.contract }} {{ item.subject }}"
+
+    - name: Bind the example filter to the subject
+      cisco.aci.aci_contract_subject_to_filter:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        contract: "{{ item.contract }}"
+        subject: "{{ item.subject }}"
+        filter: "{{ example_filter }}"
+        action: permit
+        direction: both
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.contract }} {{ example_filter }}"
+
+    - name: Create the one-node routed firewall service graph template
+      cisco.aci.aci_l4l7_service_graph_template:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        service_graph: "{{ item.graph }}"
+        type: legacy
+        filter_between_nodes: allow-all
+        description: "Example PBR service graph for {{ item.vrf }}"
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.graph }}"
+
+    - name: Add consumer terminal node T1
+      cisco.aci.aci_l4l7_service_graph_template_term_node:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        service_graph: "{{ item.graph }}"
+        node_name: T1
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.graph }} T1"
+
+    - name: Add provider terminal node T2
+      cisco.aci.aci_l4l7_service_graph_template_term_node:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        service_graph: "{{ item.graph }}"
+        node_name: T2
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.graph }} T2"
+
+    - name: Add the firewall function node in redirect (PBR) mode
+      cisco.aci.aci_l4l7_service_graph_template_node:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        service_graph: "{{ item.graph }}"
+        node: "{{ item.graph_node }}"
+        device: "{{ item.logical_device }}"
+        function_type: go_to
+        functional_template_type: fw_routed
+        routing_mode: redirect
+        managed: false
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.graph }} {{ item.graph_node }}"
+
+    - name: Add the consumer functional connector on the firewall node
+      cisco.aci.aci_l4l7_service_graph_template_functional_connection:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        service_graph: "{{ item.graph }}"
+        node: "{{ item.graph_node }}"
+        connection_name: consumer
+        connection_type: redir
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.graph }} consumer"
+
+    - name: Add the provider functional connector on the firewall node
+      cisco.aci.aci_l4l7_service_graph_template_functional_connection:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        service_graph: "{{ item.graph }}"
+        node: "{{ item.graph_node }}"
+        connection_name: provider
+        connection_type: redir
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.graph }} provider"
+
+    - name: Create the consumer-side graph connection C1
+      cisco.aci.aci_l4l7_service_graph_template_connection:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        service_graph: "{{ item.graph }}"
+        connection_name: C1
+        connector_direction: consumer
+        adjacency_type: l3
+        unicast_route: true
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.graph }} C1"
+
+    - name: Create the provider-side graph connection C2
+      cisco.aci.aci_l4l7_service_graph_template_connection:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        service_graph: "{{ item.graph }}"
+        connection_name: C2
+        connector_direction: provider
+        adjacency_type: l3
+        unicast_route: true
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.graph }} C2"
+
+    - name: Attach C1 to consumer terminal T1
+      cisco.aci.aci_l4l7_service_graph_template_connection_to_connector:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        service_graph: "{{ item.graph }}"
+        connection_name: C1
+        direction: consumer
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.graph }} C1-T1"
+
+    - name: Attach C1 to the firewall node consumer connector
+      cisco.aci.aci_l4l7_service_graph_template_connection_to_connector:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        service_graph: "{{ item.graph }}"
+        connection_name: C1
+        connected_node: "{{ item.graph_node }}"
+        direction: consumer
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.graph }} C1-N1"
+
+    - name: Attach C2 to the firewall node provider connector
+      cisco.aci.aci_l4l7_service_graph_template_connection_to_connector:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        service_graph: "{{ item.graph }}"
+        connection_name: C2
+        connected_node: "{{ item.graph_node }}"
+        direction: provider
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.graph }} C2-N1"
+
+    - name: Attach C2 to provider terminal T2
+      cisco.aci.aci_l4l7_service_graph_template_connection_to_connector:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        service_graph: "{{ item.graph }}"
+        connection_name: C2
+        direction: provider
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.graph }} C2-T2"
+
+    - name: Bind the service graph to the contract subject
+      cisco.aci.aci_contract_subject_to_service_graph:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        contract: "{{ item.contract }}"
+        subject: "{{ item.subject }}"
+        service_graph: "{{ item.graph }}"
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.contract }} {{ item.graph }}"
+
+    - name: Create the device selection policy for the graph node
+      cisco.aci.aci_l4l7_device_selection_policy:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        contract: "{{ item.contract }}"
+        graph: "{{ item.graph }}"
+        node: "{{ item.graph_node }}"
+        device: "{{ item.logical_device }}"
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.contract }} {{ item.graph }}"
+
+    - name: Bind the consumer connector to the external interface, consumer BD and PBR policy
+      cisco.aci.aci_l4l7_device_selection_interface_context:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        contract: "{{ item.contract }}"
+        graph: "{{ item.graph }}"
+        node: "{{ item.graph_node }}"
+        context: consumer
+        logical_device: "{{ item.logical_device }}"
+        logical_interface: "{{ item.external_lif }}"
+        bridge_domain: "{{ item.consumer_bd }}"
+        redirect_policy: "{{ item.pbr_consumer.name }}"
+        l3_destination: true
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.graph }} consumer"
+
+    - name: Bind the provider connector to the internal interface, provider BD and PBR policy
+      cisco.aci.aci_l4l7_device_selection_interface_context:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        contract: "{{ item.contract }}"
+        graph: "{{ item.graph }}"
+        node: "{{ item.graph_node }}"
+        context: provider
+        logical_device: "{{ item.logical_device }}"
+        logical_interface: "{{ item.internal_lif }}"
+        bridge_domain: "{{ item.provider_bd }}"
+        redirect_policy: "{{ item.pbr_provider.name }}"
+        l3_destination: true
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.graph }} provider"
+
+    - name: Bind the application EPG as the contract consumer
+      cisco.aci.aci_epg_to_contract:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        ap: "{{ app_profile }}"
+        epg: "{{ item.consumer_epg }}"
+        contract: "{{ item.contract }}"
+        contract_type: consumer
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.consumer_epg }} consumer of {{ item.contract }}"
+
+    - name: Bind the database EPG as the contract provider
+      cisco.aci.aci_epg_to_contract:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        ap: "{{ app_profile }}"
+        epg: "{{ item.provider_epg }}"
+        contract: "{{ item.contract }}"
+        contract_type: provider
+        state: present
+      loop: "{{ vrf_services }}"
+      loop_control:
+        label: "{{ item.provider_epg }} provider of {{ item.contract }}"
