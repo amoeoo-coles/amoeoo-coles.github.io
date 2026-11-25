@@ -800,6 +800,25 @@ html[data-theme="dark"] .diag svg .arrowhead { fill: var(--muted); }
 .diag svg rect.flow-nonaci { fill: #fef3c7; stroke: #d97706; }
 .diag svg rect.flow-mid { fill: #ede9fe; stroke: #7c3aed; }
 .diag svg rect.flow-ise { fill: #ccfbf1; stroke: #0f766e; }
+
+.cisco-fig {
+  overflow-x: auto;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.7rem;
+  margin: 0 0 1rem;
+  box-shadow: var(--shadow);
+}
+.cisco-fig img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 1160px;
+  background: #fff;
+  border-radius: 8px;
+}
+h3.redrawn-label { margin-top: 1.3rem; }
 html[data-theme="dark"] .diag svg rect.zone { fill: #0f172a; stroke: #334155; }
 html[data-theme="dark"] .diag svg rect.site-box { fill: #1e293b; stroke: #475569; }
 html[data-theme="dark"] .diag svg rect.ctrl { fill: #0c4a6e; stroke: #38bdf8; }
@@ -851,13 +870,22 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
 
 <p class="kicker">Hidden page</p>
 <h1>Cisco Common Policy Integration Guide</h1>
-<p class="ver"><a href="/zfrontier/common-policy/history/">v1 · 25 Nov 2026, 10:58 PM AEDT</a></p>
-<p class="lede">Summary of Cisco’s validated Common Policy Integration Guide (January 14, 2026), covering multi-domain Security Group Tag (SGT) context exchange and policy enforcement with Cisco ISE 3.4 Patch 1 as the central hub across Cisco ACI, Catalyst Center / SD-Access, Cisco SD-WAN, Secure Firewall Management Center (FMC), and VMware vCenter / public clouds. Both architecture diagrams below are original drawings.</p>
+<p class="ver"><a href="/zfrontier/common-policy/history/">v2 · 25 Nov 2026, 11:56 PM AEDT</a></p>
+<p class="lede">Summary of Cisco’s validated Common Policy Integration Guide (January 14, 2026), covering multi-domain Security Group Tag (SGT) context exchange and policy enforcement with Cisco ISE 3.4 Patch 1 as the central hub across Cisco ACI, Catalyst Center / SD-Access, Cisco SD-WAN, Secure Firewall Management Center (FMC), and VMware vCenter / public clouds. Section 3 includes the Cisco source topology figure and a redrawn original SVG. The workload classification diagram is an original drawing.</p>
 
 <ol class="page-menu" aria-label="On this page">
 <li><a href="#overview">Overview and architecture</a></li>
 <li><a href="#specs">Validated hardware and software</a></li>
 <li><a href="#topology">Multi-site Common Policy topology</a></li>
+<li><a href="#bom">Bill of Materials per DC</a>
+<ol>
+<li><a href="#bom-dc1">DC Site 1</a></li>
+<li><a href="#bom-dc2">DC Site 2 (Multi-Pod)</a></li>
+<li><a href="#bom-dc3">DC Site 3</a></li>
+<li><a href="#bom-shared">Shared components</a></li>
+<li><a href="#bom-sda">SD-Access sites and transit</a></li>
+</ol>
+</li>
 <li><a href="#use-cases">Solution use cases and verified scale</a></li>
 <li><a href="#integrations">ISE domain integrations</a>
 <ol>
@@ -929,8 +957,14 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
 
 <h2 id="topology">Multi-site Common Policy topology</h2>
 <p>The validated test bed spans three autonomous Cisco ACI data center fabrics (two single-pod sites and one Multi-Pod fabric joined by an IPN), an SD-Access Transit and campus sites (Main, Transit, and Branch), a central SD-WAN WAN fabric, a Firepower (FTD) boundary to a Non-SDA TrustSec domain, vCenter workloads, and FMC. The three ACI fabrics connect across Layer 3-only L3Out paths with unique IP subnets per fabric (with L3Out border leaves deployable in both pods of the Multi-Pod fabric). SD-Access Main and Branch sites integrate with SD-WAN Edges via eBGP, VRF-lite, and inline SGT, while ISE PSNs run per-VN SXP connections to the SD-Access Main Border Nodes.</p>
-<figure class="diag" aria-label="Multi-site Common Policy topology diagram">
-<svg class="arch" viewBox="0 0 1160 830" width="1160" height="830" role="img" aria-label="Original multi-site Common Policy topology showing three ACI data center sites, ISE PAN/MNT/PSN+pxGrid, Catalyst Center, vCenter, FMC, SD-WAN cloud, SDA Transit, SDA sites, Firewall, Non-SDA TrustSec, pxGrid dashed connections, and red Policy Enforcement Point markers.">
+<figure class="cisco-fig" id="topology-cisco">
+<img src="/zfrontier/common-policy/cisco-common-policy-topology.png" width="2562" height="1410" alt="Cisco Common Policy multi-site topology, showing DC Site 1, DC Site 2 multi-pod with an IPN, DC Site 3, ISE PAN/MNT/PSN+pxGrid, Catalyst Center, vCenter, FMC, the SD-WAN fabric, SDA Transit and campus sites, a firewall, and a Non-SDA TrustSec domain.">
+<figcaption>Figure: Common Policy multi-site topology — source: <a href="https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/catalyst-center/cisco-validated-solution-profiles/common-policy-integration-guide.pdf">Cisco Common Policy Integration Guide</a></figcaption>
+</figure>
+<h3 id="topology-redrawn" class="redrawn-label">Redrawn view</h3>
+<p>The drawing below is an original SVG of the same multi-site topology. It is not a copy or trace of the Cisco figure.</p>
+<figure class="diag" aria-label="Redrawn multi-site Common Policy topology diagram">
+<svg class="arch" viewBox="0 0 1160 830" width="1160" height="830" role="img" aria-label="Redrawn multi-site Common Policy topology showing three ACI data center sites, ISE PAN/MNT/PSN+pxGrid, Catalyst Center, vCenter, FMC, SD-WAN cloud, SDA Transit, SDA sites, Firewall, Non-SDA TrustSec, pxGrid dashed connections, and red Policy Enforcement Point markers.">
 <defs>
   <marker id="arr-solid" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
     <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569" class="arrowhead"/>
@@ -947,7 +981,7 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
 </defs>
 
 <rect class="panel" x="0" y="0" width="1160" height="830" rx="16" fill="#f8fafc" stroke="#e2e8f0"/>
-<text class="ink" x="22" y="28" font-size="14" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">Multi-site Common Policy topology (original drawing)</text>
+<text class="ink" x="22" y="28" font-size="14" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">Multi-site Common Policy topology (redrawn view)</text>
 <text class="muted" x="22" y="47" font-size="11.5" font-family="Segoe UI, system-ui, sans-serif">ACI data centers, SD-Access, SD-WAN, vCenter, FMC, and TrustSec via Cisco ISE.</text>
 
 <!-- Legend -->
@@ -1242,8 +1276,114 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
 <rect class="site-box" x="948" y="754" width="80" height="32" rx="6" stroke-width="1.3"/>
 <text class="ink" x="988" y="774" text-anchor="middle" font-size="10.5" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">AP</text>
 </svg>
-<figcaption>Original multi-site Common Policy topology diagram. Red circles mark Policy Enforcement Points (DC ACI leaves, SD-WAN edges, SD-Access border nodes, and Firewall). Dashed purple lines show pxGrid control-plane integration with ISE.</figcaption>
+<figcaption>Redrawn view of the multi-site Common Policy topology. Red circles mark Policy Enforcement Points (DC ACI leaves, SD-WAN edges, SD-Access border nodes, and Firewall). Dashed purple lines show pxGrid control-plane integration with ISE.</figcaption>
 </figure>
+
+<h2 id="bom">Bill of Materials per DC</h2>
+<p>Quantities below are counted from the Cisco Common Policy multi-site topology figure, not from a sized production design. Validated model and software values are taken only from the guide’s validated hardware and software matrix. Where the figure draws an item but the matrix does not name a model, or the figure leaves an icon unlabelled, the field is marked <strong>not collected</strong>. Part numbers, licences and prices are not invented.</p>
+
+<h3 id="bom-dc1">DC Site 1</h3>
+<p>Cisco’s figure places Catalyst Center and the ISE PAN, MNT and PSN+pxGrid nodes inside the DC Site 1 outline. Those shared controllers are listed only in the <a href="#bom-shared">Shared components</a> table so they are not counted twice.</p>
+<div class="scroll">
+<table class="data">
+<caption>DC Site 1 bill of materials (quantities as drawn)</caption>
+<thead>
+<tr><th>Role</th><th>Component</th><th>Qty (as drawn)</th><th>Validated model/version</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>Spine</td><td>ACI spine switch</td><td>2</td><td>N9K-C93240YC-FX2 or N9K-C9332C, ACI-mode 16.1.2 (with APIC 6.1.2)</td><td>The guide lists both Nexus 9000 models as ACI-mode switches. Which model is used as a spine versus a leaf is not collected.</td></tr>
+<tr><td>Leaf (PEP)</td><td>ACI leaf switch</td><td>4</td><td>N9K-C93240YC-FX2 or N9K-C9332C, ACI-mode 16.1.2 (with APIC 6.1.2)</td><td>Policy Enforcement Point markers are drawn on leaves in the Cisco figure. Spine versus leaf model split is not collected.</td></tr>
+<tr><td>APIC cluster</td><td>Cisco APIC</td><td>1 cluster</td><td>APIC-SERVER-M3, Cisco APIC Appliance, 6.1.2</td><td>The figure uses a stacked APIC icon. Cluster node count is not collected. The guide does not state the APIC cluster size.</td></tr>
+<tr><td>Unlabelled icon</td><td>Uplink / interconnect-style icon (left of fabric)</td><td>1</td><td>not collected</td><td>Drawn in the Cisco figure but not labelled. Role and model are not collected.</td></tr>
+<tr><td>Unlabelled icon</td><td>Three-cube cluster icon (left of fabric)</td><td>1</td><td>not collected</td><td>Drawn in the Cisco figure but not labelled. Role and model are not collected.</td></tr>
+<tr><td>Unlabelled icon</td><td>Server icon (left of fabric)</td><td>1</td><td>not collected</td><td>Drawn in the Cisco figure but not labelled. Role and model are not collected.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 id="bom-dc2">DC Site 2 (Multi-Pod)</h3>
+<div class="scroll">
+<table class="data">
+<caption>DC Site 2 bill of materials, split by Pod 1, Pod 2 and IPN (quantities as drawn)</caption>
+<thead>
+<tr><th>Role</th><th>Component</th><th>Qty (as drawn)</th><th>Validated model/version</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>Spine — Pod 1</td><td>ACI spine switch</td><td>2</td><td>N9K-C93240YC-FX2 or N9K-C9332C, ACI-mode 16.1.2 (with APIC 6.1.2)</td><td>Spine versus leaf model split is not collected.</td></tr>
+<tr><td>Leaf (PEP) — Pod 1</td><td>ACI leaf switch</td><td>2</td><td>N9K-C93240YC-FX2 or N9K-C9332C, ACI-mode 16.1.2 (with APIC 6.1.2)</td><td>Policy Enforcement Point markers are drawn on the Pod 1 leaves.</td></tr>
+<tr><td>Unlabelled icon — Pod 1</td><td>Server icon (inside Pod 1)</td><td>1</td><td>not collected</td><td>Drawn in the Cisco figure but not labelled. Role and model are not collected.</td></tr>
+<tr><td>Spine — Pod 2</td><td>ACI spine switch</td><td>2</td><td>N9K-C93240YC-FX2 or N9K-C9332C, ACI-mode 16.1.2 (with APIC 6.1.2)</td><td>Spine versus leaf model split is not collected.</td></tr>
+<tr><td>Leaf (PEP) — Pod 2</td><td>ACI leaf switch</td><td>2</td><td>N9K-C93240YC-FX2 or N9K-C9332C, ACI-mode 16.1.2 (with APIC 6.1.2)</td><td>Policy Enforcement Point markers are drawn on the Pod 2 leaves.</td></tr>
+<tr><td>Unlabelled icon — Pod 2</td><td>Server icon (inside Pod 2)</td><td>1</td><td>not collected</td><td>Drawn in the Cisco figure but not labelled. Role and model are not collected.</td></tr>
+<tr><td>IPN</td><td>Inter-Pod Network</td><td>1</td><td>not collected</td><td>Drawn as an IPN cloud joining Pod 1 and Pod 2. No IPN platform is named in the validated hardware matrix.</td></tr>
+<tr><td>Unlabelled icon — site</td><td>Three-cube cluster icon (between pods)</td><td>1</td><td>not collected</td><td>Drawn at the Pod 1 / Pod 2 boundary and not labelled. Role and model are not collected.</td></tr>
+<tr><td>APIC cluster</td><td>Cisco APIC</td><td>1 cluster</td><td>APIC-SERVER-M3, Cisco APIC Appliance, 6.1.2</td><td>Stacked APIC icon at site level. Cluster node count is not collected.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 id="bom-dc3">DC Site 3</h3>
+<div class="scroll">
+<table class="data">
+<caption>DC Site 3 bill of materials (quantities as drawn)</caption>
+<thead>
+<tr><th>Role</th><th>Component</th><th>Qty (as drawn)</th><th>Validated model/version</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>Spine</td><td>ACI spine switch</td><td>2</td><td>N9K-C93240YC-FX2 or N9K-C9332C, ACI-mode 16.1.2 (with APIC 6.1.2)</td><td>Spine versus leaf model split is not collected.</td></tr>
+<tr><td>Leaf (PEP)</td><td>ACI leaf switch</td><td>4</td><td>N9K-C93240YC-FX2 or N9K-C9332C, ACI-mode 16.1.2 (with APIC 6.1.2)</td><td>Policy Enforcement Point markers are drawn on leaves in the Cisco figure.</td></tr>
+<tr><td>APIC cluster</td><td>Cisco APIC</td><td>1 cluster</td><td>APIC-SERVER-M3, Cisco APIC Appliance, 6.1.2</td><td>Stacked APIC icon. Cluster node count is not collected.</td></tr>
+<tr><td>Unlabelled icon</td><td>DNA / helix-style icon (right of fabric)</td><td>1</td><td>not collected</td><td>Visually similar to the Catalyst Center icon in DC Site 1, but it is not labelled in DC Site 3. Role is not collected.</td></tr>
+<tr><td>Unlabelled icon</td><td>Uplink / interconnect-style icon (right of fabric)</td><td>1</td><td>not collected</td><td>Drawn in the Cisco figure but not labelled. Role and model are not collected.</td></tr>
+<tr><td>Unlabelled icon</td><td>Three-cube cluster icon (right of fabric)</td><td>1</td><td>not collected</td><td>Drawn in the Cisco figure but not labelled. Role and model are not collected.</td></tr>
+<tr><td>Unlabelled icon</td><td>Server icon (right of fabric)</td><td>1</td><td>not collected</td><td>Drawn in the Cisco figure but not labelled. Role and model are not collected.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 id="bom-shared">Shared components</h3>
+<div class="scroll">
+<table class="data">
+<caption>Shared controllers, WAN edges and firewall (quantities as drawn)</caption>
+<thead>
+<tr><th>Role</th><th>Component</th><th>Qty (as drawn)</th><th>Validated model/version</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>ISE PAN</td><td>Cisco Identity Services Engine (Policy Administration Node)</td><td>1</td><td>ISE-VM-K9, Cisco SNS-3600 or Cisco SNS-3700, ISE 3.4 Patch 1</td><td>Drawn inside the DC Site 1 outline. The guide lists these ISE platforms without assigning a specific appliance to the PAN role.</td></tr>
+<tr><td>ISE MNT</td><td>Cisco Identity Services Engine (Monitoring Node)</td><td>1</td><td>ISE-VM-K9, Cisco SNS-3600 or Cisco SNS-3700, ISE 3.4 Patch 1</td><td>Drawn inside the DC Site 1 outline. Role-to-platform mapping is not collected.</td></tr>
+<tr><td>ISE PSN + pxGrid</td><td>Cisco Identity Services Engine (Policy Service Node with pxGrid)</td><td>1</td><td>ISE-VM-K9, Cisco SNS-3600 or Cisco SNS-3700, ISE 3.4 Patch 1</td><td>Drawn inside the DC Site 1 outline, with an SXP link toward the SD-WAN edge. Additional PSN count is not collected.</td></tr>
+<tr><td>Catalyst Center</td><td>Cisco Catalyst Center</td><td>1 icon</td><td>DN2-HW-APL, Catalyst Center Appliance 3-Node Cluster, 2.3.7.7 or 2.3.7.9</td><td>Drawn as a single icon inside DC Site 1. The validated matrix describes a 3-node cluster; the figure does not show three separate nodes.</td></tr>
+<tr><td>Firewall management</td><td>Cisco Secure Firewall Management Center (FMC)</td><td>1</td><td>FMCv, 7.2.5</td><td>pxGrid 2.0 integration with ISE is listed as supported since FMC 6.7; the validated release is 7.2.5.</td></tr>
+<tr><td>Workload connector</td><td>VMware vCenter</td><td>1</td><td>not collected</td><td>Drawn in a cloud with a Cloud Connection toward the APICs. vCenter is described as a workload connector in the guide, but no vCenter model or version appears in the validated hardware matrix.</td></tr>
+<tr><td>WAN Edge (PEP)</td><td>Cisco SD-WAN Edge router</td><td>5</td><td>C8300 or C8500, 17.9.5f, 17.12.4b or 17.15.1a</td><td>Five WAN Edge icons are drawn on the SD-WAN cloud, connecting the data center sites, SDA sites and the firewall. Which edges use C8300 versus C8500 is not collected. SD-WAN Manager 20.15.1 is the validated manager release.</td></tr>
+<tr><td>Unlabelled SD-WAN controllers</td><td>Controller icons inside the SD-WAN cloud</td><td>3</td><td>Cisco SD-WAN Manager 20.15.1 is validated in the guide</td><td>The figure draws three unlabelled controller-style icons in the SD-WAN cloud and does not identify which (if any) is SD-WAN Manager. Individual roles are not collected.</td></tr>
+<tr><td>Firewall (PEP)</td><td>Cisco Firepower Threat Defense</td><td>1</td><td>FPR2110, Firepower 2100, 7.2.5</td><td>Drawn between an SD-WAN WAN Edge and the Non-SDA TrustSec cloud, with a Policy Enforcement Point marker.</td></tr>
+<tr><td>Non-SDA TrustSec</td><td>TrustSec domain (no SD-Access)</td><td>1 cloud</td><td>not collected</td><td>Drawn as a destination cloud beyond the firewall. No separate platform is named for this domain in the validated hardware matrix.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 id="bom-sda">SD-Access sites and transit</h3>
+<p>The guide validates Catalyst 9500H and 9600 as core and distribution nodes, Catalyst 9300-48P and 9300-24P as access nodes, Catalyst 9800-40-K9 as the wireless controller, and Catalyst 9120-AXI and 9130-AXI as access points (software 17.9.6 / 17.12.4 or 17.12.5 / 17.15.1 or 17.15.3, as listed in the matrix). The guide does not say which of those campus platforms is used as a BN, CP, EN or transit control-plane node. A dedicated wireless controller is not labelled in the Cisco topology figure (quantity as drawn: not collected).</p>
+<div class="scroll">
+<table class="data">
+<caption>SD-Access transit and sites bill of materials (quantities as drawn)</caption>
+<thead>
+<tr><th>Role</th><th>Component</th><th>Qty (as drawn)</th><th>Validated model/version</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>Transit Control Plane (TC)</td><td>SDA Transit control-plane node</td><td>1</td><td>not collected</td><td>Drawn as TC in the SDA Transit (IP Network) cloud. No separate TC platform is named in the validated hardware matrix.</td></tr>
+<tr><td>SDA Transit</td><td>IP Network (transit fabric)</td><td>1</td><td>not collected</td><td>Drawn as a transit cloud. Not a discrete appliance in the validated matrix.</td></tr>
+<tr><td>BN | CP | EN — Transit Site</td><td>Combined border, control-plane and edge node</td><td>1</td><td>C9500H, C9600, C9300-48P or C9300-24P (role mapping not collected)</td><td>One combined BN|CP|EN icon is drawn in the SDA Transit Site.</td></tr>
+<tr><td>Access point — Transit Site</td><td>Cisco Catalyst Access Point</td><td>1</td><td>9120-AXI or 9130-AXI, 17.9.6, 17.12.4 / 17.12.5 or 17.15.1 / 17.15.3</td><td>One labelled AP is drawn in the SDA Transit Site. Which AP model is used is not collected.</td></tr>
+<tr><td>BN | CP — Main Site (PEP)</td><td>SD-Access border and control-plane node</td><td>2</td><td>C9500H or C9600 as core/distribution (role mapping not collected)</td><td>Two BN|CP icons with Policy Enforcement Point markers are drawn in the SDA Main Site. An SXP link is shown toward these borders.</td></tr>
+<tr><td>EN — Main Site</td><td>SD-Access edge node</td><td>3</td><td>C9300-48P or C9300-24P as access (role mapping not collected)</td><td>Three EN icons are drawn in the SDA Main Site.</td></tr>
+<tr><td>Access point — Main Site</td><td>Cisco Catalyst Access Point</td><td>2</td><td>9120-AXI or 9130-AXI, 17.9.6, 17.12.4 / 17.12.5 or 17.15.1 / 17.15.3</td><td>Two labelled AP icons are drawn in the SDA Main Site.</td></tr>
+<tr><td>BN | CP | EN — Branch</td><td>Combined border, control-plane and edge node</td><td>1</td><td>C9500H, C9600, C9300-48P or C9300-24P (role mapping not collected)</td><td>One combined BN|CP|EN icon is drawn in the SDA Branch.</td></tr>
+<tr><td>Access point — Branch</td><td>Cisco Catalyst Access Point</td><td>2</td><td>9120-AXI or 9130-AXI, 17.9.6, 17.12.4 / 17.12.5 or 17.15.1 / 17.15.3</td><td>Two AP icons are drawn in the SDA Branch.</td></tr>
+</tbody>
+</table>
+</div>
 
 <h2 id="use-cases">Solution use cases and verified scale</h2>
 <div class="scroll">
@@ -1480,7 +1620,8 @@ S3-CE1# show cts role-based sgt-map vrf 1 all | inc 111.11.0.31</textarea>
 
 <h2 id="not-collected">Not collected</h2>
 <ul>
-  <li><strong>Original vendor figures:</strong> Cisco’s original PDF diagrams and reference screenshots were not copied or traced; both diagrams on this page are original SVG drawings.</li>
+  <li><strong>Cisco source figure:</strong> The multi-site topology figure in section 3 is the Cisco figure from the Common Policy Integration Guide, included at Aung’s request and captioned with a link to that guide. The SVG under Redrawn view, and the workload classification diagram, remain original drawings and are not traces of Cisco artwork.</li>
+  <li><strong>Bill of Materials gaps:</strong> APIC cluster node counts, spine versus leaf Nexus 9000 model split, vCenter model and version, IPN platform, unlabelled figure icons, SD-WAN controller icon roles, SDA BN/CP/EN platform mapping, transit control-plane platform, and a drawn quantity for the validated Catalyst 9800 wireless controller are not collected. No licences, list prices or invented part numbers are included.</li>
   <li><strong>Production addressing &amp; credentials:</strong> Real customer IPs, certificates, SXP passwords, and production policy names are not collected. The CLI snippets quote only the example lab values printed in the Cisco guide.</li>
   <li><strong>Standalone URL for SD-Access | SD-WAN Pairwise Guide:</strong> Cited by title in the PDF’s Technical References (<em>Cisco SD-Access | SD-WAN Independent Domain Pairwise Integration Prescriptive Deployment Guide</em>); a standalone Cisco.com URL was not collected in search results.</li>
   <li><strong>Live lab execution output:</strong> This page summarizes the published Cisco validated profile; no live Catalyst Center, ISE, APIC, SD-WAN, or FMC commands were executed for this summary.</li>
@@ -1514,16 +1655,17 @@ S3-CE1# show cts role-based sgt-map vrf 1 all | inc 111.11.0.31</textarea>
 
 <section id="versions">
 <h2>Versions</h2>
-<p>This is <strong>v1 · 25 Nov 2026, 10:58 PM AEDT</strong>. Snapshots are under <a href="/zfrontier/common-policy/history/">history/</a>.</p>
+<p>This is <strong>v2 · 25 Nov 2026, 11:56 PM AEDT</strong>. Snapshots are under <a href="/zfrontier/common-policy/history/">history/</a>.</p>
 <ul>
+<li><a href="/zfrontier/common-policy/history/v2/">v2 · 25 Nov 2026, 11:56 PM AEDT</a> — added the Cisco source topology figure and a Bill of Materials per DC, counted from that figure.</li>
 <li><a href="/zfrontier/common-policy/history/v1/">v1 · 25 Nov 2026, 10:58 PM AEDT</a> — first publication of the hidden Common Policy page, with original multi-site topology and workload classification flow diagrams.</li>
 </ul>
 </section>
 
 </main>
 <footer class="wrap">
-<p class="meta">Page: <strong>Cisco Common Policy Integration Guide</strong> · Version: <strong>v1 · 25 Nov 2026, 10:58 PM AEDT</strong></p>
-<p class="meta">This page is hidden and is not listed in the public site menu or the public zFrontier index. Folder links end with <code>/</code>. Diagrams are original drawings.</p>
+<p class="meta">Page: <strong>Cisco Common Policy Integration Guide</strong> · Version: <strong>v2 · 25 Nov 2026, 11:56 PM AEDT</strong></p>
+<p class="meta">This page is hidden and is not listed in the public site menu or the public zFrontier index. Folder links end with <code>/</code>. The multi-site topology section includes the Cisco source figure (with attribution) and an original redrawn SVG. The workload classification diagram is an original drawing. Bill of Materials quantities are taken from the reference topology, not a sized design.</p>
 </footer>
 
 <script>
