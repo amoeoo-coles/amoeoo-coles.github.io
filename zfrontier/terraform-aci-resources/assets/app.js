@@ -128,6 +128,7 @@
       " · DN: <strong class=\"mono\">" + escapeHtml(m.dn) + "</strong></p>" +
       '<p class="mod-desc">' + escapeHtml(m.desc || "Description not collected.") + "</p>" +
       '<p class="mod-meta">Required: ' + escapeHtml((m.required || []).join(", ") || "none") +
+      ((m.example_set || []).length ? " · Set in docs minimal example: " + escapeHtml(m.example_set.join(", ")) : "") +
       " · Optional inputs: " + m.optional_count + " · Exported attributes: " + m.exported_count +
       (m.depends_on && m.depends_on.length ? " · References: " + escapeHtml(m.depends_on.join(", ")) : "") + "</p>" +
       '<div class="mod-links">' +
