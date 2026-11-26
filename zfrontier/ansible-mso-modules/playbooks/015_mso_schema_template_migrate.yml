@@ -1,0 +1,21 @@
+---
+# Sample playbook for cisco.mso.mso_schema_template_migrate
+# Build order: 015
+# Migrate Bridge Domains (BDs) and EPGs between templates
+# Reads models/mso_schema_template_migrate.yml and uses inventory placeholders
+# {{ mso_host }} {{ mso_username }} {{ mso_password }}.
+# Default model state is present: the present and query tasks run.
+# The absent task runs only when the model state is set to absent.
+
+- name: "015 mso_schema_template_migrate"
+  hosts: mso
+  gather_facts: false
+  collections:
+    - cisco.mso
+  vars_files:
+    - ../models/mso_schema_template_migrate.yml
+  tasks:
+    - name: Run cisco.mso.mso_schema_template_migrate (sample; method from model, default get)
+      cisco.mso.mso_schema_template_migrate: "{{ mso_schema_template_migrate | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      delegate_to: localhost
+      register: result

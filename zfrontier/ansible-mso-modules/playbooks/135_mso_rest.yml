@@ -1,0 +1,21 @@
+---
+# Sample playbook for cisco.mso.mso_rest
+# Build order: 135
+# Direct access to the Cisco MSO REST API
+# Reads models/mso_rest.yml and uses inventory placeholders
+# {{ mso_host }} {{ mso_username }} {{ mso_password }}.
+# Default model state is present: the present and query tasks run.
+# The absent task runs only when the model state is set to absent.
+
+- name: "135 mso_rest"
+  hosts: mso
+  gather_facts: false
+  collections:
+    - cisco.mso
+  vars_files:
+    - ../models/mso_rest.yml
+  tasks:
+    - name: Run cisco.mso.mso_rest (sample; method from model, default get)
+      cisco.mso.mso_rest: "{{ mso_rest | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      delegate_to: localhost
+      register: result

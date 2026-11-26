@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sample .tf files — Terraform MSO Resource and Data Source Catalogue</title>
+<meta name="description" content="Sample .tf files for the Terraform MSO catalogue.">
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+html{overflow-x:hidden;}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+  background:var(--bg) !important;
+  color:var(--ink) !important;
+}
+main{max-width:none !important;width:100%;margin:0 !important;padding:0 !important;box-sizing:border-box;min-width:0;}
+a:not(#mm-link):not(.kicker){color:var(--link);}
+#tt-wrap{
+  position:static!important;
+  display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;
+  box-sizing:border-box;width:100%;height:36px;padding:8px 0 0;flex:none;
+}
+#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;align-items:center;justify-content:center;
+  height:36px;padding:0 12px;border-radius:18px;
+  border:1px solid var(--btn-bd);background:var(--btn-bg);color:var(--btn-fg);
+  cursor:pointer;opacity:.92;text-decoration:none;white-space:nowrap;flex:none;
+}
+#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+.uv,.uvc{color:#fff!important}
+</style>
+<link rel="stylesheet" href="/zfrontier/terraform-mso-resources/assets/page.css">
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'☀️ Light':'🌙 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+})();</script>
+<main class="wrap">
+<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:var(--muted,#888)"><a href="/visitors/" style="color:inherit;text-decoration:none"><span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></a><span class="uvt" style="font-size:11px;color:var(--muted,#888)"></span></div><!--/arr-uv-tr17-->
+<p class="kicker">zFrontier</p>
+<h1>Sample .tf files</h1>
+<p class="lede">183 files. This folder is part of the <a href="/zfrontier/terraform-mso-resources/">Terraform MSO Resource and Data Source Catalogue</a>.</p>
+<ul class="page-menu" style="list-style:none;padding:14px 18px">
+<li><a href="001_mso_label.tf"><code>001_mso_label.tf</code></a></li>
+<li><a href="002_data_mso_label.tf"><code>002_data_mso_label.tf</code></a></li>
+<li><a href="003_mso_remote_location.tf"><code>003_mso_remote_location.tf</code></a></li>
+<li><a href="004_data_mso_remote_location.tf"><code>004_data_mso_remote_location.tf</code></a></li>
+<li><a href="005_data_mso_role.tf"><code>005_data_mso_role.tf</code></a></li>
+<li><a href="006_mso_site.tf"><code>006_mso_site.tf</code></a></li>
+<li><a href="007_data_mso_site.tf"><code>007_data_mso_site.tf</code></a></li>
+<li><a href="008_mso_system_config.tf"><code>008_mso_system_config.tf</code></a></li>
+<li><a href="009_data_mso_system_config.tf"><code>009_data_mso_system_config.tf</code></a></li>
+<li><a href="010_mso_user.tf"><code>010_mso_user.tf</code></a></li>
+<li><a href="011_data_mso_user.tf"><code>011_data_mso_user.tf</code></a></li>
+<li><a href="012_mso_tenant.tf"><code>012_mso_tenant.tf</code></a></li>
+<li><a href="013_data_mso_tenant.tf"><code>013_data_mso_tenant.tf</code></a></li>
+<li><a href="014_mso_schema.tf"><code>014_mso_schema.tf</code></a></li>
+<li><a href="015_data_mso_schema.tf"><code>015_data_mso_schema.tf</code></a></li>
+<li><a href="016_mso_schema_site.tf"><code>016_mso_schema_site.tf</code></a></li>
+<li><a href="017_data_mso_schema_site.tf"><code>017_data_mso_schema_site.tf</code></a></li>
+<li><a href="018_mso_schema_template.tf"><code>018_mso_schema_template.tf</code></a></li>
+<li><a href="019_data_mso_schema_template.tf"><code>019_data_mso_schema_template.tf</code></a></li>
+<li><a href="020_mso_template.tf"><code>020_mso_template.tf</code></a></li>
+<li><a href="021_data_mso_template.tf"><code>021_data_mso_template.tf</code></a></li>
+<li><a href="022_mso_schema_site_vrf.tf"><code>022_mso_schema_site_vrf.tf</code></a></li>
+<li><a href="023_data_mso_schema_site_vrf.tf"><code>023_data_mso_schema_site_vrf.tf</code></a></li>
+<li><a href="024_mso_schema_site_vrf_region.tf"><code>024_mso_schema_site_vrf_region.tf</code></a></li>
+<li><a href="025_data_mso_schema_site_vrf_region.tf"><code>025_data_mso_schema_site_vrf_region.tf</code></a></li>
+<li><a href="026_mso_schema_site_vrf_region_cidr.tf"><code>026_mso_schema_site_vrf_region_cidr.tf</code></a></li>
+<li><a href="027_data_mso_schema_site_vrf_region_cidr.tf"><code>027_data_mso_schema_site_vrf_region_cidr.tf</code></a></li>
+<li><a href="028_mso_schema_site_vrf_region_cidr_subnet.tf"><code>028_mso_schema_site_vrf_region_cidr_subnet.tf</code></a></li>
+<li><a href="029_data_mso_schema_site_vrf_region_cidr_subnet.tf"><code>029_data_mso_schema_site_vrf_region_cidr_subnet.tf</code></a></li>
+<li><a href="030_mso_schema_site_vrf_route_leak.tf"><code>030_mso_schema_site_vrf_route_leak.tf</code></a></li>
+<li><a href="031_data_mso_schema_site_vrf_route_leak.tf"><code>031_data_mso_schema_site_vrf_route_leak.tf</code></a></li>
+<li><a href="032_mso_schema_template_vrf.tf"><code>032_mso_schema_template_vrf.tf</code></a></li>
+<li><a href="033_data_mso_schema_template_vrf.tf"><code>033_data_mso_schema_template_vrf.tf</code></a></li>
+<li><a href="034_mso_schema_template_vrf_contract.tf"><code>034_mso_schema_template_vrf_contract.tf</code></a></li>
+<li><a href="035_data_mso_schema_template_vrf_contract.tf"><code>035_data_mso_schema_template_vrf_contract.tf</code></a></li>
+<li><a href="036_mso_schema_site_bd.tf"><code>036_mso_schema_site_bd.tf</code></a></li>
+<li><a href="037_data_mso_schema_site_bd.tf"><code>037_data_mso_schema_site_bd.tf</code></a></li>
+<li><a href="038_mso_schema_site_bd_l3out.tf"><code>038_mso_schema_site_bd_l3out.tf</code></a></li>
+<li><a href="039_data_mso_schema_site_bd_l3out.tf"><code>039_data_mso_schema_site_bd_l3out.tf</code></a></li>
+<li><a href="040_mso_schema_site_bd_subnet.tf"><code>040_mso_schema_site_bd_subnet.tf</code></a></li>
+<li><a href="041_data_mso_schema_site_bd_subnet.tf"><code>041_data_mso_schema_site_bd_subnet.tf</code></a></li>
+<li><a href="042_mso_schema_template_bd.tf"><code>042_mso_schema_template_bd.tf</code></a></li>
+<li><a href="043_data_mso_schema_template_bd.tf"><code>043_data_mso_schema_template_bd.tf</code></a></li>
+<li><a href="044_mso_schema_template_bd_subnet.tf"><code>044_mso_schema_template_bd_subnet.tf</code></a></li>
+<li><a href="045_data_mso_schema_template_bd_subnet.tf"><code>045_data_mso_schema_template_bd_subnet.tf</code></a></li>
+<li><a href="046_mso_schema_site_anp.tf"><code>046_mso_schema_site_anp.tf</code></a></li>
+<li><a href="047_data_mso_schema_site_anp.tf"><code>047_data_mso_schema_site_anp.tf</code></a></li>
+<li><a href="048_mso_schema_site_anp_epg.tf"><code>048_mso_schema_site_anp_epg.tf</code></a></li>
+<li><a href="049_data_mso_schema_site_anp_epg.tf"><code>049_data_mso_schema_site_anp_epg.tf</code></a></li>
+<li><a href="050_mso_schema_site_anp_epg_bulk_staticport.tf"><code>050_mso_schema_site_anp_epg_bulk_staticport.tf</code></a></li>
+<li><a href="051_data_mso_schema_site_anp_epg_bulk_staticport.tf"><code>051_data_mso_schema_site_anp_epg_bulk_staticport.tf</code></a></li>
+<li><a href="052_mso_schema_site_anp_epg_domain.tf"><code>052_mso_schema_site_anp_epg_domain.tf</code></a></li>
+<li><a href="053_data_mso_schema_site_anp_epg_domain.tf"><code>053_data_mso_schema_site_anp_epg_domain.tf</code></a></li>
+<li><a href="054_mso_schema_site_anp_epg_selector.tf"><code>054_mso_schema_site_anp_epg_selector.tf</code></a></li>
+<li><a href="055_data_mso_schema_site_anp_epg_selector.tf"><code>055_data_mso_schema_site_anp_epg_selector.tf</code></a></li>
+<li><a href="056_mso_schema_site_anp_epg_static_leaf.tf"><code>056_mso_schema_site_anp_epg_static_leaf.tf</code></a></li>
+<li><a href="057_data_mso_schema_site_anp_epg_static_leaf.tf"><code>057_data_mso_schema_site_anp_epg_static_leaf.tf</code></a></li>
+<li><a href="058_mso_schema_site_anp_epg_static_port.tf"><code>058_mso_schema_site_anp_epg_static_port.tf</code></a></li>
+<li><a href="059_data_mso_schema_site_anp_epg_static_port.tf"><code>059_data_mso_schema_site_anp_epg_static_port.tf</code></a></li>
+<li><a href="060_mso_schema_site_anp_epg_subnet.tf"><code>060_mso_schema_site_anp_epg_subnet.tf</code></a></li>
+<li><a href="061_data_mso_schema_site_anp_epg_subnet.tf"><code>061_data_mso_schema_site_anp_epg_subnet.tf</code></a></li>
+<li><a href="062_mso_schema_template_anp.tf"><code>062_mso_schema_template_anp.tf</code></a></li>
+<li><a href="063_data_mso_schema_template_anp.tf"><code>063_data_mso_schema_template_anp.tf</code></a></li>
+<li><a href="064_mso_schema_template_anp_epg.tf"><code>064_mso_schema_template_anp_epg.tf</code></a></li>
+<li><a href="065_data_mso_schema_template_anp_epg.tf"><code>065_data_mso_schema_template_anp_epg.tf</code></a></li>
+<li><a href="066_mso_schema_template_anp_epg_contract.tf"><code>066_mso_schema_template_anp_epg_contract.tf</code></a></li>
+<li><a href="067_data_mso_schema_template_anp_epg_contract.tf"><code>067_data_mso_schema_template_anp_epg_contract.tf</code></a></li>
+<li><a href="068_mso_schema_template_anp_epg_selector.tf"><code>068_mso_schema_template_anp_epg_selector.tf</code></a></li>
+<li><a href="069_data_mso_schema_template_anp_epg_selector.tf"><code>069_data_mso_schema_template_anp_epg_selector.tf</code></a></li>
+<li><a href="070_mso_schema_template_anp_epg_subnet.tf"><code>070_mso_schema_template_anp_epg_subnet.tf</code></a></li>
+<li><a href="071_data_mso_schema_template_anp_epg_subnet.tf"><code>071_data_mso_schema_template_anp_epg_subnet.tf</code></a></li>
+<li><a href="072_mso_schema_template_anp_epg_useg_attr.tf"><code>072_mso_schema_template_anp_epg_useg_attr.tf</code></a></li>
+<li><a href="073_data_mso_schema_template_anp_epg_useg_attr.tf"><code>073_data_mso_schema_template_anp_epg_useg_attr.tf</code></a></li>
+<li><a href="074_mso_schema_site_external_epg.tf"><code>074_mso_schema_site_external_epg.tf</code></a></li>
+<li><a href="075_data_mso_schema_site_external_epg.tf"><code>075_data_mso_schema_site_external_epg.tf</code></a></li>
+<li><a href="076_mso_schema_site_external_epg_selector.tf"><code>076_mso_schema_site_external_epg_selector.tf</code></a></li>
+<li><a href="077_data_mso_schema_site_external_epg_selector.tf"><code>077_data_mso_schema_site_external_epg_selector.tf</code></a></li>
+<li><a href="078_mso_schema_template_contract.tf"><code>078_mso_schema_template_contract.tf</code></a></li>
+<li><a href="079_data_mso_schema_template_contract.tf"><code>079_data_mso_schema_template_contract.tf</code></a></li>
+<li><a href="080_mso_schema_template_contract_filter.tf"><code>080_mso_schema_template_contract_filter.tf</code></a></li>
+<li><a href="081_data_mso_schema_template_contract_filter.tf"><code>081_data_mso_schema_template_contract_filter.tf</code></a></li>
+<li><a href="082_mso_schema_template_external_epg.tf"><code>082_mso_schema_template_external_epg.tf</code></a></li>
+<li><a href="083_data_mso_schema_template_external_epg.tf"><code>083_data_mso_schema_template_external_epg.tf</code></a></li>
+<li><a href="084_mso_schema_template_external_epg_contract.tf"><code>084_mso_schema_template_external_epg_contract.tf</code></a></li>
+<li><a href="085_data_mso_schema_template_external_epg_contract.tf"><code>085_data_mso_schema_template_external_epg_contract.tf</code></a></li>
+<li><a href="086_mso_schema_template_external_epg_selector.tf"><code>086_mso_schema_template_external_epg_selector.tf</code></a></li>
+<li><a href="087_data_mso_schema_template_external_epg_selector.tf"><code>087_data_mso_schema_template_external_epg_selector.tf</code></a></li>
+<li><a href="088_mso_schema_template_external_epg_subnet.tf"><code>088_mso_schema_template_external_epg_subnet.tf</code></a></li>
+<li><a href="089_data_mso_schema_template_external_epg_subnet.tf"><code>089_data_mso_schema_template_external_epg_subnet.tf</code></a></li>
+<li><a href="090_mso_schema_template_filter_entry.tf"><code>090_mso_schema_template_filter_entry.tf</code></a></li>
+<li><a href="091_data_mso_schema_template_filter_entry.tf"><code>091_data_mso_schema_template_filter_entry.tf</code></a></li>
+<li><a href="092_mso_schema_template_l3out.tf"><code>092_mso_schema_template_l3out.tf</code></a></li>
+<li><a href="093_data_mso_schema_template_l3out.tf"><code>093_data_mso_schema_template_l3out.tf</code></a></li>
+<li><a href="094_mso_schema_site_contract_service_graph.tf"><code>094_mso_schema_site_contract_service_graph.tf</code></a></li>
+<li><a href="095_data_mso_schema_site_contract_service_graph.tf"><code>095_data_mso_schema_site_contract_service_graph.tf</code></a></li>
+<li><a href="096_mso_schema_site_contract_service_graph_listener.tf"><code>096_mso_schema_site_contract_service_graph_listener.tf</code></a></li>
+<li><a href="097_data_mso_schema_site_contract_service_graph_listener.tf"><code>097_data_mso_schema_site_contract_service_graph_listener.tf</code></a></li>
+<li><a href="098_mso_schema_site_service_graph.tf"><code>098_mso_schema_site_service_graph.tf</code></a></li>
+<li><a href="099_data_mso_schema_site_service_graph.tf"><code>099_data_mso_schema_site_service_graph.tf</code></a></li>
+<li><a href="100_mso_schema_site_service_graph_node.tf"><code>100_mso_schema_site_service_graph_node.tf</code></a></li>
+<li><a href="101_mso_schema_template_contract_service_chaining.tf"><code>101_mso_schema_template_contract_service_chaining.tf</code></a></li>
+<li><a href="102_data_mso_schema_template_contract_service_chaining.tf"><code>102_data_mso_schema_template_contract_service_chaining.tf</code></a></li>
+<li><a href="103_mso_schema_template_contract_service_graph.tf"><code>103_mso_schema_template_contract_service_graph.tf</code></a></li>
+<li><a href="104_data_mso_schema_template_contract_service_graph.tf"><code>104_data_mso_schema_template_contract_service_graph.tf</code></a></li>
+<li><a href="105_mso_schema_template_service_graph.tf"><code>105_mso_schema_template_service_graph.tf</code></a></li>
+<li><a href="106_data_mso_schema_template_service_graph.tf"><code>106_data_mso_schema_template_service_graph.tf</code></a></li>
+<li><a href="107_mso_service_device_cluster.tf"><code>107_mso_service_device_cluster.tf</code></a></li>
+<li><a href="108_data_mso_service_device_cluster.tf"><code>108_data_mso_service_device_cluster.tf</code></a></li>
+<li><a href="109_mso_service_device_cluster_site.tf"><code>109_mso_service_device_cluster_site.tf</code></a></li>
+<li><a href="110_data_mso_service_device_cluster_site.tf"><code>110_data_mso_service_device_cluster_site.tf</code></a></li>
+<li><a href="111_mso_service_node_type.tf"><code>111_mso_service_node_type.tf</code></a></li>
+<li><a href="112_data_mso_service_node_type.tf"><code>112_data_mso_service_node_type.tf</code></a></li>
+<li><a href="113_mso_tenant_policies_bgp_peer_prefix_policy.tf"><code>113_mso_tenant_policies_bgp_peer_prefix_policy.tf</code></a></li>
+<li><a href="114_data_mso_tenant_policies_bgp_peer_prefix_policy.tf"><code>114_data_mso_tenant_policies_bgp_peer_prefix_policy.tf</code></a></li>
+<li><a href="115_mso_tenant_policies_custom_qos_policy.tf"><code>115_mso_tenant_policies_custom_qos_policy.tf</code></a></li>
+<li><a href="116_data_mso_tenant_policies_custom_qos_policy.tf"><code>116_data_mso_tenant_policies_custom_qos_policy.tf</code></a></li>
+<li><a href="117_mso_tenant_policies_dhcp_option_policy.tf"><code>117_mso_tenant_policies_dhcp_option_policy.tf</code></a></li>
+<li><a href="118_data_mso_tenant_policies_dhcp_option_policy.tf"><code>118_data_mso_tenant_policies_dhcp_option_policy.tf</code></a></li>
+<li><a href="119_mso_tenant_policies_dhcp_relay_policy.tf"><code>119_mso_tenant_policies_dhcp_relay_policy.tf</code></a></li>
+<li><a href="120_data_mso_tenant_policies_dhcp_relay_policy.tf"><code>120_data_mso_tenant_policies_dhcp_relay_policy.tf</code></a></li>
+<li><a href="121_mso_tenant_policies_endpoint_mac_tag_policy.tf"><code>121_mso_tenant_policies_endpoint_mac_tag_policy.tf</code></a></li>
+<li><a href="122_data_mso_tenant_policies_endpoint_mac_tag_policy.tf"><code>122_data_mso_tenant_policies_endpoint_mac_tag_policy.tf</code></a></li>
+<li><a href="123_mso_tenant_policies_igmp_interface_policy.tf"><code>123_mso_tenant_policies_igmp_interface_policy.tf</code></a></li>
+<li><a href="124_data_mso_tenant_policies_igmp_interface_policy.tf"><code>124_data_mso_tenant_policies_igmp_interface_policy.tf</code></a></li>
+<li><a href="125_mso_tenant_policies_ipsla_monitoring_policy.tf"><code>125_mso_tenant_policies_ipsla_monitoring_policy.tf</code></a></li>
+<li><a href="126_data_mso_tenant_policies_ipsla_monitoring_policy.tf"><code>126_data_mso_tenant_policies_ipsla_monitoring_policy.tf</code></a></li>
+<li><a href="127_mso_tenant_policies_ipsla_track_list.tf"><code>127_mso_tenant_policies_ipsla_track_list.tf</code></a></li>
+<li><a href="128_data_mso_tenant_policies_ipsla_track_list.tf"><code>128_data_mso_tenant_policies_ipsla_track_list.tf</code></a></li>
+<li><a href="129_mso_tenant_policies_l3out_interface_routing_policy.tf"><code>129_mso_tenant_policies_l3out_interface_routing_policy.tf</code></a></li>
+<li><a href="130_data_mso_tenant_policies_l3out_interface_routing_policy.tf"><code>130_data_mso_tenant_policies_l3out_interface_routing_policy.tf</code></a></li>
+<li><a href="131_mso_tenant_policies_l3out_node_routing_policy.tf"><code>131_mso_tenant_policies_l3out_node_routing_policy.tf</code></a></li>
+<li><a href="132_data_mso_tenant_policies_l3out_node_routing_policy.tf"><code>132_data_mso_tenant_policies_l3out_node_routing_policy.tf</code></a></li>
+<li><a href="133_mso_tenant_policies_match_rule_policy.tf"><code>133_mso_tenant_policies_match_rule_policy.tf</code></a></li>
+<li><a href="134_data_mso_tenant_policies_match_rule_policy.tf"><code>134_data_mso_tenant_policies_match_rule_policy.tf</code></a></li>
+<li><a href="135_mso_tenant_policies_mld_snooping_policy.tf"><code>135_mso_tenant_policies_mld_snooping_policy.tf</code></a></li>
+<li><a href="136_data_mso_tenant_policies_mld_snooping_policy.tf"><code>136_data_mso_tenant_policies_mld_snooping_policy.tf</code></a></li>
+<li><a href="137_mso_tenant_policies_netflow_exporter.tf"><code>137_mso_tenant_policies_netflow_exporter.tf</code></a></li>
+<li><a href="138_data_mso_tenant_policies_netflow_exporter.tf"><code>138_data_mso_tenant_policies_netflow_exporter.tf</code></a></li>
+<li><a href="139_mso_tenant_policies_netflow_exporter_site.tf"><code>139_mso_tenant_policies_netflow_exporter_site.tf</code></a></li>
+<li><a href="140_data_mso_tenant_policies_netflow_exporter_site.tf"><code>140_data_mso_tenant_policies_netflow_exporter_site.tf</code></a></li>
+<li><a href="141_mso_tenant_policies_netflow_monitor.tf"><code>141_mso_tenant_policies_netflow_monitor.tf</code></a></li>
+<li><a href="142_data_mso_tenant_policies_netflow_monitor.tf"><code>142_data_mso_tenant_policies_netflow_monitor.tf</code></a></li>
+<li><a href="143_mso_tenant_policies_netflow_record.tf"><code>143_mso_tenant_policies_netflow_record.tf</code></a></li>
+<li><a href="144_data_mso_tenant_policies_netflow_record.tf"><code>144_data_mso_tenant_policies_netflow_record.tf</code></a></li>
+<li><a href="145_mso_tenant_policies_route_map_policy_multicast.tf"><code>145_mso_tenant_policies_route_map_policy_multicast.tf</code></a></li>
+<li><a href="146_data_mso_tenant_policies_route_map_policy_multicast.tf"><code>146_data_mso_tenant_policies_route_map_policy_multicast.tf</code></a></li>
+<li><a href="147_mso_tenant_policies_route_map_policy_route_control.tf"><code>147_mso_tenant_policies_route_map_policy_route_control.tf</code></a></li>
+<li><a href="148_data_mso_tenant_policies_route_map_policy_route_control.tf"><code>148_data_mso_tenant_policies_route_map_policy_route_control.tf</code></a></li>
+<li><a href="149_mso_tenant_policies_route_map_policy_route_control_context.tf"><code>149_mso_tenant_policies_route_map_policy_route_control_context.tf</code></a></li>
+<li><a href="150_data_mso_tenant_policies_route_map_policy_route_control_context.tf"><code>150_data_mso_tenant_policies_route_map_policy_route_control_context.tf</code></a></li>
+<li><a href="151_mso_tenant_policies_set_rule_policy.tf"><code>151_mso_tenant_policies_set_rule_policy.tf</code></a></li>
+<li><a href="152_data_mso_tenant_policies_set_rule_policy.tf"><code>152_data_mso_tenant_policies_set_rule_policy.tf</code></a></li>
+<li><a href="153_mso_fabric_policies_interface_setting.tf"><code>153_mso_fabric_policies_interface_setting.tf</code></a></li>
+<li><a href="154_data_mso_fabric_policies_interface_setting.tf"><code>154_data_mso_fabric_policies_interface_setting.tf</code></a></li>
+<li><a href="155_mso_fabric_policies_l3_domain.tf"><code>155_mso_fabric_policies_l3_domain.tf</code></a></li>
+<li><a href="156_data_mso_fabric_policies_l3_domain.tf"><code>156_data_mso_fabric_policies_l3_domain.tf</code></a></li>
+<li><a href="157_mso_fabric_policies_macsec_policy.tf"><code>157_mso_fabric_policies_macsec_policy.tf</code></a></li>
+<li><a href="158_data_mso_fabric_policies_macsec_policy.tf"><code>158_data_mso_fabric_policies_macsec_policy.tf</code></a></li>
+<li><a href="159_mso_fabric_policies_mcp_global_policy.tf"><code>159_mso_fabric_policies_mcp_global_policy.tf</code></a></li>
+<li><a href="160_data_mso_fabric_policies_mcp_global_policy.tf"><code>160_data_mso_fabric_policies_mcp_global_policy.tf</code></a></li>
+<li><a href="161_mso_fabric_policies_node_settings.tf"><code>161_mso_fabric_policies_node_settings.tf</code></a></li>
+<li><a href="162_data_mso_fabric_policies_node_settings.tf"><code>162_data_mso_fabric_policies_node_settings.tf</code></a></li>
+<li><a href="163_mso_fabric_policies_physical_domain.tf"><code>163_mso_fabric_policies_physical_domain.tf</code></a></li>
+<li><a href="164_data_mso_fabric_policies_physical_domain.tf"><code>164_data_mso_fabric_policies_physical_domain.tf</code></a></li>
+<li><a href="165_mso_fabric_policies_ptp_policy.tf"><code>165_mso_fabric_policies_ptp_policy.tf</code></a></li>
+<li><a href="166_data_mso_fabric_policies_ptp_policy.tf"><code>166_data_mso_fabric_policies_ptp_policy.tf</code></a></li>
+<li><a href="167_mso_fabric_policies_ptp_policy_profile.tf"><code>167_mso_fabric_policies_ptp_policy_profile.tf</code></a></li>
+<li><a href="168_data_mso_fabric_policies_ptp_policy_profile.tf"><code>168_data_mso_fabric_policies_ptp_policy_profile.tf</code></a></li>
+<li><a href="169_mso_fabric_policies_synce_interface_policy.tf"><code>169_mso_fabric_policies_synce_interface_policy.tf</code></a></li>
+<li><a href="170_data_mso_fabric_policies_synce_interface_policy.tf"><code>170_data_mso_fabric_policies_synce_interface_policy.tf</code></a></li>
+<li><a href="171_mso_fabric_policies_vlan_pool.tf"><code>171_mso_fabric_policies_vlan_pool.tf</code></a></li>
+<li><a href="172_data_mso_fabric_policies_vlan_pool.tf"><code>172_data_mso_fabric_policies_vlan_pool.tf</code></a></li>
+<li><a href="173_mso_fabric_resource_policies_physical_interface.tf"><code>173_mso_fabric_resource_policies_physical_interface.tf</code></a></li>
+<li><a href="174_data_mso_fabric_resource_policies_physical_interface.tf"><code>174_data_mso_fabric_resource_policies_physical_interface.tf</code></a></li>
+<li><a href="175_mso_fabric_resource_policies_port_channel_interface.tf"><code>175_mso_fabric_resource_policies_port_channel_interface.tf</code></a></li>
+<li><a href="176_data_mso_fabric_resource_policies_port_channel_interface.tf"><code>176_data_mso_fabric_resource_policies_port_channel_interface.tf</code></a></li>
+<li><a href="177_mso_fabric_resource_policies_virtual_port_channel_interface.tf"><code>177_mso_fabric_resource_policies_virtual_port_channel_interface.tf</code></a></li>
+<li><a href="178_data_mso_fabric_resource_policies_virtual_port_channel_interface.tf"><code>178_data_mso_fabric_resource_policies_virtual_port_channel_interface.tf</code></a></li>
+<li><a href="179_mso_rest.tf"><code>179_mso_rest.tf</code></a></li>
+<li><a href="180_data_mso_rest.tf"><code>180_data_mso_rest.tf</code></a></li>
+<li><a href="181_mso_schema_template_deploy.tf"><code>181_mso_schema_template_deploy.tf</code></a></li>
+<li><a href="182_mso_schema_template_deploy_ndo.tf"><code>182_mso_schema_template_deploy_ndo.tf</code></a></li>
+<li><a href="versions.tf"><code>versions.tf</code></a></li>
+</ul>
+</main>
+<footer class="wrap">
+  <p class="meta">Page: <strong>Terraform MSO Resource and Data Source Catalogue</strong> · Folder: <code>tf/</code></p>
+  <p class="meta">Folder links end with <code>/</code>.</p>
+</footer>
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/"}}</script>
+<script>(function(){var b=String.fromCharCode(99,111,108,101,115);var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';s.setAttribute('data-goatcounter','https://amoeoo-'+b+'.goatcounter.com/count');document.head.appendChild(s);}());</script>
+
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+
+<!-- uv-badge v2 -->
+<style id="uv-badge-style">
+.uv-pop{position:relative;display:inline-block;vertical-align:middle}
+.uv-pop .uv-card{display:none;position:absolute;right:0;top:calc(100% + 6px);z-index:80;min-width:228px;padding:10px 12px;border-radius:10px;background:var(--card,#0f172a);color:var(--ink,#e2e8f0);border:1px solid var(--line,#334155);box-shadow:0 10px 28px rgba(0,0,0,.28);font:12px/1.4 system-ui,Arial,sans-serif;text-align:left;white-space:normal}
+.uv-pop.open .uv-card{display:block}
+.uv-card svg{display:block;width:204px;height:44px;margin:6px 0 8px}
+.uv-card .uv-k{font-weight:700;margin:0 0 2px}
+.uv-card .uv-m{color:var(--muted,#94a3b8);font-size:11px}
+.uv-card a{color:var(--link,#8ecbff)}
+</style>
+<script id="uv-badge">(function(){
+function norm(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function tzParts(iso){
+  var pt=new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'2-digit',minute:'2-digit',hour12:false,hourCycle:'h23',timeZoneName:'short',day:'2-digit',month:'short'}).formatToParts(new Date(iso));
+  var g=function(t){return (pt.find(function(x){return x.type===t})||{}).value||''};
+  var tz=(g('timeZoneName')||'AEDT').replace('GMT+11','AEDT').replace('GMT+10','AEST');
+  return {hh:g('hour'),mm:g('minute'),tz:tz,day:g('day'),mon:g('month')};
+}
+function last30(daysMap){
+  var out=[], now=new Date();
+  var fmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'});
+  for(var i=29;i>=0;i--){
+    var d=new Date(now.getTime()-i*86400000);
+    var key=fmt.format(d);
+    out.push({day:key,count:+((daysMap||{})[key]||0)});
+  }
+  return out;
+}
+function spark(series){
+  var w=204,h=44,p=2;
+  var max=Math.max.apply(null,series.map(function(x){return x.count}).concat([1]));
+  var n=series.length||1;
+  var pts=series.map(function(x,i){
+    var X=p+(i*(w-2*p)/Math.max(1,n-1));
+    var Y=h-p-((x.count/max)*(h-2*p));
+    return X.toFixed(1)+','+Y.toFixed(1);
+  }).join(' ');
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true"><polyline fill="none" stroke="#22c55e" stroke-width="2" points="'+pts+'"/></svg>';
+}
+function fillStats(d){
+  var total=(d.total&& (d.total.total||d.total.total_utc))||0;
+  var cc=(d.countries||[]).length;
+  var asof=d.as_of_aedt||'';
+  document.querySelectorAll('.im-stat-vis').forEach(function(e){e.textContent=total||'0'});
+  document.querySelectorAll('.im-stat-cc').forEach(function(e){e.textContent=cc||'0'});
+  document.querySelectorAll('.im-stat-asof').forEach(function(e){e.textContent=asof||'n/a'});
+}
+function attachPopover(d, count, series){
+  document.querySelectorAll('.uv').forEach(function(uv){
+    if(uv.closest('.uv-pop')) return;
+    var wrap=document.createElement('span');wrap.className='uv-pop';
+    uv.parentNode.insertBefore(wrap,uv);wrap.appendChild(uv);
+    var card=document.createElement('div');card.className='uv-card';card.setAttribute('role','dialog');
+    var last=series.length?series[series.length-1].count:0;
+    card.innerHTML='<p class="uv-k">This page: '+count+' unique visitors</p>'+spark(series)+'<p class="uv-m">Last 30 days (this page). Today so far: '+last+'.</p><p><a href="/visitors/">Full visitor stats ›</a></p>';
+    wrap.appendChild(card);
+    function tog(ev){ev.preventDefault();ev.stopPropagation();document.querySelectorAll('.uv-pop.open').forEach(function(x){if(x!==wrap)x.classList.remove('open')});wrap.classList.toggle('open')}
+    uv.addEventListener('click',tog);
+    uv.style.cursor='pointer';
+    uv.title='Click for a 30-day sparkline';
+  });
+  document.addEventListener('click',function(){document.querySelectorAll('.uv-pop.open').forEach(function(x){x.classList.remove('open')})});
+}
+function apply(d){
+  var p=norm(location.pathname);
+  var page=(d.pages||[]).filter(function(x){return norm(x.path)===p});
+  var c=page.reduce(function(a,x){return a+(+x.count||0)},0);
+  var days={};
+  page.forEach(function(x){var m=x.days||{};Object.keys(m).forEach(function(k){days[k]=(days[k]||0)+(+m[k]||0)})});
+  document.querySelectorAll('.uvc').forEach(function(e){e.textContent=c});
+  document.querySelectorAll('.uvt').forEach(function(e){
+    if(d.updated_utc){var t=tzParts(d.updated_utc);e.textContent=' (data as of '+t.hh+':'+t.mm+' '+t.tz+')'}
+  });
+  fillStats(d);
+  attachPopover(d,c,last30(days));
+}
+function fail(){
+  document.querySelectorAll('.uvc').forEach(function(e){if(e.textContent==='…'||e.textContent==='...') e.textContent='n/a'});
+  document.querySelectorAll('.im-stat-vis,.im-stat-cc,.im-stat-asof').forEach(function(e){if(e.textContent==='…') e.textContent='n/a'});
+}
+if(!window.__visitorsData){
+  var ac=typeof AbortController==='function'?new AbortController():null;
+  var timer=setTimeout(function(){try{ac&&ac.abort()}catch(e){}},8000);
+  window.__visitorsData=fetch('/data/visitors.json?'+Date.now(),ac?{signal:ac.signal}:undefined).then(function(r){
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('visitors.json '+r.status);
+    return r.json();
+  });
+}
+window.__visitorsData.then(apply).catch(function(){fail()});
+})();</script>
+</body>
+</html>

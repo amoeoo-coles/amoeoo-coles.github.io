@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terraform MSO Resource and Data Source Catalogue</title>
+<meta name="description" content="Every resource and data source in the CiscoDevNet/mso Terraform provider, each with a YAML data model and a sample .tf that reads it, in chronological MSO/NDO build order.">
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+html{overflow-x:hidden;}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+  background:var(--bg) !important;
+  color:var(--ink) !important;
+}
+main{max-width:none !important;width:100%;margin:0 !important;padding:0 !important;box-sizing:border-box;min-width:0;}
+a:not(#mm-link):not(.kicker){color:var(--link);}
+#tt-wrap{
+  position:static!important;
+  display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;
+  box-sizing:border-box;width:100%;height:36px;padding:8px 0 0;flex:none;
+}
+#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;align-items:center;justify-content:center;
+  height:36px;padding:0 12px;border-radius:18px;
+  border:1px solid var(--btn-bd);background:var(--btn-bg);color:var(--btn-fg);
+  cursor:pointer;opacity:.92;text-decoration:none;white-space:nowrap;flex:none;
+}
+#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+.uv,.uvc{color:#fff!important}
+</style>
+<link rel="stylesheet" href="/zfrontier/terraform-mso-resources/assets/page.css">
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'☀️ Light':'🌙 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+})();</script>
+<main class="wrap" id="catalogue-ready">
+<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:var(--muted,#888)"><a href="/visitors/" style="color:inherit;text-decoration:none"><span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></a><span class="uvt" style="font-size:11px;color:var(--muted,#888)"></span></div><!--/arr-uv-tr17-->
+<p class="kicker">zFrontier</p>
+<h1>Terraform MSO Resource and Data Source Catalogue</h1>
+<p class="ver"><a href="/zfrontier/terraform-mso-resources/history/">v1 · 26 Nov 2026, 20:52 AEDT</a></p>
+<p class="lede">Every resource and every data source in the <code>CiscoDevNet/mso</code> Terraform provider
+(<strong id="collection-version">3.1.0</strong>: <strong>92</strong> resources and
+<strong>90</strong> data sources, <strong id="module-total">182</strong> catalogue entries),
+taken from <code>terraform providers schema -json</code> and the provider docs at the same tag.
+Each entry has its own YAML data model in <code>models/</code> and a numbered sample <code>tf/NNN_*.tf</code>
+that reads it with <code>yamldecode(file(...))</code>. Numbers follow chronological fabric build order across the
+whole tree: system and fabric, access policies, tenant networking, applications, L4&ndash;L7, Multi-Pod / Multi-Site /
+Cloud, monitoring, utilities. Each data source follows its resource. Attribute names are exactly the schema&rsquo;s.
+Nothing here is invented.</p>
+
+<div class="cred-banner">
+  <strong>Credential-safe by design:</strong> this page is a static catalogue and never contacts an MSO or Nexus Dashboard Orchestrator.
+  The provider block reads <code>var.mso_url</code>, <code>var.mso_username</code> and <code>var.mso_password</code>;
+  <code>terraform.tfvars.example</code> holds the placeholder <code>{{ mso_password }}</code>.
+  Secret attributes in models are <code>{{ placeholders }}</code> only. Do not commit real passwords.
+  A live <code>terraform plan</code> belongs on a self-hosted runner that can reach your orchestrator.
+</div>
+
+<ol class="page-menu">
+<li><a href="#tree">Object tree map</a></li>
+<li><a href="#files">Models, tf files and combined config</a></li>
+<li><a href="#rules">Grouping and value rules</a></li>
+<li><a href="#index">Resource and data source index</a></li>
+<li>Groups
+<ul>
+<li><a href="#group-platform">1. Platform, identity and sites</a><span class="menu-count">5 + 6</span></li>
+<li><a href="#group-tenant">2. Tenants</a><span class="menu-count">1 + 1</span></li>
+<li><a href="#group-schema">3. Schema and templates</a><span class="menu-count">4 + 4</span></li>
+<li><a href="#group-vrf">4. VRF</a><span class="menu-count">7 + 7</span></li>
+<li><a href="#group-bd">5. Bridge domains</a><span class="menu-count">5 + 5</span></li>
+<li><a href="#group-application">6. ANP and EPG</a><span class="menu-count">14 + 14</span></li>
+<li><a href="#group-contracts">7. Contracts, filters and external EPGs</a><span class="menu-count">9 + 9</span></li>
+<li><a href="#group-l3out">8. L3Out</a><span class="menu-count">1 + 1</span></li>
+<li><a href="#group-service">9. Service graphs and devices</a><span class="menu-count">10 + 9</span></li>
+<li><a href="#group-tenantpol">10. Tenant policy templates</a><span class="menu-count">20 + 20</span></li>
+<li><a href="#group-fabric">11. Fabric policy and resource templates</a><span class="menu-count">13 + 13</span></li>
+<li><a href="#group-deployops">12. Validate, deploy and utility</a><span class="menu-count">3 + 1</span></li>
+</ul></li>
+<li><a href="#gaps">Gaps and not collected</a></li>
+<li><a href="#comments">Comments</a></li>
+<li><a href="#versions">Version history</a></li>
+</ol>
+
+<div class="stats-row" id="stats"></div>
+<p id="catalogue-error" class="cred-banner" hidden></p>
+
+<section id="tree" class="section-block">
+  <h2>Object tree map</h2>
+  <p class="section-intro">Click a group to jump to its cards, or a labelled object to open that resource. The map follows MSO/NDO build order, not a live orchestrator discovery.</p>
+  <div class="treemap-card">
+    <h3>Terraform MSO object hierarchy</h3>
+    <p class="treemap-hint">Scroll sideways on a narrow screen. Group counts are resources + data sources from the provider schema.</p>
+    <div class="treemap-scroll">
+<svg class="aci-treemap" viewBox="0 0 1180 657" role="img" aria-label="Clickable Terraform MSO object hierarchy">
+<rect class="tm-root" x="330.0" y="8" width="520" height="40" rx="8"/>
+<text class="tm-root-txt" x="590.0" y="34" text-anchor="middle">CiscoDevNet/mso 3.1.0 · 92 resources · 90 data sources</text>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 251.0 76, 251.0 92"/>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 477.0 76, 477.0 92"/>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 703.0 76, 703.0 92"/>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 929.0 76, 929.0 92"/>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 251.0 271, 251.0 287"/>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 477.0 271, 477.0 287"/>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 703.0 271, 703.0 287"/>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 929.0 271, 929.0 287"/>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 251.0 466, 251.0 482"/>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 477.0 466, 477.0 482"/>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 703.0 466, 703.0 482"/>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 929.0 466, 929.0 482"/>
+<a href="#group-platform" class="tm-grp">
+<rect x="147.0" y="92" width="208" height="36" rx="7" fill="#1e3a8a" stroke="#1e3a8a"/>
+<text class="tm-grp-txt" x="251.0" y="115" text-anchor="middle">Platform / sites (11)</text>
+</a>
+<a href="#r-mso_user" class="tm-node">
+<rect x="153.0" y="136" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="251.0" y="150" text-anchor="middle">User</text>
+</a>
+<a href="#r-mso_label" class="tm-node">
+<rect x="153.0" y="159" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="251.0" y="173" text-anchor="middle">Label</text>
+</a>
+<a href="#r-mso_site" class="tm-node">
+<rect x="153.0" y="182" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="251.0" y="196" text-anchor="middle">Site</text>
+</a>
+<a href="#r-mso_remote_location" class="tm-node">
+<rect x="153.0" y="205" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="251.0" y="219" text-anchor="middle">Remote location</text>
+</a>
+<a href="#r-mso_system_config" class="tm-node">
+<rect x="153.0" y="228" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="251.0" y="242" text-anchor="middle">System config</text>
+</a>
+<a href="#group-tenant" class="tm-grp">
+<rect x="373.0" y="92" width="208" height="36" rx="7" fill="#1d4ed8" stroke="#1d4ed8"/>
+<text class="tm-grp-txt" x="477.0" y="115" text-anchor="middle">Tenants (2)</text>
+</a>
+<a href="#r-mso_tenant" class="tm-node">
+<rect x="379.0" y="136" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="477.0" y="150" text-anchor="middle">Tenant</text>
+</a>
+<a href="#group-schema" class="tm-grp">
+<rect x="599.0" y="92" width="208" height="36" rx="7" fill="#4338ca" stroke="#4338ca"/>
+<text class="tm-grp-txt" x="703.0" y="115" text-anchor="middle">Schema / templates (8)</text>
+</a>
+<a href="#r-mso_schema" class="tm-node">
+<rect x="605.0" y="136" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="703.0" y="150" text-anchor="middle">Schema</text>
+</a>
+<a href="#r-mso_schema_template" class="tm-node">
+<rect x="605.0" y="159" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="703.0" y="173" text-anchor="middle">Schema template</text>
+</a>
+<a href="#r-mso_schema_site" class="tm-node">
+<rect x="605.0" y="182" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="703.0" y="196" text-anchor="middle">Schema site</text>
+</a>
+<a href="#r-mso_template" class="tm-node">
+<rect x="605.0" y="205" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="703.0" y="219" text-anchor="middle">NDO template</text>
+</a>
+<a href="#group-vrf" class="tm-grp">
+<rect x="825.0" y="92" width="208" height="36" rx="7" fill="#0f766e" stroke="#0f766e"/>
+<text class="tm-grp-txt" x="929.0" y="115" text-anchor="middle">VRF (14)</text>
+</a>
+<a href="#r-mso_schema_template_vrf" class="tm-node">
+<rect x="831.0" y="136" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="929.0" y="150" text-anchor="middle">Template VRF</text>
+</a>
+<a href="#r-mso_schema_template_vrf_contract" class="tm-node">
+<rect x="831.0" y="159" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="929.0" y="173" text-anchor="middle">VRF contract</text>
+</a>
+<a href="#r-mso_schema_site_vrf" class="tm-node">
+<rect x="831.0" y="182" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="929.0" y="196" text-anchor="middle">Site VRF</text>
+</a>
+<a href="#r-mso_schema_site_vrf_region" class="tm-node">
+<rect x="831.0" y="205" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="929.0" y="219" text-anchor="middle">VRF region</text>
+</a>
+<a href="#group-bd" class="tm-grp">
+<rect x="147.0" y="287" width="208" height="36" rx="7" fill="#0e7490" stroke="#0e7490"/>
+<text class="tm-grp-txt" x="251.0" y="310" text-anchor="middle">Bridge domains (10)</text>
+</a>
+<a href="#r-mso_schema_template_bd" class="tm-node">
+<rect x="153.0" y="331" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="251.0" y="345" text-anchor="middle">Template BD</text>
+</a>
+<a href="#r-mso_schema_template_bd_subnet" class="tm-node">
+<rect x="153.0" y="354" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="251.0" y="368" text-anchor="middle">BD subnet</text>
+</a>
+<a href="#r-mso_schema_site_bd" class="tm-node">
+<rect x="153.0" y="377" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="251.0" y="391" text-anchor="middle">Site BD</text>
+</a>
+<a href="#r-mso_schema_site_bd_l3out" class="tm-node">
+<rect x="153.0" y="400" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="251.0" y="414" text-anchor="middle">BD L3Out</text>
+</a>
+<a href="#group-application" class="tm-grp">
+<rect x="373.0" y="287" width="208" height="36" rx="7" fill="#6d28d9" stroke="#6d28d9"/>
+<text class="tm-grp-txt" x="477.0" y="310" text-anchor="middle">ANP / EPG (28)</text>
+</a>
+<a href="#r-mso_schema_template_anp" class="tm-node">
+<rect x="379.0" y="331" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="477.0" y="345" text-anchor="middle">ANP</text>
+</a>
+<a href="#r-mso_schema_template_anp_epg" class="tm-node">
+<rect x="379.0" y="354" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="477.0" y="368" text-anchor="middle">EPG</text>
+</a>
+<a href="#r-mso_schema_template_anp_epg_contract" class="tm-node">
+<rect x="379.0" y="377" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="477.0" y="391" text-anchor="middle">EPG contract</text>
+</a>
+<a href="#r-mso_schema_site_anp_epg_domain" class="tm-node">
+<rect x="379.0" y="400" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="477.0" y="414" text-anchor="middle">EPG domain</text>
+</a>
+<a href="#r-mso_schema_site_anp_epg_static_port" class="tm-node">
+<rect x="379.0" y="423" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="477.0" y="437" text-anchor="middle">Static port</text>
+</a>
+<a href="#group-contracts" class="tm-grp">
+<rect x="599.0" y="287" width="208" height="36" rx="7" fill="#a21caf" stroke="#a21caf"/>
+<text class="tm-grp-txt" x="703.0" y="310" text-anchor="middle">Contracts / ext EPG (18)</text>
+</a>
+<a href="#r-mso_schema_template_contract" class="tm-node">
+<rect x="605.0" y="331" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="703.0" y="345" text-anchor="middle">Contract</text>
+</a>
+<a href="#r-mso_schema_template_filter_entry" class="tm-node">
+<rect x="605.0" y="354" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="703.0" y="368" text-anchor="middle">Filter entry</text>
+</a>
+<a href="#r-mso_schema_template_contract_filter" class="tm-node">
+<rect x="605.0" y="377" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="703.0" y="391" text-anchor="middle">Contract filter</text>
+</a>
+<a href="#r-mso_schema_template_external_epg" class="tm-node">
+<rect x="605.0" y="400" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="703.0" y="414" text-anchor="middle">External EPG</text>
+</a>
+<a href="#r-mso_schema_site_external_epg" class="tm-node">
+<rect x="605.0" y="423" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="703.0" y="437" text-anchor="middle">Site ext EPG</text>
+</a>
+<a href="#group-l3out" class="tm-grp">
+<rect x="825.0" y="287" width="208" height="36" rx="7" fill="#c2410c" stroke="#c2410c"/>
+<text class="tm-grp-txt" x="929.0" y="310" text-anchor="middle">L3Out (2)</text>
+</a>
+<a href="#r-mso_schema_template_l3out" class="tm-node">
+<rect x="831.0" y="331" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="929.0" y="345" text-anchor="middle">Template L3Out</text>
+</a>
+<a href="#group-service" class="tm-grp">
+<rect x="147.0" y="482" width="208" height="36" rx="7" fill="#b45309" stroke="#b45309"/>
+<text class="tm-grp-txt" x="251.0" y="505" text-anchor="middle">Service graphs (19)</text>
+</a>
+<a href="#r-mso_service_node_type" class="tm-node">
+<rect x="153.0" y="526" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="251.0" y="540" text-anchor="middle">Node type</text>
+</a>
+<a href="#r-mso_schema_template_service_graph" class="tm-node">
+<rect x="153.0" y="549" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="251.0" y="563" text-anchor="middle">SG template</text>
+</a>
+<a href="#r-mso_schema_template_contract_service_graph" class="tm-node">
+<rect x="153.0" y="572" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="251.0" y="586" text-anchor="middle">Contract SG</text>
+</a>
+<a href="#r-mso_service_device_cluster" class="tm-node">
+<rect x="153.0" y="595" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="251.0" y="609" text-anchor="middle">Device cluster</text>
+</a>
+<a href="#group-tenantpol" class="tm-grp">
+<rect x="373.0" y="482" width="208" height="36" rx="7" fill="#0369a1" stroke="#0369a1"/>
+<text class="tm-grp-txt" x="477.0" y="505" text-anchor="middle">Tenant policies (40)</text>
+</a>
+<a href="#r-mso_tenant_policies_dhcp_relay_policy" class="tm-node">
+<rect x="379.0" y="526" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="477.0" y="540" text-anchor="middle">DHCP relay</text>
+</a>
+<a href="#r-mso_tenant_policies_ipsla_monitoring_policy" class="tm-node">
+<rect x="379.0" y="549" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="477.0" y="563" text-anchor="middle">IPSLA</text>
+</a>
+<a href="#r-mso_tenant_policies_custom_qos_policy" class="tm-node">
+<rect x="379.0" y="572" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="477.0" y="586" text-anchor="middle">Custom QoS</text>
+</a>
+<a href="#r-mso_tenant_policies_route_map_policy_route_control" class="tm-node">
+<rect x="379.0" y="595" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="477.0" y="609" text-anchor="middle">Route map</text>
+</a>
+<a href="#r-mso_tenant_policies_netflow_monitor" class="tm-node">
+<rect x="379.0" y="618" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="477.0" y="632" text-anchor="middle">NetFlow</text>
+</a>
+<a href="#group-fabric" class="tm-grp">
+<rect x="599.0" y="482" width="208" height="36" rx="7" fill="#155e75" stroke="#155e75"/>
+<text class="tm-grp-txt" x="703.0" y="505" text-anchor="middle">Fabric policies (26)</text>
+</a>
+<a href="#r-mso_fabric_policies_vlan_pool" class="tm-node">
+<rect x="605.0" y="526" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="703.0" y="540" text-anchor="middle">VLAN pool</text>
+</a>
+<a href="#r-mso_fabric_policies_physical_domain" class="tm-node">
+<rect x="605.0" y="549" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="703.0" y="563" text-anchor="middle">Phys domain</text>
+</a>
+<a href="#r-mso_fabric_policies_interface_setting" class="tm-node">
+<rect x="605.0" y="572" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="703.0" y="586" text-anchor="middle">IF settings</text>
+</a>
+<a href="#r-mso_fabric_resource_policies_physical_interface" class="tm-node">
+<rect x="605.0" y="595" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="703.0" y="609" text-anchor="middle">Physical IF</text>
+</a>
+<a href="#r-mso_fabric_resource_policies_virtual_port_channel_interface" class="tm-node">
+<rect x="605.0" y="618" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="703.0" y="632" text-anchor="middle">vPC</text>
+</a>
+<a href="#group-deployops" class="tm-grp">
+<rect x="825.0" y="482" width="208" height="36" rx="7" fill="#334155" stroke="#334155"/>
+<text class="tm-grp-txt" x="929.0" y="505" text-anchor="middle">Deploy / utility (4)</text>
+</a>
+<a href="#r-mso_schema_template_deploy" class="tm-node">
+<rect x="831.0" y="526" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="929.0" y="540" text-anchor="middle">Deploy</text>
+</a>
+<a href="#r-mso_schema_template_deploy_ndo" class="tm-node">
+<rect x="831.0" y="549" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="929.0" y="563" text-anchor="middle">NDO deploy</text>
+</a>
+<a href="#r-mso_rest" class="tm-node">
+<rect x="831.0" y="572" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="929.0" y="586" text-anchor="middle">mso_rest</text>
+</a>
+</svg>
+    </div>
+  </div>
+  <div class="table-wrap"><table class="aci-data-table" id="counts-table">
+<thead><tr><th>Group</th><th>Resources</th><th>Data sources</th><th>Total files</th></tr></thead>
+<tbody>
+<tr><td>1. Platform, identity and sites</td><td>5</td><td>6</td><td>11</td></tr>
+<tr><td>2. Tenants</td><td>1</td><td>1</td><td>2</td></tr>
+<tr><td>3. Schema and templates</td><td>4</td><td>4</td><td>8</td></tr>
+<tr><td>4. VRF</td><td>7</td><td>7</td><td>14</td></tr>
+<tr><td>5. Bridge domains</td><td>5</td><td>5</td><td>10</td></tr>
+<tr><td>6. ANP and EPG</td><td>14</td><td>14</td><td>28</td></tr>
+<tr><td>7. Contracts, filters and external EPGs</td><td>9</td><td>9</td><td>18</td></tr>
+<tr><td>8. L3Out</td><td>1</td><td>1</td><td>2</td></tr>
+<tr><td>9. Service graphs and devices</td><td>10</td><td>9</td><td>19</td></tr>
+<tr><td>10. Tenant policy templates</td><td>20</td><td>20</td><td>40</td></tr>
+<tr><td>11. Fabric policy and resource templates</td><td>13</td><td>13</td><td>26</td></tr>
+<tr><td>12. Validate, deploy and utility</td><td>3</td><td>1</td><td>4</td></tr>
+<tr><td><strong>Total</strong></td><td><strong>92</strong></td><td><strong>90</strong></td><td><strong>182</strong></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="files" class="section-block">
+  <h2>Models, tf files and combined config</h2>
+  <div class="sample-bar">
+    <p>All 182 models and sample files are published as real files, plus a combined configuration that validates every one of them.</p>
+    <ul>
+      <li>Provider and versions: <a href="providers.tf"><code>providers.tf</code></a> (<code>CiscoDevNet/mso</code> pinned to <code>3.1.0</code>)</li>
+      <li>Variables: <a href="variables.tf"><code>variables.tf</code></a> and <a href="terraform.tfvars.example"><code>terraform.tfvars.example</code></a></li>
+      <li>Combined config: <a href="main.tf"><code>main.tf</code></a> (module <code>./tf</code>: every sample in build order, for validation; do not apply as-is)</li>
+      <li>Combined sample data model: <a href="sample/mso-model.yml"><code>sample/mso-model.yml</code></a></li>
+      <li>Per-item models: <a href="models/"><code>models/&lt;name&gt;.yml</code></a> (data sources are <code>data_&lt;name&gt;.yml</code>)</li>
+      <li>Per-item samples: <a href="tf/"><code>tf/&lt;NNN&gt;_&lt;name&gt;.tf</code></a></li>
+    </ul>
+    <p style="margin:10px 0 0">Validate locally (no orchestrator needed):</p>
+    <pre style="margin:8px 0 0;padding:12px;background:var(--code);color:var(--code-fg);border-radius:8px;overflow:auto">terraform init -backend=false
+terraform fmt -check -recursive
+terraform validate</pre>
+  </div>
+</section>
+
+<section id="rules" class="section-block">
+  <h2>Grouping and value rules</h2>
+  <ul>
+    <li>Group = chronological MSO/NDO build order from the resource or data source name: platform and sites, tenants, schema and templates, VRF, bridge domains, ANP/EPG, contracts, L3Out, service graphs, tenant policy templates, fabric policy and resource templates, then deploy and utility. The provider docs at this tag do not set a <code>subcategory</code> on every page, so grouping is by documented type name, not a guessed subcategory.</li>
+    <li>Order inside a group = dependency depth (from documented examples or DN format, when present), then name.</li>
+    <li>Model values: attributes required by the schema (or set in the docs minimal example) take the literal from the docs Example Usage. References to another object become <code>REPLACE_ME</code> with the referenced type in a comment. Every other attribute is <code>null</code> (omit, provider default).</li>
+    <li>Computed-only attributes are listed in each model header as exported attributes, not as inputs.</li>
+  </ul>
+</section>
+
+<section id="index" class="section-block">
+  <h2>Resource and data source index</h2>
+  <p class="section-intro">Sort any column. Search filters this table and the cards below.</p>
+  <div class="search-bar">
+    <label for="module-search">Search</label>
+    <input type="search" id="module-search" placeholder="Name, kind, Class, DN, group or description" autocomplete="off">
+    <span class="search-meta" id="search-meta">182 entries</span>
+  </div>
+  <p id="search-empty" hidden>Nothing matches that search.</p>
+  <div class="table-wrap">
+    <table class="aci-data-table" id="index-table">
+      <thead><tr><th>No.</th><th>Name</th><th>Kind</th><th>Group</th><th>Class</th><th>Files</th></tr></thead>
+      <tbody id="index-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<section id="group-platform" class="section-block" data-group="platform">
+  <h2>1. Platform, identity and sites <span class="menu-count">5 resources · 6 data sources</span></h2>
+  <p class="section-intro">Users, roles, labels, sites, remote locations and system configuration. Cards load their YAML model and sample .tf when they scroll into view.</p>
+  <div id="group-mount-platform"></div>
+</section>
+<section id="group-tenant" class="section-block" data-group="tenant">
+  <h2>2. Tenants <span class="menu-count">1 resources · 1 data sources</span></h2>
+  <p class="section-intro">The tenant object. Cards load their YAML model and sample .tf when they scroll into view.</p>
+  <div id="group-mount-tenant"></div>
+</section>
+<section id="group-schema" class="section-block" data-group="schema">
+  <h2>3. Schema and templates <span class="menu-count">4 resources · 4 data sources</span></h2>
+  <p class="section-intro">Schemas, schema templates, schema sites, and NDO templates (mso_template). Cards load their YAML model and sample .tf when they scroll into view.</p>
+  <div id="group-mount-schema"></div>
+</section>
+<section id="group-vrf" class="section-block" data-group="vrf">
+  <h2>4. VRF <span class="menu-count">7 resources · 7 data sources</span></h2>
+  <p class="section-intro">Template and site-local VRFs, VRF contracts, regions, CIDRs and route leak. Cards load their YAML model and sample .tf when they scroll into view.</p>
+  <div id="group-mount-vrf"></div>
+</section>
+<section id="group-bd" class="section-block" data-group="bd">
+  <h2>5. Bridge domains <span class="menu-count">5 resources · 5 data sources</span></h2>
+  <p class="section-intro">Template and site-local bridge domains, subnets and BD-to-L3Out associations. Cards load their YAML model and sample .tf when they scroll into view.</p>
+  <div id="group-mount-bd"></div>
+</section>
+<section id="group-application" class="section-block" data-group="application">
+  <h2>6. ANP and EPG <span class="menu-count">14 resources · 14 data sources</span></h2>
+  <p class="section-intro">Application Network Profiles, EPGs, contracts on EPGs, selectors, subnets, uSeg attributes, domains and static leaf or port bindings. Cards load their YAML model and sample .tf when they scroll into view.</p>
+  <div id="group-mount-application"></div>
+</section>
+<section id="group-contracts" class="section-block" data-group="contracts">
+  <h2>7. Contracts, filters and external EPGs <span class="menu-count">9 resources · 9 data sources</span></h2>
+  <p class="section-intro">Contracts, filter entries, contract filters, external EPGs, contracts and selectors. Cards load their YAML model and sample .tf when they scroll into view.</p>
+  <div id="group-mount-contracts"></div>
+</section>
+<section id="group-l3out" class="section-block" data-group="l3out">
+  <h2>8. L3Out <span class="menu-count">1 resources · 1 data sources</span></h2>
+  <p class="section-intro">Schema-template L3Outs. Tenant-policy L3Out routing policies live with tenant policy templates. Cards load their YAML model and sample .tf when they scroll into view.</p>
+  <div id="group-mount-l3out"></div>
+</section>
+<section id="group-service" class="section-block" data-group="service">
+  <h2>9. Service graphs and devices <span class="menu-count">10 resources · 9 data sources</span></h2>
+  <p class="section-intro">Service node types, service graphs, contract service-graph associations, service chaining and service device clusters. Cards load their YAML model and sample .tf when they scroll into view.</p>
+  <div id="group-mount-service"></div>
+</section>
+<section id="group-tenantpol" class="section-block" data-group="tenantpol">
+  <h2>10. Tenant policy templates <span class="menu-count">20 resources · 20 data sources</span></h2>
+  <p class="section-intro">Tenant policies: DHCP, QoS, IPSLA, IGMP/MLD, route maps, match and set rules, NetFlow, L3Out routing policies and endpoint tags. Cards load their YAML model and sample .tf when they scroll into view.</p>
+  <div id="group-mount-tenantpol"></div>
+</section>
+<section id="group-fabric" class="section-block" data-group="fabric">
+  <h2>11. Fabric policy and resource templates <span class="menu-count">13 resources · 13 data sources</span></h2>
+  <p class="section-intro">Fabric policies (VLAN pools, domains, interface, node and PTP/MCP/syncE settings) and fabric resource interfaces (physical, PC, vPC). Cards load their YAML model and sample .tf when they scroll into view.</p>
+  <div id="group-mount-fabric"></div>
+</section>
+<section id="group-deployops" class="section-block" data-group="deployops">
+  <h2>12. Validate, deploy and utility <span class="menu-count">3 resources · 1 data sources</span></h2>
+  <p class="section-intro">Schema template deploy (including the NDO deploy resource), REST utility. Cards load their YAML model and sample .tf when they scroll into view.</p>
+  <div id="group-mount-deployops"></div>
+</section>
+
+<section id="gaps" class="section-block">
+  <h2>Gaps and not collected</h2>
+  <ul>
+    <li>Class is <code>not collected</code> for 182 of 182 items and DN for 182: the provider docs for those (mostly older SDKv2 resources) do not state an API class or DN format.</li>
+    <li>No docs page at this tag, so placed in group 9 Other: .</li>
+    <li>Marked deprecated in the schema: <code>data.mso_label</code>, <code>data.mso_remote_location</code>, <code>data.mso_role</code>, <code>data.mso_schema_site_anp_epg_selector</code>, <code>data.mso_schema_site_contract_service_graph_listener</code>, <code>data.mso_schema_site_external_epg_selector</code>, <code>data.mso_schema_site_vrf_region</code>, <code>data.mso_schema_site_vrf_region_cidr</code>, <code>data.mso_schema_site_vrf_region_cidr_subnet</code>, <code>data.mso_schema_site_vrf_route_leak</code>, <code>data.mso_schema_template_anp_epg_selector</code>, <code>data.mso_schema_template_contract_filter</code>, <code>data.mso_schema_template_external_epg_selector</code>, <code>data.mso_service_node_type</code>, <code>data.mso_system_config</code>, <code>data.mso_user</code>, <code>mso_label</code>, <code>mso_remote_location</code>, <code>mso_schema_site_anp_epg_selector</code>, <code>mso_schema_site_contract_service_graph_listener</code>, <code>mso_schema_site_external_epg_selector</code>, <code>mso_schema_site_service_graph_node</code>, <code>mso_schema_site_vrf_region</code>, <code>mso_schema_site_vrf_region_cidr</code>, <code>mso_schema_site_vrf_region_cidr_subnet</code>, <code>mso_schema_site_vrf_route_leak</code>, <code>mso_schema_template_anp_epg_selector</code>, <code>mso_schema_template_contract_filter</code>, <code>mso_schema_template_deploy</code>, <code>mso_schema_template_external_epg_selector</code>, <code>mso_service_node_type</code>, <code>mso_site</code>, <code>mso_system_config</code>, <code>mso_tenant</code>, <code>mso_user</code>.</li>
+    <li><code>REPLACE_ME</code> values (493 in total) are references to another object in the docs example (for example <code>tenant_id = mso_tenant.example.id</code>). Set them to that object&rsquo;s DN, or swap the model value for a Terraform reference in your own module.</li>
+    <li>Two files carry a <code>_file</code> suffix (<code>*_override_file.tf</code>) because Terraform treats any file ending <code>_override.tf</code> as an override file.</li>
+    <li>Nothing was applied to an MSO or Nexus Dashboard Orchestrator. Validation is <code>terraform validate</code> only; live plan/apply needs a self-hosted runner that can reach the orchestrator.</li>
+  </ul>
+</section>
+
+<section id="comments" class="section-block">
+  <h2>Comments</h2>
+  <p class="section-intro">Questions, peer review notes, or lab test feedback via GitHub Discussions.</p>
+  <div id="comments-mount"></div>
+  <script>
+  (function(){
+    var b=String.fromCharCode(99,111,108,101,115);
+    var repo='amoeoo-'+b+'/amoeoo-'+b+'.github.io';
+    var s=document.createElement('script');
+    s.src='https://giscus.app/client.js';
+    s.setAttribute('data-repo',repo);
+    s.setAttribute('data-repo-id','R_kgDOVM0-Fw');
+    s.setAttribute('data-category','Announcements');
+    s.setAttribute('data-category-id','DIC_kwDOVM0-F84DLoq4');
+    s.setAttribute('data-mapping','pathname');
+    s.setAttribute('data-strict','1');
+    s.setAttribute('data-reactions-enabled','1');
+    s.setAttribute('data-input-position','top');
+    s.setAttribute('data-theme','preferred_color_scheme');
+    s.setAttribute('data-lang','en');
+    s.setAttribute('data-loading','lazy');
+    s.crossOrigin='anonymous';
+    s.async=true;
+    var m=document.getElementById('comments-mount');
+    if(m) m.appendChild(s);
+  })();
+  </script>
+</section>
+
+<section id="versions" class="section-block">
+  <h2>Version history</h2>
+  <p>This is <strong>v1 · 26 Nov 2026, 20:52 AEDT</strong>. Snapshots are under <a href="/zfrontier/terraform-mso-resources/history/">history/</a>.</p>
+  <div class="table-wrap">
+    <table class="aci-data-table">
+      <thead><tr><th>Version</th><th>Published (AEDT)</th><th>Summary of changes</th><th>Snapshot</th></tr></thead>
+      <tbody><tr>
+        <td><strong>v1</strong> (Current)</td>
+        <td>26 Nov 2026, 20:52 AEDT</td>
+        <td>Initial catalogue of every <code>CiscoDevNet/mso</code> 3.1.0 resource (92) and data source (90) with YAML models, numbered sample .tf files in build order, combined config, sample data model, tree map and searchable index.</td>
+        <td><a href="/zfrontier/terraform-mso-resources/history/v1/">View v1 snapshot</a></td>
+      </tr></tbody>
+    </table>
+  </div>
+</section>
+</main>
+
+<footer class="wrap">
+  <p class="meta">Page: <strong>Terraform MSO Resource and Data Source Catalogue</strong> · Version: <strong>v1 · 26 Nov 2026, 20:52 AEDT</strong></p>
+  <p class="meta">Provider: <strong>CiscoDevNet/mso 3.1.0</strong> from the
+  <a href="https://registry.terraform.io/providers/CiscoDevNet/mso/3.1.0/docs">Terraform Registry</a>.
+  Sources: <code>terraform providers schema -json</code> (attribute names, types, required/optional/computed, sensitive, deprecated)
+  and the provider <code>docs/</code> at tag <code>v3.1.0</code> (subcategory, API class, DN format, GUI location, Example Usage).</p>
+  <p class="meta">Folder links end with <code>/</code>. Class and DN are <code>not collected</code> unless the provider docs state them.</p>
+</footer>
+
+<script src="/zfrontier/terraform-mso-resources/sort.js"></script>
+<script src="/zfrontier/terraform-mso-resources/assets/app.js"></script>
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/"}}</script>
+<script>(function(){var b=String.fromCharCode(99,111,108,101,115);var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';s.setAttribute('data-goatcounter','https://amoeoo-'+b+'.goatcounter.com/count');document.head.appendChild(s);}());</script>
+
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+
+<!-- uv-badge v2 -->
+<style id="uv-badge-style">
+.uv-pop{position:relative;display:inline-block;vertical-align:middle}
+.uv-pop .uv-card{display:none;position:absolute;right:0;top:calc(100% + 6px);z-index:80;min-width:228px;padding:10px 12px;border-radius:10px;background:var(--card,#0f172a);color:var(--ink,#e2e8f0);border:1px solid var(--line,#334155);box-shadow:0 10px 28px rgba(0,0,0,.28);font:12px/1.4 system-ui,Arial,sans-serif;text-align:left;white-space:normal}
+.uv-pop.open .uv-card{display:block}
+.uv-card svg{display:block;width:204px;height:44px;margin:6px 0 8px}
+.uv-card .uv-k{font-weight:700;margin:0 0 2px}
+.uv-card .uv-m{color:var(--muted,#94a3b8);font-size:11px}
+.uv-card a{color:var(--link,#8ecbff)}
+</style>
+<script id="uv-badge">(function(){
+function norm(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function tzParts(iso){
+  var pt=new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'2-digit',minute:'2-digit',hour12:false,hourCycle:'h23',timeZoneName:'short',day:'2-digit',month:'short'}).formatToParts(new Date(iso));
+  var g=function(t){return (pt.find(function(x){return x.type===t})||{}).value||''};
+  var tz=(g('timeZoneName')||'AEDT').replace('GMT+11','AEDT').replace('GMT+10','AEST');
+  return {hh:g('hour'),mm:g('minute'),tz:tz,day:g('day'),mon:g('month')};
+}
+function last30(daysMap){
+  var out=[], now=new Date();
+  var fmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'});
+  for(var i=29;i>=0;i--){
+    var d=new Date(now.getTime()-i*86400000);
+    var key=fmt.format(d);
+    out.push({day:key,count:+((daysMap||{})[key]||0)});
+  }
+  return out;
+}
+function spark(series){
+  var w=204,h=44,p=2;
+  var max=Math.max.apply(null,series.map(function(x){return x.count}).concat([1]));
+  var n=series.length||1;
+  var pts=series.map(function(x,i){
+    var X=p+(i*(w-2*p)/Math.max(1,n-1));
+    var Y=h-p-((x.count/max)*(h-2*p));
+    return X.toFixed(1)+','+Y.toFixed(1);
+  }).join(' ');
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true"><polyline fill="none" stroke="#22c55e" stroke-width="2" points="'+pts+'"/></svg>';
+}
+function fillStats(d){
+  var total=(d.total&& (d.total.total||d.total.total_utc))||0;
+  var cc=(d.countries||[]).length;
+  var asof=d.as_of_aedt||'';
+  document.querySelectorAll('.im-stat-vis').forEach(function(e){e.textContent=total||'0'});
+  document.querySelectorAll('.im-stat-cc').forEach(function(e){e.textContent=cc||'0'});
+  document.querySelectorAll('.im-stat-asof').forEach(function(e){e.textContent=asof||'n/a'});
+}
+function attachPopover(d, count, series){
+  document.querySelectorAll('.uv').forEach(function(uv){
+    if(uv.closest('.uv-pop')) return;
+    var wrap=document.createElement('span');wrap.className='uv-pop';
+    uv.parentNode.insertBefore(wrap,uv);wrap.appendChild(uv);
+    var card=document.createElement('div');card.className='uv-card';card.setAttribute('role','dialog');
+    var last=series.length?series[series.length-1].count:0;
+    card.innerHTML='<p class="uv-k">This page: '+count+' unique visitors</p>'+spark(series)+'<p class="uv-m">Last 30 days (this page). Today so far: '+last+'.</p><p><a href="/visitors/">Full visitor stats ›</a></p>';
+    wrap.appendChild(card);
+    function tog(ev){ev.preventDefault();ev.stopPropagation();document.querySelectorAll('.uv-pop.open').forEach(function(x){if(x!==wrap)x.classList.remove('open')});wrap.classList.toggle('open')}
+    uv.addEventListener('click',tog);
+    uv.style.cursor='pointer';
+    uv.title='Click for a 30-day sparkline';
+  });
+  document.addEventListener('click',function(){document.querySelectorAll('.uv-pop.open').forEach(function(x){x.classList.remove('open')})});
+}
+function apply(d){
+  var p=norm(location.pathname);
+  var page=(d.pages||[]).filter(function(x){return norm(x.path)===p});
+  var c=page.reduce(function(a,x){return a+(+x.count||0)},0);
+  var days={};
+  page.forEach(function(x){var m=x.days||{};Object.keys(m).forEach(function(k){days[k]=(days[k]||0)+(+m[k]||0)})});
+  document.querySelectorAll('.uvc').forEach(function(e){e.textContent=c});
+  document.querySelectorAll('.uvt').forEach(function(e){
+    if(d.updated_utc){var t=tzParts(d.updated_utc);e.textContent=' (data as of '+t.hh+':'+t.mm+' '+t.tz+')'}
+  });
+  fillStats(d);
+  attachPopover(d,c,last30(days));
+}
+function fail(){
+  document.querySelectorAll('.uvc').forEach(function(e){if(e.textContent==='…'||e.textContent==='...') e.textContent='n/a'});
+  document.querySelectorAll('.im-stat-vis,.im-stat-cc,.im-stat-asof').forEach(function(e){if(e.textContent==='…') e.textContent='n/a'});
+}
+if(!window.__visitorsData){
+  var ac=typeof AbortController==='function'?new AbortController():null;
+  var timer=setTimeout(function(){try{ac&&ac.abort()}catch(e){}},8000);
+  window.__visitorsData=fetch('/data/visitors.json?'+Date.now(),ac?{signal:ac.signal}:undefined).then(function(r){
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('visitors.json '+r.status);
+    return r.json();
+  });
+}
+window.__visitorsData.then(apply).catch(function(){fail()});
+})();</script>
+</body>
+</html>

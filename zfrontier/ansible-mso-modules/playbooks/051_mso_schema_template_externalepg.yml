@@ -1,0 +1,36 @@
+---
+# Sample playbook for cisco.mso.mso_schema_template_externalepg
+# Build order: 051
+# Manage external EPGs in schema templates
+# Reads models/mso_schema_template_externalepg.yml and uses inventory placeholders
+# {{ mso_host }} {{ mso_username }} {{ mso_password }}.
+# Default model state is present: the present and query tasks run.
+# The absent task runs only when the model state is set to absent.
+
+- name: "051 mso_schema_template_externalepg"
+  hosts: mso
+  gather_facts: false
+  collections:
+    - cisco.mso
+  vars_files:
+    - ../models/mso_schema_template_externalepg.yml
+  tasks:
+    - name: Ensure mso_schema_template_externalepg is present
+      cisco.mso.mso_schema_template_externalepg: "{{ mso_schema_template_externalepg | dict2items | rejectattr('value', 'none') | list | items2dict | combine({'state': 'present'}) }}"
+      delegate_to: localhost
+      when: (mso_schema_template_externalepg.state | default('present')) == 'present'
+      register: present_result
+
+    - name: Query mso_schema_template_externalepg
+      cisco.mso.mso_schema_template_externalepg: "{{ mso_schema_template_externalepg | dict2items | rejectattr('value', 'none') | list | items2dict | combine({'state': 'query'}) }}"
+      delegate_to: localhost
+      when: (mso_schema_template_externalepg.state | default('present')) in ['present', 'query']
+      register: query_result
+
+    - name: Remove mso_schema_template_externalepg (only when model state is absent)
+      cisco.mso.mso_schema_template_externalepg: "{{ mso_schema_template_externalepg | dict2items | rejectattr('value', 'none') | list | items2dict | combine({'state': 'absent'}) }}"
+      delegate_to: localhost
+      when: (mso_schema_template_externalepg.state | default('present')) == 'absent'
+      register: absent_result
+      tags:
+        - absent

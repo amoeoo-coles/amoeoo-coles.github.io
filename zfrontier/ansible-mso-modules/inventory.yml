@@ -1,0 +1,38 @@
+---
+# Example Ansible inventory for the cisco.mso 3.0.0 catalogue.
+# Placeholders only — replace at runtime or via --extra-vars. Never commit secrets.
+#
+# Documented connection options from the cisco.mso documentation fragment:
+#   - host (str, optional, default: none)
+#   - login_domain (str, optional, default: none)
+#   - output_level (str, optional, default: normal)
+#   - password (str, optional, default: none)
+#   - port (int, optional, default: none)
+#   - timeout (int, optional, default: none)
+#   - use_proxy (bool, optional, default: none)
+#   - use_ssl (bool, optional, default: none)
+#   - username (str, optional, default: none)
+#   - validate_certs (bool, optional, default: none)
+#
+# Run with:
+#   ansible-playbook -i inventory.yml site.yml \
+#     -e mso_host=ndo.example.com \
+#     -e mso_username=admin \
+#     -e mso_password='***'
+
+all:
+  children:
+    mso:
+      hosts:
+        mso01:
+          ansible_connection: local
+      vars:
+        mso_host: "{{ mso_host }}"
+        mso_username: "{{ mso_username }}"
+        mso_password: "{{ mso_password }}"
+        # Documented defaults from cisco.mso (override as needed):
+        mso_use_ssl: true
+        mso_validate_certs: true
+        mso_use_proxy: true
+        mso_timeout: 30
+        mso_output_level: normal

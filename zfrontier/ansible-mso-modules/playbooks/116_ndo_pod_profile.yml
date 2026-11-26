@@ -1,0 +1,36 @@
+---
+# Sample playbook for cisco.mso.ndo_pod_profile
+# Build order: 116
+# Manage Pod Profiles on Cisco Nexus Dashboard Orchestrator (NDO).
+# Reads models/ndo_pod_profile.yml and uses inventory placeholders
+# {{ mso_host }} {{ mso_username }} {{ mso_password }}.
+# Default model state is present: the present and query tasks run.
+# The absent task runs only when the model state is set to absent.
+
+- name: "116 ndo_pod_profile"
+  hosts: mso
+  gather_facts: false
+  collections:
+    - cisco.mso
+  vars_files:
+    - ../models/ndo_pod_profile.yml
+  tasks:
+    - name: Ensure ndo_pod_profile is present
+      cisco.mso.ndo_pod_profile: "{{ ndo_pod_profile | dict2items | rejectattr('value', 'none') | list | items2dict | combine({'state': 'present'}) }}"
+      delegate_to: localhost
+      when: (ndo_pod_profile.state | default('present')) == 'present'
+      register: present_result
+
+    - name: Query ndo_pod_profile
+      cisco.mso.ndo_pod_profile: "{{ ndo_pod_profile | dict2items | rejectattr('value', 'none') | list | items2dict | combine({'state': 'query'}) }}"
+      delegate_to: localhost
+      when: (ndo_pod_profile.state | default('present')) in ['present', 'query']
+      register: query_result
+
+    - name: Remove ndo_pod_profile (only when model state is absent)
+      cisco.mso.ndo_pod_profile: "{{ ndo_pod_profile | dict2items | rejectattr('value', 'none') | list | items2dict | combine({'state': 'absent'}) }}"
+      delegate_to: localhost
+      when: (ndo_pod_profile.state | default('present')) == 'absent'
+      register: absent_result
+      tags:
+        - absent
