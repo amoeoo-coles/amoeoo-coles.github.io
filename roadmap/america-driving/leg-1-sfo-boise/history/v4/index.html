@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Compact 28px pills, 6 columns on wide screens, 4 mid, 2 on mobile.
+   Per-section accent colour is set as --im-accent on each pill. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:6px 12px 8px;
+  gap:6px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:650 11.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:4px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im details.im-sub,
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:4px;
+  margin:0;
+  padding:6px 8px;
+  border-left:3px solid var(--im-accent,var(--menu-on,#2563eb))!important;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 10%,transparent)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl,
+nav.site.im summary.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+  list-style:none;
+}
+nav.site.im summary.sl::-webkit-details-marker{display:none}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:5px;
+  box-sizing:border-box;
+  width:100%;
+  height:28px;
+  min-height:28px;
+  max-height:28px;
+  min-width:0;
+  padding:0 8px;
+  border-radius:999px;
+  border:1px solid color-mix(in srgb,var(--im-accent,#2563eb) 40%,var(--menu-pill-bd,#3a4456))!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:color-mix(in srgb,var(--im-accent,#2563eb) 16%,var(--menu-hover))!important}
+nav.site.im a.mi.on{
+  background:var(--im-accent,var(--menu-on,#2563eb))!important;
+  border-color:var(--im-accent,var(--menu-on,#2563eb))!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:11px;height:28px;min-height:28px;max-height:28px}
+nav.site.im a.mi .ic{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 22%,transparent);
+  font-size:11px;
+  line-height:1;
+}
+nav.site.im a.mi.on .ic{background:rgba(255,255,255,.22)}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  line-height:1;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:14px;
+  height:14px;
+  padding:0 4px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:700;
+  line-height:1;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 35%,#93c5fd);
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:16px;
+  height:16px;
+  padding:0 4px;
+  border-radius:999px;
+  font-size:10px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:var(--im-accent,#1d4ed8)!important;
+}
+nav.site.im a.mi .im-dot{
+  width:7px;height:7px;border-radius:50%;background:#22c55e;flex:none;
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--im-accent,#2563eb) 18%,transparent);
+}
+nav.site.im .im-stats{
+  display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;
+  font:600 11px/1.3 system-ui,Arial,sans-serif;color:var(--menu-fg);padding:2px 2px 0;opacity:.9;
+}
+nav.site.im .im-stats a{color:var(--link);text-decoration:none}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:28px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:28px;
+  padding:0 12px;
+  border-radius:999px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:28px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:28px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:28px;padding:0 10px}
+  nav.site.im summary.sl .im-toggle{display:inline}
+}
+@media (min-width:721px){
+  nav.site.im summary.sl .im-toggle{display:none}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>America Driving · Leg 1 — SFO to Boise</title>
+<meta name="description" content="Leg 1 of the America Driving road trip: San Francisco (SFO) to Boise, with the OSRM distance and time, route and highways, Supercharger stops and a comments link.">
+<style id="page-css">
+:root {
+  color-scheme: light dark;
+  --site-content-max: 1200px;
+  --bg: #f4f6f8;
+  --bg-accent: #e8eef4;
+  --card: #ffffff;
+  --ink: #15202b;
+  --muted: #5b6b7c;
+  --line: #d5dee7;
+  --accent: #0e7490;
+  --accent-soft: #e0f4f8;
+  --link: #0e7490;
+  --good: #047857;
+  --warn: #a16207;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --radius: 14px;
+  --mono: "IBM Plex Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+  --sans: "Source Sans 3", "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --map-land: #dfe8ef;
+  --map-stroke: #8aa0b3;
+  --map-water: #c5d6e6;
+  --leg1: #0e7490;
+  --leg2: #6d28d9;
+  --leg3: #b45309;
+  --leg4: #047857;
+  --sc-fill: #dc2626;
+  --sc-stroke: #ffffff;
+  --leg-faint: #8aa0b3;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+    --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+    --link: #5eead4; --good: #34d399; --warn: #fbbf24;
+    --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+    --map-land: #1b2a3d; --map-stroke: #4b6480; --map-water: #0f2740;
+    --leg1: #5eead4; --leg2: #c4b5fd; --leg3: #fdba74; --leg4: #34d399;
+    --sc-fill: #f87171; --sc-stroke: #0b1220;
+    --leg-faint: #4b6480;
+  }
+}
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f4f6f8; --bg-accent: #e8eef4; --card: #ffffff; --ink: #15202b;
+  --muted: #5b6b7c; --line: #d5dee7; --accent: #0e7490; --accent-soft: #e0f4f8;
+  --link: #0e7490; --good: #047857; --warn: #a16207;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --map-land: #dfe8ef; --map-stroke: #8aa0b3; --map-water: #c5d6e6;
+  --leg1: #0e7490; --leg2: #6d28d9; --leg3: #b45309; --leg4: #047857;
+  --sc-fill: #dc2626; --sc-stroke: #ffffff;
+  --leg-faint: #8aa0b3;
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+  --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+  --link: #5eead4; --good: #34d399; --warn: #fbbf24;
+  --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+  --map-land: #1b2a3d; --map-stroke: #4b6480; --map-water: #0f2740;
+  --leg1: #5eead4; --leg2: #c4b5fd; --leg3: #fdba74; --leg4: #34d399;
+  --sc-fill: #f87171; --sc-stroke: #0b1220;
+  --leg-faint: #4b6480;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--sans);
+  background: radial-gradient(1200px 500px at 10% -10%, var(--bg-accent), transparent 60%), var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  min-height: 100vh;
+}
+a { color: var(--link); }
+code, .mono { font-family: var(--mono); font-size: 0.92em; }
+main.wrap, footer.wrap { max-width: var(--site-content-max); margin: 0 auto; padding: 0 1.5rem; }
+main.wrap { padding-top: 0.4rem; padding-bottom: 2.2rem; }
+footer.wrap { padding-bottom: 3.5rem; }
+.tr17 { margin: 0 0 8px; }
+h1 { font-size: clamp(1.55rem, 3vw, 2.15rem); margin: 0 0 0.35rem; letter-spacing: -0.03em; font-weight: 700; overflow-wrap: anywhere; }
+.ver { margin: 0 0 0.85rem; color: var(--muted); font-weight: 650; }
+.lede { font-size: 1.05rem; margin: 0 0 1rem; max-width: 78ch; }
+h2 { font-size: 1.25rem; margin: 2rem 0 0.7rem; letter-spacing: -0.02em; scroll-margin-top: 80px; overflow-wrap: anywhere; }
+h3 { font-size: 1.05rem; margin: 1.2rem 0 0.45rem; }
+p, ul, ol { margin: 0 0 0.85rem; }
+ul, ol { padding-left: 1.25rem; }
+li { margin: 0.2rem 0; }
+.kicker {
+  display: inline-block; text-transform: uppercase; letter-spacing: 0.14em;
+  font-size: 0.72rem; color: var(--accent); font-weight: 700; margin: 0 0 0.35rem;
+}
+.note, .muted, .meta, .footer { color: var(--muted); }
+.meta { margin: 0 0 0.25rem; }
+.footer { margin: 0.4rem 0 0; font-size: 0.92rem; }
+.callout, .card, .module, .leg, .comment-notes {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 1rem 1.15rem; margin: 0 0 1.1rem;
+  min-width: 0;
+}
+.table-wrap { overflow-x: auto; margin: 0 0 1rem; max-width: 100%; }
+table {
+  width: 100%; border-collapse: collapse; background: var(--card);
+  border: 1px solid var(--line); border-radius: var(--radius);
+}
+th, td { text-align: left; padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--line); vertical-align: top; overflow-wrap: break-word; }
+.table-wrap table td:first-child { overflow-wrap: normal; word-break: normal; }
+th { font-size: 0.82rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); background: var(--bg-accent); }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.toc a { margin-right: 0.75rem; }
+.mapwrap { overflow-x: auto; max-width: 100%; margin: 0 0 1rem; }
+.mapwrap svg { display: block; width: 100%; max-width: 100%; height: auto; }
+.map-legend { display: flex; flex-wrap: wrap; gap: 0.6rem 1.1rem; margin: 0 0 0.8rem; font-size: 0.92rem; }
+.map-legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+.map-swatch { width: 18px; height: 4px; border-radius: 2px; display: inline-block; }
+.map-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; background: var(--sc-fill); border: 2px solid var(--sc-stroke); box-sizing: content-box; }
+.gap { border-left: 4px solid var(--warn); padding-left: 0.8rem; margin: 0.8rem 0; }
+.sources li { overflow-wrap: anywhere; }
+.legnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 1rem;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 1.1rem 0;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  min-width: 0;
+}
+.legnav a, .legnav .nav-missing {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.legnav .nav-missing { color: var(--muted); }
+.leg-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem;
+  margin: 0 0 1.1rem;
+  min-width: 0;
+}
+.leg-cards .card { margin: 0; min-width: 0; }
+.leg-cards h3 { margin: 0 0 0.35rem; font-size: 1.02rem; overflow-wrap: anywhere; }
+@media (max-width: 390px) {
+  main.wrap, footer.wrap { padding-left: 0.85rem; padding-right: 0.85rem; }
+  th, td { padding: 0.45rem 0.5rem; }
+  .leg-cards { grid-template-columns: 1fr; }
+  .legnav { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+
+<!-- site-menu v1 -->
+<nav class="site"></nav>
+<main class="wrap">
+<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:#bbb"><a href="/visitors/" style="color:#fff;text-decoration:none"><span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></a><span class="uvt" style="font-size:11px;color:#888"></span></div><!--/arr-uv-tr17-->
+
+<p class="kicker">RoadMap</p>
+<p class="muted"><a href="/roadmap/">← RoadMap</a> · <a href="/roadmap/america-driving/">America Driving</a></p>
+<h1>Leg 1 — San Francisco (SFO) to Idaho (Boise)</h1>
+<p class="ver"><a href="/roadmap/america-driving/leg-1-sfo-boise/history/">v4 · 26 Nov 2026, 8:36 PM AEDT</a></p>
+<p class="toc"><a href="#fuel">Fuel-stop towns</a> · <a href="#stops">Stops</a> · <a href="#weather">January weather</a> · <a href="#roads">Road conditions</a> · <a href="#ev">EV charging</a> · <a href="#swot">SWOT</a> · <a href="#risk">Risk</a> · <a href="#sources">Sources</a> · <a href="#comments">Comments</a></p>
+<p class="lede">Idaho’s endpoint on this trip is <strong>Boise</strong> (that choice is stated here because “Idaho” alone is a large state). This page covers only leg 1. Distances and drive times are from OSRM on OpenStreetMap, retrieved 21 Nov 2026, and are driving time only — they do not include Supercharging, meals, traffic, weather or overnight stops.</p>
+<nav class="legnav" aria-label="Leg navigation"><a href="/roadmap/america-driving/">← America Driving overview</a><span><span class="nav-missing">This is the first leg</span> · <a href="/roadmap/america-driving/leg-2-boise-las-vegas/">Next: Leg 2 Boise to Las Vegas →</a></span></nav>
+
+<h2 id="map">Route map</h2>
+<p>Schematic diagram of this leg, with other America Driving legs shown faintly for context. It is a planning diagram, not a turn-by-turn survey map. Fills and colours are set explicitly for light and dark themes.</p>
+<div class="map-legend">
+  <span><i class="map-swatch" style="background:var(--leg1)"></i> Leg 1 SFO–Boise (highlighted)</span>
+  <span><i class="map-dot"></i> Supercharger town on this leg (see table)</span>
+</div>
+<div class="mapwrap card"><svg viewBox="145.6 24.8 555.0 444.5" role="img" aria-labelledby="map-title map-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="map-title">Schematic map of America Driving leg 1, SFO to Boise, with Supercharger towns</title>
+<desc id="map-desc">Schematic diagram, not a survey map. The highlighted path runs from San Francisco International Airport through Sacramento, Truckee, Reno, Winnemucca and Jordan Valley to Boise. Red circles mark Supercharger towns listed in the table.</desc>
+<rect x="0" y="0" width="1100" height="720" fill="var(--map-water)"/>
+<path d="M 70,520 L 90,430 L 70,300 L 95,200 L 120,90 L 280,50 L 520,40 L 820,80 L 980,160 L 1020,280 L 1000,420 L 920,560 L 700,640 L 420,660 L 200,620 Z" fill="var(--map-land)" stroke="var(--map-stroke)" stroke-width="1.5"/>
+<path d="M 610.6 114.8 L 716.4 161.2 L 685.7 225.3 L 690.3 307.6 L 672.6 379.4 L 675.1 443.4" fill="none" stroke="var(--leg2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.28"/>
+<path d="M 675.1 443.4 L 693.6 451.9 L 741.1 486.7 L 818.7 540.6 L 861.2 563.5 L 928.0 617.6" fill="none" stroke="var(--leg3)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.28"/>
+<path d="M 928.0 617.6 L 861.2 563.5 L 730.4 556.4 L 609.8 551.5 L 486.6 536.9" fill="none" stroke="var(--leg4)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.28"/>
+<path d="M 235.6 379.3 L 256.2 351.6 L 289.3 337.0 L 368.9 304.0 L 391.3 295.1 L 427.7 291.6 L 517.5 231.4 L 518.5 186.2 L 558.9 143.0 L 610.6 114.8" fill="none" stroke="var(--leg1)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="235.1" cy="380.4" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="261.1" cy="346.9" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="285.9" cy="334.4" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="368.9" cy="304.0" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="391.3" cy="295.1" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="427.7" cy="291.6" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="517.5" cy="231.4" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="518.5" cy="186.2" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="558.9" cy="143.0" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="601.6" cy="115.4" r="5.5" fill="var(--sc-fill)" stroke="var(--sc-stroke)" stroke-width="1.6"/>
+<circle cx="235.6" cy="379.3" r="4" fill="var(--ink)"/>
+<text x="189.6" y="371.3" fill="var(--ink)" font-size="15" font-weight="700" font-family="system-ui,sans-serif">SFO</text>
+<circle cx="391.3" cy="295.1" r="4" fill="var(--ink)"/>
+<text x="401.3" y="285.1" fill="var(--ink)" font-size="15" font-weight="700" font-family="system-ui,sans-serif">Reno</text>
+<circle cx="610.6" cy="114.8" r="4" fill="var(--ink)"/>
+<text x="618.6" y="102.8" fill="var(--ink)" font-size="15" font-weight="700" font-family="system-ui,sans-serif">Boise</text>
+</svg></div>
+
+<h2 id="route">Route and highways</h2>
+<p><strong>Suggested route:</strong> US-101 / I-80 east from the Bay Area through Sacramento, Truckee and Reno; continue on I-80 to Fernley / Winnemucca; then US-95 north through McDermitt and Jordan Valley, Oregon; join I-84 / ID-55 into Boise. OSRM’s named roads for this path include I-80, US-95, ID-55 and I-84 / US-30 / I-184.</p><p class="muted">Maps: <a href="https://www.google.com/maps/dir/San+Francisco+International+Airport,+CA/Boise,+ID/">Google Maps</a> · <a href="https://www.openstreetmap.org/directions?engine=fossgis_osrm_car&amp;route=37.6213,-122.3790;43.6150,-116.2023">OpenStreetMap / OSRM</a></p>
+
+<h2 id="distance">Distance and time</h2>
+<p>OSRM (21 Nov 2026) for SFO to Boise is <strong>650.5 miles</strong> and about <strong>12 hours 5 minutes</strong> of driving. That matches Air Miles Calculator’s published driving figure of 650.1 miles and 12 hours 5 minutes. Travelmath publishes 648 miles and 9 hours 58 minutes at a constant 65 mph — a shorter time because it does not reflect typical highway speed variation. Plan a long day, or split the drive, especially in winter over the Sierra Nevada (I-80).</p>
+
+<h2 id="chargers">Tesla Superchargers along the way</h2>
+<p>Open Superchargers on or next to this corridor, from <a href="https://supercharge.info/">supercharge.info</a> (retrieved 21 Nov 2026). One representative site is listed per town. Confirm status and stall counts on <a href="https://www.tesla.com/findus">tesla.com/findus</a>.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Town</th><th>Site</th><th class="n">Stalls / power</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>Millbrae, CA (near SFO)</td><td>400 El Camino Real</td><td class="n">24 × 500 kW</td><td><a href="https://supercharge.info/site/441166">supercharge.info</a></td></tr>
+<tr><td>Vacaville, CA</td><td>136 Peabody Rd</td><td class="n">16 × 500 kW</td><td><a href="https://supercharge.info/site/440303">supercharge.info</a></td></tr>
+<tr><td>Sacramento, CA</td><td>2828 El Centro Rd</td><td class="n">12 × 325 kW</td><td><a href="https://supercharge.info/site/58252">supercharge.info</a></td></tr>
+<tr><td>Truckee, CA</td><td>12277 Deerfield Dr</td><td class="n">12 × 325 kW</td><td><a href="https://supercharge.info/site/4006752">supercharge.info</a></td></tr>
+<tr><td>Reno, NV</td><td>303 N Sierra St</td><td class="n">16 × 250 kW</td><td><a href="https://supercharge.info/site/renonsierrasupercharger">supercharge.info</a></td></tr>
+<tr><td>Fernley, NV</td><td>1330 Hwy 95A N</td><td class="n">12 × 250 kW</td><td><a href="https://supercharge.info/site/FernleyNVQ322">supercharge.info</a></td></tr>
+<tr><td>Winnemucca, NV</td><td>1985 W Winnemucca Blvd</td><td class="n">8 × 250 kW</td><td><a href="https://supercharge.info/site/winnemuccanvsupercharger">supercharge.info</a></td></tr>
+<tr><td>McDermitt, NV</td><td>195 US-95</td><td class="n">8 × 250 kW</td><td><a href="https://supercharge.info/site/19128">supercharge.info</a></td></tr>
+<tr><td>Jordan Valley, OR</td><td>909 W US-95</td><td class="n">8 × 325 kW</td><td><a href="https://supercharge.info/site/19094">supercharge.info</a></td></tr>
+<tr><td>Meridian, ID (Boise metro)</td><td>1050 S Progress Ave</td><td class="n">8 × 500 kW</td><td><a href="https://supercharge.info/site/469204">supercharge.info</a></td></tr>
+<tr><td>Boise, ID</td><td>1426 S Entertainment Ave</td><td class="n">8 × 150 kW</td><td><a href="https://supercharge.info/site/boisesupercharger">supercharge.info</a></td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="notes">Leg notes</h2>
+<p>Winter driving over the Sierra Nevada on I-80 can reduce range and add time. Do not plan to arrive at a Supercharger at 0%. Smaller towns on US-95 (McDermitt, Jordan Valley) have 8 stalls and can fill — arrive with a buffer.</p>
+<h2 id="car-hire">Car hire quote</h2>
+<p>A petrol SUV quote for this corridor, with pickup at <strong>San Jose International Airport</strong> rather than SFO, is transcribed on <a href="/roadmap/america-driving/car-hire-san-jose-boise/">Car hire — San Jose to Boise</a> (Avis, Kia Telluride or similar, 10–11 Jan 2027, $304.19 as shown on 21 Nov 2026).</p>
+
+
+<nav class="legnav" aria-label="Leg navigation"><a href="/roadmap/america-driving/">← America Driving overview</a><span><span class="nav-missing">This is the first leg</span> · <a href="/roadmap/america-driving/leg-2-boise-las-vegas/">Next: Leg 2 Boise to Las Vegas →</a></span></nav>
+
+<h2 id="fuel">Fuel-stop towns</h2>
+<p>These are the towns already named on this leg’s route and Supercharger table. They are the practical places to look for fuel or a charge. Specific fuel brands, opening hours and prices are <span class="na">not collected</span>.</p>
+<ul>
+<li>San Francisco Bay Area / Millbrae (near SFO), Vacaville and Sacramento, California.</li>
+<li>Truckee, California, on I-80 at the Sierra crossing.</li>
+<li>Reno, Fernley, Winnemucca and McDermitt, Nevada.</li>
+<li>Jordan Valley, Oregon, on US-95.</li>
+<li>Meridian and Boise, Idaho.</li>
+</ul>
+<h2 id="stops">Notable stops and attractions</h2>
+<p><a href="https://www.parks.ca.gov/?page_id=503">Donner Memorial State Park</a> sits on the I-80 corridor at the Sierra crossing and is the official California State Parks page for that site. Entry hours, fees and suggested visit lengths are <span class="na">not collected</span>. Other detours (for example Lake Tahoe) were not collected as a sourced itinerary on this page.</p>
+<h2 id="weather">January weather (climate normals)</h2>
+<p>January on this leg runs from a mild Bay Area start into a cold, snowy Sierra crossing and a still-winter arrival in Boise. The Truckee Ranger Station and Donner Memorial State Park normals are the most important winter figures on the I-80 crossing.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Place on this trip</th><th>NOAA station</th><th class='n'>Jan normal max</th><th class='n'>Jan normal min</th><th class='n'>Jan precip</th><th class='n'>Jan snow</th><th class='n'>Jan days with ≥0.1 in snow</th></tr></thead>
+<tbody>
+<tr><td>San Francisco (SFO area)</td><td><code>USW00023234</code> — SAN FRANCISCO INTL AP</td><td class='n'>58.0°F (14.4°C)</td><td class='n'>44.5°F (6.9°C)</td><td class='n'>3.89&nbsp;in</td><td class='n'><span class="na">not collected</span></td><td class='n'><span class="na">not collected</span></td></tr>
+<tr><td>Sacramento, CA</td><td><code>USW00023232</code> — SACRAMENTO AP ASOS</td><td class='n'>56.0°F (13.3°C)</td><td class='n'>39.2°F (4.0°C)</td><td class='n'>3.66&nbsp;in</td><td class='n'><span class="na">not collected</span></td><td class='n'><span class="na">not collected</span></td></tr>
+<tr><td>Truckee, CA (I-80 / Donner Pass area)</td><td><code>USC00049043</code> — TRUCKEE RS</td><td class='n'>41.8°F (5.4°C)</td><td class='n'>16.1°F (-8.8°C)</td><td class='n'>5.68&nbsp;in</td><td class='n'>43.60&nbsp;in</td><td class='n'>8.7</td></tr>
+<tr><td>Donner Memorial State Park, CA</td><td><code>USC00042467</code> — DONNER MEM SP</td><td class='n'>41.0°F (5.0°C)</td><td class='n'>17.0°F (-8.3°C)</td><td class='n'>6.73&nbsp;in</td><td class='n'>40.00&nbsp;in</td><td class='n'>8.9</td></tr>
+<tr><td>Reno, NV</td><td><code>USW00023185</code> — RENO AP</td><td class='n'>47.7°F (8.7°C)</td><td class='n'>26.1°F (-3.3°C)</td><td class='n'>1.25&nbsp;in</td><td class='n'>5.20&nbsp;in</td><td class='n'>3.4</td></tr>
+<tr><td>Winnemucca, NV</td><td><code>USW00024128</code> — WINNEMUCCA AP</td><td class='n'>44.0°F (6.7°C)</td><td class='n'>20.5°F (-6.4°C)</td><td class='n'>0.96&nbsp;in</td><td class='n'>4.40&nbsp;in</td><td class='n'>4.1</td></tr>
+<tr><td>Boise, ID</td><td><code>USW00024131</code> — BOISE AIR TERMINAL</td><td class='n'>38.8°F (3.8°C)</td><td class='n'>25.5°F (-3.6°C)</td><td class='n'>1.41&nbsp;in</td><td class='n'>5.30&nbsp;in</td><td class='n'>5.2</td></tr>
+</tbody></table></div>
+<p class="muted">Values are NOAA NCEI Monthly U.S. Climate Normals (1991–2020), retrieved 23 Nov 2026 from the NCEI access service, dataset <code>normals-monthly-1991-2020</code>, January row (<code>DATE=01</code>), units standard. Celsius figures are converted from the published Fahrenheit normals. A snow or snow-day cell is marked <span class="na">not collected</span> when that field was not present in the station’s January row. These are 30-year monthly normals, not a forecast for a specific travel date. Check a current forecast and the state traveler-information sites before you drive.</p>
+<h2 id="roads">Road conditions and 511</h2>
+<p>Check the official traveler-information site for each state on the day you drive. These pages change with incidents, weather and chain controls.</p>
+<ul>
+<li>California: <a href="https://quickmap.dot.ca.gov/">Caltrans QuickMap</a> (live traffic, incidents and chain-control layers), <a href="https://dot.ca.gov/travel">Caltrans Travel</a> and <a href="https://roads.dot.ca.gov/">roads.dot.ca.gov</a>.</li>
+<li>Nevada: <a href="https://nvroads.com/">nvroads.com</a> (Nevada DOT traveler information).</li>
+<li>Oregon: <a href="https://www.tripcheck.com/">ODOT TripCheck</a> (the US-95 segment through Jordan Valley is in Oregon).</li>
+<li>Idaho: <a href="https://511.idaho.gov/">511.idaho.gov</a> (Idaho Transportation Department).</li>
+</ul>
+<h2 id="ev">EV charging notes</h2>
+<p>Tesla Supercharger sites already listed on this page come from supercharge.info (retrieved 21–22 Nov 2026, as cited in the Supercharger table) and should be confirmed on <a href="https://www.tesla.com/findus">Tesla Find Us</a>. For other networks and connector types (including CCS), use the U.S. Department of Energy <a href="https://afdc.energy.gov/stations">Alternative Fueling Station Locator</a> (AFDC). A live count of non-Tesla stations in each town is <span class="na">not collected</span>; the locator is the official source to check before you travel.</p>
+<p>Supercharger coverage on this corridor is relatively frequent through Reno, Winnemucca, McDermitt and Jordan Valley. The existing leg notes still apply: winter driving over the Sierra can reduce range, and the 8-stall sites at McDermitt and Jordan Valley can fill — arrive with a buffer and do not plan to reach a charger at 0%.</p>
+<h2 id="checkpoints">Border Patrol checkpoints</h2>
+<p>No official U.S. Border Patrol interior checkpoint on this measured SFO–Boise route was collected. That is not a claim that none could ever appear; it is <span class="na">not collected</span> for this corridor.</p>
+<h2 id="emergency">Emergency and roadside information</h2>
+<p>Call <strong>911</strong> in the United States for police, fire or medical emergencies. For non-emergency road conditions and closures, use the official state traveler-information sites below. Individual roadside-assistance phone numbers and in-car star codes are <span class="na">not collected</span> here; confirm them with the rental company and the relevant highway-patrol or transportation department before you travel.</p>
+<ul>
+<li>Emergencies: 911.</li>
+<li>California: <a href="https://quickmap.dot.ca.gov/">Caltrans QuickMap</a> (live traffic, incidents and chain-control layers), <a href="https://dot.ca.gov/travel">Caltrans Travel</a> and <a href="https://roads.dot.ca.gov/">roads.dot.ca.gov</a>. California Highway Patrol: <a href="https://www.chp.ca.gov/">chp.ca.gov</a>.</li>
+<li>Nevada: <a href="https://nvroads.com/">nvroads.com</a> (Nevada DOT traveler information).</li>
+<li>Oregon: <a href="https://www.tripcheck.com/">ODOT TripCheck</a> (the US-95 segment through Jordan Valley is in Oregon).</li>
+<li>Idaho: <a href="https://511.idaho.gov/">511.idaho.gov</a> (Idaho Transportation Department). Idaho Transportation Department: <a href="https://itd.idaho.gov/">itd.idaho.gov</a>.</li>
+</ul>
+<h2 id="swot">SWOT analysis</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Factor</th><th>Point</th></tr></thead>
+<tbody>
+<tr><td>Strengths</td><td>The I-80 corridor from the Bay Area to Reno is a major interstate with frequent named towns and a relatively dense Supercharger list on this page.</td></tr>
+<tr><td>Strengths</td><td>Official traveler-information sites exist for every state on the route (Caltrans QuickMap, Nevada DOT, ODOT TripCheck, Idaho 511).</td></tr>
+<tr><td>Weaknesses</td><td>OSRM driving time is about 12 hours 5 minutes, which is a very long single day, especially in winter over the Sierra Nevada.</td></tr>
+<tr><td>Weaknesses</td><td>US-95 north of Winnemucca is more remote, and the McDermitt and Jordan Valley Superchargers have only 8 stalls in the cited dataset.</td></tr>
+<tr><td>Opportunities</td><td>Splitting the drive with an overnight in Reno or Winnemucca reduces fatigue and gives a buffer for I-80 chain controls or storms.</td></tr>
+<tr><td>Opportunities</td><td>A short stop at <a href="https://www.parks.ca.gov/?page_id=503">Donner Memorial State Park</a> is on the corridor if weather and time allow.</td></tr>
+<tr><td>Threats</td><td>January normals at Truckee Ranger Station show 43.60 inches of snow and 8.7 days with at least 0.1 inch of snow, and Donner Memorial State Park is similar (40.00 inches, 8.9 days). I-80 chain controls and closures are a realistic January risk.</td></tr>
+<tr><td>Threats</td><td>Cold weather (Boise normal January minimum 25.5°F; Truckee 16.1°F) can cut EV range and make a late arrival at a small charger harder.</td></tr>
+</tbody></table></div>
+<p class="muted">Grouping these points into strengths, weaknesses, opportunities and threats is a qualitative judgement on this page, not an official travel advisory.</p>
+<h2 id="risk">Risk analysis</h2>
+<p class="muted">Likelihood and impact ratings are qualitative judgements based on the sourced conditions cited in the Source column. They are not official risk scores.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Mitigation</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>I-80 Sierra / Donner Pass snow, ice or chain controls</td><td>High</td><td>High</td><td>Check Caltrans QuickMap and a current forecast before crossing; carry chains if the rental agreement and state rules allow; be prepared to wait or overnight in Sacramento, Truckee or Reno.</td><td>NOAA normals for Truckee RS and Donner Memorial State Park (table above); <a href="https://quickmap.dot.ca.gov/">Caltrans QuickMap</a>.</td></tr>
+<tr><td>Driver fatigue on a 12-hour day</td><td>Med</td><td>High</td><td>Split the leg over two days, or start early and plan a hard stop if weather slows I-80.</td><td>OSRM driving time on this page, 12 hours 5 minutes (21 Nov 2026).</td></tr>
+<tr><td>Cold-weather EV range loss, and small chargers filling at McDermitt or Jordan Valley</td><td>Med</td><td>Med</td><td>Use the in-car trip planner, arrive at high-elevation chargers with a reserve, and do not plan to reach a site at 0%.</td><td>Supercharger table and existing leg notes on this page; NOAA January minima in the weather table.</td></tr>
+<tr><td>Remote US-95 stretches if a vehicle breaks down</td><td>Low</td><td>High</td><td>Fill or charge in Winnemucca or McDermitt; carry extra water; tell someone your plan.</td><td>Route description on this page (US-95 through McDermitt and Jordan Valley).</td></tr>
+</tbody></table></div>
+<h2 id="not-collected">Not collected</h2>
+<ul>
+<li>Specific fuel brands, opening hours and prices.</li>
+<li>Hotel availability and prices.</li>
+<li>A live, town-by-town non-Tesla EV station count (use the AFDC locator).</li>
+<li>Roadside-assistance phone numbers and in-car star codes.</li>
+<li>A forecast for a specific travel date (dates are not set; the table is 1991–2020 monthly normals).</li>
+<li>An official U.S. Border Patrol interior checkpoint on this measured corridor.</li>
+<li>January snow fields for San Francisco International Airport and Sacramento AP ASOS (those fields were not in the January row).</li>
+</ul>
+
+<section id="sources">
+<h2>Sources</h2>
+<ul class="sources">
+<li>Driving distances and times: OSRM public router (<a href="https://router.project-osrm.org/">router.project-osrm.org</a>) using OpenStreetMap, retrieved 21 Nov 2026. Endpoints used on this trip: SFO (37.6213, −122.3790), Boise (43.6150, −116.2023), Las Vegas (36.1699, −115.1398), Phoenix (33.4484, −112.0740), Tucson (32.2226, −110.9747), downtown Los Angeles (34.0522, −118.2437), LAX (33.9425, −118.4081).</li>
+<li>Comparison figures: <a href="https://www.travelmath.com/drive-distance/from/SFO/to/Boise,+ID">Travelmath SFO–Boise distance</a> and <a href="https://www.travelmath.com/driving-time/from/SFO/to/Boise,+ID">driving time</a>; <a href="https://www.airmilescalculator.com/distance/sfo-to-boi/">Air Miles Calculator SFO–BOI</a>.</li>
+<li>Superchargers: <a href="https://supercharge.info/">supercharge.info</a> open-site data, retrieved 21 Nov 2026, filtered to sites along the OSRM route. Official confirmation: <a href="https://www.tesla.com/findus">Tesla Find Us</a> (tesla.com/findus). Individual site links are in the table.</li>
+<li>January climate normals (1991–2020): NOAA NCEI <a href="https://www.ncei.noaa.gov/products/land-based-station/us-climate-normals">U.S. Climate Normals</a>, dataset <code>normals-monthly-1991-2020</code>, January row retrieved 23 Nov 2026 from the NCEI access service. Station IDs and official station names are listed in the weather table.</li>
+<li>Other EV charging networks and connectors: U.S. Department of Energy <a href="https://afdc.energy.gov/stations">Alternative Fueling Station Locator</a> (AFDC), retrieved 23 Nov 2026 (the locator itself is the live source; this page does not invent a station count).</li>
+<li>California road conditions: <a href="https://quickmap.dot.ca.gov/">Caltrans QuickMap</a>, <a href="https://dot.ca.gov/travel">Caltrans Travel</a>, <a href="https://roads.dot.ca.gov/">roads.dot.ca.gov</a>.</li>
+<li>Nevada road conditions: <a href="https://nvroads.com/">nvroads.com</a>.</li>
+<li>Oregon road conditions (US-95 at Jordan Valley): <a href="https://www.tripcheck.com/">ODOT TripCheck</a>.</li>
+<li>Idaho road conditions: <a href="https://511.idaho.gov/">511.idaho.gov</a>; agency home: <a href="https://itd.idaho.gov/">itd.idaho.gov</a>.</li>
+<li>Arizona road conditions: <a href="https://az511.gov/">az511.gov</a>.</li>
+<li>New Mexico road conditions: <a href="https://www.nmroads.com/">nmroads.com</a>.</li>
+<li>Texas road conditions: <a href="https://drivetexas.org/">DriveTexas</a>.</li>
+<li>Utah road conditions (I-15 alternate): <a href="https://udottraffic.utah.gov/">UDOT Traffic</a>.</li>
+<li>California Highway Patrol: <a href="https://www.chp.ca.gov/">chp.ca.gov</a>.</li>
+<li>Donner Memorial State Park: <a href="https://www.parks.ca.gov/?page_id=503">California State Parks</a>.</li>
+<li>Hoover Dam: <a href="https://www.usbr.gov/lc/hooverdam/">Bureau of Reclamation</a>.</li>
+<li>Great Basin National Park: <a href="https://www.nps.gov/grba/index.htm">nps.gov/grba</a>.</li>
+<li>Saguaro National Park: <a href="https://www.nps.gov/sagu/index.htm">nps.gov/sagu</a>.</li>
+<li>Joshua Tree National Park: <a href="https://www.nps.gov/jotr/index.htm">nps.gov/jotr</a>.</li>
+</ul>
+</section>
+
+
+<section id="comments" class="card" aria-label="Comments">
+<h2 id="comments-heading">Comments</h2>
+<p class="muted">Sign in with GitHub to comment. Comments are stored as GitHub Discussions in this site’s repository. If the comments app is not yet installed on that repository, the comments area will say so until it is installed.</p>
+<div id="comments-mount"></div>
+<script>
+(function(){
+  var b=String.fromCharCode(99,111,108,101,115);
+  var repo='amoeoo-'+b+'/amoeoo-'+b+'.github.io';
+  var s=document.createElement('script');
+  s.src='https://giscus.app/client.js';
+  s.setAttribute('data-repo',repo);
+  s.setAttribute('data-repo-id','R_kgDOVM0-Fw');
+  s.setAttribute('data-category','Announcements');
+  s.setAttribute('data-category-id','DIC_kwDOVM0-F84DLoq4');
+  s.setAttribute('data-mapping','pathname');
+  s.setAttribute('data-strict','1');
+  s.setAttribute('data-reactions-enabled','1');
+  s.setAttribute('data-input-position','top');
+  s.setAttribute('data-theme','preferred_color_scheme');
+  s.setAttribute('data-lang','en');
+  s.setAttribute('data-loading','lazy');
+  s.crossOrigin='anonymous';
+  s.async=true;
+  var m=document.getElementById('comments-mount');
+  if(m) m.appendChild(s);
+})();
+</script>
+</section>
+
+
+
+<!--vh-->
+<section aria-label="Versions" id="versions">
+<h2>Versions</h2>
+<p>Each entry is a published version of this page.</p>
+<ul>
+<li><b>v3 (current)</b> · v3 · 23 Nov 2026, 9:15 AM AEDT (Melbourne time) · added January climate normals, official 511 / AFDC / emergency links, a SWOT analysis, a sortable risk table, Giscus comments, and a history/ snapshot · <a href="./">this page</a></li>
+<li><b>v2</b> · 21 Nov 2026, 8:06 PM AEDT (Melbourne time) · removed former curriculum-hub references; standalone under Roadmap  · <a href="/roadmap/america-driving/leg-1-sfo-boise/history/v2/">history/v2/</a></li>
+<li><b>v1</b> · 21 Nov 2026, 7:04 PM AEDT (Melbourne time) · First publication: America Driving leg 1 subpage, with route and highways, OSRM distance and time, a leg map, Supercharger stops and comments</li>
+</ul>
+</section>
+<!--/vh--></main>
+<footer class="wrap">
+<p class="meta">Page: <strong>Leg 1 — San Francisco (SFO) to Idaho (Boise)</strong> · Version: <strong>v3 · 23 Nov 2026, 9:15 AM AEDT</strong></p>
+<p class="meta">Parent: <a href="/roadmap/america-driving/">/roadmap/america-driving/</a>. Distances and Superchargers are sourced as listed above. No credentials are included.</p>
+
+<p class="footer">Earlier versions: <a href="/roadmap/america-driving/leg-1-sfo-boise/history/">history/</a>.</p>
+</footer>
+<script src="/roadmap/america-driving/sort.js"></script>
+
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:6px 0 8px;gap:6px;font:650 11.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:4px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im details.im-sub,nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:4px;margin:0;padding:6px 8px;border-left:3px solid var(--im-accent,var(--menu-on,#2563eb));background:color-mix(in srgb,var(--im-accent,#2563eb) 10%,transparent);border-radius:8px}
+nav.site.im a.mi{display:flex!important;align-items:center;gap:5px;box-sizing:border-box;width:100%;height:28px;min-height:28px;max-height:28px;min-width:0;padding:0 8px;border-radius:999px;border:1px solid color-mix(in srgb,var(--im-accent,#2563eb) 40%,var(--menu-pill-bd,#3a4456))!important;background:var(--menu-pill,#1b2330)!important;color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:color-mix(in srgb,var(--im-accent,#2563eb) 16%,var(--menu-hover,#26344a))!important}
+nav.site.im a.mi.on{background:var(--im-accent,#2563eb)!important;border-color:var(--im-accent,#2563eb)!important;color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{display:inline-flex;align-items:center;justify-content:center;flex:none;width:18px;height:18px;border-radius:50%;background:color-mix(in srgb,var(--im-accent,#2563eb) 22%,transparent);font-size:11px;line-height:1}
+nav.site.im a.mi.on .ic{background:rgba(255,255,255,.22)}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1;text-align:left}
+nav.site.im a.mi.sm{font-size:11px}
+nav.site.im a.sl,nav.site.im summary.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px;display:flex;align-items:center;gap:6px;cursor:pointer;list-style:none}
+nav.site.im summary.sl::-webkit-details-marker{display:none}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:14px;height:14px;padding:0 4px;border-radius:999px;font-size:9px;font-weight:700;line-height:1;background:color-mix(in srgb,var(--im-accent,#2563eb) 35%,#93c5fd);color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex!important;align-items:center;justify-content:center;flex:none;min-width:16px;height:16px;padding:0 4px;border-radius:999px;font-size:10px!important;font-weight:800;line-height:1;background:#0f172a!important;color:#fff!important}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc!important;color:#0f172a!important}
+nav.site.im a.mi.on .im-seq{background:#fff!important;color:var(--im-accent,#1d4ed8)!important}
+nav.site.im a.mi .im-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 2px color-mix(in srgb,var(--im-accent,#2563eb) 18%,transparent);flex:none}
+nav.site.im .im-stats{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font:600 11px/1.3 system-ui,Arial,sans-serif;color:var(--menu-fg,#94a3b8);padding:2px 2px 0;opacity:.9}
+nav.site.im .im-stats a{color:var(--link,#8ecbff);text-decoration:none}
+nav.site.im .im-stats .im-stat-n{font-variant-numeric:tabular-nums;font-weight:700}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:28px;flex:none}
+#sg-link,#tt-btn,#mm-link{height:28px;border-radius:999px;font-size:12px}
+#mm-link{width:28px;padding:0}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){
+  nav.site.im .im-main{grid-template-columns:repeat(2,minmax(0,1fr))}
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  nav.site.im summary.sl .im-toggle{display:inline}
+}
+@media (min-width:721px){
+  nav.site.im details.im-sub[open] .im-sub-pills,nav.site.im details.im-sub .im-sub-pills{display:grid!important}
+  nav.site.im summary.sl .im-toggle{display:none}
+}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["About Me","/about-me/","👤",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Cursor_Tenant6","/ARR/provisioning/cursor-tenant6/","🚀"],["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"],["ရှေ့သို့ချီ","/roadmap/forward/","⏩"],["Time Map 2026–2030","/roadmap/forward/time-map/","🗓️"],["BridgeWhy","/roadmap/bridgewhy/","📚"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["ARR-LargeTopology","/ARR-LargeTopology/","🗺️",[["Overview","/ARR-LargeTopology/","🗺️"],["Nodes","/ARR-LargeTopology/nodes.html","🖥️"],["Serials","/ARR-LargeTopology/serials.html","🔢"],["Mgmt IPs","/ARR-LargeTopology/mgmt-ips.html","🌐"],["Links","/ARR-LargeTopology/links.html","🔗"],["Tenants","/ARR-LargeTopology/tenants.html","🏢"],["VRFs","/ARR-LargeTopology/vrfs.html","🧭"],["BDs","/ARR-LargeTopology/bds.html","🌉"],["Subnets","/ARR-LargeTopology/subnets.html","🔢"],["EPGs","/ARR-LargeTopology/epgs.html","🎯"],["Leaf VNIs","/ARR-LargeTopology/vni.html","💠"],["VXLAN","/ARR-LargeTopology/vxlan/","🧵"],["VNI compare","/ARR-LargeTopology/vni-compare/","🔷"],["Access policies","/ARR-LargeTopology/access-policies/","🧱"],["BD GIPo & FTAG","/ARR-LargeTopology/bd-gipo-ftag/","📡"],["IAC files","/ARR-LargeTopology/iac-files/","📦"],["ARR-netbox","/ARR-LargeTopology/arr-netbox/","🗄️"],["Hardware monitor","/ARR-LargeTopology/hw-monitor/","📟"],["Site map","/ARR-LargeTopology/site-map/","🌳"],["Provisioning","/ARR-LargeTopology/provisioning/","🚀"],["Test explain","/ARR-LargeTopology/test-explain/","🧪"],["GitLab","/ARR-LargeTopology/gitlab/","🦊"],["GitLab Runner","/ARR-LargeTopology/gitlab-runner/","🏃"]]],["Terragrunt","/terragrunt/","🧰",[["Terragrunt","/terragrunt/","🧰"]]],["zFrontier","/zfrontier/","🌠",[["zFrontier","/zfrontier/","🌠"],["Southwest Chief","/zfrontier/southwest-chief/","🚂"],["Southwest Chief tracker","/zfrontier/southwest-chief/tracker/","📡"],["Southwest Chief stations","/zfrontier/southwest-chief/stations/","🚉"],["Farzad","/zfrontier/farzad/","📺"],["SpaceX vs Tesla shares","/zfrontier/shares/","📈"],["Optimus","/zfrontier/optimus/","🤖"],["Gigafactory","/zfrontier/gigafactory/","🏭"],["FSD versions","/zfrontier/fsd-versions/","🛣️"],["Liquid cooling","/zfrontier/liquid-cooling/","💧"],["SpaceX Tracking","/zfrontier/spacex/","🚀"],["CyberCab","/zfrontier/cybercab/","🚕"],["AI FineTune Pod","/zfrontier/ai-finetune-pod/","🎛️"],["MCP Servers","/zfrontier/mcp-servers/","🔌"],["NaC CLI","/zfrontier/nac-cli/","🧰"],["GPU Workflow","/zfrontier/3gpu-ai-workflow/","🧮"],["MWMESH","/zfrontier/mwmesh/","📡"],["Notebooks","/zfrontier/notebooks/","📓"],["RAG documents","/zfrontier/rag-documents/","📚"],["Foundation-Sec-8B","/zfrontier/foundation-sec-8b/","🛡️"],["Terafab","/zfrontier/terafab/","💠"],["3DiffsVXLAN","/zfrontier/3diffsvxlan/","🔀"],["ARR-LargePod","/zfrontier/arr-largepod/","🏗️"],["Nvidia A100 & H100","/zfrontier/Nvidia-A100-H100/","🟩"],["AgenticAI","/zfrontier/agenticai/","🧠"],["MS-02 GPU Monitoring","/zfrontier/MS-02-GPU-Monitoring/","📟"],["MBPro","/zfrontier/MBPro/","💻"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"]]],["ACI GUI Forms","/ACI-GUI-Forms/","📝",[["ACI GUI Forms","/ACI-GUI-Forms/","📝"],["GUI Map","/aci-gui-forms/WIP/gui-map/","🗺️"],["APG Access Policy Group","/ACI-GUI-Forms/apg/","🧩"],["Spine Access Policy Group","/ACI-GUI-Forms/spine-apg/","🛰️"]]],["ACI GUI","/aci-gui/","🖥️",[["Create Pod Policy Group","/aci-gui/create-pod-policy-group/","🧬"],["Create Bridge Domain (step 3)","/aci-gui/create-bridge-domain-step3/","🌉"],["Create Subnet","/aci-gui/create-subnet/","🔢"],["Create Application Profile","/aci-gui/create-application-profile/","🧩"],["Create Management EPG","/aci-gui/create-management-epg/","🛠️"],["Static Node Management Addresses","/aci-gui/static-node-management-addresses/","📍"],["Create Fabric Policies","/aci-gui/create-fabric-policies/","🧵"],["Create Access Policies","/aci-gui/create-access-policies/","🔐"],["Create VLAN Pool","/aci-gui/create-vlan-pool/","🏷️"],["Create Physical Domain","/aci-gui/create-physical-domain/","🏛️"],["Create Access Interface Policy Group","/aci-gui/create-access-interface-policy-group/","🔌"],["Create PC Interface Policy Group","/aci-gui/create-pc-interface-policy-group/","🔀"],["Note on Interface Policies","/aci-gui/interface-policies/","📘"],["Interface Wizard for vPC","/aci-gui/interface-wizard-vpc/","🪄"],["Create VMM Domain","/aci-gui/create-vmm-domain/","💻"],["vCenter Networking","/aci-gui/vcenter-networking/","🖥️"],["Create Tenant","/aci-gui/create-tenant/","🏢"],["Create L3Out","/aci-gui/create-l3out/","🌐"],["L3Out Contracts","/aci-gui/l3out-contracts/","📜"],["Create Bridge Domain","/aci-gui/create-bridge-domain/","🌉"],["Bridge Domain","/aci-gui/bridge-domain/","🌉"],["Mgmt Bridge Domain","/aci-gui/mgmt-bridge-domain/","🔧"],["DHCP Relay","/aci-gui/dhcp-relay/","📡"],["Management Application Profile","/aci-gui/management-application-profile/","📦"],["Application Profile (web + app)","/aci-gui/application-profile/","🧩"],["Create VRF","/aci-gui/create-vrf/","🧭"],["Create Endpoint Group","/aci-gui/create-endpoint-group/","🎯"],["Contracts Between Tenants","/aci-gui/contracts-between-tenants/","🤝"],["Create Filter","/aci-gui/create-filter/","🧹"],["Create Contract","/aci-gui/create-contract/","📃"],["Create Management Contracts","/aci-gui/create-management-contracts/","📑"],["Mgmt PortGroup to VM","/aci-gui/mgmt-portgroup-to-vm/","🧷"],["Pod Policy Group","/aci-gui/pod-policy-group/","🕒"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+var IM_UPDATED=["/ARR-LargeTopology/","/ARR-LargeTopology/access-policies/","/ARR-LargeTopology/arr-netbox/","/ARR-LargeTopology/arr-netbox/bds/","/ARR-LargeTopology/arr-netbox/cables/","/ARR-LargeTopology/arr-netbox/devices/","/ARR-LargeTopology/arr-netbox/epgs/","/ARR-LargeTopology/arr-netbox/interfaces/","/ARR-LargeTopology/arr-netbox/ip-addresses/","/ARR-LargeTopology/arr-netbox/subnets/","/ARR-LargeTopology/arr-netbox/tenants/","/ARR-LargeTopology/arr-netbox/vlans/","/ARR-LargeTopology/arr-netbox/vrfs/","/ARR-LargeTopology/bd-gipo-ftag/","/ARR-LargeTopology/bds/","/ARR-LargeTopology/epgs/","/ARR-LargeTopology/hw-monitor/","/ARR-LargeTopology/hw-monitor/bgp-rr/","/ARR-LargeTopology/hw-monitor/coop/","/ARR-LargeTopology/hw-monitor/endpoints/","/ARR-LargeTopology/hw-monitor/events/","/ARR-LargeTopology/hw-monitor/faults/","/ARR-LargeTopology/hw-monitor/firmware/","/ARR-LargeTopology/hw-monitor/health/","/ARR-LargeTopology/hw-monitor/interfaces/","/ARR-LargeTopology/hw-monitor/isis/","/ARR-LargeTopology/hw-monitor/leaf-compare/","/ARR-LargeTopology/hw-monitor/neighbours/","/ARR-LargeTopology/hw-monitor/node-101/","/ARR-LargeTopology/hw-monitor/node-102/","/ARR-LargeTopology/hw-monitor/node-103/","/ARR-LargeTopology/hw-monitor/node-104/","/ARR-LargeTopology/hw-monitor/node-201/","/ARR-LargeTopology/hw-monitor/node-202/","/ARR-LargeTopology/hw-monitor/overlay/","/ARR-LargeTopology/hw-monitor/resources/","/ARR-LargeTopology/hw-monitor/spine-compare/","/ARR-LargeTopology/hw-monitor/underlay/","/ARR-LargeTopology/hw-monitor/vxlan/","/ARR-LargeTopology/iac-files/","/ARR-LargeTopology/iac-files/ARR-APIC-01.nac/","/ARR-LargeTopology/iac-files/LEAF-101.nac/","/ARR-LargeTopology/iac-files/LEAF-102.nac/","/ARR-LargeTopology/iac-files/LEAF-103.nac/","/ARR-LargeTopology/iac-files/LEAF-104.nac/","/ARR-LargeTopology/iac-files/SPINE-201.nac/","/ARR-LargeTopology/iac-files/SPINE-202.nac/","/ARR-LargeTopology/iac-files/access_policies.nac/","/ARR-LargeTopology/iac-files/apic.nac/","/ARR-LargeTopology/iac-files/arr-iac-files/","/ARR-LargeTopology/iac-files/common.nac/","/ARR-LargeTopology/iac-files/fabric_policies.nac/","/ARR-LargeTopology/iac-files/infra.nac/","/ARR-LargeTopology/iac-files/interface_policies.nac/","/ARR-LargeTopology/iac-files/mgmt.nac/","/ARR-LargeTopology/iac-files/node_policies.nac/","/ARR-LargeTopology/iac-files/pods.nac/","/ARR-LargeTopology/iac-files/tenants/Cursor_Tenant2.nac/","/ARR-LargeTopology/iac-files/tenants/Cursor_Tenant3.nac/","/ARR-LargeTopology/iac-files/tenants/Cursor_Tenant6.nac/","/ARR-LargeTopology/iac-files/tenants/Cursor_tenant1.nac/","/ARR-LargeTopology/iac-files/tenants/Cursor_tenant5.nac/","/ARR-LargeTopology/iac-files/tenants/aci_p01_tenant.nac/","/ARR-LargeTopology/iac-files/tenants/common.nac/","/ARR-LargeTopology/iac-files/tenants/infra.nac/","/ARR-LargeTopology/iac-files/tenants/mgmt.nac/","/ARR-LargeTopology/iac-files/tenants/msite_p01_tenant.nac/","/ARR-LargeTopology/links/","/ARR-LargeTopology/mgmt-ips/","/ARR-LargeTopology/nodes/","/ARR-LargeTopology/provisioning/","/ARR-LargeTopology/serials/","/ARR-LargeTopology/site-map/","/ARR-LargeTopology/subnets/","/ARR-LargeTopology/tenants/","/ARR-LargeTopology/test-explain/","/ARR-LargeTopology/vni-compare/","/ARR-LargeTopology/vni/","/ARR-LargeTopology/vrfs/","/ARR-LargeTopology/vxlan/","/ARR/","/ARR/ap/common-default/","/ARR/ap/infra-access/","/ARR/ap/infra-ave-ctrl/","/ARR/aps/","/ARR/arr-LToPo/","/ARR/arr-LToPo/bds/","/ARR/arr-LToPo/epgs/","/ARR/arr-LToPo/links/","/ARR/arr-LToPo/mgmt-ips/","/ARR/arr-LToPo/nodes/","/ARR/arr-LToPo/serials/","/ARR/arr-LToPo/subnets/","/ARR/arr-LToPo/tenants/","/ARR/arr-LToPo/vni/","/ARR/arr-LToPo/vrfs/","/ARR/bd/common-default/","/ARR/bd/infra-ave-ctrl/","/ARR/bd/infra-default/","/ARR/bd/mgmt-inb/","/ARR/bds/","/ARR/contract/common-default/","/ARR/contracts/","/ARR/endpoints/","/ARR/epg/infra-access-default/","/ARR/epg/infra-ave-ctrl-ave-ctrl/","/ARR/epgs/","/ARR/faults/","/ARR/faults/critical/","/ARR/faults/major/","/ARR/faults/minor/","/ARR/faults/recent/","/ARR/faults/warning/","/ARR/health/","/ARR/l3out/common-default/","/ARR/l3outs/","/ARR/logical/","/ARR/logical/contracts/","/ARR/logical/filters/","/ARR/logical/l3outs/","/ARR/logical/providers-consumers/","/ARR/nodes/","/ARR/physical/","/ARR/physical/switch-101/","/ARR/physical/switch-102/","/ARR/physical/switch-103/","/ARR/physical/switch-104/","/ARR/physical/switch-201/","/ARR/physical/switch-202/","/ARR/provisioning/","/ARR/provisioning/cursor-tenant1/","/ARR/provisioning/cursor-tenant5-l3out/","/ARR/provisioning/cursor-tenant5/","/ARR/provisioning/cursor-tenant5/design/","/ARR/provisioning/cursor-tenant6/","/ARR/tenant/common/","/ARR/tenant/infra/","/ARR/tenant/mgmt/","/ARR/tenants/","/ARR/tracker/","/ARR/visitors/","/ARR/vni/","/ARR/vni/l2-16220082/","/ARR/vni/l2-16416666/","/ARR/vni/l2-16744306/","/ARR/vni/l2-16777209/","/ARR/vni/l3-16777199/","/ARR/vni/l3-2129920/","/ARR/vni/l3-2457600/","/ARR/vni/l3-2818048/","/ARR/vni/l3-3047424/","/ARR/vni/l3-3047425/","/ARR/vrf/common-copy/","/ARR/vrf/common-default/","/ARR/vrf/infra-ave-ctrl/","/ARR/vrf/infra-overlay-1/","/ARR/vrf/mgmt-inb/","/ARR/vrf/mgmt-oob/","/ARR/vrfs/","/netbox-aci-objects/","/netbox-aci-tenants/","/netbox-aci-tenants/diagrams/","/netbox-aci-tenants/diagrams/aci-p01-tenant/","/netbox-aci-tenants/diagrams/cursor-tenant1/","/netbox-aci-tenants/diagrams/cursor-tenant2/","/netbox-aci-tenants/diagrams/cursor-tenant3/","/netbox-aci-tenants/diagrams/cursor-tenant5/","/netbox-aci-tenants/diagrams/cursor-tenant6/","/netbox-aci-tenants/diagrams/msite-p01-tenant/","/netbox-hw-inventory/","/netbox-yaml-model/","/netbox-yaml-model/aci-p01-tenant/","/netbox-yaml-model/cursor-tenant1/","/netbox-yaml-model/cursor-tenant2/","/netbox-yaml-model/cursor-tenant3/","/netbox-yaml-model/cursor-tenant5/","/netbox-yaml-model/cursor-tenant6/","/netbox-yaml-model/msite-p01-tenant/","/report17-aoapic-monitoring/","/report17-aoapic-monitoring/objects/","/report17-aoapic-monitoring/objects/access_port_pgs/","/report17-aoapic-monitoring/objects/aeps/","/report17-aoapic-monitoring/objects/app_profiles/","/report17-aoapic-monitoring/objects/audit_24h/","/report17-aoapic-monitoring/objects/audit_7d/","/report17-aoapic-monitoring/objects/bd_subnets/","/report17-aoapic-monitoring/objects/bds/","/report17-aoapic-monitoring/objects/bundle_pgs/","/report17-aoapic-monitoring/objects/contracts/","/report17-aoapic-monitoring/objects/endpoints/","/report17-aoapic-monitoring/objects/epg_subnets/","/report17-aoapic-monitoring/objects/epgs/","/report17-aoapic-monitoring/objects/events_24h/","/report17-aoapic-monitoring/objects/faults/","/report17-aoapic-monitoring/objects/filters/","/report17-aoapic-monitoring/objects/interfaces/","/report17-aoapic-monitoring/objects/interfaces_up/","/report17-aoapic-monitoring/objects/l3_domains/","/report17-aoapic-monitoring/objects/l3outs/","/report17-aoapic-monitoring/objects/nodes/","/report17-aoapic-monitoring/objects/phys_domains/","/report17-aoapic-monitoring/objects/port_channels/","/report17-aoapic-monitoring/objects/static_paths/","/report17-aoapic-monitoring/objects/tenants/","/report17-aoapic-monitoring/objects/vlan_pools/","/report17-aoapic-monitoring/objects/vmm_domains/","/report17-aoapic-monitoring/objects/vpcs/","/report17-aoapic-monitoring/objects/vrfs/","/report17-aoapic-monitoring/pending-provisioning/","/report17-aoapic-monitoring/tenants/","/report17-aoapic-monitoring/universal-provisioning/","/report17-aoapic-monitoring/universal-provisioning/rma/","/roadmap/","/roadmap/america-driving/","/roadmap/america-driving/car-hire-boise-las-vegas/","/roadmap/america-driving/car-hire-las-vegas-phoenix/","/roadmap/america-driving/car-hire-san-jose-boise/","/roadmap/america-driving/las-vegas-to-boca-chica/","/roadmap/america-driving/leg-1-sfo-boise/","/roadmap/america-driving/leg-2-boise-las-vegas/","/roadmap/america-driving/leg-3-las-vegas-tucson-via-phoenix/","/roadmap/america-driving/leg-4-tucson-los-angeles/","/roadmap/bridgewhy/","/roadmap/bridgewhy/america-driving/","/roadmap/bridgewhy/bgp-mpls-enterprise-network-design/","/roadmap/bridgewhy/campus-network-design/","/roadmap/bridgewhy/ccna/","/roadmap/bridgewhy/cisco-aci/","/roadmap/bridgewhy/cisco-aci/lesson-01/","/roadmap/bridgewhy/cisco-aci/lesson-02/","/roadmap/bridgewhy/cisco-aci/lesson-03/","/roadmap/bridgewhy/cisco-aci/lesson-04/","/roadmap/bridgewhy/cisco-aci/lesson-05/","/roadmap/bridgewhy/cisco-aci/lesson-06/","/roadmap/bridgewhy/cisco-aci/lesson-07/","/roadmap/bridgewhy/cisco-aci/lesson-08/","/roadmap/bridgewhy/cisco-aci/lesson-09/","/roadmap/bridgewhy/cisco-aci/lesson-10/","/roadmap/bridgewhy/cisco-aci/lesson-11/","/roadmap/bridgewhy/cisco-aci/lesson-12/","/roadmap/bridgewhy/cisco-ise/","/roadmap/bridgewhy/cisco-sd-access/","/roadmap/bridgewhy/cisco-sd-wan/","/roadmap/bridgewhy/data-center-vxlan-bgp-evpn/","/roadmap/bridgewhy/enterprise-quality-of-service/","/roadmap/bridgewhy/git-for-network-engineers/","/roadmap/bridgewhy/introduction/","/roadmap/bridgewhy/ipv6-fundamentals/","/roadmap/bridgewhy/is-is-routing-protocol/","/roadmap/bridgewhy/linux-operating-system/","/roadmap/bridgewhy/llms-from-scratch/","/roadmap/bridgewhy/machine-learning-fundamentals/","/roadmap/bridgewhy/network-automation/","/roadmap/bridgewhy/network-security-fundamentals/","/roadmap/bridgewhy/ospf-deep-dive/","/roadmap/bridgewhy/switching-fundamentals/","/roadmap/bridgewhy/tcp-protocol-deep-dive/","/roadmap/bridgewhy/wireless-fundamentals-wlc-9800/","/roadmap/bridgewhy/wireshark-packet-analysis/","/visitors/countries/","/zfrontier/","/zfrontier/ces-2027/","/zfrontier/ces-2027/03-jan/","/zfrontier/ces-2027/03-jan/autonomous-drones/","/zfrontier/ces-2027/03-jan/frontier-tech/","/zfrontier/ces-2027/03-jan/physical-ai/","/zfrontier/ces-2027/03-jan/robots/","/zfrontier/ces-2027/04-jan/","/zfrontier/ces-2027/04-jan/autonomous-drones/","/zfrontier/ces-2027/04-jan/frontier-tech/","/zfrontier/ces-2027/04-jan/physical-ai/","/zfrontier/ces-2027/04-jan/robots/","/zfrontier/ces-2027/05-jan/","/zfrontier/ces-2027/05-jan/autonomous-drones/","/zfrontier/ces-2027/05-jan/frontier-tech/","/zfrontier/ces-2027/05-jan/physical-ai/","/zfrontier/ces-2027/05-jan/robots/","/zfrontier/ces-2027/06-jan/","/zfrontier/ces-2027/06-jan/autonomous-drones/","/zfrontier/ces-2027/06-jan/frontier-tech/","/zfrontier/ces-2027/06-jan/physical-ai/","/zfrontier/ces-2027/06-jan/robots/","/zfrontier/ces-2027/07-jan/","/zfrontier/ces-2027/07-jan/autonomous-drones/","/zfrontier/ces-2027/07-jan/frontier-tech/","/zfrontier/ces-2027/07-jan/physical-ai/","/zfrontier/ces-2027/07-jan/robots/","/zfrontier/ces-2027/08-jan/","/zfrontier/ces-2027/08-jan/autonomous-drones/","/zfrontier/ces-2027/08-jan/frontier-tech/","/zfrontier/ces-2027/08-jan/physical-ai/","/zfrontier/ces-2027/08-jan/robots/","/zfrontier/meraki/","/zfrontier/meraki/alerts/","/zfrontier/meraki/devices/","/zfrontier/meraki/firmware/","/zfrontier/meraki/licensing/","/zfrontier/meraki/networks/"];
+var IM_ACCENT={"/":"#64748b","/tasks/netbox/":"#2563eb","/tasks/provisioning/":"#0d9488","/tasks/monitoring/":"#0891b2","/tasks/testing/":"#d97706","/aci-policy/":"#16a34a","/aci-multipod/":"#15803d","/aci-azure-vxlan/":"#059669","/firewall-domain/":"#dc2626","/aci-lab-guide/":"#22c55e","/demo-ai-pod/":"#7c3aed","/intersight-demo/":"#0284c7","/tasks/itil/":"#4f46e5","/roadmap/":"#ea580c","/virtual-dc/":"#0f766e","/ARR-LargeTopology/":"#0e7490","/terragrunt/":"#a16207","/zfrontier/":"#7c3aed","/visitors/":"#059669","/ACI-GUI-Forms/":"#16a34a","/aci-gui/":"#15803d"};
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function normPath(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function accentOf(href){var h=String(href||'');return IM_ACCENT[h]||IM_ACCENT[h.replace(/\/?$/,'/')]||IM_ACCENT[normPath(h)+'/']||'#2563eb'}
+function pathUpdated(href){
+  var h=normPath(href), list=IM_UPDATED||[];
+  if(h==='/') return list.indexOf('/')>=0;
+  for(var i=0;i<list.length;i++){
+    var u=normPath(list[i]);
+    if(u===h||u.indexOf(h+'/')===0) return true;
+  }
+  return false;
+}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq,accent){
+  var a=document.createElement('a');
+  a.className=cls+(on?' on':'');
+  a.href=e[1];
+  a.title=(seq?String(seq)+'. ':'')+e[0]+(pathUpdated(e[1])?' (updated in the last 7 days)':'');
+  a.style.setProperty('--im-accent', accent||accentOf(e[1]));
+  if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}
+  var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);
+  var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);
+  if(pathUpdated(e[1])){var dot=document.createElement('span');dot.className='im-dot';dot.title='Updated in the last 7 days';dot.setAttribute('aria-label','Updated in the last 7 days');a.appendChild(dot)}
+  if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}
+  return a;
+}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function statsRow(){
+  var d=document.createElement('div');d.className='im-stats';
+  d.innerHTML='<a href="/visitors/">Visitors <span class="im-stat-n im-stat-vis">\u2026</span></a><span>\u00b7</span><a href="/visitors/countries/">Countries <span class="im-stat-n im-stat-cc">\u2026</span></a><span>\u00b7</span><span>Updated <span class="im-stat-n im-stat-asof">\u2026</span></span>';
+  return d;
+}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length,0,accentOf(g[1])))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){
+var acc=accentOf(G[gi][1]);
+var r2=document.createElement('details');r2.className='im-sub';r2.style.setProperty('--im-accent',acc);
+if(window.matchMedia&&window.matchMedia('(min-width:721px)').matches) r2.open=true;
+var t=document.createElement('summary');t.className='sl';
+t.innerHTML='<span>'+G[gi][0]+' tasks \u203A</span><span class="im-toggle"> (tap to expand)</span>';
+r2.appendChild(t);
+t.addEventListener('click',function(ev){if(window.matchMedia&&window.matchMedia('(min-width:721px)').matches){ev.preventDefault();location.href=G[gi][1];}});
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1,acc))});r2.appendChild(pills);n.appendChild(r2)}}
+n.appendChild(statsRow());});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+<!-- uv-badge v2 -->
+<style id="uv-badge-style">
+.uv-pop{position:relative;display:inline-block;vertical-align:middle}
+.uv-pop .uv-card{display:none;position:absolute;right:0;top:calc(100% + 6px);z-index:80;min-width:228px;padding:10px 12px;border-radius:10px;background:var(--card,#0f172a);color:var(--ink,#e2e8f0);border:1px solid var(--line,#334155);box-shadow:0 10px 28px rgba(0,0,0,.28);font:12px/1.4 system-ui,Arial,sans-serif;text-align:left;white-space:normal}
+.uv-pop.open .uv-card{display:block}
+.uv-card svg{display:block;width:204px;height:44px;margin:6px 0 8px}
+.uv-card .uv-k{font-weight:700;margin:0 0 2px}
+.uv-card .uv-m{color:var(--muted,#94a3b8);font-size:11px}
+.uv-card a{color:var(--link,#8ecbff)}
+</style>
+<script id="uv-badge">(function(){
+function norm(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function tzParts(iso){
+  var pt=new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'2-digit',minute:'2-digit',hour12:false,hourCycle:'h23',timeZoneName:'short',day:'2-digit',month:'short'}).formatToParts(new Date(iso));
+  var g=function(t){return (pt.find(function(x){return x.type===t})||{}).value||''};
+  var tz=(g('timeZoneName')||'AEDT').replace('GMT+11','AEDT').replace('GMT+10','AEST');
+  return {hh:g('hour'),mm:g('minute'),tz:tz,day:g('day'),mon:g('month')};
+}
+function last30(daysMap){
+  var out=[], now=new Date();
+  var fmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'});
+  for(var i=29;i>=0;i--){
+    var d=new Date(now.getTime()-i*86400000);
+    var key=fmt.format(d);
+    out.push({day:key,count:+((daysMap||{})[key]||0)});
+  }
+  return out;
+}
+function spark(series){
+  var w=204,h=44,p=2;
+  var max=Math.max.apply(null,series.map(function(x){return x.count}).concat([1]));
+  var n=series.length||1;
+  var pts=series.map(function(x,i){
+    var X=p+(i*(w-2*p)/Math.max(1,n-1));
+    var Y=h-p-((x.count/max)*(h-2*p));
+    return X.toFixed(1)+','+Y.toFixed(1);
+  }).join(' ');
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true"><polyline fill="none" stroke="#22c55e" stroke-width="2" points="'+pts+'"/></svg>';
+}
+function fillStats(d){
+  var total=(d.total&& (d.total.total||d.total.total_utc))||0;
+  var cc=(d.countries||[]).length;
+  var asof=d.as_of_aedt||'';
+  document.querySelectorAll('.im-stat-vis').forEach(function(e){e.textContent=total||'0'});
+  document.querySelectorAll('.im-stat-cc').forEach(function(e){e.textContent=cc||'0'});
+  document.querySelectorAll('.im-stat-asof').forEach(function(e){e.textContent=asof||'n/a'});
+}
+function attachPopover(d, count, series){
+  document.querySelectorAll('.uv').forEach(function(uv){
+    if(uv.closest('.uv-pop')) return;
+    var wrap=document.createElement('span');wrap.className='uv-pop';
+    uv.parentNode.insertBefore(wrap,uv);wrap.appendChild(uv);
+    var card=document.createElement('div');card.className='uv-card';card.setAttribute('role','dialog');
+    var last=series.length?series[series.length-1].count:0;
+    card.innerHTML='<p class="uv-k">This page: '+count+' unique visitors</p>'+spark(series)+'<p class="uv-m">Last 30 days (this page). Today so far: '+last+'.</p><p><a href="/visitors/">Full visitor stats \u203A</a></p>';
+    wrap.appendChild(card);
+    function tog(ev){ev.preventDefault();ev.stopPropagation();document.querySelectorAll('.uv-pop.open').forEach(function(x){if(x!==wrap)x.classList.remove('open')});wrap.classList.toggle('open')}
+    uv.addEventListener('click',tog);
+    uv.style.cursor='pointer';
+    uv.title='Click for a 30-day sparkline';
+  });
+  document.addEventListener('click',function(){document.querySelectorAll('.uv-pop.open').forEach(function(x){x.classList.remove('open')})});
+}
+function apply(d){
+  var p=norm(location.pathname);
+  var page=(d.pages||[]).filter(function(x){return norm(x.path)===p});
+  var c=page.reduce(function(a,x){return a+(+x.count||0)},0);
+  var days={};
+  page.forEach(function(x){var m=x.days||{};Object.keys(m).forEach(function(k){days[k]=(days[k]||0)+(+m[k]||0)})});
+  document.querySelectorAll('.uvc').forEach(function(e){e.textContent=c});
+  document.querySelectorAll('.uvt').forEach(function(e){
+    if(d.updated_utc){var t=tzParts(d.updated_utc);e.textContent=' (data as of '+t.hh+':'+t.mm+' '+t.tz+')'}
+  });
+  fillStats(d);
+  attachPopover(d,c,last30(days));
+}
+function fail(){
+  document.querySelectorAll('.uvc').forEach(function(e){if(e.textContent==='\u2026'||e.textContent==='...') e.textContent='n/a'});
+  document.querySelectorAll('.im-stat-vis,.im-stat-cc,.im-stat-asof').forEach(function(e){if(e.textContent==='\u2026') e.textContent='n/a'});
+}
+if(!window.__visitorsData){
+  var ac=typeof AbortController==='function'?new AbortController():null;
+  var timer=setTimeout(function(){try{ac&&ac.abort()}catch(e){}},8000);
+  window.__visitorsData=fetch('/data/visitors.json?'+Date.now(),ac?{signal:ac.signal}:undefined).then(function(r){
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('visitors.json '+r.status);
+    return r.json();
+  });
+}
+window.__visitorsData.then(apply).catch(function(){fail()});
+})();</script>
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/"}}</script>
+<script>(function(){var b=String.fromCharCode(99,111,108,101,115);var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';s.setAttribute('data-goatcounter','https://amoeoo-'+b+'.goatcounter.com/count');document.head.appendChild(s);}());</script>
+<p class="meta">Page: <strong>Leg 1 — San Francisco (SFO) to Idaho (Boise)</strong> · Version: <strong>v4 · 26 Nov 2026, 8:36 PM AEDT</strong></p>
+</body>
+</html>

@@ -1,0 +1,913 @@
+<!doctype html><html lang="en"><head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Compact 28px pills, 6 columns on wide screens, 4 mid, 2 on mobile.
+   Per-section accent colour is set as --im-accent on each pill. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:6px 12px 8px;
+  gap:6px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:650 11.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:4px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im details.im-sub,
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:4px;
+  margin:0;
+  padding:6px 8px;
+  border-left:3px solid var(--im-accent,var(--menu-on,#2563eb))!important;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 10%,transparent)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl,
+nav.site.im summary.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+  list-style:none;
+}
+nav.site.im summary.sl::-webkit-details-marker{display:none}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:5px;
+  box-sizing:border-box;
+  width:100%;
+  height:28px;
+  min-height:28px;
+  max-height:28px;
+  min-width:0;
+  padding:0 8px;
+  border-radius:999px;
+  border:1px solid color-mix(in srgb,var(--im-accent,#2563eb) 40%,var(--menu-pill-bd,#3a4456))!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:color-mix(in srgb,var(--im-accent,#2563eb) 16%,var(--menu-hover))!important}
+nav.site.im a.mi.on{
+  background:var(--im-accent,var(--menu-on,#2563eb))!important;
+  border-color:var(--im-accent,var(--menu-on,#2563eb))!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:11px;height:28px;min-height:28px;max-height:28px}
+nav.site.im a.mi .ic{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 22%,transparent);
+  font-size:11px;
+  line-height:1;
+}
+nav.site.im a.mi.on .ic{background:rgba(255,255,255,.22)}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  line-height:1;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:14px;
+  height:14px;
+  padding:0 4px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:700;
+  line-height:1;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 35%,#93c5fd);
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:16px;
+  height:16px;
+  padding:0 4px;
+  border-radius:999px;
+  font-size:10px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:var(--im-accent,#1d4ed8)!important;
+}
+nav.site.im a.mi .im-dot{
+  width:7px;height:7px;border-radius:50%;background:#22c55e;flex:none;
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--im-accent,#2563eb) 18%,transparent);
+}
+nav.site.im .im-stats{
+  display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;
+  font:600 11px/1.3 system-ui,Arial,sans-serif;color:var(--menu-fg);padding:2px 2px 0;opacity:.9;
+}
+nav.site.im .im-stats a{color:var(--link);text-decoration:none}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:28px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:28px;
+  padding:0 12px;
+  border-radius:999px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:28px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:28px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:28px;padding:0 10px}
+  nav.site.im summary.sl .im-toggle{display:inline}
+}
+@media (min-width:721px){
+  nav.site.im summary.sl .im-toggle{display:none}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cursor_tenant1 — Tenant Diagram</title><style>body{font-family:system-ui,sans-serif;margin:20px;background:#111;color:#eee;line-height:1.5}main{max-width:var(--site-content-max,1200px);margin:auto}a{color:#8cf}table{border-collapse:collapse;width:100%;background:#19212a}td,th{padding:8px;border-bottom:1px solid #444;text-align:left;vertical-align:top}td.dn{font-family:ui-monospace,monospace;font-size:12px;word-break:break-all}th{color:#9ed}.scroll{overflow:auto}.note{padding:14px;background:#302d20;border-left:4px solid #fc6}.add{border-left:4px solid #5c5;padding-left:10px}.rem{border-left:4px solid #e66;padding-left:10px}nav{margin-bottom:20px}h1{font-size:clamp(22px,4vw,32px)}input{background:#19212a;color:#eee;border:1px solid #555;padding:6px;border-radius:4px;width:min(400px,100%)}.pill{display:inline-block;background:#202832;border:1px solid #444;border-radius:12px;padding:2px 10px;margin:2px}details{margin:3px 0 3px 18px}details.grp{margin-left:0}summary{cursor:pointer}.leaf{margin:2px 0 2px 34px}.kv{color:#bbb;font-size:13px;margin-left:6px}.cnt{color:#9ed;font-size:13px}.dl{font-size:12px;margin-left:8px}tr.t{cursor:pointer}tr.t:hover{background:#243040}tr.x td{background:#141a21}button{background:#202832;color:#eee;border:1px solid #555;border-radius:4px;padding:6px 12px;margin-right:6px;cursor:pointer}.st{border-radius:4px;padding:2px 8px;font-weight:600;white-space:nowrap;font-size:13px}.st-ok{background:#198754;color:#fff}.st-part{background:#f0ad4e;color:#111}.st-miss{background:#c9302c;color:#fff}.nb-ok{color:#5c5}.nb-miss{color:#e66}.nb-diff{color:#fc6}.bc{font-size:14px;color:#bbb;margin:8px 0 14px}.bc a{color:#8cf}.cards{display:flex;flex-wrap:wrap;gap:14px;margin:16px 0 22px}.card{flex:1 1 280px;max-width:420px;box-sizing:border-box;background:#161d29;border:1px solid #2a3446;border-radius:10px;padding:12px 14px;text-decoration:none!important;color:#e6edf3!important;transition:transform .12s,background .12s}.card:hover{background:#1c2636;transform:translateY(-2px)}.card b.tn{display:block;font-size:17px;margin:6px 0 2px}.card .d{font-size:13px;color:#aab6c4;min-height:2.6em}.card .meta{font-size:12.5px;color:#c3cfdc;margin:8px 0}.card .go{display:block;margin-top:8px;font-size:13px;color:#8ecbff}.thumb{background:#0f141c;border:1px solid #2a3446;border-radius:8px;overflow:hidden;height:150px;display:flex;align-items:center;justify-content:center}.thumb svg{width:100%;height:148px}.legend{display:flex;flex-wrap:wrap;gap:10px 18px;margin:10px 0 16px;font-size:13px}.legend i{display:inline-block;width:14px;height:14px;border-radius:3px;border:2px solid;vertical-align:-2px;margin-right:6px}.diag{overflow:auto;background:#0f141c;border:1px solid #2a3446;border-radius:10px;padding:10px;margin:10px 0 18px}.diag svg{display:block;max-width:100%;height:auto}main.wide{max-width:var(--site-content-max,1200px)}button,a.btn{background:#202832;color:#eee;border:1px solid #555;border-radius:4px;padding:6px 12px;margin-right:6px;cursor:pointer;text-decoration:none;display:inline-block;font:inherit}button:hover,a.btn:hover{background:#2a3446}.pill{margin-right:6px}td.n,th.n{text-align:right}tr.t:hover{background:#243040}.tabs{display:flex;flex-wrap:wrap;gap:4px;margin:14px 0 0}.tabs button.on{background:#2563eb;border-color:#2563eb;color:#fff}.dview[hidden]{display:none!important}.diag.contain{background:#3d4a3c;border-color:#2a3830}.tsecs{display:grid;grid-template-columns:1fr;gap:16px;margin:16px 0 22px}@media (min-width:720px){.tsecs{grid-template-columns:repeat(2,minmax(0,1fr))}}@media (min-width:1100px){.tsecs{grid-template-columns:repeat(3,minmax(0,1fr))}}.tsec{background:#161d29;border:1px solid #2a3446;border-radius:10px;padding:14px 16px 12px;min-width:0}.tsec.wide{grid-column:1/-1}.tsec .tsec-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start;margin:0 0 6px}.tsec .tsec-titles{min-width:0}.tsec h2{margin:0 0 4px;font-size:20px;overflow-wrap:anywhere}.tsec .d{font-size:13px;color:#aab6c4;margin:0 0 6px}.tsec .meta{font-size:12.5px;color:#c3cfdc;margin:0 0 8px}.tsec a.go{color:#8ecbff;font-size:13px}.tsec .diag{margin:10px 0}.tsec .dlbar{margin:0;flex:0 0 auto;align-self:flex-start}.page-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start;margin:0 0 8px}.page-head h1{margin:0;min-width:0;overflow-wrap:anywhere}.page-head .dlbar{margin:0;align-self:start}.dlbar{display:flex;justify-content:flex-end;align-items:center;gap:6px;flex-wrap:wrap}.dlico{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border:1px solid #555;border-radius:6px;background:#202832;color:#eee!important;text-decoration:none!important;font:600 11px/1 system-ui,Arial,sans-serif;line-height:1;white-space:nowrap}.dlico:hover{background:#2a3446}.dlico svg{display:block;flex:0 0 auto}svg a.yaml-pop{cursor:pointer}.ymodal[hidden]{display:none!important}.ymodal{position:fixed;inset:0;z-index:2147483600}.ymodal-back{position:absolute;inset:0;background:rgba(0,0,0,.55)}.ymodal-box{position:relative;z-index:1;max-width:min(740px,calc(100vw - 32px));max-height:min(82vh,calc(100vh - 40px));margin:7vh auto 0;background:#161d29;color:#e6edf3;border:1px solid #2a3446;border-radius:12px;box-shadow:0 16px 48px rgba(0,0,0,.45);display:flex;flex-direction:column;min-height:0}.ymodal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px 8px}.ymodal-head h3{margin:0;font-size:18px}.ymodal-x{background:transparent!important;border:0!important;color:#e6edf3;font-size:20px;line-height:1;cursor:pointer;padding:4px 8px!important;margin:0}.ymodal-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:0 16px 10px}.ymodal-body{overflow:auto;padding:0 12px 14px;min-height:0}ol.ycode{list-style:none;margin:0;padding:8px 0;background:#0d1117;border:1px solid #333;border-radius:6px;font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}ol.ycode li{padding:0 12px 0 58px;position:relative;white-space:pre}ol.ycode li .ln{position:absolute;left:0;width:50px;text-align:right;padding-right:10px;color:#6e7681;user-select:none}ol.ycode li.hl{background:#1f4e79}.yk{color:#79c0ff}.ys{color:#a5d6ff}.yb{color:#ff7b72}.yn{color:#f2cc60}.yc{color:#8b949e;font-style:italic}.yd{color:#ffa657}th.sortable{padding:0;vertical-align:bottom}button.thsort{all:unset;display:inline-flex;align-items:center;gap:4px;width:100%;box-sizing:border-box;padding:8px 10px;cursor:pointer;font:inherit;font-weight:600;color:inherit;text-align:left;border-radius:4px}button.thsort:hover,button.thsort:focus-visible{background:#243040;outline:2px solid #2563eb;outline-offset:-2px}th.sortable.n button.thsort{justify-content:flex-end;text-align:right}button.thsort .si{font-size:11px;opacity:.45;min-width:1.1em;text-align:center}th[aria-sort=ascending] button.thsort .si,th[aria-sort=descending] button.thsort .si{opacity:1;color:#8ecbff}</style></head><body data-dl="cursor-tenant1">
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+<main class="wide"><div class="topbar" style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-bottom:16px"><nav class="site" style="margin:0"><a href="/">Home</a> | <a href="/report17-aoapic-monitoring/tenants/">Tenants Detail</a> | <a href="/netbox-aci-tenants/">NetBox ACI Tenants</a> | <a href="/netbox-aci-tenants/diagrams/">Tenant Diagrams</a> | <a href="/netbox-aci-objects/">NB ACI Objects</a> | <a href="/netbox-yaml-model/">YAML Model</a> | <a href="/report17-aoapic-monitoring/pending-provisioning/">Pending Provisioning</a> | <a href="/report17-aoapic-monitoring/universal-provisioning/">Universal Provisioning</a> | <a href="/report17-aoapic-monitoring/objects/">Object Drill-down</a> | <a href="/report17-aoapic-monitoring/">Report 17</a> | <a href="/grafana-screenshots/">Group 1</a> | <a href="/grafana-screenshots-part2/">Group 2</a> | <a href="/visitors/">Visitors</a> | <a href="https://amoeoo-coles.github.io/aoapic-nac-test-status/">nac-test Status</a></nav><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:#bbb">NetBox data 18 Nov 2026 07:29:06 AEDT (Melbourne time)<span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span><span class="uvt" style="font-size:11px;color:#888"></span></div></div><p class="bc"><a href="/">Home</a> · <a href="/netbox-aci-tenants/">NetBox ACI Tenants</a> · <a href="/netbox-aci-tenants/diagrams/">Tenant Diagrams</a> · Cursor_tenant1</p><div class="page-head"><h1>Cursor_tenant1</h1>
+<p class="ver"><a href="/netbox-aci-tenants/diagrams/cursor-tenant1/history/">v2 · 26 Nov 2026, 8:36 PM AEDT</a></p>
+<div class="dlbar"><a class="dlico" id="dl-svg-file" href="containment.svg" download="cursor-tenant1-containment.svg" title="Download SVG" aria-label="Download SVG"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M8 1.25a.75.75 0 0 1 .75.75v6.19l1.97-1.97a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 1.06-1.06l1.97 1.97V2a.75.75 0 0 1 .75-.75zM3.25 12a.75.75 0 0 0 0 1.5h9.5a.75.75 0 0 0 0-1.5h-9.5z"/></svg><span>SVG</span></a><a class="dlico" id="dl-png-file" href="containment.png" download="cursor-tenant1-containment.png" title="Download PNG" aria-label="Download PNG"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M8 1.25a.75.75 0 0 1 .75.75v6.19l1.97-1.97a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 1.06-1.06l1.97 1.97V2a.75.75 0 0 1 .75-.75zM3.25 12a.75.75 0 0 0 0 1.5h9.5a.75.75 0 0 0 0-1.5h-9.5z"/></svg><span>PNG</span></a></div></div><p>Cursor tenant 1 - web tier via Add Tenant portal (NaC + Ansible) · Fabric Fabric1 · <span class="st st-miss">Missing on AOAPIC</span></p><p class="note"><b>Data:</b> NetBox read 18 Nov 2026 07:29:06 AEDT (Melbourne time). AOAPIC overlay 18 Nov 2026 07:28:08 AEDT (Melbourne time), read-only snapshot, no APIC login.</p><div class="legend" aria-label="Status colour legend"><span><i style="background:#163022;border-color:#22c55e"></i>In NetBox and on AOAPIC</span><span><i style="background:#2a2410;border-color:#f59e0b"></i>In NetBox only (not on AOAPIC)</span><span><i style="background:#2a1515;border-color:#ef4444"></i>On AOAPIC only (not in NetBox)</span></div><p style="font-size:13px;color:#bbb">The 📄 icon on a Tenant, VRF, BD, subnet or EPG box opens a preview of that object’s YAML. Open the full model from the popup or the <a href="/netbox-yaml-model/cursor-tenant1/">YAML model for Cursor_tenant1</a>.</p><p class="tabs"><button type="button" class="on" data-v="c" onclick="tdtab('c')">Containment view</button><button type="button" data-v="t" onclick="tdtab('t')">Tree view</button></p><p style="font-size:13px;color:#bbb">No contracts in NetBox or on AOAPIC for this tenant, so there are no provider/consumer arrows.</p><p style="font-size:13px;color:#bbb">No L3Outs in NetBox or on AOAPIC for this tenant.</p><div class="dview diag contain" data-v="c"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 284 378" class="tdiag tt-keep" id="tdiag-c" role="img">
+<rect width="284" height="378" fill="#3d4a3c"/>
+<rect x="77.0" y="16.0" width="130" height="30" rx="6" fill="#1f4e79" stroke="#0d2b4a" stroke-width="1.5"/>
+<text x="142.0" y="36.0" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" font-family="Segoe UI,Arial,sans-serif">root/uni</text>
+<line x1="142.0" y1="46.0" x2="142.0" y2="90.0" stroke="#1f4e79" stroke-width="3"/>
+<polygon points="136.0,82.0 148.0,82.0 142.0,92.0" fill="#1f4e79"/>
+<rect x="16.0" y="94.0" width="252.0" height="258.0" rx="10" fill="#5b9bd5" stroke="#2e75b6" stroke-width="1.6"/>
+<text x="142.0" y="116.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff" font-family="Segoe UI,Arial,sans-serif">Cursor_tenant1</text>
+<circle cx="258.0" cy="104.0" r="5" fill="#f59e0b" stroke="#fff" stroke-width="1.2"/>
+<a class="yaml-pop" href="/netbox-yaml-model/cursor-tenant1/" title="Preview YAML for Tenant Cursor_tenant1"><text x="28.0" y="114.0" font-size="13" font-family="Apple Color Emoji,Segoe UI Emoji,system-ui,sans-serif">📄</text></a>
+<rect x="32.0" y="132.0" width="220.0" height="26" rx="8" fill="#c6efef"/>
+<text x="142.0" y="150.0" text-anchor="middle" font-size="12" font-weight="700" fill="#c00000" font-family="Segoe UI,Arial,sans-serif">cursor_vrf</text>
+<circle cx="242.0" cy="142.0" r="5" fill="#f59e0b" stroke="#fff" stroke-width="1.2"/>
+<a class="yaml-pop" href="/netbox-yaml-model/cursor-tenant1/#vrf-cursor_vrf" title="Preview YAML for VRF cursor_vrf"><text x="40.0" y="150.0" font-size="13" font-family="Apple Color Emoji,Segoe UI Emoji,system-ui,sans-serif">📄</text></a>
+<line x1="142.0" y1="172.0" x2="142.0" y2="188.0" stroke="#c00000" stroke-width="2"/><circle cx="142.0" cy="172.0" r="7" fill="#c00000"/><path d="M138.8 170.8 L145.2 170.8 L142.0 176.2 Z" fill="#fff"/>
+<rect x="67.0" y="192.0" width="150" height="68.0" rx="8" fill="#2e75b6" stroke="#1f4e79" stroke-width="1.4"/>
+<text x="142.0" y="206.0" text-anchor="middle" font-size="9" font-weight="600" fill="#dbeafe" font-family="Segoe UI,Arial,sans-serif">Bridge Domain</text>
+<text x="142.0" y="222.0" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff" font-family="Segoe UI,Arial,sans-serif">cursor_bd</text>
+<circle cx="207.0" cy="202.0" r="5" fill="#f59e0b" stroke="#fff" stroke-width="1.2"/>
+<a class="yaml-pop" href="/netbox-yaml-model/cursor-tenant1/#bd-cursor_bd" title="Preview YAML for BD cursor_bd"><text x="75.0" y="208.0" font-size="13" font-family="Apple Color Emoji,Segoe UI Emoji,system-ui,sans-serif">📄</text></a>
+<rect x="75.0" y="230.0" width="134" height="18" rx="5" fill="#92d050"/>
+<text x="142.0" y="243.0" text-anchor="middle" font-size="10" font-weight="700" fill="#1a3300" font-family="Segoe UI,Arial,sans-serif">198.51.100.1/24</text>
+<circle cx="199.0" cy="239.0" r="3.4" fill="#f59e0b" stroke="#fff" stroke-width="0.8"/>
+<a class="yaml-pop" href="/netbox-yaml-model/cursor-tenant1/#subnet-198.51.100.1-24" title="Preview YAML for subnet 198.51.100.1/24"><text x="79.0" y="244.0" font-size="13" font-family="Apple Color Emoji,Segoe UI Emoji,system-ui,sans-serif">📄</text></a>
+<line x1="142.0" y1="268.0" x2="142.0" y2="284.0" stroke="#c00000" stroke-width="2"/><circle cx="142.0" cy="268.0" r="7" fill="#c00000"/><path d="M138.8 266.8 L145.2 266.8 L142.0 272.2 Z" fill="#fff"/>
+<rect x="71.0" y="288.0" width="142.0" height="22" rx="6" fill="#fff2cc" stroke="#d0b84a"/>
+<text x="142.0" y="303.0" text-anchor="middle" font-size="10" font-weight="700" fill="#c00000" font-family="Segoe UI,Arial,sans-serif">web</text>
+<circle cx="203.0" cy="298.0" r="5" fill="#f59e0b" stroke="#fff" stroke-width="1.2"/>
+<a class="yaml-pop" href="/netbox-yaml-model/cursor-tenant1/#epg-web" title="Preview YAML for EPG web"><text x="75.0" y="304.0" font-size="13" font-family="Apple Color Emoji,Segoe UI Emoji,system-ui,sans-serif">📄</text></a>
+</svg></div><div class="dview diag" data-v="t" hidden><svg xmlns="http://www.w3.org/2000/svg" id="tdiag" viewBox="0 0 420 472" width="420" height="472" role="img" aria-label="Diagram of tenant Cursor_tenant1"><title>Tenant diagram: Cursor_tenant1</title><rect class="nbd-bg" width="420" height="472" fill="#0f141c"/><defs><marker id="arr-cursor-tenant1" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#60a5fa"/></marker></defs><g class="nbd-node"><rect class="nbd-box nbd-st-nb-only" x="28.0" y="22.0" width="364.0" height="66.0" rx="8" ry="8" fill="#2a2410" stroke="#f59e0b" stroke-width="2.2"/><text class="nbd-kind nbd-st-nb-only" x="38.0" y="37.0" fill="#f59e0b" font-family="system-ui,Arial,sans-serif" font-size="10" font-weight="600">TENANT</text><text class="nbd-title" x="38.0" y="54.0" fill="#f1f5f9" font-family="system-ui,Arial,sans-serif" font-size="13" font-weight="700">Cursor_tenant1</text><text class="nbd-sub" x="38.0" y="68.0" fill="#cbd5e1" font-family="ui-monospace,monospace" font-size="11">Fabric1</text><a class="yaml-pop" href="/netbox-yaml-model/cursor-tenant1/" title="Preview YAML for Tenant Cursor_tenant1"><text x="370.0" y="38.0" font-size="13" font-family="Apple Color Emoji,Segoe UI Emoji,system-ui,sans-serif">📄</text></a></g><g class="nbd-node"><rect class="nbd-box nbd-st-nb-only" x="110.0" y="144.0" width="200.0" height="50.0" rx="8" ry="8" fill="#2a2410" stroke="#f59e0b" stroke-width="2.2"/><text class="nbd-kind nbd-st-nb-only" x="120.0" y="159.0" fill="#f59e0b" font-family="system-ui,Arial,sans-serif" font-size="10" font-weight="600">VRF</text><text class="nbd-title" x="120.0" y="176.0" fill="#f1f5f9" font-family="system-ui,Arial,sans-serif" font-size="13" font-weight="700">cursor_vrf</text><a class="yaml-pop" href="/netbox-yaml-model/cursor-tenant1/#vrf-cursor_vrf" title="Preview YAML for VRF cursor_vrf"><text x="288.0" y="160.0" font-size="13" font-family="Apple Color Emoji,Segoe UI Emoji,system-ui,sans-serif">📄</text></a></g><path class="nbd-edge" d="M 210.0 88.0 L 210.0 116.0 L 210.0 116.0 L 210.0 144.0" fill="none" stroke="#64748b" stroke-width="1.4"/><g class="nbd-node"><rect class="nbd-box nbd-st-nb-only" x="110.0" y="250.0" width="172.0" height="86.0" rx="8" ry="8" fill="#2a2410" stroke="#f59e0b" stroke-width="2.2"/><text class="nbd-kind nbd-st-nb-only" x="120.0" y="265.0" fill="#f59e0b" font-family="system-ui,Arial,sans-serif" font-size="10" font-weight="600">BD</text><text class="nbd-title" x="120.0" y="282.0" fill="#f1f5f9" font-family="system-ui,Arial,sans-serif" font-size="13" font-weight="700">cursor_bd</text><text class="nbd-sub" x="120.0" y="296.0" fill="#cbd5e1" font-family="ui-monospace,monospace" font-size="11">198.51.100.1/24</text><text class="nbd-sub" x="120.0" y="310.0" fill="#cbd5e1" font-family="ui-monospace,monospace" font-size="11">private</text><a class="yaml-pop" href="/netbox-yaml-model/cursor-tenant1/#bd-cursor_bd" title="Preview YAML for BD cursor_bd"><text x="260.0" y="266.0" font-size="13" font-family="Apple Color Emoji,Segoe UI Emoji,system-ui,sans-serif">📄</text></a></g><path class="nbd-edge" d="M 210.0 194.0 L 210.0 222.0 L 196.0 222.0 L 196.0 250.0" fill="none" stroke="#64748b" stroke-width="1.4"/><g class="nbd-node"><rect class="nbd-box nbd-st-nb-only" x="116.0" y="392.0" width="160.0" height="58.0" rx="8" ry="8" fill="#2a2410" stroke="#f59e0b" stroke-width="2.2"/><text class="nbd-kind nbd-st-nb-only" x="126.0" y="407.0" fill="#f59e0b" font-family="system-ui,Arial,sans-serif" font-size="10" font-weight="600">EPG</text><text class="nbd-title" x="126.0" y="424.0" fill="#f1f5f9" font-family="system-ui,Arial,sans-serif" font-size="13" font-weight="700">web</text><text class="nbd-sub" x="126.0" y="438.0" fill="#cbd5e1" font-family="ui-monospace,monospace" font-size="11">AP cursor_ap</text><a class="yaml-pop" href="/netbox-yaml-model/cursor-tenant1/#epg-web" title="Preview YAML for EPG web"><text x="254.0" y="408.0" font-size="13" font-family="Apple Color Emoji,Segoe UI Emoji,system-ui,sans-serif">📄</text></a></g><path class="nbd-edge" d="M 196.0 336.0 L 196.0 364.0 L 196.0 364.0 L 196.0 392.0" fill="none" stroke="#64748b" stroke-width="1.4"/></svg></div><h2>Objects (6)</h2><p><input id="q17" placeholder="Filter objects…" oninput="tdflt(this)" aria-label="Filter objects"></p><div class="scroll"><table class="objsort"><thead><tr><th class="sortable" data-sk="type" scope="col"><button type="button" class="thsort" data-sk="type" aria-label="Sort by Type">Type <span class="si" aria-hidden="true"></span></button></th><th class="sortable" data-sk="name" scope="col"><button type="button" class="thsort" data-sk="name" aria-label="Sort by Name">Name <span class="si" aria-hidden="true"></span></button></th><th class="sortable" data-sk="parent" scope="col"><button type="button" class="thsort" data-sk="parent" aria-label="Sort by Parent">Parent <span class="si" aria-hidden="true"></span></button></th><th class="sortable" data-sk="details" scope="col"><button type="button" class="thsort" data-sk="details" aria-label="Sort by Details">Details <span class="si" aria-hidden="true"></span></button></th><th class="sortable" data-sk="status" scope="col"><button type="button" class="thsort" data-sk="status" aria-label="Sort by Status">Status <span class="si" aria-hidden="true"></span></button></th><th class="sortable" data-sk="yaml" scope="col"><button type="button" class="thsort" data-sk="yaml" aria-label="Sort by YAML">YAML <span class="si" aria-hidden="true"></span></button></th></tr></thead><tbody><tr data-tn="Tenant Cursor_tenant1 – Cursor tenant 1 - web tier via Add Tenant portal (NaC + Ansible)" data-st="nb-only"><td>Tenant</td><td><b>Cursor_tenant1</b></td><td>–</td><td>Cursor tenant 1 - web tier via Add Tenant portal (NaC + Ansible)</td><td><span class="nb-miss">In NetBox only</span></td><td><a class="yaml-pop" href="/netbox-yaml-model/cursor-tenant1/" title="Preview YAML for Tenant Cursor_tenant1">YAML</a></td></tr><tr data-tn="VRF cursor_vrf Cursor_tenant1 enforcement enforced" data-st="nb-only"><td>VRF</td><td><b>cursor_vrf</b></td><td>Cursor_tenant1</td><td>enforcement enforced</td><td><span class="nb-miss">In NetBox only</span></td><td><a class="yaml-pop" href="/netbox-yaml-model/cursor-tenant1/#vrf-cursor_vrf" title="Preview YAML for VRF cursor_vrf">YAML</a></td></tr><tr data-tn="Bridge domain cursor_bd cursor_vrf VRF cursor_vrf, unicast routing yes, unknown unicast flood" data-st="nb-only"><td>Bridge domain</td><td><b>cursor_bd</b></td><td>cursor_vrf</td><td>VRF cursor_vrf, unicast routing yes, unknown unicast flood</td><td><span class="nb-miss">In NetBox only</span></td><td><a class="yaml-pop" href="/netbox-yaml-model/cursor-tenant1/#bd-cursor_bd" title="Preview YAML for Bridge domain cursor_bd">YAML</a></td></tr><tr data-tn="Subnet 198.51.100.1/24 cursor_bd scope private" data-st="nb-only"><td>Subnet</td><td><b>198.51.100.1/24</b></td><td>cursor_bd</td><td>scope private</td><td><span class="nb-miss">In NetBox only</span></td><td><a class="yaml-pop" href="/netbox-yaml-model/cursor-tenant1/#subnet-198.51.100.1-24" title="Preview YAML for Subnet 198.51.100.1/24">YAML</a></td></tr><tr data-tn="Application profile cursor_ap Cursor_tenant1 –" data-st="nb-only"><td>Application profile</td><td><b>cursor_ap</b></td><td>Cursor_tenant1</td><td>–</td><td><span class="nb-miss">In NetBox only</span></td><td><a class="yaml-pop" href="/netbox-yaml-model/cursor-tenant1/#ap-cursor_ap" title="Preview YAML for Application profile cursor_ap">YAML</a></td></tr><tr data-tn="EPG web cursor_ap AP cursor_ap, BD cursor_bd" data-st="nb-only"><td>EPG</td><td><b>web</b></td><td>cursor_ap</td><td>AP cursor_ap, BD cursor_bd</td><td><span class="nb-miss">In NetBox only</span></td><td><a class="yaml-pop" href="/netbox-yaml-model/cursor-tenant1/#epg-web" title="Preview YAML for EPG web">YAML</a></td></tr></tbody></table></div><p style="font-size:13px;color:#bbb"><a href="/netbox-aci-tenants/diagrams/">← All tenant diagrams</a> · <a href="/netbox-aci-tenants/">NetBox ACI Tenants</a> · <a href="/netbox-yaml-model/cursor-tenant1/">YAML model</a></p><section id="comments" aria-labelledby="comments-h">
+<h2 id="comments-h">Comments</h2>
+<p>Sign in with GitHub to comment. Comments are stored as GitHub Discussions in this site’s repository, one thread per page (mapped by pathname). Do not post credentials, addresses or other personal details.</p>
+<div id="comments-mount"></div>
+<script>
+(function(){
+  var b=String.fromCharCode(99,111,108,101,115);
+  var repo='amoeoo-'+b+'/amoeoo-'+b+'.github.io';
+  var s=document.createElement('script');
+  s.src='https://giscus.app/client.js';
+  s.setAttribute('data-repo',repo);
+  s.setAttribute('data-repo-id','R_kgDOVM0-Fw');
+  s.setAttribute('data-category','Announcements');
+  s.setAttribute('data-category-id','DIC_kwDOVM0-F84DLoq4');
+  s.setAttribute('data-mapping','pathname');
+  s.setAttribute('data-strict','1');
+  s.setAttribute('data-reactions-enabled','1');
+  s.setAttribute('data-input-position','top');
+  s.setAttribute('data-theme','preferred_color_scheme');
+  s.setAttribute('data-lang','en');
+  s.setAttribute('data-loading','lazy');
+  s.crossOrigin='anonymous';
+  s.async=true;
+  var m=document.getElementById('comments-mount');
+  if(m) m.appendChild(s);
+})();
+</script>
+</section>
+<section id="versions">
+<h2>Versions</h2>
+<p>This is <strong>v2 · 26 Nov 2026, 8:36 PM AEDT</strong>. Snapshots are under <a href="/netbox-aci-tenants/diagrams/cursor-tenant1/history/">history/</a>.</p>
+<ul>
+<li><b>v2 (current)</b> · 26 Nov 2026, 8:36 PM AEDT (Melbourne time) · added Giscus comments, version label, version history. · <a href="/netbox-aci-tenants/diagrams/cursor-tenant1/history/v2/">history/v2/</a></li><li><b>v1</b> · previous snapshot · previous page before visitor badge, GoatCounter, comments and version history were added. · <a href="/netbox-aci-tenants/diagrams/cursor-tenant1/history/v1/">history/v1/</a></li>
+</ul>
+</section>
+</main><script type="application/json" id="yaml-snippets">{"cursor-tenant1/tenant": {"id": "tenant", "kind": "tenant", "name": "Cursor_tenant1", "title": "Tenant Cursor_tenant1", "href": "/netbox-yaml-model/cursor-tenant1/", "start": 6, "end": 25, "text": "  - name: Cursor_tenant1\n    description: Cursor tenant 1 - web tier via Add Tenant portal (NaC + Ansible)\n    vrfs:\n    - name: cursor_vrf\n    bridge_domains:\n    - name: cursor_bd\n      vrf: cursor_vrf\n      unicast_routing: true\n      arp_flooding: true\n      unknown_unicast: flood\n      limit_ip_learn_to_subnets: true\n      subnets:\n      - ip: 198.51.100.1/24\n        public: false\n        shared: false\n    application_profiles:\n    - name: cursor_ap\n      endpoint_groups:\n      - name: web\n        bridge_domain: cursor_bd", "lines": [{"n": 6, "t": "  - name: Cursor_tenant1", "hl": true}, {"n": 7, "t": "    description: Cursor tenant 1 - web tier via Add Tenant portal (NaC + Ansible)", "hl": true}, {"n": 8, "t": "    vrfs:", "hl": true}, {"n": 9, "t": "    - name: cursor_vrf", "hl": true}, {"n": 10, "t": "    bridge_domains:", "hl": true}, {"n": 11, "t": "    - name: cursor_bd", "hl": true}, {"n": 12, "t": "      vrf: cursor_vrf", "hl": true}, {"n": 13, "t": "      unicast_routing: true", "hl": true}, {"n": 14, "t": "      arp_flooding: true", "hl": true}, {"n": 15, "t": "      unknown_unicast: flood", "hl": true}, {"n": 16, "t": "      limit_ip_learn_to_subnets: true", "hl": true}, {"n": 17, "t": "      subnets:", "hl": true}, {"n": 18, "t": "      - ip: 198.51.100.1/24", "hl": true}, {"n": 19, "t": "        public: false", "hl": true}, {"n": 20, "t": "        shared: false", "hl": true}, {"n": 21, "t": "    application_profiles:", "hl": true}, {"n": 22, "t": "    - name: cursor_ap", "hl": true}, {"n": 23, "t": "      endpoint_groups:", "hl": true}, {"n": 24, "t": "      - name: web", "hl": true}, {"n": 25, "t": "        bridge_domain: cursor_bd", "hl": true}]}, "cursor-tenant1/vrf-cursor_vrf": {"id": "vrf-cursor_vrf", "kind": "vrf", "name": "cursor_vrf", "title": "VRF cursor_vrf", "href": "/netbox-yaml-model/cursor-tenant1/#vrf-cursor_vrf", "start": 9, "end": 9, "text": "    - name: cursor_vrf", "lines": [{"n": 9, "t": "    - name: cursor_vrf", "hl": true}]}, "cursor-tenant1/bd-cursor_bd": {"id": "bd-cursor_bd", "kind": "bd", "name": "cursor_bd", "title": "BD cursor_bd", "href": "/netbox-yaml-model/cursor-tenant1/#bd-cursor_bd", "start": 11, "end": 20, "text": "    - name: cursor_bd\n      vrf: cursor_vrf\n      unicast_routing: true\n      arp_flooding: true\n      unknown_unicast: flood\n      limit_ip_learn_to_subnets: true\n      subnets:\n      - ip: 198.51.100.1/24\n        public: false\n        shared: false", "lines": [{"n": 11, "t": "    - name: cursor_bd", "hl": true}, {"n": 12, "t": "      vrf: cursor_vrf", "hl": true}, {"n": 13, "t": "      unicast_routing: true", "hl": true}, {"n": 14, "t": "      arp_flooding: true", "hl": true}, {"n": 15, "t": "      unknown_unicast: flood", "hl": true}, {"n": 16, "t": "      limit_ip_learn_to_subnets: true", "hl": true}, {"n": 17, "t": "      subnets:", "hl": true}, {"n": 18, "t": "      - ip: 198.51.100.1/24", "hl": true}, {"n": 19, "t": "        public: false", "hl": true}, {"n": 20, "t": "        shared: false", "hl": true}]}, "cursor-tenant1/subnet-198.51.100.1-24": {"id": "subnet-198.51.100.1-24", "kind": "subnet", "name": "198.51.100.1/24", "title": "subnet 198.51.100.1/24", "href": "/netbox-yaml-model/cursor-tenant1/#subnet-198.51.100.1-24", "start": 18, "end": 20, "text": "      - ip: 198.51.100.1/24\n        public: false\n        shared: false", "lines": [{"n": 18, "t": "      - ip: 198.51.100.1/24", "hl": true}, {"n": 19, "t": "        public: false", "hl": true}, {"n": 20, "t": "        shared: false", "hl": true}]}, "cursor-tenant1/ap-cursor_ap": {"id": "ap-cursor_ap", "kind": "ap", "name": "cursor_ap", "title": "application profile cursor_ap", "href": "/netbox-yaml-model/cursor-tenant1/#ap-cursor_ap", "start": 22, "end": 25, "text": "    - name: cursor_ap\n      endpoint_groups:\n      - name: web\n        bridge_domain: cursor_bd", "lines": [{"n": 22, "t": "    - name: cursor_ap", "hl": true}, {"n": 23, "t": "      endpoint_groups:", "hl": true}, {"n": 24, "t": "      - name: web", "hl": true}, {"n": 25, "t": "        bridge_domain: cursor_bd", "hl": true}]}, "cursor-tenant1/epg-web": {"id": "epg-web", "kind": "epg", "name": "web", "title": "EPG web", "href": "/netbox-yaml-model/cursor-tenant1/#epg-web", "start": 24, "end": 25, "text": "      - name: web\n        bridge_domain: cursor_bd", "lines": [{"n": 24, "t": "      - name: web", "hl": true}, {"n": 25, "t": "        bridge_domain: cursor_bd", "hl": true}]}}</script><div id="ymodal" class="ymodal" hidden><div class="ymodal-back" data-yclose></div><div class="ymodal-box" role="dialog" aria-modal="true" aria-labelledby="ymodal-title"><div class="ymodal-head"><h3 id="ymodal-title"></h3><button type="button" class="ymodal-x" data-yclose aria-label="Close">✕</button></div><div class="ymodal-actions"><button type="button" id="ymodal-copy">Copy</button><a id="ymodal-full" href="#" data-yaml-full>Open in full YAML model ›</a></div><div class="ymodal-body"><ol class="ycode" id="ymodal-code"></ol></div></div></div><script>function tdflt(i){var q=(i.value||"").toLowerCase();document.querySelectorAll("[data-tn]").forEach(function(el){el.style.display=!q||(el.getAttribute("data-tn")+" "+el.textContent).toLowerCase().indexOf(q)>=0?"":"none"})}function currentSvg(){var v=document.querySelector(".dview:not([hidden]) svg");return v||document.querySelector("svg.tdiag,svg#tdiag-c,svg#tdiag")}function viewName(){var b=document.querySelector(".tabs button.on");return b&&b.getAttribute("data-v")==="t"?"tree":"containment"}function tdtab(w){document.querySelectorAll(".dview").forEach(function(el){el.hidden=el.getAttribute("data-v")!==w});document.querySelectorAll(".tabs button").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-v")===w)});var base=document.body.getAttribute("data-dl")||"diagram";var svgA=document.getElementById("dl-svg-file"),pngA=document.getElementById("dl-png-file");if(svgA){var f=w==="c"?"containment.svg":"diagram.svg";svgA.href=f;svgA.download=base+"-"+(w==="c"?"containment":"tree")+".svg"}if(pngA){var f=w==="c"?"containment.png":"diagram.png";pngA.href=f;pngA.download=base+"-"+(w==="c"?"containment":"tree")+".png"}}function tdsvg(){var s=currentSvg();if(!s)return;var b=new Blob([new XMLSerializer().serializeToString(s)],{type:"image/svg+xml"});var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=(document.body.getAttribute("data-dl")||"diagram")+"-"+viewName()+".svg";a.click()}function tdpng(){var s=currentSvg();if(!s)return;var img=new Image();img.onload=function(){var vb=s.viewBox.baseVal,c=document.createElement("canvas");c.width=Math.max(vb.width,1)*2;c.height=Math.max(vb.height,1)*2;var x=c.getContext("2d");x.fillStyle="#3d4a3c";x.fillRect(0,0,c.width,c.height);x.drawImage(img,0,0,c.width,c.height);var a=document.createElement("a");a.href=c.toDataURL("image/png");a.download=(document.body.getAttribute("data-dl")||"diagram")+"-"+viewName()+".png";a.click()};img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(new XMLSerializer().serializeToString(s))}function yEsc(s){return String(s==null?"":s).replace(/[&<>]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c]})}function yColor(line){if(/^\s*#/.test(line))return '<span class="yc">'+yEsc(line)+"</span>";var m=line.match(/^(\s*)(- )?([A-Za-z_][\w-]*)(:)(\s*)(.*)$/);if(m){var vv=yEsc(m[6]);if(m[6]==="true"||m[6]==="false")vv='<span class="yb">'+vv+"</span>";else if(/^-?\d+(\.\d+)?$/.test(m[6]))vv='<span class="yn">'+vv+"</span>";else if(m[6])vv='<span class="ys">'+vv+"</span>";return yEsc(m[1])+(m[2]?'<span class="yd">- </span>':"")+'<span class="yk">'+yEsc(m[3])+"</span>"+m[4]+m[5]+vv}var m2=line.match(/^(\s*)(- )(.*)$/);return m2?yEsc(m2[1])+'<span class="yd">- </span><span class="ys">'+yEsc(m2[3])+"</span>":'<span class="ys">'+yEsc(line)+"</span>"}function ySnips(){var el=document.getElementById("yaml-snippets");if(!el||el._c)return el&&el._c||{};try{el._c=JSON.parse(el.textContent)}catch(e){el._c={}}return el._c}function yHref(a){if(!a)return "";var h=a.getAttribute("href")||a.getAttributeNS("http://www.w3.org/1999/xlink","href");if(!h&&a.href){if(typeof a.href==="string")h=a.href;else if(a.href.baseVal)h=a.href.baseVal}return h||""}function yKey(href){try{var u=new URL(href,location.origin);var m=u.pathname.match(/\/netbox-yaml-model\/([^\/]+)\/?$/);if(!m)return "";var id=(u.hash||"#tenant").replace(/^#/,"")||"tenant";return m[1]+"/"+id}catch(e){return ""}}function yClose(){var m=document.getElementById("ymodal");if(!m)return;m.hidden=true;document.body.style.overflow=""}function yOpen(href){var sn=ySnips()[yKey(href)];if(!sn)return false;var box=document.getElementById("ymodal");if(!box)return false;document.getElementById("ymodal-title").textContent=sn.title||(sn.kind+" "+sn.name);var full=document.getElementById("ymodal-full");full.href=sn.href||href;var ol=document.getElementById("ymodal-code");ol.innerHTML="";(sn.lines||[]).forEach(function(L){var li=document.createElement("li");if(L.hl!==false)li.className="hl";li.innerHTML='<span class="ln">'+L.n+"</span>"+yColor(L.t);ol.appendChild(li)});box.dataset.text=sn.text||(sn.lines||[]).map(function(L){return L.t}).join("\n");var c=document.getElementById("ymodal-copy");if(c)c.textContent="Copy";box.hidden=false;document.body.style.overflow="hidden";var body=box.querySelector(".ymodal-body");if(body)body.scrollTop=0;return true}document.addEventListener("click",function(ev){var t=ev.target;if(t&&t.closest&&t.closest("[data-yclose]")){yClose();return}var n=t,a=null;while(n&&n!==document){var tag=n.tagName&&n.tagName.toLowerCase();if(tag==="a"){a=n;break}n=n.parentNode||n.parentElement}if(!a)return;if(a.id==="ymodal-full"||a.getAttribute("data-yaml-full")!=null)return;var href=yHref(a);if(href.indexOf("/netbox-yaml-model/")===-1)return;if(!yKey(href)||!ySnips()[yKey(href)])return;ev.preventDefault();yOpen(href)});document.addEventListener("keydown",function(ev){if(ev.key==="Escape")yClose()});document.addEventListener("click",function(ev){if(ev.target&&ev.target.id==="ymodal-copy"){var box=document.getElementById("ymodal");var t=box&&box.dataset.text||"";(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){ev.target.textContent="Copied \u2713";setTimeout(function(){ev.target.textContent="Copy"},1500)}).catch(function(){ev.target.textContent="Copy failed"})}});function natParts(s){s=String(s==null?"":s);var a=[],re=/(\d+)|(\D+)/g,m;while(m=re.exec(s))a.push(m[1]?[1,Number(m[1])]:[0,m[2].toLowerCase()]);return a}function natCmp(a,b){var aa=natParts(a),bb=natParts(b),n=Math.max(aa.length,bb.length);for(var i=0;i<n;i++){if(i>=aa.length)return -1;if(i>=bb.length)return 1;var x=aa[i],y=bb[i];if(x[0]!==y[0])return x[0]-y[0];if(x[1]<y[1])return -1;if(x[1]>y[1])return 1}return 0}function stRank(t){t=(t||"").toLowerCase();if(/in netbox and on aoapic/.test(t)||/^\s*in aoapic\s*$/.test(t))return 0;if(/partial/.test(t)||/in netbox only/.test(t))return 1;if(/missing on aoapic/.test(t)||/on aoapic only/.test(t))return 2;return 9}function cellSortVal(td,sk,num){if(!td)return "";if(sk==="status")return stRank(td.textContent);if(sk==="yaml")return td.querySelector("a")?"1":"0";var t=(td.textContent||"").replace(/\s+/g," ").trim();if(num){var m=t.match(/-?\d+(\.\d+)?/);return m?Number(m[0]):Number.NEGATIVE_INFINITY}return t}function tsort(btn){var th=btn.closest("th");var table=btn.closest("table");if(!th||!table)return;var sk=btn.getAttribute("data-sk")||th.getAttribute("data-sk");var num=btn.getAttribute("data-num")==="1"||th.getAttribute("data-num")==="1";var idx=Array.prototype.indexOf.call(th.parentNode.children,th);var cur=th.getAttribute("aria-sort");var dir=(cur==="ascending")?"descending":"ascending";table.querySelectorAll("thead th[aria-sort]").forEach(function(h){h.removeAttribute("aria-sort");var s=h.querySelector(".si");if(s)s.textContent="";var b=h.querySelector("button.thsort");if(b)b.removeAttribute("aria-pressed")});th.setAttribute("aria-sort",dir);btn.setAttribute("aria-pressed","true");var si=btn.querySelector(".si");if(si)si.textContent=dir==="ascending"?"\u25B2":"\u25BC";var tb=table.tBodies[0];if(!tb)return;var rows=Array.prototype.slice.call(tb.rows);rows.sort(function(ra,rb){var va=cellSortVal(ra.cells[idx],sk,num),vb=cellSortVal(rb.cells[idx],sk,num);var c;if(sk==="status"||sk==="yaml"||num){c=va<vb?-1:va>vb?1:0}else c=natCmp(va,vb);if(c===0){c=natCmp((ra.cells[0]&&ra.cells[0].textContent)||"",(rb.cells[0]&&rb.cells[0].textContent)||"");if(c===0)c=natCmp((ra.cells[1]&&ra.cells[1].textContent)||"",(rb.cells[1]&&rb.cells[1].textContent)||"")}return dir==="ascending"?c:-c});rows.forEach(function(r){tb.appendChild(r)})}document.addEventListener("click",function(ev){var b=ev.target&&ev.target.closest&&ev.target.closest("button.thsort");if(b){ev.preventDefault();tsort(b)}});</script><script async="" data-goatcounter="https://amoeoo-coles.goatcounter.com/count" src="//gc.zgo.at/count.js"></script>
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:6px 0 8px;gap:6px;font:650 11.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:4px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im details.im-sub,nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:4px;margin:0;padding:6px 8px;border-left:3px solid var(--im-accent,var(--menu-on,#2563eb));background:color-mix(in srgb,var(--im-accent,#2563eb) 10%,transparent);border-radius:8px}
+nav.site.im a.mi{display:flex!important;align-items:center;gap:5px;box-sizing:border-box;width:100%;height:28px;min-height:28px;max-height:28px;min-width:0;padding:0 8px;border-radius:999px;border:1px solid color-mix(in srgb,var(--im-accent,#2563eb) 40%,var(--menu-pill-bd,#3a4456))!important;background:var(--menu-pill,#1b2330)!important;color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:color-mix(in srgb,var(--im-accent,#2563eb) 16%,var(--menu-hover,#26344a))!important}
+nav.site.im a.mi.on{background:var(--im-accent,#2563eb)!important;border-color:var(--im-accent,#2563eb)!important;color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{display:inline-flex;align-items:center;justify-content:center;flex:none;width:18px;height:18px;border-radius:50%;background:color-mix(in srgb,var(--im-accent,#2563eb) 22%,transparent);font-size:11px;line-height:1}
+nav.site.im a.mi.on .ic{background:rgba(255,255,255,.22)}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1;text-align:left}
+nav.site.im a.mi.sm{font-size:11px}
+nav.site.im a.sl,nav.site.im summary.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px;display:flex;align-items:center;gap:6px;cursor:pointer;list-style:none}
+nav.site.im summary.sl::-webkit-details-marker{display:none}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:14px;height:14px;padding:0 4px;border-radius:999px;font-size:9px;font-weight:700;line-height:1;background:color-mix(in srgb,var(--im-accent,#2563eb) 35%,#93c5fd);color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex!important;align-items:center;justify-content:center;flex:none;min-width:16px;height:16px;padding:0 4px;border-radius:999px;font-size:10px!important;font-weight:800;line-height:1;background:#0f172a!important;color:#fff!important}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc!important;color:#0f172a!important}
+nav.site.im a.mi.on .im-seq{background:#fff!important;color:var(--im-accent,#1d4ed8)!important}
+nav.site.im a.mi .im-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 2px color-mix(in srgb,var(--im-accent,#2563eb) 18%,transparent);flex:none}
+nav.site.im .im-stats{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font:600 11px/1.3 system-ui,Arial,sans-serif;color:var(--menu-fg,#94a3b8);padding:2px 2px 0;opacity:.9}
+nav.site.im .im-stats a{color:var(--link,#8ecbff);text-decoration:none}
+nav.site.im .im-stats .im-stat-n{font-variant-numeric:tabular-nums;font-weight:700}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:28px;flex:none}
+#sg-link,#tt-btn,#mm-link{height:28px;border-radius:999px;font-size:12px}
+#mm-link{width:28px;padding:0}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){
+  nav.site.im .im-main{grid-template-columns:repeat(2,minmax(0,1fr))}
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  nav.site.im summary.sl .im-toggle{display:inline}
+}
+@media (min-width:721px){
+  nav.site.im details.im-sub[open] .im-sub-pills,nav.site.im details.im-sub .im-sub-pills{display:grid!important}
+  nav.site.im summary.sl .im-toggle{display:none}
+}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["About Me","/about-me/","👤",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Cursor_Tenant6","/ARR/provisioning/cursor-tenant6/","🚀"],["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"],["ရှေ့သို့ချီ","/roadmap/forward/","⏩"],["Time Map 2026–2030","/roadmap/forward/time-map/","🗓️"],["BridgeWhy","/roadmap/bridgewhy/","📚"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["ARR-LargeTopology","/ARR-LargeTopology/","🗺️",[["Overview","/ARR-LargeTopology/","🗺️"],["Nodes","/ARR-LargeTopology/nodes.html","🖥️"],["Serials","/ARR-LargeTopology/serials.html","🔢"],["Mgmt IPs","/ARR-LargeTopology/mgmt-ips.html","🌐"],["Links","/ARR-LargeTopology/links.html","🔗"],["Tenants","/ARR-LargeTopology/tenants.html","🏢"],["VRFs","/ARR-LargeTopology/vrfs.html","🧭"],["BDs","/ARR-LargeTopology/bds.html","🌉"],["Subnets","/ARR-LargeTopology/subnets.html","🔢"],["EPGs","/ARR-LargeTopology/epgs.html","🎯"],["Leaf VNIs","/ARR-LargeTopology/vni.html","💠"],["VXLAN","/ARR-LargeTopology/vxlan/","🧵"],["VNI compare","/ARR-LargeTopology/vni-compare/","🔷"],["Access policies","/ARR-LargeTopology/access-policies/","🧱"],["BD GIPo & FTAG","/ARR-LargeTopology/bd-gipo-ftag/","📡"],["IAC files","/ARR-LargeTopology/iac-files/","📦"],["ARR-netbox","/ARR-LargeTopology/arr-netbox/","🗄️"],["Hardware monitor","/ARR-LargeTopology/hw-monitor/","📟"],["Site map","/ARR-LargeTopology/site-map/","🌳"],["Provisioning","/ARR-LargeTopology/provisioning/","🚀"],["Test explain","/ARR-LargeTopology/test-explain/","🧪"],["GitLab","/ARR-LargeTopology/gitlab/","🦊"],["GitLab Runner","/ARR-LargeTopology/gitlab-runner/","🏃"]]],["Terragrunt","/terragrunt/","🧰",[["Terragrunt","/terragrunt/","🧰"]]],["zFrontier","/zfrontier/","🌠",[["zFrontier","/zfrontier/","🌠"],["Southwest Chief","/zfrontier/southwest-chief/","🚂"],["Southwest Chief tracker","/zfrontier/southwest-chief/tracker/","📡"],["Southwest Chief stations","/zfrontier/southwest-chief/stations/","🚉"],["Farzad","/zfrontier/farzad/","📺"],["SpaceX vs Tesla shares","/zfrontier/shares/","📈"],["Optimus","/zfrontier/optimus/","🤖"],["Gigafactory","/zfrontier/gigafactory/","🏭"],["FSD versions","/zfrontier/fsd-versions/","🛣️"],["Liquid cooling","/zfrontier/liquid-cooling/","💧"],["SpaceX Tracking","/zfrontier/spacex/","🚀"],["CyberCab","/zfrontier/cybercab/","🚕"],["AI FineTune Pod","/zfrontier/ai-finetune-pod/","🎛️"],["MCP Servers","/zfrontier/mcp-servers/","🔌"],["NaC CLI","/zfrontier/nac-cli/","🧰"],["GPU Workflow","/zfrontier/3gpu-ai-workflow/","🧮"],["MWMESH","/zfrontier/mwmesh/","📡"],["Notebooks","/zfrontier/notebooks/","📓"],["RAG documents","/zfrontier/rag-documents/","📚"],["Foundation-Sec-8B","/zfrontier/foundation-sec-8b/","🛡️"],["Terafab","/zfrontier/terafab/","💠"],["3DiffsVXLAN","/zfrontier/3diffsvxlan/","🔀"],["ARR-LargePod","/zfrontier/arr-largepod/","🏗️"],["Nvidia A100 & H100","/zfrontier/Nvidia-A100-H100/","🟩"],["AgenticAI","/zfrontier/agenticai/","🧠"],["MS-02 GPU Monitoring","/zfrontier/MS-02-GPU-Monitoring/","📟"],["MBPro","/zfrontier/MBPro/","💻"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"]]],["ACI GUI Forms","/ACI-GUI-Forms/","📝",[["ACI GUI Forms","/ACI-GUI-Forms/","📝"],["GUI Map","/aci-gui-forms/WIP/gui-map/","🗺️"],["APG Access Policy Group","/ACI-GUI-Forms/apg/","🧩"],["Spine Access Policy Group","/ACI-GUI-Forms/spine-apg/","🛰️"]]],["ACI GUI","/aci-gui/","🖥️",[["Create Pod Policy Group","/aci-gui/create-pod-policy-group/","🧬"],["Create Bridge Domain (step 3)","/aci-gui/create-bridge-domain-step3/","🌉"],["Create Subnet","/aci-gui/create-subnet/","🔢"],["Create Application Profile","/aci-gui/create-application-profile/","🧩"],["Create Management EPG","/aci-gui/create-management-epg/","🛠️"],["Static Node Management Addresses","/aci-gui/static-node-management-addresses/","📍"],["Create Fabric Policies","/aci-gui/create-fabric-policies/","🧵"],["Create Access Policies","/aci-gui/create-access-policies/","🔐"],["Create VLAN Pool","/aci-gui/create-vlan-pool/","🏷️"],["Create Physical Domain","/aci-gui/create-physical-domain/","🏛️"],["Create Access Interface Policy Group","/aci-gui/create-access-interface-policy-group/","🔌"],["Create PC Interface Policy Group","/aci-gui/create-pc-interface-policy-group/","🔀"],["Note on Interface Policies","/aci-gui/interface-policies/","📘"],["Interface Wizard for vPC","/aci-gui/interface-wizard-vpc/","🪄"],["Create VMM Domain","/aci-gui/create-vmm-domain/","💻"],["vCenter Networking","/aci-gui/vcenter-networking/","🖥️"],["Create Tenant","/aci-gui/create-tenant/","🏢"],["Create L3Out","/aci-gui/create-l3out/","🌐"],["L3Out Contracts","/aci-gui/l3out-contracts/","📜"],["Create Bridge Domain","/aci-gui/create-bridge-domain/","🌉"],["Bridge Domain","/aci-gui/bridge-domain/","🌉"],["Mgmt Bridge Domain","/aci-gui/mgmt-bridge-domain/","🔧"],["DHCP Relay","/aci-gui/dhcp-relay/","📡"],["Management Application Profile","/aci-gui/management-application-profile/","📦"],["Application Profile (web + app)","/aci-gui/application-profile/","🧩"],["Create VRF","/aci-gui/create-vrf/","🧭"],["Create Endpoint Group","/aci-gui/create-endpoint-group/","🎯"],["Contracts Between Tenants","/aci-gui/contracts-between-tenants/","🤝"],["Create Filter","/aci-gui/create-filter/","🧹"],["Create Contract","/aci-gui/create-contract/","📃"],["Create Management Contracts","/aci-gui/create-management-contracts/","📑"],["Mgmt PortGroup to VM","/aci-gui/mgmt-portgroup-to-vm/","🧷"],["Pod Policy Group","/aci-gui/pod-policy-group/","🕒"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+var IM_UPDATED=["/ARR-LargeTopology/","/ARR-LargeTopology/access-policies/","/ARR-LargeTopology/arr-netbox/","/ARR-LargeTopology/arr-netbox/bds/","/ARR-LargeTopology/arr-netbox/cables/","/ARR-LargeTopology/arr-netbox/devices/","/ARR-LargeTopology/arr-netbox/epgs/","/ARR-LargeTopology/arr-netbox/interfaces/","/ARR-LargeTopology/arr-netbox/ip-addresses/","/ARR-LargeTopology/arr-netbox/subnets/","/ARR-LargeTopology/arr-netbox/tenants/","/ARR-LargeTopology/arr-netbox/vlans/","/ARR-LargeTopology/arr-netbox/vrfs/","/ARR-LargeTopology/bd-gipo-ftag/","/ARR-LargeTopology/bds/","/ARR-LargeTopology/epgs/","/ARR-LargeTopology/hw-monitor/","/ARR-LargeTopology/hw-monitor/bgp-rr/","/ARR-LargeTopology/hw-monitor/coop/","/ARR-LargeTopology/hw-monitor/endpoints/","/ARR-LargeTopology/hw-monitor/events/","/ARR-LargeTopology/hw-monitor/faults/","/ARR-LargeTopology/hw-monitor/firmware/","/ARR-LargeTopology/hw-monitor/health/","/ARR-LargeTopology/hw-monitor/interfaces/","/ARR-LargeTopology/hw-monitor/isis/","/ARR-LargeTopology/hw-monitor/leaf-compare/","/ARR-LargeTopology/hw-monitor/neighbours/","/ARR-LargeTopology/hw-monitor/node-101/","/ARR-LargeTopology/hw-monitor/node-102/","/ARR-LargeTopology/hw-monitor/node-103/","/ARR-LargeTopology/hw-monitor/node-104/","/ARR-LargeTopology/hw-monitor/node-201/","/ARR-LargeTopology/hw-monitor/node-202/","/ARR-LargeTopology/hw-monitor/overlay/","/ARR-LargeTopology/hw-monitor/resources/","/ARR-LargeTopology/hw-monitor/spine-compare/","/ARR-LargeTopology/hw-monitor/underlay/","/ARR-LargeTopology/hw-monitor/vxlan/","/ARR-LargeTopology/iac-files/","/ARR-LargeTopology/iac-files/ARR-APIC-01.nac/","/ARR-LargeTopology/iac-files/LEAF-101.nac/","/ARR-LargeTopology/iac-files/LEAF-102.nac/","/ARR-LargeTopology/iac-files/LEAF-103.nac/","/ARR-LargeTopology/iac-files/LEAF-104.nac/","/ARR-LargeTopology/iac-files/SPINE-201.nac/","/ARR-LargeTopology/iac-files/SPINE-202.nac/","/ARR-LargeTopology/iac-files/access_policies.nac/","/ARR-LargeTopology/iac-files/apic.nac/","/ARR-LargeTopology/iac-files/arr-iac-files/","/ARR-LargeTopology/iac-files/common.nac/","/ARR-LargeTopology/iac-files/fabric_policies.nac/","/ARR-LargeTopology/iac-files/infra.nac/","/ARR-LargeTopology/iac-files/interface_policies.nac/","/ARR-LargeTopology/iac-files/mgmt.nac/","/ARR-LargeTopology/iac-files/node_policies.nac/","/ARR-LargeTopology/iac-files/pods.nac/","/ARR-LargeTopology/iac-files/tenants/Cursor_Tenant2.nac/","/ARR-LargeTopology/iac-files/tenants/Cursor_Tenant3.nac/","/ARR-LargeTopology/iac-files/tenants/Cursor_Tenant6.nac/","/ARR-LargeTopology/iac-files/tenants/Cursor_tenant1.nac/","/ARR-LargeTopology/iac-files/tenants/Cursor_tenant5.nac/","/ARR-LargeTopology/iac-files/tenants/aci_p01_tenant.nac/","/ARR-LargeTopology/iac-files/tenants/common.nac/","/ARR-LargeTopology/iac-files/tenants/infra.nac/","/ARR-LargeTopology/iac-files/tenants/mgmt.nac/","/ARR-LargeTopology/iac-files/tenants/msite_p01_tenant.nac/","/ARR-LargeTopology/links/","/ARR-LargeTopology/mgmt-ips/","/ARR-LargeTopology/nodes/","/ARR-LargeTopology/provisioning/","/ARR-LargeTopology/serials/","/ARR-LargeTopology/site-map/","/ARR-LargeTopology/subnets/","/ARR-LargeTopology/tenants/","/ARR-LargeTopology/test-explain/","/ARR-LargeTopology/vni-compare/","/ARR-LargeTopology/vni/","/ARR-LargeTopology/vrfs/","/ARR-LargeTopology/vxlan/","/ARR/","/ARR/ap/common-default/","/ARR/ap/infra-access/","/ARR/ap/infra-ave-ctrl/","/ARR/aps/","/ARR/arr-LToPo/","/ARR/arr-LToPo/bds/","/ARR/arr-LToPo/epgs/","/ARR/arr-LToPo/links/","/ARR/arr-LToPo/mgmt-ips/","/ARR/arr-LToPo/nodes/","/ARR/arr-LToPo/serials/","/ARR/arr-LToPo/subnets/","/ARR/arr-LToPo/tenants/","/ARR/arr-LToPo/vni/","/ARR/arr-LToPo/vrfs/","/ARR/bd/common-default/","/ARR/bd/infra-ave-ctrl/","/ARR/bd/infra-default/","/ARR/bd/mgmt-inb/","/ARR/bds/","/ARR/contract/common-default/","/ARR/contracts/","/ARR/endpoints/","/ARR/epg/infra-access-default/","/ARR/epg/infra-ave-ctrl-ave-ctrl/","/ARR/epgs/","/ARR/faults/","/ARR/faults/critical/","/ARR/faults/major/","/ARR/faults/minor/","/ARR/faults/recent/","/ARR/faults/warning/","/ARR/health/","/ARR/l3out/common-default/","/ARR/l3outs/","/ARR/logical/","/ARR/logical/contracts/","/ARR/logical/filters/","/ARR/logical/l3outs/","/ARR/logical/providers-consumers/","/ARR/nodes/","/ARR/physical/","/ARR/physical/switch-101/","/ARR/physical/switch-102/","/ARR/physical/switch-103/","/ARR/physical/switch-104/","/ARR/physical/switch-201/","/ARR/physical/switch-202/","/ARR/provisioning/","/ARR/provisioning/cursor-tenant1/","/ARR/provisioning/cursor-tenant5-l3out/","/ARR/provisioning/cursor-tenant5/","/ARR/provisioning/cursor-tenant5/design/","/ARR/provisioning/cursor-tenant6/","/ARR/tenant/common/","/ARR/tenant/infra/","/ARR/tenant/mgmt/","/ARR/tenants/","/ARR/tracker/","/ARR/visitors/","/ARR/vni/","/ARR/vni/l2-16220082/","/ARR/vni/l2-16416666/","/ARR/vni/l2-16744306/","/ARR/vni/l2-16777209/","/ARR/vni/l3-16777199/","/ARR/vni/l3-2129920/","/ARR/vni/l3-2457600/","/ARR/vni/l3-2818048/","/ARR/vni/l3-3047424/","/ARR/vni/l3-3047425/","/ARR/vrf/common-copy/","/ARR/vrf/common-default/","/ARR/vrf/infra-ave-ctrl/","/ARR/vrf/infra-overlay-1/","/ARR/vrf/mgmt-inb/","/ARR/vrf/mgmt-oob/","/ARR/vrfs/","/netbox-aci-objects/","/netbox-aci-tenants/","/netbox-aci-tenants/diagrams/","/netbox-aci-tenants/diagrams/aci-p01-tenant/","/netbox-aci-tenants/diagrams/cursor-tenant1/","/netbox-aci-tenants/diagrams/cursor-tenant2/","/netbox-aci-tenants/diagrams/cursor-tenant3/","/netbox-aci-tenants/diagrams/cursor-tenant5/","/netbox-aci-tenants/diagrams/cursor-tenant6/","/netbox-aci-tenants/diagrams/msite-p01-tenant/","/netbox-hw-inventory/","/netbox-yaml-model/","/netbox-yaml-model/aci-p01-tenant/","/netbox-yaml-model/cursor-tenant1/","/netbox-yaml-model/cursor-tenant2/","/netbox-yaml-model/cursor-tenant3/","/netbox-yaml-model/cursor-tenant5/","/netbox-yaml-model/cursor-tenant6/","/netbox-yaml-model/msite-p01-tenant/","/report17-aoapic-monitoring/","/report17-aoapic-monitoring/objects/","/report17-aoapic-monitoring/objects/access_port_pgs/","/report17-aoapic-monitoring/objects/aeps/","/report17-aoapic-monitoring/objects/app_profiles/","/report17-aoapic-monitoring/objects/audit_24h/","/report17-aoapic-monitoring/objects/audit_7d/","/report17-aoapic-monitoring/objects/bd_subnets/","/report17-aoapic-monitoring/objects/bds/","/report17-aoapic-monitoring/objects/bundle_pgs/","/report17-aoapic-monitoring/objects/contracts/","/report17-aoapic-monitoring/objects/endpoints/","/report17-aoapic-monitoring/objects/epg_subnets/","/report17-aoapic-monitoring/objects/epgs/","/report17-aoapic-monitoring/objects/events_24h/","/report17-aoapic-monitoring/objects/faults/","/report17-aoapic-monitoring/objects/filters/","/report17-aoapic-monitoring/objects/interfaces/","/report17-aoapic-monitoring/objects/interfaces_up/","/report17-aoapic-monitoring/objects/l3_domains/","/report17-aoapic-monitoring/objects/l3outs/","/report17-aoapic-monitoring/objects/nodes/","/report17-aoapic-monitoring/objects/phys_domains/","/report17-aoapic-monitoring/objects/port_channels/","/report17-aoapic-monitoring/objects/static_paths/","/report17-aoapic-monitoring/objects/tenants/","/report17-aoapic-monitoring/objects/vlan_pools/","/report17-aoapic-monitoring/objects/vmm_domains/","/report17-aoapic-monitoring/objects/vpcs/","/report17-aoapic-monitoring/objects/vrfs/","/report17-aoapic-monitoring/pending-provisioning/","/report17-aoapic-monitoring/tenants/","/report17-aoapic-monitoring/universal-provisioning/","/report17-aoapic-monitoring/universal-provisioning/rma/","/roadmap/","/roadmap/america-driving/","/roadmap/america-driving/car-hire-boise-las-vegas/","/roadmap/america-driving/car-hire-las-vegas-phoenix/","/roadmap/america-driving/car-hire-san-jose-boise/","/roadmap/america-driving/las-vegas-to-boca-chica/","/roadmap/america-driving/leg-1-sfo-boise/","/roadmap/america-driving/leg-2-boise-las-vegas/","/roadmap/america-driving/leg-3-las-vegas-tucson-via-phoenix/","/roadmap/america-driving/leg-4-tucson-los-angeles/","/roadmap/bridgewhy/","/roadmap/bridgewhy/america-driving/","/roadmap/bridgewhy/bgp-mpls-enterprise-network-design/","/roadmap/bridgewhy/campus-network-design/","/roadmap/bridgewhy/ccna/","/roadmap/bridgewhy/cisco-aci/","/roadmap/bridgewhy/cisco-aci/lesson-01/","/roadmap/bridgewhy/cisco-aci/lesson-02/","/roadmap/bridgewhy/cisco-aci/lesson-03/","/roadmap/bridgewhy/cisco-aci/lesson-04/","/roadmap/bridgewhy/cisco-aci/lesson-05/","/roadmap/bridgewhy/cisco-aci/lesson-06/","/roadmap/bridgewhy/cisco-aci/lesson-07/","/roadmap/bridgewhy/cisco-aci/lesson-08/","/roadmap/bridgewhy/cisco-aci/lesson-09/","/roadmap/bridgewhy/cisco-aci/lesson-10/","/roadmap/bridgewhy/cisco-aci/lesson-11/","/roadmap/bridgewhy/cisco-aci/lesson-12/","/roadmap/bridgewhy/cisco-ise/","/roadmap/bridgewhy/cisco-sd-access/","/roadmap/bridgewhy/cisco-sd-wan/","/roadmap/bridgewhy/data-center-vxlan-bgp-evpn/","/roadmap/bridgewhy/enterprise-quality-of-service/","/roadmap/bridgewhy/git-for-network-engineers/","/roadmap/bridgewhy/introduction/","/roadmap/bridgewhy/ipv6-fundamentals/","/roadmap/bridgewhy/is-is-routing-protocol/","/roadmap/bridgewhy/linux-operating-system/","/roadmap/bridgewhy/llms-from-scratch/","/roadmap/bridgewhy/machine-learning-fundamentals/","/roadmap/bridgewhy/network-automation/","/roadmap/bridgewhy/network-security-fundamentals/","/roadmap/bridgewhy/ospf-deep-dive/","/roadmap/bridgewhy/switching-fundamentals/","/roadmap/bridgewhy/tcp-protocol-deep-dive/","/roadmap/bridgewhy/wireless-fundamentals-wlc-9800/","/roadmap/bridgewhy/wireshark-packet-analysis/","/visitors/countries/","/zfrontier/","/zfrontier/ces-2027/","/zfrontier/ces-2027/03-jan/","/zfrontier/ces-2027/03-jan/autonomous-drones/","/zfrontier/ces-2027/03-jan/frontier-tech/","/zfrontier/ces-2027/03-jan/physical-ai/","/zfrontier/ces-2027/03-jan/robots/","/zfrontier/ces-2027/04-jan/","/zfrontier/ces-2027/04-jan/autonomous-drones/","/zfrontier/ces-2027/04-jan/frontier-tech/","/zfrontier/ces-2027/04-jan/physical-ai/","/zfrontier/ces-2027/04-jan/robots/","/zfrontier/ces-2027/05-jan/","/zfrontier/ces-2027/05-jan/autonomous-drones/","/zfrontier/ces-2027/05-jan/frontier-tech/","/zfrontier/ces-2027/05-jan/physical-ai/","/zfrontier/ces-2027/05-jan/robots/","/zfrontier/ces-2027/06-jan/","/zfrontier/ces-2027/06-jan/autonomous-drones/","/zfrontier/ces-2027/06-jan/frontier-tech/","/zfrontier/ces-2027/06-jan/physical-ai/","/zfrontier/ces-2027/06-jan/robots/","/zfrontier/ces-2027/07-jan/","/zfrontier/ces-2027/07-jan/autonomous-drones/","/zfrontier/ces-2027/07-jan/frontier-tech/","/zfrontier/ces-2027/07-jan/physical-ai/","/zfrontier/ces-2027/07-jan/robots/","/zfrontier/ces-2027/08-jan/","/zfrontier/ces-2027/08-jan/autonomous-drones/","/zfrontier/ces-2027/08-jan/frontier-tech/","/zfrontier/ces-2027/08-jan/physical-ai/","/zfrontier/ces-2027/08-jan/robots/","/zfrontier/meraki/","/zfrontier/meraki/alerts/","/zfrontier/meraki/devices/","/zfrontier/meraki/firmware/","/zfrontier/meraki/licensing/","/zfrontier/meraki/networks/"];
+var IM_ACCENT={"/":"#64748b","/tasks/netbox/":"#2563eb","/tasks/provisioning/":"#0d9488","/tasks/monitoring/":"#0891b2","/tasks/testing/":"#d97706","/aci-policy/":"#16a34a","/aci-multipod/":"#15803d","/aci-azure-vxlan/":"#059669","/firewall-domain/":"#dc2626","/aci-lab-guide/":"#22c55e","/demo-ai-pod/":"#7c3aed","/intersight-demo/":"#0284c7","/tasks/itil/":"#4f46e5","/roadmap/":"#ea580c","/virtual-dc/":"#0f766e","/ARR-LargeTopology/":"#0e7490","/terragrunt/":"#a16207","/zfrontier/":"#7c3aed","/visitors/":"#059669","/ACI-GUI-Forms/":"#16a34a","/aci-gui/":"#15803d"};
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function normPath(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function accentOf(href){var h=String(href||'');return IM_ACCENT[h]||IM_ACCENT[h.replace(/\/?$/,'/')]||IM_ACCENT[normPath(h)+'/']||'#2563eb'}
+function pathUpdated(href){
+  var h=normPath(href), list=IM_UPDATED||[];
+  if(h==='/') return list.indexOf('/')>=0;
+  for(var i=0;i<list.length;i++){
+    var u=normPath(list[i]);
+    if(u===h||u.indexOf(h+'/')===0) return true;
+  }
+  return false;
+}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq,accent){
+  var a=document.createElement('a');
+  a.className=cls+(on?' on':'');
+  a.href=e[1];
+  a.title=(seq?String(seq)+'. ':'')+e[0]+(pathUpdated(e[1])?' (updated in the last 7 days)':'');
+  a.style.setProperty('--im-accent', accent||accentOf(e[1]));
+  if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}
+  var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);
+  var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);
+  if(pathUpdated(e[1])){var dot=document.createElement('span');dot.className='im-dot';dot.title='Updated in the last 7 days';dot.setAttribute('aria-label','Updated in the last 7 days');a.appendChild(dot)}
+  if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}
+  return a;
+}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function statsRow(){
+  var d=document.createElement('div');d.className='im-stats';
+  d.innerHTML='<a href="/visitors/">Visitors <span class="im-stat-n im-stat-vis">\u2026</span></a><span>\u00b7</span><a href="/visitors/countries/">Countries <span class="im-stat-n im-stat-cc">\u2026</span></a><span>\u00b7</span><span>Updated <span class="im-stat-n im-stat-asof">\u2026</span></span>';
+  return d;
+}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length,0,accentOf(g[1])))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){
+var acc=accentOf(G[gi][1]);
+var r2=document.createElement('details');r2.className='im-sub';r2.style.setProperty('--im-accent',acc);
+if(window.matchMedia&&window.matchMedia('(min-width:721px)').matches) r2.open=true;
+var t=document.createElement('summary');t.className='sl';
+t.innerHTML='<span>'+G[gi][0]+' tasks \u203A</span><span class="im-toggle"> (tap to expand)</span>';
+r2.appendChild(t);
+t.addEventListener('click',function(ev){if(window.matchMedia&&window.matchMedia('(min-width:721px)').matches){ev.preventDefault();location.href=G[gi][1];}});
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1,acc))});r2.appendChild(pills);n.appendChild(r2)}}
+n.appendChild(statsRow());});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+<!-- uv-badge v2 -->
+<style id="uv-badge-style">
+.uv-pop{position:relative;display:inline-block;vertical-align:middle}
+.uv-pop .uv-card{display:none;position:absolute;right:0;top:calc(100% + 6px);z-index:80;min-width:228px;padding:10px 12px;border-radius:10px;background:var(--card,#0f172a);color:var(--ink,#e2e8f0);border:1px solid var(--line,#334155);box-shadow:0 10px 28px rgba(0,0,0,.28);font:12px/1.4 system-ui,Arial,sans-serif;text-align:left;white-space:normal}
+.uv-pop.open .uv-card{display:block}
+.uv-card svg{display:block;width:204px;height:44px;margin:6px 0 8px}
+.uv-card .uv-k{font-weight:700;margin:0 0 2px}
+.uv-card .uv-m{color:var(--muted,#94a3b8);font-size:11px}
+.uv-card a{color:var(--link,#8ecbff)}
+</style>
+<script id="uv-badge">(function(){
+function norm(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function tzParts(iso){
+  var pt=new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'2-digit',minute:'2-digit',hour12:false,hourCycle:'h23',timeZoneName:'short',day:'2-digit',month:'short'}).formatToParts(new Date(iso));
+  var g=function(t){return (pt.find(function(x){return x.type===t})||{}).value||''};
+  var tz=(g('timeZoneName')||'AEDT').replace('GMT+11','AEDT').replace('GMT+10','AEST');
+  return {hh:g('hour'),mm:g('minute'),tz:tz,day:g('day'),mon:g('month')};
+}
+function last30(daysMap){
+  var out=[], now=new Date();
+  var fmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'});
+  for(var i=29;i>=0;i--){
+    var d=new Date(now.getTime()-i*86400000);
+    var key=fmt.format(d);
+    out.push({day:key,count:+((daysMap||{})[key]||0)});
+  }
+  return out;
+}
+function spark(series){
+  var w=204,h=44,p=2;
+  var max=Math.max.apply(null,series.map(function(x){return x.count}).concat([1]));
+  var n=series.length||1;
+  var pts=series.map(function(x,i){
+    var X=p+(i*(w-2*p)/Math.max(1,n-1));
+    var Y=h-p-((x.count/max)*(h-2*p));
+    return X.toFixed(1)+','+Y.toFixed(1);
+  }).join(' ');
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true"><polyline fill="none" stroke="#22c55e" stroke-width="2" points="'+pts+'"/></svg>';
+}
+function fillStats(d){
+  var total=(d.total&& (d.total.total||d.total.total_utc))||0;
+  var cc=(d.countries||[]).length;
+  var asof=d.as_of_aedt||'';
+  document.querySelectorAll('.im-stat-vis').forEach(function(e){e.textContent=total||'0'});
+  document.querySelectorAll('.im-stat-cc').forEach(function(e){e.textContent=cc||'0'});
+  document.querySelectorAll('.im-stat-asof').forEach(function(e){e.textContent=asof||'n/a'});
+}
+function attachPopover(d, count, series){
+  document.querySelectorAll('.uv').forEach(function(uv){
+    if(uv.closest('.uv-pop')) return;
+    var wrap=document.createElement('span');wrap.className='uv-pop';
+    uv.parentNode.insertBefore(wrap,uv);wrap.appendChild(uv);
+    var card=document.createElement('div');card.className='uv-card';card.setAttribute('role','dialog');
+    var last=series.length?series[series.length-1].count:0;
+    card.innerHTML='<p class="uv-k">This page: '+count+' unique visitors</p>'+spark(series)+'<p class="uv-m">Last 30 days (this page). Today so far: '+last+'.</p><p><a href="/visitors/">Full visitor stats \u203A</a></p>';
+    wrap.appendChild(card);
+    function tog(ev){ev.preventDefault();ev.stopPropagation();document.querySelectorAll('.uv-pop.open').forEach(function(x){if(x!==wrap)x.classList.remove('open')});wrap.classList.toggle('open')}
+    uv.addEventListener('click',tog);
+    uv.style.cursor='pointer';
+    uv.title='Click for a 30-day sparkline';
+  });
+  document.addEventListener('click',function(){document.querySelectorAll('.uv-pop.open').forEach(function(x){x.classList.remove('open')})});
+}
+function apply(d){
+  var p=norm(location.pathname);
+  var page=(d.pages||[]).filter(function(x){return norm(x.path)===p});
+  var c=page.reduce(function(a,x){return a+(+x.count||0)},0);
+  var days={};
+  page.forEach(function(x){var m=x.days||{};Object.keys(m).forEach(function(k){days[k]=(days[k]||0)+(+m[k]||0)})});
+  document.querySelectorAll('.uvc').forEach(function(e){e.textContent=c});
+  document.querySelectorAll('.uvt').forEach(function(e){
+    if(d.updated_utc){var t=tzParts(d.updated_utc);e.textContent=' (data as of '+t.hh+':'+t.mm+' '+t.tz+')'}
+  });
+  fillStats(d);
+  attachPopover(d,c,last30(days));
+}
+function fail(){
+  document.querySelectorAll('.uvc').forEach(function(e){if(e.textContent==='\u2026'||e.textContent==='...') e.textContent='n/a'});
+  document.querySelectorAll('.im-stat-vis,.im-stat-cc,.im-stat-asof').forEach(function(e){if(e.textContent==='\u2026') e.textContent='n/a'});
+}
+if(!window.__visitorsData){
+  var ac=typeof AbortController==='function'?new AbortController():null;
+  var timer=setTimeout(function(){try{ac&&ac.abort()}catch(e){}},8000);
+  window.__visitorsData=fetch('/data/visitors.json?'+Date.now(),ac?{signal:ac.signal}:undefined).then(function(r){
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('visitors.json '+r.status);
+    return r.json();
+  });
+}
+window.__visitorsData.then(apply).catch(function(){fail()});
+})();</script>
+<p class="meta">Page: <strong>Cursor_tenant1</strong> · Version: <strong>v2 · 26 Nov 2026, 8:36 PM AEDT</strong></p>
+</body></html>

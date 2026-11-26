@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Compact 28px pills, 6 columns on wide screens, 4 mid, 2 on mobile.
+   Per-section accent colour is set as --im-accent on each pill. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:6px 12px 8px;
+  gap:6px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:650 11.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:4px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im details.im-sub,
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:4px;
+  margin:0;
+  padding:6px 8px;
+  border-left:3px solid var(--im-accent,var(--menu-on,#2563eb))!important;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 10%,transparent)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl,
+nav.site.im summary.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+  list-style:none;
+}
+nav.site.im summary.sl::-webkit-details-marker{display:none}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:5px;
+  box-sizing:border-box;
+  width:100%;
+  height:28px;
+  min-height:28px;
+  max-height:28px;
+  min-width:0;
+  padding:0 8px;
+  border-radius:999px;
+  border:1px solid color-mix(in srgb,var(--im-accent,#2563eb) 40%,var(--menu-pill-bd,#3a4456))!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:color-mix(in srgb,var(--im-accent,#2563eb) 16%,var(--menu-hover))!important}
+nav.site.im a.mi.on{
+  background:var(--im-accent,var(--menu-on,#2563eb))!important;
+  border-color:var(--im-accent,var(--menu-on,#2563eb))!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:11px;height:28px;min-height:28px;max-height:28px}
+nav.site.im a.mi .ic{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 22%,transparent);
+  font-size:11px;
+  line-height:1;
+}
+nav.site.im a.mi.on .ic{background:rgba(255,255,255,.22)}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  line-height:1;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:14px;
+  height:14px;
+  padding:0 4px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:700;
+  line-height:1;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 35%,#93c5fd);
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:16px;
+  height:16px;
+  padding:0 4px;
+  border-radius:999px;
+  font-size:10px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:var(--im-accent,#1d4ed8)!important;
+}
+nav.site.im a.mi .im-dot{
+  width:7px;height:7px;border-radius:50%;background:#22c55e;flex:none;
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--im-accent,#2563eb) 18%,transparent);
+}
+nav.site.im .im-stats{
+  display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;
+  font:600 11px/1.3 system-ui,Arial,sans-serif;color:var(--menu-fg);padding:2px 2px 0;opacity:.9;
+}
+nav.site.im .im-stats a{color:var(--link);text-decoration:none}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:28px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:28px;
+  padding:0 12px;
+  border-radius:999px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:28px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:28px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:28px;padding:0 10px}
+  nav.site.im summary.sl .im-toggle{display:inline}
+}
+@media (min-width:721px){
+  nav.site.im summary.sl .im-toggle{display:none}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CyberCab — CyberCab — amoeoo-coles</title>
+<meta name="description" content="Tesla Cybercab, the two-seat robotaxi with no steering wheel or pedals: what it is, what is confirmed, and a dated timeline.">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg,#f8fafc);color:var(--ink,#0f172a);font:15px/1.55 system-ui,Segoe UI,Arial,sans-serif}
+main{max-width:var(--site-content-max,1200px);margin:0 auto;padding:18px 18px 64px;min-width:0}
+.tr17{color:var(--muted,#475569)!important}
+.crumb{font-size:13px;color:var(--muted,#475569);margin:0 0 12px}
+.crumb a{color:var(--link,#1d4ed8);text-decoration:none}
+h1{font-size:1.7rem;line-height:1.25;margin:0 0 8px;overflow-wrap:anywhere}
+h2{font-size:1.2rem;margin:1.6rem 0 .6rem}
+h3{font-size:1.02rem;margin:1.1rem 0 .4rem}
+.lede{font-size:1.02rem;color:var(--muted,#475569);margin:0 0 1.1rem;max-width:80ch}
+.kicker{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;color:#fff;margin:0 6px 8px 0}
+.stamp{display:inline-block;font-size:12.5px;color:var(--muted,#475569);background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:8px;padding:3px 9px;margin:0 0 12px}
+.note,.warn,.claim{border-radius:10px;padding:10px 12px;margin:12px 0;border:1px solid var(--line,#e2e8f0);background:var(--card,#fff)}
+.note{border-left:4px solid #2563eb}.warn{border-left:4px solid #d97706}.claim{border-left:4px solid #9333ea}
+.badge{display:inline-block;font:700 10.5px/1.6 system-ui;letter-spacing:.03em;text-transform:uppercase;border-radius:999px;padding:0 7px;margin-right:4px;white-space:nowrap;color:#fff}
+.b-fact{background:#15803d}.b-claim{background:#9333ea}.b-est{background:#b45309}.b-unk{background:#64748b}
+.b-live{background:#15803d}.b-sup{background:#0369a1}.b-ann{background:#9333ea}.b-disp{background:#be185d}.b-none{background:#64748b}
+.kids{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));margin:8px 0 16px}
+.pbox{display:block;text-decoration:none;color:inherit;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:12px 14px;border-top:5px solid var(--c,#2563eb);transition:transform .12s,box-shadow .12s;min-width:0}
+.pbox:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,23,42,.08)}
+.pbox h3{margin:0 0 4px;font-size:1.02rem}.pbox p{margin:0;color:var(--muted,#475569);font-size:13.5px}
+.stats{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));margin:10px 0 16px}
+.stat{background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:12px;padding:10px 12px;min-width:0}
+.stat b{display:block;font-size:1.35rem;line-height:1.2}
+.stat>span{display:block;font-size:12.5px;color:var(--muted,#475569)}
+.stat span.badge{display:inline-block}
+.stat>cite{display:block;font-style:normal;font-size:11.5px;margin-top:4px;overflow-wrap:anywhere}
+.stat cite.src{display:inline}
+.tblwrap{overflow-x:auto;max-width:100%;margin:0 0 16px;border:1px solid var(--line,#e2e8f0);border-radius:10px;background:var(--card,#fff)}
+table.tree{width:100%;min-width:720px;border-collapse:collapse;font-size:13.5px}
+table.tree th,table.tree td{border-bottom:1px solid var(--line,#e2e8f0);padding:7px 9px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+table.tree th{background:var(--th-bg,#f1f5f9);font-size:12px;letter-spacing:.02em;cursor:pointer;white-space:nowrap}
+.filter{width:100%;max-width:360px;padding:7px 10px;border:1px solid var(--line,#e2e8f0);border-radius:8px;margin:0 0 10px;font:inherit;background:var(--card,#fff);color:var(--ink,#0f172a)}
+.help{font-size:13.5px;color:var(--muted,#475569);margin:-4px 0 12px}
+.svgwrap{overflow-x:auto;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;padding:10px;margin:12px 0 20px}
+.svgwrap svg{min-width:900px;width:100%;height:auto;display:block}
+.svgwrap svg text{fill:var(--ink,#0f172a);font-family:system-ui,Arial,sans-serif}
+.svgwrap svg text.mut{fill:var(--muted,#475569)}
+.svgwrap svg .axis{stroke:var(--muted,#94a3b8)}
+.svgwrap svg .card{fill:var(--card,#fff);stroke:var(--line,#cbd5e1)}
+cite.src{font-style:normal;font-size:12px;color:var(--muted,#475569)}
+cite.src a{color:var(--link,#1d4ed8)}
+.asof{font-size:11.5px;color:var(--muted,#475569);white-space:nowrap}
+ol.srcs{font-size:13px;padding-left:1.3rem;overflow-wrap:anywhere}ol.srcs li{margin:0 0 5px}
+.related{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
+.related a{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);text-decoration:none;color:var(--ink,#0f172a);font-size:13px}
+.citygrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));margin:10px 0 18px}
+.city{background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:12px;padding:10px 12px;border-left:5px solid var(--c,#64748b);min-width:0}
+.city h3{margin:0 0 4px;font-size:1rem}.city p{margin:2px 0;font-size:12.5px;color:var(--muted,#475569)}
+ul.tight{margin:6px 0 14px;padding-left:1.2rem}ul.tight li{margin:0 0 5px}
+@media(max-width:430px){main{padding:14px 10px 56px}h1{font-size:1.4rem}.kids,.citygrid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.svgwrap svg{min-width:760px}}
+</style>
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+
+<!-- site-menu v1 --><nav class="site"><a href="/">Home</a></nav>
+<main>
+<div class="tr17" style="text-align:right;font-size:13px;margin:0 0 10px"><span class="uv" style="background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></div>
+<nav class="crumb"><a href="/">Home</a> › <a href="/zfrontier/">zFrontier</a> › CyberCab</nav>
+<div class="stamp">Last updated 12 Nov 2026 09:20 AEDT (Melbourne time) · facts researched 12 Nov 2026</div>
+
+<span class="kicker" style="background:#b45309">CyberCab</span>
+<h1>🚕 Tesla Cybercab</h1>
+<p class="ver"><a href="/zfrontier/cybercab/history/">v2 · 26 Nov 2026, 8:36 PM AEDT</a></p>
+
+<p class="lede">Cybercab is Tesla's purpose-built two-seat robotaxi. It has no steering wheel or pedals and drives on Tesla's camera-based Full Self-Driving software inside the Tesla Robotaxi ride-hail network. It was unveiled on 10 Oct 2024, entered production at Giga Texas in April 2026 and began carrying paying riders in Austin on 3–4 Sep 2026. This group of pages keeps confirmed facts apart from Tesla's targets, and every figure has a source and a date.</p>
+<div class="claim"><span class="badge b-fact">Confirmed</span> = reported as having happened, by a filing, regulator or more than one outlet. <span class="badge b-claim">Tesla claim</span> = a target or statement by Tesla or Elon Musk that hasn't been independently checked. <span class="badge b-est">Estimate</span> = third-party count or tracker. <span class="badge b-unk">Not published</span> = no public figure found.</div>
+<h2>At a glance</h2>
+<div class="stats">
+<div class="stat"><b>Apr 2026</b><span><span class="badge b-fact">Confirmed</span> start of continuous production, Giga Texas</span><cite><cite class="src">[<a href="https://electrek.co/2026/04/23/tesla-cybercab-production-starts-no-nhtsa-2500-vehicle-cap/" title="Electrek: Tesla confirms Cybercab production has started (Q1 2026 call) (23 Apr 2026)">4</a>]</cite> <cite class="src">[<a href="https://www.theverge.com/transportation/918106/tesla-cybercab-production-robotaxi-elon-musk-earnings" title="The Verge: Tesla&#x27;s Cybercab goes into production (24 Apr 2026)">16</a>]</cite> <span class="asof">as of 24 Apr 2026</span></cite></div>
+<div class="stat"><b>3–4 Sep 2026</b><span><span class="badge b-fact">Confirmed</span> first paid Cybercab rides (Austin)</span><cite><cite class="src">[<a href="https://static.nhtsa.gov/odi/inv/2026/INOA-AQ26002-17078.pdf" title="NHTSA ODI resume, Audit Query AQ26002 (opened 3 Sep 2026) (3 Sep 2026)">3</a>]</cite> <cite class="src">[<a href="https://www.notateslaapp.com/news/4651/cybercab-joins-teslas-robotaxi-fleet-with-cheaper-fares" title="Not a Tesla App: Cybercab joins Tesla&#x27;s Robotaxi fleet with cheaper fares (4 Sep 2026)">2</a>]</cite> <span class="asof">as of 4 Sep 2026</span></cite></div>
+<div class="stat"><b>573</b><span><span class="badge b-fact">Confirmed</span> Cybercabs on the Texas AV register (registered, not necessarily in service)</span><cite><cite class="src">[<a href="https://evwire.com/p/tesla-overtakes-waymo-texas-robotaxi-registrations" title="EVwire: Tesla overtakes Waymo in Texas robotaxi registrations, 1,302 vehicles to 1,297 (TxDMV register) (11 Nov 2026)">10</a>]</cite> <span class="asof">as of 11 Nov 2026</span></cite></div>
+<div class="stat"><b>&gt;125,000/yr</b><span><span class="badge b-claim">Tesla claim</span> installed Cybercab capacity listed in Tesla's Q2 2026 deck</span><cite><cite class="src">[<a href="https://evwire.com/p/tesla-cybercab-production-capacity-125000" title="EVwire: Tesla can now produce 125,000 Cybercabs per year (Q2 2026 shareholder deck) (Jul 2026)">20</a>]</cite> <span class="asof">as of Q2 2026</span></cite></div>
+<div class="stat"><b>&lt;US$30k</b><span><span class="badge b-claim">Tesla claim</span> Musk's 2024 target price; no price published since</span><cite><cite class="src">[<a href="https://techcrunch.com/2024/10/10/tesla-reveals-20-cybercabs-at-we-robot-event/" title="TechCrunch: Tesla reveals 20 Cybercabs at We, Robot event, says you&#x27;ll be able to buy one for less than $30,000 (10 Oct 2024)">1</a>]</cite> <cite class="src">[<a href="https://techcrunch.com/2026/10/21/tesla-says-it-will-start-selling-cybercabs-by-end-of-year/" title="TechCrunch: Tesla says it will start selling Cybercabs by end of year (21 Oct 2026)">9</a>]</cite> <span class="asof">as of 21 Oct 2026</span></cite></div>
+<div class="stat"><b>AQ26002</b><span><span class="badge b-fact">Confirmed</span> NHTSA audit of Tesla's FMVSS self-certification, open</span><cite><cite class="src">[<a href="https://www.nhtsa.gov/press-releases/investigation-tesla-cybercab-self-certification" title="NHTSA press release: Investigation into Tesla Cybercab self-certification (4 Sep 2026)">21</a>]</cite> <cite class="src">[<a href="https://electrek.co/2026/11/05/tesla-cybercab-nhtsa-sworn-answers-confidential/" title="Electrek: Tesla wants its sworn Cybercab answers to NHTSA kept entirely secret (5 Nov 2026)">5</a>]</cite> <span class="asof">as of 5 Nov 2026</span></cite></div>
+</div>
+<h2>Explore</h2>
+<div class='kids'><a class="pbox" style="--c:#7c3aed" href="/zfrontier/cybercab/production/"><h3>Production</h3><p>Giga Texas start of production, capacity versus reported output, the unboxed line, and the NHTSA certification audit.</p></a><a class="pbox" style="--c:#0369a1" href="/zfrontier/cybercab/taxi-fleet/"><h3>Taxi Fleet</h3><p>Tesla Robotaxi service: fleet counts, Model Y versus Cybercab, supervision, app, fares, incidents, and a sourced comparison with Waymo, Zoox and Apollo Go.</p></a><a class="pbox" style="--c:#15803d" href="/zfrontier/cybercab/city-info/"><h3>City Info</h3><p>Every Tesla Robotaxi city that is live, supervised or announced, plus the Cybercab display tour in Australia (Melbourne 5–18 Nov 2026).</p></a></div>
+<h2>Timeline</h2>
+<p class="help">Swipe or scroll sideways on a phone. Green dots are confirmed events; purple dots contain a Tesla claim or target.</p>
+<div class='svgwrap'><svg viewBox="0 0 1160 330" role="img" aria-label="Cybercab milestone timeline, Oct 2024 to Nov 2026"><line class="axis" x1="50" y1="165" x2="1110" y2="165" stroke-width="3"/><line class="axis" x1="50" y1="165" x2="50" y2="145" stroke-width="1.5"/><circle cx="50" cy="165" r="8" fill="#9333ea"/><text x="50" y="59" text-anchor="middle" font-size="12" font-weight="700">10 Oct 2024</text><text class="mut" x="50" y="75" text-anchor="middle" font-size="10.5">We, Robot unveil in</text><text class="mut" x="50" y="89" text-anchor="middle" font-size="10.5">Burbank: two seats,</text><text class="mut" x="50" y="103" text-anchor="middle" font-size="10.5">no wheel or pedals,</text><text class="mut" x="50" y="117" text-anchor="middle" font-size="10.5">inductive charging;</text><text class="mut" x="50" y="131" text-anchor="middle" font-size="10.5">Musk: under US$30k…</text><line class="axis" x1="168" y1="165" x2="168" y2="185" stroke-width="1.5"/><circle cx="168" cy="165" r="8" fill="#15803d"/><text x="168" y="203" text-anchor="middle" font-size="12" font-weight="700">22 Jun 2025</text><text class="mut" x="168" y="219" text-anchor="middle" font-size="10.5">Tesla Robotaxi</text><text class="mut" x="168" y="233" text-anchor="middle" font-size="10.5">service starts in</text><text class="mut" x="168" y="247" text-anchor="middle" font-size="10.5">Austin with Model Y</text><text class="mut" x="168" y="261" text-anchor="middle" font-size="10.5">and a safety monitor</text><text class="mut" x="168" y="275" text-anchor="middle" font-size="10.5">on board.</text><line class="axis" x1="286" y1="165" x2="286" y2="145" stroke-width="1.5"/><circle cx="286" cy="165" r="8" fill="#15803d"/><text x="286" y="73" text-anchor="middle" font-size="12" font-weight="700">22 Jan 2026</text><text class="mut" x="286" y="89" text-anchor="middle" font-size="10.5">First Robotaxi rides</text><text class="mut" x="286" y="103" text-anchor="middle" font-size="10.5">with no Tesla</text><text class="mut" x="286" y="117" text-anchor="middle" font-size="10.5">employee in the car</text><text class="mut" x="286" y="131" text-anchor="middle" font-size="10.5">(Austin).</text><line class="axis" x1="403" y1="165" x2="403" y2="185" stroke-width="1.5"/><circle cx="403" cy="165" r="8" fill="#15803d"/><text x="403" y="203" text-anchor="middle" font-size="12" font-weight="700">18 Feb 2026</text><text class="mut" x="403" y="219" text-anchor="middle" font-size="10.5">First Cybercab built</text><text class="mut" x="403" y="233" text-anchor="middle" font-size="10.5">at Giga Texas.</text><line class="axis" x1="521" y1="165" x2="521" y2="145" stroke-width="1.5"/><circle cx="521" cy="165" r="8" fill="#15803d"/><text x="521" y="59" text-anchor="middle" font-size="12" font-weight="700">23 Apr 2026</text><text class="mut" x="521" y="75" text-anchor="middle" font-size="10.5">Q1 call: Cybercab</text><text class="mut" x="521" y="89" text-anchor="middle" font-size="10.5">production has</text><text class="mut" x="521" y="103" text-anchor="middle" font-size="10.5">started; Musk</text><text class="mut" x="521" y="117" text-anchor="middle" font-size="10.5">expects a slow</text><text class="mut" x="521" y="131" text-anchor="middle" font-size="10.5">S-curve ramp.</text><line class="axis" x1="639" y1="165" x2="639" y2="185" stroke-width="1.5"/><circle cx="639" cy="165" r="8" fill="#15803d"/><text x="639" y="203" text-anchor="middle" font-size="12" font-weight="700">26 May 2026</text><text class="mut" x="639" y="219" text-anchor="middle" font-size="10.5">EPA certificate</text><text class="mut" x="639" y="233" text-anchor="middle" font-size="10.5">issued (163 kW,</text><text class="mut" x="639" y="247" text-anchor="middle" font-size="10.5">~47.6 kWh, 418 mi</text><text class="mut" x="639" y="261" text-anchor="middle" font-size="10.5">unadjusted).</text><line class="axis" x1="757" y1="165" x2="757" y2="145" stroke-width="1.5"/><circle cx="757" cy="165" r="8" fill="#15803d"/><text x="757" y="59" text-anchor="middle" font-size="12" font-weight="700">3–4 Sep 2026</text><text class="mut" x="757" y="75" text-anchor="middle" font-size="10.5">Cybercab enters paid</text><text class="mut" x="757" y="89" text-anchor="middle" font-size="10.5">Robotaxi service in</text><text class="mut" x="757" y="103" text-anchor="middle" font-size="10.5">Austin; public</text><text class="mut" x="757" y="117" text-anchor="middle" font-size="10.5">bookings from 4 Sep,</text><text class="mut" x="757" y="131" text-anchor="middle" font-size="10.5">5 pm CT. NHTSA opens…</text><line class="axis" x1="874" y1="165" x2="874" y2="185" stroke-width="1.5"/><circle cx="874" cy="165" r="8" fill="#9333ea"/><text x="874" y="203" text-anchor="middle" font-size="12" font-weight="700">21 Oct 2026</text><text class="mut" x="874" y="219" text-anchor="middle" font-size="10.5">Q3 call: Robotaxi in</text><text class="mut" x="874" y="233" text-anchor="middle" font-size="10.5">six cities; Cybercab</text><text class="mut" x="874" y="247" text-anchor="middle" font-size="10.5">to Dallas “next</text><text class="mut" x="874" y="261" text-anchor="middle" font-size="10.5">month”; first</text><text class="mut" x="874" y="275" text-anchor="middle" font-size="10.5">customer Cybercabs…</text><line class="axis" x1="992" y1="165" x2="992" y2="145" stroke-width="1.5"/><circle cx="992" cy="165" r="8" fill="#9333ea"/><text x="992" y="59" text-anchor="middle" font-size="12" font-weight="700">6 Nov 2026</text><text class="mut" x="992" y="75" text-anchor="middle" font-size="10.5">Musk: Cybertruck to</text><text class="mut" x="992" y="89" text-anchor="middle" font-size="10.5">wind down at Giga</text><text class="mut" x="992" y="103" text-anchor="middle" font-size="10.5">Texas around</text><text class="mut" x="992" y="117" text-anchor="middle" font-size="10.5">mid-2027 to make</text><text class="mut" x="992" y="131" text-anchor="middle" font-size="10.5">room for more…</text><line class="axis" x1="1110" y1="165" x2="1110" y2="185" stroke-width="1.5"/><circle cx="1110" cy="165" r="8" fill="#15803d"/><text x="1110" y="203" text-anchor="middle" font-size="12" font-weight="700">11 Nov 2026</text><text class="mut" x="1110" y="219" text-anchor="middle" font-size="10.5">Texas register:</text><text class="mut" x="1110" y="233" text-anchor="middle" font-size="10.5">1,302 Tesla</text><text class="mut" x="1110" y="247" text-anchor="middle" font-size="10.5">robotaxis incl. 573</text><text class="mut" x="1110" y="261" text-anchor="middle" font-size="10.5">Cybercabs.</text><circle cx="60" cy="316" r="6" fill="#15803d"/><text x="72" y="320" font-size="11">Confirmed event</text><circle cx="200" cy="316" r="6" fill="#9333ea"/><text x="212" y="320" font-size="11">Contains a Tesla claim or target</text></svg></div>
+<input class="filter" type="search" placeholder="Filter this table…" aria-label="Filter table" oninput="ccFilter(this.value, document.getElementById('cc-timeline'))"><div class="tblwrap"><table class="tree" id="cc-timeline"><thead><tr><th onclick="ccSort(document.getElementById('cc-timeline'),0)">Date</th><th onclick="ccSort(document.getElementById('cc-timeline'),1)">Milestone</th><th onclick="ccSort(document.getElementById('cc-timeline'),2)">Type</th><th onclick="ccSort(document.getElementById('cc-timeline'),3)">Source</th></tr></thead><tbody><tr><td data-k="2024-10-10">10 Oct 2024</td><td>We, Robot unveil in Burbank: two seats, no wheel or pedals, inductive charging; Musk: under US$30k, production 2026 or “before 2027”.</td><td><span class="badge b-claim">Tesla claim</span></td><td><cite class="src">[<a href="https://techcrunch.com/2024/10/10/tesla-reveals-20-cybercabs-at-we-robot-event/" title="TechCrunch: Tesla reveals 20 Cybercabs at We, Robot event, says you&#x27;ll be able to buy one for less than $30,000 (10 Oct 2024)">1</a>]</cite> <cite class="src">[<a href="https://www.reuters.com/technology/teslas-musk-unveil-robotaxis-amid-fanfare-skepticism-2024-10-10/" title="Reuters: Tesla CEO Elon Musk unveils &#x27;Cybercab&#x27; robotaxi (10 Oct 2024)">11</a>]</cite></td></tr><tr><td data-k="2025-06-22">22 Jun 2025</td><td>Tesla Robotaxi service starts in Austin with Model Y and a safety monitor on board.</td><td><span class="badge b-fact">Confirmed</span></td><td><cite class="src">[<a href="https://www.notateslaapp.com/news/4336/recapping-year-one-of-teslas-robotaxi-service" title="Not a Tesla App: Recapping year one of Tesla&#x27;s Robotaxi service (22 Jun 2026)">12</a>]</cite></td></tr><tr><td data-k="2026-01-22">22 Jan 2026</td><td>First Robotaxi rides with no Tesla employee in the car (Austin).</td><td><span class="badge b-fact">Confirmed</span></td><td><cite class="src">[<a href="https://electrek.co/2026/01/22/tesla-starts-robotaxi-rides-without-safety-monitor-in-austin-what-you-need-to-know/" title="Electrek: Tesla starts Robotaxi rides without safety monitor in Austin (22 Jan 2026)">13</a>]</cite> <cite class="src">[<a href="https://techcrunch.com/2026/11/09/tesla-expands-robotaxi-service-to-san-antonio/" title="TechCrunch: Tesla expands robotaxi service to San Antonio (9 Nov 2026)">14</a>]</cite></td></tr><tr><td data-k="2026-02-18">18 Feb 2026</td><td>First Cybercab built at Giga Texas.</td><td><span class="badge b-fact">Confirmed</span></td><td><cite class="src">[<a href="https://www.proactiveinvestors.com/companies/news/1091163/tesla-ceo-elon-musk-announces-cybercab-production-has-begun-1091163.html" title="Proactive Investors: Tesla announces Cybercab production has begun (first unit 18 Feb 2026) (24 Apr 2026)">15</a>]</cite> <cite class="src">[<a href="https://www.theverge.com/transportation/918106/tesla-cybercab-production-robotaxi-elon-musk-earnings" title="The Verge: Tesla&#x27;s Cybercab goes into production (24 Apr 2026)">16</a>]</cite></td></tr><tr><td data-k="2026-04-23">23 Apr 2026</td><td>Q1 call: Cybercab production has started; Musk expects a slow S-curve ramp.</td><td><span class="badge b-fact">Confirmed</span></td><td><cite class="src">[<a href="https://electrek.co/2026/04/23/tesla-cybercab-production-starts-no-nhtsa-2500-vehicle-cap/" title="Electrek: Tesla confirms Cybercab production has started (Q1 2026 call) (23 Apr 2026)">4</a>]</cite> <cite class="src">[<a href="https://www.bloomberg.com/news/articles/2026-04-24/musk-says-tesla-has-begun-production-of-its-cybercab-robotaxi" title="Bloomberg: Tesla Starts Production of Cybercab Robotaxi, Musk Says (24 Apr 2026)">17</a>]</cite></td></tr><tr><td data-k="2026-05-26">26 May 2026</td><td>EPA certificate issued (163 kW, ~47.6 kWh, 418 mi unadjusted).</td><td><span class="badge b-fact">Confirmed</span></td><td><cite class="src">[<a href="https://electrek.co/2026/06/15/tesla-cybercab-epa-specs-curb-weight-battery-motor-power/" title="Electrek: Tesla Cybercab full specs revealed from EPA filing (15 Jun 2026)">6</a>]</cite> <cite class="src">[<a href="https://dis.epa.gov/otaqpub/display_file.jsp?docid=65402&amp;flag=1" title="US EPA Certification Summary Information report (Cybercab test group) (May 2026)">7</a>]</cite></td></tr><tr><td data-k="2026-09-03">3–4 Sep 2026</td><td>Cybercab enters paid Robotaxi service in Austin; public bookings from 4 Sep, 5 pm CT. NHTSA opens audit AQ26002.</td><td><span class="badge b-fact">Confirmed</span></td><td><cite class="src">[<a href="https://www.notateslaapp.com/news/4651/cybercab-joins-teslas-robotaxi-fleet-with-cheaper-fares" title="Not a Tesla App: Cybercab joins Tesla&#x27;s Robotaxi fleet with cheaper fares (4 Sep 2026)">2</a>]</cite> <cite class="src">[<a href="https://static.nhtsa.gov/odi/inv/2026/INOA-AQ26002-17078.pdf" title="NHTSA ODI resume, Audit Query AQ26002 (opened 3 Sep 2026) (3 Sep 2026)">3</a>]</cite></td></tr><tr><td data-k="2026-10-21">21 Oct 2026</td><td>Q3 call: Robotaxi in six cities; Cybercab to Dallas “next month”; first customer Cybercabs targeted by end of 2026.</td><td><span class="badge b-claim">Tesla claim</span></td><td><cite class="src">[<a href="https://www.fool.com/earnings/call-transcripts/2026/10/22/tesla-tsla-q3-2026-earnings-call-transcript/" title="Motley Fool: Tesla (TSLA) Q3 2026 earnings call transcript (22 Oct 2026)">18</a>]</cite> <cite class="src">[<a href="https://techcrunch.com/2026/10/21/tesla-says-it-will-start-selling-cybercabs-by-end-of-year/" title="TechCrunch: Tesla says it will start selling Cybercabs by end of year (21 Oct 2026)">9</a>]</cite></td></tr><tr><td data-k="2026-11-06">6 Nov 2026</td><td>Musk: Cybertruck to wind down at Giga Texas around mid-2027 to make room for more Cybercab output.</td><td><span class="badge b-claim">Tesla claim</span></td><td><cite class="src">[<a href="https://www.cnbc.com/2026/11/06/tesla-cybertruck-texas-musk.html" title="CNBC: Tesla to wind down Cybertruck production in Texas next year to ramp Cybercab, Musk says (6 Nov 2026)">19</a>]</cite></td></tr><tr><td data-k="2026-11-11">11 Nov 2026</td><td>Texas register: 1,302 Tesla robotaxis incl. 573 Cybercabs.</td><td><span class="badge b-fact">Confirmed</span></td><td><cite class="src">[<a href="https://evwire.com/p/tesla-overtakes-waymo-texas-robotaxi-registrations" title="EVwire: Tesla overtakes Waymo in Texas robotaxi registrations, 1,302 vehicles to 1,297 (TxDMV register) (11 Nov 2026)">10</a>]</cite></td></tr></tbody></table></div>
+<h2>Known specifications</h2>
+<p class="help">From the EPA certification filing, Tesla's launch material and reporting. Tap a header to sort.</p>
+<input class="filter" type="search" placeholder="Filter this table…" aria-label="Filter table" oninput="ccFilter(this.value, document.getElementById('cc-specs'))"><div class="tblwrap"><table class="tree" id="cc-specs"><thead><tr><th onclick="ccSort(document.getElementById('cc-specs'),0)">Item</th><th onclick="ccSort(document.getElementById('cc-specs'),1)">Value</th><th onclick="ccSort(document.getElementById('cc-specs'),2)">Status</th><th onclick="ccSort(document.getElementById('cc-specs'),3)">Source</th><th onclick="ccSort(document.getElementById('cc-specs'),4)">As of</th></tr></thead><tbody><tr><td>Seats</td><td>2 passengers</td><td><span class="badge b-fact">Confirmed</span></td><td><cite class="src">[<a href="https://techcrunch.com/2024/10/10/tesla-reveals-20-cybercabs-at-we-robot-event/" title="TechCrunch: Tesla reveals 20 Cybercabs at We, Robot event, says you&#x27;ll be able to buy one for less than $30,000 (10 Oct 2024)">1</a>]</cite> <cite class="src">[<a href="https://www.notateslaapp.com/news/4651/cybercab-joins-teslas-robotaxi-fleet-with-cheaper-fares" title="Not a Tesla App: Cybercab joins Tesla&#x27;s Robotaxi fleet with cheaper fares (4 Sep 2026)">2</a>]</cite></td><td>4 Sep 2026</td></tr><tr><td>Driver controls</td><td>No steering wheel, no pedals, no mirrors (production robotaxi). Tesla also builds a wheel-and-pedal engineering/test variant.</td><td><span class="badge b-fact">Confirmed</span></td><td><cite class="src">[<a href="https://static.nhtsa.gov/odi/inv/2026/INOA-AQ26002-17078.pdf" title="NHTSA ODI resume, Audit Query AQ26002 (opened 3 Sep 2026) (3 Sep 2026)">3</a>]</cite> <cite class="src">[<a href="https://electrek.co/2026/04/23/tesla-cybercab-production-starts-no-nhtsa-2500-vehicle-cap/" title="Electrek: Tesla confirms Cybercab production has started (Q1 2026 call) (23 Apr 2026)">4</a>]</cite> <cite class="src">[<a href="https://electrek.co/2026/11/05/tesla-cybercab-nhtsa-sworn-answers-confidential/" title="Electrek: Tesla wants its sworn Cybercab answers to NHTSA kept entirely secret (5 Nov 2026)">5</a>]</cite></td><td>5 Nov 2026</td></tr><tr><td>Motor / drive</td><td>One permanent-magnet motor, 163 kW (219 hp), front-wheel drive</td><td><span class="badge b-fact">Confirmed</span></td><td><cite class="src">[<a href="https://electrek.co/2026/06/15/tesla-cybercab-epa-specs-curb-weight-battery-motor-power/" title="Electrek: Tesla Cybercab full specs revealed from EPA filing (15 Jun 2026)">6</a>]</cite></td><td>15 Jun 2026</td></tr><tr><td>Battery</td><td>326 V, 146 Ah, about 47.6 kWh lithium-ion</td><td><span class="badge b-fact">Confirmed</span></td><td><cite class="src">[<a href="https://electrek.co/2026/06/15/tesla-cybercab-epa-specs-curb-weight-battery-motor-power/" title="Electrek: Tesla Cybercab full specs revealed from EPA filing (15 Jun 2026)">6</a>]</cite> <cite class="src">[<a href="https://dis.epa.gov/otaqpub/display_file.jsp?docid=65402&amp;flag=1" title="US EPA Certification Summary Information report (Cybercab test group) (May 2026)">7</a>]</cite></td><td>15 Jun 2026</td></tr><tr><td>Range</td><td>418.2 mi combined (unadjusted EPA test). Adjusted consumer range not published by EPA; Electrek estimates ~293 mi.</td><td><span class="badge b-fact">Confirmed</span><span class="badge b-est">Estimate</span></td><td><cite class="src">[<a href="https://electrek.co/2026/06/15/tesla-cybercab-epa-specs-curb-weight-battery-motor-power/" title="Electrek: Tesla Cybercab full specs revealed from EPA filing (15 Jun 2026)">6</a>]</cite></td><td>15 Jun 2026</td></tr><tr><td>Weight</td><td>3,113 lb curb, 3,730 lb GVWR (about 617 lb payload)</td><td><span class="badge b-fact">Confirmed</span></td><td><cite class="src">[<a href="https://electrek.co/2026/06/15/tesla-cybercab-epa-specs-curb-weight-battery-motor-power/" title="Electrek: Tesla Cybercab full specs revealed from EPA filing (15 Jun 2026)">6</a>]</cite></td><td>15 Jun 2026</td></tr><tr><td>Charging</td><td>Musk said inductive (wireless) charging at the unveil; Electrek calls wireless the primary method. Other reports say it also charges via a NACS DC port. How each depot charges is not published.</td><td><span class="badge b-claim">Tesla claim</span><span class="badge b-est">Estimate</span></td><td><cite class="src">[<a href="https://techcrunch.com/2024/10/10/tesla-reveals-20-cybercabs-at-we-robot-event/" title="TechCrunch: Tesla reveals 20 Cybercabs at We, Robot event, says you&#x27;ll be able to buy one for less than $30,000 (10 Oct 2024)">1</a>]</cite> <cite class="src">[<a href="https://electrek.co/2026/06/15/tesla-cybercab-epa-specs-curb-weight-battery-motor-power/" title="Electrek: Tesla Cybercab full specs revealed from EPA filing (15 Jun 2026)">6</a>]</cite> <cite class="src">[<a href="https://dockduty.com/blog/tesla-robotaxi-dallas.html" title="DockDuty: Robotaxi in Dallas, map, Fort Worth and Cybercab status (checked 9 Nov 2026) (9 Nov 2026)">8</a>]</cite></td><td>9 Nov 2026</td></tr><tr><td>Cabin</td><td>22-inch centre screen, built-in Starlink connectivity, Braille labels on door release and emergency stop</td><td><span class="badge b-fact">Confirmed</span></td><td><cite class="src">[<a href="https://www.notateslaapp.com/news/4651/cybercab-joins-teslas-robotaxi-fleet-with-cheaper-fares" title="Not a Tesla App: Cybercab joins Tesla&#x27;s Robotaxi fleet with cheaper fares (4 Sep 2026)">2</a>]</cite></td><td>4 Sep 2026</td></tr><tr><td>Price to buy</td><td>Musk: “less than $30,000” (Oct 2024). Tesla has published no consumer price, order page or ownership terms.</td><td><span class="badge b-claim">Tesla claim</span><span class="badge b-unk">Not published</span></td><td><cite class="src">[<a href="https://techcrunch.com/2024/10/10/tesla-reveals-20-cybercabs-at-we-robot-event/" title="TechCrunch: Tesla reveals 20 Cybercabs at We, Robot event, says you&#x27;ll be able to buy one for less than $30,000 (10 Oct 2024)">1</a>]</cite> <cite class="src">[<a href="https://techcrunch.com/2026/10/21/tesla-says-it-will-start-selling-cybercabs-by-end-of-year/" title="TechCrunch: Tesla says it will start selling Cybercabs by end of year (21 Oct 2026)">9</a>]</cite> <cite class="src">[<a href="https://dockduty.com/blog/tesla-robotaxi-dallas.html" title="DockDuty: Robotaxi in Dallas, map, Fort Worth and Cybercab status (checked 9 Nov 2026) (9 Nov 2026)">8</a>]</cite></td><td>9 Nov 2026</td></tr><tr><td>Next version</td><td>Musk said a later Cybercab would use a ~40 kWh pack and come in liquid silver.</td><td><span class="badge b-claim">Tesla claim</span></td><td><cite class="src">[<a href="https://evwire.com/p/tesla-overtakes-waymo-texas-robotaxi-registrations" title="EVwire: Tesla overtakes Waymo in Texas robotaxi registrations, 1,302 vehicles to 1,297 (TxDMV register) (11 Nov 2026)">10</a>]</cite></td><td>11 Nov 2026</td></tr></tbody></table></div>
+<h2>What is still unknown</h2>
+<ul class="tight">
+<li><span class="badge b-unk">Not published</span> How many Cybercabs Tesla has built in total. Tesla gives installed capacity, not a Cybercab build count <cite class="src">[<a href="https://evwire.com/p/tesla-cybercab-production-capacity-125000" title="EVwire: Tesla can now produce 125,000 Cybercabs per year (Q2 2026 shareholder deck) (Jul 2026)">20</a>]</cite> <cite class="src">[<a href="https://www.sec.gov/Archives/edgar/data/1318605/000162828026066738/exhibit9914.htm" title="Tesla Q3 2026 Update (SEC exhibit 99.1) (21 Oct 2026)">22</a>]</cite>.</li>
+<li><span class="badge b-unk">Not published</span> A consumer price, order date or ownership terms <cite class="src">[<a href="https://techcrunch.com/2026/10/21/tesla-says-it-will-start-selling-cybercabs-by-end-of-year/" title="TechCrunch: Tesla says it will start selling Cybercabs by end of year (21 Oct 2026)">9</a>]</cite> <cite class="src">[<a href="https://dockduty.com/blog/tesla-robotaxi-dallas.html" title="DockDuty: Robotaxi in Dallas, map, Fort Worth and Cybercab status (checked 9 Nov 2026) (9 Nov 2026)">8</a>]</cite>.</li>
+<li><span class="badge b-unk">Not published</span> How Tesla certified the Cybercab to FMVSS rules that assume a steering wheel, pedals and mirrors. Tesla asked NHTSA to keep its whole answer confidential <cite class="src">[<a href="https://electrek.co/2026/11/05/tesla-cybercab-nhtsa-sworn-answers-confidential/" title="Electrek: Tesla wants its sworn Cybercab answers to NHTSA kept entirely secret (5 Nov 2026)">5</a>]</cite>.</li>
+<li><span class="badge b-unk">Not published</span> Any Australian on-road date. In Australia the Cybercab is on display only. Tesla has asked for driverless trials from 2027 <cite class="src">[<a href="https://www.drive.com.au/news/tesla-wants-to-start-driverless-vehicle-trials-in-australia-in-2027/" title="Drive.com.au: Tesla wants to start driverless vehicle trials in Australia in 2027 (6 Nov 2026)">23</a>]</cite> <cite class="src">[<a href="https://www.basenor.com/blogs/news/tesla-cybercab-australia-nz-tour-6-details-that-matter" title="Basenor: Tesla Cybercab Australia and NZ tour, 6 details that matter (3 Nov 2026)">24</a>]</cite>.</li>
+</ul>
+<h2 id='sources'>Sources</h2><p class='help'>Numbered as cited on this page. All links were opened or searched on 12 Nov 2026 (Melbourne time). Where a figure comes from Tesla it is marked as a Tesla claim; registry and tracker counts are not the same as cars in service.</p><ol class='srcs'><li><a href="https://techcrunch.com/2024/10/10/tesla-reveals-20-cybercabs-at-we-robot-event/">TechCrunch: Tesla reveals 20 Cybercabs at We, Robot event, says you&#x27;ll be able to buy one for less than $30,000</a> <span class="asof">(10 Oct 2024)</span></li><li><a href="https://www.notateslaapp.com/news/4651/cybercab-joins-teslas-robotaxi-fleet-with-cheaper-fares">Not a Tesla App: Cybercab joins Tesla&#x27;s Robotaxi fleet with cheaper fares</a> <span class="asof">(4 Sep 2026)</span></li><li><a href="https://static.nhtsa.gov/odi/inv/2026/INOA-AQ26002-17078.pdf">NHTSA ODI resume, Audit Query AQ26002 (opened 3 Sep 2026)</a> <span class="asof">(3 Sep 2026)</span></li><li><a href="https://electrek.co/2026/04/23/tesla-cybercab-production-starts-no-nhtsa-2500-vehicle-cap/">Electrek: Tesla confirms Cybercab production has started (Q1 2026 call)</a> <span class="asof">(23 Apr 2026)</span></li><li><a href="https://electrek.co/2026/11/05/tesla-cybercab-nhtsa-sworn-answers-confidential/">Electrek: Tesla wants its sworn Cybercab answers to NHTSA kept entirely secret</a> <span class="asof">(5 Nov 2026)</span></li><li><a href="https://electrek.co/2026/06/15/tesla-cybercab-epa-specs-curb-weight-battery-motor-power/">Electrek: Tesla Cybercab full specs revealed from EPA filing</a> <span class="asof">(15 Jun 2026)</span></li><li><a href="https://dis.epa.gov/otaqpub/display_file.jsp?docid=65402&amp;flag=1">US EPA Certification Summary Information report (Cybercab test group)</a> <span class="asof">(May 2026)</span></li><li><a href="https://dockduty.com/blog/tesla-robotaxi-dallas.html">DockDuty: Robotaxi in Dallas, map, Fort Worth and Cybercab status (checked 9 Nov 2026)</a> <span class="asof">(9 Nov 2026)</span></li><li><a href="https://techcrunch.com/2026/10/21/tesla-says-it-will-start-selling-cybercabs-by-end-of-year/">TechCrunch: Tesla says it will start selling Cybercabs by end of year</a> <span class="asof">(21 Oct 2026)</span></li><li><a href="https://evwire.com/p/tesla-overtakes-waymo-texas-robotaxi-registrations">EVwire: Tesla overtakes Waymo in Texas robotaxi registrations, 1,302 vehicles to 1,297 (TxDMV register)</a> <span class="asof">(11 Nov 2026)</span></li><li><a href="https://www.reuters.com/technology/teslas-musk-unveil-robotaxis-amid-fanfare-skepticism-2024-10-10/">Reuters: Tesla CEO Elon Musk unveils &#x27;Cybercab&#x27; robotaxi</a> <span class="asof">(10 Oct 2024)</span></li><li><a href="https://www.notateslaapp.com/news/4336/recapping-year-one-of-teslas-robotaxi-service">Not a Tesla App: Recapping year one of Tesla&#x27;s Robotaxi service</a> <span class="asof">(22 Jun 2026)</span></li><li><a href="https://electrek.co/2026/01/22/tesla-starts-robotaxi-rides-without-safety-monitor-in-austin-what-you-need-to-know/">Electrek: Tesla starts Robotaxi rides without safety monitor in Austin</a> <span class="asof">(22 Jan 2026)</span></li><li><a href="https://techcrunch.com/2026/11/09/tesla-expands-robotaxi-service-to-san-antonio/">TechCrunch: Tesla expands robotaxi service to San Antonio</a> <span class="asof">(9 Nov 2026)</span></li><li><a href="https://www.proactiveinvestors.com/companies/news/1091163/tesla-ceo-elon-musk-announces-cybercab-production-has-begun-1091163.html">Proactive Investors: Tesla announces Cybercab production has begun (first unit 18 Feb 2026)</a> <span class="asof">(24 Apr 2026)</span></li><li><a href="https://www.theverge.com/transportation/918106/tesla-cybercab-production-robotaxi-elon-musk-earnings">The Verge: Tesla&#x27;s Cybercab goes into production</a> <span class="asof">(24 Apr 2026)</span></li><li><a href="https://www.bloomberg.com/news/articles/2026-04-24/musk-says-tesla-has-begun-production-of-its-cybercab-robotaxi">Bloomberg: Tesla Starts Production of Cybercab Robotaxi, Musk Says</a> <span class="asof">(24 Apr 2026)</span></li><li><a href="https://www.fool.com/earnings/call-transcripts/2026/10/22/tesla-tsla-q3-2026-earnings-call-transcript/">Motley Fool: Tesla (TSLA) Q3 2026 earnings call transcript</a> <span class="asof">(22 Oct 2026)</span></li><li><a href="https://www.cnbc.com/2026/11/06/tesla-cybertruck-texas-musk.html">CNBC: Tesla to wind down Cybertruck production in Texas next year to ramp Cybercab, Musk says</a> <span class="asof">(6 Nov 2026)</span></li><li><a href="https://evwire.com/p/tesla-cybercab-production-capacity-125000">EVwire: Tesla can now produce 125,000 Cybercabs per year (Q2 2026 shareholder deck)</a> <span class="asof">(Jul 2026)</span></li><li><a href="https://www.nhtsa.gov/press-releases/investigation-tesla-cybercab-self-certification">NHTSA press release: Investigation into Tesla Cybercab self-certification</a> <span class="asof">(4 Sep 2026)</span></li><li><a href="https://www.sec.gov/Archives/edgar/data/1318605/000162828026066738/exhibit9914.htm">Tesla Q3 2026 Update (SEC exhibit 99.1)</a> <span class="asof">(21 Oct 2026)</span></li><li><a href="https://www.drive.com.au/news/tesla-wants-to-start-driverless-vehicle-trials-in-australia-in-2027/">Drive.com.au: Tesla wants to start driverless vehicle trials in Australia in 2027</a> <span class="asof">(6 Nov 2026)</span></li><li><a href="https://www.basenor.com/blogs/news/tesla-cybercab-australia-nz-tour-6-details-that-matter">Basenor: Tesla Cybercab Australia and NZ tour, 6 details that matter</a> <span class="asof">(3 Nov 2026)</span></li></ol><h2>Related pages</h2><div class='related'><a href="/zfrontier/cybercab/production/">Production</a><a href="/zfrontier/cybercab/taxi-fleet/">Taxi Fleet</a><a href="/zfrontier/cybercab/city-info/">City Info</a></div>
+<section id="comments" aria-labelledby="comments-h">
+<h2 id="comments-h">Comments</h2>
+<p>Sign in with GitHub to comment. Comments are stored as GitHub Discussions in this site’s repository, one thread per page (mapped by pathname). Do not post credentials, addresses or other personal details.</p>
+<div id="comments-mount"></div>
+<script>
+(function(){
+  var b=String.fromCharCode(99,111,108,101,115);
+  var repo='amoeoo-'+b+'/amoeoo-'+b+'.github.io';
+  var s=document.createElement('script');
+  s.src='https://giscus.app/client.js';
+  s.setAttribute('data-repo',repo);
+  s.setAttribute('data-repo-id','R_kgDOVM0-Fw');
+  s.setAttribute('data-category','Announcements');
+  s.setAttribute('data-category-id','DIC_kwDOVM0-F84DLoq4');
+  s.setAttribute('data-mapping','pathname');
+  s.setAttribute('data-strict','1');
+  s.setAttribute('data-reactions-enabled','1');
+  s.setAttribute('data-input-position','top');
+  s.setAttribute('data-theme','preferred_color_scheme');
+  s.setAttribute('data-lang','en');
+  s.setAttribute('data-loading','lazy');
+  s.crossOrigin='anonymous';
+  s.async=true;
+  var m=document.getElementById('comments-mount');
+  if(m) m.appendChild(s);
+})();
+</script>
+</section>
+<section id="versions">
+<h2>Versions</h2>
+<p>This is <strong>v2 · 26 Nov 2026, 8:36 PM AEDT</strong>. Snapshots are under <a href="/zfrontier/cybercab/history/">history/</a>.</p>
+<ul>
+<li><b>v2 (current)</b> · 26 Nov 2026, 8:36 PM AEDT (Melbourne time) · added Giscus comments, version label, version history. · <a href="/zfrontier/cybercab/history/v2/">history/v2/</a></li><li><b>v1</b> · previous snapshot · previous page before visitor badge, GoatCounter, comments and version history were added. · <a href="/zfrontier/cybercab/history/v1/">history/v1/</a></li>
+</ul>
+</section>
+</main>
+
+<script>
+function ccFilter(q,t){q=(q||'').toLowerCase();t.querySelectorAll('tbody tr').forEach(function(r){r.style.display=r.textContent.toLowerCase().indexOf(q)>=0?'':'none';});}
+function ccSort(t,c){var tb=t.tBodies[0],rows=[].slice.call(tb.rows),ths=t.tHead.rows[0].cells;
+var dir=t.getAttribute('data-dir')==='asc'&&t.getAttribute('data-col')==String(c)?'desc':'asc';
+function key(r){var td=r.cells[c];if(!td)return '';var k=td.getAttribute('data-k');return (k!==null?k:td.textContent).trim().toLowerCase();}
+rows.sort(function(a,b){var x=key(a),y=key(b);var nx=parseFloat(x),ny=parseFloat(y);if(!isNaN(nx)&&!isNaN(ny)&&/^[-0-9.]+$/.test(x)&&/^[-0-9.]+$/.test(y)){x=nx;y=ny;}
+if(x<y)return dir==='asc'?-1:1;if(x>y)return dir==='asc'?1:-1;return 0;});
+rows.forEach(function(r){tb.appendChild(r)});t.setAttribute('data-dir',dir);t.setAttribute('data-col',c);
+for(var i=0;i<ths.length;i++){ths[i].textContent=ths[i].textContent.replace(/ [\u25B2\u25BC]$/,'');if(i===c)ths[i].textContent+=' '+(dir==='asc'?'\u25B2':'\u25BC');}}
+</script>
+
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/+$/,"")||"/"}}</script><script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:6px 0 8px;gap:6px;font:650 11.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:4px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im details.im-sub,nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:4px;margin:0;padding:6px 8px;border-left:3px solid var(--im-accent,var(--menu-on,#2563eb));background:color-mix(in srgb,var(--im-accent,#2563eb) 10%,transparent);border-radius:8px}
+nav.site.im a.mi{display:flex!important;align-items:center;gap:5px;box-sizing:border-box;width:100%;height:28px;min-height:28px;max-height:28px;min-width:0;padding:0 8px;border-radius:999px;border:1px solid color-mix(in srgb,var(--im-accent,#2563eb) 40%,var(--menu-pill-bd,#3a4456))!important;background:var(--menu-pill,#1b2330)!important;color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:color-mix(in srgb,var(--im-accent,#2563eb) 16%,var(--menu-hover,#26344a))!important}
+nav.site.im a.mi.on{background:var(--im-accent,#2563eb)!important;border-color:var(--im-accent,#2563eb)!important;color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{display:inline-flex;align-items:center;justify-content:center;flex:none;width:18px;height:18px;border-radius:50%;background:color-mix(in srgb,var(--im-accent,#2563eb) 22%,transparent);font-size:11px;line-height:1}
+nav.site.im a.mi.on .ic{background:rgba(255,255,255,.22)}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1;text-align:left}
+nav.site.im a.mi.sm{font-size:11px}
+nav.site.im a.sl,nav.site.im summary.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px;display:flex;align-items:center;gap:6px;cursor:pointer;list-style:none}
+nav.site.im summary.sl::-webkit-details-marker{display:none}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:14px;height:14px;padding:0 4px;border-radius:999px;font-size:9px;font-weight:700;line-height:1;background:color-mix(in srgb,var(--im-accent,#2563eb) 35%,#93c5fd);color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex!important;align-items:center;justify-content:center;flex:none;min-width:16px;height:16px;padding:0 4px;border-radius:999px;font-size:10px!important;font-weight:800;line-height:1;background:#0f172a!important;color:#fff!important}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc!important;color:#0f172a!important}
+nav.site.im a.mi.on .im-seq{background:#fff!important;color:var(--im-accent,#1d4ed8)!important}
+nav.site.im a.mi .im-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 2px color-mix(in srgb,var(--im-accent,#2563eb) 18%,transparent);flex:none}
+nav.site.im .im-stats{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font:600 11px/1.3 system-ui,Arial,sans-serif;color:var(--menu-fg,#94a3b8);padding:2px 2px 0;opacity:.9}
+nav.site.im .im-stats a{color:var(--link,#8ecbff);text-decoration:none}
+nav.site.im .im-stats .im-stat-n{font-variant-numeric:tabular-nums;font-weight:700}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:28px;flex:none}
+#sg-link,#tt-btn,#mm-link{height:28px;border-radius:999px;font-size:12px}
+#mm-link{width:28px;padding:0}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){
+  nav.site.im .im-main{grid-template-columns:repeat(2,minmax(0,1fr))}
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  nav.site.im summary.sl .im-toggle{display:inline}
+}
+@media (min-width:721px){
+  nav.site.im details.im-sub[open] .im-sub-pills,nav.site.im details.im-sub .im-sub-pills{display:grid!important}
+  nav.site.im summary.sl .im-toggle{display:none}
+}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["About Me","/about-me/","👤",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Cursor_Tenant6","/ARR/provisioning/cursor-tenant6/","🚀"],["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"],["ရှေ့သို့ချီ","/roadmap/forward/","⏩"],["Time Map 2026–2030","/roadmap/forward/time-map/","🗓️"],["BridgeWhy","/roadmap/bridgewhy/","📚"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["ARR-LargeTopology","/ARR-LargeTopology/","🗺️",[["Overview","/ARR-LargeTopology/","🗺️"],["Nodes","/ARR-LargeTopology/nodes.html","🖥️"],["Serials","/ARR-LargeTopology/serials.html","🔢"],["Mgmt IPs","/ARR-LargeTopology/mgmt-ips.html","🌐"],["Links","/ARR-LargeTopology/links.html","🔗"],["Tenants","/ARR-LargeTopology/tenants.html","🏢"],["VRFs","/ARR-LargeTopology/vrfs.html","🧭"],["BDs","/ARR-LargeTopology/bds.html","🌉"],["Subnets","/ARR-LargeTopology/subnets.html","🔢"],["EPGs","/ARR-LargeTopology/epgs.html","🎯"],["Leaf VNIs","/ARR-LargeTopology/vni.html","💠"],["VXLAN","/ARR-LargeTopology/vxlan/","🧵"],["VNI compare","/ARR-LargeTopology/vni-compare/","🔷"],["Access policies","/ARR-LargeTopology/access-policies/","🧱"],["BD GIPo & FTAG","/ARR-LargeTopology/bd-gipo-ftag/","📡"],["IAC files","/ARR-LargeTopology/iac-files/","📦"],["ARR-netbox","/ARR-LargeTopology/arr-netbox/","🗄️"],["Hardware monitor","/ARR-LargeTopology/hw-monitor/","📟"],["Site map","/ARR-LargeTopology/site-map/","🌳"],["Provisioning","/ARR-LargeTopology/provisioning/","🚀"],["Test explain","/ARR-LargeTopology/test-explain/","🧪"],["GitLab","/ARR-LargeTopology/gitlab/","🦊"],["GitLab Runner","/ARR-LargeTopology/gitlab-runner/","🏃"]]],["Terragrunt","/terragrunt/","🧰",[["Terragrunt","/terragrunt/","🧰"]]],["zFrontier","/zfrontier/","🌠",[["zFrontier","/zfrontier/","🌠"],["Southwest Chief","/zfrontier/southwest-chief/","🚂"],["Southwest Chief tracker","/zfrontier/southwest-chief/tracker/","📡"],["Southwest Chief stations","/zfrontier/southwest-chief/stations/","🚉"],["Farzad","/zfrontier/farzad/","📺"],["SpaceX vs Tesla shares","/zfrontier/shares/","📈"],["Optimus","/zfrontier/optimus/","🤖"],["Gigafactory","/zfrontier/gigafactory/","🏭"],["FSD versions","/zfrontier/fsd-versions/","🛣️"],["Liquid cooling","/zfrontier/liquid-cooling/","💧"],["SpaceX Tracking","/zfrontier/spacex/","🚀"],["CyberCab","/zfrontier/cybercab/","🚕"],["AI FineTune Pod","/zfrontier/ai-finetune-pod/","🎛️"],["MCP Servers","/zfrontier/mcp-servers/","🔌"],["NaC CLI","/zfrontier/nac-cli/","🧰"],["GPU Workflow","/zfrontier/3gpu-ai-workflow/","🧮"],["MWMESH","/zfrontier/mwmesh/","📡"],["Notebooks","/zfrontier/notebooks/","📓"],["RAG documents","/zfrontier/rag-documents/","📚"],["Foundation-Sec-8B","/zfrontier/foundation-sec-8b/","🛡️"],["Terafab","/zfrontier/terafab/","💠"],["3DiffsVXLAN","/zfrontier/3diffsvxlan/","🔀"],["ARR-LargePod","/zfrontier/arr-largepod/","🏗️"],["Nvidia A100 & H100","/zfrontier/Nvidia-A100-H100/","🟩"],["AgenticAI","/zfrontier/agenticai/","🧠"],["MS-02 GPU Monitoring","/zfrontier/MS-02-GPU-Monitoring/","📟"],["MBPro","/zfrontier/MBPro/","💻"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"]]],["ACI GUI Forms","/ACI-GUI-Forms/","📝",[["ACI GUI Forms","/ACI-GUI-Forms/","📝"],["GUI Map","/aci-gui-forms/WIP/gui-map/","🗺️"],["APG Access Policy Group","/ACI-GUI-Forms/apg/","🧩"],["Spine Access Policy Group","/ACI-GUI-Forms/spine-apg/","🛰️"]]],["ACI GUI","/aci-gui/","🖥️",[["Create Pod Policy Group","/aci-gui/create-pod-policy-group/","🧬"],["Create Bridge Domain (step 3)","/aci-gui/create-bridge-domain-step3/","🌉"],["Create Subnet","/aci-gui/create-subnet/","🔢"],["Create Application Profile","/aci-gui/create-application-profile/","🧩"],["Create Management EPG","/aci-gui/create-management-epg/","🛠️"],["Static Node Management Addresses","/aci-gui/static-node-management-addresses/","📍"],["Create Fabric Policies","/aci-gui/create-fabric-policies/","🧵"],["Create Access Policies","/aci-gui/create-access-policies/","🔐"],["Create VLAN Pool","/aci-gui/create-vlan-pool/","🏷️"],["Create Physical Domain","/aci-gui/create-physical-domain/","🏛️"],["Create Access Interface Policy Group","/aci-gui/create-access-interface-policy-group/","🔌"],["Create PC Interface Policy Group","/aci-gui/create-pc-interface-policy-group/","🔀"],["Note on Interface Policies","/aci-gui/interface-policies/","📘"],["Interface Wizard for vPC","/aci-gui/interface-wizard-vpc/","🪄"],["Create VMM Domain","/aci-gui/create-vmm-domain/","💻"],["vCenter Networking","/aci-gui/vcenter-networking/","🖥️"],["Create Tenant","/aci-gui/create-tenant/","🏢"],["Create L3Out","/aci-gui/create-l3out/","🌐"],["L3Out Contracts","/aci-gui/l3out-contracts/","📜"],["Create Bridge Domain","/aci-gui/create-bridge-domain/","🌉"],["Bridge Domain","/aci-gui/bridge-domain/","🌉"],["Mgmt Bridge Domain","/aci-gui/mgmt-bridge-domain/","🔧"],["DHCP Relay","/aci-gui/dhcp-relay/","📡"],["Management Application Profile","/aci-gui/management-application-profile/","📦"],["Application Profile (web + app)","/aci-gui/application-profile/","🧩"],["Create VRF","/aci-gui/create-vrf/","🧭"],["Create Endpoint Group","/aci-gui/create-endpoint-group/","🎯"],["Contracts Between Tenants","/aci-gui/contracts-between-tenants/","🤝"],["Create Filter","/aci-gui/create-filter/","🧹"],["Create Contract","/aci-gui/create-contract/","📃"],["Create Management Contracts","/aci-gui/create-management-contracts/","📑"],["Mgmt PortGroup to VM","/aci-gui/mgmt-portgroup-to-vm/","🧷"],["Pod Policy Group","/aci-gui/pod-policy-group/","🕒"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+var IM_UPDATED=["/netbox-aci-objects/","/netbox-aci-tenants/","/netbox-aci-tenants/diagrams/","/netbox-aci-tenants/diagrams/aci-p01-tenant/","/netbox-aci-tenants/diagrams/cursor-tenant1/","/netbox-aci-tenants/diagrams/cursor-tenant2/","/netbox-aci-tenants/diagrams/cursor-tenant3/","/netbox-aci-tenants/diagrams/cursor-tenant5/","/netbox-aci-tenants/diagrams/cursor-tenant6/","/netbox-aci-tenants/diagrams/msite-p01-tenant/","/netbox-hw-inventory/","/netbox-yaml-model/","/netbox-yaml-model/aci-p01-tenant/","/netbox-yaml-model/cursor-tenant1/","/netbox-yaml-model/cursor-tenant2/","/netbox-yaml-model/cursor-tenant3/","/netbox-yaml-model/cursor-tenant5/","/netbox-yaml-model/cursor-tenant6/","/netbox-yaml-model/msite-p01-tenant/","/report17-aoapic-monitoring/","/report17-aoapic-monitoring/objects/","/report17-aoapic-monitoring/objects/access_port_pgs/","/report17-aoapic-monitoring/objects/aeps/","/report17-aoapic-monitoring/objects/app_profiles/","/report17-aoapic-monitoring/objects/audit_24h/","/report17-aoapic-monitoring/objects/audit_7d/","/report17-aoapic-monitoring/objects/bd_subnets/","/report17-aoapic-monitoring/objects/bds/","/report17-aoapic-monitoring/objects/bundle_pgs/","/report17-aoapic-monitoring/objects/contracts/","/report17-aoapic-monitoring/objects/endpoints/","/report17-aoapic-monitoring/objects/epg_subnets/","/report17-aoapic-monitoring/objects/epgs/","/report17-aoapic-monitoring/objects/events_24h/","/report17-aoapic-monitoring/objects/faults/","/report17-aoapic-monitoring/objects/filters/","/report17-aoapic-monitoring/objects/interfaces/","/report17-aoapic-monitoring/objects/interfaces_up/","/report17-aoapic-monitoring/objects/l3_domains/","/report17-aoapic-monitoring/objects/l3outs/","/report17-aoapic-monitoring/objects/nodes/","/report17-aoapic-monitoring/objects/phys_domains/","/report17-aoapic-monitoring/objects/port_channels/","/report17-aoapic-monitoring/objects/static_paths/","/report17-aoapic-monitoring/objects/tenants/","/report17-aoapic-monitoring/objects/vlan_pools/","/report17-aoapic-monitoring/objects/vmm_domains/","/report17-aoapic-monitoring/objects/vpcs/","/report17-aoapic-monitoring/objects/vrfs/","/report17-aoapic-monitoring/pending-provisioning/","/report17-aoapic-monitoring/tenants/","/report17-aoapic-monitoring/universal-provisioning/","/report17-aoapic-monitoring/universal-provisioning/rma/","/roadmap/","/roadmap/america-driving/","/roadmap/america-driving/car-hire-boise-las-vegas/","/roadmap/america-driving/car-hire-las-vegas-phoenix/","/roadmap/america-driving/car-hire-san-jose-boise/","/roadmap/america-driving/las-vegas-to-boca-chica/","/roadmap/america-driving/leg-1-sfo-boise/","/roadmap/america-driving/leg-2-boise-las-vegas/","/roadmap/america-driving/leg-3-las-vegas-tucson-via-phoenix/","/roadmap/america-driving/leg-4-tucson-los-angeles/","/roadmap/bridgewhy/","/roadmap/bridgewhy/america-driving/","/roadmap/bridgewhy/bgp-mpls-enterprise-network-design/","/roadmap/bridgewhy/campus-network-design/","/roadmap/bridgewhy/ccna/","/roadmap/bridgewhy/cisco-aci/","/roadmap/bridgewhy/cisco-aci/lesson-01/","/roadmap/bridgewhy/cisco-aci/lesson-02/","/roadmap/bridgewhy/cisco-aci/lesson-03/","/roadmap/bridgewhy/cisco-aci/lesson-04/","/roadmap/bridgewhy/cisco-aci/lesson-05/","/roadmap/bridgewhy/cisco-aci/lesson-06/","/roadmap/bridgewhy/cisco-aci/lesson-07/","/roadmap/bridgewhy/cisco-aci/lesson-08/","/roadmap/bridgewhy/cisco-aci/lesson-09/","/roadmap/bridgewhy/cisco-aci/lesson-10/","/roadmap/bridgewhy/cisco-aci/lesson-11/","/roadmap/bridgewhy/cisco-aci/lesson-12/","/roadmap/bridgewhy/cisco-ise/","/roadmap/bridgewhy/cisco-sd-access/","/roadmap/bridgewhy/cisco-sd-wan/","/roadmap/bridgewhy/data-center-vxlan-bgp-evpn/","/roadmap/bridgewhy/enterprise-quality-of-service/","/roadmap/bridgewhy/git-for-network-engineers/","/roadmap/bridgewhy/introduction/","/roadmap/bridgewhy/ipv6-fundamentals/","/roadmap/bridgewhy/is-is-routing-protocol/","/roadmap/bridgewhy/linux-operating-system/","/roadmap/bridgewhy/llms-from-scratch/","/roadmap/bridgewhy/machine-learning-fundamentals/","/roadmap/bridgewhy/network-automation/","/roadmap/bridgewhy/network-security-fundamentals/","/roadmap/bridgewhy/ospf-deep-dive/","/roadmap/bridgewhy/switching-fundamentals/","/roadmap/bridgewhy/tcp-protocol-deep-dive/","/roadmap/bridgewhy/wireless-fundamentals-wlc-9800/","/roadmap/bridgewhy/wireshark-packet-analysis/","/visitors/countries/","/zfrontier/","/zfrontier/ces-2027/","/zfrontier/ces-2027/03-jan/","/zfrontier/ces-2027/03-jan/autonomous-drones/","/zfrontier/ces-2027/03-jan/frontier-tech/","/zfrontier/ces-2027/03-jan/physical-ai/","/zfrontier/ces-2027/03-jan/robots/","/zfrontier/ces-2027/04-jan/","/zfrontier/ces-2027/04-jan/autonomous-drones/","/zfrontier/ces-2027/04-jan/frontier-tech/","/zfrontier/ces-2027/04-jan/physical-ai/","/zfrontier/ces-2027/04-jan/robots/","/zfrontier/ces-2027/05-jan/","/zfrontier/ces-2027/05-jan/autonomous-drones/","/zfrontier/ces-2027/05-jan/frontier-tech/","/zfrontier/ces-2027/05-jan/physical-ai/","/zfrontier/ces-2027/05-jan/robots/","/zfrontier/ces-2027/06-jan/","/zfrontier/ces-2027/06-jan/autonomous-drones/","/zfrontier/ces-2027/06-jan/frontier-tech/","/zfrontier/ces-2027/06-jan/physical-ai/","/zfrontier/ces-2027/06-jan/robots/","/zfrontier/ces-2027/07-jan/","/zfrontier/ces-2027/07-jan/autonomous-drones/","/zfrontier/ces-2027/07-jan/frontier-tech/","/zfrontier/ces-2027/07-jan/physical-ai/","/zfrontier/ces-2027/07-jan/robots/","/zfrontier/ces-2027/08-jan/","/zfrontier/ces-2027/08-jan/autonomous-drones/","/zfrontier/ces-2027/08-jan/frontier-tech/","/zfrontier/ces-2027/08-jan/physical-ai/","/zfrontier/ces-2027/08-jan/robots/","/zfrontier/meraki/","/zfrontier/meraki/alerts/","/zfrontier/meraki/devices/","/zfrontier/meraki/firmware/","/zfrontier/meraki/licensing/","/zfrontier/meraki/networks/"];
+var IM_ACCENT={"/":"#64748b","/tasks/netbox/":"#2563eb","/tasks/provisioning/":"#0d9488","/tasks/monitoring/":"#0891b2","/tasks/testing/":"#d97706","/aci-policy/":"#16a34a","/aci-multipod/":"#15803d","/aci-azure-vxlan/":"#059669","/firewall-domain/":"#dc2626","/aci-lab-guide/":"#22c55e","/demo-ai-pod/":"#7c3aed","/intersight-demo/":"#0284c7","/tasks/itil/":"#4f46e5","/roadmap/":"#ea580c","/virtual-dc/":"#0f766e","/ARR-LargeTopology/":"#0e7490","/terragrunt/":"#a16207","/zfrontier/":"#7c3aed","/visitors/":"#059669","/ACI-GUI-Forms/":"#16a34a","/aci-gui/":"#15803d"};
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function normPath(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function accentOf(href){var h=String(href||'');return IM_ACCENT[h]||IM_ACCENT[h.replace(/\/?$/,'/')]||IM_ACCENT[normPath(h)+'/']||'#2563eb'}
+function pathUpdated(href){
+  var h=normPath(href), list=IM_UPDATED||[];
+  if(h==='/') return list.indexOf('/')>=0;
+  for(var i=0;i<list.length;i++){
+    var u=normPath(list[i]);
+    if(u===h||u.indexOf(h+'/')===0) return true;
+  }
+  return false;
+}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq,accent){
+  var a=document.createElement('a');
+  a.className=cls+(on?' on':'');
+  a.href=e[1];
+  a.title=(seq?String(seq)+'. ':'')+e[0]+(pathUpdated(e[1])?' (updated in the last 7 days)':'');
+  a.style.setProperty('--im-accent', accent||accentOf(e[1]));
+  if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}
+  var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);
+  var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);
+  if(pathUpdated(e[1])){var dot=document.createElement('span');dot.className='im-dot';dot.title='Updated in the last 7 days';dot.setAttribute('aria-label','Updated in the last 7 days');a.appendChild(dot)}
+  if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}
+  return a;
+}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function statsRow(){
+  var d=document.createElement('div');d.className='im-stats';
+  d.innerHTML='<a href="/visitors/">Visitors <span class="im-stat-n im-stat-vis">\u2026</span></a><span>\u00b7</span><a href="/visitors/countries/">Countries <span class="im-stat-n im-stat-cc">\u2026</span></a><span>\u00b7</span><span>Updated <span class="im-stat-n im-stat-asof">\u2026</span></span>';
+  return d;
+}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length,0,accentOf(g[1])))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){
+var acc=accentOf(G[gi][1]);
+var r2=document.createElement('details');r2.className='im-sub';r2.style.setProperty('--im-accent',acc);
+if(window.matchMedia&&window.matchMedia('(min-width:721px)').matches) r2.open=true;
+var t=document.createElement('summary');t.className='sl';
+t.innerHTML='<span>'+G[gi][0]+' tasks \u203A</span><span class="im-toggle"> (tap to expand)</span>';
+r2.appendChild(t);
+t.addEventListener('click',function(ev){if(window.matchMedia&&window.matchMedia('(min-width:721px)').matches){ev.preventDefault();location.href=G[gi][1];}});
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1,acc))});r2.appendChild(pills);n.appendChild(r2)}}
+n.appendChild(statsRow());});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+<!-- uv-badge v2 -->
+<style id="uv-badge-style">
+.uv-pop{position:relative;display:inline-block;vertical-align:middle}
+.uv-pop .uv-card{display:none;position:absolute;right:0;top:calc(100% + 6px);z-index:80;min-width:228px;padding:10px 12px;border-radius:10px;background:var(--card,#0f172a);color:var(--ink,#e2e8f0);border:1px solid var(--line,#334155);box-shadow:0 10px 28px rgba(0,0,0,.28);font:12px/1.4 system-ui,Arial,sans-serif;text-align:left;white-space:normal}
+.uv-pop.open .uv-card{display:block}
+.uv-card svg{display:block;width:204px;height:44px;margin:6px 0 8px}
+.uv-card .uv-k{font-weight:700;margin:0 0 2px}
+.uv-card .uv-m{color:var(--muted,#94a3b8);font-size:11px}
+.uv-card a{color:var(--link,#8ecbff)}
+</style>
+<script id="uv-badge">(function(){
+function norm(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function tzParts(iso){
+  var pt=new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'2-digit',minute:'2-digit',hour12:false,hourCycle:'h23',timeZoneName:'short',day:'2-digit',month:'short'}).formatToParts(new Date(iso));
+  var g=function(t){return (pt.find(function(x){return x.type===t})||{}).value||''};
+  var tz=(g('timeZoneName')||'AEDT').replace('GMT+11','AEDT').replace('GMT+10','AEST');
+  return {hh:g('hour'),mm:g('minute'),tz:tz,day:g('day'),mon:g('month')};
+}
+function last30(daysMap){
+  var out=[], now=new Date();
+  var fmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'});
+  for(var i=29;i>=0;i--){
+    var d=new Date(now.getTime()-i*86400000);
+    var key=fmt.format(d);
+    out.push({day:key,count:+((daysMap||{})[key]||0)});
+  }
+  return out;
+}
+function spark(series){
+  var w=204,h=44,p=2;
+  var max=Math.max.apply(null,series.map(function(x){return x.count}).concat([1]));
+  var n=series.length||1;
+  var pts=series.map(function(x,i){
+    var X=p+(i*(w-2*p)/Math.max(1,n-1));
+    var Y=h-p-((x.count/max)*(h-2*p));
+    return X.toFixed(1)+','+Y.toFixed(1);
+  }).join(' ');
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true"><polyline fill="none" stroke="#22c55e" stroke-width="2" points="'+pts+'"/></svg>';
+}
+function fillStats(d){
+  var total=(d.total&& (d.total.total||d.total.total_utc))||0;
+  var cc=(d.countries||[]).length;
+  var asof=d.as_of_aedt||'';
+  document.querySelectorAll('.im-stat-vis').forEach(function(e){e.textContent=total||'0'});
+  document.querySelectorAll('.im-stat-cc').forEach(function(e){e.textContent=cc||'0'});
+  document.querySelectorAll('.im-stat-asof').forEach(function(e){e.textContent=asof||'n/a'});
+}
+function attachPopover(d, count, series){
+  document.querySelectorAll('.uv').forEach(function(uv){
+    if(uv.closest('.uv-pop')) return;
+    var wrap=document.createElement('span');wrap.className='uv-pop';
+    uv.parentNode.insertBefore(wrap,uv);wrap.appendChild(uv);
+    var card=document.createElement('div');card.className='uv-card';card.setAttribute('role','dialog');
+    var last=series.length?series[series.length-1].count:0;
+    card.innerHTML='<p class="uv-k">This page: '+count+' unique visitors</p>'+spark(series)+'<p class="uv-m">Last 30 days (this page). Today so far: '+last+'.</p><p><a href="/visitors/">Full visitor stats \u203A</a></p>';
+    wrap.appendChild(card);
+    function tog(ev){ev.preventDefault();ev.stopPropagation();document.querySelectorAll('.uv-pop.open').forEach(function(x){if(x!==wrap)x.classList.remove('open')});wrap.classList.toggle('open')}
+    uv.addEventListener('click',tog);
+    uv.style.cursor='pointer';
+    uv.title='Click for a 30-day sparkline';
+  });
+  document.addEventListener('click',function(){document.querySelectorAll('.uv-pop.open').forEach(function(x){x.classList.remove('open')})});
+}
+function apply(d){
+  var p=norm(location.pathname);
+  var page=(d.pages||[]).filter(function(x){return norm(x.path)===p});
+  var c=page.reduce(function(a,x){return a+(+x.count||0)},0);
+  var days={};
+  page.forEach(function(x){var m=x.days||{};Object.keys(m).forEach(function(k){days[k]=(days[k]||0)+(+m[k]||0)})});
+  document.querySelectorAll('.uvc').forEach(function(e){e.textContent=c});
+  document.querySelectorAll('.uvt').forEach(function(e){
+    if(d.updated_utc){var t=tzParts(d.updated_utc);e.textContent=' (data as of '+t.hh+':'+t.mm+' '+t.tz+')'}
+  });
+  fillStats(d);
+  attachPopover(d,c,last30(days));
+}
+function fail(){
+  document.querySelectorAll('.uvc').forEach(function(e){if(e.textContent==='\u2026'||e.textContent==='...') e.textContent='n/a'});
+  document.querySelectorAll('.im-stat-vis,.im-stat-cc,.im-stat-asof').forEach(function(e){if(e.textContent==='\u2026') e.textContent='n/a'});
+}
+if(!window.__visitorsData){
+  var ac=typeof AbortController==='function'?new AbortController():null;
+  var timer=setTimeout(function(){try{ac&&ac.abort()}catch(e){}},8000);
+  window.__visitorsData=fetch('/data/visitors.json?'+Date.now(),ac?{signal:ac.signal}:undefined).then(function(r){
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('visitors.json '+r.status);
+    return r.json();
+  });
+}
+window.__visitorsData.then(apply).catch(function(){fail()});
+})();</script>
+<p class="meta">Page: <strong>🚕 Tesla Cybercab</strong> · Version: <strong>v2 · 26 Nov 2026, 8:36 PM AEDT</strong></p>
+</body>
+</html>

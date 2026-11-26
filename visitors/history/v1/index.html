@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html><head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Compact 28px pills, 6 columns on wide screens, 4 mid, 2 on mobile.
+   Per-section accent colour is set as --im-accent on each pill. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:6px 12px 8px;
+  gap:6px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:650 11.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:4px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im details.im-sub,
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:4px;
+  margin:0;
+  padding:6px 8px;
+  border-left:3px solid var(--im-accent,var(--menu-on,#2563eb))!important;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 10%,transparent)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl,
+nav.site.im summary.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+  list-style:none;
+}
+nav.site.im summary.sl::-webkit-details-marker{display:none}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:5px;
+  box-sizing:border-box;
+  width:100%;
+  height:28px;
+  min-height:28px;
+  max-height:28px;
+  min-width:0;
+  padding:0 8px;
+  border-radius:999px;
+  border:1px solid color-mix(in srgb,var(--im-accent,#2563eb) 40%,var(--menu-pill-bd,#3a4456))!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:color-mix(in srgb,var(--im-accent,#2563eb) 16%,var(--menu-hover))!important}
+nav.site.im a.mi.on{
+  background:var(--im-accent,var(--menu-on,#2563eb))!important;
+  border-color:var(--im-accent,var(--menu-on,#2563eb))!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:11px;height:28px;min-height:28px;max-height:28px}
+nav.site.im a.mi .ic{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 22%,transparent);
+  font-size:11px;
+  line-height:1;
+}
+nav.site.im a.mi.on .ic{background:rgba(255,255,255,.22)}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  line-height:1;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:14px;
+  height:14px;
+  padding:0 4px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:700;
+  line-height:1;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 35%,#93c5fd);
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:16px;
+  height:16px;
+  padding:0 4px;
+  border-radius:999px;
+  font-size:10px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:var(--im-accent,#1d4ed8)!important;
+}
+nav.site.im a.mi .im-dot{
+  width:7px;height:7px;border-radius:50%;background:#22c55e;flex:none;
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--im-accent,#2563eb) 18%,transparent);
+}
+nav.site.im .im-stats{
+  display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;
+  font:600 11px/1.3 system-ui,Arial,sans-serif;color:var(--menu-fg);padding:2px 2px 0;opacity:.9;
+}
+nav.site.im .im-stats a{color:var(--link);text-decoration:none}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:28px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:28px;
+  padding:0 12px;
+  border-radius:999px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:28px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:28px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:28px;padding:0 10px}
+  nav.site.im summary.sl .im-toggle{display:inline}
+}
+@media (min-width:721px){
+  nav.site.im summary.sl .im-toggle{display:none}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+
+
+<meta charset="utf-8"/><meta content="width=device-width" name="viewport"/><title>Visitors - ACI Always on APIC Monitoring</title>
+<style>body{font-family:sans-serif;margin:20px auto;background:#111;color:#eee;width:100%;box-sizing:border-box}a{color:#8cf}nav.site{margin:0 0 10px}table{border-collapse:collapse;width:100%;margin:8px 0 24px}th,td{border:1px solid #333;padding:6px 8px;text-align:left;font-size:14px}th{background:#1d1d1d}td.n{text-align:right;width:90px}.muted{color:#999;font-size:13px}.kpis{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0 20px}.kpi{background:#1b1b1b;border:1px solid #333;border-radius:6px;padding:10px 14px;min-width:150px}.kpi b{display:block;font-size:26px;color:#6c6}.bar{background:#2a6;height:8px;border-radius:4px}</style></head><body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+
+
+
+<div class="topbar" style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-bottom:16px"><!-- site-menu v1 --><nav class="site" style="margin:0"><a href="/">Home</a> | <a href="/report17-aoapic-monitoring/tenants/">Tenants Detail</a> | <a href="/netbox-aci-tenants/">NetBox ACI Tenants</a> | <a href="/netbox-yaml-model/">YAML Model</a> | <a href="/report17-aoapic-monitoring/pending-provisioning/">Pending Provisioning</a> | <a href="/report17-aoapic-monitoring/universal-provisioning/">Universal Provisioning</a> | <a href="/report17-aoapic-monitoring/objects/">Object Drill-down</a> | <a href="/report17-aoapic-monitoring/">Report 17</a> | <a href="/grafana-screenshots/">Group 1</a> | <a href="/grafana-screenshots-part2/">Group 2</a> | <a href="/visitors/">Visitors</a> | <a href="https://amoeoo-coles.github.io/aoapic-nac-test-status/">nac-test Status</a></nav><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:#bbb">Visitor stats<span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span><span class="uvt" style="font-size:11px;color:#888"></span></div></div>
+<h1>Visitors</h1>
+<!--arr-visitors-card-->
+<section class="card arr-visitors-card" style="margin:12px 0 18px;padding:14px 16px;border:1px solid var(--line,#333);border-radius:12px;background:var(--card,#1b1b1b);max-width:100%;box-sizing:border-box">
+<h2 style="margin:0 0 8px;font-size:1.15rem"><a href="/ARR/visitors/">ARR visitors</a></h2>
+<p class="muted" style="margin:0">Aggregate visitor counts for the <a href="/ARR/">ARR — ACI Fabric Report</a> pages: daily totals, a simple chart, and countries. Tracking on /ARR/ starts from this page's first publish; earlier snapshots have no /ARR/ paths.</p>
+</section>
+<!--/arr-visitors-card-->
+
+<!--mrtg--><section aria-label="Daily visitors graph" id="mrtg"><style>
+#mrtg .g{background:var(--card,#fff)!important;color:var(--ink,#0f172a)!important;border:1px solid var(--line,#94a3b8)!important;padding:10px 12px 6px;margin:6px 0 10px;width:100%;max-width:100%;box-sizing:border-box;overflow-x:auto;font-family:Arial,Helvetica,sans-serif}
+#mrtg .g h3{margin:0 0 4px;font-size:15px;color:var(--ink,#0f172a)!important}#mrtg svg{display:block;width:100%;max-width:100%;height:auto;overflow:hidden}#mrtg svg text{font:11px Arial,Helvetica,sans-serif;fill:var(--ink,#0f172a)!important}
+#mrtg table.ms{border-collapse:collapse;width:auto;margin:6px 0 2px;background:var(--card,#fff)!important}#mrtg table.ms th,#mrtg table.ms td{border:1px solid var(--line,#94a3b8)!important;padding:5px 10px;font-size:13px;color:var(--ink,#0f172a)!important;background:var(--card,#fff)!important;font-weight:600}
+#mrtg table.ms th{background:var(--th-bg,#e2e8f0)!important;color:var(--ink,#0f172a)!important;font-weight:700}#mrtg .lg{display:inline-block;width:12px;height:12px;vertical-align:middle;margin-right:4px;border:1px solid var(--ink,#333)}#mrtg .gn{font-size:12px;color:var(--ink,#0f172a)!important;margin:4px 0}
+#mrtg .asof{font-weight:700;color:var(--ink,#0f172a)!important}
+#mrtg .ht{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 10px;margin:8px 0 4px;font:12px/1.35 Arial,Helvetica,sans-serif;color:var(--ink,#0f172a)!important}
+#mrtg .ht button.hr{display:flex;justify-content:space-between;gap:8px;width:100%;border:0;border-bottom:1px solid var(--line,#e2e8f0);padding:4px 0;background:transparent;color:var(--ink,#0f172a)!important;font:inherit;cursor:pointer;text-align:left}
+#mrtg .ht button.hr:hover{background:rgba(37,99,235,.12)}
+#mrtg .ht b{font-variant-numeric:tabular-nums;color:var(--ink,#0f172a)!important}
+</style><h2 style="margin-top:4px">Daily visitors (MRTG style)</h2><div id="mrtg-graphs"><p class="muted">Loading graph…</p></div>
+<p class="muted" id="mrtg-src"></p></section><script>
+(function(){
+var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
+var MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function lab(d){var p=d.split("-");return +p[2]+" "+MON[+p[1]-1]}
+function melParts(d){
+ var fmt=new Intl.DateTimeFormat("en-CA",{timeZone:"Australia/Melbourne",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false,hourCycle:"h23"});
+ var gp=function(t){return fmt.formatToParts(d).find(function(x){return x.type==t}).value};
+ return {day:gp("year")+"-"+gp("month")+"-"+gp("day"),h:+gp("hour")%24,min:+gp("minute")};
+}
+function tzName(d){
+ var p=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Melbourne",timeZoneName:"short",hour:"2-digit",hour12:false,hourCycle:"h23"}).formatToParts(d);
+ var n=(p.find(function(x){return x.type=="timeZoneName"})||{}).value||"AEDT";
+ return n.replace("GMT+11","AEDT").replace("GMT+10","AEST");
+}
+function asOfLabel(iso){
+ var d=iso?new Date(iso):new Date();
+ var p=melParts(d);
+ return "data as of "+String(p.h).padStart(2,"0")+":"+String(p.min).padStart(2,"0")+" "+tzName(d);
+}
+function lastHours(days,asOfIso,n){
+ n=n||48;
+ var map={};
+ days.forEach(function(d){(d.hourly||[]).forEach(function(v,i){if(i>=0&&i<24)map[d.day+"|"+i]=v})});
+ var end=asOfIso?new Date(asOfIso):new Date();
+ var hrs=[];
+ for(var i=n-1;i>=0;i--){
+  var t=new Date(end.getTime()-i*3600*1000);
+  var p=melParts(t);
+  var key=p.day+"|"+p.h;
+  var v=Object.prototype.hasOwnProperty.call(map,key)?map[key]:0;
+  hrs.push({day:p.day,h:p.h,v:v});
+ }
+ return hrs;
+}
+function graph(title,pts,xl,opts){ // pts: [{x:label,v:number}] oldest..newest (newest on the right, as MRTG)
+ var W=720,H=230,L=46,R=36,T=12,B=48,w=W-L-R,h=H-T-B,n=pts.length,max=0;pts.forEach(function(p){if(p.v>max)max=p.v});
+ var step=max<=5?1:max<=10?2:max<=25?5:max<=50?10:max<=100?20:Math.pow(10,Math.floor(Math.log10(max)))*(max/Math.pow(10,Math.floor(Math.log10(max)))>5?2:1);
+ var top=Math.max(step,Math.ceil(max/step)*step),X=function(i){return L+(n<=1?w/2:i*w/(n-1))},Y=function(v){return T+h-v/top*h};
+ var s='<svg viewBox="0 0 '+W+' '+H+'" width="100%" overflow="hidden" role="img" aria-label="'+esc(title)+'"><rect x="'+L+'" y="'+T+'" width="'+w+'" height="'+h+'" fill="#fff" stroke="#000"/>';
+ for(var g=0;g<=top;g+=step){s+='<line x1="'+L+'" x2="'+(L+w)+'" y1="'+Y(g)+'" y2="'+Y(g)+'" stroke="'+(g?'#d8d8d8':'#000')+'" stroke-dasharray="'+(g?'2,2':'')+'"/><text x="'+(L-5)+'" y="'+(Y(g)+4)+'" text-anchor="end">'+g+'</text>'}
+ var every=Math.max(1,Math.ceil(n/(opts.maxlabels||12)));
+ pts.forEach(function(p,i){if(i%every==0||i==n-1){s+='<line x1="'+X(i)+'" x2="'+X(i)+'" y1="'+T+'" y2="'+(T+h)+'" stroke="#e4e4e4" stroke-dasharray="2,2"/><text x="'+X(i)+'" y="'+(T+h+14)+'" text-anchor="middle">'+esc(p.x)+'</text>'}});
+ if(n){var a='M'+X(0)+' '+Y(0);pts.forEach(function(p,i){a+=' L'+X(i)+' '+Y(p.v)});a+=' L'+X(n-1)+' '+Y(0)+' Z';s+='<path d="'+a+'" fill="#00cc00" fill-opacity="'+(opts.alpha||1)+'" stroke="#009900"/>';
+  if(n==1)s+='<rect x="'+(X(0)-8)+'" y="'+Y(pts[0].v)+'" width="16" height="'+(Y(0)-Y(pts[0].v))+'" fill="#00cc00" stroke="#009900"/>'}
+ pts.forEach(function(p,i){if(p.day==null||p.h==null)return;var x0=i===0?L:(X(i-1)+X(i))/2,x1=i===n-1?(L+w):(X(i)+X(i+1))/2;s+='<rect class="hit" data-day="'+esc(p.day)+'" data-h="'+p.h+'" x="'+x0+'" y="'+T+'" width="'+Math.max(2,x1-x0)+'" height="'+h+'" fill="transparent" style="cursor:pointer"><title>'+esc(p.x)+': '+p.v+' visitors. Click for details.</title></rect>'});
+ s+='<text x="'+(L+w/2)+'" y="'+(H-4)+'" text-anchor="middle">'+esc(xl)+'</text><text transform="translate(12,'+(T+h/2)+') rotate(-90)" text-anchor="middle">Visitors</text>';
+ s+='<polygon points="'+(L+w)+','+(T+h-4)+' '+(L+w+8)+','+(T+h)+' '+(L+w)+','+(T+h+4)+'" fill="#f00"/></svg>';
+ return s}
+function stats(vals,curLabel,avgNote){var max=0,sum=0;vals.forEach(function(v){if(v>max)max=v;sum+=v});var avg=vals.length?sum/vals.length:0;
+ return '<table class="ms"><tr><th></th><th>Max</th><th>Average</th><th>Current</th></tr><tr><th style="text-align:left"><span class="lg" style="background:#00cc00"></span>Visitors</th><td>'+max+'</td><td>'+avg.toFixed(1)+'</td><td>'+curLabel+'</td></tr></table><div class="gn">'+avgNote+'</div>'}
+function box(t,inner){return '<div class="g"><h3>'+t+'</h3>'+inner+'<div class="gn"><span class="lg" style="background:#00cc00"></span>Visitors (GoatCounter count, green area). No blue unique-visitor line: GoatCounter reports one count, not pageviews and unique visitors separately.</div></div>'}
+function hourTable(hrs){
+ return '<div class="ht">'+hrs.map(function(x){return '<button type="button" class="hr" data-day="'+esc(x.day)+'" data-h="'+x.h+'"><span>'+(x.h===0?lab(x.day)+' ':'')+String(x.h).padStart(2,"0")+':00</span><b>'+x.v+'</b></button>'}).join('')+'</div>';
+}
+function render(days,src,asOf){
+ var el=document.getElementById("mrtg-graphs");if(!days.length){el.innerHTML='<p class="muted">No visitor data yet.</p>';return}
+ var last=days[days.length-1],full=days.slice(0,-1),fv=full.map(function(d){return d.visitors});
+ var mx=0,mxd="";days.forEach(function(d){if(d.visitors>mx){mx=d.visitors;mxd=d.day}});
+ var stamp=asOfLabel(asOf);
+ var h=box('Daily visitors · '+lab(days[0].day)+' – '+lab(last.day)+' 2026 (one point per Melbourne day, newest on the right)',graph('Daily visitors',days.map(function(d){return {x:lab(d.day),v:d.visitors}}),'Day (Melbourne time)',{maxlabels:14})+
+  '<table class="ms"><tr><th></th><th>Max</th><th>Average</th><th>Current</th></tr><tr><th style="text-align:left"><span class="lg" style="background:#00cc00"></span>Visitors / day</th><td>'+mx+' ('+lab(mxd)+')</td><td>'+(fv.length?(fv.reduce(function(a,b){return a+b},0)/fv.length).toFixed(1):'n/a')+' (complete days: '+fv.length+')</td><td>'+last.visitors+' ('+lab(last.day)+', so far)</td></tr></table>'+
+  '<div class="gn"><span class="asof">'+esc(stamp)+'</span>. Period: '+lab(days[0].day)+' – '+lab(last.day)+' 2026, '+days.length+' days. Counting started 7 Nov 2026 (the counter was added that day), so the graph starts there. Today is a partial day; the average uses complete days only.</div>');
+ var hrs=lastHours(days,asOf,48);
+ if(hrs.length){var hv=hrs.map(function(x){return x.v}),cur=hrs[hrs.length-1];
+  var asofHour=asOf?melParts(new Date(asOf)):melParts(new Date());
+  var inProg=cur.day===asofHour.day&&cur.h===asofHour.h;
+  h+=box('Hourly visitors · last '+hrs.length+' hours, labelled in Melbourne time, zeros filled · '+stamp,graph('Hourly visitors',hrs.map(function(x){return {x:(x.h==0?lab(x.day)+' ':'')+String(x.h).padStart(2,"0")+':00',v:x.v,day:x.day,h:x.h}}),'Hour (Australia/Melbourne)',{maxlabels:12})+
+  stats(hv,cur.v+' ('+lab(cur.day)+' '+String(cur.h).padStart(2,"0")+':00'+(inProg?', hour in progress':'')+')','Max and average over the '+hrs.length+' hours shown. Hours after the stamp are not shown. Click a bar or a row for that hour\'s pages, and for that day\'s countries.')+
+  hourTable(hrs)+'<p class="gn">Click an hour for pages (true per hour) and for countries, referrers, browsers, OS and screen size on that Melbourne day. GoatCounter records countries per day, not per hour.</p>')}
+ if(days.length>=14){var wk=[];for(var i=days.length;i>0;i-=7){var c=days.slice(Math.max(0,i-7),i);wk.unshift({x:'w/e '+lab(c[c.length-1].day),v:c.reduce(function(a,d){return a+d.visitors},0)})}
+  h+=box('Weekly graph · visitors per 7 days',graph('Weekly',wk,'Week ending (Melbourne time)',{})+stats(wk.map(function(x){return x.v}),wk[wk.length-1].v+' (current week, so far)','Weeks of 7 days ending on the newest day.'))}
+ else h+='<p class="muted">Weekly graph appears once there are 14 days of data (now '+days.length+'); monthly graph once there are 60 days.</p>';
+ if(days.length>=60){var mo={};days.forEach(function(d){var k=d.day.slice(0,7);mo[k]=(mo[k]||0)+d.visitors});var ms=Object.keys(mo).sort().map(function(k){return {x:MON[+k.slice(5)-1]+" "+k.slice(0,4),v:mo[k]}});
+  h+=box('Monthly graph · visitors per month',graph('Monthly',ms,'Month',{})+stats(ms.map(function(x){return x.v}),ms[ms.length-1].v+' (current month, so far)','Calendar months, Melbourne time.'))}
+ el.innerHTML=h;document.getElementById("mrtg-src").textContent=src}
+Promise.all([fetch("/visitors/daily.json?"+Date.now()).then(function(r){return r.json()}).catch(function(){return null}),fetch("/data/visitors.json?"+Date.now()).then(function(r){return r.json()}).catch(function(){return null})]).then(function(a){
+ var d=a[0],v=a[1],by={},su="",asOf=null;
+ if(d&&d.days){d.days.forEach(function(x){by[x.day]=x});asOf=d.generated_utc;su="Daily series: visitors/daily.json ("+d.source+", generated "+d.generated_utc+")"}
+ if(v&&v.total&&v.total.stats){
+  var newer=!d||!d.generated_utc||(v.updated_utc&&v.updated_utc>=d.generated_utc);
+  v.total.stats.forEach(function(s){if(s.day>="2026-11-07"&&(newer||!by[s.day]))by[s.day]={day:s.day,visitors:s.daily||0,hourly:s.hourly||[]}});
+  if(newer){asOf=v.updated_utc||asOf;su+=(su?"; ":"")+"newer days from data/visitors.json (updated "+v.updated_utc+")"}
+ }
+ if(v&&v.updated_utc&&(!asOf||v.updated_utc>asOf))asOf=v.updated_utc;
+ var days=Object.keys(by).sort().map(function(k){return by[k]});
+ render(days,(su?su+". ":"")+asOfLabel(asOf)+". Times are Australia/Melbourne (GoatCounter site setting). Real GoatCounter counts only.",asOf);
+}).catch(function(e){document.getElementById("mrtg-graphs").innerHTML='<p class="muted">Graph data could not be loaded.</p>'})})();
+</script>
+<script defer="" src="/visitors/geo.js"></script><!--/mrtg-->
+<p class="muted">Unique visitors to amoeoo-coles.github.io, counted from 7 Nov 2026. Each person counts once per page per day rather than on every reload. Where visitors are located comes from their country and region only, never their exact address or name. Browsers with ad blockers aren't counted.</p>
+<h2>Unique visitors by page</h2>
+<div class="kpis" id="kpis"></div>
+
+
+
+
+
+<!--pagehist--><section id="pagehist" aria-label="Every page, day by day"><style>
+#pagehist table{border-collapse:collapse;width:100%;margin:6px 0 14px}#pagehist th,#pagehist td{border-bottom:1px solid #3334;padding:5px 8px;font-size:13px;text-align:left;vertical-align:middle}
+#pagehist th.n,#pagehist td.n{text-align:right;font-variant-numeric:tabular-nums}#pagehist td.z{color:#8888}#pagehist .sp{display:inline-block;vertical-align:middle}
+#pagehist input[type=search]{padding:6px 9px;border-radius:6px;border:1px solid #8886;background:transparent;color:inherit;min-width:0;width:min(260px,100%);max-width:100%;box-sizing:border-box;margin:4px 0 6px}
+#pagehist .vl{list-style:none;padding:0}#pagehist .vl>li{margin:6px 0;padding:8px 12px;border:1px solid #8884;border-left:5px solid #22c55e;border-radius:8px}
+#pagehist .vl summary{cursor:pointer}#pagehist .tag{display:inline-block;font-size:11px;padding:2px 7px;border-radius:10px;background:#2563eb;color:#fff;margin-left:6px}
+#pagehist th.n,#pagehist td.n,#pagehist td:nth-last-child(-n+3),#pagehist th:nth-last-child(-n+3){white-space:nowrap;width:1%}#pagehist .new{color:#16a34a;font-weight:600}#pagehist,#pagehist .wrapt{max-width:100%;min-width:0;box-sizing:border-box}#pagehist .wrapt{overflow-x:auto}
+#pagehist th.s{cursor:pointer;user-select:none;white-space:nowrap}#pagehist th.s:hover{color:#8cf}#pagehist th.s .ar{opacity:.45;font-size:11px;margin-left:3px}#pagehist th.s.on .ar{opacity:1;color:#8cf}
+#pagehist tr.gh td{background:#1b2330;font-weight:700;border-bottom:1px solid #3a4456;padding-top:10px;padding-bottom:8px}
+#pagehist .controls{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin:4px 0 8px}
+#pagehist .controls label{font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+#pagehist .trlink{font-size:13px}
+</style>
+<h2>Every page, day by day</h2>
+<p class="muted">Every page on the site is listed, including the main menu pages and the Infrastructure as Code sub pages, even when they have no visitors yet. Each column is one Melbourne day, newest first. The small bars show the daily trend from oldest to newest. Click a column header to sort (within each menu group when grouping is on).</p>
+<p class="trlink"><a href="/visitors/trends/">📈 Trends</a> — daily totals, per-group lines, risers and fallers, and per-page sparklines. <a href="/visitors/countries/">Countries</a> — visitors by country, with a sortable table and CSV download. <a href="/ARR/visitors/">ARR visitors</a> — aggregate counts for the ARR fabric report.</p>
+<div class="controls">
+<input id="ph-q" type="search" placeholder="Filter pages, e.g. report17 or iac" aria-label="Filter pages">
+<label><input type="checkbox" id="ph-grp" checked> Group by menu</label>
+</div>
+<div class="wrapt"><table id="ph-t"><thead></thead><tbody><tr><td class="muted">Loading…</td></tr></tbody></table></div>
+<h2>Daily snapshots (version history of visitor counts)</h2>
+<p class="muted">One version per day since tracking started on 7 Nov 2026. Each version lists the pages visited that day, the running total to that date, and any page seen for the first time. Open a version to see its full table. Column headers inside each version are sortable.</p>
+<ul class="vl" id="ph-v"><li class="muted">Loading…</li></ul>
+<script>(function(){
+var esc=function(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function lab(d){var p=d.split('-');return +p[2]+' '+MON[+p[1]-1]}
+function lab2(d){var p=d.split('-');return +p[2]+' '+MON[+p[1]-1]+' '+p[0]}
+var GROUPS=[{"name":"Home","urls":["/"]},{"name":"NETBOX","urls":["/tasks/netbox/","/netbox-aci-tenants/","/netbox-aci-tenants/diagrams/","/netbox-aci-objects/","/netbox-hw-inventory/","/netbox-yaml-model/","/netbox-yaml-model/aoapic/","/ARR-LargeTopology/iac-files/","/tasks/netbox/history/"]},{"name":"PROVISIONING","urls":["/tasks/provisioning/","/report17-aoapic-monitoring/pending-provisioning/","/report17-aoapic-monitoring/universal-provisioning/","/tasks/provisioning/aci-lab-guide-policy/"]},{"name":"MONITORING","urls":["/tasks/monitoring/","/report17-aoapic-monitoring/","/report17-aoapic-monitoring/tenants/","/report17-aoapic-monitoring/objects/","/tasks/monitoring/aoapic/","/tasks/monitoring/arr/","/grafana-screenshots/","/grafana-screenshots-part2/"]},{"name":"TESTING","urls":["/tasks/testing/","/aoapic-nac-test-status/","/testing/aoapic-defaults/","/testing/arr-defaults/","/testing/defaults-compare/"]},{"name":"ACI Policy","urls":["/aci-policy/","/aci-policy/","/aci-policy/policy-universe/","/aci-policy/tenants/","/aci-policy/policy-tenant/","/aci-policy/aci-lab-guide-policy/","/aci-policy/aci-lab-guide-policy/diagrams/","/aci-policy/fabric-access-inventory/","/aci-gui/pod-policy-group/"]},{"name":"ACI Multi-Pod","urls":["/aci-multipod/","/aci-multipod/","/aci-multipod/overview/","/aci-multipod/planning/","/aci-multipod/design/","/aci-multipod/migration/","/aci-multipod/deployment/","/aci-multipod/operations/","/aci-multipod/yaml/"]},{"name":"ACI Azure VXLAN","urls":["/aci-azure-vxlan/","/aci-azure-vxlan/","/aci-azure-vxlan/physical-rack/","/aci-azure-vxlan/logical/","/aci-azure-vxlan/tenant-diagram/","/aci-azure-vxlan/yaml/","/aci-azure-vxlan/deployment/"]},{"name":"Firewall Domain","urls":["/firewall-domain/","/firewall-domain/","/firewall-domain/cisco-fmt/","/firewall-domain/palo-alto/","/firewall-domain/other/","/firewall-domain/asa-build/"]},{"name":"ACI Demo Guide","urls":["/aci-lab-guide/","/aci-lab-guide/","/aci-lab-guide/introduction/","/aci-lab-guide/aci-basics/","/aci-lab-guide/access-policies/","/aci-lab-guide/vmm/","/aci-lab-guide/tenants/","/aci-lab-guide/day2/","/aci-lab-guide/esg/","/aci-lab-guide/segmentation/","/aci-lab-guide/nexus-dashboard/","/aci-lab-guide/orchestrator/","/aci-lab-guide/insights/","/aci-lab-guide/conclusion/","/aci-lab-guide/references/"]},{"name":"Demo AI Pod","urls":["/demo-ai-pod/","/demo-ai-pod/","/demo-ai-pod/learning-objectives/","/demo-ai-pod/get-started/","/demo-ai-pod/network-diagram/","/demo-ai-pod/task-1/","/demo-ai-pod/task-2/","/demo-ai-pod/task-3/","/demo-ai-pod/task-4/","/demo-ai-pod/task-5/","/demo-ai-pod/wrap-up/","/demo-ai-pod/addendum/","/demo-ai-pod/training-fine-tuning/","/demo-ai-pod/vxlan-evpn/"]},{"name":"Intersight Demo","urls":["/intersight-demo/","/intersight-demo/","/intersight-demo/get-started/","/intersight-demo/power-energy/","/intersight-demo/operate/","/intersight-demo/gpu-inventory/","/intersight-demo/ai-pod-design/","/intersight-demo/wrap-up/","/intersight-demo/cheat-sheet/","/intersight-demo/reports/"]},{"name":"ITIL","urls":["/tasks/itil/","/itil/aoapic/","/itil/arr/","/itil/wiki/"]},{"name":"RoadMap","urls":["/roadmap/","/roadmap/","/mindmap/","/roadmap/forward/","/roadmap/forward/time-map/"]},{"name":"Virtual DC","urls":["/virtual-dc/","/virtual-dc/","/virtual-dc/report.html","/virtual-dc/capacity.html"]},{"name":"zFrontier","urls":["/zfrontier/","/zfrontier/","/zfrontier/farzad/","/zfrontier/shares/","/zfrontier/optimus/","/zfrontier/gigafactory/","/zfrontier/fsd-versions/","/zfrontier/liquid-cooling/","/zfrontier/spacex/","/zfrontier/cybercab/","/zfrontier/ai-finetune-pod/","/zfrontier/mcp-servers/","/zfrontier/nac-cli/","/zfrontier/3gpu-ai-workflow/","/zfrontier/mwmesh/","/zfrontier/notebooks/","/zfrontier/rag-documents/","/zfrontier/foundation-sec-8b/","/zfrontier/terafab/"]},{"name":"Visitors","urls":["/visitors/","/visitors/","/status/","/visitors/trends/","/visitors/countries/","/visitors/git-tracking/","/zfrontier/ACI-GUI-Forms/","/zfrontier/ACI-GUI-Forms/","/aci-gui/create-vlan-pool/","/aci-gui/create-physical-domain/","/aci-gui/create-access-interface-policy-group/","/aci-gui/create-pc-interface-policy-group/"]}];
+var GROUP_ORDER=GROUPS.map(function(g){return g.name}).concat(['IaC','Other']);
+var KNOWN=[['/','Home'],['/tasks','Tasks'],['/tasks/netbox','NetBox tasks'],['/tasks/provisioning','Provisioning tasks'],['/tasks/monitoring','Monitoring tasks'],['/tasks/monitoring/aoapic','AOAPIC Fault Counts'],['/tasks/monitoring/arr','ARR Fault Counts'],['/tasks/testing','Testing tasks'],['/tasks/itil','ITIL tasks'],['/itil/aoapic','AOAPIC ITIL'],['/itil/arr','ARR ITIL'],['/itil/wiki','Site Wiki'],['/report17-aoapic-monitoring/tenants','Tenants Detail'],['/netbox-aci-tenants','NetBox ACI Tenants'],['/netbox-aci-tenants/diagrams','Tenant Diagrams'],['/netbox-aci-objects','NB ACI Objects'],['/netbox-hw-inventory','NB HW Inventory'],['/netbox-yaml-model','YAML Model'],['/netbox-yaml-model/aoapic','AOAPIC Model'],['/ARR-LargeTopology/iac-files','ARR Model'],['/netbox-yaml-model/models','Models hub'],['/report17-aoapic-monitoring/pending-provisioning','Pending Provisioning'],['/report17-aoapic-monitoring/universal-provisioning','Universal Provisioning'],['/report17-aoapic-monitoring/universal-provisioning/rma','Universal Provisioning RMA'],['/report17-aoapic-monitoring/objects','Object Drill-down'],['/report17-aoapic-monitoring','Report 17'],['/grafana-screenshots','Group 1'],['/grafana-screenshots-part2','Group 2'],['/aoapic-nac-test-status','nac-test Status'],['/testing/aoapic-defaults','AOAPIC defaults'],['/testing/arr-defaults','ARR defaults'],['/testing/defaults-compare','Defaults compare'],['/roadmap','RoadMap'],['/roadmap/forward','ရှေ့သို့ချီ'],['/roadmap/forward/time-map','Time Map 2026–2030'],['/roadmap/notebooks','Notebooks'],['/roadmap/notebooks/advanced-agentic-ai','Advanced Agentic AI'],['/roadmap/notebooks/cisco-fdtn-model','Cisco Foundation-Sec-8B CWE Q&A'],['/roadmap/notebooks/f1-qualifying-prediction','F1 Australian GP Qualifying Prediction'],['/roadmap/notebooks/simple-agentic-ai','Simple Agentic AI Chat'],['/roadmap/rag-documents','RAG documents'],['/roadmap/foundation-sec-8b','Foundation-Sec-8B'],['/zfrontier/notebooks','Notebooks'],['/zfrontier/notebooks/advanced-agentic-ai','Advanced Agentic AI'],['/zfrontier/notebooks/cisco-fdtn-model','Cisco Foundation-Sec-8B CWE Q&A'],['/zfrontier/notebooks/f1-qualifying-prediction','F1 Australian GP Qualifying Prediction'],['/zfrontier/notebooks/simple-agentic-ai','Simple Agentic AI Chat'],['/zfrontier/rag-documents','RAG documents'],['/zfrontier/foundation-sec-8b','Foundation-Sec-8B'],['/mindmap','MindMap'],['/visitors','Visitors'],['/visitors/trends','Visitor Trends'],['/visitors/countries','Visitors by country'],['/status','Status'],
+['/aci-policy','ACI Policy'],['/aci-policy/policy-universe','Policy Universe'],['/aci-policy/apic-controllers','APIC Controllers'],['/aci-policy/tenants','Tenants'],['/aci-policy/fabric-access-inventory','Fabric, Access, Inventory'],['/aci-policy/vm-domains','VM Domains'],['/aci-policy/layer-4-7-services','Layer 4-7 Services'],['/aci-policy/aaa-security','AAA, Security'],['/aci-policy/outside-network','Outside Network'],['/aci-policy/application-profile','Application Profile'],['/aci-policy/endpoint-group','Endpoint Group'],['/aci-policy/bridge-domain','Bridge Domain'],['/aci-policy/subnet','Subnet'],['/aci-policy/vrf','VRF'],['/aci-policy/contract','Contract'],['/aci-policy/subject','Subject'],['/aci-policy/filter','Filter'],['/aci-gui/pod-policy-group','Pod Policy Group'],['/aci-policy/policy-tenant','Policy Tenant'],['/aci-policy/aci-lab-guide-policy','Demo ACI Provisioning'],['/aci-policy/aci-lab-guide-policy/diagrams','Demo Guide Diagrams'],['/aci-policy/aci-lab-guide-policy/diagrams/aci-p01-tenant','Demo Guide Tenant aci_p01_tenant'],['/aci-policy/aci-lab-guide-policy/diagrams/msite-p01-tenant','Demo Guide Tenant msite_p01_tenant'],['/aci-policy/aci-lab-guide-policy/diagrams/access-policies','Demo Guide Access Policies'],['/aci-policy/aci-lab-guide-policy/diagrams/l3out','Demo Guide L3Out'],['/aci-policy/aci-lab-guide-policy/diagrams/contracts','Demo Guide Contracts'],['/aci-policy/aci-lab-guide-policy/diagrams/summary','Demo Guide Object Summary'],['/aci-policy/aaep','AAEP'],['/aci-policy/date-time-policy','Date Time Policy'],['/aci-policy/domain','Domain'],['/aci-policy/interface-profiles','Interface Profiles'],['/aci-policy/switch-profiles','Switch Profiles'],['/aci-policy/vlan-pool','VLAN Pool'],['/aci-gui-forms/WIP/gui-map','GUI Map'],['/aci-gui/create-pod-policy-group','Create Pod Policy Group'],['/aci-gui/create-bridge-domain-step3','Create Bridge Domain (step 3)'],['/aci-gui/create-subnet','Create Subnet'],['/aci-gui/create-application-profile','Create Application Profile'],['/aci-gui/create-management-epg','Create Management EPG'],['/aci-gui/static-node-management-addresses','Static Node Management Addresses'],['/aci-gui/create-fabric-policies','Create Fabric Policies'],['/aci-gui/create-access-policies','Create Access Policies'],['/aci-gui/create-tenant','Create Tenant'],['/aci-gui/create-vrf','Create VRF'],['/aci-gui/create-endpoint-group','Create Endpoint Group'],['/aci-gui/contracts-between-tenants','Contracts Between Tenants'],['/aci-gui/create-filter','Create Filter'],['/aci-gui/create-contract','Create Contract'],['/aci-gui/create-management-contracts','Create Management Contracts'],
+['/aci-lab-guide','ACI Demo Guide'],['/aci-lab-guide/introduction','Introduction'],['/aci-lab-guide/introduction/landing','Introduction'],['/aci-lab-guide/aci-basics','ACI Basics'],['/aci-lab-guide/aci-basics/aci-concepts','ACI Concepts'],['/aci-lab-guide/aci-basics/login-to-apic','Login to APIC'],['/aci-lab-guide/access-policies','Access Policies'],['/aci-lab-guide/access-policies/why-access-policies','Why Access Policies?'],['/aci-lab-guide/access-policies/vlan-pool','VLAN Pools'],['/aci-lab-guide/access-policies/physical-domain','Physical Domains'],['/aci-lab-guide/access-policies/l3-domain','L3 Domains'],['/aci-lab-guide/access-policies/aaep','AEP Policy'],['/aci-lab-guide/access-policies/access-interface-policy-group','Access Interface Policy Group'],['/aci-lab-guide/access-policies/pc-interface-policy-group','PC Interface Policy Group'],['/aci-lab-guide/access-policies/vpc-interface-policy-group','vPC Interface Policy Group'],['/aci-lab-guide/access-policies/interface-wizard-access','Interface Wizard for Access'],['/aci-lab-guide/access-policies/interface-wizard-pc','Interface Wizard for PC'],['/aci-lab-guide/access-policies/interface-wizard-vpc','Interface Wizard for VPC'],['/aci-lab-guide/access-policies/verify-access-policies','Verify all Access Policies'],['/aci-lab-guide/vmm','ACI VMM Integration'],['/aci-lab-guide/vmm/vmware-integration','VMware ACI Integration'],['/aci-lab-guide/vmm/configure-vmm-domain','Configure VMM Domain'],['/aci-lab-guide/vmm/explore-vcenter','Explore vCenter Integration'],['/aci-lab-guide/vmm/add-hosts-to-dvs','Add Hosts to DVS'],['/aci-lab-guide/tenants','Tenants'],['/aci-lab-guide/tenants/about-tenants','What are Tenants?'],['/aci-lab-guide/tenants/create-tenant','Create Tenant'],['/aci-lab-guide/tenants/create-l3out','Create L3 OUT'],['/aci-lab-guide/tenants/what-are-contracts','What are Contracts?'],['/aci-lab-guide/tenants/l3out-contracts','L3Out Contracts'],['/aci-lab-guide/tenants/create-bridge-domains','Create Bridge Domains'],['/aci-lab-guide/tenants/create-mgmt-bridge-domain','Create Mgmt Bridge Domain'],['/aci-lab-guide/tenants/dhcp-relay','Create DHCP Relay'],['/aci-lab-guide/tenants/create-mgmt-application-profile','Create MGMT Application Profile'],['/aci-lab-guide/tenants/add-mgmt-portgroup','Add Mgmt PortGroup to VM'],['/aci-lab-guide/tenants/create-application-profile','Create Application Profile'],['/aci-lab-guide/tenants/verify-tenant-policies','Verify all Tenant Policies'],['/aci-lab-guide/tenants/add-port-groups-to-vm','Add Port Groups to VM'],['/aci-lab-guide/tenants/create-l2-bridge-domain','Create L2 Bridge Domain'],['/aci-lab-guide/tenants/create-l2-app-profile','Create L2 App Profile'],['/aci-lab-guide/day2','Day 2 Operations'],['/aci-lab-guide/day2/aci-testing','ACI Testing'],['/aci-lab-guide/day2/aci-troubleshooting','ACI Troubleshooting'],['/aci-lab-guide/day2/fault-counts','Fault Counts'],['/aci-lab-guide/esg','Endpoint Security Group'],['/aci-lab-guide/esg/concepts','ESG Concepts'],['/aci-lab-guide/esg/configure-esg','ESG'],['/aci-lab-guide/segmentation','ACI Segmentation'],['/aci-lab-guide/segmentation/concepts','MicroSegmentation Concepts'],['/aci-lab-guide/segmentation/microsegmentation','ACI MicroSegmentation'],['/aci-lab-guide/nexus-dashboard','Nexus Dashboard'],['/aci-lab-guide/nexus-dashboard/platform','Platform'],['/aci-lab-guide/orchestrator','Orchestrator'],['/aci-lab-guide/orchestrator/about-multi-site','About Multi-Site'],['/aci-lab-guide/orchestrator/schema','ND Orchestrator Schema'],['/aci-lab-guide/orchestrator/network','ND Orchestrator Network'],['/aci-lab-guide/orchestrator/vmm','ND Orchestrator VMM'],['/aci-lab-guide/orchestrator/deploy','ND Orchestrator Deploy'],['/aci-lab-guide/orchestrator/endpoints-across-sites','Endpoints across sites'],['/aci-lab-guide/insights','Insights'],['/aci-lab-guide/insights/nd-insights','ND Insights'],['/aci-lab-guide/conclusion','Conclusion'],['/aci-lab-guide/conclusion/conclusion','Conclusion'],['/aci-lab-guide/conclusion/finished','Finished'],['/aci-lab-guide/references','References'],['/aci-lab-guide/references/fabric-initialization','Initializing the ACI Fabric'],['/aci-lab-guide/references/connecting-infra-nodes','Connecting INFRA nodes'],['/aci-lab-guide/references/deploying-multisite-orch','Deploying MultiSite Orch.'],['/aci-lab-guide/references/multisite-apic-setup','Multi-Site APIC Setup'],['/aci-lab-guide/references/multisite-orch-setup','Multi-Site Orch. Setup'],['/mcp-servers','MCP Servers'],['/mcp-servers/aci','MCP for ACI'],['/mcp-servers/nexus-dashboard','MCP for Nexus Dashboard'],['/mcp-servers/dna','MCP for DNA'],['/zfrontier/mcp-servers','MCP Servers'],['/zfrontier/mcp-servers/aci','MCP for ACI'],['/zfrontier/mcp-servers/nexus-dashboard','MCP for Nexus Dashboard'],['/zfrontier/mcp-servers/dna','MCP for DNA'],
+['/iac/form','IaC: Universal Provisioning Form'],['/iac/netbox','IaC: NetBox'],['/iac/super-portal','IaC: Super Portal Front End'],['/iac/pipeline','IaC: Pipeline'],['/iac/approval','IaC: Approval'],['/iac/dev-prod','IaC: Development and Production'],['/iac/aci','IaC: ACI'],['/iac/sda','IaC: SDA'],['/iac/sdwan','IaC: SD-WAN'],['/iac/vxlan-evpn','IaC: VXLAN EVPN'],['/iac/nexus-dashboard','IaC: Nexus Dashboard'],['/iac/meraki','IaC: Meraki'],['/iac/loadbalancer','IaC: Load Balancer'],['/ARR','ARR — ACI Fabric Report'],['/ARR/visitors','ARR visitors'],['/ARR/health','ARR health'],['/ARR/nodes','ARR nodes'],['/ARR/tenants','ARR tenants'],['/ARR/vrfs','ARR VRFs'],['/ARR/bds','ARR bridge domains'],['/ARR/aps','ARR application profiles'],['/ARR/epgs','ARR EPGs'],['/ARR/contracts','ARR contracts'],['/ARR/l3outs','ARR L3Outs'],['/ARR/endpoints','ARR endpoints'],['/ARR/faults','ARR faults'],['/ARR/faults/critical','ARR critical faults'],['/ARR/faults/major','ARR major faults'],['/ARR/faults/minor','ARR minor faults'],['/ARR/faults/warning','ARR warning faults'],['/iac/firewall','IaC: Firewall']];
+function norm(p){p=String(p||'').split('?')[0].replace(/\/index\.html$/,'').replace(/\/+$/,'');return p||'/'}
+function today(){return new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne'}).format(new Date())}
+function spark(vals){var w=Math.max(40,vals.length*7),h=18,m=Math.max.apply(null,vals.concat([1])),s='<svg class="sp" width="'+w+'" height="'+h+'">';
+ vals.forEach(function(v,i){var bh=v?Math.max(2,v/m*h):1;s+='<rect x="'+(i*7)+'" y="'+(h-bh)+'" width="5" height="'+bh+'" fill="'+(v?'#22c55e':'#8886')+'"/>'});return s+'</svg>'}
+function slope7(vals){var a=vals.slice(-7),n=a.length;if(n<2)return 0;var sx=0,sy=0,sxy=0,sx2=0;for(var i=0;i<n;i++){sx+=i;sy+=a[i];sxy+=i*a[i];sx2+=i*i}var d=n*sx2-sx*sx;return d?(n*sxy-sx*sy)/d:0}
+function groupOf(path){var best=null,bl=-1;GROUPS.forEach(function(g){g.urls.forEach(function(u){var nu=norm(u);if(nu==='/'){if(path==='/'&&1>bl){bl=1;best=g.name}}else if(path===nu||path.indexOf(nu+'/')===0){if(nu.length>bl){bl=nu.length;best=g.name}}})});if(!best&&path.indexOf('/iac')===0)return 'IaC';return best||'Other'}
+var state={col:'total',dir:-1,group:true,q:''};
+function cmp(a,b,col,dir){
+ var av,bv;
+ if(col==='page'){av=(a.name||a.path).toLowerCase();bv=(b.name||b.path).toLowerCase();return av<bv?-dir:av>bv?dir:0}
+ if(col==='total'){av=a.total;bv=b.total;return av<bv?-dir:av>bv?dir:a.path.localeCompare(b.path)}
+ if(col==='trend'){av=a._slope;bv=b._slope;return av<bv?-dir:av>bv?dir:a.path.localeCompare(b.path)}
+ if(col==='first'){av=a.first||'9999';bv=b.first||'9999';return av<bv?-dir:av>bv?dir:0}
+ if(col==='last'){av=a.last||'';bv=b.last||'';return av<bv?-dir:av>bv?dir:0}
+ if(col.indexOf('day:')===0){var d=col.slice(4);av=a.days[d]||0;bv=b.days[d]||0;return av<bv?-dir:av>bv?dir:a.path.localeCompare(b.path)}
+ return a.path.localeCompare(b.path)
+}
+function th(label,key,cls){var on=state.col===key;var ar=on?(state.dir>0?'\u25B2':'\u25BC'):'\u2195';return '<th class="s '+(cls||'')+(on?' on':'')+'" data-k="'+esc(key)+'">'+label+'<span class="ar">'+ar+'</span></th>'}
+fetch('/data/visitors.json?'+Date.now()).then(function(r){return r.json()}).then(function(d){
+ var M={};function get(p,t){p=norm(p);if(!M[p])M[p]={path:p,title:t||'',days:{},total:0};if(t&&!M[p].title)M[p].title=t;return M[p]}
+ KNOWN.forEach(function(k){get(k[0],k[1]).name=k[1]});
+ (d.pages||[]).forEach(function(x){var o=get(x.path,x.title);o.total+=(+x.count||0);var ds=x.days||{};for(var k in ds){o.days[k]=(o.days[k]||0)+(+ds[k]||0)}});
+ var start=d.since||'2026-11-07',end=today(),days=[];var dt=new Date(start+'T00:00:00Z'),e=new Date(end+'T00:00:00Z');
+ while(dt<=e){days.push(dt.toISOString().slice(0,10));dt.setUTCDate(dt.getUTCDate()+1)}
+ var L=Object.keys(M).map(function(k){var o=M[k];o.first=null;o.last=null;days.forEach(function(x){if(o.days[x]){if(!o.first)o.first=x;o.last=x}});if(!o.total){days.forEach(function(x){o.total+=o.days[x]||0})}o._vals=days.map(function(x){return o.days[x]||0});o._slope=slope7(o._vals);o.group=groupOf(o.path);return o});
+ var rd=days.slice().reverse();
+ var ncols=6+rd.length;
+ function link(o){var h=o.path==='/'?'/':o.path+'/';return '<a href="'+esc(h)+'">'+esc(o.name||o.path)+'</a>'+(o.name?'':' <span class="muted">'+esc(o.title)+'</span>')+(o.name?' <span class="muted">'+esc(o.path)+'</span>':'')}
+ function head(){document.querySelector('#ph-t thead').innerHTML='<tr>'+th('#','total','n')+th('Page','page')+th('Total','total','n')+rd.map(function(x){return th(lab(x),'day:'+x,'n')}).join('')+th('Trend','trend')+th('First visit','first')+th('Last visit','last')+'</tr>';
+  document.querySelectorAll('#ph-t thead th.s').forEach(function(el){el.addEventListener('click',function(){var k=el.getAttribute('data-k');if(state.col===k)state.dir=-state.dir;else{state.col=k;state.dir=(k==='page'||k==='first')?1:-1}draw()})})}
+ function rowHtml(o,i){return '<tr data-path="'+esc(o.path)+'"><td class="n">'+(i+1)+'</td><td>'+link(o)+'</td><td class="n"><b>'+o.total+'</b></td>'+rd.map(function(x){var v=o.days[x]||0;return '<td class="n'+(v?'':' z')+'">'+v+'</td>'}).join('')+'<td>'+spark(o._vals)+'</td><td>'+(o.first?lab(o.first):'<span class="muted">not yet</span>')+'</td><td>'+(o.last?lab(o.last):'<span class="muted">not yet</span>')+'</td></tr>'}
+ function draw(){var q=(state.q||'').toLowerCase();var rows=L.filter(function(o){return !q||(o.path+' '+(o.name||'')+' '+o.title+' '+o.group).toLowerCase().indexOf(q)>=0});
+  head();
+  var html='';
+  if(!rows.length){document.querySelector('#ph-t tbody').innerHTML='<tr><td colspan="'+ncols+'" class="muted">No pages match.</td></tr>';return}
+  if(state.group){
+   var by={};rows.forEach(function(o){(by[o.group]=by[o.group]||[]).push(o)});
+   var n=0;
+   GROUP_ORDER.forEach(function(gn){var list=by[gn];if(!list||!list.length)return;
+    list=list.slice().sort(function(a,b){return cmp(a,b,state.col,state.dir)});
+    var gt=list.reduce(function(a,o){return a+o.total},0);
+    html+='<tr class="gh"><td colspan="'+ncols+'">'+esc(gn)+' <span class="muted">\u00b7 '+list.length+' page'+(list.length===1?'':'s')+' \u00b7 total '+gt+'</span></td></tr>';
+    list.forEach(function(o){n++;html+=rowHtml(o,n-1)});
+   });
+   Object.keys(by).forEach(function(gn){if(GROUP_ORDER.indexOf(gn)>=0)return;var list=by[gn].slice().sort(function(a,b){return cmp(a,b,state.col,state.dir)});var gt=list.reduce(function(a,o){return a+o.total},0);html+='<tr class="gh"><td colspan="'+ncols+'">'+esc(gn)+' <span class="muted">\u00b7 '+list.length+' \u00b7 total '+gt+'</span></td></tr>';list.forEach(function(o){n++;html+=rowHtml(o,n-1)})});
+  }else{
+   rows=rows.slice().sort(function(a,b){return cmp(a,b,state.col,state.dir)});
+   html=rows.map(function(o,i){return rowHtml(o,i)}).join('');
+  }
+  document.querySelector('#ph-t tbody').innerHTML=html}
+ draw();
+ document.getElementById('ph-q').addEventListener('input',function(){state.q=this.value;draw()});
+ document.getElementById('ph-grp').addEventListener('change',function(){state.group=!!this.checked;draw()});
+ var seen={},cum=0,V=[];
+ days.forEach(function(x,i){var ps=L.filter(function(o){return o.days[x]}).map(function(o){return {o:o,v:o.days[x]}}).sort(function(a,b){return b.v-a.v});
+  var tot=ps.reduce(function(a,p){return a+p.v},0);cum+=tot;var nw=ps.filter(function(p){return !seen[p.o.path]});ps.forEach(function(p){seen[p.o.path]=1});
+  V.push({n:i+1,day:x,tot:tot,cum:cum,ps:ps,nw:nw})});
+ document.getElementById('ph-v').innerHTML=V.reverse().map(function(v,i){return '<li><details'+(i===0?' open':'')+'><summary><b>v'+v.n+'</b>'+(i===0?'<span class="tag">today, live</span>':'')+' \u00b7 '+lab2(v.day)+' \u00b7 <b>'+v.tot+'</b> visitors on '+v.ps.length+' page'+(v.ps.length===1?'':'s')+' \u00b7 running total '+v.cum+(v.nw.length?' \u00b7 <span class="new">'+v.nw.length+' new page'+(v.nw.length===1?'':'s')+'</span>':'')+'</summary>'+
+  (v.ps.length?'<table class="ph-snap"><thead><tr><th class="s" data-k="i">#</th><th class="s" data-k="p">Page</th><th class="s n" data-k="v">Visitors that day</th><th class="s n" data-k="c">Total to date</th></tr></thead><tbody>'+v.ps.map(function(p,j){var c=0;days.forEach(function(x){if(x<=v.day)c+=p.o.days[x]||0});return '<tr data-p="'+esc((p.o.name||p.o.path).toLowerCase())+'" data-v="'+p.v+'" data-c="'+c+'"><td>'+(j+1)+'</td><td>'+link(p.o)+(v.nw.indexOf(p)>=0?' <span class="new">new</span>':'')+'</td><td class="n">'+p.v+'</td><td class="n">'+c+'</td></tr>'}).join('')+'</tbody></table>':'<p class="muted">No visits recorded that day.</p>')+'</details></li>'}).join('');
+ document.getElementById('ph-v').addEventListener('click',function(ev){var th=ev.target.closest('th.s');if(!th)return;var table=th.closest('table');var k=th.getAttribute('data-k');var tb=table.querySelector('tbody');var rows=[].slice.call(tb.querySelectorAll('tr'));var dir=th.classList.contains('asc')?-1:1;table.querySelectorAll('th.s').forEach(function(x){x.classList.remove('asc','desc','on')});th.classList.add('on',dir>0?'asc':'desc');rows.sort(function(a,b){var av,bv;if(k==='p'){av=a.getAttribute('data-p');bv=b.getAttribute('data-p');return av<bv?-dir:av>bv?dir:0}av=+(k==='v'?a.getAttribute('data-v'):k==='c'?a.getAttribute('data-c'):a.cells[0].textContent);bv=+(k==='v'?b.getAttribute('data-v'):k==='c'?b.getAttribute('data-c'):b.cells[0].textContent);return av<bv?-dir:av>bv?dir:0});rows.forEach(function(r,i){r.cells[0].textContent=String(i+1);tb.appendChild(r)})});
+}).catch(function(){document.querySelector('#ph-t tbody').innerHTML='<tr><td class="muted">Page history will appear after the next refresh.</td></tr>'});
+
+function makeSortable(sel, numCols){
+ function attach(){var table=document.querySelector(sel);if(!table||table.dataset.sortReady)return;var thead=table.tHead;if(!thead)return;var ths=thead.querySelectorAll('th');if(!ths.length)return;table.dataset.sortReady='1';
+  ths.forEach(function(th,ci){th.classList.add('s');th.style.cursor='pointer';th.addEventListener('click',function(){var tb=table.tBodies[0];if(!tb)return;var rows=[].slice.call(tb.rows);if(!rows.length||(rows[0].cells.length===1&&rows[0].cells[0].colSpan>1))return;var dir=th.classList.contains('asc')?-1:1;ths.forEach(function(x){x.classList.remove('asc','desc','on');var ar=x.querySelector('.ar');if(ar)ar.textContent='\u2195'});th.classList.add('on',dir>0?'asc':'desc');var ar=th.querySelector('.ar');if(!ar){ar=document.createElement('span');ar.className='ar';ar.style.marginLeft='3px';ar.style.fontSize='11px';th.appendChild(ar)}ar.textContent=dir>0?'\u25B2':'\u25BC';
+   var isNum=numCols.indexOf(ci)>=0;rows.sort(function(a,b){var at=(a.cells[ci]?a.cells[ci].textContent:'').trim();var bt=(b.cells[ci]?b.cells[ci].textContent:'').trim();if(isNum){var an=parseFloat(at.replace(/[^0-9.-]/g,''))||0,bn=parseFloat(bt.replace(/[^0-9.-]/g,''))||0;return an<bn?-dir:an>bn?dir:0}at=at.toLowerCase();bt=bt.toLowerCase();return at<bt?-dir:at>bt?dir:0});rows.forEach(function(r,i){if(r.cells[0]&&numCols.indexOf(0)>=0)r.cells[0].textContent=String(i+1);tb.appendChild(r)})})})}
+ var tries=0;var t=setInterval(function(){attach();tries++;if(tries>40)clearInterval(t)},250)}
+ var st=document.createElement('style');st.textContent='#loc th.s,#pages th.s,#refs th.s{cursor:pointer;user-select:none}#loc th.s:hover,#pages th.s:hover,#refs th.s:hover{color:#8cf}#loc th.s .ar,#pages th.s .ar,#refs th.s .ar{opacity:.45;font-size:11px;margin-left:3px}#loc th.s.on .ar,#pages th.s.on .ar,#refs th.s.on .ar{opacity:1;color:#8cf}';document.head.appendChild(st);
+ makeSortable('#loc',[0,3]);makeSortable('#pages',[0,2]);makeSortable('#refs',[0,2]);
+})();</script></section><!--/pagehist-->
+<h2>Where visitors are</h2>
+<table id="loc"><thead><tr><th>#</th><th>Country</th><th>Regions</th><th class="n">Visitors</th></tr></thead><tbody><tr><td class="muted" colspan="4">Loading…</td></tr></tbody></table>
+<h2>Pages visited</h2>
+<table id="pages"><thead><tr><th>#</th><th>Page</th><th class="n">Visitors</th></tr></thead><tbody></tbody></table>
+<h2>Where they came from</h2>
+<table id="refs"><thead><tr><th>#</th><th>Referrer</th><th class="n">Visitors</th></tr></thead><tbody></tbody></table>
+<h2>Browsers</h2>
+<p class="muted">From GoatCounter browser families for the tracking window.</p>
+<table id="browsers"><thead><tr><th>#</th><th>Browser</th><th class="n">Visitors</th></tr></thead><tbody><tr><td class="muted" colspan="3">Loading…</td></tr></tbody></table>
+<h2>Operating systems</h2>
+<table id="systems"><thead><tr><th>#</th><th>System</th><th class="n">Visitors</th></tr></thead><tbody><tr><td class="muted" colspan="3">Loading…</td></tr></tbody></table>
+<h2>Screen size</h2>
+<p class="muted">GoatCounter size buckets (phone, tablet, desktop, desktop HD). A missing table means the size count has not been published in <code>/data/visitors.json</code> yet.</p>
+<table id="sizes"><thead><tr><th>#</th><th>Size</th><th class="n">Visitors</th></tr></thead><tbody><tr><td class="muted" colspan="3">Loading…</td></tr></tbody></table>
+<p class="muted" id="upd"></p>
+<p class="muted">Full live dashboard: <a href="https://amoeoo-coles.goatcounter.com/">amoeoo-coles.goatcounter.com</a></p><!--vh--><section aria-label="Version history" id="version-history"><h2>Version history</h2><p>49 versions: 48 committed versions from git history of <code>visitors/index.html</code> plus the current one. Each entry is a real commit of this page (summary = commit message, with the page size at that commit). Archived snapshots are recovered from git and are not live.</p><ul><li><b>v49 (current)</b> · 24 Nov 2026 12:11 AEDT (Melbourne time) · Remove the ACI GUI Forms card from the Visitors hub. The ACI GUI Forms menu pill is unchanged. · <a href="./">this page</a></li><li><b>v48</b> · 23 Nov 2026 09:46 AEDT (Melbourne time) · Compact colourful menu, unique-visitor badge popover with a 30-day sparkline, browser/OS/screen-size tables, and country names linking to /visitors/countries/#country-xx <span style="color:#bbb">page 126.2 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/2ef87d561ed24a42b8920008151e51fc9aba13c5"><code>2ef87d5</code></a> on <code>main</code> · <a href="versions/v48-2ef87d5/">archived snapshot</a></li><li><b>v47</b> · 11 Nov 2026 08:16 AEDT (Melbourne time) · Daily visitor graph refreshed by the Report 17 build (5 days, 2026-11-07 to 2026-11-11, source GoatCounter API /api/v0/stats/total) · <a href="versions/v47-9525ff2/">archived snapshot</a></li><li><b>v46</b> · 11 Nov 2026 05:08 AEDT (Melbourne time) · Add clickable hourly visitor details and a country section. <span style="color:#bbb">page 76.4 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/52188898ee1e62b5149b96c9b702f968e260cf16"><code>5218889</code></a> on <code>page/visitors-geo-20261111-0503</code> · <a href="/visitors/">archived snapshot</a></li><li><b>v45</b> · 11 Nov 2026 05:07 AEDT (Melbourne time) · Fix Fault Counts pages so the Copy-DN helper is a script, not visible text. <span style="color:#bbb">page 75.1 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/573861400e0937ed1d3252b963b8174183ea3676"><code>5738614</code></a> on <code>page/monitoring-faults-20261111-0502</code> · <a href="/visitors/">archived snapshot</a></li><li><b>v44</b> · 11 Nov 2026 05:04 AEDT (Melbourne time) · Add AOAPIC and ARR Fault Counts pages under Monitoring. <span style="color:#bbb">page 75.1 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/e70ed809f775a854fa17e89b9957b85c8d01ea1c"><code>e70ed80</code></a> on <code>page/monitoring-faults-20261111-0502</code> · <a href="/visitors/">archived snapshot</a></li><li><b>v43</b> · 11 Nov 2026 00:32 AEDT (Melbourne time) · Move Have an idea and Dark to a toolbar row above the menu. <span style="color:#bbb">page 75.0 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/179aba21890251e5db04c296b248f6a4ab83416f"><code>179aba2</code></a> on <code>page/tools-position-20261111-0030</code> · <a href="/visitors/">archived snapshot</a></li></ul><details><summary>Show all 49 versions</summary><ul><li><b>v42</b> · 11 Nov 2026 00:20 AEDT (Melbourne time) · Flatten the site menu into an even grid and fix hourly visitor counts. <span style="color:#bbb">page 74.5 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/1793d846a2ea71f6af2c3f745eb675cdc8abe782"><code>1793d84</code></a> on <code>page/menu-flat-20261111-0020</code> · <a href="/visitors/">archived snapshot</a></li><li><b>v41</b> · 11 Nov 2026 00:04 AEDT (Melbourne time) · Fix site-wide light/dark theme so the menu and page body stay in sync <span style="color:#bbb">page 69.7 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/b6a3ba1c6a7adf597ae0dc9e0b101f9fac1bc03d"><code>b6a3ba1</code></a> on <code>page/clickable-dn-20261110-2356</code> · <a href="/visitors/">archived snapshot</a></li><li><b>v40</b> · 10 Nov 2026 23:58 AEDT (Melbourne time) · Clickable one-per-line APIC classes and DNs, hide ACI GUI Forms index, add ACI Demo Guide Policy <span style="color:#bbb">page 60.9 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/843280027fa0dc2b66bd7ecc499872b51937b386"><code>8432800</code></a> on <code>page/clickable-dn-20261110-2356</code> · <a href="/visitors/">archived snapshot</a></li><li><b>v39</b> · 10 Nov 2026 23:31 AEDT (Melbourne time) · Add ACI Demo Guide pages aligned with Cisco Live LTRDCN-2143 pod1 <span style="color:#bbb">page 62.6 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/46b96ca1ada0bd5fe93705c4748bdf4064bf7982"><code>46b96ca</code></a> on <code>page/aci-lab-guide-20261110-2330</code> · <a href="/visitors/">archived snapshot</a></li><li><b>v38</b> · 10 Nov 2026 22:58 AEDT (Melbourne time) · Add Configuring Policies and Tenants recipe list to ACI GUI Forms <span style="color:#bbb">page 57.0 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/d494e1ff5fe613779e8f182aadbdac42caa8211e"><code>d494e1f</code></a> on <code>page/aci-gui-recipes-20261110-2255</code> · <a href="/visitors/">archived snapshot</a></li><li><b>v37</b> · 10 Nov 2026 21:12 AEDT (Melbourne time) · Add MCP Servers pages for ACI, Nexus Dashboard and DNA <span style="color:#bbb">page 55.5 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/af93c35e9d5a53e0edbb38b606419e724f8a9038"><code>af93c35</code></a> on <code>page/mcp-servers-20261110-2107</code> · <a href="/visitors/">archived snapshot</a></li><li><b>v36</b> · 10 Nov 2026 20:11 AEDT (Melbourne time) · Add visitor counters, version history and GitHub feedback to ACI Policy and ACI GUI Forms <span style="color:#bbb">page 55.0 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/776d487f72759abe2f168308995e4d703ce20062"><code>776d487</code></a> on <code>page/aci-pages-tracking-20261110-2004</code> · <a href="/visitors/">archived snapshot</a></li><li><b>v35</b> · 10 Nov 2026 18:30 AEDT (Melbourne time) · ACI Policy Universe tree (original 15 boxes + extras); Create Subnet screenshot and newer APIC fields; Policy Universe first in menu <span style="color:#bbb">page 52.9 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/e0a51c3a9815093cfa7fedef71856fda7db87922"><code>e0a51c3</code></a> on <code>page/aci-policy-tree-20261110-1821</code> · <a href="/visitors/">archived snapshot</a></li><li><b>v34</b> · 10 Nov 2026 18:14 AEDT (Melbourne time) · ACI Policy (+Pod Policy Group, Policy Tenant) and ACI GUI Forms (GUI Map, 6 forms); menu groups <span style="color:#bbb">page 52.8 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/453dd8a9ab9778eb71113d881176d1910eb1496c"><code>453dd8a</code></a> on <code>page/aci-policy-gui-forms-20261110-1805</code> · <a href="/visitors/">archived snapshot</a></li><li><b>v33</b> · 10 Nov 2026 10:03 AEDT (Melbourne time) · Hide Meraki and GitLab dashboards from the public site. <span style="color:#bbb">page 51.9 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/b31680912faabc7fde19276cade9057db38a0286"><code>b316809</code></a> on <code>page/hide-gitlab-dashboard-20261110-1000</code> · <a href="/visitors/">archived snapshot</a></li><li><b>v32</b> · 10 Nov 2026 09:38 AEDT (Melbourne time) · Hide GitLab tasks hub: menu opens /gitlab/ directly. <span style="color:#bbb">page 52.1 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/c782e27d64f3d4ce1c5294a26edfbb9c393791b9"><code>c782e27</code></a> on <code>page/hide-gitlab-hub-20261110-0935</code> · <a href="/visitors/">archived snapshot</a></li><li><b>v31</b> · 10 Nov 2026 09:27 AEDT (Melbourne time) · Fix Meraki/GitLab menu icons (literal emoji after inject sanitize) <span style="color:#bbb">page 52.0 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/ec696848b1e38d22e6670b63fcfcdf83da91091c"><code>ec69684</code></a> on <code>page/meraki-gitlab-icons-20261110-0927</code> · <a href="/visitors/">archived snapshot</a></li><li><b>v30</b> · 10 Nov 2026 09:22 AEDT (Melbourne time) · Add Meraki and GitLab Dashboard pages with main-menu groups <span style="color:#bbb">page 52.1 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/4dd715d2cbf5462192ada7f8a79f145823a3546a"><code>4dd715d</code></a> on <code>page/meraki-gitlab-20261110-0922</code> · <a href="/visitors/">archived snapshot</a></li><li><b>v29</b> · 10 Nov 2026 08:04 AEDT (Melbourne time) · Report 17 daily AOAPIC status 2026-11-10 08:04 <span style="color:#bbb">page 52.0 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/1d051d2eb3374dcb8d03df8f49c3ea89076df45c"><code>1d051d2</code></a> on <code>report17</code> · <a href="/visitors/">archived snapshot</a></li><li><b>v28</b> · 10 Nov 2026 06:15 AEDT (Melbourne time) · Add ITIL group with AOAPIC, ARR and Site Wiki pages. <span style="color:#bbb">page 45.1 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/23b0d2b7ab056f9e23da1c6a69087d5dd2ffc241"><code>23b0d2b</code></a> on <code>page/itil-20261110-0615</code> · <a href="versions/v28-23b0d2b/">archived snapshot</a></li><li><b>v27</b> · 10 Nov 2026 06:06 AEDT (Melbourne time) · Add AOAPIC and ARR nac-test defaults pages with a side-by-side compare. <span style="color:#bbb">page 44.6 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/e96fed075ee4fdb6a0464a9ee7d04f0b07ec3ca8"><code>e96fed0</code></a> on <code>page/nac-defaults-20261110-0606</code> · <a href="versions/v27-e96fed0/">archived snapshot</a></li><li><b>v26</b> · 10 Nov 2026 05:36 AEDT (Melbourne time) · Add full NaC models for AOAPIC and ARR, with menu and YAML Model cards. <span style="color:#bbb">page 44.4 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/e393fec72ea4c7a7df9cc400d2cab58f3f124b8d"><code>e393fec</code></a> on <code>page/nac-full-models-20261110-0536</code> · <a href="versions/v26-e393fec/">archived snapshot</a></li><li><b>v25</b> · 10 Nov 2026 05:33 AEDT (Melbourne time) · Add NB HW Inventory, tenant containment diagrams, YAML viewers, and Visitor Trends. <span style="color:#bbb">page 44.0 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/5bac45fc1912dca235514a30d6aaca1841122b38"><code>5bac45f</code></a> on <code>page/nb-hw-inventory-20261110-0533</code> · <a href="versions/v25-5bac45f/">archived snapshot</a></li><li><b>v24</b> · 10 Nov 2026 05:19 AEDT (Melbourne time) · Add MindMap page, RoadMap menu group, suggestion link and menu badges <span style="color:#bbb">page 35.8 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/5a53cc3fe9e2bb4087934f1cceb3cf8603a4c983"><code>5a53cc3</code></a> on <code>page/mindmap-roadmap-20261110-0518</code> · <a href="versions/v24-5a53cc3/">archived snapshot</a></li><li><b>v23</b> · 10 Nov 2026 04:58 AEDT (Melbourne time) · NB Tenant Diagrams: summary and per-tenant SVG pages for NetBox-driven ACI tenants (t200u) <span style="color:#bbb">page 34.4 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/5d70470dc842d2e0a663d1e5b14515ca2ed0f7d6"><code>5d70470</code></a> on <code>page/nb-tenant-diagrams-20261110-0458</code> · <a href="versions/v23-5d70470/">archived snapshot</a></li><li><b>v22</b> · 10 Nov 2026 04:41 AEDT (Melbourne time) · Status page (green/amber/red) under Visitors group in menu <span style="color:#bbb">page 34.2 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/8b996975e3ac5d546b841e34a0bcbb7728bace00"><code>8b99697</code></a> on <code>page/status-20261110-0442</code> · <a href="versions/v22-8b99697/">archived snapshot</a></li><li><b>v21</b> · 10 Nov 2026 04:27 AEDT (Melbourne time) · New RoadMap page (/roadmap/) placed before Visitors in the main menu <span style="color:#bbb">page 34.1 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/e56ad4b684864a5738f81c9bfa7150380e5a188c"><code>e56ad4b</code></a> on <code>page/roadmap-20261110-0427</code> · <a href="versions/v21-e56ad4b/">archived snapshot</a></li><li><b>v20</b> · 10 Nov 2026 04:22 AEDT (Melbourne time) · Group menu by task: main row Home/NetBox/Provisioning/Monitoring/Testing/Visitors, sub-row per task, /tasks/ pages <span style="color:#bbb">page 34.0 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/a73fcd375628fc143e7976a42cf145df3a5164ab"><code>a73fcd3</code></a> on <code>ui/task-menu-20261110-0422</code> · <a href="versions/v20-a73fcd3/">archived snapshot</a></li><li><b>v19</b> · 10 Nov 2026 04:16 AEDT (Melbourne time) · NB Custom Objects Tracker (ACI plugin only) at /netbox-aci-objects/ + NB ACI Objects icon in shared menu <span style="color:#bbb">page 32.7 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/7e0359312f79499d37828e45f0da214101e5fba6"><code>7e03593</code></a> on <code>netbox/aci-objects-tracker-20261110-0415</code> · <a href="versions/v19-7e03593/">archived snapshot</a></li><li><b>v18</b> · 10 Nov 2026 03:57 AEDT (Melbourne time) · Version history moved to the bottom of every page <span style="color:#bbb">page 32.6 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/d8acddc818ccc353e71e348b1c633221160e07db"><code>d8acddc</code></a> on <code>ui/version-history-bottom-20261110-0357</code> · <a href="versions/v18-d8acddc/">archived snapshot</a></li><li><b>v17</b> · 10 Nov 2026 03:56 AEDT (Melbourne time) · Visitors: every page tracked day by day, with daily snapshot versions; fetcher stores per-page daily history <span style="color:#bbb">page 32.6 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/a9895af40cab018d45fe4c41d053c0d2742f3c41"><code>a9895af</code></a> on <code>visitors/page-history-20261110-0356</code> · <a href="versions/v17-a9895af/">archived snapshot</a></li><li><b>v16</b> · 10 Nov 2026 03:51 AEDT (Melbourne time) · Menu: clickable icon buttons, Visitors moved to last <span style="color:#bbb">page 24.4 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/e71db472079ee6dc119a84e0a4ebf8e8bcb88099"><code>e71db47</code></a> on <code>ui/icon-menu-20261110-0351</code> · <a href="versions/v16-e71db47/">archived snapshot</a></li><li><b>v15</b> · 09 Nov 2026 09:49 AEDT (Melbourne time) · Theme toggle: keep menu clear of the button, full-page light background; home flow on one row <span style="color:#bbb">page 22.2 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/948f4e7e91c4482a7a8a582d333c0fca390d9d88"><code>948f4e7</code></a> on <code>ui/theme-toggle-fix-20261109-0949</code> · <a href="versions/v15-948f4e7/">archived snapshot</a></li><li><b>v14</b> · 09 Nov 2026 09:46 AEDT (Melbourne time) · Add light/dark background toggle to every page <span style="color:#bbb">page 22.0 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/4ae4225191bba5c34e37e6d155b533833026a080"><code>4ae4225</code></a> on <code>ui/theme-toggle-20261109-0946</code> · <a href="versions/v14-4ae4225/">archived snapshot</a></li><li><b>v13</b> · 09 Nov 2026 08:01 AEDT (Melbourne time) · Report 17 daily AOAPIC status 2026-11-09 08:00 AEDT (APIC UP; 14/18/22/24; faults C6/M4) <span style="color:#bbb">page 20.5 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/075df8af8664b4380fbfa102a867172f98d258d9"><code>075df8a</code></a> on <code>report17/daily-aoapic-status-20261109-0800</code> · <a href="versions/v13-075df8a/">archived snapshot</a></li><li><b>v12</b> · 09 Nov 2026 06:46 AEDT (Melbourne time) · Site menu: add nac-test Status link after Visitors on every page (t183u); generator menus in report17 updated <span style="color:#bbb">page 19.6 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/ca6f6173b6ea64daebbab41ec78bbda77c40052e"><code>ca6f617</code></a> on <code>menu/nac-test-status-link-20261109-0646</code> · <a href="versions/v12-ca6f617/">archived snapshot</a></li><li><b>v11</b> · 09 Nov 2026 06:27 AEDT (Melbourne time) · Visitors: MRTG-style daily visitor graph on top (GoatCounter daily series in visitors/daily.json, hourly last-48h detail, Max/Average/Current), refreshed by the Report 17… <span style="color:#bbb">page 19.5 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/bab4e4ef2286f9a6118b87fa4e340fea396eb10c"><code>bab4e4e</code></a> on <code>visitors/mrtg-graph-20261109-0626</code> · <a href="versions/v11-bab4e4e/">archived snapshot</a></li><li><b>v10</b> · 09 Nov 2026 02:03 AEDT (Melbourne time) · Universal Provisioning page + RMA subpage (Host, Server, Firewall, LoadBalancer, Spine, Leaf; live AOAPIC/NetBox counts), menu item on every page (t178u) <span style="color:#bbb">page 5.8 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/677490515cee36b583a7e169c266858755006095"><code>6774905</code></a> on <code>report17/universal-provisioning-20261109-0202</code> · <a href="versions/v10-6774905/">archived snapshot</a></li><li><b>v9</b> · 09 Nov 2026 00:00 AEDT (Melbourne time) · YAML Model page (/netbox-yaml-model/): NaC (nac-aci) YAML generated from NetBox ACI tenants, per-tenant + combined files, nac-validate result, model vs AOAPIC; nav adds Y… <span style="color:#bbb">page 5.7 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/f64b32c3c872ccd88f62a624a9b3121412eb57f1"><code>f64b32c</code></a> on <code>report17/netbox-yaml-model-20261109-0000</code> · <a href="versions/v9-f64b32c/">archived snapshot</a></li><li><b>v8</b> · 08 Nov 2026 22:34 AEDT (Melbourne time) · NetBox ACI Tenants page (/netbox-aci-tenants/): NetBox ACI plugin tenants vs AOAPIC, expandable trees; nav adds NetBox ACI Tenants on every page; link from Tenants Detail <span style="color:#bbb">page 5.7 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/fb72e8ee2469f85b5f83c8641db4dd16c869723b"><code>fb72e8e</code></a> on <code>report17/netbox-aci-tenants-20261108-2234</code> · <a href="versions/v8-fb72e8e/">archived snapshot</a></li><li><b>v7</b> · 08 Nov 2026 19:13 AEDT (Melbourne time) · Pending Provisioning page (Cursor_tenant5 planned objects table) and nav: Home | Tenants Detail | Pending Provisioning | Object Drill-down | Report 17 | Group 1 | Group 2… <span style="color:#bbb">page 5.6 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/f5a3b5f83b7587ec8ec00117fb0d8500466a8c55"><code>f5a3b5f</code></a> on <code>report17/pending-provisioning-page-20261108-1912</code> · <a href="versions/v7-f5a3b5f/">archived snapshot</a></li><li><b>v6</b> · 08 Nov 2026 16:50 AEDT (Melbourne time) · Object Drill-down page (grouped index, cards, search) and nav: Home | Tenants Detail | Object Drill-down | Report 17 | Group 1 | Group 2 | Visitors <span style="color:#bbb">page 5.5 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/df81e82eddddb1590350119582eeb2c887ecf7a3"><code>df81e82</code></a> on <code>report17/object-drilldown-page-20261108-1650</code> · <a href="versions/v6-df81e82/">archived snapshot</a></li><li><b>v5</b> · 08 Nov 2026 16:40 AEDT (Melbourne time) · Top-right Updated time and per-page unique visitors on every page; built-in tenants table first; paginate per-page visitor stats <span style="color:#bbb">page 5.5 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/ae5cb70db3f8c860d47b22493fe860110d334498"><code>ae5cb70</code></a> on <code>site/topright-updated-visitors-20261108-1639</code> · <a href="versions/v5-ae5cb70/">archived snapshot</a></li><li><b>v4</b> · 08 Nov 2026 16:32 AEDT (Melbourne time) · Site nav: Home | Tenants Detail | Report 17 | Group 1 | Group 2 | Visitors <span style="color:#bbb">page 4.2 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/00dcd83fabbce08472f6b66279358a1b824bdb2f"><code>00dcd83</code></a> on <code>site/nav-reorder-20261108-1632</code> · <a href="versions/v4-00dcd83/">archived snapshot</a></li><li><b>v3</b> · 08 Nov 2026 07:25 AEDT (Melbourne time) · Publish Report 17 AOAPIC monitoring with real inventory and probe history <span style="color:#bbb">page 4.2 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/1344df5e3e9572cbf5467857d5d63d1ffb89439d"><code>1344df5</code></a> on <code>main</code> · <a href="versions/v3-1344df5/">archived snapshot</a></li><li><b>v2</b> · 07 Nov 2026 12:47 AEDT (Melbourne time) · Visitor counters read refreshed stats (counter API is cached for hours) <span style="color:#bbb">page 4.2 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/e9ab5ed7210aaab8c8124589f2efb9dc50c59504"><code>e9ab5ed</code></a> on <code>main</code> · <a href="versions/v2-e9ab5ed/">archived snapshot</a></li><li><b>v1</b> · 07 Nov 2026 12:43 AEDT (Melbourne time) · Add GoatCounter unique-visitor counters, Visitors page and stats workflow <span style="color:#bbb">page 4.2 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/4df63527f9d12bc345eadf25fd578fbdaac71002"><code>4df6352</code></a> on <code>main</code> · <a href="versions/v1-4df6352/">archived snapshot</a></li></ul></details></section><!--/vh-->
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/+$/,"")||"/"}}</script><script async="" data-goatcounter="https://amoeoo-coles.goatcounter.com/count" src="//gc.zgo.at/count.js"></script>
+<script>
+const GC='https://amoeoo-coles.goatcounter.com/counter/';
+const P=[['Home','/'],['Tenants Detail','/report17-aoapic-monitoring/tenants'],['NetBox ACI Tenants','/netbox-aci-tenants'],['Tenant Diagrams','/netbox-aci-tenants/diagrams'],['NB ACI Objects','/netbox-aci-objects'],['NB HW Inventory','/netbox-hw-inventory'],['YAML Model','/netbox-yaml-model'],['AOAPIC Model','/netbox-yaml-model/aoapic'],['ARR Model','/ARR-LargeTopology/iac-files'],['Models hub','/netbox-yaml-model/models'],['Pending Provisioning','/report17-aoapic-monitoring/pending-provisioning'],['Universal Provisioning','/report17-aoapic-monitoring/universal-provisioning'],['Object Drill-down','/report17-aoapic-monitoring/objects'],['Report 17','/report17-aoapic-monitoring'],['Group 1','/grafana-screenshots'],['Group 2','/grafana-screenshots-part2'],['nac-test status','/aoapic-nac-test-status'],['RoadMap','/roadmap'],['MindMap','/mindmap'],['Visitors','/visitors'],['Visitor Trends','/visitors/trends'],['Visitors by country','/visitors/countries'],['Status','/status']];
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const k=document.getElementById('kpis');const B={};
+P.forEach(([n,p])=>{const d=document.createElement('div');d.className='kpi';d.innerHTML='<b>0</b><a href="'+(p==='/'?'/':p+'/')+'">'+n+'</a>';k.appendChild(d);B[p]=d.querySelector('b')});
+function rows(id,list,f){const tb=document.querySelector('#'+id+' tbody');if(!list||!list.length){tb.innerHTML='<tr><td colspan="4" class="muted">No visits recorded yet.</td></tr>';return}
+ const max=Math.max(...list.map(x=>+x.count||0),1);tb.innerHTML=list.map((x,i)=>f(x,i,max)).join('')}
+fetch('../data/visitors.json?'+Date.now()).then(r=>r.json()).then(d=>{
+ (d.pages||[]).forEach(x=>{const q=String(x.path||'').replace(/\/+$/,'')||'/';if(B[q])B[q].textContent=(+B[q].textContent||0)+(+x.count||0)});
+ rows('loc',d.countries,(c,i,m)=>{const id=String(c.id||'').toLowerCase();const href=/^[a-z]{2}$/.test(id)?'/visitors/countries/#country-'+id:'/visitors/countries/';return '<tr><td>'+(i+1)+'</td><td><a href="'+href+'">'+esc(c.name||c.id||'Unknown')+'</a><div class="bar" style="width:'+(100*(+c.count||0)/m)+'%"></div></td><td>'+esc((c.regions||[]).map(r=>(r.name||'Unknown')+' ('+r.count+')').join(', '))+'</td><td class="n">'+esc(c.count)+'</td></tr>'});
+ rows('pages',d.pages,(p,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(p.path)+(p.title?' <span class="muted">'+esc(p.title)+'</span>':'')+'</td><td class="n">'+esc(p.count)+'</td></tr>');
+ rows('refs',d.toprefs,(p,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(p.name||'Direct or unknown')+'</td><td class="n">'+esc(p.count)+'</td></tr>');
+ rows('browsers',d.browsers,(p,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(p.name||'Unknown')+'</td><td class="n">'+esc(p.count)+'</td></tr>');
+ rows('systems',d.systems,(p,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(p.name||'Unknown')+'</td><td class="n">'+esc(p.count)+'</td></tr>');
+ rows('sizes',d.sizes,(p,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(p.name||p.id||'Unknown')+'</td><td class="n">'+esc(p.count)+'</td></tr>');
+ if(d.updated_utc)document.getElementById('upd').textContent='Location and page tables last refreshed '+new Date(d.updated_utc).toLocaleString('en-AU',{timeZone:'Australia/Melbourne'})+' (Melbourne time). All numbers on this page refresh about every 30 minutes.';
+}).catch(()=>{document.querySelector('#loc tbody').innerHTML='<tr><td colspan="4" class="muted">Location data will appear after the first refresh.</td></tr>'});
+</script>
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:6px 0 8px;gap:6px;font:650 11.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:4px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im details.im-sub,nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:4px;margin:0;padding:6px 8px;border-left:3px solid var(--im-accent,var(--menu-on,#2563eb));background:color-mix(in srgb,var(--im-accent,#2563eb) 10%,transparent);border-radius:8px}
+nav.site.im a.mi{display:flex!important;align-items:center;gap:5px;box-sizing:border-box;width:100%;height:28px;min-height:28px;max-height:28px;min-width:0;padding:0 8px;border-radius:999px;border:1px solid color-mix(in srgb,var(--im-accent,#2563eb) 40%,var(--menu-pill-bd,#3a4456))!important;background:var(--menu-pill,#1b2330)!important;color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:color-mix(in srgb,var(--im-accent,#2563eb) 16%,var(--menu-hover,#26344a))!important}
+nav.site.im a.mi.on{background:var(--im-accent,#2563eb)!important;border-color:var(--im-accent,#2563eb)!important;color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{display:inline-flex;align-items:center;justify-content:center;flex:none;width:18px;height:18px;border-radius:50%;background:color-mix(in srgb,var(--im-accent,#2563eb) 22%,transparent);font-size:11px;line-height:1}
+nav.site.im a.mi.on .ic{background:rgba(255,255,255,.22)}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1;text-align:left}
+nav.site.im a.mi.sm{font-size:11px}
+nav.site.im a.sl,nav.site.im summary.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px;display:flex;align-items:center;gap:6px;cursor:pointer;list-style:none}
+nav.site.im summary.sl::-webkit-details-marker{display:none}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:14px;height:14px;padding:0 4px;border-radius:999px;font-size:9px;font-weight:700;line-height:1;background:color-mix(in srgb,var(--im-accent,#2563eb) 35%,#93c5fd);color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex!important;align-items:center;justify-content:center;flex:none;min-width:16px;height:16px;padding:0 4px;border-radius:999px;font-size:10px!important;font-weight:800;line-height:1;background:#0f172a!important;color:#fff!important}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc!important;color:#0f172a!important}
+nav.site.im a.mi.on .im-seq{background:#fff!important;color:var(--im-accent,#1d4ed8)!important}
+nav.site.im a.mi .im-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 2px color-mix(in srgb,var(--im-accent,#2563eb) 18%,transparent);flex:none}
+nav.site.im .im-stats{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font:600 11px/1.3 system-ui,Arial,sans-serif;color:var(--menu-fg,#94a3b8);padding:2px 2px 0;opacity:.9}
+nav.site.im .im-stats a{color:var(--link,#8ecbff);text-decoration:none}
+nav.site.im .im-stats .im-stat-n{font-variant-numeric:tabular-nums;font-weight:700}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:28px;flex:none}
+#sg-link,#tt-btn,#mm-link{height:28px;border-radius:999px;font-size:12px}
+#mm-link{width:28px;padding:0}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){
+  nav.site.im .im-main{grid-template-columns:repeat(2,minmax(0,1fr))}
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  nav.site.im summary.sl .im-toggle{display:inline}
+}
+@media (min-width:721px){
+  nav.site.im details.im-sub[open] .im-sub-pills,nav.site.im details.im-sub .im-sub-pills{display:grid!important}
+  nav.site.im summary.sl .im-toggle{display:none}
+}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["About Me","/about-me/","👤",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Cursor_Tenant6","/ARR/provisioning/cursor-tenant6/","🚀"],["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"],["ရှေ့သို့ချီ","/roadmap/forward/","⏩"],["Time Map 2026–2030","/roadmap/forward/time-map/","🗓️"],["BridgeWhy","/roadmap/bridgewhy/","📚"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["ARR-LargeTopology","/ARR-LargeTopology/","🗺️",[["Overview","/ARR-LargeTopology/","🗺️"],["Nodes","/ARR-LargeTopology/nodes.html","🖥️"],["Serials","/ARR-LargeTopology/serials.html","🔢"],["Mgmt IPs","/ARR-LargeTopology/mgmt-ips.html","🌐"],["Links","/ARR-LargeTopology/links.html","🔗"],["Tenants","/ARR-LargeTopology/tenants.html","🏢"],["VRFs","/ARR-LargeTopology/vrfs.html","🧭"],["BDs","/ARR-LargeTopology/bds.html","🌉"],["Subnets","/ARR-LargeTopology/subnets.html","🔢"],["EPGs","/ARR-LargeTopology/epgs.html","🎯"],["Leaf VNIs","/ARR-LargeTopology/vni.html","💠"],["VXLAN","/ARR-LargeTopology/vxlan/","🧵"],["VNI compare","/ARR-LargeTopology/vni-compare/","🔷"],["Access policies","/ARR-LargeTopology/access-policies/","🧱"],["BD GIPo & FTAG","/ARR-LargeTopology/bd-gipo-ftag/","📡"],["IAC files","/ARR-LargeTopology/iac-files/","📦"],["ARR-netbox","/ARR-LargeTopology/arr-netbox/","🗄️"],["Hardware monitor","/ARR-LargeTopology/hw-monitor/","📟"],["Site map","/ARR-LargeTopology/site-map/","🌳"],["Provisioning","/ARR-LargeTopology/provisioning/","🚀"],["Test explain","/ARR-LargeTopology/test-explain/","🧪"],["GitLab","/ARR-LargeTopology/gitlab/","🦊"],["GitLab Runner","/ARR-LargeTopology/gitlab-runner/","🏃"]]],["Terragrunt","/terragrunt/","🧰",[["Terragrunt","/terragrunt/","🧰"]]],["zFrontier","/zfrontier/","🌠",[["zFrontier","/zfrontier/","🌠"],["Southwest Chief","/zfrontier/southwest-chief/","🚂"],["Southwest Chief tracker","/zfrontier/southwest-chief/tracker/","📡"],["Southwest Chief stations","/zfrontier/southwest-chief/stations/","🚉"],["Farzad","/zfrontier/farzad/","📺"],["SpaceX vs Tesla shares","/zfrontier/shares/","📈"],["Optimus","/zfrontier/optimus/","🤖"],["Gigafactory","/zfrontier/gigafactory/","🏭"],["FSD versions","/zfrontier/fsd-versions/","🛣️"],["Liquid cooling","/zfrontier/liquid-cooling/","💧"],["SpaceX Tracking","/zfrontier/spacex/","🚀"],["CyberCab","/zfrontier/cybercab/","🚕"],["AI FineTune Pod","/zfrontier/ai-finetune-pod/","🎛️"],["MCP Servers","/zfrontier/mcp-servers/","🔌"],["NaC CLI","/zfrontier/nac-cli/","🧰"],["GPU Workflow","/zfrontier/3gpu-ai-workflow/","🧮"],["MWMESH","/zfrontier/mwmesh/","📡"],["Notebooks","/zfrontier/notebooks/","📓"],["RAG documents","/zfrontier/rag-documents/","📚"],["Foundation-Sec-8B","/zfrontier/foundation-sec-8b/","🛡️"],["Terafab","/zfrontier/terafab/","💠"],["3DiffsVXLAN","/zfrontier/3diffsvxlan/","🔀"],["ARR-LargePod","/zfrontier/arr-largepod/","🏗️"],["Nvidia A100 & H100","/zfrontier/Nvidia-A100-H100/","🟩"],["AgenticAI","/zfrontier/agenticai/","🧠"],["MS-02 GPU Monitoring","/zfrontier/MS-02-GPU-Monitoring/","📟"],["MBPro","/zfrontier/MBPro/","💻"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"]]],["ACI GUI Forms","/ACI-GUI-Forms/","📝",[["ACI GUI Forms","/ACI-GUI-Forms/","📝"],["GUI Map","/aci-gui-forms/WIP/gui-map/","🗺️"],["APG Access Policy Group","/ACI-GUI-Forms/apg/","🧩"],["Spine Access Policy Group","/ACI-GUI-Forms/spine-apg/","🛰️"]]],["ACI GUI","/aci-gui/","🖥️",[["Create Pod Policy Group","/aci-gui/create-pod-policy-group/","🧬"],["Create Bridge Domain (step 3)","/aci-gui/create-bridge-domain-step3/","🌉"],["Create Subnet","/aci-gui/create-subnet/","🔢"],["Create Application Profile","/aci-gui/create-application-profile/","🧩"],["Create Management EPG","/aci-gui/create-management-epg/","🛠️"],["Static Node Management Addresses","/aci-gui/static-node-management-addresses/","📍"],["Create Fabric Policies","/aci-gui/create-fabric-policies/","🧵"],["Create Access Policies","/aci-gui/create-access-policies/","🔐"],["Create VLAN Pool","/aci-gui/create-vlan-pool/","🏷️"],["Create Physical Domain","/aci-gui/create-physical-domain/","🏛️"],["Create Access Interface Policy Group","/aci-gui/create-access-interface-policy-group/","🔌"],["Create PC Interface Policy Group","/aci-gui/create-pc-interface-policy-group/","🔀"],["Note on Interface Policies","/aci-gui/interface-policies/","📘"],["Interface Wizard for vPC","/aci-gui/interface-wizard-vpc/","🪄"],["Create VMM Domain","/aci-gui/create-vmm-domain/","💻"],["vCenter Networking","/aci-gui/vcenter-networking/","🖥️"],["Create Tenant","/aci-gui/create-tenant/","🏢"],["Create L3Out","/aci-gui/create-l3out/","🌐"],["L3Out Contracts","/aci-gui/l3out-contracts/","📜"],["Create Bridge Domain","/aci-gui/create-bridge-domain/","🌉"],["Bridge Domain","/aci-gui/bridge-domain/","🌉"],["Mgmt Bridge Domain","/aci-gui/mgmt-bridge-domain/","🔧"],["DHCP Relay","/aci-gui/dhcp-relay/","📡"],["Management Application Profile","/aci-gui/management-application-profile/","📦"],["Application Profile (web + app)","/aci-gui/application-profile/","🧩"],["Create VRF","/aci-gui/create-vrf/","🧭"],["Create Endpoint Group","/aci-gui/create-endpoint-group/","🎯"],["Contracts Between Tenants","/aci-gui/contracts-between-tenants/","🤝"],["Create Filter","/aci-gui/create-filter/","🧹"],["Create Contract","/aci-gui/create-contract/","📃"],["Create Management Contracts","/aci-gui/create-management-contracts/","📑"],["Mgmt PortGroup to VM","/aci-gui/mgmt-portgroup-to-vm/","🧷"],["Pod Policy Group","/aci-gui/pod-policy-group/","🕒"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+var IM_UPDATED=["/","/netbox-aci-objects/","/netbox-aci-tenants/","/netbox-aci-tenants/diagrams/","/netbox-aci-tenants/diagrams/aci-p01-tenant/","/netbox-aci-tenants/diagrams/cursor-tenant1/","/netbox-aci-tenants/diagrams/cursor-tenant2/","/netbox-aci-tenants/diagrams/cursor-tenant3/","/netbox-aci-tenants/diagrams/cursor-tenant5/","/netbox-aci-tenants/diagrams/cursor-tenant6/","/netbox-aci-tenants/diagrams/msite-p01-tenant/","/netbox-hw-inventory/","/netbox-yaml-model/","/netbox-yaml-model/aci-p01-tenant/","/netbox-yaml-model/cursor-tenant1/","/netbox-yaml-model/cursor-tenant2/","/netbox-yaml-model/cursor-tenant3/","/netbox-yaml-model/cursor-tenant5/","/netbox-yaml-model/cursor-tenant6/","/netbox-yaml-model/msite-p01-tenant/","/report17-aoapic-monitoring/","/report17-aoapic-monitoring/objects/","/report17-aoapic-monitoring/objects/access_port_pgs/","/report17-aoapic-monitoring/objects/aeps/","/report17-aoapic-monitoring/objects/app_profiles/","/report17-aoapic-monitoring/objects/audit_24h/","/report17-aoapic-monitoring/objects/audit_7d/","/report17-aoapic-monitoring/objects/bd_subnets/","/report17-aoapic-monitoring/objects/bds/","/report17-aoapic-monitoring/objects/bundle_pgs/","/report17-aoapic-monitoring/objects/contracts/","/report17-aoapic-monitoring/objects/endpoints/","/report17-aoapic-monitoring/objects/epg_subnets/","/report17-aoapic-monitoring/objects/epgs/","/report17-aoapic-monitoring/objects/events_24h/","/report17-aoapic-monitoring/objects/faults/","/report17-aoapic-monitoring/objects/filters/","/report17-aoapic-monitoring/objects/interfaces/","/report17-aoapic-monitoring/objects/interfaces_up/","/report17-aoapic-monitoring/objects/l3_domains/","/report17-aoapic-monitoring/objects/l3outs/","/report17-aoapic-monitoring/objects/nodes/","/report17-aoapic-monitoring/objects/phys_domains/","/report17-aoapic-monitoring/objects/port_channels/","/report17-aoapic-monitoring/objects/static_paths/","/report17-aoapic-monitoring/objects/tenants/","/report17-aoapic-monitoring/objects/vlan_pools/","/report17-aoapic-monitoring/objects/vmm_domains/","/report17-aoapic-monitoring/objects/vpcs/","/report17-aoapic-monitoring/objects/vrfs/","/report17-aoapic-monitoring/pending-provisioning/","/report17-aoapic-monitoring/tenants/","/report17-aoapic-monitoring/universal-provisioning/","/report17-aoapic-monitoring/universal-provisioning/rma/","/roadmap/","/roadmap/america-driving/","/roadmap/america-driving/car-hire-boise-las-vegas/","/roadmap/america-driving/car-hire-las-vegas-phoenix/","/roadmap/america-driving/car-hire-san-jose-boise/","/roadmap/america-driving/las-vegas-to-boca-chica/","/roadmap/america-driving/leg-1-sfo-boise/","/roadmap/america-driving/leg-2-boise-las-vegas/","/roadmap/america-driving/leg-3-las-vegas-tucson-via-phoenix/","/roadmap/america-driving/leg-4-tucson-los-angeles/","/roadmap/bridgewhy/","/roadmap/bridgewhy/america-driving/","/roadmap/bridgewhy/bgp-mpls-enterprise-network-design/","/roadmap/bridgewhy/campus-network-design/","/roadmap/bridgewhy/ccna/","/roadmap/bridgewhy/cisco-aci/","/roadmap/bridgewhy/cisco-aci/lesson-01/","/roadmap/bridgewhy/cisco-aci/lesson-02/","/roadmap/bridgewhy/cisco-aci/lesson-03/","/roadmap/bridgewhy/cisco-aci/lesson-04/","/roadmap/bridgewhy/cisco-aci/lesson-05/","/roadmap/bridgewhy/cisco-aci/lesson-06/","/roadmap/bridgewhy/cisco-aci/lesson-07/","/roadmap/bridgewhy/cisco-aci/lesson-08/","/roadmap/bridgewhy/cisco-aci/lesson-09/","/roadmap/bridgewhy/cisco-aci/lesson-10/","/roadmap/bridgewhy/cisco-aci/lesson-11/","/roadmap/bridgewhy/cisco-aci/lesson-12/","/roadmap/bridgewhy/cisco-ise/","/roadmap/bridgewhy/cisco-sd-access/","/roadmap/bridgewhy/cisco-sd-wan/","/roadmap/bridgewhy/data-center-vxlan-bgp-evpn/","/roadmap/bridgewhy/enterprise-quality-of-service/","/roadmap/bridgewhy/git-for-network-engineers/","/roadmap/bridgewhy/introduction/","/roadmap/bridgewhy/ipv6-fundamentals/","/roadmap/bridgewhy/is-is-routing-protocol/","/roadmap/bridgewhy/linux-operating-system/","/roadmap/bridgewhy/llms-from-scratch/","/roadmap/bridgewhy/machine-learning-fundamentals/","/roadmap/bridgewhy/network-automation/","/roadmap/bridgewhy/network-security-fundamentals/","/roadmap/bridgewhy/ospf-deep-dive/","/roadmap/bridgewhy/switching-fundamentals/","/roadmap/bridgewhy/tcp-protocol-deep-dive/","/roadmap/bridgewhy/wireless-fundamentals-wlc-9800/","/roadmap/bridgewhy/wireshark-packet-analysis/","/visitors/countries/","/zfrontier/","/zfrontier/3diffsvxlan/","/zfrontier/3gpu-ai-workflow/","/zfrontier/3gpu-ai-workflow/check/","/zfrontier/3gpu-ai-workflow/checklist/","/zfrontier/3gpu-ai-workflow/ms-02-ultra/","/zfrontier/MBPro/","/zfrontier/MS-02-GPU-Monitoring/","/zfrontier/Nvidia-A100-H100/","/zfrontier/agenticai/","/zfrontier/ai-finetune-pod/","/zfrontier/ai-finetune-pod/checklist/","/zfrontier/ai-finetune-pod/plan/","/zfrontier/ai-finetune-pod/showcase/","/zfrontier/arr-largepod/","/zfrontier/ces-2027/","/zfrontier/ces-2027/03-jan/","/zfrontier/ces-2027/03-jan/autonomous-drones/","/zfrontier/ces-2027/03-jan/frontier-tech/","/zfrontier/ces-2027/03-jan/physical-ai/","/zfrontier/ces-2027/03-jan/robots/","/zfrontier/ces-2027/04-jan/","/zfrontier/ces-2027/04-jan/autonomous-drones/","/zfrontier/ces-2027/04-jan/frontier-tech/","/zfrontier/ces-2027/04-jan/physical-ai/","/zfrontier/ces-2027/04-jan/robots/","/zfrontier/ces-2027/05-jan/","/zfrontier/ces-2027/05-jan/autonomous-drones/","/zfrontier/ces-2027/05-jan/frontier-tech/","/zfrontier/ces-2027/05-jan/physical-ai/","/zfrontier/ces-2027/05-jan/robots/","/zfrontier/ces-2027/06-jan/","/zfrontier/ces-2027/06-jan/autonomous-drones/","/zfrontier/ces-2027/06-jan/frontier-tech/","/zfrontier/ces-2027/06-jan/physical-ai/","/zfrontier/ces-2027/06-jan/robots/","/zfrontier/ces-2027/07-jan/","/zfrontier/ces-2027/07-jan/autonomous-drones/","/zfrontier/ces-2027/07-jan/frontier-tech/","/zfrontier/ces-2027/07-jan/physical-ai/","/zfrontier/ces-2027/07-jan/robots/","/zfrontier/ces-2027/08-jan/","/zfrontier/ces-2027/08-jan/autonomous-drones/","/zfrontier/ces-2027/08-jan/frontier-tech/","/zfrontier/ces-2027/08-jan/physical-ai/","/zfrontier/ces-2027/08-jan/robots/","/zfrontier/cybercab/","/zfrontier/cybercab/city-info/","/zfrontier/cybercab/production/","/zfrontier/cybercab/taxi-fleet/","/zfrontier/farzad/","/zfrontier/foundation-sec-8b/","/zfrontier/fsd-versions/","/zfrontier/gigafactory/","/zfrontier/liquid-cooling/","/zfrontier/mcp-servers/","/zfrontier/mcp-servers/aci/","/zfrontier/mcp-servers/dna/","/zfrontier/mcp-servers/nexus-dashboard/","/zfrontier/meraki/","/zfrontier/meraki/alerts/","/zfrontier/meraki/devices/","/zfrontier/meraki/firmware/","/zfrontier/meraki/licensing/","/zfrontier/meraki/networks/","/zfrontier/mwmesh/","/zfrontier/mwmesh/australia-plan/","/zfrontier/nac-cli/","/zfrontier/nac-cli/apply/","/zfrontier/nac-cli/destroy/","/zfrontier/nac-cli/init/","/zfrontier/nac-cli/integration/","/zfrontier/nac-cli/plan/","/zfrontier/nac-cli/setup/","/zfrontier/nac-cli/test/","/zfrontier/nac-cli/validate/","/zfrontier/notebooks/","/zfrontier/notebooks/advanced-agentic-ai/","/zfrontier/notebooks/cisco-fdtn-model/","/zfrontier/notebooks/f1-qualifying-prediction/","/zfrontier/notebooks/simple-agentic-ai/","/zfrontier/optimus/","/zfrontier/rag-documents/","/zfrontier/shares/","/zfrontier/southwest-chief/","/zfrontier/spacex/","/zfrontier/spacex/boosters/","/zfrontier/spacex/boosters/previous/","/zfrontier/spacex/control-center/","/zfrontier/spacex/launch-monitoring/","/zfrontier/spacex/launch-preparation/","/zfrontier/spacex/launch-sequence/","/zfrontier/spacex/raptor/","/zfrontier/spacex/ships/","/zfrontier/spacex/sites/","/zfrontier/terafab/"];
+var IM_ACCENT={"/":"#64748b","/tasks/netbox/":"#2563eb","/tasks/provisioning/":"#0d9488","/tasks/monitoring/":"#0891b2","/tasks/testing/":"#d97706","/aci-policy/":"#16a34a","/aci-multipod/":"#15803d","/aci-azure-vxlan/":"#059669","/firewall-domain/":"#dc2626","/aci-lab-guide/":"#22c55e","/demo-ai-pod/":"#7c3aed","/intersight-demo/":"#0284c7","/tasks/itil/":"#4f46e5","/roadmap/":"#ea580c","/virtual-dc/":"#0f766e","/ARR-LargeTopology/":"#0e7490","/terragrunt/":"#a16207","/zfrontier/":"#7c3aed","/visitors/":"#059669","/ACI-GUI-Forms/":"#16a34a","/aci-gui/":"#15803d"};
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function normPath(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function accentOf(href){var h=String(href||'');return IM_ACCENT[h]||IM_ACCENT[h.replace(/\/?$/,'/')]||IM_ACCENT[normPath(h)+'/']||'#2563eb'}
+function pathUpdated(href){
+  var h=normPath(href), list=IM_UPDATED||[];
+  if(h==='/') return list.indexOf('/')>=0;
+  for(var i=0;i<list.length;i++){
+    var u=normPath(list[i]);
+    if(u===h||u.indexOf(h+'/')===0) return true;
+  }
+  return false;
+}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq,accent){
+  var a=document.createElement('a');
+  a.className=cls+(on?' on':'');
+  a.href=e[1];
+  a.title=(seq?String(seq)+'. ':'')+e[0]+(pathUpdated(e[1])?' (updated in the last 7 days)':'');
+  a.style.setProperty('--im-accent', accent||accentOf(e[1]));
+  if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}
+  var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);
+  var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);
+  if(pathUpdated(e[1])){var dot=document.createElement('span');dot.className='im-dot';dot.title='Updated in the last 7 days';dot.setAttribute('aria-label','Updated in the last 7 days');a.appendChild(dot)}
+  if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}
+  return a;
+}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function statsRow(){
+  var d=document.createElement('div');d.className='im-stats';
+  d.innerHTML='<a href="/visitors/">Visitors <span class="im-stat-n im-stat-vis">\u2026</span></a><span>\u00b7</span><a href="/visitors/countries/">Countries <span class="im-stat-n im-stat-cc">\u2026</span></a><span>\u00b7</span><span>Updated <span class="im-stat-n im-stat-asof">\u2026</span></span>';
+  return d;
+}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length,0,accentOf(g[1])))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){
+var acc=accentOf(G[gi][1]);
+var r2=document.createElement('details');r2.className='im-sub';r2.style.setProperty('--im-accent',acc);
+if(window.matchMedia&&window.matchMedia('(min-width:721px)').matches) r2.open=true;
+var t=document.createElement('summary');t.className='sl';
+t.innerHTML='<span>'+G[gi][0]+' tasks \u203A</span><span class="im-toggle"> (tap to expand)</span>';
+r2.appendChild(t);
+t.addEventListener('click',function(ev){if(window.matchMedia&&window.matchMedia('(min-width:721px)').matches){ev.preventDefault();location.href=G[gi][1];}});
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1,acc))});r2.appendChild(pills);n.appendChild(r2)}}
+n.appendChild(statsRow());});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+<!-- uv-badge v2 -->
+<style id="uv-badge-style">
+.uv-pop{position:relative;display:inline-block;vertical-align:middle}
+.uv-pop .uv-card{display:none;position:absolute;right:0;top:calc(100% + 6px);z-index:80;min-width:228px;padding:10px 12px;border-radius:10px;background:var(--card,#0f172a);color:var(--ink,#e2e8f0);border:1px solid var(--line,#334155);box-shadow:0 10px 28px rgba(0,0,0,.28);font:12px/1.4 system-ui,Arial,sans-serif;text-align:left;white-space:normal}
+.uv-pop.open .uv-card{display:block}
+.uv-card svg{display:block;width:204px;height:44px;margin:6px 0 8px}
+.uv-card .uv-k{font-weight:700;margin:0 0 2px}
+.uv-card .uv-m{color:var(--muted,#94a3b8);font-size:11px}
+.uv-card a{color:var(--link,#8ecbff)}
+</style>
+<script id="uv-badge">(function(){
+function norm(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function tzParts(iso){
+  var pt=new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'2-digit',minute:'2-digit',hour12:false,hourCycle:'h23',timeZoneName:'short',day:'2-digit',month:'short'}).formatToParts(new Date(iso));
+  var g=function(t){return (pt.find(function(x){return x.type===t})||{}).value||''};
+  var tz=(g('timeZoneName')||'AEDT').replace('GMT+11','AEDT').replace('GMT+10','AEST');
+  return {hh:g('hour'),mm:g('minute'),tz:tz,day:g('day'),mon:g('month')};
+}
+function last30(daysMap){
+  var out=[], now=new Date();
+  var fmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'});
+  for(var i=29;i>=0;i--){
+    var d=new Date(now.getTime()-i*86400000);
+    var key=fmt.format(d);
+    out.push({day:key,count:+((daysMap||{})[key]||0)});
+  }
+  return out;
+}
+function spark(series){
+  var w=204,h=44,p=2;
+  var max=Math.max.apply(null,series.map(function(x){return x.count}).concat([1]));
+  var n=series.length||1;
+  var pts=series.map(function(x,i){
+    var X=p+(i*(w-2*p)/Math.max(1,n-1));
+    var Y=h-p-((x.count/max)*(h-2*p));
+    return X.toFixed(1)+','+Y.toFixed(1);
+  }).join(' ');
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true"><polyline fill="none" stroke="#22c55e" stroke-width="2" points="'+pts+'"/></svg>';
+}
+function fillStats(d){
+  var total=(d.total&& (d.total.total||d.total.total_utc))||0;
+  var cc=(d.countries||[]).length;
+  var asof=d.as_of_aedt||'';
+  document.querySelectorAll('.im-stat-vis').forEach(function(e){e.textContent=total||'0'});
+  document.querySelectorAll('.im-stat-cc').forEach(function(e){e.textContent=cc||'0'});
+  document.querySelectorAll('.im-stat-asof').forEach(function(e){e.textContent=asof||'n/a'});
+}
+function attachPopover(d, count, series){
+  document.querySelectorAll('.uv').forEach(function(uv){
+    if(uv.closest('.uv-pop')) return;
+    var wrap=document.createElement('span');wrap.className='uv-pop';
+    uv.parentNode.insertBefore(wrap,uv);wrap.appendChild(uv);
+    var card=document.createElement('div');card.className='uv-card';card.setAttribute('role','dialog');
+    var last=series.length?series[series.length-1].count:0;
+    card.innerHTML='<p class="uv-k">This page: '+count+' unique visitors</p>'+spark(series)+'<p class="uv-m">Last 30 days (this page). Today so far: '+last+'.</p><p><a href="/visitors/">Full visitor stats \u203A</a></p>';
+    wrap.appendChild(card);
+    function tog(ev){ev.preventDefault();ev.stopPropagation();document.querySelectorAll('.uv-pop.open').forEach(function(x){if(x!==wrap)x.classList.remove('open')});wrap.classList.toggle('open')}
+    uv.addEventListener('click',tog);
+    uv.style.cursor='pointer';
+    uv.title='Click for a 30-day sparkline';
+  });
+  document.addEventListener('click',function(){document.querySelectorAll('.uv-pop.open').forEach(function(x){x.classList.remove('open')})});
+}
+function apply(d){
+  var p=norm(location.pathname);
+  var page=(d.pages||[]).filter(function(x){return norm(x.path)===p});
+  var c=page.reduce(function(a,x){return a+(+x.count||0)},0);
+  var days={};
+  page.forEach(function(x){var m=x.days||{};Object.keys(m).forEach(function(k){days[k]=(days[k]||0)+(+m[k]||0)})});
+  document.querySelectorAll('.uvc').forEach(function(e){e.textContent=c});
+  document.querySelectorAll('.uvt').forEach(function(e){
+    if(d.updated_utc){var t=tzParts(d.updated_utc);e.textContent=' (data as of '+t.hh+':'+t.mm+' '+t.tz+')'}
+  });
+  fillStats(d);
+  attachPopover(d,c,last30(days));
+}
+function fail(){
+  document.querySelectorAll('.uvc').forEach(function(e){if(e.textContent==='\u2026'||e.textContent==='...') e.textContent='n/a'});
+  document.querySelectorAll('.im-stat-vis,.im-stat-cc,.im-stat-asof').forEach(function(e){if(e.textContent==='\u2026') e.textContent='n/a'});
+}
+if(!window.__visitorsData){
+  var ac=typeof AbortController==='function'?new AbortController():null;
+  var timer=setTimeout(function(){try{ac&&ac.abort()}catch(e){}},8000);
+  window.__visitorsData=fetch('/data/visitors.json?'+Date.now(),ac?{signal:ac.signal}:undefined).then(function(r){
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('visitors.json '+r.status);
+    return r.json();
+  });
+}
+window.__visitorsData.then(apply).catch(function(){fail()});
+})();</script>
+</body></html>

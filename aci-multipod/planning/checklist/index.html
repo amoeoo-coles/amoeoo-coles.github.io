@@ -715,12 +715,49 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
 <nav class="crumb"><a href="/">Home</a> › <a href="/aci-multipod/">ACI Multi-Pod</a> › <a href="/aci-multipod/planning/">Planning</a> › Pre-deployment checklist</nav>
 <span class="kicker" style="background:#0891b2">Planning</span>
 <h1>Pre-deployment checklist</h1>
+<p class="ver"><a href="/aci-multipod/planning/checklist/history/">v2 · 26 Nov 2026, 8:36 PM AEDT</a></p>
+
 <p class="lede">A day-0 list assembled from the requirements the three sources publish. Each item is a planning action, not a new number.</p>
 <ul class="chk"><li><i></i><span>Confirm inter-pod RTT is within 50 msec (ACI 2.3 and later). Before 2.3(1) the published figure was 10 msec RTT.</span></li><li><i></i><span>Choose IPN vs back-to-back. Back-to-back needs ACI 5.2(3)+, exactly two pods, 2nd-generation spines or later, and rules out Multi-Site, Remote Leaf, GOLF and APIC-over-L3.</span></li><li><i></i><span>Size the APIC cluster against leaf count: the 2021 paper recommends 3 active nodes below 80 leaves, 4 active (two per pod) between 80 and 200, and reserves a 5-node cluster across two pods for more than 200 leaves. The 2025 deck says “Two pods? 200 or fewer leaf nodes? Deploy a 4-APIC cluster.”</span></li><li><i></i><span>Decide whether APICs attach to leaves or sit on the IPN as Pod 0 (ACI 5.2(1)+). Distribute APICs so the loss of one pod does not take down the cluster. Plan Warm Standby (6.1(2)+) if you need disaster recovery without fabric-ID recovery.</span></li><li><i></i><span>Allocate a unique internal TEP pool per pod. All APIC nodes still initialise with the seed pod’s TEP pool (the paper’s example is 198.51.100.0/16).</span></li><li><i></i><span>Allocate a routable external TEP pool per pod, mask length between /22 and /29, not overlapping the spine–IPN point-to-point prefixes.</span></li><li><i></i><span>Plan spine-to-IPN routed subinterfaces on VLAN 4. Subinterfaces toward the spines are mandatory.</span></li><li><i></i><span>Pick OSPF (the 2021 paper’s only supported option) or BGP (documented on the 2025 deck) for spine-to-IPN underlay. Use point-to-point OSPF in the paper’s example, area 0.</span></li><li><i></i><span>If you will extend Layer 2 across pods, design PIM Bidir with a group range of at least /15 and a phantom RP on a pair of IPN loopbacks. Raise the OSPF cost of IPN-to-spine links so the preferred path to the RP is never via a spine. Skip PIM Bidir if L2 extension is not required (slide 66).</span></li><li><i></i><span>Set IPN MTU to carry VXLAN. The paper’s example is 9150 bytes; the ACI OSPF policy should inherit. Budget 50 or 50/54 bytes of VXLAN overhead against the endpoint MTU, or use TCP MSS adjust (6.0(3)F).</span></li><li><i></i><span>Configure DHCP relay on every spine-facing IPN subinterface for every APIC TEP address.</span></li><li><i></i><span>Enable LLDP on the IPN. Each spine that will be used must have an active leaf-facing link (LLDP up) or the fabric deems it unused.</span></li><li><i></i><span>Prepare a fabric BGP ASN so MP-BGP EVPN can run. Prefer full-mesh EVPN for up to three pods; the paper says external route reflectors are for a larger number of pods.</span></li><li><i></i><span>Plan L3Outs locally in each pod. Host-route advertisement (ACI 4.0(1)+) can pin inbound traffic to the pod that owns the endpoint.</span></li><li><i></i><span>If you are converting a stretched fabric, read the migration pages: the 2021 paper forbids back-to-back spines, while the 2025 deck allows back-to-back plus IPN only as a disruptive migration step.</span></li></ul>
 <p class="field-help"><cite class="src">Source: <a href="https://www.ciscolive.com/c/dam/r/ciscolive/emea/docs/2025/pdf/BRKDCN-2949.pdf">BRKDCN-2949, slides 7, 9, 10, 17, 36–45, 52, 66</a></cite> · <cite class="src">Source: <a href="https://www.cisco.com/c/en/us/solutions/collateral/data-center-virtualization/application-centric-infrastructure/white-paper-c11-739714.html">Cisco Multi-Pod Configuration White Paper (c11-739714), Guidelines, wizard and IPN chapters</a></cite> · <cite class="src">Source: <a href="https://www.dclessons.com/multi-pod-overview-in-aci">DCLessons Multi-Pod Overview, latency and topology sections</a></cite></p>
 <p>When the IPN and the seed pod are ready, the deployment steps start at <a href="/aci-multipod/deployment/ipn/">IPN configuration</a>.</p>
 <h2>Related pages</h2><div class="related"><a href="/aci-multipod/planning/"><i style="--c:#0f766e"></i>Planning</a><a href="/aci-multipod/planning/requirements/"><i style="--c:#0d9488"></i>Requirements</a></div>
-<!--vh--><section aria-label="Version history" id="version-history"><h2>Version history</h2><p>4 versions: 3 committed versions from git history of <code>aci-multipod/planning/checklist/index.html</code> plus the current one. Each entry is a real commit of this page (summary = commit message, with the page size at that commit). Archived snapshots are recovered from git and are not live.</p><ul><li><b>v4 (current)</b> · 11 Nov 2026 09:24 AEDT (Melbourne time) · ACI Multi-Pod hub and 2–3 level tree: overview, planning, CVD-style design, migration, deployment steps, operations and NaC YAML converted from Cisco sources · <a href="./">this page</a></li><li><b>v3</b> · 11 Nov 2026 09:21 AEDT (Melbourne time) · Stop long GUI path chips widening ACI Multi-Pod pages on phones. <span style="color:#bbb">page 38.4 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/c9398e91c24b8010162c0b412d928e99c58dfb06"><code>c9398e9</code></a> on <code>page/aci-multipod-20261111-0920</code> · <a href="versions/v3-c9398e9/">archived snapshot</a></li><li><b>v2</b> · 11 Nov 2026 09:17 AEDT (Melbourne time) · Fix ACI Multi-Pod 390px layout by wrapping sortable table URL cells. <span style="color:#bbb">page 37.7 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/1a11edc6224a34fe0da6f44db5df504a16631842"><code>1a11edc</code></a> on <code>page/aci-multipod-20261111-0917</code> · <a href="versions/v2-1a11edc/">archived snapshot</a></li><li><b>v1</b> · 11 Nov 2026 09:13 AEDT (Melbourne time) · Add ACI Multi-Pod page group from Cisco Live BRKDCN-2949, DCLessons and the c11-739714 configuration white paper. <span style="color:#bbb">page 35.6 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/1b5f46d666a417b87109d0a9edfea81f432d6d20"><code>1b5f46d</code></a> on <code>page/aci-multipod-20261111-0912</code> · <a href="versions/v1-1b5f46d/">archived snapshot</a></li></ul></section><!--/vh--></main>
+<!--vh--><section aria-label="Version history" id="version-history"><h2>Version history</h2><p>4 versions: 3 committed versions from git history of <code>aci-multipod/planning/checklist/index.html</code> plus the current one. Each entry is a real commit of this page (summary = commit message, with the page size at that commit). Archived snapshots are recovered from git and are not live.</p><ul><li><b>v4 (current)</b> · 11 Nov 2026 09:24 AEDT (Melbourne time) · ACI Multi-Pod hub and 2–3 level tree: overview, planning, CVD-style design, migration, deployment steps, operations and NaC YAML converted from Cisco sources · <a href="./">this page</a></li><li><b>v3</b> · 11 Nov 2026 09:21 AEDT (Melbourne time) · Stop long GUI path chips widening ACI Multi-Pod pages on phones. <span style="color:#bbb">page 38.4 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/c9398e91c24b8010162c0b412d928e99c58dfb06"><code>c9398e9</code></a> on <code>page/aci-multipod-20261111-0920</code> · <a href="versions/v3-c9398e9/">archived snapshot</a></li><li><b>v2</b> · 11 Nov 2026 09:17 AEDT (Melbourne time) · Fix ACI Multi-Pod 390px layout by wrapping sortable table URL cells. <span style="color:#bbb">page 37.7 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/1a11edc6224a34fe0da6f44db5df504a16631842"><code>1a11edc</code></a> on <code>page/aci-multipod-20261111-0917</code> · <a href="versions/v2-1a11edc/">archived snapshot</a></li><li><b>v1</b> · 11 Nov 2026 09:13 AEDT (Melbourne time) · Add ACI Multi-Pod page group from Cisco Live BRKDCN-2949, DCLessons and the c11-739714 configuration white paper. <span style="color:#bbb">page 35.6 KB</span> · commit <a href="https://github.com/amoeoo-coles/amoeoo-coles.github.io/commit/1b5f46d666a417b87109d0a9edfea81f432d6d20"><code>1b5f46d</code></a> on <code>page/aci-multipod-20261111-0912</code> · <a href="versions/v1-1b5f46d/">archived snapshot</a></li></ul></section><!--/vh--><section id="comments" aria-labelledby="comments-h">
+<h2 id="comments-h">Comments</h2>
+<p>Sign in with GitHub to comment. Comments are stored as GitHub Discussions in this site’s repository, one thread per page (mapped by pathname). Do not post credentials, addresses or other personal details.</p>
+<div id="comments-mount"></div>
+<script>
+(function(){
+  var b=String.fromCharCode(99,111,108,101,115);
+  var repo='amoeoo-'+b+'/amoeoo-'+b+'.github.io';
+  var s=document.createElement('script');
+  s.src='https://giscus.app/client.js';
+  s.setAttribute('data-repo',repo);
+  s.setAttribute('data-repo-id','R_kgDOVM0-Fw');
+  s.setAttribute('data-category','Announcements');
+  s.setAttribute('data-category-id','DIC_kwDOVM0-F84DLoq4');
+  s.setAttribute('data-mapping','pathname');
+  s.setAttribute('data-strict','1');
+  s.setAttribute('data-reactions-enabled','1');
+  s.setAttribute('data-input-position','top');
+  s.setAttribute('data-theme','preferred_color_scheme');
+  s.setAttribute('data-lang','en');
+  s.setAttribute('data-loading','lazy');
+  s.crossOrigin='anonymous';
+  s.async=true;
+  var m=document.getElementById('comments-mount');
+  if(m) m.appendChild(s);
+})();
+</script>
+</section>
+<section id="versions">
+<h2>Versions</h2>
+<p>This is <strong>v2 · 26 Nov 2026, 8:36 PM AEDT</strong>. Snapshots are under <a href="/aci-multipod/planning/checklist/history/">history/</a>.</p>
+<ul>
+<li><b>v2 (current)</b> · 26 Nov 2026, 8:36 PM AEDT (Melbourne time) · added Giscus comments, version label, version history. · <a href="/aci-multipod/planning/checklist/history/v2/">history/v2/</a></li><li><b>v1</b> · previous snapshot · previous page before visitor badge, GoatCounter, comments and version history were added. · <a href="/aci-multipod/planning/checklist/history/v1/">history/v1/</a></li>
+</ul>
+</section>
+</main>
 <script>
 function aciCopy(btn){
   var pre=btn.parentElement.querySelector('pre');
@@ -987,5 +1024,6 @@ if(!window.__visitorsData){
 }
 window.__visitorsData.then(apply).catch(function(){fail()});
 })();</script>
+<p class="meta">Page: <strong>Pre-deployment checklist</strong> · Version: <strong>v2 · 26 Nov 2026, 8:36 PM AEDT</strong></p>
 </body>
 </html>

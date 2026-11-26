@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- site-hidden-page: no menu, noindex, skip inject -->
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[6] ACI EP Learning &amp; Forwarding — Automation ACI Course</title>
+<meta name="description" content="Section 6: ACI EP Learning &amp; Forwarding.">
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Full-width equal grid: 6 columns on wide screens (11 items + Suggest/Dark
+   fill two even rows), 4 columns on mid widths, 2 columns on mobile. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:8px 12px 10px;
+  gap:8px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:600 12.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:6px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:6px;
+  margin:0;
+  padding:8px;
+  border-left:3px solid var(--menu-on)!important;
+  background:var(--menu-sub)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:6px;
+  box-sizing:border-box;
+  width:100%;
+  height:auto;
+  min-height:44px;
+  min-width:0;
+  padding:8px 10px;
+  border-radius:18px;
+  border:1px solid var(--menu-pill-bd)!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:var(--menu-hover)!important}
+nav.site.im a.mi.on{
+  background:var(--menu-on)!important;
+  border-color:var(--menu-on)!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:12px;height:auto;min-height:44px}
+nav.site.im a.mi.sm.on{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+nav.site.im a.mi .ic{font-size:15px;line-height:1;flex:none}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:visible;
+  text-overflow:unset;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.25;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:16px;
+  height:16px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  background:#93c5fd;
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:22px;
+  height:22px;
+  padding:0 5px;
+  border-radius:999px;
+  font-size:16px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:#1d4ed8!important;
+}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:36px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:36px;
+  padding:0 12px;
+  border-radius:18px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:36px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:36px;padding:0 10px}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+<style>
+
+
+:root {
+  color-scheme: light dark;
+  --bg: #f4f6f8;
+  --bg-accent: #e8eef4;
+  --card: #ffffff;
+  --ink: #15202b;
+  --muted: #5b6b7c;
+  --line: #d5dee7;
+  --accent: #0e7490;
+  --accent-soft: #e0f4f8;
+  --link: #0e7490;
+  --good: #047857;
+  --warn: #a16207;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --radius: 14px;
+  --mono: "IBM Plex Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+  --sans: "Source Sans 3", "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1220;
+    --bg-accent: #111827;
+    --card: #152033;
+    --ink: #e6edf5;
+    --muted: #93a4b8;
+    --line: #2a3b52;
+    --accent: #5eead4;
+    --accent-soft: #12313a;
+    --link: #5eead4;
+    --good: #34d399;
+    --warn: #fbbf24;
+    --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+  }
+}
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f4f6f8; --bg-accent: #e8eef4; --card: #ffffff; --ink: #15202b;
+  --muted: #5b6b7c; --line: #d5dee7; --accent: #0e7490; --accent-soft: #e0f4f8;
+  --link: #0e7490; --good: #047857; --warn: #a16207;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+  --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+  --link: #5eead4; --good: #34d399; --warn: #fbbf24;
+  --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--sans);
+  background: radial-gradient(1200px 500px at 10% -10%, var(--bg-accent), transparent 60%), var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  min-height: 100vh;
+}
+a { color: var(--link); }
+main.wrap, footer.wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem; }
+main.wrap { padding-top: 0.4rem; padding-bottom: 2.2rem; }
+footer.wrap { padding-bottom: 3.5rem; }
+.tr17 { margin: 0 0 8px; }
+h1 { font-size: clamp(1.7rem, 3vw, 2.25rem); margin: 0 0 0.35rem; letter-spacing: -0.03em; font-weight: 700; }
+.ver { margin: 0 0 0.85rem; color: var(--muted); font-weight: 650; }
+.lede { font-size: 1.05rem; margin: 0 0 1rem; max-width: 70ch; }
+h2 { font-size: 1.25rem; margin: 2rem 0 0.7rem; letter-spacing: -0.02em; scroll-margin-top: 80px; }
+h3 { font-size: 1.05rem; margin: 1.2rem 0 0.45rem; }
+p, ul, ol { margin: 0 0 0.85rem; }
+ul, ol { padding-left: 1.25rem; }
+li { margin: 0.2rem 0; }
+.kicker {
+  display: inline-block; text-transform: uppercase; letter-spacing: 0.14em;
+  font-size: 0.72rem; color: var(--accent); font-weight: 700; margin: 0 0 0.35rem;
+}
+.callout {
+  background: var(--accent-soft); border: 1px solid var(--line);
+  border-left: 4px solid var(--accent); border-radius: 10px;
+  padding: 12px 14px; margin: 0 0 1rem;
+}
+.callout p { margin: 0; }
+.callout .k { color: var(--muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+.callout .v { font-size: 1.35rem; font-weight: 750; letter-spacing: -0.02em; }
+.note, .muted, .meta, .footer, .snapshot { color: var(--muted); }
+.meta { margin: 0 0 0.25rem; }
+.snapshot { margin: 0; }
+.footer { margin: 0.4rem 0 0; font-size: 0.92rem; }
+.na { color: var(--muted); font-style: italic; }
+.cite { font-size: 0.9rem; color: var(--muted); margin: -0.35rem 0 1rem; }
+pre {
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+  padding: 12px 14px; overflow-x: auto; box-shadow: var(--shadow);
+  font-family: var(--mono); font-size: 0.86rem; line-height: 1.45; margin: 0 0 0.5rem;
+}
+code { font-family: var(--mono); font-size: 0.9em; }
+pre code { font-size: 0.86rem; }
+.table-wrap { overflow-x: auto; margin: 0 0 1rem; }
+table {
+  width: 100%; border-collapse: collapse; font-size: 0.95rem;
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+th, td { border-bottom: 1px solid var(--line); padding: 0.55rem 0.75rem; text-align: left; vertical-align: top; }
+th { font-size: 0.82rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); background: var(--bg-accent); }
+tr:last-child td { border-bottom: 0; }
+.src { font-size: 0.88rem; }
+.src-list { columns: 2; gap: 1.2rem; padding-left: 1.2rem; }
+@media (max-width: 720px) { .src-list { columns: 1; } }
+
+.page-menu { margin: 0 0 1.2rem; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 0 0 1.2rem; }
+.kpi { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; padding: 10px 12px; box-shadow: var(--shadow); }
+.kpi b { display: block; font-size: 1.4rem; letter-spacing: -0.03em; line-height: 1.2; }
+.kpi span { color: var(--muted); font-size: 0.82rem; }
+td.num, th.num, th.n, td.n { text-align: right; font-variant-numeric: tabular-nums; }
+html[data-theme="light"] .kicker, html[data-theme="dark"] .kicker, .kicker { color: var(--accent) !important; }
+td.nw, .nw { white-space: nowrap; }
+.geo-flag { margin-right: 0.35rem; }
+#geo-table { max-width: 56rem; }
+#geo-table a { text-decoration: none; }
+#geo-table a:hover { text-decoration: underline; }
+#comments { margin: 1.6rem 0 0; }
+#comments-mount { margin-top: 0.8rem; }
+.desc { max-width: 52rem; }
+
+
+.ai-note {
+  border-left: 4px solid var(--accent, #0e7490);
+  padding: 0.55rem 0.8rem;
+  margin: 0.8rem 0 1.1rem;
+  background: var(--bg-accent, #e8eef4);
+  max-width: 78ch;
+}
+details.topic {
+  border: 1px solid var(--line, #d5dee7);
+  border-radius: 8px;
+  background: var(--card, #fff);
+  margin: 0 0 0.6rem;
+  padding: 0;
+}
+details.topic summary {
+  cursor: pointer;
+  font-weight: 650;
+  padding: 0.65rem 0.85rem;
+  list-style: none;
+}
+details.topic summary::-webkit-details-marker { display: none; }
+details.topic summary::after {
+  content: "▸";
+  float: right;
+  color: var(--muted, #5b6b7c);
+}
+details.topic[open] summary::after { content: "▾"; }
+details.topic .topic-body { padding: 0 0.85rem 0.85rem; max-width: 78ch; }
+details.topic .topic-body > :first-child { margin-top: 0; }
+
+/* Program-style code box: tight lines, no inherited list gaps. */
+.codebox {
+  border-radius: 8px;
+  overflow: hidden;
+  background: #0b1220;
+  color: #e2e8f0;
+  margin: 1rem 0 1.2rem;
+  border: 1px solid #1f2937;
+}
+.codebox-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0.75rem;
+  background: #111827;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  color: #cbd5e1;
+}
+.codebox-tab .fname { font-weight: 650; color: #f8fafc; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.codebox-tab a, .codebox-tab button {
+  margin-left: auto;
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 0.2rem 0.55rem;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  flex: none;
+}
+.codebox-tab a { margin-left: 0.4rem; }
+.codebox-tab button.copy-btn { margin-left: auto; }
+.codebox-tab button.copy-btn:hover, .codebox-tab a:hover { background: #334155; }
+.codebox-body {
+  margin: 0;
+  overflow: auto;
+  background: #0b1220;
+  color: #e2e8f0;
+}
+.codebox ol.lines {
+  list-style: none;
+  margin: 0 !important;
+  padding: 0.45rem 0 0.55rem !important;
+  counter-reset: ln;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.5;
+  white-space: normal;
+}
+.codebox ol.lines li {
+  display: block;
+  box-sizing: border-box;
+  margin: 0 !important;
+  padding: 0 1rem 0 3.3rem !important;
+  border: 0;
+  line-height: 1.5;
+  min-height: 0;
+  position: relative;
+  white-space: pre;
+  color: #e2e8f0 !important;
+  background: transparent !important;
+}
+.codebox ol.lines li::before {
+  content: counter(ln);
+  counter-increment: ln;
+  position: absolute;
+  left: 0;
+  width: 2.7rem;
+  text-align: right;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+/* Nested course lists — no extra ol numbering. */
+.course-tree, .course-tree ul,
+.section-children, .section-children ul,
+.outline-tree, .outline-tree ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.course-tree { max-width: 80ch; }
+.course-tree > li,
+.section-children > li {
+  margin: 0.85rem 0 1.1rem;
+}
+.course-tree .sec-title,
+.section-children .sec-title { font-weight: 700; }
+.course-tree ul,
+.section-children ul {
+  padding-left: 1.15rem;
+  margin: 0.35rem 0 0;
+  border-left: 2px solid var(--line, #d5dee7);
+}
+.course-tree ul li,
+.section-children ul li { margin: 0.15rem 0; }
+.page-menu { margin: 0 0 1.2rem; padding-left: 1.3rem; }
+.diagram {
+  margin: 0.85rem 0 1.2rem;
+  max-width: 100%;
+}
+.diagram svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 42rem;
+  background: var(--card, #fff);
+  border: 1px solid var(--line, #d5dee7);
+  border-radius: 10px;
+}
+.diagram figcaption {
+  margin: 0.45rem 0 0;
+  font-size: 0.92rem;
+  color: var(--muted, #5b6b7c);
+  max-width: 78ch;
+}
+details.topic .topic-body:has(.diagram) { max-width: 100%; }
+
+.kicker { text-transform: uppercase; letter-spacing: .06em; font-size: .8rem; color: var(--muted); }
+.ver { color: var(--muted); font-size: 0.95rem; }
+.lede { max-width: 78ch; }
+footer.wrap .meta, p.meta { color: var(--muted); font-size: 0.92rem; }
+code, .dn { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.92em; }
+
+/* Course navigation bar */
+.course-nav {
+  background: var(--bg, #fff);
+  border-bottom: 1px solid var(--line, #d5dee7);
+  z-index: 30;
+}
+.course-nav.is-top { position: sticky; top: 0; }
+.course-nav.is-bottom {
+  position: static;
+  border-bottom: 0;
+  border-top: 1px solid var(--line, #d5dee7);
+  margin: 1.4rem 0 0.6rem;
+}
+.course-nav-bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 0.45rem 0.6rem;
+  align-items: center;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0.4rem 1.5rem;
+  box-sizing: border-box;
+}
+.nav-btn {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-decoration: none;
+  border: 1px solid var(--line, #d5dee7);
+  border-radius: 8px;
+  padding: 0.4rem 0.65rem;
+  background: var(--card, #fff);
+  color: var(--link, #1d4ed8);
+  font-size: 0.88rem;
+  line-height: 1.3;
+}
+.nav-btn .nav-title { font-weight: 650; }
+.nav-btn.prev, .nav-btn.next { width: 100%; max-width: 100%; justify-self: stretch; box-sizing: border-box; }
+.nav-btn.next { text-align: right; }
+.nav-btn.is-disabled {
+  opacity: 0.42;
+  pointer-events: none;
+  color: var(--muted, #5b6b7c);
+  cursor: not-allowed;
+}
+.nav-mid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  text-align: center;
+  min-width: 9rem;
+}
+.nav-pos {
+  font-size: 0.78rem;
+  color: var(--muted, #5b6b7c);
+  white-space: nowrap;
+}
+.outline-toggle {
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 650;
+  cursor: pointer;
+  border: 1px solid var(--line, #d5dee7);
+  border-radius: 8px;
+  background: var(--card, #fff);
+  color: var(--ink, #15202b);
+  padding: 0.2rem 0.55rem;
+}
+.outline-toggle[aria-expanded="true"] { background: var(--bg-accent, #e8eef4); }
+.course-outline {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0.35rem 1.5rem 0.9rem;
+  box-sizing: border-box;
+  max-height: min(70vh, 28rem);
+  overflow: auto;
+}
+.course-outline[hidden] { display: none !important; }
+.outline-tree a {
+  display: block;
+  padding: 0.12rem 0.35rem;
+  border-radius: 4px;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.outline-tree ul {
+  padding-left: 1.05rem;
+  border-left: 2px solid var(--line, #d5dee7);
+  margin: 0.15rem 0 0.25rem 0.2rem;
+}
+.outline-tree a[aria-current="page"] {
+  font-weight: 750;
+  background: var(--bg-accent, #e8eef4);
+  color: var(--ink, #15202b);
+}
+@media (max-width: 720px) {
+  .course-nav-bar {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "prev next"
+      "mid mid";
+    padding: 0.4rem 1rem;
+  }
+  .nav-btn.prev { grid-area: prev; }
+  .nav-btn.next { grid-area: next; }
+  .nav-mid { grid-area: mid; flex-direction: row; justify-content: center; min-width: 0; }
+  .course-outline { padding-left: 1rem; padding-right: 1rem; }
+}
+
+/* Interactive study quiz */
+.quiz-app { max-width: 78ch; }
+.q-card {
+  border: 1px solid var(--line, #d5dee7);
+  border-radius: 8px;
+  background: var(--card, #fff);
+  padding: 0.9rem 1rem 1rem;
+  margin: 0 0 1rem;
+}
+.q-card fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.q-card legend {
+  font-weight: 650;
+  padding: 0;
+  margin: 0 0 0.65rem;
+  float: none;
+  width: 100%;
+}
+.q-num { color: var(--muted, #5b6b7c); font-weight: 600; margin-right: 0.35rem; }
+.quiz-snippet {
+  margin: 0 0 0.75rem;
+  padding: 0.55rem 0.75rem;
+  overflow: auto;
+  background: #0b1220;
+  color: #e2e8f0;
+  border-radius: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.5;
+  white-space: pre;
+  max-width: 100%;
+}
+.q-options {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.q-option {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+  border: 1px solid var(--line, #d5dee7);
+  border-radius: 8px;
+  padding: 0.45rem 0.65rem;
+  cursor: pointer;
+}
+.q-option:focus-within { outline: 2px solid var(--accent, #0e7490); outline-offset: 1px; }
+.q-option input { margin-top: 0.25rem; flex: none; }
+.q-option .opt-id { font-weight: 700; min-width: 1.2rem; }
+.q-actions { margin-top: 0.7rem; display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.quiz-btn {
+  font: inherit;
+  font-weight: 650;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 1px solid var(--line, #d5dee7);
+  border-radius: 8px;
+  background: var(--card, #fff);
+  color: var(--ink, #15202b);
+  padding: 0.4rem 0.8rem;
+}
+.quiz-btn.primary {
+  background: var(--accent, #0e7490);
+  color: #fff;
+  border-color: var(--accent, #0e7490);
+}
+html[data-theme="dark"] .quiz-btn.primary { color: #042f2e; }
+.quiz-btn:focus-visible { outline: 2px solid var(--accent, #0e7490); outline-offset: 2px; }
+.q-feedback {
+  margin: 0.65rem 0 0;
+  padding: 0.55rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid var(--line, #d5dee7);
+  border-left-width: 4px;
+}
+.q-feedback .verdict { font-weight: 700; margin: 0 0 0.3rem; }
+.q-feedback .src { margin: 0.35rem 0 0; }
+.q-feedback.is-correct,
+.q-option.is-correct {
+  border-color: var(--good, #047857);
+  background: color-mix(in srgb, var(--good, #047857) 14%, var(--card, #fff));
+}
+.q-feedback.is-wrong,
+.q-option.is-wrong {
+  border-color: #b91c1c;
+  background: color-mix(in srgb, #b91c1c 12%, var(--card, #fff));
+}
+html[data-theme="dark"] .q-feedback.is-wrong,
+html[data-theme="dark"] .q-option.is-wrong {
+  border-color: #fca5a5;
+  background: color-mix(in srgb, #fca5a5 16%, var(--card, #152033));
+}
+.quiz-score {
+  border: 1px solid var(--line, #d5dee7);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  background: var(--bg-accent, #e8eef4);
+  margin: 1rem 0 0;
+}
+.quiz-score .score-line { margin: 0; font-weight: 650; }
+@media (max-width: 420px) {
+  .q-card { padding: 0.75rem; }
+  .quiz-snippet { font-size: 12px; }
+}
+
+</style>
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+
+<nav class="course-nav is-top" aria-label="Course">
+  <div class="course-nav-bar">
+    <a class="nav-btn prev" href="/roadmap/automation-aci-course/05-aci-tenant-policies/quiz-5/">← Previous: <span class="nav-title">ACI Core Quiz #5</span></a>
+    <div class="nav-mid">
+      <span class="nav-pos">Section 6 of 11</span>
+      <button type="button" class="outline-toggle" aria-expanded="false" aria-controls="course-outline">Outline</button>
+    </div>
+    <a class="nav-btn next" href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/39-aci-packet-encapsulation-format/">Next: <span class="nav-title">(39) ACI Packet Encapsulation &amp; Format</span> →</a>
+  </div>
+  <div id="course-outline" class="course-outline" hidden>
+<ul class="outline-tree">
+<li><a href="/roadmap/automation-aci-course/">Automation ACI Course</a><ul>
+<li><a href="/roadmap/automation-aci-course/01-aci-overview-basic-concepts/">[1] ACI Overview &amp; Basic Concepts</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/01-aci-overview-basic-concepts/01-what-and-why-cisco-aci/">(01) What and Why Cisco ACI?</a></li>
+<li><a href="/roadmap/automation-aci-course/01-aci-overview-basic-concepts/02-aci-fabric-components-apics/">(02) ACI Fabric Components - APICs</a></li>
+<li><a href="/roadmap/automation-aci-course/01-aci-overview-basic-concepts/03-aci-fabric-components-n9k-switches/">(03) ACI Fabric Components - N9K Switches</a></li>
+<li><a href="/roadmap/automation-aci-course/01-aci-overview-basic-concepts/04-aci-leaf-spine-topology/">(04) ACI Leaf-Spine Topology</a></li>
+<li><a href="/roadmap/automation-aci-course/01-aci-overview-basic-concepts/05-aci-data-control-management-plane/">(05) ACI Data, Control &amp; Management Plane</a></li>
+<li><a href="/roadmap/automation-aci-course/01-aci-overview-basic-concepts/quiz-1/">ACI Core Quiz #1</a></li>
+</ul></li>
+<li><a href="/roadmap/automation-aci-course/02-bring-up-the-aci-fabric/">[2] Bring Up the ACI Fabric</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/02-bring-up-the-aci-fabric/06-aci-fabric-discovery/">(06) ACI Fabric Discovery</a></li>
+<li><a href="/roadmap/automation-aci-course/02-bring-up-the-aci-fabric/07-aci-fabric-initial-setup/">(07) ACI Fabric Initial Setup</a></li>
+<li><a href="/roadmap/automation-aci-course/02-bring-up-the-aci-fabric/08-aci-initialization-lab-demo/">(08) ACI Initialization LAB Demo</a></li>
+<li><a href="/roadmap/automation-aci-course/02-bring-up-the-aci-fabric/quiz-2/">ACI Core Quiz #2</a></li>
+</ul></li>
+<li><a href="/roadmap/automation-aci-course/03-aci-object-model-clustering/">[3] ACI Object Model &amp; Clustering</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/03-aci-object-model-clustering/09-aci-object-model/">(09) ACI Object Model</a></li>
+<li><a href="/roadmap/automation-aci-course/03-aci-object-model-clustering/10-aci-gui-overview/">(10) ACI GUI Overview</a></li>
+<li><a href="/roadmap/automation-aci-course/03-aci-object-model-clustering/11-aci-obtaining-the-dn-from-gui/">(11) ACI Obtaining the DN from GUI</a></li>
+<li><a href="/roadmap/automation-aci-course/03-aci-object-model-clustering/12-aci-object-store-browser-visore/">(12) ACI Object Store Browser (Visore)</a></li>
+<li><a href="/roadmap/automation-aci-course/03-aci-object-model-clustering/13-aci-cli-types/">(13) ACI CLI Types</a></li>
+<li><a href="/roadmap/automation-aci-course/03-aci-object-model-clustering/14-aci-moquery/">(14) ACI Moquery</a></li>
+<li><a href="/roadmap/automation-aci-course/03-aci-object-model-clustering/15-aci-apic-clustering/">(15) ACI APIC Clustering</a></li>
+<li><a href="/roadmap/automation-aci-course/03-aci-object-model-clustering/quiz-3/">ACI Core Quiz #3</a></li>
+</ul></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/">[4] ACI Access Policies</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/16-aci-access-policies-overview/">(16) ACI Access Policies Overview</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/17-aci-switch-profiles-selectors/">(17) ACI Switch Profiles &amp; Selectors</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/18-aci-switch-policies-policy-groups/">(18) ACI Switch Policies &amp; Policy Groups</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/19-aci-interface-profiles-selectors/">(19) ACI Interface Profiles &amp; Selectors</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/20-aci-interface-policies-policy-groups-ipg/">(20) ACI Interface Policies &amp; Policy Groups (IPG)</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/21-aci-port-channels-pc/">(21) ACI Port-Channels (PC)</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/22-aci-virtual-port-channels-vpc/">(22) ACI Virtual Port-Channels (VPC)</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/23-aci-vlan-pools/">(23) ACI VLAN Pools</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/24-aci-domains/">(24) ACI Domains</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/25-aci-attachable-entity-profiles-aeps/">(25) ACI Attachable Entity Profiles (AEPs)</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/26-aci-and-fabric-extenders-fex/">(26) ACI &amp; Fabric Extenders (FEX)</a></li>
+<li><a href="/roadmap/automation-aci-course/04-aci-access-policies/quiz-4/">ACI Core Quiz #4</a></li>
+</ul></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/">[5] ACI Tenant Policies</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/27-aci-tenant-policies-overview/">(27) ACI Tenant Policies Overview</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/28-aci-tenants/">(28) ACI Tenants</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/29-aci-vrfs/">(29) ACI VRFs</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/30-aci-bridge-domains-bds/">(30) ACI Bridge Domains (BDs)</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/31-aci-subnets/">(31) ACI Subnets</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/32-aci-application-profiles-ap/">(32) ACI Application Profiles (AP)</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/33-aci-endpoint-groups-epg/">(33) ACI Endpoint Groups (EPG)</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/34-aci-attaching-endpoints-to-epgs/">(34) ACI Attaching Endpoints to EPGs</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/35-aci-contracts-subjects-filters/">(35) ACI Contracts, Subjects &amp; Filters</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/36-aci-contracts-deployment/">(36) ACI Contracts Deployment</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/37-aci-as-l2-and-l3-fabric-lab-demo-part-1/">(37) ACI as L2 &amp; L3 Fabric (LAB Demo Part 1)</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/38-aci-as-l2-and-l3-fabric-lab-demo-part-2/">(38) ACI as L2 &amp; L3 Fabric (LAB Demo Part 2)</a></li>
+<li><a href="/roadmap/automation-aci-course/05-aci-tenant-policies/quiz-5/">ACI Core Quiz #5</a></li>
+</ul></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/" aria-current="page">[6] ACI EP Learning &amp; Forwarding</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/39-aci-packet-encapsulation-format/">(39) ACI Packet Encapsulation &amp; Format</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/40-aci-endpoint-types-servers-nic-teaming/">(40) ACI Endpoint Types &amp; Servers NIC Teaming</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/41-aci-vlan-types-vlan-scope/">(41) ACI VLAN Types &amp; VLAN Scope</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/42-aci-endpoint-learning-part-1/">(42) ACI Endpoint Learning (Part 1)</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/43-aci-endpoint-learning-part-2/">(43) ACI Endpoint Learning (Part 2)</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/44-aci-endpoint-forwarding-overview/">(44) ACI Endpoint Forwarding Overview</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/45-aci-endpoint-forwarding-deep-dive-part-1/">(45) ACI Endpoint Forwarding Deep-Dive (Part 1)</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/46-aci-endpoint-forwarding-deep-dive-part-2/">(46) ACI Endpoint Forwarding Deep-Dive (Part 2)</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/47-aci-bum-forwarding-part-1/">(47) ACI BUM Forwarding (Part 1)</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/48-aci-bum-forwarding-part-2/">(48) ACI BUM Forwarding (Part 2)</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/quiz-6/">ACI Core Quiz #6</a></li>
+</ul></li>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/">[7] ACI Security Policies Deployment</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/49-aci-policy-deployment-overview/">(49) ACI Policy Deployment Overview</a></li>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/50-aci-zoning-rules/">(50) ACI Zoning-Rules</a></li>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/51-aci-policy-enforcement-options-part-1/">(51) ACI Policy Enforcement Options (Part 1)</a></li>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/52-aci-policy-enforcement-options-part-2/">(52) ACI Policy Enforcement Options (Part 2)</a></li>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/53-aci-policy-enforcement-options-part-3/">(53) ACI Policy Enforcement Options (Part 3)</a></li>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/54-aci-policy-enforcement-options-part-4/">(54) ACI Policy Enforcement Options (Part 4)</a></li>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/55-aci-policy-enforcement-lab-demo-part-1/">(55) ACI Policy Enforcement LAB Demo (Part 1)</a></li>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/56-aci-policy-enforcement-lab-demo-part-2/">(56) ACI Policy Enforcement LAB Demo (Part 2)</a></li>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/57-aci-contract-priorities/">(57) ACI Contract Priorities</a></li>
+<li><a href="/roadmap/automation-aci-course/07-aci-security-policies-deployment/quiz-7/">ACI Core Quiz #7</a></li>
+</ul></li>
+<li><a href="/roadmap/automation-aci-course/08-aci-external-l2-connectivity/">[8] ACI External L2 Connectivity</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/08-aci-external-l2-connectivity/58-aci-l2out-vs-epg-out/">(58) ACI L2Out vs. EPG Out</a></li>
+<li><a href="/roadmap/automation-aci-course/08-aci-external-l2-connectivity/59-aci-l2out-lab-demo/">(59) ACI L2Out LAB Demo</a></li>
+<li><a href="/roadmap/automation-aci-course/08-aci-external-l2-connectivity/60-aci-and-stp/">(60) ACI &amp; STP</a></li>
+<li><a href="/roadmap/automation-aci-course/08-aci-external-l2-connectivity/61-aci-loop-detection/">(61) ACI Loop Detection</a></li>
+<li><a href="/roadmap/automation-aci-course/08-aci-external-l2-connectivity/quiz-8/">ACI Core Quiz #8</a></li>
+</ul></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/">[9] ACI External L3 Connectivity</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/62-aci-l3out-overview/">(62) ACI L3Out Overview</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/63-aci-l3out-interface-types/">(63) ACI L3Out Interface Types</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/64-aci-mp-bgp-route-reflector-rr/">(64) ACI MP-BGP Route-Reflector (RR)</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/65-aci-l3out-object-model/">(65) ACI L3Out Object Model</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/66-aci-l3out-configuration-steps/">(66) ACI L3Out Configuration Steps</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/67-aci-l3out-eigrp-lab-demo/">(67) ACI L3Out EIGRP LAB Demo</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/68-aci-l3out-static-routing-lab-demo/">(68) ACI L3Out Static Routing LAB Demo</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/69-aci-l3out-ospf-lab-demo/">(69) ACI L3Out OSPF LAB Demo</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/70-aci-l3out-bgp-lab-demo/">(70) ACI L3Out BGP LAB Demo</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/71-aci-l3out-route-control/">(71) ACI L3Out Route Control</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/72-aci-l3out-route-control-lab-demo-part-1/">(72) ACI L3Out Route Control LAB Demo (Part 1)</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/73-aci-l3out-route-control-lab-demo-part-2/">(73) ACI L3Out Route Control LAB Demo (Part 2)</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/74-aci-l3out-route-control-lab-demo-part-3/">(74) ACI L3Out Route Control LAB Demo (Part 3)</a></li>
+<li><a href="/roadmap/automation-aci-course/09-aci-external-l3-connectivity/quiz-9/">ACI Core Quiz #9</a></li>
+</ul></li>
+<li><a href="/roadmap/automation-aci-course/10-aci-additional-learning-topics/">[10] ACI Additional Learning Topics</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/10-aci-additional-learning-topics/75-miscellaneous-aci-topics/">(75) Miscellaneous ACI Topics</a></li>
+</ul></li>
+<li><a href="/roadmap/automation-aci-course/11-shared-services/">[11] Shared Services</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/11-shared-services/76-shared-l3out/">(76) Shared L3Out</a></li>
+<li><a href="/roadmap/automation-aci-course/11-shared-services/77-shared-vrf/">(77) Shared VRF</a></li>
+<li><a href="/roadmap/automation-aci-course/11-shared-services/78-shared-bridge-domains/">(78) Shared Bridge Domains</a></li>
+<li><a href="/roadmap/automation-aci-course/11-shared-services/79-shared-l4-7-services/">(79) Shared L4-7 Services</a></li>
+<li><a href="/roadmap/automation-aci-course/11-shared-services/80-five-tenant-shared-topology/">(80) Five-tenant shared topology</a></li>
+<li><a href="/roadmap/automation-aci-course/11-shared-services/quiz-10/">ACI Core Quiz #10</a></li>
+</ul></li>
+</ul></li></ul>
+</div>
+</nav>
+
+<main class="wrap">
+<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:var(--muted,#888)"><a href="/visitors/" style="color:inherit;text-decoration:none"><span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></a><span class="uvt" style="font-size:11px;color:var(--muted,#888)"></span></div><!--/arr-uv-tr17-->
+
+<p class="kicker">Automation ACI Course</p>
+<h1>[6] ACI EP Learning &amp; Forwarding</h1>
+<p class="ver">v6 · 25 Nov 2026, 7:40 AM AEDT</p>
+<p class="lede">Section [6] of the Automation ACI Course, with its lesson and quiz pages listed as child links.</p>
+<h2 id="pages">Pages in this section</h2>
+<ul class="section-children">
+<li><a class="sec-title" href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/" aria-current="page">[6] ACI EP Learning &amp; Forwarding</a>
+<ul>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/39-aci-packet-encapsulation-format/">(39) ACI Packet Encapsulation &amp; Format</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/40-aci-endpoint-types-servers-nic-teaming/">(40) ACI Endpoint Types &amp; Servers NIC Teaming</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/41-aci-vlan-types-vlan-scope/">(41) ACI VLAN Types &amp; VLAN Scope</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/42-aci-endpoint-learning-part-1/">(42) ACI Endpoint Learning (Part 1)</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/43-aci-endpoint-learning-part-2/">(43) ACI Endpoint Learning (Part 2)</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/44-aci-endpoint-forwarding-overview/">(44) ACI Endpoint Forwarding Overview</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/45-aci-endpoint-forwarding-deep-dive-part-1/">(45) ACI Endpoint Forwarding Deep-Dive (Part 1)</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/46-aci-endpoint-forwarding-deep-dive-part-2/">(46) ACI Endpoint Forwarding Deep-Dive (Part 2)</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/47-aci-bum-forwarding-part-1/">(47) ACI BUM Forwarding (Part 1)</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/48-aci-bum-forwarding-part-2/">(48) ACI BUM Forwarding (Part 2)</a></li>
+<li><a href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/quiz-6/">ACI Core Quiz #6</a> (10 questions)</li>
+</ul>
+</li>
+</ul>
+
+</main>
+<footer class="wrap">
+<p class="meta">Page: <strong>[6] ACI EP Learning &amp; Forwarding</strong> · Version: <strong>v6 · 25 Nov 2026, 7:40 AM AEDT</strong></p>
+
+<nav class="course-nav is-bottom" aria-label="Course">
+  <div class="course-nav-bar">
+    <a class="nav-btn prev" href="/roadmap/automation-aci-course/05-aci-tenant-policies/quiz-5/">← Previous: <span class="nav-title">ACI Core Quiz #5</span></a>
+    <div class="nav-mid">
+      <span class="nav-pos">Section 6 of 11</span>
+      <button type="button" class="outline-toggle" aria-expanded="false" aria-controls="course-outline">Outline</button>
+    </div>
+    <a class="nav-btn next" href="/roadmap/automation-aci-course/06-aci-ep-learning-forwarding/39-aci-packet-encapsulation-format/">Next: <span class="nav-title">(39) ACI Packet Encapsulation &amp; Format</span> →</a>
+  </div>
+  
+</nav>
+
+<p class="meta">This course is a hidden study area and is not listed in the public site menu or the public RoadMap page. Folder links end with <code>/</code>. Credentials in playbooks are placeholders. No playbook on these pages is meant to be run against a production APIC. Use the left and right arrow keys to move to the previous or next page.</p>
+</footer>
+
+<script>
+(function(){
+  document.querySelectorAll(".codebox").forEach(function(box){
+    var btn = box.querySelector(".copy-btn");
+    var rawEl = box.querySelector(".codebox-raw");
+    if (!btn) return;
+    btn.addEventListener("click", function(){
+      var text = rawEl ? rawEl.value : "";
+      function done(){
+        var old = btn.textContent;
+        btn.textContent = "Copied";
+        setTimeout(function(){ btn.textContent = old; }, 1500);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(function(){ fallback(); });
+      } else { fallback(); }
+      function fallback(){
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+      }
+    });
+  });
+
+  var outline = document.getElementById("course-outline");
+  var toggles = document.querySelectorAll(".outline-toggle");
+  function setOpen(open){
+    if (!outline) return;
+    if (open) outline.removeAttribute("hidden");
+    else outline.setAttribute("hidden", "");
+    toggles.forEach(function(btn){ btn.setAttribute("aria-expanded", open ? "true" : "false"); });
+    if (open) {
+      var cur = outline.querySelector('[aria-current="page"]');
+      if (cur && cur.scrollIntoView) cur.scrollIntoView({block: "nearest"});
+    }
+  }
+  toggles.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var open = outline && !outline.hasAttribute("hidden");
+      setOpen(!open);
+      if (!open && btn.closest(".is-bottom") && outline) {
+        outline.scrollIntoView({block: "nearest"});
+      }
+    });
+  });
+
+  document.addEventListener("keydown", function(ev){
+    if (ev.altKey || ev.ctrlKey || ev.metaKey || ev.shiftKey) return;
+    var tag = (ev.target && ev.target.tagName) ? ev.target.tagName.toLowerCase() : "";
+    if (tag === "input" || tag === "textarea" || tag === "select" || (ev.target && ev.target.isContentEditable)) return;
+    var href = null;
+    if (ev.key === "ArrowLeft") {
+      var prev = document.querySelector(".course-nav.is-top a.nav-btn.prev");
+      if (prev) href = prev.getAttribute("href");
+    } else if (ev.key === "ArrowRight") {
+      var next = document.querySelector(".course-nav.is-top a.nav-btn.next");
+      if (next) href = next.getAttribute("href");
+    }
+    if (href) { ev.preventDefault(); window.location.href = href; }
+  });
+
+  var app = document.getElementById("quiz-app");
+  if (app) {
+    var dataEl = document.getElementById("quiz-data");
+    var form = document.getElementById("quiz-form");
+    var questions = [];
+    try { questions = JSON.parse(dataEl ? dataEl.textContent : "[]"); } catch (e) { questions = []; }
+    var cards = Array.prototype.slice.call(app.querySelectorAll(".q-card"));
+    var scoreBox = document.getElementById("quiz-score");
+    var scoreLine = scoreBox ? scoreBox.querySelector(".score-line") : null;
+    var checked = [];
+
+    function escHtml(s){
+      return String(s == null ? "" : s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+    function selected(card){
+      var input = card.querySelector('input[type="radio"]:checked');
+      return input ? input.value : null;
+    }
+    function setFeedback(card, html, kind){
+      var box = card.querySelector(".q-feedback");
+      if (!box) return;
+      box.hidden = !html;
+      box.classList.remove("is-correct", "is-wrong");
+      if (kind) box.classList.add(kind);
+      box.innerHTML = html || "";
+    }
+    function clearMarks(card){
+      card.querySelectorAll(".q-option").forEach(function(lab){
+        lab.classList.remove("is-correct", "is-wrong");
+      });
+    }
+    function grade(index, showNeedSelect){
+      var item = questions[index];
+      var card = cards[index];
+      if (!item || !card) return;
+      var choice = selected(card);
+      if (!choice) {
+        if (showNeedSelect) {
+          setFeedback(card, "<p class=\"verdict\">Select an answer, then Check.</p>", "");
+        }
+        return;
+      }
+      clearMarks(card);
+      var ok = choice === item.answer;
+      checked[index] = ok;
+      card.querySelectorAll(".q-option").forEach(function(lab){
+        var input = lab.querySelector("input");
+        if (!input) return;
+        if (input.value === item.answer) lab.classList.add("is-correct");
+        else if (input.value === choice && !ok) lab.classList.add("is-wrong");
+      });
+      var src = item.source || {};
+      var srcHtml = "";
+      if (src.url && src.label) {
+        srcHtml = '<p class="src">Source: <a href="' + escHtml(src.url) + '">' + escHtml(src.label) + "</a></p>";
+      }
+      var expl = item.explanation ? "<p>" + escHtml(item.explanation) + "</p>" : "";
+      var verdict = ok ? "Correct." : "Not quite. The correct answer is " + escHtml(String(item.answer).toUpperCase()) + ".";
+      setFeedback(card, '<p class="verdict">' + verdict + "</p>" + expl + srcHtml, ok ? "is-correct" : "is-wrong");
+      updateScore();
+    }
+    function updateScore(){
+      if (!scoreLine) return;
+      var total = questions.length;
+      var done = 0, right = 0;
+      for (var i = 0; i < total; i++) {
+        if (typeof checked[i] === "boolean") {
+          done += 1;
+          if (checked[i]) right += 1;
+        }
+      }
+      if (done === 0) {
+        scoreLine.textContent = "Select an answer for each question, then choose Check. Your score appears here after you check answers.";
+      } else if (done < total) {
+        scoreLine.textContent = "Score so far: " + right + " of " + done + " checked. " + (total - done) + " not yet checked.";
+      } else {
+        scoreLine.textContent = "Final score: " + right + " of " + total + ".";
+      }
+    }
+    function resetQuiz(){
+      checked = [];
+      cards.forEach(function(card){
+        card.querySelectorAll('input[type="radio"]').forEach(function(input){ input.checked = false; });
+        clearMarks(card);
+        setFeedback(card, "", "");
+      });
+      updateScore();
+      var first = app.querySelector('input[type="radio"]');
+      if (first && first.focus) first.focus();
+    }
+    if (form) {
+      form.addEventListener("submit", function(ev){ ev.preventDefault(); });
+    }
+    app.querySelectorAll(".q-check").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var idx = parseInt(btn.getAttribute("data-index"), 10);
+        grade(idx, true);
+      });
+    });
+    var checkAll = document.getElementById("quiz-check-all");
+    if (checkAll) {
+      checkAll.addEventListener("click", function(){
+        cards.forEach(function(_c, i){ grade(i, true); });
+        if (scoreBox && scoreBox.scrollIntoView) scoreBox.scrollIntoView({block: "nearest"});
+      });
+    }
+    var resetBtn = document.getElementById("quiz-reset");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", resetQuiz);
+    }
+    updateScore();
+  }
+})();
+</script>
+
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/"}}</script>
+<script>(function(){var b=String.fromCharCode(99,111,108,101,115);var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';s.setAttribute('data-goatcounter','https://amoeoo-'+b+'.goatcounter.com/count');document.head.appendChild(s);}());</script>
+
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+
+<!-- uv-badge v2 -->
+<style id="uv-badge-style">
+.uv-pop{position:relative;display:inline-block;vertical-align:middle}
+.uv-pop .uv-card{display:none;position:absolute;right:0;top:calc(100% + 6px);z-index:80;min-width:228px;padding:10px 12px;border-radius:10px;background:var(--card,#0f172a);color:var(--ink,#e2e8f0);border:1px solid var(--line,#334155);box-shadow:0 10px 28px rgba(0,0,0,.28);font:12px/1.4 system-ui,Arial,sans-serif;text-align:left;white-space:normal}
+.uv-pop.open .uv-card{display:block}
+.uv-card svg{display:block;width:204px;height:44px;margin:6px 0 8px}
+.uv-card .uv-k{font-weight:700;margin:0 0 2px}
+.uv-card .uv-m{color:var(--muted,#94a3b8);font-size:11px}
+.uv-card a{color:var(--link,#8ecbff)}
+</style>
+<script id="uv-badge">(function(){
+function norm(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function tzParts(iso){
+  var pt=new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'2-digit',minute:'2-digit',hour12:false,hourCycle:'h23',timeZoneName:'short',day:'2-digit',month:'short'}).formatToParts(new Date(iso));
+  var g=function(t){return (pt.find(function(x){return x.type===t})||{}).value||''};
+  var tz=(g('timeZoneName')||'AEDT').replace('GMT+11','AEDT').replace('GMT+10','AEST');
+  return {hh:g('hour'),mm:g('minute'),tz:tz,day:g('day'),mon:g('month')};
+}
+function last30(daysMap){
+  var out=[], now=new Date();
+  var fmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'});
+  for(var i=29;i>=0;i--){
+    var d=new Date(now.getTime()-i*86400000);
+    var key=fmt.format(d);
+    out.push({day:key,count:+((daysMap||{})[key]||0)});
+  }
+  return out;
+}
+function spark(series){
+  var w=204,h=44,p=2;
+  var max=Math.max.apply(null,series.map(function(x){return x.count}).concat([1]));
+  var n=series.length||1;
+  var pts=series.map(function(x,i){
+    var X=p+(i*(w-2*p)/Math.max(1,n-1));
+    var Y=h-p-((x.count/max)*(h-2*p));
+    return X.toFixed(1)+','+Y.toFixed(1);
+  }).join(' ');
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true"><polyline fill="none" stroke="#22c55e" stroke-width="2" points="'+pts+'"/></svg>';
+}
+function fillStats(d){
+  var total=(d.total&& (d.total.total||d.total.total_utc))||0;
+  var cc=(d.countries||[]).length;
+  var asof=d.as_of_aedt||'';
+  document.querySelectorAll('.im-stat-vis').forEach(function(e){e.textContent=total||'0'});
+  document.querySelectorAll('.im-stat-cc').forEach(function(e){e.textContent=cc||'0'});
+  document.querySelectorAll('.im-stat-asof').forEach(function(e){e.textContent=asof||'n/a'});
+}
+function attachPopover(d, count, series){
+  document.querySelectorAll('.uv').forEach(function(uv){
+    if(uv.closest('.uv-pop')) return;
+    var wrap=document.createElement('span');wrap.className='uv-pop';
+    uv.parentNode.insertBefore(wrap,uv);wrap.appendChild(uv);
+    var card=document.createElement('div');card.className='uv-card';card.setAttribute('role','dialog');
+    var last=series.length?series[series.length-1].count:0;
+    card.innerHTML='<p class="uv-k">This page: '+count+' unique visitors</p>'+spark(series)+'<p class="uv-m">Last 30 days (this page). Today so far: '+last+'.</p><p><a href="/visitors/">Full visitor stats \u203A</a></p>';
+    wrap.appendChild(card);
+    function tog(ev){ev.preventDefault();ev.stopPropagation();document.querySelectorAll('.uv-pop.open').forEach(function(x){if(x!==wrap)x.classList.remove('open')});wrap.classList.toggle('open')}
+    uv.addEventListener('click',tog);
+    uv.style.cursor='pointer';
+    uv.title='Click for a 30-day sparkline';
+  });
+  document.addEventListener('click',function(){document.querySelectorAll('.uv-pop.open').forEach(function(x){x.classList.remove('open')})});
+}
+function apply(d){
+  var p=norm(location.pathname);
+  var page=(d.pages||[]).filter(function(x){return norm(x.path)===p});
+  var c=page.reduce(function(a,x){return a+(+x.count||0)},0);
+  var days={};
+  page.forEach(function(x){var m=x.days||{};Object.keys(m).forEach(function(k){days[k]=(days[k]||0)+(+m[k]||0)})});
+  document.querySelectorAll('.uvc').forEach(function(e){e.textContent=c});
+  document.querySelectorAll('.uvt').forEach(function(e){
+    if(d.updated_utc){var t=tzParts(d.updated_utc);e.textContent=' (data as of '+t.hh+':'+t.mm+' '+t.tz+')'}
+  });
+  fillStats(d);
+  attachPopover(d,c,last30(days));
+}
+function fail(){
+  document.querySelectorAll('.uvc').forEach(function(e){if(e.textContent==='\u2026'||e.textContent==='...') e.textContent='n/a'});
+  document.querySelectorAll('.im-stat-vis,.im-stat-cc,.im-stat-asof').forEach(function(e){if(e.textContent==='\u2026') e.textContent='n/a'});
+}
+if(!window.__visitorsData){
+  var ac=typeof AbortController==='function'?new AbortController():null;
+  var timer=setTimeout(function(){try{ac&&ac.abort()}catch(e){}},8000);
+  window.__visitorsData=fetch('/data/visitors.json?'+Date.now(),ac?{signal:ac.signal}:undefined).then(function(r){
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('visitors.json '+r.status);
+    return r.json();
+  });
+}
+window.__visitorsData.then(apply).catch(function(){fail()});
+})();</script>
+
+</body>
+</html>

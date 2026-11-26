@@ -718,7 +718,7 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
 
 <p class="kicker">zFrontier · hidden</p>
 <h1>Create Wireless SSID with PSK Authentication</h1>
-<p class="ver">v1 · 22 Nov 2026, 1:37 AM AEDT</p>
+<p class="ver"><a href="/zfrontier/workflows/meraki/create-wireless-ssid-with-psk-authentication/history/">v2 · 26 Nov 2026, 8:36 PM AEDT</a></p>
 
 <p class="lede">Detail for <strong>Create Wireless SSID with PSK Authentication</strong>, in the <a href="/zfrontier/workflows/meraki/">Meraki</a> group.</p>
 <h2 id="description">Description</h2>
@@ -803,6 +803,13 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
 
 <p class="meta">Page: <strong>Create Wireless SSID with PSK Authentication</strong> · Version: <strong>v1 · 22 Nov 2026, 1:37 AM AEDT</strong></p>
 <p class="snapshot">Source export read: <strong>22 Nov 2026, 1:37 AM AEDT</strong> · Metadata only · Hidden (noindex, not listed in the site menu)</p>
+<section id="versions">
+<h2>Versions</h2>
+<p>This is <strong>v2 · 26 Nov 2026, 8:36 PM AEDT</strong>. Snapshots are under <a href="/zfrontier/workflows/meraki/create-wireless-ssid-with-psk-authentication/history/">history/</a>.</p>
+<ul>
+<li><b>v2 (current)</b> · 26 Nov 2026, 8:36 PM AEDT (Melbourne time) · added version history, visitor badge script. · <a href="/zfrontier/workflows/meraki/create-wireless-ssid-with-psk-authentication/history/v2/">history/v2/</a></li><li><b>v1</b> · previous snapshot · previous published snapshot. · <a href="/zfrontier/workflows/meraki/create-wireless-ssid-with-psk-authentication/history/v1/">history/v1/</a></li>
+</ul>
+</section>
 </main>
 <footer class="wrap">
 <p class="footer">These pages list extracted metadata from a local workflow export. Raw workflow JSON is not published. Passwords, tokens, API keys, secrets, IP addresses, hostnames, email addresses, organisation or network identifiers, private URLs and phone numbers are omitted or masked. Names that identified a specific organisation were replaced with generic wording. Nothing on these pages was invented. Unknown or unavailable values are marked not collected. Earlier versions, when they exist, live under <a href="/zfrontier/workflows/history/">history/</a>.</p>
@@ -877,5 +884,87 @@ fetch('/data/visitors.json?'+Date.now()).then(function(r){return r.ok?r.json():P
 })();
 </script>
 
+<script id="uv-badge">(function(){
+function norm(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function tzParts(iso){
+  var pt=new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'2-digit',minute:'2-digit',hour12:false,hourCycle:'h23',timeZoneName:'short',day:'2-digit',month:'short'}).formatToParts(new Date(iso));
+  var g=function(t){return (pt.find(function(x){return x.type===t})||{}).value||''};
+  var tz=(g('timeZoneName')||'AEDT').replace('GMT+11','AEDT').replace('GMT+10','AEST');
+  return {hh:g('hour'),mm:g('minute'),tz:tz,day:g('day'),mon:g('month')};
+}
+function last30(daysMap){
+  var out=[], now=new Date();
+  var fmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'});
+  for(var i=29;i>=0;i--){
+    var d=new Date(now.getTime()-i*86400000);
+    var key=fmt.format(d);
+    out.push({day:key,count:+((daysMap||{})[key]||0)});
+  }
+  return out;
+}
+function spark(series){
+  var w=204,h=44,p=2;
+  var max=Math.max.apply(null,series.map(function(x){return x.count}).concat([1]));
+  var n=series.length||1;
+  var pts=series.map(function(x,i){
+    var X=p+(i*(w-2*p)/Math.max(1,n-1));
+    var Y=h-p-((x.count/max)*(h-2*p));
+    return X.toFixed(1)+','+Y.toFixed(1);
+  }).join(' ');
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true"><polyline fill="none" stroke="#22c55e" stroke-width="2" points="'+pts+'"/></svg>';
+}
+function fillStats(d){
+  var total=(d.total&& (d.total.total||d.total.total_utc))||0;
+  var cc=(d.countries||[]).length;
+  var asof=d.as_of_aedt||'';
+  document.querySelectorAll('.im-stat-vis').forEach(function(e){e.textContent=total||'0'});
+  document.querySelectorAll('.im-stat-cc').forEach(function(e){e.textContent=cc||'0'});
+  document.querySelectorAll('.im-stat-asof').forEach(function(e){e.textContent=asof||'n/a'});
+}
+function attachPopover(d, count, series){
+  document.querySelectorAll('.uv').forEach(function(uv){
+    if(uv.closest('.uv-pop')) return;
+    var wrap=document.createElement('span');wrap.className='uv-pop';
+    uv.parentNode.insertBefore(wrap,uv);wrap.appendChild(uv);
+    var card=document.createElement('div');card.className='uv-card';card.setAttribute('role','dialog');
+    var last=series.length?series[series.length-1].count:0;
+    card.innerHTML='<p class="uv-k">This page: '+count+' unique visitors</p>'+spark(series)+'<p class="uv-m">Last 30 days (this page). Today so far: '+last+'.</p><p><a href="/visitors/">Full visitor stats \u203A</a></p>';
+    wrap.appendChild(card);
+    function tog(ev){ev.preventDefault();ev.stopPropagation();document.querySelectorAll('.uv-pop.open').forEach(function(x){if(x!==wrap)x.classList.remove('open')});wrap.classList.toggle('open')}
+    uv.addEventListener('click',tog);
+    uv.style.cursor='pointer';
+    uv.title='Click for a 30-day sparkline';
+  });
+  document.addEventListener('click',function(){document.querySelectorAll('.uv-pop.open').forEach(function(x){x.classList.remove('open')})});
+}
+function apply(d){
+  var p=norm(location.pathname);
+  var page=(d.pages||[]).filter(function(x){return norm(x.path)===p});
+  var c=page.reduce(function(a,x){return a+(+x.count||0)},0);
+  var days={};
+  page.forEach(function(x){var m=x.days||{};Object.keys(m).forEach(function(k){days[k]=(days[k]||0)+(+m[k]||0)})});
+  document.querySelectorAll('.uvc').forEach(function(e){e.textContent=c});
+  document.querySelectorAll('.uvt').forEach(function(e){
+    if(d.updated_utc){var t=tzParts(d.updated_utc);e.textContent=' (data as of '+t.hh+':'+t.mm+' '+t.tz+')'}
+  });
+  fillStats(d);
+  attachPopover(d,c,last30(days));
+}
+function fail(){
+  document.querySelectorAll('.uvc').forEach(function(e){if(e.textContent==='\u2026'||e.textContent==='...') e.textContent='n/a'});
+  document.querySelectorAll('.im-stat-vis,.im-stat-cc,.im-stat-asof').forEach(function(e){if(e.textContent==='\u2026') e.textContent='n/a'});
+}
+if(!window.__visitorsData){
+  var ac=typeof AbortController==='function'?new AbortController():null;
+  var timer=setTimeout(function(){try{ac&&ac.abort()}catch(e){}},8000);
+  window.__visitorsData=fetch('/data/visitors.json?'+Date.now(),ac?{signal:ac.signal}:undefined).then(function(r){
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('visitors.json '+r.status);
+    return r.json();
+  });
+}
+window.__visitorsData.then(apply).catch(function(){fail()});
+})();</script>
+<p class="meta">Page: <strong>Create Wireless SSID with PSK Authentication</strong> · Version: <strong>v2 · 26 Nov 2026, 8:36 PM AEDT</strong></p>
 </body>
 </html>

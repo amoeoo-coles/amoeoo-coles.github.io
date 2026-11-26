@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Compact 28px pills, 6 columns on wide screens, 4 mid, 2 on mobile.
+   Per-section accent colour is set as --im-accent on each pill. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:6px 12px 8px;
+  gap:6px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:650 11.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:4px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im details.im-sub,
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:4px;
+  margin:0;
+  padding:6px 8px;
+  border-left:3px solid var(--im-accent,var(--menu-on,#2563eb))!important;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 10%,transparent)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl,
+nav.site.im summary.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+  list-style:none;
+}
+nav.site.im summary.sl::-webkit-details-marker{display:none}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:5px;
+  box-sizing:border-box;
+  width:100%;
+  height:28px;
+  min-height:28px;
+  max-height:28px;
+  min-width:0;
+  padding:0 8px;
+  border-radius:999px;
+  border:1px solid color-mix(in srgb,var(--im-accent,#2563eb) 40%,var(--menu-pill-bd,#3a4456))!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:color-mix(in srgb,var(--im-accent,#2563eb) 16%,var(--menu-hover))!important}
+nav.site.im a.mi.on{
+  background:var(--im-accent,var(--menu-on,#2563eb))!important;
+  border-color:var(--im-accent,var(--menu-on,#2563eb))!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:11px;height:28px;min-height:28px;max-height:28px}
+nav.site.im a.mi .ic{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 22%,transparent);
+  font-size:11px;
+  line-height:1;
+}
+nav.site.im a.mi.on .ic{background:rgba(255,255,255,.22)}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  line-height:1;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:14px;
+  height:14px;
+  padding:0 4px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:700;
+  line-height:1;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 35%,#93c5fd);
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:16px;
+  height:16px;
+  padding:0 4px;
+  border-radius:999px;
+  font-size:10px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:var(--im-accent,#1d4ed8)!important;
+}
+nav.site.im a.mi .im-dot{
+  width:7px;height:7px;border-radius:50%;background:#22c55e;flex:none;
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--im-accent,#2563eb) 18%,transparent);
+}
+nav.site.im .im-stats{
+  display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;
+  font:600 11px/1.3 system-ui,Arial,sans-serif;color:var(--menu-fg);padding:2px 2px 0;opacity:.9;
+}
+nav.site.im .im-stats a{color:var(--link);text-decoration:none}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:28px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:28px;
+  padding:0 12px;
+  border-radius:999px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:28px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:28px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:28px;padding:0 10px}
+  nav.site.im summary.sl .im-toggle{display:inline}
+}
+@media (min-width:721px){
+  nav.site.im summary.sl .im-toggle{display:none}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VXLAN</title>
+  <meta name="description" content="ARR ACI fabric report — read-only snapshot.">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f4f6f8;
+      --bg-accent: #e8eef4;
+      --card: #ffffff;
+      --ink: #15202b;
+      --muted: #5b6b7c;
+      --line: #d5dee7;
+      --accent: #0e7490;
+      --accent-soft: #e0f4f8;
+      --link: #0e7490;
+      --good: #047857;
+      --fair: #b45309;
+      --poor: #b91c1c;
+      --crit: #b91c1c;
+      --major: #c2410c;
+      --minor: #a16207;
+      --warn: #a16207;
+      --info: #0369a1;
+      --cleared: #047857;
+      --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+      --radius: 14px;
+      --mono: "IBM Plex Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+      --sans: "Source Sans 3", "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1220;
+        --bg-accent: #111827;
+        --card: #152033;
+        --ink: #e6edf5;
+        --muted: #93a4b8;
+        --line: #2a3b52;
+        --accent: #5eead4;
+        --accent-soft: #12313a;
+        --link: #5eead4;
+        --good: #34d399;
+        --fair: #fbbf24;
+        --poor: #f87171;
+        --crit: #f87171;
+        --major: #fb923c;
+        --minor: #fbbf24;
+        --warn: #fbbf24;
+        --info: #7dd3fc;
+        --cleared: #34d399;
+        --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--sans);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, var(--bg-accent), transparent 60%),
+        var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    header {
+      padding: 2.2rem 1.5rem 1.4rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem 3.5rem; }
+    header .wrap { padding-bottom: 0; }
+    .kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.72rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin: 0 0 0.35rem;
+    }
+    h1 {
+      font-size: clamp(1.7rem, 3vw, 2.25rem);
+      margin: 0 0 0.45rem;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+    }
+    .meta, .footer, .note, .muted, .card-sub, .card-label, .empty, .na, .dn {
+      color: var(--muted);
+    }
+    .meta { margin: 0 0 0.25rem; }
+    .snapshot { margin: 0; font-size: 0.98rem; }
+    h2 {
+      margin: 2.4rem 0 0.85rem;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.85rem;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem 1.05rem 0.95rem;
+      box-shadow: var(--shadow);
+    }
+    .card-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 650;
+    }
+    .card-value {
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-top: 0.2rem;
+    }
+    .card-value strong { font-weight: 700; }
+    .card-sub { font-size: 0.78rem; margin-top: 0.25rem; }
+    .unit { font-size: 0.9rem; color: var(--muted); font-weight: 600; margin-left: 0.15rem; }
+    .health.good, .sev.cleared { color: var(--good); }
+    .health.fair { color: var(--fair); }
+    .health.poor, .sev.critical { color: var(--poor); }
+    .sev.major { color: var(--major); }
+    .sev.warning, .sev.minor { color: var(--warn); }
+    .sev.info { color: var(--info); }
+    .table-wrap {
+      overflow-x: auto;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.93rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.65rem 0.85rem;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    th {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      font-weight: 700;
+      background: color-mix(in srgb, var(--card) 80%, var(--bg-accent));
+    }
+    tr:last-child td { border-bottom: 0; }
+    .mono { font-family: var(--mono); font-size: 0.86em; }
+    .num { font-variant-numeric: tabular-nums; text-align: right; font-family: var(--mono); }
+    th:nth-child(3) { text-align: left; }
+    table thead th:nth-child(3) { /* keep */ }
+    .pill {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      font-size: 0.78rem;
+      font-weight: 650;
+      background: color-mix(in srgb, var(--card) 70%, var(--bg-accent));
+    }
+    .pill.role-controller { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+    .pill.role-leaf { background: color-mix(in srgb, var(--good) 16%, var(--card)); color: var(--good); border-color: transparent; }
+    .pill.role-spine { background: color-mix(in srgb, var(--info) 16%, var(--card)); color: var(--info); border-color: transparent; }
+    .pill.sev.critical { background: color-mix(in srgb, var(--crit) 16%, var(--card)); color: var(--crit); border-color: transparent; }
+    .pill.sev.major { background: color-mix(in srgb, var(--major) 16%, var(--card)); color: var(--major); border-color: transparent; }
+    .pill.sev.warning, .pill.sev.minor { background: color-mix(in srgb, var(--warn) 16%, var(--card)); color: var(--warn); border-color: transparent; }
+    .tenant-block {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem 1.15rem 1.1rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1rem;
+    }
+    .tenant-block h3 { margin: 0 0 0.85rem; font-size: 1.05rem; }
+    .tenant-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 0.85rem 1.25rem;
+    }
+    .tenant-block h4 {
+      margin: 0 0 0.35rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+    }
+    .count {
+      font-family: var(--mono);
+      font-size: 0.85em;
+      color: var(--ink);
+    }
+    .obj-list { list-style: none; margin: 0; padding: 0; }
+    .obj-list li { margin: 0 0 0.35rem; }
+    .dn { display: block; font-family: var(--mono); font-size: 0.75rem; word-break: break-all; }
+    .empty, .na { font-style: italic; }
+    .note { font-size: 0.9rem; margin: 0.85rem 0 0; }
+    footer {
+      margin-top: 2.8rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--line);
+      font-size: 0.85rem;
+    }
+    a { color: var(--link); }
+  
+    a { color: var(--link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .card-value a, .card-sub a, .count a, a.count, td a, .health a, a.health {
+      color: inherit;
+    }
+    .card-value a:hover, a.count:hover, .count a:hover { text-decoration: underline; }
+    .crumb {
+      font-size: 0.92rem;
+      margin: 0 0 0.85rem;
+      color: var(--muted);
+    }
+    .crumb ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.3rem 0.15rem; }
+    .crumb li { display: inline; }
+    .crumb li:not(:last-child)::after { content: "/"; margin: 0 0.4rem; color: var(--muted); }
+    .crumb a { color: var(--link); }
+    .back { margin: 0 0 1rem; }
+    dl.attrs {
+      display: grid;
+      grid-template-columns: minmax(11rem, 15rem) 1fr;
+      gap: 0.45rem 1.1rem;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem 1.15rem;
+      box-shadow: var(--shadow);
+      margin: 0 0 1.4rem;
+    }
+    dl.attrs dt { color: var(--muted); font-size: 0.85rem; padding-top: 0.1rem; }
+    dl.attrs dd { margin: 0; word-break: break-word; }
+    h2 .count, h3 .count { font-weight: 600; }
+    section[id] { scroll-margin-top: 1rem; }
+
+  
+    .banner { border: 1px solid var(--line); border-radius: var(--radius); padding: 0.85rem 1.05rem; background: var(--accent-soft); margin: 0 0 1.2rem; }
+    .banner.warn { background: color-mix(in srgb, var(--warn) 14%, var(--card)); }
+    .banner.plan { background: color-mix(in srgb, var(--fair) 12%, var(--card)); border-color: color-mix(in srgb, var(--fair) 40%, var(--line)); }
+    .banner strong.missing { color: var(--poor); }
+    .placeholder { display: inline-block; padding: 0 0.35rem; border-radius: 4px; background: color-mix(in srgb, var(--warn) 18%, var(--card)); font-family: var(--mono); font-size: 0.86em; }
+    .tree, .tree ul { list-style: none; margin: 0; padding: 0; }
+    .tree ul { margin-left: 1.1rem; border-left: 1px solid var(--line); padding-left: 0.9rem; }
+    .tree li { margin: 0.28rem 0; }
+    .tree .meta-inline { color: var(--muted); font-size: 0.86rem; }
+    tr.hl td { background: color-mix(in srgb, var(--warn) 16%, var(--card)); }
+    .tag-post { display: inline-block; margin-left: 0.35rem; padding: 0.05rem 0.45rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; background: var(--accent-soft); color: var(--accent); }
+    .up { color: var(--good); font-weight: 650; }
+    .down { color: var(--muted); }
+    nav.local { margin: 0.6rem 0 1.1rem; display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    nav.local a { display: inline-block; padding: 0.2rem 0.65rem; border-radius: 999px; border: 1px solid var(--line); font-size: 0.85rem; font-weight: 650; }
+
+  </style>
+
+<style>
+  p.ver{margin:0.15rem 0 0;color:var(--muted);font-size:0.92rem}
+  body.vxlan{--site-content-max:1500px}
+  body.vxlan header .wrap,
+  body.vxlan main.wrap,
+  body.vxlan footer.wrap,
+  body.vxlan nav.site.im{max-width:1500px !important}
+  .toc{display:flex;flex-wrap:wrap;gap:0.45rem;margin:0.3rem 0 1rem}
+  .toc a{display:inline-block;padding:0.2rem 0.65rem;border-radius:999px;border:1px solid var(--line);font-size:0.85rem;font-weight:650}
+  .vx-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.75rem;margin:0 0 1.2rem}
+  .callout,.expect{border:1px solid var(--line);border-radius:var(--radius,10px);padding:0.85rem 1.05rem;background:var(--card);margin:0 0 1.15rem}
+  .expect{background:color-mix(in srgb,var(--warn,#ca8a04) 12%,var(--card));border-color:color-mix(in srgb,var(--warn,#ca8a04) 40%,var(--line))}
+  .callout ul,.expect ul,section ul{margin:0.35rem 0 0;padding-left:1.2rem}
+  .callout li,.expect li,section li{margin:0.25rem 0}
+  .diagram{margin:0.4rem 0 1.3rem;padding:0.55rem 0.55rem 0.2rem;border:1px solid var(--line);border-radius:var(--radius,10px);background:var(--card);overflow-x:auto}
+  .vx-svg{display:block;min-width:1180px;color:var(--ink)}
+  .vx-svg .tb{stroke-width:1.4}
+  .vx-svg .tb-s{fill:color-mix(in srgb,#0369a1 16%,var(--card,#fff));stroke:#0369a1}
+  .vx-svg .tb-l{fill:color-mix(in srgb,var(--accent,#0e7490) 16%,var(--card,#fff));stroke:var(--accent,#0e7490)}
+  .vx-svg .tb-a{fill:color-mix(in srgb,#c2410c 14%,var(--card,#fff));stroke:#c2410c}
+  .vx-svg .tb-p{fill:color-mix(in srgb,var(--fair,#ca8a04) 14%,var(--card,#fff));stroke:color-mix(in srgb,var(--fair,#ca8a04) 65%,var(--line))}
+  .vx-svg .chip-l2{fill:color-mix(in srgb,#7c3aed 16%,var(--card,#fff));stroke:#7c3aed}
+  .vx-svg .chip-l3m{fill:color-mix(in srgb,#0369a1 14%,var(--card,#fff));stroke:#0369a1}
+  .vx-svg .chip-l3b{fill:color-mix(in srgb,#57534e 16%,var(--card,#fff));stroke:#57534e}
+  .vx-svg .tn{fill:var(--ink);font:650 13px/1.15 system-ui,sans-serif}
+  .vx-svg .tc{fill:var(--muted);font:600 10.5px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .vx-svg .te{fill:var(--muted);font:500 10.5px/1.2 system-ui,sans-serif}
+  .vx-svg .th{fill:var(--ink);font:700 16px/1 system-ui,sans-serif}
+  .vx-svg .tl{stroke:var(--muted);stroke-width:1.4;fill:none}
+  .vx-svg .tl-dash{stroke:var(--muted);stroke-width:1.2;stroke-dasharray:5 4;fill:none}
+  .vx-svg .tl-flow{stroke:#c2410c;stroke-width:1.8;fill:none}
+  .vx-svg .tlbl{fill:var(--muted);font:600 10px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  table.vx-table{font-size:0.92rem}
+  table.vx-table td,table.vx-table th{vertical-align:top}
+  table.vx-table td.mono,table.vx-table .mono{font-family:var(--mono);font-size:0.86rem}
+  table.vx-table thead th{position:sticky;top:0;background:var(--th-bg,var(--card));z-index:1}
+  .chip{display:inline-block;padding:0.05rem 0.5rem;border-radius:999px;font-size:0.75rem;font-weight:700;letter-spacing:0.03em;border:1px solid var(--line)}
+  .chip.up{background:color-mix(in srgb,var(--good) 18%,var(--card));color:var(--good);border-color:transparent}
+  .chip.na{background:color-mix(in srgb,var(--muted) 14%,var(--card));color:var(--muted)}
+  h2{margin-top:1.7rem}
+</style>
+
+</head>
+<body class="vxlan">
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  h.classList.remove('tt-invert');
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'\u2600\uFE0F Light':'\uD83C\uDF19 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var sg=document.createElement('a');sg.id='sg-link';sg.target='_blank';sg.rel='noopener noreferrer';
+sg.href='https://github.com/amoeoo-coles/amoeoo-coles.github.io/issues/new?labels=suggestion&title='+encodeURIComponent('Suggestion: '+(document.title||'page'))+'&body='+encodeURIComponent('Page: '+location.href);
+sg.title='Have an idea? Suggest on GitHub';
+sg.innerHTML='\uD83D\uDCA1 <span class="sg-wide">Have an idea? Suggest on GitHub \u203A</span><span class="sg-short">Suggest</span>';
+wrap.appendChild(sg);
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+function place(){var nav=document.querySelector('nav.site.im');var w=document.getElementById('tt-wrap');if(nav&&w&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+place();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);
+})();</script>
+<!-- site-menu v1 --><nav class="site"><a href="/">Home</a></nav>
+
+<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:#bbb">Page updated 15 Nov 2026 17:27 AEDT (Melbourne time)<a href="/visitors/" style="color:#fff;text-decoration:none"><span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></a><span class="uvt" style="font-size:11px;color:#888"></span></div><!--/arr-uv-tr17-->
+
+  <header>
+    <div class="wrap">
+      <p class="kicker">ARR</p>
+      <h1>VXLAN</h1>
+      <p class="ver">v1 · 15 Nov 2026, 5:27 PM AEDT</p>
+    </div>
+  </header>
+  <main class="wrap">
+
+    <p class="note">This page explains the nine operational VXLAN entries collected from
+    LEAF-101 to LEAF-104 in the hardware-monitor snapshot v3
+    (14 Nov 2026, 10:08 PM AEDT). The data comes from <span class="mono">l2BD</span> and
+    <span class="mono">l3Ctx</span>. <span class="mono">vxlanCktEp</span> returned 0 on
+    every leaf, so it is not a source for these rows. There was no new APIC pull.
+    Policy VNIs from tenant objects are on
+    <a href="/ARR/vni/">ARR/vni</a>; the compact per-leaf table is
+    <a href="/ARR-LargeTopology/vni.html">Leaf VNIs</a>.</p>
+    <nav class="toc" aria-label="On this page">
+      <a href="#diagram">Diagram</a>
+      <a href="#vnid">What a VNID is</a>
+      <a href="#infra">infra:default</a>
+      <a href="#management">management</a>
+      <a href="#black-hole">black-hole</a>
+      <a href="#state">Why state is —</a>
+      <a href="#overlay">overlay-1 and TEPs</a>
+      <a href="#table">The nine entries</a>
+      <a href="#tenant6">Cursor_Tenant6</a>
+    </nav>
+    <div class="cards vx-cards">
+      <article class="card"><div class="card-label">Operational entries</div><div class="card-value"><strong>9</strong></div><div class="card-sub">on LEAF-101 to LEAF-104</div></article>
+      <article class="card"><div class="card-label">Distinct VNIDs</div><div class="card-value"><strong>3</strong></div><div class="card-sub">16777209 · 3047425 · 16777200</div></article>
+      <article class="card"><div class="card-label">Layer 2 on one leaf</div><div class="card-value"><strong>1</strong></div><div class="card-sub">infra:default on LEAF-101 only</div></article>
+      <article class="card"><div class="card-label">Snapshot</div><div class="card-value"><strong>v3</strong></div><div class="card-sub">14 Nov 2026, 10:08 PM AEDT</div></article>
+    </div>
+
+    <h2 id="diagram">VNIDs on each leaf, and the overlay path</h2>
+    <p>The top of the drawing is the two spines and a sample VXLAN packet. The middle row is the four leaves, with every VNID that this snapshot actually collected on that leaf. ARR-APIC-01 sits under LEAF-101, on the dashed link. The packet path is the fabric’s overlay method, drawn with TEP addresses from this snapshot. It is not a claim that a tenant bridge domain already spans two leaves: the only Layer 2 VNID collected here lives on LEAF-101 alone.</p>
+    <div class="diagram"><svg class="vx-svg" viewBox="0 0 1400 800" width="100%" role="img" aria-labelledby="vx-title vx-desc">
+<title id="vx-title">Operational VNIDs on LEAF-101 to LEAF-104, and VXLAN encapsulation through the spines</title>
+<desc id="vx-desc">SPINE-201 and SPINE-202 sit at the top with TEPs 198.51.100.65 and 198.51.100.66. The four leaves sit in a row. Only LEAF-101 has the Layer 2 infra:default VNID 16777209, because ARR-APIC-01 attaches on eth1/49 VLAN 3. All four leaves have the management VNID 3047425 and the black-hole VNID 16777200. A sample overlay packet is drawn from LEAF-101 to LEAF-103 with outer IP 198.51.100.64 to 198.51.100.68, forwarded by a spine, and a 24-bit VNID in the VXLAN header.</desc>
+<text class="th" x="700" y="28" text-anchor="middle">VNIDs on each leaf, and the fabric overlay</text>
+<text class="te" x="700" y="48" text-anchor="middle">hw-monitor snapshot v3 · 14 Nov 2026, 10:08 PM AEDT · no new APIC pull</text>
+<g transform="translate(330,70)">
+<title>SPINE-201 TEP is lo0 in overlay-1, address 198.51.100.65/32, operSt up</title>
+<rect class="tb tb-s" x="0" y="0" width="220" height="78" rx="8"/>
+<text class="tn" x="110.0" y="28.0" text-anchor="middle">SPINE-201</text>
+<text class="tc" x="110.0" y="48.0" text-anchor="middle">TEP 198.51.100.65</text>
+<text class="te" x="110.0" y="66.0" text-anchor="middle">lo0 · overlay-1</text>
+</g>
+<g transform="translate(850,70)">
+<title>SPINE-202 TEP is lo0 in overlay-1, address 198.51.100.66/32, operSt up</title>
+<rect class="tb tb-s" x="0" y="0" width="220" height="78" rx="8"/>
+<text class="tn" x="110.0" y="28.0" text-anchor="middle">SPINE-202</text>
+<text class="tc" x="110.0" y="48.0" text-anchor="middle">TEP 198.51.100.66</text>
+<text class="te" x="110.0" y="66.0" text-anchor="middle">lo0 · overlay-1</text>
+</g>
+<rect class="tb tb-p" x="430" y="200" width="540" height="118" rx="10"/>
+<text class="tn" x="700.0" y="224.0" text-anchor="middle">VXLAN packet (overlay-1)</text>
+<text class="tc" x="700.0" y="246.0" text-anchor="middle">Outer IP  src 198.51.100.64  →  dst 198.51.100.68</text>
+<text class="tc" x="700.0" y="264.0" text-anchor="middle">UDP destination port 4789</text>
+<text class="tc" x="700.0" y="282.0" text-anchor="middle">VXLAN header  ·  24-bit VNID  ·  inner frame</text>
+<text class="te" x="700.0" y="302.0" text-anchor="middle">Example path: LEAF-101 → spine underlay → LEAF-103. The spine forwards on the outer IP; it does not terminate the tenant VNID.</text>
+<g transform="translate(70,390)">
+<title>LEAF-101 TEP 198.51.100.64/32 on lo0 in overlay-1, operSt up. Layer 2 infra:default VNID 16777209 is present, plus management and black-hole.</title>
+<rect class="tb tb-l" x="0" y="0" width="250" height="168" rx="8"/>
+<text class="tn" x="125.0" y="24" text-anchor="middle">LEAF-101</text>
+<text class="tc" x="125.0" y="42" text-anchor="middle">TEP 198.51.100.64</text>
+<rect class="tb chip-l2" x="18" y="62" width="214" height="28" rx="8"/>
+<text class="tc" x="125.0" y="81" text-anchor="middle">L2  infra:default  16777209</text>
+<rect class="tb chip-l3m" x="18" y="98" width="214" height="28" rx="8"/>
+<text class="tc" x="125.0" y="117" text-anchor="middle">L3  management  3047425</text>
+<rect class="tb chip-l3b" x="18" y="134" width="214" height="28" rx="8"/>
+<text class="tc" x="125.0" y="153" text-anchor="middle">L3  black-hole  16777200</text>
+</g>
+<g transform="translate(350,390)">
+<title>LEAF-102 TEP 198.51.100.67/32 on lo0 in overlay-1, operSt up. Layer 3 management VNID 3047425 and black-hole VNID 16777200 only. No l2BD in this snapshot.</title>
+<rect class="tb tb-l" x="0" y="0" width="250" height="168" rx="8"/>
+<text class="tn" x="125.0" y="24" text-anchor="middle">LEAF-102</text>
+<text class="tc" x="125.0" y="42" text-anchor="middle">TEP 198.51.100.67</text>
+<text class="te" x="125.0" y="76" text-anchor="middle">no Layer 2 VNID in this snapshot</text>
+<rect class="tb chip-l3m" x="18" y="90" width="214" height="28" rx="8"/>
+<text class="tc" x="125.0" y="109" text-anchor="middle">L3  management  3047425</text>
+<rect class="tb chip-l3b" x="18" y="126" width="214" height="28" rx="8"/>
+<text class="tc" x="125.0" y="145" text-anchor="middle">L3  black-hole  16777200</text>
+</g>
+<g transform="translate(630,390)">
+<title>LEAF-103 TEP 198.51.100.68/32 on lo0 in overlay-1, operSt up. Layer 3 management VNID 3047425 and black-hole VNID 16777200 only. No l2BD in this snapshot.</title>
+<rect class="tb tb-l" x="0" y="0" width="250" height="168" rx="8"/>
+<text class="tn" x="125.0" y="24" text-anchor="middle">LEAF-103</text>
+<text class="tc" x="125.0" y="42" text-anchor="middle">TEP 198.51.100.68</text>
+<text class="te" x="125.0" y="76" text-anchor="middle">no Layer 2 VNID in this snapshot</text>
+<rect class="tb chip-l3m" x="18" y="90" width="214" height="28" rx="8"/>
+<text class="tc" x="125.0" y="109" text-anchor="middle">L3  management  3047425</text>
+<rect class="tb chip-l3b" x="18" y="126" width="214" height="28" rx="8"/>
+<text class="tc" x="125.0" y="145" text-anchor="middle">L3  black-hole  16777200</text>
+</g>
+<g transform="translate(910,390)">
+<title>LEAF-104 TEP 198.51.100.69/32 on lo0 in overlay-1, operSt up. Layer 3 management VNID 3047425 and black-hole VNID 16777200 only. No l2BD in this snapshot.</title>
+<rect class="tb tb-l" x="0" y="0" width="250" height="168" rx="8"/>
+<text class="tn" x="125.0" y="24" text-anchor="middle">LEAF-104</text>
+<text class="tc" x="125.0" y="42" text-anchor="middle">TEP 198.51.100.69</text>
+<text class="te" x="125.0" y="76" text-anchor="middle">no Layer 2 VNID in this snapshot</text>
+<rect class="tb chip-l3m" x="18" y="90" width="214" height="28" rx="8"/>
+<text class="tc" x="125.0" y="109" text-anchor="middle">L3  management  3047425</text>
+<rect class="tb chip-l3b" x="18" y="126" width="214" height="28" rx="8"/>
+<text class="tc" x="125.0" y="145" text-anchor="middle">L3  black-hole  16777200</text>
+</g>
+<path class="tl-flow" d="M 195.0 390 L 195.0 318 L 430 318"/>
+<path class="tl-flow" d="M 755.0 390 L 755.0 318 L 970 318"/>
+<path class="tl" d="M 660.0 200 L 440.0 148"/>
+<path class="tl" d="M 740.0 200 L 960.0 148"/>
+<text class="tlbl" x="195.0" y="380" text-anchor="middle">encap</text>
+<text class="tlbl" x="755.0" y="380" text-anchor="middle">decap</text>
+<path class="tl-dash" d="M 195.0 558 L 195.0 594"/>
+<g transform="translate(80,594)">
+<title>ARR-APIC-01 attaches only to LEAF-101 eth1/49 (trunk, operVlans 3, usage controller,epg,infra). LEAF-101 has 198.51.100.30/27 on vlan3 in overlay-1. LLDP sysName ARR-APIC-01, mgmtIp 198.51.100.1. The APIC MAC is learned in bd-[vxlan-16777209] on eth1/49.</title>
+<rect class="tb tb-a" x="0" y="0" width="230" height="86" rx="8"/>
+<text class="tn" x="115.0" y="24.0" text-anchor="middle">ARR-APIC-01</text>
+<text class="tc" x="115.0" y="44.0" text-anchor="middle">eth1/49  ·  VLAN 3</text>
+<text class="tc" x="115.0" y="62.0" text-anchor="middle">overlay-1  198.51.100.30/27</text>
+<text class="te" x="115.0" y="78.0" text-anchor="middle">LLDP mgmtIp 198.51.100.1</text>
+</g>
+<text class="te" x="195.0" y="698.0" text-anchor="middle">infra:default is on LEAF-101 only because the APIC attaches here</text>
+<text class="te" x="700" y="784" text-anchor="middle">The leaf–spine–leaf path is the fabric overlay method, drawn with TEP addresses from this snapshot. The only Layer 2 VNID collected lives on LEAF-101 alone, so this is not a current tenant flood domain spanning two leaves.</text>
+</svg></div>
+
+    <h2 id="vnid">What a VNID is in ACI</h2>
+    <p>A VXLAN Network Identifier (VNID) is the 24-bit identifier carried in the VXLAN header. In Cisco ACI it names one overlay network as frames and packets are encapsulated between tunnel endpoints (TEPs) — the leaf and spine loopback addresses in the infrastructure VRF, <span class="mono">overlay-1</span>.</p>
+    <p>The 24-bit space runs from 0 to 16,777,215 (2<sup>24</sup> − 1, or <span class="mono">0xFFFFFF</span>). ACI assigns a unique VNID to each bridge domain and a different unique VNID to each VRF (context). Those two uses share the same numeric space, but a BD VNID and a VRF VNID are never the same number, and they are not interchangeable:</p>
+    <ul>
+      <li><strong>Bridge-domain VNID (Layer 2).</strong> Shown operationally as <span class="mono">l2BD.fabEncap</span>, for example <span class="mono">vxlan-16777209</span>. It identifies the Layer 2 flood and learn domain in the fabric overlay. The object lives under <span class="mono">sys/inst-overlay-1/bd-[vxlan-…]</span> on the leaf that has instantiated that BD.</li>
+      <li><strong>VRF VNID (Layer 3).</strong> Shown operationally as <span class="mono">l3Ctx.encap</span>, for example <span class="mono">vxlan-3047425</span> or <span class="mono">vxlan-16777200</span>. It identifies the Layer 3 forwarding context. The object lives under <span class="mono">sys/ctx-[vxlan-…]</span> on each node that has that VRF.</li>
+    </ul>
+    <p>ACI uses the high end of the 24-bit space for system and infrastructure constructs. In this snapshot the two high values, 16,777,200 (<span class="mono">0xFFFFF0</span>) and 16,777,209 (<span class="mono">0xFFFFF9</span>), sit only 6–15 below the maximum. The management VRF’s 3,047,425 sits well below that high band and looks like a normal allocated identifier. This page does not publish a complete reserved-range table beyond those observed values.</p>
+
+    <h2 id="infra">infra:default — Layer 2, VNID 16777209, LEAF-101 only</h2>
+    <p>This is the infrastructure tenant’s default bridge domain (<span class="mono">uni/tn-infra/BD-default</span>), used for APIC–leaf and other infra traffic on the overlay. The snapshot shows one <span class="mono">l2BD</span> on LEAF-101 and none on LEAF-102, 103 or 104 (and none on the spines).</p>
+    <ul>
+      <li>Name <span class="mono">infra:default</span>, type <span class="mono">bd-control</span>, <span class="mono">fabEncap</span> <span class="mono">vxlan-16777209</span>, <span class="mono">operSt</span> <span class="mono">up</span>.</li>
+      <li>DN <span class="mono">topology/pod-1/node-101/sys/inst-overlay-1/bd-[vxlan-16777209]</span>.</li>
+      <li>Policy definition <span class="mono">uni/bd-[uni/tn-infra/BD-default]-isSvc-no</span>.</li>
+      <li>Access / platform VLAN on the leaf is <span class="mono">accEncap=vlan-3914</span>. That is the leaf’s internal VLAN for the BD, not the APIC-facing encapsulation, which is VLAN 3.</li>
+    </ul>
+    <p>It appears only on LEAF-101 because that is the leaf the APIC attaches to. All of the following were checked in the same snapshot:</p>
+    <ul>
+      <li>LEAF-101 <span class="mono">eth1/49</span> is up, trunk, <span class="mono">operVlans</span> and <span class="mono">encap</span> 3, usage <span class="mono">controller,epg,infra</span>.</li>
+      <li>LEAF-101 has <span class="mono">198.51.100.30/27</span> on <span class="mono">dom-overlay-1/if-[vlan3]</span>, <span class="mono">operSt</span> up. The other three leaves have no vlan3 address in overlay-1.</li>
+      <li>LLDP on <span class="mono">eth1/49</span> shows <span class="mono">sysName=ARR-APIC-01</span>, <span class="mono">mgmtIp=198.51.100.1</span>, chassis/port MAC <span class="mono">00:0c:29:55:6e:0a</span>.</li>
+      <li>That MAC is learned as a local endpoint in <span class="mono">bd-[vxlan-16777209]</span> on <span class="mono">ifId=eth1/49</span> (DN <span class="mono">topology/pod-1/node-101/sys/inst-overlay-1/bd-[vxlan-16777209]/db-ep/mac-00:0C:29:55:6E:0A</span>).</li>
+    </ul>
+    <p>Together, those facts are why the infra BD is instantiated on LEAF-101 and not on the other leaves in this pull.</p>
+
+    <h2 id="management">management — Layer 3, VNID 3047425, all four leaves</h2>
+    <p>The operational name is <span class="mono">management</span>. The policy key on every leaf (and both spines) is <span class="mono">uni/tn-mgmt/ctx-oob</span>, and the type is <span class="mono">oob-mgmt</span>. This is the mgmt tenant’s <strong>out-of-band</strong> VRF, not the in-band context. An in-band VRF would be <span class="mono">uni/tn-mgmt/ctx-inb</span>; that object is not present in the leaf <span class="mono">l3Ctx</span> list in this snapshot, and calling this entry “inb/oob” would be overstating what was collected.</p>
+    <ul>
+      <li>Encap <span class="mono">vxlan-3047425</span>, <span class="mono">operState</span> <span class="mono">up</span>, <span class="mono">adminState</span> <span class="mono">admin-up</span>, on LEAF-101, 102, 103 and 104.</li>
+      <li>The same two <span class="mono">l3Ctx</span> objects (management and black-hole) are also present on SPINE-201 and SPINE-202. They are not in the nine-row leaf table, but they are in the raw spine files.</li>
+      <li>Out-of-band addresses in this snapshot sit on <span class="mono">mgmt0</span> in <span class="mono">dom-management</span>: LEAF-101 192.0.2.11/24 through LEAF-104 192.0.2.14/24, all <span class="mono">operSt</span> up. ARR-APIC-01’s OOB address is 192.0.2.1.</li>
+    </ul>
+
+    <h2 id="black-hole">black-hole — Layer 3, VNID 16777200, all four leaves</h2>
+    <p>The operational name is <span class="mono">black-hole</span>, encap <span class="mono">vxlan-16777200</span>, type <span class="mono">tenant</span>. It is present on LEAF-101 to LEAF-104, and also on both spines. The policy key (<span class="mono">ctxPKey</span>) is empty on every node, which matches a system-owned context rather than a tenant-configured VRF.</p>
+    <p>In Cisco ACI the system black-hole VRF is used to drop or contain traffic that has no valid tenant forwarding path. That is standard platform behaviour. This snapshot shows the object and its VNID; it does not include a packet capture or drop counter that would demonstrate a drop.</p>
+
+    <h2 id="state">Why the Layer 3 rows show “—” for state</h2>
+    <p>The compact leaf VNI table, and the State column here, read the attribute <span class="mono">operSt</span>.</p>
+    <ul>
+      <li><span class="mono">l2BD</span> has <span class="mono">operSt</span>. On LEAF-101 it is <span class="mono">up</span>, so that row shows “up”.</li>
+      <li><span class="mono">l3Ctx</span> has <strong>no</strong> <span class="mono">operSt</span> attribute. The field is absent from every raw object in this pull, so the State column is “—”. That does not mean the VRF is down.</li>
+      <li>The raw <span class="mono">l3Ctx</span> objects instead have <span class="mono">operState</span> (value <span class="mono">up</span> on all four leaves and both spines) and <span class="mono">adminState</span> (value <span class="mono">admin-up</span>). Those values are in the <span class="mono">operState</span> column of the table below.</li>
+    </ul>
+
+    <h2 id="overlay">overlay-1 and the TEPs</h2>
+    <p><span class="mono">overlay-1</span> is the fabric’s infrastructure VRF: the underlay that carries VXLAN between TEPs. In the snapshot it appears as <span class="mono">sys/inst-overlay-1</span> and as <span class="mono">sys/ipv4/inst/dom-overlay-1</span>. Each switch’s TEP is the <span class="mono">lo0</span> address in that domain, and it matches <span class="mono">topSystem.address</span>. Every switch reports a TEP pool of <span class="mono">198.51.100.0/16</span>.</p>
+    <ul>
+      <li>LEAF-101 TEP <span class="mono">198.51.100.64/32</span></li>
+      <li>LEAF-102 TEP <span class="mono">198.51.100.67/32</span></li>
+      <li>LEAF-103 TEP <span class="mono">198.51.100.68/32</span></li>
+      <li>LEAF-104 TEP <span class="mono">198.51.100.69/32</span></li>
+      <li>SPINE-201 TEP <span class="mono">198.51.100.65/32</span></li>
+      <li>SPINE-202 TEP <span class="mono">198.51.100.66/32</span></li>
+    </ul>
+    <p>All six loopbacks are <span class="mono">operSt</span> up. ARR-APIC-01’s <span class="mono">topSystem.address</span> is 198.51.100.1, and LEAF-101’s APIC-facing SVI is 198.51.100.30/27 on vlan3 in overlay-1, as above.</p>
+    <p>All four leaves also have <span class="mono">198.51.100.32/32</span> on <span class="mono">lo1023</span> in overlay-1, <span class="mono">operSt</span> up. In ACI this address is typically the anycast proxy TEP. The snapshot shows the shared address; it does not, by itself, prove the proxy role, so that role is noted as typical rather than as a measured fact.</p>
+    <p>When a leaf encapsulates a frame for another leaf, the outer IPv4 header uses the local TEP as the source and the remote TEP as the destination (for example 198.51.100.64 to 198.51.100.68). A spine forwards that outer packet in overlay-1. The VXLAN header carries the 24-bit VNID that tells the destination leaf which BD or VRF the inner frame belongs to. Standard VXLAN uses UDP destination port 4789.</p>
+
+    <h2 id="table">The nine operational entries</h2>
+    <p class="note">Column headers sort the table. State is <span class="mono">operSt</span>, which only <span class="mono">l2BD</span> has. The <span class="mono">operState</span> column is filled from the raw <span class="mono">l3Ctx</span> objects.</p>
+    <div class="table-wrap"><table class="vx-table"><thead><tr><th>Leaf</th><th>Class</th><th>Name</th><th>VNID</th><th>Encap</th><th>State (operSt)</th><th>operState</th><th>State note</th><th>Operational DN</th></tr></thead><tbody><tr><td>LEAF-101</td><td class="mono">l2BD</td><td>infra:default</td><td class="mono">16777209</td><td class="mono">vxlan-16777209</td><td><span class="chip up">up</span></td><td class="mono">—</td><td>l2BD.operSt</td><td class="mono">topology/pod-1/node-101/sys/inst-overlay-1/bd-[vxlan-16777209]</td></tr><tr><td>LEAF-101</td><td class="mono">l3Ctx</td><td>black-hole</td><td class="mono">16777200</td><td class="mono">vxlan-16777200</td><td><span class="chip na">—</span></td><td class="mono">up</td><td>l3Ctx has no operSt; raw operState is up</td><td class="mono">topology/pod-1/node-101/sys/ctx-[vxlan-16777200]</td></tr><tr><td>LEAF-101</td><td class="mono">l3Ctx</td><td>management</td><td class="mono">3047425</td><td class="mono">vxlan-3047425</td><td><span class="chip na">—</span></td><td class="mono">up</td><td>l3Ctx has no operSt; raw operState is up</td><td class="mono">topology/pod-1/node-101/sys/ctx-[vxlan-3047425]</td></tr><tr><td>LEAF-102</td><td class="mono">l3Ctx</td><td>black-hole</td><td class="mono">16777200</td><td class="mono">vxlan-16777200</td><td><span class="chip na">—</span></td><td class="mono">up</td><td>l3Ctx has no operSt; raw operState is up</td><td class="mono">topology/pod-1/node-102/sys/ctx-[vxlan-16777200]</td></tr><tr><td>LEAF-102</td><td class="mono">l3Ctx</td><td>management</td><td class="mono">3047425</td><td class="mono">vxlan-3047425</td><td><span class="chip na">—</span></td><td class="mono">up</td><td>l3Ctx has no operSt; raw operState is up</td><td class="mono">topology/pod-1/node-102/sys/ctx-[vxlan-3047425]</td></tr><tr><td>LEAF-103</td><td class="mono">l3Ctx</td><td>black-hole</td><td class="mono">16777200</td><td class="mono">vxlan-16777200</td><td><span class="chip na">—</span></td><td class="mono">up</td><td>l3Ctx has no operSt; raw operState is up</td><td class="mono">topology/pod-1/node-103/sys/ctx-[vxlan-16777200]</td></tr><tr><td>LEAF-103</td><td class="mono">l3Ctx</td><td>management</td><td class="mono">3047425</td><td class="mono">vxlan-3047425</td><td><span class="chip na">—</span></td><td class="mono">up</td><td>l3Ctx has no operSt; raw operState is up</td><td class="mono">topology/pod-1/node-103/sys/ctx-[vxlan-3047425]</td></tr><tr><td>LEAF-104</td><td class="mono">l3Ctx</td><td>black-hole</td><td class="mono">16777200</td><td class="mono">vxlan-16777200</td><td><span class="chip na">—</span></td><td class="mono">up</td><td>l3Ctx has no operSt; raw operState is up</td><td class="mono">topology/pod-1/node-104/sys/ctx-[vxlan-16777200]</td></tr><tr><td>LEAF-104</td><td class="mono">l3Ctx</td><td>management</td><td class="mono">3047425</td><td class="mono">vxlan-3047425</td><td><span class="chip na">—</span></td><td class="mono">up</td><td>l3Ctx has no operSt; raw operState is up</td><td class="mono">topology/pod-1/node-104/sys/ctx-[vxlan-3047425]</td></tr></tbody></table></div>
+
+    <div class="expect" id="tenant6">
+      <h2>What to expect for Cursor_Tenant6</h2>
+      <p>The v4 apply at 12:47 AM AEDT on 15 November 2026 created the tenant policy, including VRF <span class="mono">Cursor_Tenant6_VRF</span> and bridge domain <span class="mono">Cursor_Tenant6_BD</span> (subnet 198.51.100.1/24) with path attachments on LEAF-101 and LEAF-102 (VLAN 1601) and on LEAF-103 and LEAF-104 (VLAN 1603).</p>
+      <p>Once those EPG paths are programmed on the leaves, a later read-only pull should show two new operational objects on LEAF-101 to LEAF-104:</p>
+      <ul>
+        <li>A Layer 2 <span class="mono">l2BD</span> for <span class="mono">Cursor_Tenant6_BD</span>, with a fabric VNID assigned by the APIC (<span class="mono">fabEncap</span> of the form <span class="mono">vxlan-&lt;id&gt;</span>).</li>
+        <li>A Layer 3 <span class="mono">l3Ctx</span> for <span class="mono">Cursor_Tenant6_VRF</span>, with a different VNID in <span class="mono">encap</span>.</li>
+      </ul>
+      <p>Those two VNIDs were <strong>not</strong> in the v3 snapshot. That pull was taken at 10:08 PM AEDT on 14 November 2026, which is before the v4 push. This page does not invent the numbers. Eight seconds after the push, the four path attachments were still <span class="mono">unformed</span> and no <span class="mono">vlanCktEp</span> for VLAN 1601 or 1603 had appeared, so even a pull taken immediately after the apply might not yet show the leaf VNIDs. A later hardware-monitor pull (for example hw-monitor v4) is the way to read the allocated identifiers.</p>
+    </div>
+    
+      <p class="meta">Fabric: <strong>ARR-FABRIC</strong> · APIC version: <strong>6.0(2h)</strong></p>
+      <p class="snapshot">Page built: <strong>15 November 2026, 5:27 PM AEDT</strong></p>
+  </main>
+  <footer class="wrap">
+    <p class="footer">Built from the hardware-monitor snapshot v3 taken at 14 November 2026, 10:08:35 PM AEDT (Australia/Melbourne, UTC+11), raw files under /workspace/arr/hwmon/20261114-220835. Classes used: l2BD, l3Ctx, vxlanCktEp, ipv4Addr, ethpmPhysIf, lldpAdjEp, epmMacEp and topSystem. No APIC or NetBox writes. No credentials, tokens or session IDs are included.</p>
+  </footer>
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/"}}</script>
+<script data-goatcounter="https://amoeoo-coles.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script src="sort.js" defer></script>
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:6px 0 8px;gap:6px;font:650 11.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:4px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im details.im-sub,nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:4px;margin:0;padding:6px 8px;border-left:3px solid var(--im-accent,var(--menu-on,#2563eb));background:color-mix(in srgb,var(--im-accent,#2563eb) 10%,transparent);border-radius:8px}
+nav.site.im a.mi{display:flex!important;align-items:center;gap:5px;box-sizing:border-box;width:100%;height:28px;min-height:28px;max-height:28px;min-width:0;padding:0 8px;border-radius:999px;border:1px solid color-mix(in srgb,var(--im-accent,#2563eb) 40%,var(--menu-pill-bd,#3a4456))!important;background:var(--menu-pill,#1b2330)!important;color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:color-mix(in srgb,var(--im-accent,#2563eb) 16%,var(--menu-hover,#26344a))!important}
+nav.site.im a.mi.on{background:var(--im-accent,#2563eb)!important;border-color:var(--im-accent,#2563eb)!important;color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{display:inline-flex;align-items:center;justify-content:center;flex:none;width:18px;height:18px;border-radius:50%;background:color-mix(in srgb,var(--im-accent,#2563eb) 22%,transparent);font-size:11px;line-height:1}
+nav.site.im a.mi.on .ic{background:rgba(255,255,255,.22)}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1;text-align:left}
+nav.site.im a.mi.sm{font-size:11px}
+nav.site.im a.sl,nav.site.im summary.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px;display:flex;align-items:center;gap:6px;cursor:pointer;list-style:none}
+nav.site.im summary.sl::-webkit-details-marker{display:none}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:14px;height:14px;padding:0 4px;border-radius:999px;font-size:9px;font-weight:700;line-height:1;background:color-mix(in srgb,var(--im-accent,#2563eb) 35%,#93c5fd);color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex!important;align-items:center;justify-content:center;flex:none;min-width:16px;height:16px;padding:0 4px;border-radius:999px;font-size:10px!important;font-weight:800;line-height:1;background:#0f172a!important;color:#fff!important}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc!important;color:#0f172a!important}
+nav.site.im a.mi.on .im-seq{background:#fff!important;color:var(--im-accent,#1d4ed8)!important}
+nav.site.im a.mi .im-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 2px color-mix(in srgb,var(--im-accent,#2563eb) 18%,transparent);flex:none}
+nav.site.im .im-stats{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font:600 11px/1.3 system-ui,Arial,sans-serif;color:var(--menu-fg,#94a3b8);padding:2px 2px 0;opacity:.9}
+nav.site.im .im-stats a{color:var(--link,#8ecbff);text-decoration:none}
+nav.site.im .im-stats .im-stat-n{font-variant-numeric:tabular-nums;font-weight:700}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:28px;flex:none}
+#sg-link,#tt-btn,#mm-link{height:28px;border-radius:999px;font-size:12px}
+#mm-link{width:28px;padding:0}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){
+  nav.site.im .im-main{grid-template-columns:repeat(2,minmax(0,1fr))}
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  nav.site.im summary.sl .im-toggle{display:inline}
+}
+@media (min-width:721px){
+  nav.site.im details.im-sub[open] .im-sub-pills,nav.site.im details.im-sub .im-sub-pills{display:grid!important}
+  nav.site.im summary.sl .im-toggle{display:none}
+}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["About Me","/about-me/","👤",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Cursor_Tenant6","/ARR/provisioning/cursor-tenant6/","🚀"],["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"],["ရှေ့သို့ချီ","/roadmap/forward/","⏩"],["Time Map 2026–2030","/roadmap/forward/time-map/","🗓️"],["BridgeWhy","/roadmap/bridgewhy/","📚"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["ARR-LargeTopology","/ARR-LargeTopology/","🗺️",[["Overview","/ARR-LargeTopology/","🗺️"],["Nodes","/ARR-LargeTopology/nodes.html","🖥️"],["Serials","/ARR-LargeTopology/serials.html","🔢"],["Mgmt IPs","/ARR-LargeTopology/mgmt-ips.html","🌐"],["Links","/ARR-LargeTopology/links.html","🔗"],["Tenants","/ARR-LargeTopology/tenants.html","🏢"],["VRFs","/ARR-LargeTopology/vrfs.html","🧭"],["BDs","/ARR-LargeTopology/bds.html","🌉"],["Subnets","/ARR-LargeTopology/subnets.html","🔢"],["EPGs","/ARR-LargeTopology/epgs.html","🎯"],["Leaf VNIs","/ARR-LargeTopology/vni.html","💠"],["VXLAN","/ARR-LargeTopology/vxlan/","🧵"],["VNI compare","/ARR-LargeTopology/vni-compare/","🔷"],["Access policies","/ARR-LargeTopology/access-policies/","🧱"],["BD GIPo & FTAG","/ARR-LargeTopology/bd-gipo-ftag/","📡"],["IAC files","/ARR-LargeTopology/iac-files/","📦"],["ARR-netbox","/ARR-LargeTopology/arr-netbox/","🗄️"],["Hardware monitor","/ARR-LargeTopology/hw-monitor/","📟"],["Site map","/ARR-LargeTopology/site-map/","🌳"],["Provisioning","/ARR-LargeTopology/provisioning/","🚀"],["Test explain","/ARR-LargeTopology/test-explain/","🧪"],["GitLab","/ARR-LargeTopology/gitlab/","🦊"],["GitLab Runner","/ARR-LargeTopology/gitlab-runner/","🏃"]]],["Terragrunt","/terragrunt/","🧰",[["Terragrunt","/terragrunt/","🧰"]]],["zFrontier","/zfrontier/","🌠",[["zFrontier","/zfrontier/","🌠"],["Southwest Chief","/zfrontier/southwest-chief/","🚂"],["Southwest Chief tracker","/zfrontier/southwest-chief/tracker/","📡"],["Southwest Chief stations","/zfrontier/southwest-chief/stations/","🚉"],["Farzad","/zfrontier/farzad/","📺"],["SpaceX vs Tesla shares","/zfrontier/shares/","📈"],["Optimus","/zfrontier/optimus/","🤖"],["Gigafactory","/zfrontier/gigafactory/","🏭"],["FSD versions","/zfrontier/fsd-versions/","🛣️"],["Liquid cooling","/zfrontier/liquid-cooling/","💧"],["SpaceX Tracking","/zfrontier/spacex/","🚀"],["CyberCab","/zfrontier/cybercab/","🚕"],["AI FineTune Pod","/zfrontier/ai-finetune-pod/","🎛️"],["MCP Servers","/zfrontier/mcp-servers/","🔌"],["NaC CLI","/zfrontier/nac-cli/","🧰"],["GPU Workflow","/zfrontier/3gpu-ai-workflow/","🧮"],["MWMESH","/zfrontier/mwmesh/","📡"],["Notebooks","/zfrontier/notebooks/","📓"],["RAG documents","/zfrontier/rag-documents/","📚"],["Foundation-Sec-8B","/zfrontier/foundation-sec-8b/","🛡️"],["Terafab","/zfrontier/terafab/","💠"],["3DiffsVXLAN","/zfrontier/3diffsvxlan/","🔀"],["ARR-LargePod","/zfrontier/arr-largepod/","🏗️"],["Nvidia A100 & H100","/zfrontier/Nvidia-A100-H100/","🟩"],["AgenticAI","/zfrontier/agenticai/","🧠"],["MS-02 GPU Monitoring","/zfrontier/MS-02-GPU-Monitoring/","📟"],["MBPro","/zfrontier/MBPro/","💻"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"]]],["ACI GUI Forms","/ACI-GUI-Forms/","📝",[["ACI GUI Forms","/ACI-GUI-Forms/","📝"],["GUI Map","/aci-gui-forms/WIP/gui-map/","🗺️"],["APG Access Policy Group","/ACI-GUI-Forms/apg/","🧩"],["Spine Access Policy Group","/ACI-GUI-Forms/spine-apg/","🛰️"]]],["ACI GUI","/aci-gui/","🖥️",[["Create Pod Policy Group","/aci-gui/create-pod-policy-group/","🧬"],["Create Bridge Domain (step 3)","/aci-gui/create-bridge-domain-step3/","🌉"],["Create Subnet","/aci-gui/create-subnet/","🔢"],["Create Application Profile","/aci-gui/create-application-profile/","🧩"],["Create Management EPG","/aci-gui/create-management-epg/","🛠️"],["Static Node Management Addresses","/aci-gui/static-node-management-addresses/","📍"],["Create Fabric Policies","/aci-gui/create-fabric-policies/","🧵"],["Create Access Policies","/aci-gui/create-access-policies/","🔐"],["Create VLAN Pool","/aci-gui/create-vlan-pool/","🏷️"],["Create Physical Domain","/aci-gui/create-physical-domain/","🏛️"],["Create Access Interface Policy Group","/aci-gui/create-access-interface-policy-group/","🔌"],["Create PC Interface Policy Group","/aci-gui/create-pc-interface-policy-group/","🔀"],["Note on Interface Policies","/aci-gui/interface-policies/","📘"],["Interface Wizard for vPC","/aci-gui/interface-wizard-vpc/","🪄"],["Create VMM Domain","/aci-gui/create-vmm-domain/","💻"],["vCenter Networking","/aci-gui/vcenter-networking/","🖥️"],["Create Tenant","/aci-gui/create-tenant/","🏢"],["Create L3Out","/aci-gui/create-l3out/","🌐"],["L3Out Contracts","/aci-gui/l3out-contracts/","📜"],["Create Bridge Domain","/aci-gui/create-bridge-domain/","🌉"],["Bridge Domain","/aci-gui/bridge-domain/","🌉"],["Mgmt Bridge Domain","/aci-gui/mgmt-bridge-domain/","🔧"],["DHCP Relay","/aci-gui/dhcp-relay/","📡"],["Management Application Profile","/aci-gui/management-application-profile/","📦"],["Application Profile (web + app)","/aci-gui/application-profile/","🧩"],["Create VRF","/aci-gui/create-vrf/","🧭"],["Create Endpoint Group","/aci-gui/create-endpoint-group/","🎯"],["Contracts Between Tenants","/aci-gui/contracts-between-tenants/","🤝"],["Create Filter","/aci-gui/create-filter/","🧹"],["Create Contract","/aci-gui/create-contract/","📃"],["Create Management Contracts","/aci-gui/create-management-contracts/","📑"],["Mgmt PortGroup to VM","/aci-gui/mgmt-portgroup-to-vm/","🧷"],["Pod Policy Group","/aci-gui/pod-policy-group/","🕒"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+var IM_UPDATED=["/ARR-LargeTopology/","/ARR-LargeTopology/access-policies/","/ARR-LargeTopology/arr-netbox/","/ARR-LargeTopology/arr-netbox/bds/","/ARR-LargeTopology/arr-netbox/cables/","/ARR-LargeTopology/arr-netbox/devices/","/ARR-LargeTopology/arr-netbox/epgs/","/ARR-LargeTopology/arr-netbox/interfaces/","/ARR-LargeTopology/arr-netbox/ip-addresses/","/ARR-LargeTopology/arr-netbox/subnets/","/ARR-LargeTopology/arr-netbox/tenants/","/ARR-LargeTopology/arr-netbox/vlans/","/ARR-LargeTopology/arr-netbox/vrfs/","/ARR-LargeTopology/bd-gipo-ftag/","/ARR-LargeTopology/bds/","/ARR-LargeTopology/epgs/","/ARR-LargeTopology/hw-monitor/","/ARR-LargeTopology/hw-monitor/bgp-rr/","/ARR-LargeTopology/hw-monitor/coop/","/ARR-LargeTopology/hw-monitor/endpoints/","/ARR-LargeTopology/hw-monitor/events/","/ARR-LargeTopology/hw-monitor/faults/","/ARR-LargeTopology/hw-monitor/firmware/","/ARR-LargeTopology/hw-monitor/health/","/ARR-LargeTopology/hw-monitor/interfaces/","/ARR-LargeTopology/hw-monitor/isis/","/ARR-LargeTopology/hw-monitor/leaf-compare/","/ARR-LargeTopology/hw-monitor/neighbours/","/ARR-LargeTopology/hw-monitor/node-101/","/ARR-LargeTopology/hw-monitor/node-102/","/ARR-LargeTopology/hw-monitor/node-103/","/ARR-LargeTopology/hw-monitor/node-104/","/ARR-LargeTopology/hw-monitor/node-201/","/ARR-LargeTopology/hw-monitor/node-202/","/ARR-LargeTopology/hw-monitor/overlay/","/ARR-LargeTopology/hw-monitor/resources/","/ARR-LargeTopology/hw-monitor/spine-compare/","/ARR-LargeTopology/hw-monitor/underlay/","/ARR-LargeTopology/hw-monitor/vxlan/","/ARR-LargeTopology/iac-files/","/ARR-LargeTopology/iac-files/ARR-APIC-01.nac/","/ARR-LargeTopology/iac-files/LEAF-101.nac/","/ARR-LargeTopology/iac-files/LEAF-102.nac/","/ARR-LargeTopology/iac-files/LEAF-103.nac/","/ARR-LargeTopology/iac-files/LEAF-104.nac/","/ARR-LargeTopology/iac-files/SPINE-201.nac/","/ARR-LargeTopology/iac-files/SPINE-202.nac/","/ARR-LargeTopology/iac-files/access_policies.nac/","/ARR-LargeTopology/iac-files/apic.nac/","/ARR-LargeTopology/iac-files/arr-iac-files/","/ARR-LargeTopology/iac-files/common.nac/","/ARR-LargeTopology/iac-files/fabric_policies.nac/","/ARR-LargeTopology/iac-files/infra.nac/","/ARR-LargeTopology/iac-files/interface_policies.nac/","/ARR-LargeTopology/iac-files/mgmt.nac/","/ARR-LargeTopology/iac-files/node_policies.nac/","/ARR-LargeTopology/iac-files/pods.nac/","/ARR-LargeTopology/iac-files/tenants/Cursor_Tenant2.nac/","/ARR-LargeTopology/iac-files/tenants/Cursor_Tenant3.nac/","/ARR-LargeTopology/iac-files/tenants/Cursor_Tenant6.nac/","/ARR-LargeTopology/iac-files/tenants/Cursor_tenant1.nac/","/ARR-LargeTopology/iac-files/tenants/Cursor_tenant5.nac/","/ARR-LargeTopology/iac-files/tenants/aci_p01_tenant.nac/","/ARR-LargeTopology/iac-files/tenants/common.nac/","/ARR-LargeTopology/iac-files/tenants/infra.nac/","/ARR-LargeTopology/iac-files/tenants/mgmt.nac/","/ARR-LargeTopology/iac-files/tenants/msite_p01_tenant.nac/","/ARR-LargeTopology/links/","/ARR-LargeTopology/mgmt-ips/","/ARR-LargeTopology/nodes/","/ARR-LargeTopology/provisioning/","/ARR-LargeTopology/serials/","/ARR-LargeTopology/site-map/","/ARR-LargeTopology/subnets/","/ARR-LargeTopology/tenants/","/ARR-LargeTopology/test-explain/","/ARR-LargeTopology/vni-compare/","/ARR-LargeTopology/vni/","/ARR-LargeTopology/vrfs/","/ARR-LargeTopology/vxlan/","/ARR/","/ARR/ap/common-default/","/ARR/ap/infra-access/","/ARR/ap/infra-ave-ctrl/","/ARR/aps/","/ARR/arr-LToPo/","/ARR/arr-LToPo/bds/","/ARR/arr-LToPo/epgs/","/ARR/arr-LToPo/links/","/ARR/arr-LToPo/mgmt-ips/","/ARR/arr-LToPo/nodes/","/ARR/arr-LToPo/serials/","/ARR/arr-LToPo/subnets/","/ARR/arr-LToPo/tenants/","/ARR/arr-LToPo/vni/","/ARR/arr-LToPo/vrfs/","/ARR/bd/common-default/","/ARR/bd/infra-ave-ctrl/","/ARR/bd/infra-default/","/ARR/bd/mgmt-inb/","/ARR/bds/","/ARR/contract/common-default/","/ARR/contracts/","/ARR/endpoints/","/ARR/epg/infra-access-default/","/ARR/epg/infra-ave-ctrl-ave-ctrl/","/ARR/epgs/","/ARR/faults/","/ARR/faults/critical/","/ARR/faults/major/","/ARR/faults/minor/","/ARR/faults/recent/","/ARR/faults/warning/","/ARR/health/","/ARR/l3out/common-default/","/ARR/l3outs/","/ARR/logical/","/ARR/logical/contracts/","/ARR/logical/filters/","/ARR/logical/l3outs/","/ARR/logical/providers-consumers/","/ARR/nodes/","/ARR/physical/","/ARR/physical/switch-101/","/ARR/physical/switch-102/","/ARR/physical/switch-103/","/ARR/physical/switch-104/","/ARR/physical/switch-201/","/ARR/physical/switch-202/","/ARR/provisioning/","/ARR/provisioning/cursor-tenant1/","/ARR/provisioning/cursor-tenant5-l3out/","/ARR/provisioning/cursor-tenant5/","/ARR/provisioning/cursor-tenant5/design/","/ARR/provisioning/cursor-tenant6/","/ARR/tenant/common/","/ARR/tenant/infra/","/ARR/tenant/mgmt/","/ARR/tenants/","/ARR/tracker/","/ARR/visitors/","/ARR/vni/","/ARR/vni/l2-16220082/","/ARR/vni/l2-16416666/","/ARR/vni/l2-16744306/","/ARR/vni/l2-16777209/","/ARR/vni/l3-16777199/","/ARR/vni/l3-2129920/","/ARR/vni/l3-2457600/","/ARR/vni/l3-2818048/","/ARR/vni/l3-3047424/","/ARR/vni/l3-3047425/","/ARR/vrf/common-copy/","/ARR/vrf/common-default/","/ARR/vrf/infra-ave-ctrl/","/ARR/vrf/infra-overlay-1/","/ARR/vrf/mgmt-inb/","/ARR/vrf/mgmt-oob/","/ARR/vrfs/","/netbox-aci-objects/","/netbox-aci-tenants/","/netbox-aci-tenants/diagrams/","/netbox-aci-tenants/diagrams/aci-p01-tenant/","/netbox-aci-tenants/diagrams/cursor-tenant1/","/netbox-aci-tenants/diagrams/cursor-tenant2/","/netbox-aci-tenants/diagrams/cursor-tenant3/","/netbox-aci-tenants/diagrams/cursor-tenant5/","/netbox-aci-tenants/diagrams/cursor-tenant6/","/netbox-aci-tenants/diagrams/msite-p01-tenant/","/netbox-hw-inventory/","/netbox-yaml-model/","/netbox-yaml-model/aci-p01-tenant/","/netbox-yaml-model/cursor-tenant1/","/netbox-yaml-model/cursor-tenant2/","/netbox-yaml-model/cursor-tenant3/","/netbox-yaml-model/cursor-tenant5/","/netbox-yaml-model/cursor-tenant6/","/netbox-yaml-model/msite-p01-tenant/","/report17-aoapic-monitoring/","/report17-aoapic-monitoring/objects/","/report17-aoapic-monitoring/objects/access_port_pgs/","/report17-aoapic-monitoring/objects/aeps/","/report17-aoapic-monitoring/objects/app_profiles/","/report17-aoapic-monitoring/objects/audit_24h/","/report17-aoapic-monitoring/objects/audit_7d/","/report17-aoapic-monitoring/objects/bd_subnets/","/report17-aoapic-monitoring/objects/bds/","/report17-aoapic-monitoring/objects/bundle_pgs/","/report17-aoapic-monitoring/objects/contracts/","/report17-aoapic-monitoring/objects/endpoints/","/report17-aoapic-monitoring/objects/epg_subnets/","/report17-aoapic-monitoring/objects/epgs/","/report17-aoapic-monitoring/objects/events_24h/","/report17-aoapic-monitoring/objects/faults/","/report17-aoapic-monitoring/objects/filters/","/report17-aoapic-monitoring/objects/interfaces/","/report17-aoapic-monitoring/objects/interfaces_up/","/report17-aoapic-monitoring/objects/l3_domains/","/report17-aoapic-monitoring/objects/l3outs/","/report17-aoapic-monitoring/objects/nodes/","/report17-aoapic-monitoring/objects/phys_domains/","/report17-aoapic-monitoring/objects/port_channels/","/report17-aoapic-monitoring/objects/static_paths/","/report17-aoapic-monitoring/objects/tenants/","/report17-aoapic-monitoring/objects/vlan_pools/","/report17-aoapic-monitoring/objects/vmm_domains/","/report17-aoapic-monitoring/objects/vpcs/","/report17-aoapic-monitoring/objects/vrfs/","/report17-aoapic-monitoring/pending-provisioning/","/report17-aoapic-monitoring/tenants/","/report17-aoapic-monitoring/universal-provisioning/","/report17-aoapic-monitoring/universal-provisioning/rma/","/roadmap/","/roadmap/america-driving/","/roadmap/america-driving/car-hire-boise-las-vegas/","/roadmap/america-driving/car-hire-las-vegas-phoenix/","/roadmap/america-driving/car-hire-san-jose-boise/","/roadmap/america-driving/las-vegas-to-boca-chica/","/roadmap/america-driving/leg-1-sfo-boise/","/roadmap/america-driving/leg-2-boise-las-vegas/","/roadmap/america-driving/leg-3-las-vegas-tucson-via-phoenix/","/roadmap/america-driving/leg-4-tucson-los-angeles/","/roadmap/bridgewhy/","/roadmap/bridgewhy/america-driving/","/roadmap/bridgewhy/bgp-mpls-enterprise-network-design/","/roadmap/bridgewhy/campus-network-design/","/roadmap/bridgewhy/ccna/","/roadmap/bridgewhy/cisco-aci/","/roadmap/bridgewhy/cisco-aci/lesson-01/","/roadmap/bridgewhy/cisco-aci/lesson-02/","/roadmap/bridgewhy/cisco-aci/lesson-03/","/roadmap/bridgewhy/cisco-aci/lesson-04/","/roadmap/bridgewhy/cisco-aci/lesson-05/","/roadmap/bridgewhy/cisco-aci/lesson-06/","/roadmap/bridgewhy/cisco-aci/lesson-07/","/roadmap/bridgewhy/cisco-aci/lesson-08/","/roadmap/bridgewhy/cisco-aci/lesson-09/","/roadmap/bridgewhy/cisco-aci/lesson-10/","/roadmap/bridgewhy/cisco-aci/lesson-11/","/roadmap/bridgewhy/cisco-aci/lesson-12/","/roadmap/bridgewhy/cisco-ise/","/roadmap/bridgewhy/cisco-sd-access/","/roadmap/bridgewhy/cisco-sd-wan/","/roadmap/bridgewhy/data-center-vxlan-bgp-evpn/","/roadmap/bridgewhy/enterprise-quality-of-service/","/roadmap/bridgewhy/git-for-network-engineers/","/roadmap/bridgewhy/introduction/","/roadmap/bridgewhy/ipv6-fundamentals/","/roadmap/bridgewhy/is-is-routing-protocol/","/roadmap/bridgewhy/linux-operating-system/","/roadmap/bridgewhy/llms-from-scratch/","/roadmap/bridgewhy/machine-learning-fundamentals/","/roadmap/bridgewhy/network-automation/","/roadmap/bridgewhy/network-security-fundamentals/","/roadmap/bridgewhy/ospf-deep-dive/","/roadmap/bridgewhy/switching-fundamentals/","/roadmap/bridgewhy/tcp-protocol-deep-dive/","/roadmap/bridgewhy/wireless-fundamentals-wlc-9800/","/roadmap/bridgewhy/wireshark-packet-analysis/","/visitors/countries/","/zfrontier/","/zfrontier/ces-2027/","/zfrontier/ces-2027/03-jan/","/zfrontier/ces-2027/03-jan/autonomous-drones/","/zfrontier/ces-2027/03-jan/frontier-tech/","/zfrontier/ces-2027/03-jan/physical-ai/","/zfrontier/ces-2027/03-jan/robots/","/zfrontier/ces-2027/04-jan/","/zfrontier/ces-2027/04-jan/autonomous-drones/","/zfrontier/ces-2027/04-jan/frontier-tech/","/zfrontier/ces-2027/04-jan/physical-ai/","/zfrontier/ces-2027/04-jan/robots/","/zfrontier/ces-2027/05-jan/","/zfrontier/ces-2027/05-jan/autonomous-drones/","/zfrontier/ces-2027/05-jan/frontier-tech/","/zfrontier/ces-2027/05-jan/physical-ai/","/zfrontier/ces-2027/05-jan/robots/","/zfrontier/ces-2027/06-jan/","/zfrontier/ces-2027/06-jan/autonomous-drones/","/zfrontier/ces-2027/06-jan/frontier-tech/","/zfrontier/ces-2027/06-jan/physical-ai/","/zfrontier/ces-2027/06-jan/robots/","/zfrontier/ces-2027/07-jan/","/zfrontier/ces-2027/07-jan/autonomous-drones/","/zfrontier/ces-2027/07-jan/frontier-tech/","/zfrontier/ces-2027/07-jan/physical-ai/","/zfrontier/ces-2027/07-jan/robots/","/zfrontier/ces-2027/08-jan/","/zfrontier/ces-2027/08-jan/autonomous-drones/","/zfrontier/ces-2027/08-jan/frontier-tech/","/zfrontier/ces-2027/08-jan/physical-ai/","/zfrontier/ces-2027/08-jan/robots/","/zfrontier/meraki/","/zfrontier/meraki/alerts/","/zfrontier/meraki/devices/","/zfrontier/meraki/firmware/","/zfrontier/meraki/licensing/","/zfrontier/meraki/networks/"];
+var IM_ACCENT={"/":"#64748b","/tasks/netbox/":"#2563eb","/tasks/provisioning/":"#0d9488","/tasks/monitoring/":"#0891b2","/tasks/testing/":"#d97706","/aci-policy/":"#16a34a","/aci-multipod/":"#15803d","/aci-azure-vxlan/":"#059669","/firewall-domain/":"#dc2626","/aci-lab-guide/":"#22c55e","/demo-ai-pod/":"#7c3aed","/intersight-demo/":"#0284c7","/tasks/itil/":"#4f46e5","/roadmap/":"#ea580c","/virtual-dc/":"#0f766e","/ARR-LargeTopology/":"#0e7490","/terragrunt/":"#a16207","/zfrontier/":"#7c3aed","/visitors/":"#059669","/ACI-GUI-Forms/":"#16a34a","/aci-gui/":"#15803d"};
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function normPath(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function accentOf(href){var h=String(href||'');return IM_ACCENT[h]||IM_ACCENT[h.replace(/\/?$/,'/')]||IM_ACCENT[normPath(h)+'/']||'#2563eb'}
+function pathUpdated(href){
+  var h=normPath(href), list=IM_UPDATED||[];
+  if(h==='/') return list.indexOf('/')>=0;
+  for(var i=0;i<list.length;i++){
+    var u=normPath(list[i]);
+    if(u===h||u.indexOf(h+'/')===0) return true;
+  }
+  return false;
+}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq,accent){
+  var a=document.createElement('a');
+  a.className=cls+(on?' on':'');
+  a.href=e[1];
+  a.title=(seq?String(seq)+'. ':'')+e[0]+(pathUpdated(e[1])?' (updated in the last 7 days)':'');
+  a.style.setProperty('--im-accent', accent||accentOf(e[1]));
+  if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}
+  var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);
+  var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);
+  if(pathUpdated(e[1])){var dot=document.createElement('span');dot.className='im-dot';dot.title='Updated in the last 7 days';dot.setAttribute('aria-label','Updated in the last 7 days');a.appendChild(dot)}
+  if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}
+  return a;
+}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function statsRow(){
+  var d=document.createElement('div');d.className='im-stats';
+  d.innerHTML='<a href="/visitors/">Visitors <span class="im-stat-n im-stat-vis">\u2026</span></a><span>\u00b7</span><a href="/visitors/countries/">Countries <span class="im-stat-n im-stat-cc">\u2026</span></a><span>\u00b7</span><span>Updated <span class="im-stat-n im-stat-asof">\u2026</span></span>';
+  return d;
+}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length,0,accentOf(g[1])))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){
+var acc=accentOf(G[gi][1]);
+var r2=document.createElement('details');r2.className='im-sub';r2.style.setProperty('--im-accent',acc);
+if(window.matchMedia&&window.matchMedia('(min-width:721px)').matches) r2.open=true;
+var t=document.createElement('summary');t.className='sl';
+t.innerHTML='<span>'+G[gi][0]+' tasks \u203A</span><span class="im-toggle"> (tap to expand)</span>';
+r2.appendChild(t);
+t.addEventListener('click',function(ev){if(window.matchMedia&&window.matchMedia('(min-width:721px)').matches){ev.preventDefault();location.href=G[gi][1];}});
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1,acc))});r2.appendChild(pills);n.appendChild(r2)}}
+n.appendChild(statsRow());});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+<!-- uv-badge v2 -->
+<style id="uv-badge-style">
+.uv-pop{position:relative;display:inline-block;vertical-align:middle}
+.uv-pop .uv-card{display:none;position:absolute;right:0;top:calc(100% + 6px);z-index:80;min-width:228px;padding:10px 12px;border-radius:10px;background:var(--card,#0f172a);color:var(--ink,#e2e8f0);border:1px solid var(--line,#334155);box-shadow:0 10px 28px rgba(0,0,0,.28);font:12px/1.4 system-ui,Arial,sans-serif;text-align:left;white-space:normal}
+.uv-pop.open .uv-card{display:block}
+.uv-card svg{display:block;width:204px;height:44px;margin:6px 0 8px}
+.uv-card .uv-k{font-weight:700;margin:0 0 2px}
+.uv-card .uv-m{color:var(--muted,#94a3b8);font-size:11px}
+.uv-card a{color:var(--link,#8ecbff)}
+</style>
+<script id="uv-badge">(function(){
+function norm(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function tzParts(iso){
+  var pt=new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'2-digit',minute:'2-digit',hour12:false,hourCycle:'h23',timeZoneName:'short',day:'2-digit',month:'short'}).formatToParts(new Date(iso));
+  var g=function(t){return (pt.find(function(x){return x.type===t})||{}).value||''};
+  var tz=(g('timeZoneName')||'AEDT').replace('GMT+11','AEDT').replace('GMT+10','AEST');
+  return {hh:g('hour'),mm:g('minute'),tz:tz,day:g('day'),mon:g('month')};
+}
+function last30(daysMap){
+  var out=[], now=new Date();
+  var fmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'});
+  for(var i=29;i>=0;i--){
+    var d=new Date(now.getTime()-i*86400000);
+    var key=fmt.format(d);
+    out.push({day:key,count:+((daysMap||{})[key]||0)});
+  }
+  return out;
+}
+function spark(series){
+  var w=204,h=44,p=2;
+  var max=Math.max.apply(null,series.map(function(x){return x.count}).concat([1]));
+  var n=series.length||1;
+  var pts=series.map(function(x,i){
+    var X=p+(i*(w-2*p)/Math.max(1,n-1));
+    var Y=h-p-((x.count/max)*(h-2*p));
+    return X.toFixed(1)+','+Y.toFixed(1);
+  }).join(' ');
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true"><polyline fill="none" stroke="#22c55e" stroke-width="2" points="'+pts+'"/></svg>';
+}
+function fillStats(d){
+  var total=(d.total&& (d.total.total||d.total.total_utc))||0;
+  var cc=(d.countries||[]).length;
+  var asof=d.as_of_aedt||'';
+  document.querySelectorAll('.im-stat-vis').forEach(function(e){e.textContent=total||'0'});
+  document.querySelectorAll('.im-stat-cc').forEach(function(e){e.textContent=cc||'0'});
+  document.querySelectorAll('.im-stat-asof').forEach(function(e){e.textContent=asof||'n/a'});
+}
+function attachPopover(d, count, series){
+  document.querySelectorAll('.uv').forEach(function(uv){
+    if(uv.closest('.uv-pop')) return;
+    var wrap=document.createElement('span');wrap.className='uv-pop';
+    uv.parentNode.insertBefore(wrap,uv);wrap.appendChild(uv);
+    var card=document.createElement('div');card.className='uv-card';card.setAttribute('role','dialog');
+    var last=series.length?series[series.length-1].count:0;
+    card.innerHTML='<p class="uv-k">This page: '+count+' unique visitors</p>'+spark(series)+'<p class="uv-m">Last 30 days (this page). Today so far: '+last+'.</p><p><a href="/visitors/">Full visitor stats \u203A</a></p>';
+    wrap.appendChild(card);
+    function tog(ev){ev.preventDefault();ev.stopPropagation();document.querySelectorAll('.uv-pop.open').forEach(function(x){if(x!==wrap)x.classList.remove('open')});wrap.classList.toggle('open')}
+    uv.addEventListener('click',tog);
+    uv.style.cursor='pointer';
+    uv.title='Click for a 30-day sparkline';
+  });
+  document.addEventListener('click',function(){document.querySelectorAll('.uv-pop.open').forEach(function(x){x.classList.remove('open')})});
+}
+function apply(d){
+  var p=norm(location.pathname);
+  var page=(d.pages||[]).filter(function(x){return norm(x.path)===p});
+  var c=page.reduce(function(a,x){return a+(+x.count||0)},0);
+  var days={};
+  page.forEach(function(x){var m=x.days||{};Object.keys(m).forEach(function(k){days[k]=(days[k]||0)+(+m[k]||0)})});
+  document.querySelectorAll('.uvc').forEach(function(e){e.textContent=c});
+  document.querySelectorAll('.uvt').forEach(function(e){
+    if(d.updated_utc){var t=tzParts(d.updated_utc);e.textContent=' (data as of '+t.hh+':'+t.mm+' '+t.tz+')'}
+  });
+  fillStats(d);
+  attachPopover(d,c,last30(days));
+}
+function fail(){
+  document.querySelectorAll('.uvc').forEach(function(e){if(e.textContent==='\u2026'||e.textContent==='...') e.textContent='n/a'});
+  document.querySelectorAll('.im-stat-vis,.im-stat-cc,.im-stat-asof').forEach(function(e){if(e.textContent==='\u2026') e.textContent='n/a'});
+}
+if(!window.__visitorsData){
+  var ac=typeof AbortController==='function'?new AbortController():null;
+  var timer=setTimeout(function(){try{ac&&ac.abort()}catch(e){}},8000);
+  window.__visitorsData=fetch('/data/visitors.json?'+Date.now(),ac?{signal:ac.signal}:undefined).then(function(r){
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('visitors.json '+r.status);
+    return r.json();
+  });
+}
+window.__visitorsData.then(apply).catch(function(){fail()});
+})();</script>
+</body>
+</html>
