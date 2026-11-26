@@ -1,0 +1,21 @@
+---
+# Sample playbook 081 for cisco.nxos.nxos_l3_interfaces
+# Build order: 081 of 129 (6. Interfaces and access)
+# Reads ../models/nxos_l3_interfaces.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_l3_interfaces_module.html
+
+- name: "081 nxos_l3_interfaces"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_l3_interfaces.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_l3_interfaces with the non-null model parameters
+      cisco.nxos.nxos_l3_interfaces: "{{ nxos_l3_interfaces | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_l3_interfaces_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_l3_interfaces_result
+        verbosity: 1

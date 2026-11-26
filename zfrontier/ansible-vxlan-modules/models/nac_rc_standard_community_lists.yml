@@ -1,0 +1,83 @@
+---
+# Data model for vxlan.overlay_extensions.route_control.standard_community_lists.entries (Standard Community Lists).
+# Values come from the documented example on the reference page, then the
+# documented default. Anything else is null (not set / not collected).
+# Secret-like fields are placeholders. schema_reference lists every documented attribute.
+references:
+  doc_url: https://netascode.cisco.com/docs/data_models/vxlan/overlay_extensions/route_control/standard_community_lists/
+  collection: cisco.nac_dc_vxlan
+  collection_version: 0.9.1
+  kind: data model section
+  role: cisco.nac_dc_vxlan.validate (schema check), cisco.nac_dc_vxlan.dtc.create / dtc.deploy (apply)
+  schema_path: vxlan.overlay_extensions.route_control.standard_community_lists.entries
+  schema_source: netascode.cisco.com VXLAN data model page 'Standard Community Lists' (schema-generated tables),
+    fetched 26 Nov 2026; the docs site is not version-pinned
+  classes_documented: 5
+  attributes_documented: 8
+vxlan:
+  overlay_extensions:
+    route_control:
+      standard_community_lists:
+      - name: Standard-Community
+        entries:
+        - seq_number: 10
+          operation: permit
+          communities:
+          - 65000:100
+schema_reference:
+- class: vxlan
+  path: vxlan
+  attributes:
+  - name: overlay_extensions
+    type: Class
+    constraint: overlay_extensions
+    mandatory: 'No'
+    default: null
+- class: overlay_extensions
+  path: vxlan.overlay_extensions
+  attributes:
+  - name: route_control
+    type: Class
+    constraint: route_control
+    mandatory: 'No'
+    default: null
+- class: route_control
+  path: vxlan.overlay_extensions.route_control
+  attributes:
+  - name: standard_community_lists
+    type: List
+    constraint: standard_community_lists
+    mandatory: 'No'
+    default: null
+- class: standard_community_lists
+  path: vxlan.overlay_extensions.route_control.standard_community_lists
+  attributes:
+  - name: name
+    type: String
+    constraint: 'Regex: ^[A-Za-z0-9-_:]{1,63}$'
+    mandatory: 'Yes'
+    default: null
+  - name: entries
+    type: List
+    constraint: entries
+    mandatory: 'Yes'
+    default: null
+- class: entries
+  path: vxlan.overlay_extensions.route_control.standard_community_lists.entries
+  attributes:
+  - name: seq_number
+    type: Integer
+    constraint: 'min: 1, max: 4294967294'
+    mandatory: 'Yes'
+    default: null
+  - name: operation
+    type: Choice
+    constraint: permit, deny
+    mandatory: 'Yes'
+    default: null
+  - name: communities
+    type: List
+    constraint: 'Any[String[Regex: ^([0-9]{1,5}:[0-9]{1,5})$] or Choice[blackhole, graceful-shutdown, internet,
+      local-as, no-advertise, no-export]]'
+    mandatory: 'No'
+    default: null

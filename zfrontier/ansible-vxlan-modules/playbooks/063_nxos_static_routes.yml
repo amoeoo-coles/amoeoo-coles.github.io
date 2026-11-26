@@ -1,0 +1,21 @@
+---
+# Sample playbook 063 for cisco.nxos.nxos_static_routes
+# Build order: 063 of 129 (4. VRFs)
+# Reads ../models/nxos_static_routes.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_static_routes_module.html
+
+- name: "063 nxos_static_routes"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_static_routes.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_static_routes with the non-null model parameters
+      cisco.nxos.nxos_static_routes: "{{ nxos_static_routes | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_static_routes_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_static_routes_result
+        verbosity: 1

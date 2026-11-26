@@ -1,0 +1,21 @@
+---
+# Sample playbook 127 for cisco.dcnm.dcnm_service_route_peering
+# Build order: 127 of 129 (9. Multi-site, services and other)
+# Reads ../models/dcnm_service_route_peering.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://github.com/CiscoDevNet/ansible-dcnm/blob/main/docs/cisco.dcnm.dcnm_service_route_peering_module.rst
+
+- name: "127 dcnm_service_route_peering"
+  hosts: ndfc
+  gather_facts: false
+  vars_files:
+    - ../models/dcnm_service_route_peering.yml
+  tasks:
+    - name: Run cisco.dcnm.dcnm_service_route_peering with the non-null model parameters
+      cisco.dcnm.dcnm_service_route_peering: "{{ dcnm_service_route_peering | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: dcnm_service_route_peering_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: dcnm_service_route_peering_result
+        verbosity: 1

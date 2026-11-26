@@ -1,0 +1,21 @@
+---
+# Sample playbook 015 for cisco.nxos.nxos_hostname
+# Build order: 015 of 129 (1. Fabric, global settings and switch inventory)
+# Reads ../models/nxos_hostname.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_hostname_module.html
+
+- name: "015 nxos_hostname"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_hostname.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_hostname with the non-null model parameters
+      cisco.nxos.nxos_hostname: "{{ nxos_hostname | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_hostname_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_hostname_result
+        verbosity: 1

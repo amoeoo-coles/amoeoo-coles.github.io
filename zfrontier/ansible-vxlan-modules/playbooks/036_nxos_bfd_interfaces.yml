@@ -1,0 +1,21 @@
+---
+# Sample playbook 036 for cisco.nxos.nxos_bfd_interfaces
+# Build order: 036 of 129 (2. Underlay)
+# Reads ../models/nxos_bfd_interfaces.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_bfd_interfaces_module.html
+
+- name: "036 nxos_bfd_interfaces"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_bfd_interfaces.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_bfd_interfaces with the non-null model parameters
+      cisco.nxos.nxos_bfd_interfaces: "{{ nxos_bfd_interfaces | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_bfd_interfaces_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_bfd_interfaces_result
+        verbosity: 1

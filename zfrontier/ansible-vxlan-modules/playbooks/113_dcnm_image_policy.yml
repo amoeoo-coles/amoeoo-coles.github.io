@@ -1,0 +1,21 @@
+---
+# Sample playbook 113 for cisco.dcnm.dcnm_image_policy
+# Build order: 113 of 129 (8. Deploy, Day 2 and operations)
+# Reads ../models/dcnm_image_policy.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://github.com/CiscoDevNet/ansible-dcnm/blob/main/docs/cisco.dcnm.dcnm_image_policy_module.rst
+
+- name: "113 dcnm_image_policy"
+  hosts: ndfc
+  gather_facts: false
+  vars_files:
+    - ../models/dcnm_image_policy.yml
+  tasks:
+    - name: Run cisco.dcnm.dcnm_image_policy with the non-null model parameters
+      cisco.dcnm.dcnm_image_policy: "{{ dcnm_image_policy | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: dcnm_image_policy_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: dcnm_image_policy_result
+        verbosity: 1

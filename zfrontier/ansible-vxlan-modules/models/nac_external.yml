@@ -1,0 +1,357 @@
+---
+# Data model for vxlan.global.external (External).
+# Values come from the documented example on the reference page, then the
+# documented default. Anything else is null (not set / not collected).
+# Secret-like fields are placeholders. schema_reference lists every documented attribute.
+references:
+  doc_url: https://netascode.cisco.com/docs/data_models/vxlan/global/external/
+  collection: cisco.nac_dc_vxlan
+  collection_version: 0.9.1
+  kind: data model section
+  role: cisco.nac_dc_vxlan.validate (schema check), cisco.nac_dc_vxlan.dtc.create / dtc.deploy (apply)
+  schema_path: vxlan.global.external
+  schema_source: netascode.cisco.com VXLAN data model page 'External' (schema-generated tables), fetched 26 Nov
+    2026; the docs site is not version-pinned
+  classes_documented: 11
+  attributes_documented: 51
+vxlan:
+  global:
+    external:
+      bgp_asn: '65100'
+      enable_nxapi_http: false
+      nxapi_http_port: 80
+      enable_nxapi_https: true
+      nxapi_https_port: 443
+      auth_proto: SHA_AES
+      ptp:
+        enable: false
+        domain_id: 0
+        lb_id: 0
+      snmp_server_host_trap: true
+      netflow:
+        enable: false
+        exporter:
+        - name: null
+          ip_address: null
+          vrf: null
+          source_interface: null
+          udp_port: null
+        record:
+        - name: null
+          template: null
+          layer2: null
+        monitor:
+        - name: null
+          record: null
+          exporter1: null
+          exporter2: null
+      bootstrap:
+        enable_bootstrap: true
+        enable_local_dhcp_server: false
+        dhcp_version: null
+        dhcp_v4:
+          scope_start_address: null
+          scope_end_address: null
+          switch_mgmt_default_gw: null
+          mgmt_prefix: null
+          multi_subnet_scope: null
+          domain_name: null
+        dhcp_v6:
+          scope_start_address: null
+          scope_end_address: null
+          switch_mgmt_default_gw: null
+          mgmt_prefix: null
+          multi_subnet_scope: null
+          domain_name: null
+        enable_cdp_mgmt: false
+        bootstrap_freeform: null
+      aaa_freeform: null
+schema_reference:
+- class: vxlan
+  path: vxlan
+  attributes:
+  - name: global
+    type: Class
+    constraint: global
+    mandatory: 'No'
+    default: null
+- class: global
+  path: vxlan.global
+  attributes:
+  - name: external
+    type: Class
+    constraint: external
+    mandatory: 'No'
+    default: null
+- class: external
+  path: vxlan.global.external
+  attributes:
+  - name: bgp_asn
+    type: String
+    constraint: 'Regex: ^(?:\d{1,10}|\d{1,5}\.\d{1,5})$'
+    mandatory: 'Yes'
+    default: null
+  - name: enable_nxapi_http
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: nxapi_http_port
+    type: Integer
+    constraint: null
+    mandatory: 'No'
+    default: '80'
+  - name: enable_nxapi_https
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'true'
+  - name: nxapi_https_port
+    type: Integer
+    constraint: null
+    mandatory: 'No'
+    default: '443'
+  - name: auth_proto
+    type: Choice
+    constraint: MD5, SHA, MD5_DES, MD5_AES, SHA_DES, SHA_AES
+    mandatory: 'No'
+    default: MD5
+  - name: ptp
+    type: Class
+    constraint: ptp
+    mandatory: 'No'
+    default: null
+  - name: snmp_server_host_trap
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'true'
+  - name: netflow
+    type: Class
+    constraint: netflow
+    mandatory: 'No'
+    default: null
+  - name: bootstrap
+    type: Class
+    constraint: bootstrap
+    mandatory: 'No'
+    default: null
+  - name: aaa_freeform
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+- class: ptp
+  path: vxlan.global.external.ptp
+  attributes:
+  - name: enable
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: domain_id
+    type: Integer
+    constraint: 'min: 0, max: 127'
+    mandatory: 'No'
+    default: '0'
+  - name: lb_id
+    type: Integer
+    constraint: 'min: 0, max: 1023'
+    mandatory: 'No'
+    default: '0'
+- class: netflow
+  path: vxlan.global.external.netflow
+  attributes:
+  - name: enable
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: exporter
+    type: List
+    constraint: exporter
+    mandatory: 'No'
+    default: null
+  - name: record
+    type: List
+    constraint: record
+    mandatory: 'No'
+    default: null
+  - name: monitor
+    type: List
+    constraint: monitor
+    mandatory: 'No'
+    default: null
+- class: bootstrap
+  path: vxlan.global.external.bootstrap
+  attributes:
+  - name: enable_bootstrap
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: enable_local_dhcp_server
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: dhcp_version
+    type: Choice
+    constraint: DHCPv4, DHCPv6
+    mandatory: 'No'
+    default: null
+  - name: dhcp_v4
+    type: Class
+    constraint: dhcp_v4
+    mandatory: 'No'
+    default: null
+  - name: dhcp_v6
+    type: Class
+    constraint: dhcp_v6
+    mandatory: 'No'
+    default: null
+  - name: enable_cdp_mgmt
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: bootstrap_freeform
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+- class: exporter
+  path: vxlan.global.external.netflow.exporter
+  attributes:
+  - name: name
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: ip_address
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: vrf
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: source_interface
+    type: String
+    constraint: 'Regex: (?i)^(?:mgmt0|(?:e|eth(?:ernet)?)\d(?:/\d+){1,2}(?:\.\d{1,4})?)$'
+    mandatory: 'Yes'
+    default: null
+  - name: udp_port
+    type: Integer
+    constraint: 'min: 1, max: 65535'
+    mandatory: 'Yes'
+    default: null
+- class: record
+  path: vxlan.global.external.netflow.record
+  attributes:
+  - name: name
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: template
+    type: Choice
+    constraint: netflow_ipv4_record, netflow_l2_record
+    mandatory: 'Yes'
+    default: null
+  - name: layer2
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+- class: monitor
+  path: vxlan.global.external.netflow.monitor
+  attributes:
+  - name: name
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: record
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: exporter1
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: exporter2
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+- class: dhcp_v4
+  path: vxlan.global.external.bootstrap.dhcp_v4
+  attributes:
+  - name: scope_start_address
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: scope_end_address
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: switch_mgmt_default_gw
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: mgmt_prefix
+    type: Integer
+    constraint: 'min: 8, max: 30'
+    mandatory: 'Yes'
+    default: null
+  - name: multi_subnet_scope
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: domain_name
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+- class: dhcp_v6
+  path: vxlan.global.external.bootstrap.dhcp_v6
+  attributes:
+  - name: scope_start_address
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: scope_end_address
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: switch_mgmt_default_gw
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: mgmt_prefix
+    type: Integer
+    constraint: 'min: 64, max: 126'
+    mandatory: 'Yes'
+    default: null
+  - name: multi_subnet_scope
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: domain_name
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null

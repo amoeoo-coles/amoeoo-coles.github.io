@@ -1,0 +1,132 @@
+---
+# Data model for vxlan.topology.fabric_links.ipv4 (Fabric Link).
+# Values come from the documented example on the reference page, then the
+# documented default. Anything else is null (not set / not collected).
+# Secret-like fields are placeholders. schema_reference lists every documented attribute.
+references:
+  doc_url: https://netascode.cisco.com/docs/data_models/vxlan/topology/topology_fabric_link/
+  collection: cisco.nac_dc_vxlan
+  collection_version: 0.9.1
+  kind: data model section
+  role: cisco.nac_dc_vxlan.validate (schema check), cisco.nac_dc_vxlan.dtc.create / dtc.deploy (apply)
+  schema_path: vxlan.topology.fabric_links.ipv4
+  schema_source: netascode.cisco.com VXLAN data model page 'Fabric Link' (schema-generated tables), fetched 26 Nov
+    2026; the docs site is not version-pinned
+  classes_documented: 4
+  attributes_documented: 17
+vxlan:
+  topology:
+    fabric_links:
+    - source_device: dc1-leaf1
+      source_interface: eth1/49
+      source_description: dc1-leaf1 eth1/49 to dc1-spine1 eth1/1
+      dest_device: dc1-spine1
+      dest_interface: eth1/1
+      destination_description: dc1-spine1 eth1/1 to dc1-leaf1 eth1/49
+      template: int_pre_provision_intra_fabric_link
+      admin_state: true
+      mtu: 9216
+      ipv4:
+        subnet: 10.5.0.0/31
+        source_ipv4: 10.5.0.0
+        dest_ipv4: 10.5.0.1
+      peer1_freeform: null
+      peer2_freeform: null
+schema_reference:
+- class: vxlan
+  path: vxlan
+  attributes:
+  - name: topology
+    type: Class
+    constraint: topology
+    mandatory: 'No'
+    default: null
+- class: topology
+  path: vxlan.topology
+  attributes:
+  - name: fabric_links
+    type: List
+    constraint: fabric_links
+    mandatory: 'No'
+    default: null
+- class: fabric_links
+  path: vxlan.topology.fabric_links
+  attributes:
+  - name: source_device
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: source_interface
+    type: String
+    constraint: 'Regex: (?i)^(?:e|eth(?:ernet)?)\d(?:\/\d+){1,2}|vlan(?:[1-9]|[1-9]\d{1,2}|[1-3]\d{3}|40[0-8]|409[0-4]:?)$'
+    mandatory: 'Yes'
+    default: null
+  - name: source_description
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: dest_device
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: dest_interface
+    type: String
+    constraint: 'Regex: (?i)^(?:e|eth(?:ernet)?)\d(?:\/\d+){1,2}|vlan(?:[1-9]|[1-9]\d{1,2}|[1-3]\d{3}|40[0-8]|409[0-4]:?)$'
+    mandatory: 'Yes'
+    default: null
+  - name: destination_description
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: template
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: admin_state
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'true'
+  - name: mtu
+    type: Integer
+    constraint: 'min: 1500, max: 9216'
+    mandatory: 'No'
+    default: '9216'
+  - name: ipv4
+    type: Class
+    constraint: ipv4
+    mandatory: 'No'
+    default: null
+  - name: peer1_freeform
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: peer2_freeform
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+- class: ipv4
+  path: vxlan.topology.fabric_links.ipv4
+  attributes:
+  - name: subnet
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: source_ipv4
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: dest_ipv4
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null

@@ -1,0 +1,21 @@
+---
+# Sample playbook 128 for cisco.dcnm.dcnm_service_policy
+# Build order: 128 of 129 (9. Multi-site, services and other)
+# Reads ../models/dcnm_service_policy.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://github.com/CiscoDevNet/ansible-dcnm/blob/main/docs/cisco.dcnm.dcnm_service_policy_module.rst
+
+- name: "128 dcnm_service_policy"
+  hosts: ndfc
+  gather_facts: false
+  vars_files:
+    - ../models/dcnm_service_policy.yml
+  tasks:
+    - name: Run cisco.dcnm.dcnm_service_policy with the non-null model parameters
+      cisco.dcnm.dcnm_service_policy: "{{ dcnm_service_policy | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: dcnm_service_policy_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: dcnm_service_policy_result
+        verbosity: 1

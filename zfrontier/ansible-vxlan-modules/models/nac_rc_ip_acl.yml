@@ -1,0 +1,660 @@
+---
+# Data model for vxlan.overlay_extensions.route_control (IP ACLs).
+# Values come from the documented example on the reference page, then the
+# documented default. Anything else is null (not set / not collected).
+# Secret-like fields are placeholders. schema_reference lists every documented attribute.
+references:
+  doc_url: https://netascode.cisco.com/docs/data_models/vxlan/overlay_extensions/route_control/ip_acl/
+  collection: cisco.nac_dc_vxlan
+  collection_version: 0.9.1
+  kind: data model section
+  role: cisco.nac_dc_vxlan.validate (schema check), cisco.nac_dc_vxlan.dtc.create / dtc.deploy (apply)
+  schema_path: vxlan.overlay_extensions.route_control
+  schema_source: netascode.cisco.com VXLAN data model page 'IP ACLs' (schema-generated tables), fetched 26 Nov 2026;
+    the docs site is not version-pinned
+  classes_documented: 17
+  attributes_documented: 97
+vxlan:
+  overlay_extensions:
+    route_control:
+      ipv4_access_lists:
+      - name: myACL
+        entries:
+        - seq_number: 5
+          operation: permit
+          remark: Allow_traffic
+          protocol: tcp
+          source:
+            ip: null
+            wildcard: null
+            addrgroup: null
+            any: true
+            host: null
+            port_number:
+              operator: null
+              port: null
+              from: null
+              to: null
+          destination:
+            ip: 10.30.30.0/24
+            wildcard: null
+            addrgroup: null
+            any: true
+            host: null
+            port_number:
+              operator: gt
+              port: 1023
+          filtering_options:
+          - flags:
+            - establish: true
+              ack: null
+              fin: null
+              psh: null
+              rst: null
+              syn: null
+              urg: null
+            dscp: null
+            http_method: get
+            tcp_option_length: 4
+            tcp_flags_mask: null
+            ttl: null
+            udf:
+              name: null
+              value: null
+              mask: null
+            packet_length:
+              operation: null
+              size: null
+              from: null
+              to: null
+            time_range: null
+            precedence: critical
+            set_erspan_dscp: null
+            set_erspan_gre_proto: null
+            load_share: null
+            fragments: null
+          log: true
+        statistics_per_entry: true
+        fragments: null
+        ignore_routable: null
+      ipv6_access_lists:
+      - name: ACL6-101
+        entries:
+        - seq_number: 10
+          operation: permit
+          remark: null
+          protocol: tcp
+          source:
+            ip: 2001:db8:300:201::/64
+            wildcard: null
+            addrgroup: null
+            any: null
+            host: null
+            port_number:
+              operator: eq
+              port: 23
+          destination:
+            ip: 2001:db8:300:202::1/32
+            wildcard: null
+            addrgroup: null
+            any: true
+            host: null
+            port_number: null
+          filtering_options:
+          - flags: null
+            dscp: null
+            tcp_flags_mask: null
+            ttl: null
+            udf: null
+            packet_length: null
+            time_range: null
+            precedence: null
+            load_share: null
+            fragments: null
+          log: null
+        statistics_per_entry: null
+        fragments: null
+        ignore_routable: null
+        extension_header: null
+schema_reference:
+- class: vxlan
+  path: vxlan
+  attributes:
+  - name: overlay_extensions
+    type: Class
+    constraint: overlay_extensions
+    mandatory: 'No'
+    default: null
+- class: overlay_extensions
+  path: vxlan.overlay_extensions
+  attributes:
+  - name: route_control
+    type: Class
+    constraint: route_control
+    mandatory: 'No'
+    default: null
+- class: route_control
+  path: vxlan.overlay_extensions.route_control
+  attributes:
+  - name: ipv4_access_lists
+    type: List
+    constraint: ipv4_access_lists
+    mandatory: 'No'
+    default: null
+  - name: ipv6_access_lists
+    type: List
+    constraint: ipv6_access_lists
+    mandatory: 'No'
+    default: null
+- class: ipv4_access_lists
+  path: vxlan.overlay_extensions.route_control.ipv4_access_lists
+  attributes:
+  - name: name
+    type: String
+    constraint: 'Regex: ^[A-Za-z0-9-_]{1,63}$'
+    mandatory: 'Yes'
+    default: null
+  - name: entries
+    type: List
+    constraint: entries
+    mandatory: 'No'
+    default: null
+  - name: statistics_per_entry
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: fragments
+    type: Choice
+    constraint: deny-all, permit-all
+    mandatory: 'No'
+    default: null
+  - name: ignore_routable
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+- class: ipv6_access_lists
+  path: vxlan.overlay_extensions.route_control.ipv6_access_lists
+  attributes:
+  - name: name
+    type: String
+    constraint: 'Regex: ^[A-Za-z0-9-_]{1,63}$'
+    mandatory: 'Yes'
+    default: null
+  - name: entries
+    type: List
+    constraint: entries
+    mandatory: 'No'
+    default: null
+  - name: statistics_per_entry
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: fragments
+    type: Choice
+    constraint: deny-all, permit-all
+    mandatory: 'No'
+    default: null
+  - name: ignore_routable
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: extension_header
+    type: Choice
+    constraint: permit-all, deny-all
+    mandatory: 'No'
+    default: null
+- class: entries
+  path: vxlan.overlay_extensions.route_control.ipv4_access_lists.entries
+  attributes:
+  - name: seq_number
+    type: Integer
+    constraint: 'min: 1, max: 4294967294'
+    mandatory: 'Yes'
+    default: null
+  - name: operation
+    type: Choice
+    constraint: permit, deny
+    mandatory: 'No'
+    default: null
+  - name: remark
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: protocol
+    type: Any
+    constraint: 'Integer[min: 0, max: 255] or Choice[ahp, eigrp, esp, gre, icmp, igmp, ip, nos, ospf, pcp, pim,
+      tcp, udf, udp]'
+    mandatory: 'No'
+    default: null
+  - name: source
+    type: Class
+    constraint: source
+    mandatory: 'No'
+    default: null
+  - name: destination
+    type: Class
+    constraint: destination
+    mandatory: 'No'
+    default: null
+  - name: filtering_options
+    type: List
+    constraint: filtering_options
+    mandatory: 'No'
+    default: null
+  - name: log
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+- class: entries
+  path: vxlan.overlay_extensions.route_control.ipv6_access_lists.entries
+  attributes:
+  - name: seq_number
+    type: Integer
+    constraint: 'min: 1, max: 4294967294'
+    mandatory: 'Yes'
+    default: null
+  - name: operation
+    type: Choice
+    constraint: permit, deny
+    mandatory: 'No'
+    default: null
+  - name: remark
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: protocol
+    type: Any
+    constraint: 'Integer[min: 0, max: 255] or Choice[ahp, eigrp, esp, icmp, ipv6, pcp, pim, sctp, tcp, udf, udp]'
+    mandatory: 'No'
+    default: null
+  - name: source
+    type: Class
+    constraint: source
+    mandatory: 'No'
+    default: null
+  - name: destination
+    type: Class
+    constraint: destination
+    mandatory: 'No'
+    default: null
+  - name: filtering_options
+    type: List
+    constraint: filtering_options
+    mandatory: 'No'
+    default: null
+  - name: log
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+- class: source
+  path: vxlan.overlay_extensions.route_control.ipv4_access_lists.entries.source
+  attributes:
+  - name: ip
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: wildcard
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: addrgroup
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: any
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: host
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: port_number
+    type: Class
+    constraint: port_number
+    mandatory: 'No'
+    default: null
+- class: destination
+  path: vxlan.overlay_extensions.route_control.ipv4_access_lists.entries.destination
+  attributes:
+  - name: ip
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: wildcard
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: addrgroup
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: any
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: host
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: port_number
+    type: Class
+    constraint: port_number
+    mandatory: 'No'
+    default: null
+- class: filtering_options
+  path: vxlan.overlay_extensions.route_control.ipv4_access_lists.entries.filtering_options
+  attributes:
+  - name: flags
+    type: List
+    constraint: flags
+    mandatory: 'No'
+    default: null
+  - name: dscp
+    type: Any
+    constraint: 'Integer[min: 0, max: 63] or Choice[af11, af12, af13, af21, af22, af23, af31, af32, af33, af41,
+      af42, af43, cs1, cs2, cs3, cs4, cs5, cs6, cs7, ef, default]'
+    mandatory: 'No'
+    default: null
+  - name: http_method
+    type: Any
+    constraint: 'Integer[min: 1, max: 7] or Choice[connect, delete, get, head, post, put, trace]'
+    mandatory: 'No'
+    default: null
+  - name: tcp_option_length
+    type: Integer
+    constraint: 'min: 0, max: 40'
+    mandatory: 'No'
+    default: null
+  - name: tcp_flags_mask
+    type: Integer
+    constraint: 'min: 0, max: 63'
+    mandatory: 'No'
+    default: null
+  - name: ttl
+    type: Integer
+    constraint: 'min: 0, max: 255'
+    mandatory: 'No'
+    default: null
+  - name: udf
+    type: Class
+    constraint: udf
+    mandatory: 'No'
+    default: null
+  - name: packet_length
+    type: Class
+    constraint: packet_length
+    mandatory: 'No'
+    default: null
+  - name: time_range
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: precedence
+    type: Any
+    constraint: 'Integer[min: 0, max: 7] or Choice[critical, flash, flash-override, immediate, internet, network,
+      priority, routine]'
+    mandatory: 'No'
+    default: null
+  - name: set_erspan_dscp
+    type: Integer
+    constraint: 'min: 1, max: 63'
+    mandatory: 'No'
+    default: null
+  - name: set_erspan_gre_proto
+    type: Integer
+    constraint: 'min: 1, max: 65535'
+    mandatory: 'No'
+    default: null
+  - name: load_share
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: fragments
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+- class: source
+  path: vxlan.overlay_extensions.route_control.ipv6_access_lists.entries.source
+  attributes:
+  - name: ip
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: wildcard
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: addrgroup
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: any
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: host
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: port_number
+    type: Class
+    constraint: port_number
+    mandatory: 'No'
+    default: null
+- class: destination
+  path: vxlan.overlay_extensions.route_control.ipv6_access_lists.entries.destination
+  attributes:
+  - name: ip
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: wildcard
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: addrgroup
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: any
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: host
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: port_number
+    type: Class
+    constraint: port_number
+    mandatory: 'No'
+    default: null
+- class: filtering_options
+  path: vxlan.overlay_extensions.route_control.ipv6_access_lists.entries.filtering_options
+  attributes:
+  - name: flags
+    type: List
+    constraint: flags
+    mandatory: 'No'
+    default: null
+  - name: dscp
+    type: Any
+    constraint: 'Integer[min: 0, max: 63] or Choice[af11, af12, af13, af21, af22, af23, af31, af32, af33, af41,
+      af42, af43, cs1, cs2, cs3, cs4, cs5, cs6, cs7, ef, default]'
+    mandatory: 'No'
+    default: null
+  - name: tcp_flags_mask
+    type: Integer
+    constraint: 'min: 0, max: 63'
+    mandatory: 'No'
+    default: null
+  - name: ttl
+    type: Integer
+    constraint: 'min: 0, max: 255'
+    mandatory: 'No'
+    default: null
+  - name: udf
+    type: Class
+    constraint: udf
+    mandatory: 'No'
+    default: null
+  - name: packet_length
+    type: Class
+    constraint: packet_length
+    mandatory: 'No'
+    default: null
+  - name: time_range
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: precedence
+    type: Any
+    constraint: 'Integer[min: 0, max: 7] or Choice[critical, flash, flash-override, immediate, internet, network,
+      priority, routine]'
+    mandatory: 'No'
+    default: null
+  - name: load_share
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: fragments
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+- class: port_number
+  path: vxlan.overlay_extensions.route_control.ipv4_access_lists.entries.source.port_number
+  attributes:
+  - name: operator
+    type: Choice
+    constraint: eq, gt, lt, neq, range
+    mandatory: 'No'
+    default: null
+  - name: port
+    type: Integer
+    constraint: 'min: 0, max: 65535'
+    mandatory: 'No'
+    default: null
+  - name: from
+    type: Integer
+    constraint: 'min: 0, max: 65535'
+    mandatory: 'No'
+    default: null
+  - name: to
+    type: Integer
+    constraint: 'min: 0, max: 65535'
+    mandatory: 'No'
+    default: null
+- class: flags
+  path: vxlan.overlay_extensions.route_control.ipv4_access_lists.entries.filtering_options.flags
+  attributes:
+  - name: establish
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: ack
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: fin
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: psh
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: rst
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: syn
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: urg
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+- class: udf
+  path: vxlan.overlay_extensions.route_control.ipv4_access_lists.entries.filtering_options.udf
+  attributes:
+  - name: name
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: value
+    type: Integer
+    constraint: 'min: 0, max: 65535'
+    mandatory: 'No'
+    default: null
+  - name: mask
+    type: Integer
+    constraint: 'min: 0, max: 65535'
+    mandatory: 'No'
+    default: null
+- class: packet_length
+  path: vxlan.overlay_extensions.route_control.ipv4_access_lists.entries.filtering_options.packet_length
+  attributes:
+  - name: operation
+    type: Choice
+    constraint: eq, gt, lt, neq, range
+    mandatory: 'No'
+    default: null
+  - name: size
+    type: Integer
+    constraint: 'min: 20, max: 9210'
+    mandatory: 'No'
+    default: null
+  - name: from
+    type: Integer
+    constraint: 'min: 20, max: 9210'
+    mandatory: 'No'
+    default: null
+  - name: to
+    type: Integer
+    constraint: 'min: 20, max: 9210'
+    mandatory: 'No'
+    default: null

@@ -1,0 +1,707 @@
+---
+# Data model for vxlan.global.ebgp (VXLAN EVPN eBGP).
+# Values come from the documented example on the reference page, then the
+# documented default. Anything else is null (not set / not collected).
+# Secret-like fields are placeholders. schema_reference lists every documented attribute.
+references:
+  doc_url: https://netascode.cisco.com/docs/data_models/vxlan/global/vxlan_evpn_ebgp/
+  collection: cisco.nac_dc_vxlan
+  collection_version: 0.9.1
+  kind: data model section
+  role: cisco.nac_dc_vxlan.validate (schema check), cisco.nac_dc_vxlan.dtc.create / dtc.deploy (apply)
+  schema_path: vxlan.global.ebgp
+  schema_source: netascode.cisco.com VXLAN data model page 'VXLAN EVPN eBGP' (schema-generated tables), fetched
+    26 Nov 2026; the docs site is not version-pinned
+  classes_documented: 19
+  attributes_documented: 105
+vxlan:
+  global:
+    ebgp:
+      spine_bgp_asn: '65000.3'
+      super_spine_bgp_asn: '65000.1'
+      bgp_asn_mode: Multi-AS
+      leaf_bgp_asn: '65000.4'
+      border_bgp_asn: '65000.22'
+      leaf_same_bgp_asn: false
+      bgp_asn_auto_allocation: true
+      anycast_gateway_mac: 20:20:00:00:00:aa
+      overlay_mode: cli
+      greenfield_cleanup: Disable
+      layer2_vni_range:
+        from: 30000
+        to: 49000
+      layer3_vni_range:
+        from: 50000
+        to: 59000
+      layer2_vlan_range:
+        from: 2300
+        to: 2999
+      layer3_vlan_range:
+        from: 2000
+        to: 2299
+      enable_l3_vni_no_vlan: false
+      multisite_site_id: null
+      vpc:
+        peer_link_vlan: 3600
+        peer_keep_alive: management
+        auto_recovery_time: 360
+        delay_restore_time: 150
+        peer_link_port_channel_id: 500
+        ipv6_nd_sync: true
+        advertise_pip: false
+        advertise_pip_border_only: true
+        advertise_pip_border_gateway: false
+        domain_id_range: 1-1000
+        fabric_vpc_qos: false
+        fabric_vpc_qos_policy_name: spine_qos_for_fabric_vpc_peering
+      ptp:
+        enable: false
+        domain_id: 0
+        lb_id: 0
+      snmp_server_host_trap: true
+      enable_nxapi_http: false
+      nxapi_http_port: 80
+      enable_nxapi_https: true
+      nxapi_https_port: 443
+      auth_proto: SHA_AES
+      dns_servers:
+      - ip_address: null
+        vrf: null
+      ntp_servers:
+      - ip_address: null
+        vrf: null
+      syslog_servers:
+      - ip_address: null
+        vrf: null
+        severity: null
+      netflow:
+        enable: false
+        exporter:
+        - name: null
+          ip_address: null
+          vrf: null
+          source_interface: null
+          udp_port: null
+        record:
+        - name: null
+          template: null
+          layer2: null
+        monitor:
+        - name: null
+          record: null
+          exporter1: null
+          exporter2: null
+      bootstrap:
+        enable_bootstrap: false
+        enable_local_dhcp_server: false
+        dhcp_version: null
+        dhcp_v4:
+          scope_start_address: null
+          scope_end_address: null
+          switch_mgmt_default_gw: null
+          mgmt_prefix: null
+          multi_subnet_scope: null
+          domain_name: null
+        dhcp_v6:
+          scope_start_address: null
+          scope_end_address: null
+          switch_mgmt_default_gw: null
+          mgmt_prefix: null
+          multi_subnet_scope: null
+          domain_name: null
+        enable_cdp_mgmt: false
+        bootstrap_freeform: null
+      aaa_freeform: null
+      banner_freeform: null
+      leaf_pre_interface_freeform: null
+      leaf_post_interface_freeform: null
+      spine_pre_interface_freeform: null
+      spine_post_interface_freeform: null
+      tor_pre_interface_freeform: null
+      tor_post_interface_freeform: null
+      intra_fabric_link_freeform: null
+schema_reference:
+- class: vxlan
+  path: vxlan
+  attributes:
+  - name: global
+    type: Class
+    constraint: global
+    mandatory: 'No'
+    default: null
+- class: global
+  path: vxlan.global
+  attributes:
+  - name: ebgp
+    type: Class
+    constraint: ebgp
+    mandatory: 'No'
+    default: null
+- class: ebgp
+  path: vxlan.global.ebgp
+  attributes:
+  - name: spine_bgp_asn
+    type: String
+    constraint: 'Regex: ^(?:\d{1,10}|\d{1,5}\.\d{1,5})$'
+    mandatory: 'Yes'
+    default: null
+  - name: super_spine_bgp_asn
+    type: String
+    constraint: 'Regex: ^(?:\d{1,10}|\d{1,5}\.\d{1,5})$'
+    mandatory: 'No'
+    default: null
+  - name: bgp_asn_mode
+    type: Choice
+    constraint: Multi-AS, Same-Tier-AS
+    mandatory: 'No'
+    default: Multi-AS
+  - name: leaf_bgp_asn
+    type: String
+    constraint: 'Regex: ^(?:\d{1,10}|\d{1,5}\.\d{1,5})$'
+    mandatory: 'No'
+    default: null
+  - name: border_bgp_asn
+    type: String
+    constraint: 'Regex: ^(?:\d{1,10}|\d{1,5}\.\d{1,5})$'
+    mandatory: 'No'
+    default: null
+  - name: leaf_same_bgp_asn
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: bgp_asn_auto_allocation
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'true'
+  - name: anycast_gateway_mac
+    type: Any
+    constraint: 'String[Regex: ^[a-f0-9]{1}\.[a-f0-9]{1}\.[a-f0-9]{1}$] or String[Regex: ^[a-f0-9]{4}\.[a-f0-9]{4}\.[a-f0-9]{4}$]
+      or String[Regex: ^[a-f0-9]{2}:[a-f0-9]{2}:[a-f0-9]{2}:[a-f0-9]{2}:[a-f0-9]{2}:[a-f0-9]{2}$] or String[Regex:
+      ^[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}$]'
+    mandatory: 'No'
+    default: 20:20:00:00:00:aa
+  - name: overlay_mode
+    type: Choice
+    constraint: cli, config-profile
+    mandatory: 'No'
+    default: cli
+  - name: greenfield_cleanup
+    type: Choice
+    constraint: Enable, Disable
+    mandatory: 'No'
+    default: Disable
+  - name: layer2_vni_range
+    type: Class
+    constraint: layer2_vni_range
+    mandatory: 'No'
+    default: null
+  - name: layer3_vni_range
+    type: Class
+    constraint: layer3_vni_range
+    mandatory: 'No'
+    default: null
+  - name: layer2_vlan_range
+    type: Class
+    constraint: layer2_vlan_range
+    mandatory: 'No'
+    default: null
+  - name: layer3_vlan_range
+    type: Class
+    constraint: layer3_vlan_range
+    mandatory: 'No'
+    default: null
+  - name: enable_l3_vni_no_vlan
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: multisite_site_id
+    type: Integer
+    constraint: 'min: 1, max: 281474976710655'
+    mandatory: 'No'
+    default: null
+  - name: vpc
+    type: Class
+    constraint: vpc
+    mandatory: 'No'
+    default: null
+  - name: ptp
+    type: Class
+    constraint: ptp
+    mandatory: 'No'
+    default: null
+  - name: snmp_server_host_trap
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'true'
+  - name: enable_nxapi_http
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: nxapi_http_port
+    type: Integer
+    constraint: null
+    mandatory: 'No'
+    default: '80'
+  - name: enable_nxapi_https
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'true'
+  - name: nxapi_https_port
+    type: Integer
+    constraint: null
+    mandatory: 'No'
+    default: '443'
+  - name: auth_proto
+    type: Choice
+    constraint: MD5, SHA, MD5_DES, MD5_AES, SHA_DES, SHA_AES
+    mandatory: 'No'
+    default: MD5
+  - name: dns_servers
+    type: List
+    constraint: dns_servers
+    mandatory: 'No'
+    default: null
+  - name: ntp_servers
+    type: List
+    constraint: ntp_servers
+    mandatory: 'No'
+    default: null
+  - name: syslog_servers
+    type: List
+    constraint: syslog_servers
+    mandatory: 'No'
+    default: null
+  - name: netflow
+    type: Class
+    constraint: netflow
+    mandatory: 'No'
+    default: null
+  - name: bootstrap
+    type: Class
+    constraint: bootstrap
+    mandatory: 'No'
+    default: null
+  - name: aaa_freeform
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: banner_freeform
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: leaf_pre_interface_freeform
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: leaf_post_interface_freeform
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: spine_pre_interface_freeform
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: spine_post_interface_freeform
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: tor_pre_interface_freeform
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: tor_post_interface_freeform
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: intra_fabric_link_freeform
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+- class: layer2_vni_range
+  path: vxlan.global.ebgp.layer2_vni_range
+  attributes:
+  - name: from
+    type: Integer
+    constraint: 'min: 1, max: 16777214'
+    mandatory: 'Yes'
+    default: '30000'
+  - name: to
+    type: Integer
+    constraint: 'min: 1, max: 16777214'
+    mandatory: 'No'
+    default: '49000'
+- class: layer3_vni_range
+  path: vxlan.global.ebgp.layer3_vni_range
+  attributes:
+  - name: from
+    type: Integer
+    constraint: 'min: 1, max: 16777214'
+    mandatory: 'Yes'
+    default: '50000'
+  - name: to
+    type: Integer
+    constraint: 'min: 1, max: 16777214'
+    mandatory: 'No'
+    default: '59000'
+- class: layer2_vlan_range
+  path: vxlan.global.ebgp.layer2_vlan_range
+  attributes:
+  - name: from
+    type: Integer
+    constraint: 'min: 2, max: 4094'
+    mandatory: 'Yes'
+    default: '2300'
+  - name: to
+    type: Integer
+    constraint: 'min: 2, max: 4094'
+    mandatory: 'No'
+    default: '2999'
+- class: layer3_vlan_range
+  path: vxlan.global.ebgp.layer3_vlan_range
+  attributes:
+  - name: from
+    type: Integer
+    constraint: 'min: 2, max: 4094'
+    mandatory: 'Yes'
+    default: '2000'
+  - name: to
+    type: Integer
+    constraint: 'min: 2, max: 4094'
+    mandatory: 'No'
+    default: '2299'
+- class: vpc
+  path: vxlan.global.ebgp.vpc
+  attributes:
+  - name: peer_link_vlan
+    type: Integer
+    constraint: 'min: 2, max: 3967'
+    mandatory: 'No'
+    default: '3600'
+  - name: peer_keep_alive
+    type: Choice
+    constraint: loopback, management
+    mandatory: 'No'
+    default: management
+  - name: auto_recovery_time
+    type: Integer
+    constraint: 'min: 240, max: 3600'
+    mandatory: 'No'
+    default: '360'
+  - name: delay_restore_time
+    type: Integer
+    constraint: 'min: 1, max: 3600'
+    mandatory: 'No'
+    default: '150'
+  - name: peer_link_port_channel_id
+    type: Integer
+    constraint: 'min: 1, max: 4096'
+    mandatory: 'No'
+    default: '500'
+  - name: ipv6_nd_sync
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'true'
+  - name: advertise_pip
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: advertise_pip_border_only
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'true'
+  - name: advertise_pip_border_gateway
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: domain_id_range
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: 1-1000
+  - name: fabric_vpc_qos
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: fabric_vpc_qos_policy_name
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: spine_qos_for_fabric_vpc_peering
+- class: ptp
+  path: vxlan.global.ebgp.ptp
+  attributes:
+  - name: enable
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: domain_id
+    type: Integer
+    constraint: 'min: 0, max: 127'
+    mandatory: 'No'
+    default: '0'
+  - name: lb_id
+    type: Integer
+    constraint: 'min: 0, max: 1023'
+    mandatory: 'No'
+    default: '0'
+- class: dns_servers
+  path: vxlan.global.ebgp.dns_servers
+  attributes:
+  - name: ip_address
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: vrf
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+- class: ntp_servers
+  path: vxlan.global.ebgp.ntp_servers
+  attributes:
+  - name: ip_address
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: vrf
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+- class: syslog_servers
+  path: vxlan.global.ebgp.syslog_servers
+  attributes:
+  - name: ip_address
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: vrf
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: severity
+    type: Integer
+    constraint: 'min: 0, max: 7'
+    mandatory: 'Yes'
+    default: null
+- class: netflow
+  path: vxlan.global.ebgp.netflow
+  attributes:
+  - name: enable
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: exporter
+    type: List
+    constraint: exporter
+    mandatory: 'No'
+    default: null
+  - name: record
+    type: List
+    constraint: record
+    mandatory: 'No'
+    default: null
+  - name: monitor
+    type: List
+    constraint: monitor
+    mandatory: 'No'
+    default: null
+- class: bootstrap
+  path: vxlan.global.ebgp.bootstrap
+  attributes:
+  - name: enable_bootstrap
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: enable_local_dhcp_server
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: dhcp_version
+    type: Choice
+    constraint: DHCPv4, DHCPv6
+    mandatory: 'No'
+    default: null
+  - name: dhcp_v4
+    type: Class
+    constraint: dhcp_v4
+    mandatory: 'No'
+    default: null
+  - name: dhcp_v6
+    type: Class
+    constraint: dhcp_v6
+    mandatory: 'No'
+    default: null
+  - name: enable_cdp_mgmt
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: bootstrap_freeform
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+- class: exporter
+  path: vxlan.global.ebgp.netflow.exporter
+  attributes:
+  - name: name
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: ip_address
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: vrf
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: source_interface
+    type: String
+    constraint: 'Regex: (?i)^(?:mgmt0|(?:e|eth(?:ernet)?)\d(?:/\d+){1,2}(?:\.\d{1,4})?)$'
+    mandatory: 'Yes'
+    default: null
+  - name: udp_port
+    type: Integer
+    constraint: 'min: 1, max: 65535'
+    mandatory: 'Yes'
+    default: null
+- class: record
+  path: vxlan.global.ebgp.netflow.record
+  attributes:
+  - name: name
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: template
+    type: Choice
+    constraint: netflow_ipv4_record, netflow_l2_record
+    mandatory: 'Yes'
+    default: null
+  - name: layer2
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+- class: monitor
+  path: vxlan.global.ebgp.netflow.monitor
+  attributes:
+  - name: name
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: record
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: exporter1
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: exporter2
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+- class: dhcp_v4
+  path: vxlan.global.ebgp.bootstrap.dhcp_v4
+  attributes:
+  - name: scope_start_address
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: scope_end_address
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: switch_mgmt_default_gw
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: mgmt_prefix
+    type: Integer
+    constraint: 'min: 8, max: 30'
+    mandatory: 'Yes'
+    default: null
+  - name: multi_subnet_scope
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: domain_name
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+- class: dhcp_v6
+  path: vxlan.global.ebgp.bootstrap.dhcp_v6
+  attributes:
+  - name: scope_start_address
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: scope_end_address
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: switch_mgmt_default_gw
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: mgmt_prefix
+    type: Integer
+    constraint: 'min: 64, max: 126'
+    mandatory: 'Yes'
+    default: null
+  - name: multi_subnet_scope
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: domain_name
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null

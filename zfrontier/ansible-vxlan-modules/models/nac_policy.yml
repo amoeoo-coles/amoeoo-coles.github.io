@@ -1,0 +1,135 @@
+---
+# Data model for vxlan.policy (Policy).
+# Values come from the documented example on the reference page, then the
+# documented default. Anything else is null (not set / not collected).
+# Secret-like fields are placeholders. schema_reference lists every documented attribute.
+references:
+  doc_url: https://netascode.cisco.com/docs/data_models/vxlan/policy/policy/
+  collection: cisco.nac_dc_vxlan
+  collection_version: 0.9.1
+  kind: data model section
+  role: cisco.nac_dc_vxlan.validate (schema check), cisco.nac_dc_vxlan.dtc.create / dtc.deploy (apply)
+  schema_path: vxlan.policy
+  schema_source: netascode.cisco.com VXLAN data model page 'Policy' (schema-generated tables), fetched 26 Nov 2026;
+    the docs site is not version-pinned
+  classes_documented: 6
+  attributes_documented: 15
+vxlan:
+  policy:
+    policies:
+    - name: alias
+      template_name: bgp_peer_template
+      filename: ./data/policies/alias.cfg
+      template_vars:
+        BGP_AS: '64690'
+        TEMPLATE_TYPE: peer
+        TEMPLATE_NAME: ebgp-cmd-pr-fmg-f5
+        CONF: |2-
+            bfd multihop
+            remote-as 65386
+            description ebgp-cmd-pr-fmg-f5
+            update-source Loopback5
+    groups:
+    - name: server leafs
+      priority: 500
+      policies:
+      - name: grpc feature
+        priority: 50
+    switches:
+    - name: nac-leaf3
+      groups:
+      - server leafs
+schema_reference:
+- class: vxlan
+  path: vxlan
+  attributes:
+  - name: policy
+    type: Class
+    constraint: policy
+    mandatory: 'No'
+    default: null
+- class: policy
+  path: vxlan.policy
+  attributes:
+  - name: policies
+    type: List
+    constraint: policies
+    mandatory: 'No'
+    default: null
+  - name: groups
+    type: List
+    constraint: groups
+    mandatory: 'No'
+    default: null
+  - name: switches
+    type: List
+    constraint: switches
+    mandatory: 'No'
+    default: null
+- class: policies
+  path: vxlan.policy.policies
+  attributes:
+  - name: name
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: template_name
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: filename
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: template_vars
+    type: Map
+    constraint: null
+    mandatory: 'No'
+    default: null
+- class: groups
+  path: vxlan.policy.groups
+  attributes:
+  - name: name
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: priority
+    type: Integer
+    constraint: 'min: 1, max: 1000'
+    mandatory: 'No'
+    default: null
+  - name: policies
+    type: List
+    constraint: policies
+    mandatory: 'No'
+    default: null
+- class: switches
+  path: vxlan.policy.switches
+  attributes:
+  - name: name
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: groups
+    type: List
+    constraint: String
+    mandatory: 'Yes'
+    default: null
+- class: policies
+  path: vxlan.policy.groups.policies
+  attributes:
+  - name: name
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: priority
+    type: Integer
+    constraint: 'min: 1, max: 1000'
+    mandatory: 'No'
+    default: null

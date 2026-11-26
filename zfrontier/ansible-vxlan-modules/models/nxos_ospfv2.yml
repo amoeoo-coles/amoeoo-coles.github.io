@@ -1,0 +1,69 @@
+---
+# Model for cisco.nxos.nxos_ospfv2. Options are only those documented by the module.
+# Values come from the module EXAMPLES; null means omit (module default).
+# Secret-like options are placeholders. Do not commit real credentials.
+references:
+  doc_url: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_ospfv2_module.html
+  collection: cisco.nxos
+  collection_version: 14.0.0
+  kind: module
+  module: cisco.nxos.nxos_ospfv2
+  schema_path: plugins/modules/nxos_ospfv2.py DOCUMENTATION.options
+  example_source: module EXAMPLES (first task)
+  options_documented: 3
+  deprecated: false
+nxos_ospfv2:
+  config:
+    processes:
+    - process_id: 100
+      router_id: 203.0.113.20
+    - process_id: 102
+      router_id: 198.51.100.1
+      areas:
+      - area_id: 0.0.0.100
+        filter_list:
+        - route_map: rmap_1
+          direction: in
+        - route_map: rmap_2
+          direction: out
+        ranges:
+        - prefix: 198.51.100.64/27
+          not_advertise: true
+        - prefix: 198.51.100.96/27
+          cost: 120
+      - area_id: 0.0.0.101
+        authentication:
+          message_digest: true
+      redistribute:
+      - protocol: eigrp
+        id: 120
+        route_map: rmap_1
+      - protocol: direct
+        route_map: ospf102-direct-connect
+      vrfs:
+      - vrf: zone1
+        router_id: 198.51.100.129
+        redistribute:
+        - protocol: static
+          route_map: zone1-static-connect
+        summary_address:
+        - prefix: 198.51.100.128/27
+          tag: 121
+        - prefix: 198.51.100.160/27
+        areas:
+        - area_id: 0.0.0.102
+          nssa:
+            default_information_originate: true
+            no_summary: true
+        - area_id: 0.0.0.103
+          nssa:
+            no_summary: true
+            translate:
+              type7:
+                always: true
+      - vrf: zone2
+        auto_cost:
+          reference_bandwidth: 45
+          unit: Gbps
+  running_config: null
+  state: merged

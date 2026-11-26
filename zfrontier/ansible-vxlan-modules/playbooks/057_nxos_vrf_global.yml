@@ -1,0 +1,21 @@
+---
+# Sample playbook 057 for cisco.nxos.nxos_vrf_global
+# Build order: 057 of 129 (4. VRFs)
+# Reads ../models/nxos_vrf_global.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_vrf_global_module.html
+
+- name: "057 nxos_vrf_global"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_vrf_global.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_vrf_global with the non-null model parameters
+      cisco.nxos.nxos_vrf_global: "{{ nxos_vrf_global | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_vrf_global_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_vrf_global_result
+        verbosity: 1

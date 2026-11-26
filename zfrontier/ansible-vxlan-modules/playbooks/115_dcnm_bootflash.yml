@@ -1,0 +1,21 @@
+---
+# Sample playbook 115 for cisco.dcnm.dcnm_bootflash
+# Build order: 115 of 129 (8. Deploy, Day 2 and operations)
+# Reads ../models/dcnm_bootflash.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://github.com/CiscoDevNet/ansible-dcnm/blob/main/docs/cisco.dcnm.dcnm_bootflash_module.rst
+
+- name: "115 dcnm_bootflash"
+  hosts: ndfc
+  gather_facts: false
+  vars_files:
+    - ../models/dcnm_bootflash.yml
+  tasks:
+    - name: Run cisco.dcnm.dcnm_bootflash with the non-null model parameters
+      cisco.dcnm.dcnm_bootflash: "{{ dcnm_bootflash | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: dcnm_bootflash_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: dcnm_bootflash_result
+        verbosity: 1

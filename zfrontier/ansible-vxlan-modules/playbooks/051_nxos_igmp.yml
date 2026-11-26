@@ -1,0 +1,21 @@
+---
+# Sample playbook 051 for cisco.nxos.nxos_igmp
+# Build order: 051 of 129 (3. Overlay (NVE, EVPN, VNIs))
+# Reads ../models/nxos_igmp.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_igmp_module.html
+
+- name: "051 nxos_igmp"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_igmp.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_igmp with the non-null model parameters
+      cisco.nxos.nxos_igmp: "{{ nxos_igmp | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_igmp_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_igmp_result
+        verbosity: 1

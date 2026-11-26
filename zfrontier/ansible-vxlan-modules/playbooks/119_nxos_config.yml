@@ -1,0 +1,21 @@
+---
+# Sample playbook 119 for cisco.nxos.nxos_config
+# Build order: 119 of 129 (8. Deploy, Day 2 and operations)
+# Reads ../models/nxos_config.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_config_module.html
+
+- name: "119 nxos_config"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_config.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_config with the non-null model parameters
+      cisco.nxos.nxos_config: "{{ nxos_config | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_config_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_config_result
+        verbosity: 1

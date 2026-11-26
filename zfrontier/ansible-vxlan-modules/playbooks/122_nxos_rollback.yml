@@ -1,0 +1,21 @@
+---
+# Sample playbook 122 for cisco.nxos.nxos_rollback
+# Build order: 122 of 129 (8. Deploy, Day 2 and operations)
+# Reads ../models/nxos_rollback.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_rollback_module.html
+
+- name: "122 nxos_rollback"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_rollback.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_rollback with the non-null model parameters
+      cisco.nxos.nxos_rollback: "{{ nxos_rollback | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_rollback_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_rollback_result
+        verbosity: 1

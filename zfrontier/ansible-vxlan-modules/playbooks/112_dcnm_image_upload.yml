@@ -1,0 +1,21 @@
+---
+# Sample playbook 112 for cisco.dcnm.dcnm_image_upload
+# Build order: 112 of 129 (8. Deploy, Day 2 and operations)
+# Reads ../models/dcnm_image_upload.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://github.com/CiscoDevNet/ansible-dcnm/blob/main/docs/cisco.dcnm.dcnm_image_upload_module.rst
+
+- name: "112 dcnm_image_upload"
+  hosts: ndfc
+  gather_facts: false
+  vars_files:
+    - ../models/dcnm_image_upload.yml
+  tasks:
+    - name: Run cisco.dcnm.dcnm_image_upload with the non-null model parameters
+      cisco.dcnm.dcnm_image_upload: "{{ dcnm_image_upload | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: dcnm_image_upload_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: dcnm_image_upload_result
+        verbosity: 1

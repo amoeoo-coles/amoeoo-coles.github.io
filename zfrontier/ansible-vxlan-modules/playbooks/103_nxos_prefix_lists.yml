@@ -1,0 +1,21 @@
+---
+# Sample playbook 103 for cisco.nxos.nxos_prefix_lists
+# Build order: 103 of 129 (7. Policies and route control)
+# Reads ../models/nxos_prefix_lists.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_prefix_lists_module.html
+
+- name: "103 nxos_prefix_lists"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_prefix_lists.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_prefix_lists with the non-null model parameters
+      cisco.nxos.nxos_prefix_lists: "{{ nxos_prefix_lists | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_prefix_lists_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_prefix_lists_result
+        verbosity: 1

@@ -1,0 +1,880 @@
+---
+# Data model for vxlan.overlay_extensions.vrf_lites (VRF-Lite).
+# Values come from the documented example on the reference page, then the
+# documented default. Anything else is null (not set / not collected).
+# Secret-like fields are placeholders. schema_reference lists every documented attribute.
+references:
+  doc_url: https://netascode.cisco.com/docs/data_models/vxlan/overlay_extensions/overlay_extension_vrf_lite/
+  collection: cisco.nac_dc_vxlan
+  collection_version: 0.9.1
+  kind: data model section
+  role: cisco.nac_dc_vxlan.validate (schema check), cisco.nac_dc_vxlan.dtc.create / dtc.deploy (apply)
+  schema_path: vxlan.overlay_extensions.vrf_lites
+  schema_source: netascode.cisco.com VXLAN data model page 'VRF-Lite' (schema-generated tables), fetched 26 Nov
+    2026; the docs site is not version-pinned
+  classes_documented: 24
+  attributes_documented: 130
+vxlan:
+  overlay_extensions:
+    vrf_lites:
+    - name: Static-NaC-VRF21_vrf_lite
+      vrf: NaC-VRF21
+      ospf:
+        process: OVERLAY
+        default_area: 0
+        areas:
+        - id: 0
+          area_type: standard
+          area_cost: null
+          nssa:
+            default_information_originate: null
+            route_map: null
+            no_redistribution: null
+            no_summary: null
+            translate:
+              always: null
+              never: null
+              supress_fa: null
+          default_information_originate:
+            always: null
+            route_map: null
+        distance: 110
+        bfd:
+          enabled: true
+      bgp:
+        best_path_as_path_relax: false
+        graceful_restart: true
+        graceful_restart_helper: false
+        local_as: null
+        address_family_ipv4_unicast:
+          additional_paths_send: false
+          additional_paths_receive: false
+          additional_paths_selection_route_map: null
+          default_originate: false
+          ebgp_distance: 20
+          ibgp_distance: 200
+          local_distance: 220
+        address_family_ipv6_unicast:
+          additional_paths_send: false
+          additional_paths_receive: false
+          additional_paths_selection_route_map: null
+          default_originate: false
+          ebgp_distance: 20
+          ibgp_distance: 200
+          local_distance: 220
+      redistribution:
+      - source: null
+        protocol_tag: null
+        route_map_ipv4: null
+        route_map_ipv6: null
+      switches:
+      - name: netascode-bleaf21
+        router_id: 1.1.2.21
+        loopback_id: null
+        static_routes:
+          static_ipv4:
+          - prefix: 10.1.1.0/24
+            route_tag: 12345
+            next_hops:
+            - ip: 192.168.20.1
+              name: null
+              track: null
+              route_preference: null
+          static_ipv6:
+          - prefix: 2a00:db8::/32
+            route_tag: null
+            next_hops:
+            - ip: 2a01::1
+              name: null
+              track: null
+              route_preference: null
+        interfaces:
+        - name: ethernet1/2.10
+          ospf:
+            area: 0.0.0.0
+            auth_type: md5
+            auth_key_id: 0
+            auth_key: '{{ auth_key_placeholder }}'
+            cost: 1
+            passive_interface: false
+            mtu_ignore: false
+            advertise_subnet: false
+            bfd:
+              enabled: true
+            hello_interval: 10
+            dead_interval: 40
+            network_type: point-to-point
+            priority: 1
+            lsa_retransmit_interval: 5
+            lsa_transmit_delay: 1
+        bgp: null
+        ospf: null
+        bgp_peers:
+        - address: null
+          remote_as: null
+          local_as: null
+          update_source: null
+          description: null
+          password: null
+          bfd: null
+          disable_connected_check: false
+          remove_private_as: false
+          remove_private_as_all: false
+          ebgp_multihop: null
+          address_family_ipv4_unicast:
+            send_community: false
+            send_ext_community: false
+            allow_as_in: false
+            allow_as_in_number: 3
+            as_override: false
+            default_originate: false
+            next_hop_self: false
+            route_reflector_client: false
+            weight: null
+            route_map_in: null
+            route_map_out: null
+          address_family_ipv6_unicast:
+            send_community: false
+            send_ext_community: false
+            allow_as_in: false
+            allow_as_in_number: 3
+            as_override: false
+            default_originate: false
+            next_hop_self: false
+            route_reflector_client: false
+            weight: null
+            route_map_in: null
+            route_map_out: null
+        redistribution:
+        - source: bgp
+          route_map_ipv4: rm-redistribute-ospf
+        - source: ospf
+          route_map_ipv4: rm-default_only
+schema_reference:
+- class: vxlan
+  path: vxlan
+  attributes:
+  - name: overlay_extensions
+    type: Class
+    constraint: overlay_extensions
+    mandatory: 'No'
+    default: null
+- class: overlay_extensions
+  path: vxlan.overlay_extensions
+  attributes:
+  - name: vrf_lites
+    type: List
+    constraint: vrf_lites
+    mandatory: 'No'
+    default: null
+- class: vrf_lites
+  path: vxlan.overlay_extensions.vrf_lites
+  attributes:
+  - name: name
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: vrf
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: ospf
+    type: Class
+    constraint: ospf
+    mandatory: 'No'
+    default: null
+  - name: bgp
+    type: Class
+    constraint: bgp
+    mandatory: 'No'
+    default: null
+  - name: redistribution
+    type: List
+    constraint: redistribution
+    mandatory: 'No'
+    default: null
+  - name: switches
+    type: List
+    constraint: switches
+    mandatory: 'No'
+    default: null
+- class: ospf
+  path: vxlan.overlay_extensions.vrf_lites.ospf
+  attributes:
+  - name: process
+    type: String
+    constraint: 'Regex: ^[A-Za-z0-9-_]{1,20}$'
+    mandatory: 'Yes'
+    default: null
+  - name: default_area
+    type: Any
+    constraint: 'Integer[min: 0, max: 4294967295] or IP'
+    mandatory: 'No'
+    default: '0'
+  - name: areas
+    type: List
+    constraint: areas
+    mandatory: 'No'
+    default: null
+  - name: distance
+    type: Integer
+    constraint: 'min: 1, max: 255'
+    mandatory: 'No'
+    default: '110'
+  - name: bfd
+    type: Class
+    constraint: bfd
+    mandatory: 'No'
+    default: null
+- class: bgp
+  path: vxlan.overlay_extensions.vrf_lites.bgp
+  attributes:
+  - name: best_path_as_path_relax
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: graceful_restart
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'true'
+  - name: graceful_restart_helper
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: local_as
+    type: Integer
+    constraint: 'min: 1, max: 4294967295'
+    mandatory: 'No'
+    default: null
+  - name: address_family_ipv4_unicast
+    type: Class
+    constraint: address_family_ipv4_unicast
+    mandatory: 'No'
+    default: null
+  - name: address_family_ipv6_unicast
+    type: Class
+    constraint: address_family_ipv6_unicast
+    mandatory: 'No'
+    default: null
+- class: redistribution
+  path: vxlan.overlay_extensions.vrf_lites.redistribution
+  attributes:
+  - name: source
+    type: Choice
+    constraint: bgp, ospf, static, direct
+    mandatory: 'No'
+    default: null
+  - name: protocol_tag
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: route_map_ipv4
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: route_map_ipv6
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+- class: switches
+  path: vxlan.overlay_extensions.vrf_lites.switches
+  attributes:
+  - name: name
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: router_id
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: loopback_id
+    type: Integer
+    constraint: 'min: 0, max: 1023'
+    mandatory: 'No'
+    default: null
+  - name: static_routes
+    type: Class
+    constraint: static_routes
+    mandatory: 'No'
+    default: null
+  - name: interfaces
+    type: List
+    constraint: interfaces
+    mandatory: 'No'
+    default: null
+  - name: bgp
+    type: Class
+    constraint: bgp
+    mandatory: 'No'
+    default: null
+  - name: ospf
+    type: Class
+    constraint: ospf
+    mandatory: 'No'
+    default: null
+  - name: bgp_peers
+    type: List
+    constraint: bgp_peers
+    mandatory: 'No'
+    default: null
+  - name: redistribution
+    type: List
+    constraint: redistribution
+    mandatory: 'No'
+    default: null
+- class: areas
+  path: vxlan.overlay_extensions.vrf_lites.ospf.areas
+  attributes:
+  - name: id
+    type: Any
+    constraint: 'Integer[min: 0, max: 4294967295] or IP'
+    mandatory: 'No'
+    default: null
+  - name: area_type
+    type: Choice
+    constraint: standard, stub, nssa, totally_stub
+    mandatory: 'No'
+    default: standard
+  - name: area_cost
+    type: Integer
+    constraint: 'min: 1, max: 16777215'
+    mandatory: 'No'
+    default: null
+  - name: nssa
+    type: Class
+    constraint: nssa
+    mandatory: 'No'
+    default: null
+  - name: default_information_originate
+    type: Class
+    constraint: default_information_originate
+    mandatory: 'No'
+    default: null
+- class: bfd
+  path: vxlan.overlay_extensions.vrf_lites.ospf.bfd
+  attributes:
+  - name: enabled
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+- class: address_family_ipv4_unicast
+  path: vxlan.overlay_extensions.vrf_lites.bgp.address_family_ipv4_unicast
+  attributes:
+  - name: additional_paths_send
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: additional_paths_receive
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: additional_paths_selection_route_map
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: default_originate
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: ebgp_distance
+    type: Integer
+    constraint: 'min: 1, max: 255'
+    mandatory: 'No'
+    default: '20'
+  - name: ibgp_distance
+    type: Integer
+    constraint: 'min: 1, max: 255'
+    mandatory: 'No'
+    default: '200'
+  - name: local_distance
+    type: Integer
+    constraint: 'min: 1, max: 255'
+    mandatory: 'No'
+    default: '220'
+- class: address_family_ipv6_unicast
+  path: vxlan.overlay_extensions.vrf_lites.bgp.address_family_ipv6_unicast
+  attributes:
+  - name: additional_paths_send
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: additional_paths_receive
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: additional_paths_selection_route_map
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: default_originate
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: ebgp_distance
+    type: Integer
+    constraint: 'min: 1, max: 255'
+    mandatory: 'No'
+    default: '20'
+  - name: ibgp_distance
+    type: Integer
+    constraint: 'min: 1, max: 255'
+    mandatory: 'No'
+    default: '200'
+  - name: local_distance
+    type: Integer
+    constraint: 'min: 1, max: 255'
+    mandatory: 'No'
+    default: '220'
+- class: static_routes
+  path: vxlan.overlay_extensions.vrf_lites.switches.static_routes
+  attributes:
+  - name: static_ipv4
+    type: List
+    constraint: static_ipv4
+    mandatory: 'No'
+    default: null
+  - name: static_ipv6
+    type: List
+    constraint: static_ipv6
+    mandatory: 'No'
+    default: null
+- class: interfaces
+  path: vxlan.overlay_extensions.vrf_lites.switches.interfaces
+  attributes:
+  - name: name
+    type: Any
+    constraint: 'String[Regex: (?i)^(?:e|eth(?:ernet)?)\d(?:\/\d+){1,2}$] or String[Regex: (?i)^(po|port-channel)([1-9]|[1-9][0-9]{1,2}|[1-3][0-9]{3}|40[0-8][0-9]|409[0-6])$]
+      or String[Regex: (?i)^(?:e|eth(?:ernet)?)\d(?:\/\d+){1,2}\.\d{1,4}$] or String[Regex: (?i)^(?:po|port-channel:?)((?:[1-9]|[1-9]\d{1,2}|[1-3]\d{3}|40[0-8]\d|409[0-6]:?)\.(?:[1-9]|[1-9]\d{1,2}|[1-3]\d{3}|40[0-8]\d|409[0-3]:?))$]
+      or String[Regex: (?i)^(lo|loopback)([0-9]|[1-9][0-9]{1,2}|10[0-1][0-9]|102[0-3])$]'
+    mandatory: 'Yes'
+    default: null
+  - name: ospf
+    type: Class
+    constraint: ospf
+    mandatory: 'No'
+    default: null
+- class: bgp_peers
+  path: vxlan.overlay_extensions.vrf_lites.switches.bgp_peers
+  attributes:
+  - name: address
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: remote_as
+    type: Integer
+    constraint: 'min: 1, max: 4294967295'
+    mandatory: 'No'
+    default: null
+  - name: local_as
+    type: Integer
+    constraint: 'min: 1, max: 4294967295'
+    mandatory: 'No'
+    default: null
+  - name: update_source
+    type: Any
+    constraint: 'String[Regex: ^(?:Ethernet:?)\d(?:\/\d+){1,2}$] or String[Regex: ^(?:Ethernet:?)\d(?:\/\d+){1,2}\.\d{1,4}$]
+      or String[Regex: ^(?:port-channel:?)([1-9]|[1-9][0-9]{1,2}|[1-3][0-9]{3}|40[0-8][0-9]|409[0-6])$] or String[Regex:
+      ^(?:port-channel:?)((?:[1-9]|[1-9]\d{1,2}|[1-3]\d{3}|40[0-8]\d|409[0-6]:?)\.(?:[1-9]|[1-9]\d{1,2}|[1-3]\d{3}|40[0-8]\d|409[0-3]:?))$]
+      or String[Regex: ^(?:loopback:?)([0-9]|[1-9][0-9]{1,2}|10[0-1][0-9]|102[0-3])$]'
+    mandatory: 'No'
+    default: null
+  - name: description
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: password
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: bfd
+    type: Class
+    constraint: bfd
+    mandatory: 'No'
+    default: null
+  - name: disable_connected_check
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: remove_private_as
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: remove_private_as_all
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: ebgp_multihop
+    type: Integer
+    constraint: 'min: 2, max: 255'
+    mandatory: 'No'
+    default: null
+  - name: address_family_ipv4_unicast
+    type: Class
+    constraint: address_family_ipv4_unicast
+    mandatory: 'No'
+    default: null
+  - name: address_family_ipv6_unicast
+    type: Class
+    constraint: address_family_ipv6_unicast
+    mandatory: 'No'
+    default: null
+- class: nssa
+  path: vxlan.overlay_extensions.vrf_lites.ospf.areas.nssa
+  attributes:
+  - name: default_information_originate
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: route_map
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: no_redistribution
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: no_summary
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: translate
+    type: Class
+    constraint: translate
+    mandatory: 'No'
+    default: null
+- class: default_information_originate
+  path: vxlan.overlay_extensions.vrf_lites.ospf.areas.default_information_originate
+  attributes:
+  - name: always
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: route_map
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+- class: static_ipv4
+  path: vxlan.overlay_extensions.vrf_lites.switches.static_routes.static_ipv4
+  attributes:
+  - name: prefix
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: route_tag
+    type: Integer
+    constraint: 'min: 0, max: 4294967295'
+    mandatory: 'No'
+    default: null
+  - name: next_hops
+    type: List
+    constraint: next_hops
+    mandatory: 'No'
+    default: null
+- class: static_ipv6
+  path: vxlan.overlay_extensions.vrf_lites.switches.static_routes.static_ipv6
+  attributes:
+  - name: prefix
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: route_tag
+    type: Integer
+    constraint: 'min: 0, max: 4294967295'
+    mandatory: 'No'
+    default: null
+  - name: next_hops
+    type: List
+    constraint: next_hops
+    mandatory: 'No'
+    default: null
+- class: ospf
+  path: vxlan.overlay_extensions.vrf_lites.switches.interfaces.ospf
+  attributes:
+  - name: area
+    type: Any
+    constraint: 'Integer[min: 0, max: 4294967295] or IP'
+    mandatory: 'No'
+    default: null
+  - name: auth_type
+    type: Choice
+    constraint: none, simple, md5
+    mandatory: 'No'
+    default: none
+  - name: auth_key_id
+    type: Integer
+    constraint: 'min: 0, max: 255'
+    mandatory: 'No'
+    default: '0'
+  - name: auth_key
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: cost
+    type: Integer
+    constraint: 'min: 1, max: 65535'
+    mandatory: 'No'
+    default: '1'
+  - name: passive_interface
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: mtu_ignore
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: advertise_subnet
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: bfd
+    type: Class
+    constraint: bfd
+    mandatory: 'No'
+    default: null
+  - name: hello_interval
+    type: Integer
+    constraint: 'min: 1, max: 65535'
+    mandatory: 'No'
+    default: '10'
+  - name: dead_interval
+    type: Integer
+    constraint: 'min: 1, max: 65535'
+    mandatory: 'No'
+    default: '40'
+  - name: network_type
+    type: Choice
+    constraint: point-to-point, broadcast
+    mandatory: 'No'
+    default: broadcast
+  - name: priority
+    type: Integer
+    constraint: 'min: 0, max: 255'
+    mandatory: 'No'
+    default: '1'
+  - name: lsa_retransmit_interval
+    type: Integer
+    constraint: 'min: 1, max: 65535'
+    mandatory: 'No'
+    default: '5'
+  - name: lsa_transmit_delay
+    type: Integer
+    constraint: 'min: 1, max: 65535'
+    mandatory: 'No'
+    default: '1'
+- class: address_family_ipv4_unicast
+  path: vxlan.overlay_extensions.vrf_lites.switches.bgp_peers.address_family_ipv4_unicast
+  attributes:
+  - name: send_community
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: send_ext_community
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: allow_as_in
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: allow_as_in_number
+    type: Integer
+    constraint: 'min: 1, max: 10'
+    mandatory: 'No'
+    default: '3'
+  - name: as_override
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: default_originate
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: next_hop_self
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: route_reflector_client
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: weight
+    type: Integer
+    constraint: 'min: 0, max: 65535'
+    mandatory: 'No'
+    default: null
+  - name: route_map_in
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: route_map_out
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+- class: address_family_ipv6_unicast
+  path: vxlan.overlay_extensions.vrf_lites.switches.bgp_peers.address_family_ipv6_unicast
+  attributes:
+  - name: send_community
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: send_ext_community
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: allow_as_in
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: allow_as_in_number
+    type: Integer
+    constraint: 'min: 1, max: 10'
+    mandatory: 'No'
+    default: '3'
+  - name: as_override
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: default_originate
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: next_hop_self
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: route_reflector_client
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: weight
+    type: Integer
+    constraint: 'min: 0, max: 65535'
+    mandatory: 'No'
+    default: null
+  - name: route_map_in
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: route_map_out
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+- class: translate
+  path: vxlan.overlay_extensions.vrf_lites.ospf.areas.nssa.translate
+  attributes:
+  - name: always
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: never
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: supress_fa
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+- class: next_hops
+  path: vxlan.overlay_extensions.vrf_lites.switches.static_routes.static_ipv4.next_hops
+  attributes:
+  - name: ip
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: name
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: track
+    type: Integer
+    constraint: 'min: 1, max: 512'
+    mandatory: 'No'
+    default: null
+  - name: route_preference
+    type: Integer
+    constraint: 'min: 1, max: 255'
+    mandatory: 'No'
+    default: null
+- class: next_hops
+  path: vxlan.overlay_extensions.vrf_lites.switches.static_routes.static_ipv6.next_hops
+  attributes:
+  - name: ip
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: name
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: track
+    type: Integer
+    constraint: 'min: 1, max: 512'
+    mandatory: 'No'
+    default: null
+  - name: route_preference
+    type: Integer
+    constraint: 'min: 1, max: 255'
+    mandatory: 'No'
+    default: null

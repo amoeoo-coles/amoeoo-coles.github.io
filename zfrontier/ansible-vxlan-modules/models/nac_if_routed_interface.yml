@@ -1,0 +1,189 @@
+---
+# Data model for vxlan.topology.switches (Routed Ethernet Port).
+# Values come from the documented example on the reference page, then the
+# documented default. Anything else is null (not set / not collected).
+# Secret-like fields are placeholders. schema_reference lists every documented attribute.
+references:
+  doc_url: https://netascode.cisco.com/docs/data_models/vxlan/topology/interface/routed_interface/
+  collection: cisco.nac_dc_vxlan
+  collection_version: 0.9.1
+  kind: data model section
+  role: cisco.nac_dc_vxlan.validate (schema check), cisco.nac_dc_vxlan.dtc.create / dtc.deploy (apply)
+  schema_path: vxlan.topology.switches
+  schema_source: netascode.cisco.com VXLAN data model page 'Routed Ethernet Port' (schema-generated tables), fetched
+    26 Nov 2026; the docs site is not version-pinned
+  classes_documented: 6
+  attributes_documented: 25
+vxlan:
+  topology:
+    switches:
+    - name: dc1-leaf1
+      interfaces:
+      - name: Ethernet1/46
+        mode: routed
+        description: Routed Interface 1
+        vrf: red
+        mtu: 1500
+        speed: 10gb
+        enabled: true
+        ipv4_address: 192.168.57.5/30
+        ipv4_route_tag: 12345
+        secondary_ipv4_addresses:
+        - ip_address: null
+          route_tag: null
+        ipv6_address: null
+        ipv6_route_tag: null
+        secondary_ipv6_addresses:
+        - ip_address: null
+          route_tag: null
+        enable_qos: false
+        qos_policy: null
+        queuing_policy: null
+        freeform_config: null
+        fec: rs-fec
+schema_reference:
+- class: vxlan
+  path: vxlan
+  attributes:
+  - name: topology
+    type: Class
+    constraint: topology
+    mandatory: 'No'
+    default: null
+- class: topology
+  path: vxlan.topology
+  attributes:
+  - name: switches
+    type: List
+    constraint: switches
+    mandatory: 'No'
+    default: null
+- class: switches
+  path: vxlan.topology.switches
+  attributes:
+  - name: interfaces
+    type: List
+    constraint: Any[Class[[topology_switch_access_interface]] or Class[[topology_switch_trunk_interface]] or Class[[topology_switch_access_po_interface]]
+      or Class[[topology_switch_trunk_po_interface]] or Class[topology_switch_routed_interface] or Class[[topology_switch_routed_sub_interface]]
+      or Class[[topology_switch_routed_po_interface]] or Class[[topology_switch_loopback_interface]] or Class[[topology_switch_dot1q_host_interface]]]
+    mandatory: 'No'
+    default: null
+- class: topology_switch_routed_interface
+  path: vxlan.topology.switches.interfaces.topology_switch_routed_interface
+  attributes:
+  - name: name
+    type: String
+    constraint: 'Regex: (?i)^(?:e|eth(?:ernet)?)\d(?:\/\d+){1,2}$'
+    mandatory: 'Yes'
+    default: null
+  - name: mode
+    type: Choice
+    constraint: routed
+    mandatory: 'Yes'
+    default: null
+  - name: description
+    type: String
+    constraint: 'max: 256'
+    mandatory: 'No'
+    default: NetAsCode Routed Interface
+  - name: vrf
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: mtu
+    type: Integer
+    constraint: 'min: 1500, max: 9216'
+    mandatory: 'No'
+    default: '9216'
+  - name: speed
+    type: String
+    constraint: 'Regex: (?i)^(auto|100mb|1gb|10gb|25gb|40gb|100gb|200gb|400gb|800gb)$'
+    mandatory: 'No'
+    default: auto
+  - name: enabled
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'true'
+  - name: ipv4_address
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: ipv4_route_tag
+    type: Integer
+    constraint: 'min: 0, max: 4294967295'
+    mandatory: 'No'
+    default: null
+  - name: secondary_ipv4_addresses
+    type: List
+    constraint: secondary_ipv4_addresses
+    mandatory: 'No'
+    default: null
+  - name: ipv6_address
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: ipv6_route_tag
+    type: Integer
+    constraint: 'min: 0, max: 4294967295'
+    mandatory: 'No'
+    default: null
+  - name: secondary_ipv6_addresses
+    type: List
+    constraint: secondary_ipv6_addresses
+    mandatory: 'No'
+    default: null
+  - name: enable_qos
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: qos_policy
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: queuing_policy
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: freeform_config
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: fec
+    type: Choice
+    constraint: auto, fc-fec, off, rs-cons16, rs-fec, rs-ieee
+    mandatory: 'No'
+    default: auto
+- class: secondary_ipv4_addresses
+  path: vxlan.topology.switches.interfaces.topology_switch_routed_interface.secondary_ipv4_addresses
+  attributes:
+  - name: ip_address
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: route_tag
+    type: Integer
+    constraint: 'min: 0, max: 4294967295'
+    mandatory: 'No'
+    default: null
+- class: secondary_ipv6_addresses
+  path: vxlan.topology.switches.interfaces.topology_switch_routed_interface.secondary_ipv6_addresses
+  attributes:
+  - name: ip_address
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: route_tag
+    type: Integer
+    constraint: 'min: 0, max: 4294967295'
+    mandatory: 'No'
+    default: null

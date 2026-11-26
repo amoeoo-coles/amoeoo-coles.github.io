@@ -1,0 +1,180 @@
+---
+# Data model for vxlan.underlay.multicast (Multicast).
+# Values come from the documented example on the reference page, then the
+# documented default. Anything else is null (not set / not collected).
+# Secret-like fields are placeholders. schema_reference lists every documented attribute.
+references:
+  doc_url: https://netascode.cisco.com/docs/data_models/vxlan/underlay/underlay_multicast/
+  collection: cisco.nac_dc_vxlan
+  collection_version: 0.9.1
+  kind: data model section
+  role: cisco.nac_dc_vxlan.validate (schema check), cisco.nac_dc_vxlan.dtc.create / dtc.deploy (apply)
+  schema_path: vxlan.underlay.multicast
+  schema_source: netascode.cisco.com VXLAN data model page 'Multicast' (schema-generated tables), fetched 26 Nov
+    2026; the docs site is not version-pinned
+  classes_documented: 6
+  attributes_documented: 24
+vxlan:
+  underlay:
+    multicast:
+      rendezvous_points: 2
+      rp_mode: asm
+      underlay_rp_loopback_id: 250
+      ipv4:
+        anycast_rp: 1.1.1.1
+        group_subnet: 239.1.1.0/25
+        authentication_enable: false
+        authentication_key: null
+        trm_enable: true
+        trm_default_group: 239.1.1.0
+      ipv6:
+        group_subnet: ff1e::/121
+        trmv6_enable: true
+        trmv6_default_group: 'ff1e::'
+      underlay_primary_rp_loopback_id: 0
+      underlay_backup_rp_loopback_id: 3
+      underlay_second_backup_rp_loopback_id: 4
+      underlay_third_backup_rp_loopback_id: 5
+      enable_mvpn_vri_id_range: true
+      mvpn_vri_id_range:
+        from: 2000
+        to: 2999
+schema_reference:
+- class: vxlan
+  path: vxlan
+  attributes:
+  - name: underlay
+    type: Class
+    constraint: underlay
+    mandatory: 'No'
+    default: null
+- class: underlay
+  path: vxlan.underlay
+  attributes:
+  - name: multicast
+    type: Class
+    constraint: multicast
+    mandatory: 'No'
+    default: null
+- class: multicast
+  path: vxlan.underlay.multicast
+  attributes:
+  - name: rendezvous_points
+    type: Choice
+    constraint: 2, 4
+    mandatory: 'No'
+    default: '2'
+  - name: rp_mode
+    type: Choice
+    constraint: asm, bidir
+    mandatory: 'No'
+    default: asm
+  - name: underlay_rp_loopback_id
+    type: Integer
+    constraint: 'min: 0, max: 1023'
+    mandatory: 'No'
+    default: '254'
+  - name: ipv4
+    type: Class
+    constraint: ipv4
+    mandatory: 'No'
+    default: null
+  - name: ipv6
+    type: Class
+    constraint: ipv6
+    mandatory: 'No'
+    default: null
+  - name: underlay_primary_rp_loopback_id
+    type: Integer
+    constraint: 'min: 0, max: 1023'
+    mandatory: 'No'
+    default: '2'
+  - name: underlay_backup_rp_loopback_id
+    type: Integer
+    constraint: 'min: 0, max: 1023'
+    mandatory: 'No'
+    default: '3'
+  - name: underlay_second_backup_rp_loopback_id
+    type: Integer
+    constraint: 'min: 0, max: 1023'
+    mandatory: 'No'
+    default: '4'
+  - name: underlay_third_backup_rp_loopback_id
+    type: Integer
+    constraint: 'min: 0, max: 1023'
+    mandatory: 'No'
+    default: '5'
+  - name: enable_mvpn_vri_id_range
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'true'
+  - name: mvpn_vri_id_range
+    type: Class
+    constraint: mvpn_vri_id_range
+    mandatory: 'No'
+    default: null
+- class: ipv4
+  path: vxlan.underlay.multicast.ipv4
+  attributes:
+  - name: anycast_rp
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: group_subnet
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: 239.1.1.0/25
+  - name: authentication_enable
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: authentication_key
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: trm_enable
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: trm_default_group
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: 239.1.1.0
+- class: ipv6
+  path: vxlan.underlay.multicast.ipv6
+  attributes:
+  - name: group_subnet
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: ff1e::/121
+  - name: trmv6_enable
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: trmv6_default_group
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: 'ff1e::'
+- class: mvpn_vri_id_range
+  path: vxlan.underlay.multicast.mvpn_vri_id_range
+  attributes:
+  - name: from
+    type: Integer
+    constraint: 'min: 1, max: 65535'
+    mandatory: 'Yes'
+    default: null
+  - name: to
+    type: Integer
+    constraint: 'min: 1, max: 65535'
+    mandatory: 'No'
+    default: null

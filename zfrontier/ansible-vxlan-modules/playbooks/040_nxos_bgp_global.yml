@@ -1,0 +1,21 @@
+---
+# Sample playbook 040 for cisco.nxos.nxos_bgp_global
+# Build order: 040 of 129 (2. Underlay)
+# Reads ../models/nxos_bgp_global.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_bgp_global_module.html
+
+- name: "040 nxos_bgp_global"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_bgp_global.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_bgp_global with the non-null model parameters
+      cisco.nxos.nxos_bgp_global: "{{ nxos_bgp_global | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_bgp_global_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_bgp_global_result
+        verbosity: 1

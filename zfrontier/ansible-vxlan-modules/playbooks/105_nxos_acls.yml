@@ -1,0 +1,21 @@
+---
+# Sample playbook 105 for cisco.nxos.nxos_acls
+# Build order: 105 of 129 (7. Policies and route control)
+# Reads ../models/nxos_acls.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_acls_module.html
+
+- name: "105 nxos_acls"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_acls.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_acls with the non-null model parameters
+      cisco.nxos.nxos_acls: "{{ nxos_acls | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_acls_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_acls_result
+        verbosity: 1

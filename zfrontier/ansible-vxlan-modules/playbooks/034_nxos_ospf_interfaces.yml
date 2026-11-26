@@ -1,0 +1,21 @@
+---
+# Sample playbook 034 for cisco.nxos.nxos_ospf_interfaces
+# Build order: 034 of 129 (2. Underlay)
+# Reads ../models/nxos_ospf_interfaces.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_ospf_interfaces_module.html
+
+- name: "034 nxos_ospf_interfaces"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_ospf_interfaces.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_ospf_interfaces with the non-null model parameters
+      cisco.nxos.nxos_ospf_interfaces: "{{ nxos_ospf_interfaces | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_ospf_interfaces_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_ospf_interfaces_result
+        verbosity: 1

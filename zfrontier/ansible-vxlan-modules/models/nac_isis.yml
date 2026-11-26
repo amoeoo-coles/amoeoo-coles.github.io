@@ -1,0 +1,93 @@
+---
+# Data model for vxlan.underlay.isis (ISIS).
+# Values come from the documented example on the reference page, then the
+# documented default. Anything else is null (not set / not collected).
+# Secret-like fields are placeholders. schema_reference lists every documented attribute.
+references:
+  doc_url: https://netascode.cisco.com/docs/data_models/vxlan/underlay/underlay_isis/
+  collection: cisco.nac_dc_vxlan
+  collection_version: 0.9.1
+  kind: data model section
+  role: cisco.nac_dc_vxlan.validate (schema check), cisco.nac_dc_vxlan.dtc.create / dtc.deploy (apply)
+  schema_path: vxlan.underlay.isis
+  schema_source: netascode.cisco.com VXLAN data model page 'ISIS' (schema-generated tables), fetched 26 Nov 2026;
+    the docs site is not version-pinned
+  classes_documented: 3
+  attributes_documented: 11
+vxlan:
+  underlay:
+    isis:
+      level: level-2
+      net_area_number: '0001'
+      network_point_to_point: true
+      authentication_keychain_name: isis-key
+      authentication_enable: true
+      authentication_key_id: 127
+      authentication_key: '{{ authentication_key_placeholder }}'
+      overload_bit: true
+      overload_bit_elapsed_time: 60
+schema_reference:
+- class: vxlan
+  path: vxlan
+  attributes:
+  - name: underlay
+    type: Class
+    constraint: underlay
+    mandatory: 'No'
+    default: null
+- class: underlay
+  path: vxlan.underlay
+  attributes:
+  - name: isis
+    type: Class
+    constraint: isis
+    mandatory: 'No'
+    default: null
+- class: isis
+  path: vxlan.underlay.isis
+  attributes:
+  - name: level
+    type: Choice
+    constraint: level-1, level-2
+    mandatory: 'No'
+    default: level-2
+  - name: net_area_number
+    type: String
+    constraint: 'Regex: ^[0-9a-fA-F]{4}$'
+    mandatory: 'No'
+    default: '0001'
+  - name: network_point_to_point
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'true'
+  - name: authentication_keychain_name
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: authentication_enable
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: authentication_key_id
+    type: Integer
+    constraint: null
+    mandatory: 'No'
+    default: '127'
+  - name: authentication_key
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: overload_bit
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'true'
+  - name: overload_bit_elapsed_time
+    type: Integer
+    constraint: 'min: 5, max: 86400'
+    mandatory: 'No'
+    default: '60'

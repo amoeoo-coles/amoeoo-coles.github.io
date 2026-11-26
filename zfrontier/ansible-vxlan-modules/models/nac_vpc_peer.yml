@@ -1,0 +1,135 @@
+---
+# Data model for vxlan.topology.vpc_peers (vPC Peers).
+# Values come from the documented example on the reference page, then the
+# documented default. Anything else is null (not set / not collected).
+# Secret-like fields are placeholders. schema_reference lists every documented attribute.
+references:
+  doc_url: https://netascode.cisco.com/docs/data_models/vxlan/topology/topology_vpc_peer/
+  collection: cisco.nac_dc_vxlan
+  collection_version: 0.9.1
+  kind: data model section
+  role: cisco.nac_dc_vxlan.validate (schema check), cisco.nac_dc_vxlan.dtc.create / dtc.deploy (apply)
+  schema_path: vxlan.topology.vpc_peers
+  schema_source: netascode.cisco.com VXLAN data model page 'vPC Peers' (schema-generated tables), fetched 26 Nov
+    2026; the docs site is not version-pinned
+  classes_documented: 5
+  attributes_documented: 17
+vxlan:
+  topology:
+    vpc_peers:
+    - peer1: dc1-leaf1
+      peer1_peerlink_interfaces:
+      - name: Ethernet1/3
+      peer2: dc1-leaf2
+      peer2_peerlink_interfaces:
+      - name: Ethernet1/3
+      fabric_peering: true
+      domain_id: 10
+      vtep_vip: 30.1.0.1
+      keepalive_hold_time: 3
+      peer1_keepalive_ipv4: 10.6.62.51
+      peer2_keepalive_ipv4: 10.6.62.52
+      peer1_domain_conf: null
+      peer2_domain_conf: null
+      keepalive_vrf: management
+schema_reference:
+- class: vxlan
+  path: vxlan
+  attributes:
+  - name: topology
+    type: Class
+    constraint: topology
+    mandatory: 'No'
+    default: null
+- class: topology
+  path: vxlan.topology
+  attributes:
+  - name: vpc_peers
+    type: List
+    constraint: vpc_peers
+    mandatory: 'No'
+    default: null
+- class: vpc_peers
+  path: vxlan.topology.vpc_peers
+  attributes:
+  - name: peer1
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: peer1_peerlink_interfaces
+    type: List
+    constraint: peer1_peerlink_interfaces
+    mandatory: 'No'
+    default: null
+  - name: peer2
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: peer2_peerlink_interfaces
+    type: List
+    constraint: peer2_peerlink_interfaces
+    mandatory: 'No'
+    default: null
+  - name: fabric_peering
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: domain_id
+    type: Integer
+    constraint: 'min: 1, max: 1000'
+    mandatory: 'No'
+    default: '1'
+  - name: vtep_vip
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: keepalive_hold_time
+    type: Integer
+    constraint: 'min: 3, max: 10'
+    mandatory: 'No'
+    default: '3'
+  - name: peer1_keepalive_ipv4
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: peer2_keepalive_ipv4
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: peer1_domain_conf
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: peer2_domain_conf
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: keepalive_vrf
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+- class: peer1_peerlink_interfaces
+  path: vxlan.topology.vpc_peers.peer1_peerlink_interfaces
+  attributes:
+  - name: name
+    type: String
+    constraint: 'Regex: ^(?:e|eth(?:ernet)?)\d(?:\/\d+){1,2}$'
+    mandatory: 'Yes'
+    default: null
+- class: peer2_peerlink_interfaces
+  path: vxlan.topology.vpc_peers.peer2_peerlink_interfaces
+  attributes:
+  - name: name
+    type: String
+    constraint: 'Regex: ^(?:e|eth(?:ernet)?)\d(?:\/\d+){1,2}$'
+    mandatory: 'Yes'
+    default: null

@@ -1,0 +1,154 @@
+---
+# Data model for vxlan.topology.edge_connections.bgp_section (Edge Connection).
+# Values come from the documented example on the reference page, then the
+# documented default. Anything else is null (not set / not collected).
+# Secret-like fields are placeholders. schema_reference lists every documented attribute.
+references:
+  doc_url: https://netascode.cisco.com/docs/data_models/vxlan/topology/topology_edge_connection/
+  collection: cisco.nac_dc_vxlan
+  collection_version: 0.9.1
+  kind: data model section
+  role: cisco.nac_dc_vxlan.validate (schema check), cisco.nac_dc_vxlan.dtc.create / dtc.deploy (apply)
+  schema_path: vxlan.topology.edge_connections.bgp_section
+  schema_source: netascode.cisco.com VXLAN data model page 'Edge Connection' (schema-generated tables), fetched
+    26 Nov 2026; the docs site is not version-pinned
+  classes_documented: 4
+  attributes_documented: 20
+vxlan:
+  topology:
+    edge_connections:
+    - dest_fabric: external
+      dest_device: NCS-5500-1
+      dest_interface: FortyGigE0/0/0/1
+      source_device: dc1-border1
+      source_interface: eth1/10
+      source_interface_enabled: true
+      source_interface_mtu: 9216
+      local_ip: 12.32.0.16/31
+      neighbor_ip: 12.32.0.17
+      bgp_section:
+        bgp_password_enable: true
+        bgp_password: '{{ bgp_password_placeholder }}'
+        neighbor_asn: '69999'
+        routing_tag: null
+        description: test1
+        peer_template_freeform: |2-
+                soft-reconfiguration inbound always
+                route-map underlay-in in
+                route-map underlay-outbound out
+              bfd
+        interface_freeform: '  no ip redirects'
+        bgp_freeform: '    description dc1-border1'
+schema_reference:
+- class: vxlan
+  path: vxlan
+  attributes:
+  - name: topology
+    type: Class
+    constraint: topology
+    mandatory: 'No'
+    default: null
+- class: topology
+  path: vxlan.topology
+  attributes:
+  - name: edge_connections
+    type: List
+    constraint: edge_connections
+    mandatory: 'No'
+    default: null
+- class: edge_connections
+  path: vxlan.topology.edge_connections
+  attributes:
+  - name: dest_fabric
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: dest_device
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: dest_interface
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: source_device
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: source_interface
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: source_interface_enabled
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'true'
+  - name: source_interface_mtu
+    type: Integer
+    constraint: 'min: 1500, max: 9216'
+    mandatory: 'No'
+    default: '9216'
+  - name: local_ip
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: neighbor_ip
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: bgp_section
+    type: Class
+    constraint: bgp_section
+    mandatory: 'No'
+    default: null
+- class: bgp_section
+  path: vxlan.topology.edge_connections.bgp_section
+  attributes:
+  - name: bgp_password_enable
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'true'
+  - name: bgp_password
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: neighbor_asn
+    type: String
+    constraint: 'Regex: ^(?:\d{1,10}|\d{1,5}\.\d{1,5})$'
+    mandatory: 'Yes'
+    default: null
+  - name: routing_tag
+    type: Integer
+    constraint: 'min: 0, max: 4294967295'
+    mandatory: 'No'
+    default: null
+  - name: description
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: peer_template_freeform
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: interface_freeform
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: bgp_freeform
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null

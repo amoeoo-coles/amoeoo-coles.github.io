@@ -1,0 +1,21 @@
+---
+# Sample playbook 060 for cisco.nxos.nxos_vrf_address_family
+# Build order: 060 of 129 (4. VRFs)
+# Reads ../models/nxos_vrf_address_family.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_vrf_address_family_module.html
+
+- name: "060 nxos_vrf_address_family"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_vrf_address_family.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_vrf_address_family with the non-null model parameters
+      cisco.nxos.nxos_vrf_address_family: "{{ nxos_vrf_address_family | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_vrf_address_family_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_vrf_address_family_result
+        verbosity: 1

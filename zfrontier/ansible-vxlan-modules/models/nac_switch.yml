@@ -1,0 +1,242 @@
+---
+# Data model for vxlan.topology.switches (Switch).
+# Values come from the documented example on the reference page, then the
+# documented default. Anything else is null (not set / not collected).
+# Secret-like fields are placeholders. schema_reference lists every documented attribute.
+references:
+  doc_url: https://netascode.cisco.com/docs/data_models/vxlan/topology/topology_switch/
+  collection: cisco.nac_dc_vxlan
+  collection_version: 0.9.1
+  kind: data model section
+  role: cisco.nac_dc_vxlan.validate (schema check), cisco.nac_dc_vxlan.dtc.create / dtc.deploy (apply)
+  schema_path: vxlan.topology.switches
+  schema_source: netascode.cisco.com VXLAN data model page 'Switch' (schema-generated tables), fetched 26 Nov 2026;
+    the docs site is not version-pinned
+  classes_documented: 7
+  attributes_documented: 33
+vxlan:
+  topology:
+    switches:
+    - name: dc1-spine1
+      serial_number: 9RPK63KD8TR
+      role: spine
+      management:
+        default_gateway_v4: 192.168.112.254
+        default_gateway_v6: 2055:55:55:55::55/64
+        management_ipv4_address: 192.168.112.151
+        management_ipv6_address: 2055:55:55:55::51/64
+        subnet_mask_ipv4: 24
+        subnet_mask_ipv6: null
+        username: null
+        password: null
+      poap:
+        bootstrap: true
+        preprovision:
+          serial_number: PRE9MGBD4LHN0O
+          model: N9K-C9300v
+          version: 15.5(2)
+          modulesModel:
+          - N9K-X9364v
+          - N9K-vSUP
+        discovery_creds: false
+        discovery_username: null
+        discovery_password: null
+      routing_loopback_id: 0
+      vtep_loopback_id: 1
+      interface_breakouts:
+      - module: 1
+        from: 1
+        to: 1
+        map: 10g-4x
+        enable_during_bootstrap: false
+      interfaces: null
+schema_reference:
+- class: vxlan
+  path: vxlan
+  attributes:
+  - name: topology
+    type: Class
+    constraint: topology
+    mandatory: 'No'
+    default: null
+- class: topology
+  path: vxlan.topology
+  attributes:
+  - name: switches
+    type: List
+    constraint: switches
+    mandatory: 'No'
+    default: null
+- class: switches
+  path: vxlan.topology.switches
+  attributes:
+  - name: name
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: serial_number
+    type: String
+    constraint: 'Regex: ^[a-zA-Z0-9_.:-]{1,16}$'
+    mandatory: 'No'
+    default: null
+  - name: role
+    type: Choice
+    constraint: spine, leaf, border, border_spine, border_gateway, border_gateway_spine, super_spine, border_super_spine,
+      border_gateway_super_spine, tor, core_router, edge_router
+    mandatory: 'No'
+    default: null
+  - name: management
+    type: Class
+    constraint: management
+    mandatory: 'No'
+    default: null
+  - name: poap
+    type: Class
+    constraint: poap
+    mandatory: 'No'
+    default: null
+  - name: routing_loopback_id
+    type: Integer
+    constraint: 'min: 0, max: 1023'
+    mandatory: 'No'
+    default: '0'
+  - name: vtep_loopback_id
+    type: Integer
+    constraint: 'min: 0, max: 1023'
+    mandatory: 'No'
+    default: '1'
+  - name: interface_breakouts
+    type: List
+    constraint: interface_breakouts
+    mandatory: 'No'
+    default: null
+  - name: interfaces
+    type: List
+    constraint: Any[Class[[topology_switch_access_interface]] or Class[[topology_switch_trunk_interface]] or Class[[topology_switch_access_po_interface]]
+      or Class[[topology_switch_trunk_po_interface]] or Class[[topology_switch_routed_interface]] or Class[[topology_switch_routed_sub_interface]]
+      or Class[[topology_switch_routed_po_interface]] or Class[[topology_switch_loopback_interface]] or Class[[topology_switch_dot1q_host_interface]]]
+    mandatory: 'No'
+    default: null
+- class: management
+  path: vxlan.topology.switches.management
+  attributes:
+  - name: default_gateway_v4
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: default_gateway_v6
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: management_ipv4_address
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: management_ipv6_address
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: subnet_mask_ipv4
+    type: Integer
+    constraint: 'min: 8, max: 30'
+    mandatory: 'No'
+    default: null
+  - name: subnet_mask_ipv6
+    type: Integer
+    constraint: 'min: 16, max: 128'
+    mandatory: 'No'
+    default: null
+  - name: username
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: password
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+- class: poap
+  path: vxlan.topology.switches.poap
+  attributes:
+  - name: bootstrap
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: preprovision
+    type: Class
+    constraint: preprovision
+    mandatory: 'No'
+    default: null
+  - name: discovery_creds
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: discovery_username
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: discovery_password
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+- class: interface_breakouts
+  path: vxlan.topology.switches.interface_breakouts
+  attributes:
+  - name: module
+    type: Integer
+    constraint: 'min: 0, max: 32'
+    mandatory: 'No'
+    default: '1'
+  - name: from
+    type: Integer
+    constraint: 'min: 0, max: 256'
+    mandatory: 'No'
+    default: '1'
+  - name: to
+    type: Integer
+    constraint: 'min: 0, max: 256'
+    mandatory: 'No'
+    default: '1'
+  - name: map
+    type: Choice
+    constraint: 10g-4x, 25g-4x, 50g-2x, 50g-4x, 100g-2x, 100g-2x-pam4, 100g-4x, 200g-2x
+    mandatory: 'No'
+    default: 10g-4x
+  - name: enable_during_bootstrap
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+- class: preprovision
+  path: vxlan.topology.switches.poap.preprovision
+  attributes:
+  - name: serial_number
+    type: String
+    constraint: 'Regex: ^[a-zA-Z0-9_.:-]{1,16}$'
+    mandatory: 'No'
+    default: null
+  - name: model
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: version
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: modulesModel
+    type: List
+    constraint: String
+    mandatory: 'Yes'
+    default: null

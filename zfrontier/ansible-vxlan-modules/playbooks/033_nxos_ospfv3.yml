@@ -1,0 +1,21 @@
+---
+# Sample playbook 033 for cisco.nxos.nxos_ospfv3
+# Build order: 033 of 129 (2. Underlay)
+# Reads ../models/nxos_ospfv3.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_ospfv3_module.html
+
+- name: "033 nxos_ospfv3"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_ospfv3.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_ospfv3 with the non-null model parameters
+      cisco.nxos.nxos_ospfv3: "{{ nxos_ospfv3 | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_ospfv3_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_ospfv3_result
+        verbosity: 1

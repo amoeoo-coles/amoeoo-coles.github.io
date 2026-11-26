@@ -1,0 +1,91 @@
+---
+# Data model for vxlan.overlay_extensions.route_control.mac_list.entries (MAC Lists).
+# Values come from the documented example on the reference page, then the
+# documented default. Anything else is null (not set / not collected).
+# Secret-like fields are placeholders. schema_reference lists every documented attribute.
+references:
+  doc_url: https://netascode.cisco.com/docs/data_models/vxlan/overlay_extensions/route_control/mac_lists/
+  collection: cisco.nac_dc_vxlan
+  collection_version: 0.9.1
+  kind: data model section
+  role: cisco.nac_dc_vxlan.validate (schema check), cisco.nac_dc_vxlan.dtc.create / dtc.deploy (apply)
+  schema_path: vxlan.overlay_extensions.route_control.mac_list.entries
+  schema_source: netascode.cisco.com VXLAN data model page 'MAC Lists' (schema-generated tables), fetched 26 Nov
+    2026; the docs site is not version-pinned
+  classes_documented: 5
+  attributes_documented: 9
+vxlan:
+  overlay_extensions:
+    route_control:
+      mac_list:
+      - name: mac-list
+        entries:
+        - seq_number: 5
+          operation: permit
+          mac: aaaa.aaaa.aaaa
+          mac_mask: ffff.ffff.ffff
+schema_reference:
+- class: vxlan
+  path: vxlan
+  attributes:
+  - name: overlay_extensions
+    type: Class
+    constraint: overlay_extensions
+    mandatory: 'No'
+    default: null
+- class: overlay_extensions
+  path: vxlan.overlay_extensions
+  attributes:
+  - name: route_control
+    type: Class
+    constraint: route_control
+    mandatory: 'No'
+    default: null
+- class: route_control
+  path: vxlan.overlay_extensions.route_control
+  attributes:
+  - name: mac_list
+    type: List
+    constraint: mac_list
+    mandatory: 'No'
+    default: null
+- class: mac_list
+  path: vxlan.overlay_extensions.route_control.mac_list
+  attributes:
+  - name: name
+    type: String
+    constraint: 'Regex: ^[A-Za-z0-9-_]{1,63}$'
+    mandatory: 'Yes'
+    default: null
+  - name: entries
+    type: List
+    constraint: entries
+    mandatory: 'Yes'
+    default: null
+- class: entries
+  path: vxlan.overlay_extensions.route_control.mac_list.entries
+  attributes:
+  - name: seq_number
+    type: Integer
+    constraint: 'min: 1, max: 4294967294'
+    mandatory: 'Yes'
+    default: null
+  - name: operation
+    type: Choice
+    constraint: permit, deny
+    mandatory: 'Yes'
+    default: null
+  - name: mac
+    type: Any
+    constraint: 'String[Regex: ^[a-f0-9]{1}\.[a-f0-9]{1}\.[a-f0-9]{1}$] or String[Regex: ^[a-f0-9]{4}\.[a-f0-9]{4}\.[a-f0-9]{4}$]
+      or String[Regex: ^[a-f0-9]{2}:[a-f0-9]{2}:[a-f0-9]{2}:[a-f0-9]{2}:[a-f0-9]{2}:[a-f0-9]{2}$] or String[Regex:
+      ^[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}$]'
+    mandatory: 'Yes'
+    default: null
+  - name: mac_mask
+    type: Any
+    constraint: 'String[Regex: ^[a-f0-9]{1}\.[a-f0-9]{1}\.[a-f0-9]{1}$] or String[Regex: ^[a-f0-9]{4}\.[a-f0-9]{4}\.[a-f0-9]{4}$]
+      or String[Regex: ^[a-f0-9]{2}:[a-f0-9]{2}:[a-f0-9]{2}:[a-f0-9]{2}:[a-f0-9]{2}:[a-f0-9]{2}$] or String[Regex:
+      ^[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}$]'
+    mandatory: 'No'
+    default: null

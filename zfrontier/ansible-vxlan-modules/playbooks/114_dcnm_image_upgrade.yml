@@ -1,0 +1,21 @@
+---
+# Sample playbook 114 for cisco.dcnm.dcnm_image_upgrade
+# Build order: 114 of 129 (8. Deploy, Day 2 and operations)
+# Reads ../models/dcnm_image_upgrade.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://github.com/CiscoDevNet/ansible-dcnm/blob/main/docs/cisco.dcnm.dcnm_image_upgrade_module.rst
+
+- name: "114 dcnm_image_upgrade"
+  hosts: ndfc
+  gather_facts: false
+  vars_files:
+    - ../models/dcnm_image_upgrade.yml
+  tasks:
+    - name: Run cisco.dcnm.dcnm_image_upgrade with the non-null model parameters
+      cisco.dcnm.dcnm_image_upgrade: "{{ dcnm_image_upgrade | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: dcnm_image_upgrade_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: dcnm_image_upgrade_result
+        verbosity: 1

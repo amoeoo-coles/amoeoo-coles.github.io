@@ -1,0 +1,286 @@
+---
+# Data model for vxlan.overlay (Network).
+# Values come from the documented example on the reference page, then the
+# documented default. Anything else is null (not set / not collected).
+# Secret-like fields are placeholders. schema_reference lists every documented attribute.
+references:
+  doc_url: https://netascode.cisco.com/docs/data_models/vxlan/overlay/overlay_network/
+  collection: cisco.nac_dc_vxlan
+  collection_version: 0.9.1
+  kind: data model section
+  role: cisco.nac_dc_vxlan.validate (schema check), cisco.nac_dc_vxlan.dtc.create / dtc.deploy (apply)
+  schema_path: vxlan.overlay
+  schema_source: netascode.cisco.com VXLAN data model page 'Network' (schema-generated tables), fetched 26 Nov 2026;
+    the docs site is not version-pinned
+  classes_documented: 8
+  attributes_documented: 40
+vxlan:
+  overlay:
+    networks:
+    - name: NetworkDMZ
+      is_l2_only: true
+      vrf_name: null
+      net_id: 33100
+      vlan_id: 3100
+      vlan_name: null
+      int_desc: null
+      gw_ip_address: null
+      gw_ipv6_address: null
+      ipv4_acl_in: null
+      secondary_ip_addresses:
+      - ip_address: null
+        route_tag: null
+      mtu_l3intf: 9216
+      l3gw_on_border: false
+      route_tag: 12345
+      multicast_group_address: 239.1.1.1
+      arp_suppress: false
+      route_target_both: false
+      dhcp_loopback_id: null
+      dhcp_servers:
+      - ip_address: null
+        vrf: null
+      netflow_enable: false
+      vlan_netflow_monitor: null
+      trm_enable: false
+      xconnect: false
+      network_attach_group: dmz
+      switch_attach_overrides:
+      - hostname: null
+        vlan_id: null
+        freeform_config: null
+        svi_enabled: null
+    network_attach_groups:
+    - name: esxi
+      switches:
+      - hostname: dc1-leaf1
+        ports:
+        - Port-channel10
+        - Port-channel20
+        - Port-channel30
+        - Port-channel40
+schema_reference:
+- class: vxlan
+  path: vxlan
+  attributes:
+  - name: overlay
+    type: Class
+    constraint: overlay
+    mandatory: 'No'
+    default: null
+- class: overlay
+  path: vxlan.overlay
+  attributes:
+  - name: networks
+    type: List
+    constraint: networks
+    mandatory: 'No'
+    default: null
+  - name: network_attach_groups
+    type: List
+    constraint: network_attach_groups
+    mandatory: 'No'
+    default: null
+- class: networks
+  path: vxlan.overlay.networks
+  attributes:
+  - name: name
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: is_l2_only
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: vrf_name
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: net_id
+    type: Integer
+    constraint: 'min: 1, max: 16777214'
+    mandatory: 'No'
+    default: null
+  - name: vlan_id
+    type: Integer
+    constraint: 'min: 1, max: 4094'
+    mandatory: 'No'
+    default: null
+  - name: vlan_name
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: int_desc
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: gw_ip_address
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: gw_ipv6_address
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: ipv4_acl_in
+    type: String
+    constraint: 'min: 1, max: 64'
+    mandatory: 'No'
+    default: null
+  - name: secondary_ip_addresses
+    type: List
+    constraint: secondary_ip_addresses
+    mandatory: 'No'
+    default: null
+  - name: mtu_l3intf
+    type: Integer
+    constraint: null
+    mandatory: 'No'
+    default: '9216'
+  - name: l3gw_on_border
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: route_tag
+    type: Integer
+    constraint: 'min: 0, max: 4294967295'
+    mandatory: 'No'
+    default: '12345'
+  - name: multicast_group_address
+    type: IP
+    constraint: null
+    mandatory: 'No'
+    default: 239.1.1.1
+  - name: arp_suppress
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: route_target_both
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: dhcp_loopback_id
+    type: Integer
+    constraint: 'min: 0, max: 1023'
+    mandatory: 'No'
+    default: null
+  - name: dhcp_servers
+    type: List
+    constraint: dhcp_servers
+    mandatory: 'No'
+    default: null
+  - name: netflow_enable
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: vlan_netflow_monitor
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: trm_enable
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: xconnect
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: 'false'
+  - name: network_attach_group
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: switch_attach_overrides
+    type: List
+    constraint: switch_attach_overrides
+    mandatory: 'No'
+    default: null
+- class: network_attach_groups
+  path: vxlan.overlay.network_attach_groups
+  attributes:
+  - name: name
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: switches
+    type: List
+    constraint: switches
+    mandatory: 'No'
+    default: null
+- class: secondary_ip_addresses
+  path: vxlan.overlay.networks.secondary_ip_addresses
+  attributes:
+  - name: ip_address
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: route_tag
+    type: Integer
+    constraint: 'min: 0, max: 4294967295'
+    mandatory: 'No'
+    default: null
+- class: dhcp_servers
+  path: vxlan.overlay.networks.dhcp_servers
+  attributes:
+  - name: ip_address
+    type: IP
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: vrf
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+- class: switch_attach_overrides
+  path: vxlan.overlay.networks.switch_attach_overrides
+  attributes:
+  - name: hostname
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: vlan_id
+    type: Integer
+    constraint: 'min: 1, max: 4094'
+    mandatory: 'No'
+    default: null
+  - name: freeform_config
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: svi_enabled
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+- class: switches
+  path: vxlan.overlay.network_attach_groups.switches
+  attributes:
+  - name: hostname
+    type: String
+    constraint: null
+    mandatory: 'Yes'
+    default: null
+  - name: ports
+    type: List
+    constraint: 'String[Regex: (?i)^(?:e|eth(?:ernet)?)((\d)/\d{1,3})$|^(?:po|port-channel)([1-9]|[1-9][0-9]{1,2}|[1-3][0-9]{3}|40[0-8][0-9]|409[0-6])$]'
+    mandatory: 'No'
+    default: null

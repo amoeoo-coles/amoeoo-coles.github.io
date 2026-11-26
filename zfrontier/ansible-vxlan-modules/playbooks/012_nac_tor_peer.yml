@@ -1,0 +1,33 @@
+---
+# Sample playbook 012 for NaC data model section vxlan.topology.tor_peers
+# Build order: 012 of 129 (1. Fabric, global settings and switch inventory)
+# Reads ../models/nac_tor_peer.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://netascode.cisco.com/docs/data_models/vxlan/topology/topology_tor_peer/
+
+- name: "012 nac_tor_peer (vxlan.topology.tor_peers)"
+  hosts: ndfc
+  gather_facts: false
+  vars_files:
+    - ../models/nac_tor_peer.yml
+  tasks:
+    - name: Check the model defines vxlan.topology.tor_peers
+      ansible.builtin.assert:
+        that:
+          - vxlan['topology']['tor_peers'] is defined
+        quiet: true
+
+    - name: Stage the section into host_vars for the nac_dc_vxlan roles (opt-in with -e stage_model=true)
+      ansible.builtin.copy:
+        content: "{{ {'vxlan': vxlan} | to_nice_yaml(indent=2) }}"
+        dest: "{{ playbook_dir }}/../host_vars/{{ inventory_hostname }}/nac_tor_peer.nac.yaml"
+        mode: "0644"
+      delegate_to: localhost
+      when: stage_model | default(false) | bool
+
+    - name: Validate staged data with cisco.nac_dc_vxlan.validate (run with --tags validate)
+      ansible.builtin.import_role:
+        name: cisco.nac_dc_vxlan.validate
+      tags:
+        - never
+        - validate

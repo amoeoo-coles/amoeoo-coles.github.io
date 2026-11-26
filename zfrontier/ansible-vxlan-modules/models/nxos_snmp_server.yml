@@ -1,0 +1,67 @@
+---
+# Model for cisco.nxos.nxos_snmp_server. Options are only those documented by the module.
+# Values come from the module EXAMPLES; null means omit (module default).
+# Secret-like options are placeholders. Do not commit real credentials.
+references:
+  doc_url: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_snmp_server_module.html
+  collection: cisco.nxos
+  collection_version: 14.0.0
+  kind: module
+  module: cisco.nxos.nxos_snmp_server
+  schema_path: plugins/modules/nxos_snmp_server.py DOCUMENTATION.options
+  example_source: module EXAMPLES (first task)
+  options_documented: 3
+  deprecated: false
+nxos_snmp_server:
+  config:
+    aaa_user:
+      cache_timeout: 36000
+    communities:
+    - community: '{{ community_placeholder }}'
+      group: network-operator
+    - community: '{{ community_placeholder }}'
+      group: network-admin
+    contact: nxosswitchadmin@localhost
+    location: serverroom-1
+    traps:
+      aaa:
+        server_state_change: true
+      system:
+        clock_change_notification: true
+    hosts:
+    - host: 192.0.2.1
+      traps: true
+      version: '1'
+      community: '{{ community_placeholder }}'
+    - host: 192.0.2.1
+      source_interface: Ethernet1/1
+    - host: 192.0.2.2
+      informs: true
+      version: '3'
+      auth: NMS
+    users:
+      auth:
+      - user: snmp_user_1
+        group: network-operator
+        authentication:
+          algorithm: md5
+          password: '{{ password_placeholder }}'
+          localized_key: true
+      - user: snmp_user_2
+        group: network-operator
+        authentication:
+          algorithm: md5
+          password: '{{ password_placeholder }}'
+          localized_key: true
+          priv:
+            privacy_password: '{{ privacy_password_placeholder }}'
+            aes_128: true
+      use_acls:
+      - user: snmp_user_1
+        ipv4: acl1
+        ipv6: acl2
+      - user: snmp_user_2
+        ipv4: acl3
+        ipv6: acl4
+  running_config: null
+  state: merged

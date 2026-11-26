@@ -1,0 +1,2727 @@
+---
+# Combined sample VXLAN data model. Placeholders only: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+# null = not set / not collected. Do not commit real credentials.
+references:
+  description: 'Combined sample: one iBGP VXLAN EVPN fabric data model merged from every NaC section model (except
+    eBGP, External and Multi-site, which are separate fabric types), plus every cisco.nxos and cisco.dcnm module
+    model.'
+  collections:
+    cisco.nac_dc_vxlan: 0.9.1
+    cisco.nxos: 14.0.0
+    cisco.dcnm: 3.13.1
+  data_model_docs: https://netascode.cisco.com/docs/data_models/vxlan/overview/
+vxlan:
+  vxlan:
+    fabric:
+      name: nac-ndfc
+      type: VXLAN_EVPN
+    global:
+      ibgp:
+        bgp_asn: '6512'
+        route_reflectors: 2
+        anycast_gateway_mac: 20:20:00:00:00:aa
+        overlay_mode: cli
+        greenfield_cleanup: Disable
+        layer2_vni_range:
+          from: 30000
+          to: 49000
+        layer3_vni_range:
+          from: 50000
+          to: 59000
+        layer2_vlan_range:
+          from: 2300
+          to: 2999
+        layer3_vlan_range:
+          from: 2000
+          to: 2299
+        enable_l3_vni_no_vlan: false
+        multisite_site_id: null
+        vpc:
+          peer_link_vlan: 3600
+          peer_keep_alive: management
+          auto_recovery_time: 240
+          delay_restore_time: 150
+          peer_link_port_channel_id: 500
+          ipv6_nd_sync: true
+          advertise_pip: false
+          advertise_pip_border_only: true
+          advertise_pip_border_gateway: null
+          domain_id_range: 1-100
+          fabric_vpc_qos: false
+          fabric_vpc_qos_policy_name: spine_qos_for_fabric_vpc_peering
+        ptp:
+          enable: true
+          domain_id: 10
+          lb_id: 0
+          vlan_id: 10
+        snmp_server_host_trap: true
+        enable_nxapi_http: false
+        nxapi_http_port: 80
+        enable_nxapi_https: true
+        nxapi_https_port: 443
+        spanning_tree:
+          root_bridge_protocol: unmanaged
+          vlan_range:
+          - from: null
+            to: null
+          mst_instance_range:
+          - from: null
+            to: null
+          bridge_priority: '0'
+        auth_proto: SHA_AES
+        dns_servers:
+        - ip_address: 172.25.74.200
+          vrf: service
+        ntp_servers:
+        - ip_address: 10.195.225.200
+          vrf: service
+        syslog_servers:
+        - ip_address: 172.16.255.251
+          vrf: management
+          severity: 3
+        netflow:
+          enable: false
+          exporter:
+          - name: null
+            ip_address: null
+            vrf: null
+            source_interface: null
+            udp_port: null
+          record:
+          - name: null
+            template: null
+            layer2: null
+          monitor:
+          - name: null
+            record: null
+            exporter1: null
+            exporter2: null
+        bootstrap:
+          enable_bootstrap: false
+          enable_local_dhcp_server: false
+          dhcp_version: null
+          dhcp_v4:
+            scope_start_address: null
+            scope_end_address: null
+            switch_mgmt_default_gw: null
+            mgmt_prefix: null
+            multi_subnet_scope: null
+            domain_name: null
+          dhcp_v6:
+            scope_start_address: null
+            scope_end_address: null
+            switch_mgmt_default_gw: null
+            mgmt_prefix: null
+            multi_subnet_scope: null
+            domain_name: null
+          enable_cdp_mgmt: false
+          bootstrap_freeform: null
+        tcam_allocation: true
+        spine_ibgp_peer_template_freeform: null
+        leaf_ibgp_peer_template_freeform: null
+        aaa_freeform: null
+        banner_freeform: null
+        leaf_pre_interface_freeform: null
+        leaf_post_interface_freeform: null
+        spine_pre_interface_freeform: null
+        spine_post_interface_freeform: null
+        tor_pre_interface_freeform: null
+        tor_post_interface_freeform: null
+        intra_fabric_link_freeform: service-policy type qos input my_fabric_policy
+        mpls_handoff:
+          enable: false
+          loopback_id: 101
+          loopback_ip_range: 10.101.0.0/25
+          isis_net_area_number: '0001'
+        heartbeat_interval: 190
+        enable_ngoam: true
+    topology:
+      switches:
+      - name: dc1-spine1
+        serial_number: 9RPK63KD8TR
+        role: spine
+        management:
+          default_gateway_v4: 192.168.112.254
+          default_gateway_v6: 2055:55:55:55::55/64
+          management_ipv4_address: 192.168.112.151
+          management_ipv6_address: 2055:55:55:55::51/64
+          subnet_mask_ipv4: 24
+          subnet_mask_ipv6: null
+          username: null
+          password: null
+        poap:
+          bootstrap: true
+          preprovision:
+            serial_number: PRE9MGBD4LHN0O
+            model: N9K-C9300v
+            version: 15.5(2)
+            modulesModel:
+            - N9K-X9364v
+            - N9K-vSUP
+          discovery_creds: false
+          discovery_username: null
+          discovery_password: null
+        routing_loopback_id: 0
+        vtep_loopback_id: 1
+        interface_breakouts:
+        - module: 1
+          from: 1
+          to: 1
+          map: 10g-4x
+          enable_during_bootstrap: false
+        interfaces: null
+      - name: dc1-leaf1
+        role: leaf
+        serial_number: AAAAAAAAAA
+        interface_breakouts:
+        - module: 1
+          from: 49
+          to: 1
+          map: 10g-4x
+          enable_during_bootstrap: false
+        interfaces:
+        - name: e1/11
+          mode: access
+          description: Access Interface 1
+          mtu: default
+          speed: auto
+          enabled: true
+          enable_cdp: true
+          access_vlan: 11
+          spanning_tree_portfast: true
+          enable_bpdu_guard: true
+          duplex: auto
+          orphan_port: false
+          enable_qos: false
+          qos_policy: null
+          queuing_policy: null
+          monitor: false
+          freeform_config: null
+          fec: rs-fec
+          enable_storm_control: true
+          storm_control_action: trap
+          storm_control_broadcast_level_percent: 10.0
+          storm_control_broadcast_level_pps: null
+          storm_control_multicast_level_percent: 10.0
+          storm_control_multicast_level_pps: null
+          storm_control_unicast_level_percent: 10.0
+          storm_control_unicast_level_pps: null
+        - name: Ethernet1/11
+          mode: trunk
+          description: Trunk Interface 1
+          mtu: jumbo
+          speed: auto
+          enabled: true
+          enable_cdp: true
+          trunk_allowed_vlans:
+          - from: 10
+            to: 20
+          spanning_tree_portfast: true
+          enable_bpdu_guard: false
+          duplex: auto
+          orphan_port: false
+          native_vlan: null
+          enable_qos: false
+          qos_policy: null
+          queuing_policy: null
+          monitor: false
+          freeform_config: null
+          fec: rs-ieee
+          enable_storm_control: true
+          storm_control_action: trap
+          storm_control_broadcast_level_percent: 10.0
+          storm_control_broadcast_level_pps: null
+          storm_control_multicast_level_percent: 10.0
+          storm_control_multicast_level_pps: null
+          storm_control_unicast_level_percent: null
+          storm_control_unicast_level_pps: null
+        - name: port-channel10
+          mode: access
+          description: VPC Access Interface 1 Leaf 1
+          copy_description: false
+          vpc_id: 10
+          mtu: jumbo
+          speed: auto
+          enabled: true
+          enable_cdp: true
+          spanning_tree_portfast: true
+          enable_bpdu_guard: true
+          pc_mode: active
+          members:
+          - eth1/11
+          - eth1/12
+          access_vlan: 10
+          duplex: auto
+          orphan_port: false
+          disable_lacp_suspend_individual: false
+          enable_lacp_vpc_convergence: false
+          lacp_port_priority: 32768
+          lacp_rate: normal
+          enable_qos: false
+          qos_policy: null
+          queuing_policy: null
+          monitor: false
+          freeform_config: null
+          enable_storm_control: true
+          storm_control_action: trap
+          storm_control_broadcast_level_percent: 10.0
+          storm_control_broadcast_level_pps: null
+          storm_control_multicast_level_percent: 10.0
+          storm_control_multicast_level_pps: null
+          storm_control_unicast_level_percent: null
+          storm_control_unicast_level_pps: null
+        - name: port-channel31
+          mode: trunk
+          description: VPC Trunk with Storm Control
+          copy_description: false
+          vpc_id: 31
+          mtu: jumbo
+          speed: auto
+          enabled: true
+          enable_cdp: true
+          spanning_tree_portfast: true
+          enable_bpdu_guard: true
+          pc_mode: active
+          members:
+          - Ethernet1/30
+          - Ethernet1/31
+          trunk_allowed_vlans:
+          - from: 100
+            to: 200
+          duplex: auto
+          orphan_port: false
+          native_vlan: null
+          disable_lacp_suspend_individual: false
+          enable_lacp_vpc_convergence: false
+          lacp_port_priority: 32768
+          lacp_rate: normal
+          enable_qos: false
+          qos_policy: null
+          queuing_policy: null
+          monitor: false
+          freeform_config: null
+          enable_storm_control: true
+          storm_control_action: shutdown
+          storm_control_broadcast_level_percent: null
+          storm_control_broadcast_level_pps: 1000000
+          storm_control_multicast_level_percent: null
+          storm_control_multicast_level_pps: 1000000
+          storm_control_unicast_level_percent: null
+          storm_control_unicast_level_pps: null
+        - name: Ethernet1/46
+          mode: routed
+          description: Routed Interface 1
+          vrf: red
+          mtu: 1500
+          speed: 10gb
+          enabled: true
+          ipv4_address: 192.168.57.5/30
+          ipv4_route_tag: 12345
+          secondary_ipv4_addresses:
+          - ip_address: null
+            route_tag: null
+          ipv6_address: null
+          ipv6_route_tag: null
+          secondary_ipv6_addresses:
+          - ip_address: null
+            route_tag: null
+          enable_qos: false
+          qos_policy: null
+          queuing_policy: null
+          freeform_config: null
+          fec: rs-fec
+        - name: e1/47.2
+          mode: routed_sub
+          description: Routed Sub-Interface 1
+          dot1q_id: 2
+          vrf: red
+          mtu: 1500
+          speed: auto
+          enabled: true
+          ipv4_address: 10.1.1.1/30
+          ipv4_route_tag: null
+          secondary_ipv4_addresses:
+          - ip_address: null
+            route_tag: null
+          ipv6_address: 2021:10:1:1::1/64
+          ipv6_route_tag: null
+          secondary_ipv6_addresses:
+          - ip_address: null
+            route_tag: null
+          freeform_config: null
+        - name: Po93
+          mode: routed_po
+          description: Routed Port-channel Interface 1
+          copy_description: false
+          vrf: red
+          mtu: 1500
+          speed: auto
+          enabled: true
+          ipv4_address: 192.168.57.9/30
+          ipv4_route_tag: 12345
+          secondary_ipv4_addresses:
+          - ip_address: null
+            route_tag: null
+          ipv6_address: null
+          ipv6_route_tag: null
+          secondary_ipv6_addresses:
+          - ip_address: null
+            route_tag: null
+          enable_qos: false
+          qos_policy: null
+          queuing_policy: null
+          pc_mode: active
+          members:
+          - eth1/23
+          - eth1/24
+          freeform_config: null
+        - name: lo0
+          mode: loopback
+          description: Loopback Interface 0
+          vrf: red
+          enabled: true
+          ipv4_address: 10.1.1.1
+          ipv4_route_tag: 12345
+          secondary_ipv4_addresses:
+          - ip_address: null
+            route_tag: null
+          ipv6_address: 2021:10:1:1::1
+          ipv6_route_tag: null
+          secondary_ipv6_addresses:
+          - ip_address: null
+            route_tag: null
+          freeform_config: null
+      vpc_peers:
+      - peer1: dc1-leaf1
+        peer1_peerlink_interfaces:
+        - name: Ethernet1/3
+        peer2: dc1-leaf2
+        peer2_peerlink_interfaces:
+        - name: Ethernet1/3
+        fabric_peering: true
+        domain_id: 10
+        vtep_vip: 30.1.0.1
+        keepalive_hold_time: 3
+        peer1_keepalive_ipv4: 10.6.62.51
+        peer2_keepalive_ipv4: 10.6.62.52
+        peer1_domain_conf: null
+        peer2_domain_conf: null
+        keepalive_vrf: management
+      tor_peers:
+      - pairing_id: null
+        parent_leaf1: LEAF_11
+        parent_leaf2: LEAF_21
+        tor1: ToR_24
+        tor2: ToR_23
+      fabric_links:
+      - source_device: dc1-leaf1
+        source_interface: eth1/49
+        source_description: dc1-leaf1 eth1/49 to dc1-spine1 eth1/1
+        dest_device: dc1-spine1
+        dest_interface: eth1/1
+        destination_description: dc1-spine1 eth1/1 to dc1-leaf1 eth1/49
+        template: int_pre_provision_intra_fabric_link
+        admin_state: true
+        mtu: 9216
+        ipv4:
+          subnet: 10.5.0.0/31
+          source_ipv4: 10.5.0.0
+          dest_ipv4: 10.5.0.1
+        peer1_freeform: null
+        peer2_freeform: null
+      edge_connections:
+      - dest_fabric: external
+        dest_device: NCS-5500-1
+        dest_interface: FortyGigE0/0/0/1
+        source_device: dc1-border1
+        source_interface: eth1/10
+        source_interface_enabled: true
+        source_interface_mtu: 9216
+        local_ip: 12.32.0.16/31
+        neighbor_ip: 12.32.0.17
+        bgp_section:
+          bgp_password_enable: true
+          bgp_password: '{{ bgp_password_placeholder }}'
+          neighbor_asn: '69999'
+          routing_tag: null
+          description: test1
+          peer_template_freeform: |2-
+                  soft-reconfiguration inbound always
+                  route-map underlay-in in
+                  route-map underlay-outbound out
+                bfd
+          interface_freeform: '  no ip redirects'
+          bgp_freeform: '    description dc1-border1'
+    underlay:
+      general:
+        routing_protocol: ospf
+        enable_ipv6_underlay: false
+        replication_mode: multicast
+        manual_underlay_allocation: false
+        underlay_routing_loopback_id: 0
+        underlay_vtep_loopback_id: 1
+        underlay_routing_protocol_tag: UNDERLAY
+        intra_fabric_interface_mtu: 9216
+        layer2_host_interface_mtu: 9216
+        unshut_host_interfaces: true
+      ipv4:
+        fabric_interface_numbering: p2p
+        subnet_mask: 30
+        underlay_routing_loopback_ip_range: 10.2.0.0/22
+        underlay_vtep_loopback_ip_range: 10.3.0.0/22
+        underlay_rp_loopback_ip_range: 10.254.254.0/24
+        underlay_subnet_ip_range: 10.4.0.0/16
+      ipv6:
+        enable_ipv6_link_local_address: true
+        underlay_subnet_mask: 126
+        underlay_routing_loopback_ip_range: fd00::a02:0/119
+        underlay_vtep_loopback_ip_range: fd00::a03:0/118
+        underlay_rp_loopback_ip_range: fd00::254:254:0/118
+        underlay_subnet_ip_range: fd00::a04:0/112
+      ospf:
+        area_id: 0.0.0.0
+        authentication_enable: true
+        authentication_key_id: 127
+        authentication_key: '{{ authentication_key_placeholder }}'
+      isis:
+        level: level-2
+        net_area_number: '0001'
+        network_point_to_point: true
+        authentication_keychain_name: isis-key
+        authentication_enable: true
+        authentication_key_id: 127
+        authentication_key: '{{ authentication_key_placeholder }}'
+        overload_bit: true
+        overload_bit_elapsed_time: 60
+      bgp:
+        authentication_enable: true
+        authentication_key_type: 3
+        authentication_key: '{{ authentication_key_placeholder }}'
+        max_paths: 4
+      bfd:
+        enable: true
+        ibgp: true
+        ospf: true
+        isis: false
+        pim: true
+        authentication_enable: true
+        authentication_key_id: 113
+        authentication_key: '{{ authentication_key_placeholder }}'
+      multicast:
+        rendezvous_points: 2
+        rp_mode: asm
+        underlay_rp_loopback_id: 250
+        ipv4:
+          anycast_rp: 1.1.1.1
+          group_subnet: 239.1.1.0/25
+          authentication_enable: false
+          authentication_key: null
+          trm_enable: true
+          trm_default_group: 239.1.1.0
+        ipv6:
+          group_subnet: ff1e::/121
+          trmv6_enable: true
+          trmv6_default_group: 'ff1e::'
+        underlay_primary_rp_loopback_id: 0
+        underlay_backup_rp_loopback_id: 3
+        underlay_second_backup_rp_loopback_id: 4
+        underlay_third_backup_rp_loopback_id: 5
+        enable_mvpn_vri_id_range: true
+        mvpn_vri_id_range:
+          from: 2000
+          to: 2999
+    overlay:
+      vrfs:
+      - name: NetAsCodeVrf1
+        vrf_id: 150001
+        vlan_id: 2001
+        vrf_vlan_name: null
+        vrf_intf_desc: Configured by Ansible NetAsCode
+        vrf_description: Configured by Ansible NetAsCode
+        vrf_int_mtu: 9216
+        loopback_route_tag: 12345
+        max_bgp_paths: 1
+        max_ibgp_paths: 2
+        ipv6_linklocal_enable: true
+        adv_host_routes: false
+        adv_default_routes: true
+        static_default_route: true
+        bgp_password: null
+        bgp_password_encryption_type: null
+        disable_rt_auto: false
+        export_evpn_rt: null
+        export_mvpn_rt: null
+        export_vpn_rt: null
+        import_evpn_rt: null
+        import_mvpn_rt: null
+        import_vpn_rt: null
+        netflow_enable: false
+        netflow_monitor: null
+        no_rp: false
+        overlay_multicast_group: null
+        redist_direct_routemap: FABRIC-RMAP-REDIST-SUBNET
+        ipv6_redist_direct_routemap: FABRIC-RMAP-REDIST-SUBNET
+        rp_address: null
+        rp_external: false
+        rp_loopback_id: null
+        trm_enable: false
+        trm_bgw_msite: false
+        enable_l3_vni_no_vlan: null
+        underlay_mcast_ip: null
+        vrf_attach_group: all_leaf
+      vrf_attach_groups:
+      - name: all_leaf
+        switches:
+        - hostname: dc1-leaf1
+          loopback_id: null
+          loopback_ipv4: null
+          loopback_ipv6: null
+          freeform_config: null
+      networks:
+      - name: NetworkDMZ
+        is_l2_only: true
+        vrf_name: null
+        net_id: 33100
+        vlan_id: 3100
+        vlan_name: null
+        int_desc: null
+        gw_ip_address: null
+        gw_ipv6_address: null
+        ipv4_acl_in: null
+        secondary_ip_addresses:
+        - ip_address: null
+          route_tag: null
+        mtu_l3intf: 9216
+        l3gw_on_border: false
+        route_tag: 12345
+        multicast_group_address: 239.1.1.1
+        arp_suppress: false
+        route_target_both: false
+        dhcp_loopback_id: null
+        dhcp_servers:
+        - ip_address: null
+          vrf: null
+        netflow_enable: false
+        vlan_netflow_monitor: null
+        trm_enable: false
+        xconnect: false
+        network_attach_group: dmz
+        switch_attach_overrides:
+        - hostname: null
+          vlan_id: null
+          freeform_config: null
+          svi_enabled: null
+      network_attach_groups:
+      - name: esxi
+        switches:
+        - hostname: dc1-leaf1
+          ports:
+          - Port-channel10
+          - Port-channel20
+          - Port-channel30
+          - Port-channel40
+    overlay_extensions:
+      vrf_lites:
+      - name: Static-NaC-VRF21_vrf_lite
+        vrf: NaC-VRF21
+        ospf:
+          process: OVERLAY
+          default_area: 0
+          areas:
+          - id: 0
+            area_type: standard
+            area_cost: null
+            nssa:
+              default_information_originate: null
+              route_map: null
+              no_redistribution: null
+              no_summary: null
+              translate:
+                always: null
+                never: null
+                supress_fa: null
+            default_information_originate:
+              always: null
+              route_map: null
+          distance: 110
+          bfd:
+            enabled: true
+        bgp:
+          best_path_as_path_relax: false
+          graceful_restart: true
+          graceful_restart_helper: false
+          local_as: null
+          address_family_ipv4_unicast:
+            additional_paths_send: false
+            additional_paths_receive: false
+            additional_paths_selection_route_map: null
+            default_originate: false
+            ebgp_distance: 20
+            ibgp_distance: 200
+            local_distance: 220
+          address_family_ipv6_unicast:
+            additional_paths_send: false
+            additional_paths_receive: false
+            additional_paths_selection_route_map: null
+            default_originate: false
+            ebgp_distance: 20
+            ibgp_distance: 200
+            local_distance: 220
+        redistribution:
+        - source: null
+          protocol_tag: null
+          route_map_ipv4: null
+          route_map_ipv6: null
+        switches:
+        - name: netascode-bleaf21
+          router_id: 1.1.2.21
+          loopback_id: null
+          static_routes:
+            static_ipv4:
+            - prefix: 10.1.1.0/24
+              route_tag: 12345
+              next_hops:
+              - ip: 192.168.20.1
+                name: null
+                track: null
+                route_preference: null
+            static_ipv6:
+            - prefix: 2a00:db8::/32
+              route_tag: null
+              next_hops:
+              - ip: 2a01::1
+                name: null
+                track: null
+                route_preference: null
+          interfaces:
+          - name: ethernet1/2.10
+            ospf:
+              area: 0.0.0.0
+              auth_type: md5
+              auth_key_id: 0
+              auth_key: '{{ auth_key_placeholder }}'
+              cost: 1
+              passive_interface: false
+              mtu_ignore: false
+              advertise_subnet: false
+              bfd:
+                enabled: true
+              hello_interval: 10
+              dead_interval: 40
+              network_type: point-to-point
+              priority: 1
+              lsa_retransmit_interval: 5
+              lsa_transmit_delay: 1
+          bgp: null
+          ospf: null
+          bgp_peers:
+          - address: null
+            remote_as: null
+            local_as: null
+            update_source: null
+            description: null
+            password: null
+            bfd: null
+            disable_connected_check: false
+            remove_private_as: false
+            remove_private_as_all: false
+            ebgp_multihop: null
+            address_family_ipv4_unicast:
+              send_community: false
+              send_ext_community: false
+              allow_as_in: false
+              allow_as_in_number: 3
+              as_override: false
+              default_originate: false
+              next_hop_self: false
+              route_reflector_client: false
+              weight: null
+              route_map_in: null
+              route_map_out: null
+            address_family_ipv6_unicast:
+              send_community: false
+              send_ext_community: false
+              allow_as_in: false
+              allow_as_in_number: 3
+              as_override: false
+              default_originate: false
+              next_hop_self: false
+              route_reflector_client: false
+              weight: null
+              route_map_in: null
+              route_map_out: null
+          redistribution:
+          - source: bgp
+            route_map_ipv4: rm-redistribute-ospf
+          - source: ospf
+            route_map_ipv4: rm-default_only
+      route_control:
+        groups:
+        - name: external_policies_RCtrlGrp
+          route_maps:
+          - name: rm-bgp
+          ipv4_prefix_lists:
+          - name: IPPREF1
+          ipv6_prefix_lists:
+          - name: null
+          standard_community_lists:
+          - name: CL-LPREF110
+          extended_community_lists:
+          - name: null
+          mac_list:
+          - name: null
+          ip_as_path_access_lists:
+          - name: null
+          ipv4_access_lists:
+          - name: null
+          ipv6_access_lists:
+          - name: null
+          time_range:
+          - name: null
+          ipv4_object_groups:
+          - name: null
+          ipv6_object_groups:
+          - name: null
+        switches:
+        - name: netascode-leaf21
+          groups:
+          - external_policies_RCtrlGrp
+        ipv4_prefix_lists:
+        - name: sac-ipv4_prefix-list
+          description: SAC IPv4 prefix-list
+          entries:
+          - seq_number: 10
+            operation: permit
+            prefix: 41.0.0.0/24
+            eq: null
+            ge: null
+            le: null
+            mask: null
+        ipv6_prefix_lists:
+        - name: null
+          description: null
+          entries:
+          - seq_number: null
+            operation: null
+            prefix: null
+            eq: null
+            ge: null
+            le: null
+            mask: null
+        standard_community_lists:
+        - name: Standard-Community
+          entries:
+          - seq_number: 10
+            operation: permit
+            communities:
+            - 65000:100
+        extended_community_lists:
+        - name: extcomm_list-test
+          entries:
+          - seq_number: 10
+            operation: permit
+            communities:
+              4byteas_generic:
+              - transitive: true
+                extended_community_number_list: 3932140
+              rmac: null
+              rt:
+              - 122
+              soo:
+              - 183
+        ip_as_path_access_lists:
+        - name: AllowAS
+          entries:
+          - seq_number: 10
+            operation: permit
+            bgp_as_paths_regex: '64510'
+        mac_list:
+        - name: mac-list
+          entries:
+          - seq_number: 5
+            operation: permit
+            mac: aaaa.aaaa.aaaa
+            mac_mask: ffff.ffff.ffff
+        ipv4_object_groups:
+        - name: web_server
+          entries:
+          - seq_number: 10
+            host: 10.0.0.1
+            ip: null
+        ipv6_object_groups:
+        - name: web_server6
+          entries:
+          - seq_number: 10
+            host: 2001:db8::1
+            ip: null
+        ipv4_access_lists:
+        - name: myACL
+          entries:
+          - seq_number: 5
+            operation: permit
+            remark: Allow_traffic
+            protocol: tcp
+            source:
+              ip: null
+              wildcard: null
+              addrgroup: null
+              any: true
+              host: null
+              port_number:
+                operator: null
+                port: null
+                from: null
+                to: null
+            destination:
+              ip: 10.30.30.0/24
+              wildcard: null
+              addrgroup: null
+              any: true
+              host: null
+              port_number:
+                operator: gt
+                port: 1023
+            filtering_options:
+            - flags:
+              - establish: true
+                ack: null
+                fin: null
+                psh: null
+                rst: null
+                syn: null
+                urg: null
+              dscp: null
+              http_method: get
+              tcp_option_length: 4
+              tcp_flags_mask: null
+              ttl: null
+              udf:
+                name: null
+                value: null
+                mask: null
+              packet_length:
+                operation: null
+                size: null
+                from: null
+                to: null
+              time_range: null
+              precedence: critical
+              set_erspan_dscp: null
+              set_erspan_gre_proto: null
+              load_share: null
+              fragments: null
+            log: true
+          statistics_per_entry: true
+          fragments: null
+          ignore_routable: null
+        ipv6_access_lists:
+        - name: ACL6-101
+          entries:
+          - seq_number: 10
+            operation: permit
+            remark: null
+            protocol: tcp
+            source:
+              ip: 2001:db8:300:201::/64
+              wildcard: null
+              addrgroup: null
+              any: null
+              host: null
+              port_number:
+                operator: eq
+                port: 23
+            destination:
+              ip: 2001:db8:300:202::1/32
+              wildcard: null
+              addrgroup: null
+              any: true
+              host: null
+              port_number: null
+            filtering_options:
+            - flags: null
+              dscp: null
+              tcp_flags_mask: null
+              ttl: null
+              udf: null
+              packet_length: null
+              time_range: null
+              precedence: null
+              load_share: null
+              fragments: null
+            log: null
+          statistics_per_entry: null
+          fragments: null
+          ignore_routable: null
+          extension_header: null
+        time_range:
+        - name: workday-daytime
+          entries:
+          - seq_number: 10
+            periodic:
+              day: null
+              start_hours: null
+              start_minutes: null
+              start_seconds: null
+              end_hours: null
+              end_minutes: null
+              end_seconds: null
+            absolute:
+              start_day: 4
+              start_month: July
+              start_year: 2024
+              end_day: 4
+              end_month: July
+              end_year: 2024
+              start_hours: 0
+              start_minutes: 0
+              start_seconds: 0
+              end_hours: 23
+              end_minutes: 59
+              end_seconds: 59
+            remark: workday
+        route_maps:
+        - name: rm-route-type
+          entries:
+          - seq_number: 10
+            operation: permit
+            description: My SAC Route-map
+            match:
+            - as_number:
+              - from: null
+                to: null
+              as_path_list: sac-aspath
+              community_list:
+                community: '{{ community_placeholder }}'
+                exact_match: null
+              evpn_route_types: null
+              extended_community_list:
+                community: '{{ community_placeholder }}'
+                exact_match: null
+              interface: null
+              ipv4:
+                address_prefix_list:
+                - sac-prefix-list
+                next_hop_prefix_list: null
+                route_src_prefix_list: null
+              ipv6:
+                address_prefix_list: null
+                next_hop_prefix_list: null
+                route_src_prefix_list: null
+              mac_list: null
+              metric:
+                metric: null
+                deviation_operator: null
+                deviation_value: null
+              ospf_area: null
+              route_types:
+              - external
+              - internal
+              source_protocol: null
+              tag:
+              - 10
+              - 20
+            set:
+            - as_path:
+                as_number:
+                - 65000
+                - 65001
+                prepend: null
+                prepend_last_as_count: null
+                none: null
+                replace:
+                  as_number: null
+                  private_as: null
+                tag: null
+                local_as: null
+                remote_as: null
+              community_list: mycommunitylist
+              community: null
+              dampening:
+                half_life: 1
+                reuse_penalty: 2
+                suppress_penalty: 3
+                max_suppress_time: 4
+              distance:
+                igp_ebgp: null
+                internal: null
+                local: null
+              evpn:
+                gateway_ip: null
+              extended_community_list: null
+              extended_community:
+                4byteas_generic:
+                  option: null
+                  transitivity:
+                  - transitive: null
+                    extended_community: null
+                color:
+                  color: null
+                  co_flag: null
+                cost:
+                - community_id: null
+                  type: null
+                  cost: null
+                evpn_rmac: null
+                rt:
+                  additive: null
+                  rt_list: null
+              forwarding_address: null
+              interface: null
+              ipv4:
+                address_prefix_list: null
+                next_hop:
+                  address: null
+                  drop_on_fail: null
+                  force_order: null
+                  load_share: null
+                  peer_address: null
+                  redist_unchanged: null
+                  unchanged: null
+                  verify_availability: null
+                precedence: null
+              ipv6:
+                address_prefix_list: pfx6
+                next_hop:
+                  address: null
+                  drop_on_fail: null
+                  force_order: null
+                  load_share: null
+                  peer_address: null
+                  redist_unchanged: null
+                  unchanged: null
+                  verify_availability: null
+                precedence: null
+              level: null
+              local_preference: 110
+              metric:
+                bandwidth: 1000
+                delay: null
+                reliability: null
+                load: null
+                mtu: null
+              metric_type: external
+              nssa_only: null
+              origin: incomplete
+              path_selection: null
+              tag: null
+              weight: 1000
+            continue: null
+    policy:
+      policies:
+      - name: alias
+        template_name: bgp_peer_template
+        filename: ./data/policies/alias.cfg
+        template_vars:
+          BGP_AS: '64690'
+          TEMPLATE_TYPE: peer
+          TEMPLATE_NAME: ebgp-cmd-pr-fmg-f5
+          CONF: |2-
+              bfd multihop
+              remote-as 65386
+              description ebgp-cmd-pr-fmg-f5
+              update-source Loopback5
+      groups:
+      - name: server leafs
+        priority: 500
+        policies:
+        - name: grpc feature
+          priority: 50
+      switches:
+      - name: nac-leaf3
+        groups:
+        - server leafs
+nxos_modules:
+  nxos_feature:
+    feature: lacp
+    state: enabled
+  nxos_hostname:
+    config:
+      hostname: NXOSv-9k
+    running_config: null
+    state: merged
+  nxos_system:
+    domain_lookup: null
+    domain_name: test.example.com
+    domain_search: null
+    hostname: nxos01
+    name_servers: null
+    state: present
+    system_mtu: null
+  nxos_ntp_global:
+    config:
+      access_group:
+        peer:
+        - access_list: PeerAcl1
+        serve:
+        - access_list: ServeAcl1
+      authenticate: true
+      authentication_keys:
+      - id: 1001
+        key: '{{ key_placeholder }}'
+        encryption: 7
+      - id: 1002
+        key: '{{ key_placeholder }}'
+        encryption: 7
+      logging: true
+      master:
+        stratum: 2
+      peers:
+      - peer: 192.0.2.1
+        key_id: 1
+        maxpoll: 15
+        minpoll: 5
+        vrf: default
+      - peer: 192.0.2.2
+        key_id: 2
+        prefer: true
+        vrf: siteA
+      servers:
+      - server: 198.51.100.1
+        key_id: 2
+        vrf: default
+      - server: 203.0.113.1
+        key_id: 1
+        vrf: siteB
+    running_config: null
+    state: merged
+  nxos_logging_global:
+    config:
+      console:
+        severity: error
+      monitor:
+        severity: warning
+      ip:
+        access_list:
+          cache:
+            entries: 16384
+            interval: 200
+            threshold: 5000
+      facilities:
+      - facility: auth
+        severity: critical
+      - facility: ospfv3
+        severity: alert
+      - facility: ftp
+        severity: informational
+      hosts:
+      - host: 203.0.113.100
+        severity: alert
+        use_vrf: management
+      - host: 203.0.113.101
+        severity: error
+        facility: local6
+        use_vrf: default
+      origin_id:
+        hostname: true
+    running_config: null
+    state: merged
+  nxos_snmp_server:
+    config:
+      aaa_user:
+        cache_timeout: 36000
+      communities:
+      - community: '{{ community_placeholder }}'
+        group: network-operator
+      - community: '{{ community_placeholder }}'
+        group: network-admin
+      contact: nxosswitchadmin@localhost
+      location: serverroom-1
+      traps:
+        aaa:
+          server_state_change: true
+        system:
+          clock_change_notification: true
+      hosts:
+      - host: 192.0.2.1
+        traps: true
+        version: '1'
+        community: '{{ community_placeholder }}'
+      - host: 192.0.2.1
+        source_interface: Ethernet1/1
+      - host: 192.0.2.2
+        informs: true
+        version: '3'
+        auth: NMS
+      users:
+        auth:
+        - user: snmp_user_1
+          group: network-operator
+          authentication:
+            algorithm: md5
+            password: '{{ password_placeholder }}'
+            localized_key: true
+        - user: snmp_user_2
+          group: network-operator
+          authentication:
+            algorithm: md5
+            password: '{{ password_placeholder }}'
+            localized_key: true
+            priv:
+              privacy_password: '{{ privacy_password_placeholder }}'
+              aes_128: true
+        use_acls:
+        - user: snmp_user_1
+          ipv4: acl1
+          ipv6: acl2
+        - user: snmp_user_2
+          ipv4: acl3
+          ipv6: acl4
+    running_config: null
+    state: merged
+  nxos_lldp_global:
+    config:
+      timer: 35
+      holdtime: 100
+    running_config: null
+    state: merged
+  nxos_ospfv2:
+    config:
+      processes:
+      - process_id: 100
+        router_id: 203.0.113.20
+      - process_id: 102
+        router_id: 198.51.100.1
+        areas:
+        - area_id: 0.0.0.100
+          filter_list:
+          - route_map: rmap_1
+            direction: in
+          - route_map: rmap_2
+            direction: out
+          ranges:
+          - prefix: 198.51.100.64/27
+            not_advertise: true
+          - prefix: 198.51.100.96/27
+            cost: 120
+        - area_id: 0.0.0.101
+          authentication:
+            message_digest: true
+        redistribute:
+        - protocol: eigrp
+          id: 120
+          route_map: rmap_1
+        - protocol: direct
+          route_map: ospf102-direct-connect
+        vrfs:
+        - vrf: zone1
+          router_id: 198.51.100.129
+          redistribute:
+          - protocol: static
+            route_map: zone1-static-connect
+          summary_address:
+          - prefix: 198.51.100.128/27
+            tag: 121
+          - prefix: 198.51.100.160/27
+          areas:
+          - area_id: 0.0.0.102
+            nssa:
+              default_information_originate: true
+              no_summary: true
+          - area_id: 0.0.0.103
+            nssa:
+              no_summary: true
+              translate:
+                type7:
+                  always: true
+        - vrf: zone2
+          auto_cost:
+            reference_bandwidth: 45
+            unit: Gbps
+    running_config: null
+    state: merged
+  nxos_ospfv3:
+    config:
+      processes:
+      - process_id: 100
+        router_id: 203.0.113.20
+      - process_id: 102
+        router_id: 198.51.100.1
+        address_family:
+          afi: ipv6
+          safi: unicast
+          areas:
+          - area_id: 0.0.0.100
+            filter_list:
+            - route_map: rmap_1
+              direction: in
+            - route_map: rmap_2
+              direction: out
+            ranges:
+            - prefix: 2001:db2::/32
+              not_advertise: true
+            - prefix: 2001:db3::/32
+              cost: 120
+          redistribute:
+          - protocol: eigrp
+            id: 120
+            route_map: rmap_1
+          - protocol: direct
+            route_map: ospf102-direct-connect
+        vrfs:
+        - vrf: zone1
+          router_id: 198.51.100.129
+          areas:
+          - area_id: 0.0.0.102
+            nssa:
+              default_information_originate: true
+              no_summary: true
+          - area_id: 0.0.0.103
+            nssa:
+              no_summary: true
+              translate:
+                type7:
+                  always: true
+        - vrf: zone2
+          auto_cost:
+            reference_bandwidth: 45
+            unit: Gbps
+    running_config: null
+    state: merged
+  nxos_ospf_interfaces:
+    config:
+    - name: Ethernet1/1
+      address_family:
+      - afi: ipv4
+        processes:
+        - process_id: '100'
+          area:
+            area_id: 1.1.1.1
+            secondaries: false
+        multi_areas:
+        - 11.11.11.11
+      - afi: ipv6
+        processes:
+        - process_id: '200'
+          area:
+            area_id: 2.2.2.2
+          multi_areas:
+          - 21.0.0.0
+        - process_id: '300'
+          multi_areas:
+          - 50.50.50.50
+        multi_areas:
+        - 16.10.10.10
+    - name: Ethernet1/2
+      address_family:
+      - afi: ipv4
+        authentication:
+          enable: true
+          key_chain: test-1
+        message_digest_key:
+          key_id: 10
+          encryption: 3
+          key: '{{ key_placeholder }}'
+        cost: 100
+      - afi: ipv6
+        network: broadcast
+        shutdown: true
+    - name: Ethernet1/3
+      address_family:
+      - afi: ipv4
+        authentication_key:
+          encryption: 7
+          key: '{{ key_placeholder }}'
+    running_config: null
+    state: merged
+  nxos_bfd_global:
+    echo_interface: Ethernet1/2
+    echo_rx_interval: 50
+    fabricpath_interval: null
+    fabricpath_slow_timer: null
+    fabricpath_vlan: null
+    interval:
+      tx: 50
+      min_rx: 50
+      multiplier: 4
+    ipv4_echo_rx_interval: null
+    ipv4_interval: null
+    ipv4_slow_timer: null
+    ipv6_echo_rx_interval: null
+    ipv6_interval: null
+    ipv6_slow_timer: null
+    slow_timer: null
+    startup_timer: null
+  nxos_bfd_interfaces:
+    config:
+    - bfd: null
+      echo: null
+      name: null
+    running_config: null
+    state: deleted
+  nxos_pim:
+    bfd: enable
+    ssm_range: 224.0.0.0/8
+  nxos_pim_rp_address:
+    bidir: null
+    group_list: null
+    prefix_list: null
+    route_map: null
+    rp_address: 10.1.1.20
+    state: present
+  nxos_pim_interface:
+    bfd: null
+    border: null
+    dr_prio: null
+    hello_auth_key: null
+    hello_interval: null
+    hello_interval_ms: null
+    interface: eth1/33
+    jp_policy_in: null
+    jp_policy_out: null
+    jp_type_in: null
+    jp_type_out: null
+    neighbor_policy: null
+    neighbor_type: null
+    sparse: null
+    state: absent
+  nxos_bgp_global:
+    config:
+      as_number: 65563
+      router_id: 192.168.1.1
+      bestpath:
+        as_path:
+          multipath_relax: true
+        compare_neighborid: true
+        cost_community_ignore: true
+      confederation:
+        identifier: 42
+        peers:
+        - 65020
+        - 65030
+        - 65040
+      log_neighbor_changes: true
+      maxas_limit: 20
+      neighbors:
+      - neighbor_address: 192.168.1.100
+        neighbor_affinity_group:
+          group_id: 160
+        bmp_activate_server: 1
+        remote_as: 65563
+        description: NBR-1
+        low_memory:
+          exempt: true
+      - neighbor_address: 192.168.1.101
+        remote_as: 65563
+        password:
+          encryption: 7
+          key: '{{ key_placeholder }}'
+      neighbor_down:
+        fib_accelerate: true
+      vrfs:
+      - vrf: site-1
+        allocate_index: 5000
+        local_as: 200
+        log_neighbor_changes: true
+        neighbors:
+        - neighbor_address: 198.51.100.1
+          description: site-1-nbr-1
+          password:
+            encryption: 3
+            key: '{{ key_placeholder }}'
+          remote_as: 65562
+        - neighbor_address: 198.51.100.2
+          remote_as: 65562
+          description: site-1-nbr-2
+      - vrf: site-2
+        local_as: 300
+        log_neighbor_changes: true
+        neighbors:
+        - neighbor_address: 203.0.113.2
+          description: site-2-nbr-1
+          password:
+            encryption: 3
+            key: '{{ key_placeholder }}'
+          remote_as: 65568
+        neighbor_down:
+          fib_accelerate: true
+    running_config: null
+    state: merged
+  nxos_bgp_templates:
+    config:
+      as_number: 65536
+      neighbor:
+      - name: neighbor_tmplt_1
+        address_family:
+        - afi: ipv4
+          safi: unicast
+          advertise_map:
+            route_map: rmap1
+            non_exist_map: nemap1
+          advertisement_interval: 60
+          disable_peer_as_check: true
+        bmp_activate_server: 2
+        capability:
+          suppress_4_byte_as: true
+        description: Test_BGP_PEER_TEMPLATE_1
+        local_as: 65536
+        remote_as: 65001
+      - name: neighbor_tmplt_2
+        description: Test_BGP_PEER_TEMPLATE_2
+        address_family:
+        - afi: ipv4
+          safi: multicast
+          advertise_map:
+            route_map: rmap1
+            exist_map: emap1
+          as_override: true
+          filter_list:
+            inbound: flist1
+            outbound: flist2
+        inherit:
+          peer_session: psession1
+        timers:
+          holdtime: 100
+          keepalive: 45
+    running_config: null
+    state: merged
+  nxos_nve_interface:
+    config:
+      enabled: true
+      description: vxlan vtep
+      advertise_virtual_rmac: true
+      host_reachability_bgp: true
+      source_interface_name: loopback1
+      source_interface_hold_time: 60
+      global_multicast_group:
+        address: 233.252.0.20
+        mode: L2
+      vnis:
+      - associate_vrf: true
+        vni_id: 11111
+      - associate_vrf: false
+        vni_id: 22222
+      - suppress_arp: true
+        vni_id: 33333
+      - vni_id: 44444
+        mcast_group:
+          address: 233.252.0.10
+    running_config: null
+    state: merged
+  nxos_vxlan_vtep:
+    advertise_virtual_rmac: null
+    description: default
+    global_ingress_replication_bgp: null
+    global_mcast_group_L2: null
+    global_mcast_group_L3: null
+    global_suppress_arp: null
+    host_reachability: true
+    interface: nve1
+    multisite_border_gateway_interface: Loopback0
+    shutdown: default
+    source_interface: Loopback0
+    source_interface_hold_down_time: 30
+    state: present
+  nxos_overlay_global:
+    anycast_gateway_mac: b.b.b
+  nxos_evpn_global:
+    nv_overlay_evpn: true
+  nxos_bgp_address_family:
+    config:
+      as_number: 65536
+      address_family:
+      - afi: ipv4
+        safi: multicast
+        networks:
+        - prefix: 192.0.2.32/27
+        - prefix: 192.0.2.64/27
+          route_map: rmap1
+        nexthop:
+          route_map: rmap2
+          trigger_delay:
+            critical_delay: 120
+            non_critical_delay: 180
+      - afi: ipv4
+        safi: unicast
+        vrf: site-1
+        default_information:
+          originate: true
+        aggregate_address:
+        - prefix: 203.0.113.0/24
+          as_set: true
+          summary_only: true
+      - afi: ipv6
+        safi: multicast
+        vrf: site-1
+        redistribute:
+        - protocol: ospfv3
+          id: 100
+          route_map: rmap-ospf-1
+        - protocol: eigrp
+          id: 101
+          route_map: rmap-eigrp-1
+    running_config: null
+    state: merged
+  nxos_bgp_neighbor_address_family:
+    config:
+      as_number: 65536
+      neighbors:
+      - neighbor_address: 192.0.2.32
+        address_family:
+        - afi: ipv4
+          safi: unicast
+          maximum_prefix:
+            max_prefix_limit: 20
+            generate_warning_threshold: 75
+          weight: 100
+          prefix_list:
+            inbound: rmap1
+            outbound: rmap2
+        - afi: ipv6
+          safi: unicast
+      - neighbor_address: 192.0.2.33
+        address_family:
+        - afi: ipv4
+          safi: multicast
+          inherit:
+            template: BasePolicy
+            sequence: 200
+      vrfs:
+      - vrf: site-1
+        neighbors:
+        - neighbor_address: 203.0.113.1
+          address_family:
+          - afi: ipv4
+            safi: unicast
+            suppress_inactive: true
+            next_hop_self:
+              set: true
+        - neighbor_address: 203.0.113.2
+          address_family:
+          - afi: ipv6
+            safi: unicast
+          - afi: ipv4
+            safi: multicast
+            send_community:
+              set: true
+    running_config: null
+    state: merged
+  nxos_evpn_vni:
+    route_distinguisher: 3610
+    route_target_both: default
+    route_target_export: auto
+    route_target_import:
+    - '5000:10'
+    - 4100:100
+    state: present
+    vni: 6000
+  nxos_evpn_vnis:
+    config:
+    - vni: 10100
+      route_target_both:
+      - auto
+    - vni: 10200
+      route_distinguisher: 65000:10200
+      route_target_import:
+      - 65000:10200
+      route_target_export:
+      - 65000:10200
+    running_config: null
+    state: merged
+  nxos_vxlan_vtep_vni:
+    assoc_vrf: null
+    ingress_replication: default
+    interface: nve1
+    multicast_group: null
+    multisite_ingress_replication: enable
+    peer_list: null
+    state: present
+    suppress_arp: null
+    suppress_arp_disable: null
+    vni: 6000
+  nxos_igmp:
+    enforce_rtr_alert: null
+    flush_routes: null
+    restart: null
+    state: default
+  nxos_igmp_interface:
+    group_timeout: null
+    immediate_leave: null
+    interface: ethernet1/32
+    last_member_qrt: null
+    last_member_query_count: null
+    oif_ps:
+    - prefix: 238.2.2.6
+    - source: 192.168.0.1
+      prefix: 238.2.2.5
+    oif_routemap: null
+    querier_timeout: null
+    query_interval: null
+    query_mrt: null
+    report_llg: null
+    restart: null
+    robustness: null
+    startup_query_count: null
+    startup_query_interval: 30
+    state: present
+    version: null
+  nxos_igmp_snooping:
+    config:
+      vxlan: true
+      v3_report_suppression: true
+      group_timeout: '300'
+      vlans:
+      - vlan_id: 100
+        static_groups:
+        - group: 233.252.0.10
+          interfaces:
+          - Eth1/10
+          - Po20
+        - group: 233.252.0.11
+          source: 192.0.2.10
+          interfaces:
+          - Ethernet1/10
+    running_config: null
+    state: merged
+  nxos_vrf_global:
+    config:
+      vrfs:
+      - ip:
+          name_server:
+            address_list:
+            - 192.168.255.1
+          route:
+          - destination: 192.168.255.1
+            source: 0.0.0.0/0
+        name: management
+      - name: temp
+        description: Test
+        ip:
+          auto_discard: true
+          domain_list:
+          - invalid.com
+          - example.com
+          domain_name: test.org
+    running_config: null
+    state: replaced
+  nxos_vrf:
+    admin_state: null
+    aggregate: null
+    associated_interfaces: null
+    delay: null
+    description: testing
+    interfaces: null
+    name: ntc
+    purge: null
+    rd: null
+    state: present
+    vni: null
+  nxos_vrf_af:
+    afi: ipv4
+    route_target_both_auto_evpn: true
+    route_targets: null
+    state: present
+    vrf: ntc
+  nxos_vrf_address_family:
+    config:
+    - name: VRF1
+      address_families:
+      - afi: ipv4
+        safi: unicast
+        route_target:
+        - export: 65512:200
+        maximum:
+          max_routes: 500
+          max_route_options:
+            threshold:
+              threshold_value: 60
+              reinstall_threshold: 80
+        export:
+        - map: '22'
+        - vrf:
+            allow_vpn: true
+            map_import: '44'
+        - vrf:
+            allow_vpn: true
+      - afi: ipv6
+        safi: unicast
+        maximum:
+          max_routes: 1000
+        route_target:
+        - import: 65512:200
+        import:
+        - map: '22'
+        - vrf:
+            advertise_vpn: true
+            map_import: '44'
+        - vrf:
+            advertise_vpn: true
+    running_config: null
+    state: merged
+  nxos_vrf_interface:
+    interface: Ethernet1/1
+    state: present
+    vrf: ntc
+  nxos_vrf_interfaces:
+    config:
+    - name: Ethernet1/1
+    - name: Ethernet1/2
+      vrf_name: test
+    - name: Ethernet1/3
+    - name:Ethernet1/4
+    running_config: null
+    state: merged
+  nxos_static_routes:
+    config:
+    - address_families:
+      - afi: null
+        routes:
+        - dest: null
+          next_hops: null
+      vrf: null
+    running_config: null
+    state: deleted
+  nxos_vlans:
+    config:
+    - vlan_id: 5
+      name: test-vlan5
+    - vlan_id: 10
+      enabled: false
+    running_config: null
+    state: merged
+  nxos_interfaces:
+    config:
+    - name: Ethernet1/1
+      description: Configured by Ansible
+      enabled: true
+    - name: Ethernet1/2
+      description: Configured by Ansible Network
+      enabled: false
+    running_config: null
+    state: merged
+  nxos_l2_interfaces:
+    config:
+    - name: Ethernet1/1
+      trunk:
+        native_vlan: 10
+        allowed_vlans: 2,4,15
+    - name: Ethernet1/2
+      access:
+        vlan: 30
+    running_config: null
+    state: merged
+  nxos_l3_interfaces:
+    config:
+    - name: Ethernet1/1
+      mac_address: 0011.2233.4455
+      ipv4:
+        verify:
+          unicast:
+            source:
+              reachable_via:
+                mode: any
+                allow_default: true
+        dhcp:
+          relay:
+            address:
+            - relay_ip: 11.0.0.1
+              vrf_name: abc
+    - name: Ethernet1/2
+      ipv6:
+        addresses:
+        - ipv6_address: 2001:db8::1/32
+          route_preference: 70
+          tag: 97
+        dhcp:
+          relay:
+            address:
+            - relay_ip: 2001:db8::1:abcd
+    running_config: null
+    state: merged
+  nxos_lacp:
+    config:
+      system:
+        priority: 10
+        mac:
+          address: 00c1.4c00.bd15
+    running_config: null
+    state: merged
+  nxos_lag_interfaces:
+    config:
+    - name: port-channel99
+      members:
+      - member: Ethernet1/4
+    running_config: null
+    state: merged
+  nxos_lacp_interfaces:
+    config:
+    - name: Ethernet1/3
+      port_priority: 5
+      rate: fast
+    running_config: null
+    state: merged
+  nxos_vpc:
+    config:
+      domain: '10'
+      role_priority: '150'
+      system_priority: '2000'
+      pkl_dest: 192.168.2.2
+      pkl_src: 192.168.2.1
+      pkl_vrf: management
+      peer_gw: true
+      auto_recovery: true
+      delay_restore: '150'
+    running_config: null
+    state: merged
+  nxos_vpc_interface:
+    config:
+    - name: port-channel10
+      vpc: 100
+    - name: port-channel20
+      peer_link: true
+    - name: Ethernet1/3
+      orphan_port_suspend: true
+    running_config: null
+    state: merged
+  nxos_lldp_interfaces:
+    config:
+    - name: Ethernet1/4
+      receive: false
+      transmit: true
+      tlv_set:
+        management_address: 192.168.122.64
+      vlan: 12
+    running_config: null
+    state: merged
+  nxos_udld:
+    aggressive: disabled
+    msg_time: 20
+    reset: null
+    state: present
+  nxos_udld_interface:
+    interface: Ethernet1/1
+    mode: aggressive
+    state: present
+  nxos_prefix_lists:
+    config:
+    - afi: ipv4
+      prefix_lists:
+      - name: AllowPrefix
+        description: allows engineering IPv4 networks
+        entries:
+        - sequence: 10
+          action: permit
+          prefix: 192.0.2.0/23
+          eq: 24
+        - sequence: 20
+          action: permit
+          prefix: 198.51.100.128/26
+      - name: DenyPrefix
+        description: denies lab IPv4 networks
+        entries:
+        - sequence: 20
+          action: deny
+          prefix: 203.0.113.0/24
+          le: 25
+    - afi: ipv6
+      prefix_lists:
+      - name: AllowIPv6Prefix
+        description: allows engineering IPv6 networks
+        entries:
+        - sequence: 8
+          action: permit
+          prefix: 2001:db8:400::/38
+        - sequence: 20
+          action: permit
+          prefix: 2001:db8:8000::/35
+          le: 37
+    running_config: null
+    state: merged
+  nxos_route_maps:
+    config:
+    - route_map: rmap1
+      entries:
+      - sequence: 10
+        action: permit
+        description: rmap1-10-permit
+        match:
+          ip:
+            address:
+              access_list: acl_1
+          as_path: Allow40
+          as_number:
+            asn: 65564
+      - sequence: 20
+        action: deny
+        description: rmap1-20-deny
+        match:
+          community:
+            community_list:
+            - BGPCommunity1
+            - BGPCommunity2
+          ip:
+            address:
+              prefix_lists:
+              - AllowPrefix1
+              - AllowPrefix2
+        set:
+          dampening:
+            half_life: 30
+            start_reuse_route: 1500
+            start_suppress_route: 10000
+            max_suppress_time: 120
+    - route_map: rmap2
+      entries:
+      - sequence: 20
+        action: permit
+        description: rmap2-20-permit
+        continue_sequence: 40
+        match:
+          ipv6:
+            address:
+              prefix_lists: AllowIPv6Prefix
+          interfaces: '{{ nxos_int1 }}'
+        set:
+          as_path:
+            prepend:
+              as_number:
+              - 65563
+              - 65568
+              - 65569
+          comm_list: BGPCommunity
+      - sequence: 40
+        action: deny
+        description: rmap2-40-deny
+        match:
+          route_types:
+          - level-1
+          - level-2
+          tags: 2
+          ip:
+            multicast:
+              rp:
+                prefix: 192.0.2.0/24
+                rp_type: ASM
+              source: 203.0.113.0/24
+              group_range:
+                first: 239.0.0.1
+                last: 239.255.255.255
+    - route_map: rmap3
+      entries:
+      - sequence: 10
+        description: '*** first stanza ***'
+        action: permit
+        set:
+          ip:
+            next_hop:
+              verify_availability:
+              - address: 3.3.3.3
+                track: 1
+              - address: 4.4.4.4
+                track: 3
+      - sequence: 20
+        description: '*** second stanza ***'
+        action: permit
+        set:
+          ip:
+            next_hop:
+              address: 6.6.6.6 2.2.2.2
+              load_share: true
+              drop_on_fail: true
+      - sequence: 30
+        description: '*** third stanza ***'
+        action: permit
+        set:
+          ip:
+            next_hop:
+              peer_address: true
+      - sequence: 40
+        description: '*** fourth stanza ***'
+        action: permit
+        set:
+          ip:
+            next_hop:
+              unchanged: true
+              redist_unchanged: true
+    running_config: null
+    state: merged
+  nxos_acls:
+    config:
+    - afi: ipv4
+      acls:
+      - name: ACL1v4
+        aces:
+        - grant: deny
+          destination:
+            address: 192.0.2.64
+            wildcard_bits: 0.0.0.255
+          source:
+            any: true
+            port_protocol:
+              lt: 55
+          protocol: tcp
+          protocol_options:
+            tcp:
+              ack: true
+              fin: true
+          sequence: 50
+    - afi: ipv6
+      acls:
+      - name: ACL1v6
+        aces:
+        - grant: permit
+          sequence: 10
+          source:
+            any: true
+          destination:
+            prefix: 2001:db8:12::/32
+          protocol: sctp
+    running_config: null
+    state: merged
+  nxos_acl_interfaces:
+    config:
+    - name: Ethernet1/2
+      access_groups:
+      - afi: ipv6
+        acls:
+        - name: ACL1v6
+          direction: in
+    - name: Eth1/5
+      access_groups:
+      - afi: ipv4
+        acls:
+        - name: PortACL
+          direction: in
+          port: true
+        - name: ACL1v4
+          direction: out
+      - afi: ipv6
+        acls:
+        - name: ACL1v6
+          direction: in
+    running_config: null
+    state: merged
+  nxos_facts:
+    available_network_resources: null
+    gather_network_resources: null
+    gather_subset: all
+  nxos_command:
+    commands: show version
+    interval: null
+    match: null
+    retries: null
+    wait_for: null
+  nxos_config:
+    after: null
+    backup: null
+    backup_options: null
+    before: null
+    content: null
+    defaults: null
+    diff_against: null
+    diff_ignore_lines: null
+    intended_config: null
+    lines: hostname {{ inventory_hostname }}
+    match: null
+    parents: null
+    replace: null
+    replace_src: null
+    running_config: null
+    save_when: modified
+    src: null
+  nxos_ping:
+    count: null
+    dest: 8.8.8.8
+    df_bit: null
+    size: null
+    source: null
+    state: present
+    vrf: management
+  nxos_snapshot:
+    action: create
+    compare_option: null
+    comparison_results_file: null
+    description: Done with Ansible
+    element_key1: null
+    element_key2: null
+    path: /home/user/snapshots/
+    row_id: null
+    save_snapshot_locally: true
+    section: null
+    show_command: null
+    snapshot1: null
+    snapshot2: null
+    snapshot_name: test_snapshot
+  nxos_rollback:
+    checkpoint_file: backup.cfg
+    rollback_to: null
+  nxos_telemetry:
+    config:
+      certificate:
+        hostname: null
+        key: null
+      compression: null
+      destination_groups:
+      - destination:
+          encoding: null
+          ip: null
+          port: null
+          protocol: null
+        id: null
+      sensor_groups:
+      - data_source: null
+        id: null
+        path:
+          depth: null
+          filter_condition: null
+          name: null
+          query_condition: null
+      source_interface: null
+      subscriptions:
+      - destination_group: null
+        id: null
+        sensor_group:
+          id: null
+          sample_interval: null
+      vrf: null
+    state: deleted
+dcnm_modules:
+  dcnm_fabric:
+    config:
+    - FABRIC_NAME: VXLAN_Fabric
+      FABRIC_TYPE: VXLAN_EVPN
+      BGP_AS: 65000
+    - FABRIC_NAME: BGP_Fabric
+      FABRIC_TYPE: BGP
+      BGP_AS: 65001
+    - FABRIC_NAME: MSD_Fabric
+      FABRIC_TYPE: VXLAN_EVPN_MSD
+    - FABRIC_NAME: LAN_Fabric
+      FABRIC_TYPE: LAN_CLASSIC
+    - FABRIC_NAME: External_Fabric
+      FABRIC_TYPE: External
+      BGP_AS: 65003
+    skip_validation: null
+    state: merged
+  dcnm_inventory:
+    config:
+    - seed_ip: 192.168.0.1
+      auth_proto: MD5
+      user_name: switch_username
+      password: '{{ password_placeholder }}'
+      max_hops: 0
+      role: spine
+      preserve_config: false
+    - seed_ip: 192.168.0.2
+      auth_proto: MD5
+      user_name: switch_username
+      password: '{{ password_placeholder }}'
+      max_hops: 0
+      role: leaf
+      preserve_config: false
+    deploy: null
+    fabric: vxlan-fabric
+    query_poap: null
+    save: null
+    state: merged
+  dcnm_resource_manager:
+    config:
+    - entity_name: l3_vni_fabric
+      pool_type: ID
+      pool_name: L3_VNI
+      scope_type: fabric
+      resource: '101'
+    - entity_name: 9M99N34RDED~9NXHSNTEO6C
+      pool_type: ID
+      pool_name: VPC_ID
+      scope_type: device_pair
+      switch:
+      - 192.175.1.1
+      - 192.175.1.2
+      resource: '500'
+    - entity_name: mmudigon-2
+      pool_type: IP
+      pool_name: LOOPBACK0_IP_POOL
+      scope_type: fabric
+      resource: 110.1.1.1
+    - entity_name: 9M99N34RDED~Ethernet1/10
+      pool_type: IP
+      pool_name: LOOPBACK1_IP_POOL
+      scope_type: device_interface
+      switch:
+      - 192.175.1.1
+      resource: fe:80::04
+    - entity_name: 9M99N34RDED~Ethernet1/3~9NXHSNTEO6C~Ethernet1/3
+      pool_type: SUBNET
+      pool_name: SUBNET
+      scope_type: link
+      switch:
+      - 192.175.1.1
+      resource: fe:80:05::05/64
+    fabric: test_fabric
+    state: merged
+  dcnm_links:
+    config:
+    - dst_fabric: ansible_num_fabric
+      src_interface: Ethernet1/1
+      dst_interface: Ethernet1/1
+      src_device: 193.168.1.1
+      dst_device: 193.168.1.2
+      template: int_intra_fabric_num_link
+      profile:
+        peer1_ipv4_addr: 192.168.1.1
+        peer2_ipv4_addr: 192.168.1.2
+        admin_state: true
+        mtu: 9216
+        peer1_description: Description of source
+        peer2_description: Description of dest
+        peer1_bfd_echo_disable: false
+        peer2_bfd_echo_disable: false
+        enable_macsec: false
+        peer1_cmds:
+        - no shutdown
+        peer2_cmds:
+        - no shutdown
+    - dst_fabric: ansible_num_fabric
+      src_interface: Ethernet1/2
+      dst_interface: Ethernet1/2
+      src_device: 193.168.1.1
+      dst_device: 193.168.1.2
+      template: int_pre_provision_intra_fabric_link
+    - dst_fabric: ansible_num_fabric
+      src_interface: Ethernet1/3
+      dst_interface: Ethernet1/3
+      src_device: 193.168.1.1
+      dst_device: 193.168.1.2
+      template: ios_xe_int_intra_fabric_num_link
+      profile:
+        peer1_ipv4_addr: 192.169.2.1
+        peer2_ipv4_addr: 192.169.2.2
+        peer1_ipv6_addr: fe80:01::01
+        peer2_ipv6_addr: fe80:01::02
+        admin_state: true
+        mtu: 1500
+        peer1_description: Description of source
+        peer2_description: Description of dest
+        peer1_bfd_echo_disable: false
+        peer2_bfd_echo_disable: false
+        enable_macsec: false
+        peer1_cmds:
+        - no shutdown
+        peer2_cmds:
+        - no shutdown
+    deploy: null
+    src_fabric: ansible_num_fabric
+    state: merged
+  dcnm_vrf:
+    config:
+    - vrf_name: ansible-vrf-r1
+      vrf_id: 9008011
+      vrf_template: Default_VRF_Universal
+      vrf_extension_template: Default_VRF_Extension_Universal
+      vlan_id: 2000
+      attach:
+      - ip_address: 192.168.1.224
+      - ip_address: 192.168.1.225
+    - vrf_name: ansible-vrf-r2
+      vrf_id: 9008012
+      vrf_template: Default_VRF_Universal
+      vrf_extension_template: Default_VRF_Extension_Universal
+      attach:
+      - ip_address: 192.168.1.224
+      - ip_address: 192.168.1.225
+    deploy_mode: null
+    fabric: vxlan-fabric
+    fabric_details: null
+    state: merged
+  dcnm_network:
+    _fabric_details: null
+    config:
+    - net_name: ansible-net13
+      vrf_name: Tenant-1
+      net_id: 7005
+      net_template: Default_Network_Universal
+      net_extension_template: Default_Network_Extension_Universal
+      vlan_id: 150
+      gw_ip_subnet: 192.168.30.1/24
+      attach:
+      - ip_address: 192.168.1.224
+        ports:
+        - Ethernet1/13
+        - Ethernet1/14
+      - ip_address: 192.168.1.225
+        ports:
+        - Ethernet1/13
+        - Ethernet1/14
+      deploy: true
+    - net_name: ansible-net12
+      vrf_name: Tenant-2
+      net_id: 7002
+      net_template: Default_Network_Universal
+      net_extension_template: Default_Network_Extension_Universal
+      vlan_id: 151
+      gw_ip_subnet: 192.168.40.1/24
+      attach:
+      - ip_address: 192.168.1.224
+        ports:
+        - Ethernet1/11
+        - Ethernet1/12
+        tor_ports:
+        - ip_address: 192.168.1.120
+          ports:
+          - Ethernet1/14
+          - Ethernet1/15
+      - ip_address: 192.168.1.225
+        ports:
+        - Ethernet1/11
+        - Ethernet1/12
+      deploy: false
+    deploy_mode: null
+    fabric: vxlan-fabric
+    patch_version: null
+    state: merged
+  dcnm_vpc_pair:
+    config:
+    - peerOneId: 192.168.1.1
+      peerTwoId: 192.168.1.2
+      templateName: vpc_pair
+      profile:
+        ADMIN_STATE: true
+        ALLOWED_VLANS: all
+        DOMAIN_ID: 100
+        FABRIC_NAME: test-fabric
+        KEEP_ALIVE_HOLD_TIMEOUT: 3
+        KEEP_ALIVE_VRF: management
+        PC_MODE: active
+        PEER1_DOMAIN_CONF: graceful consistency-check
+        PEER1_KEEP_ALIVE_LOCAL_IP: 192.168.1.1
+        PEER1_MEMBER_INTERFACES: e1/21,e1/22-23
+        PEER1_PCID: 101
+        PEER1_PO_CONF: buffer-boost
+        PEER1_PO_DESC: This is peer1 PC
+        PEER2_DOMAIN_CONF: graceful consistency-check
+        PEER2_KEEP_ALIVE_LOCAL_IP: 192.168.1.2
+        PEER2_MEMBER_INTERFACES: e1/21,e1/22-23
+        PEER2_PCID: 102
+        PEER2_PO_CONF: buffer-boost
+        PEER2_PO_DESC: This is peer2 PC
+    deploy: true
+    src_fabric: test-fabric
+    state: merged
+    templates: null
+  dcnm_interface:
+    check_deploy: null
+    config:
+    - name: lo100
+      type: lo
+      switch:
+      - 192.172.1.1
+      deploy: true
+      profile:
+        admin_state: true
+        mode: lo
+        int_vrf: ''
+        ipv4_addr: 192.169.10.1
+        ipv6_addr: fd01::0201
+        route_tag: ''
+        cmds:
+        - no shutdown
+        description: loopback interface 100 configuration
+    deploy: null
+    fabric: mmudigon-fabric
+    override_intf_types: null
+    state: merged
+  dcnm_template:
+    config:
+    - name: template_101
+      description: Template_101
+      tags: internal policy 101
+      content: |
+        telemetry
+          certificate /bootflash/telegraf.crt telegraf
+          destination-profile
+            use-vrf management
+          destination-group 101
+            ip address 10.195.225.176 port 57101 protocol gRPC encoding GPB
+          sensor-group 101
+            data-source DME
+            path sys/ch depth unbounded
+          subscription 101
+            dst-grp 101
+            snsr-grp 101 sample-interval 10101
+    - name: template_102
+      description: Template_102
+      tags: internal policy 102
+      content: |
+        telemetry
+          certificate /bootflash/telegraf.crt telegraf
+          destination-profile
+            use-vrf management
+          destination-group 1
+            ip address 10.195.225.102 port 57102 protocol gRPC encoding GPB
+          sensor-group 102
+            data-source DME
+            path sys/ch depth unbounded
+          subscription 102
+            dst-grp 102
+            snsr-grp 102 sample-interval 10102
+    state: merged
+  dcnm_policy:
+    config:
+    - name: template_101
+      create_additional_policy: false
+      priority: 101
+    - name: template_102
+      create_additional_policy: false
+      description: 102 - No piority given
+    - name: template_103
+      create_additional_policy: false
+      description: Both description and priority given
+      priority: 500
+    - switch:
+      - ip: '{{ ansible_switch1 }}'
+        policies:
+        - name: template_104
+          create_additional_policy: false
+        - name: template_105
+          create_additional_policy: false
+      - ip: '{{ ansible_switch2 }}'
+    deploy: true
+    fabric: '{{ ansible_it_fabric }}'
+    state: merged
+    use_desc_as_key: null
+  dcnm_maintenance_mode:
+    config:
+      deploy: true
+      wait_for_mode_change: true
+      mode: maintenance
+      switches:
+      - ip_address: 192.168.1.2
+      - ip_address: 192.160.1.3
+      - ip_address: 192.160.1.4
+    state: merged
+  dcnm_image_upload:
+    files:
+    - path: full/path/to/image1
+      source: scp
+      remote_server: 192.168.1.1
+      username: image_upload
+      password: '{{ password_placeholder }}'
+    - path: full/path/to/image2
+      source: local
+    - path: full/path/to/image3
+      source: sftp
+      remote_server: 192.168.1.1
+      username: image_upload
+      password: '{{ password_placeholder }}'
+    state: merged
+  dcnm_image_policy:
+    config:
+    - name: KR5M
+    - name: NR3F
+    state: deleted
+  dcnm_image_upgrade:
+    config:
+      policy: NR3F
+      stage: true
+      validate: true
+      upgrade:
+        nxos: false
+        epld: false
+      switches:
+      - ip_address: 192.168.1.1
+      - ip_address: 192.168.1.2
+    state: merged
+  dcnm_bootflash:
+    config:
+      targets:
+      - filepath: bootflash:/foo.txt
+        supervisor: active
+      - filepath: bootflash:/bar.txt
+        supervisor: standby
+      switches:
+      - ip_address: 192.168.1.1
+      - ip_address: 192.168.1.2
+      - ip_address: 192.168.1.3
+    state: deleted
+  dcnm_rest:
+    data: null
+    method: GET
+    path: /rest/control/fabrics
+    urlencoded_data: null
+  dcnm_fabric_group:
+    config:
+    - FABRIC_NAME: MCFG
+    skip_validation: null
+    state: merged
+  dcnm_service_node:
+    config:
+    - name: SN-11
+      type: firewall
+      form_factor: virtual
+      svc_int_name: svc1
+      attach_interface: Ethernet1/1
+      switches:
+      - 192.168.1.224
+    - name: SN-12
+      type: firewall
+      form_factor: virtual
+      svc_int_name: svc1
+      attach_interface: vPC1
+      switches:
+      - 192.168.1.224
+      - 192.168.1.225
+    fabric: Fabric1
+    service_fabric: external
+    state: merged
+  dcnm_service_route_peering:
+    attach: true
+    config:
+    - name: IT-FW-RP1
+      node_name: IT-SN-1
+      deploy_mode: intra_tenant_fw
+      inside_network:
+        vrf: IT-VRF-11
+        name: rp1-sn1-inside-net
+        vlan_id: 101
+        profile:
+          ipv4_gw: 192.161.1.1/24
+          ipv6_gw: 2001:db01::1/64
+          vlan_name: rp1-sn1-inside
+          int_descr: RP1 SN1 inside interface
+          tag: 11111
+      next_hop: 192.161.1.100
+      outside_network:
+        vrf: IT-VRF-11
+        name: rp1-sn1-outside-net
+        vlan_id: 102
+        profile:
+          ipv4_gw: 192.161.2.1/24
+          ipv6_gw: 2001:db02::1/64
+          vlan_name: rp1-sn1-outside
+          int_descr: RP1 SN1 outside interface
+          tag: 11112
+      reverse_next_hop: 192.161.2.100
+    deploy: true
+    fabric: test-fabric
+    service_fabric: external
+    state: merged
+  dcnm_service_policy:
+    attach: true
+    config:
+    - name: service_policy_1
+      node_name: it-sn-1
+      rp_name: it-fw-rp1
+      src_vrf: vrf_11
+      dest_vrf: vrf_11
+      src_network: net_11
+      dest_network: net_12
+      next_hop: 192.161.1.100
+      reverse_next_hop: 192.161.2.100
+      reverse: true
+      policy:
+        proto: tcp
+        src_port: any
+        dest_port: 22
+        action: permit
+        next_hop_option: none
+        acl_name: fwd_acl_10
+        rev_acl_name: rev_acl_10
+        route_map_num: 101
+        rev_route_map_num: 102
+    deploy: true
+    fabric: test_fabric
+    service_fabric: external
+    state: merged
+  dcnm_log:
+    msg: dcnm_vrf.merged - Create VRF myVrf
+    severity: INFO

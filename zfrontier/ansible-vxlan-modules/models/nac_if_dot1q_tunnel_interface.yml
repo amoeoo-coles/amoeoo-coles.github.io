@@ -1,0 +1,183 @@
+---
+# Data model for vxlan.topology.switches (Dot1q Ethernet Port).
+# Values come from the documented example on the reference page, then the
+# documented default. Anything else is null (not set / not collected).
+# Secret-like fields are placeholders. schema_reference lists every documented attribute.
+references:
+  doc_url: https://netascode.cisco.com/docs/data_models/vxlan/topology/interface/dot1q_tunnel_interface/
+  collection: cisco.nac_dc_vxlan
+  collection_version: 0.9.1
+  kind: data model section
+  role: cisco.nac_dc_vxlan.validate (schema check), cisco.nac_dc_vxlan.dtc.create / dtc.deploy (apply)
+  schema_path: vxlan.topology.switches
+  schema_source: netascode.cisco.com VXLAN data model page 'Dot1q Ethernet Port' (schema-generated tables), fetched
+    26 Nov 2026; the docs site is not version-pinned
+  classes_documented: 4
+  attributes_documented: 25
+vxlan:
+  topology:
+    switches:
+    - name: dc1-leaf1
+      interfaces:
+      - name: e1/11
+        mode: dot1q
+        description: Dot1q Interface 1
+        mtu: null
+        speed: auto
+        enabled: true
+        enable_cdp: null
+        access_vlan: 1
+        spanning_tree_portfast: null
+        enable_bpdu_guard: null
+        duplex: null
+        orphan_port: null
+        freeform_config: null
+        fec: rs-cons16
+        enable_storm_control: true
+        storm_control_action: shutdown
+        storm_control_broadcast_level_percent: 10.0
+        storm_control_broadcast_level_pps: null
+        storm_control_multicast_level_percent: null
+        storm_control_multicast_level_pps: null
+        storm_control_unicast_level_percent: null
+        storm_control_unicast_level_pps: null
+schema_reference:
+- class: vxlan
+  path: vxlan
+  attributes:
+  - name: topology
+    type: Class
+    constraint: topology
+    mandatory: 'No'
+    default: null
+- class: topology
+  path: vxlan.topology
+  attributes:
+  - name: switches
+    type: List
+    constraint: switches
+    mandatory: 'No'
+    default: null
+- class: switches
+  path: vxlan.topology.switches
+  attributes:
+  - name: interfaces
+    type: List
+    constraint: Any[Class[[topology_switch_access_interface]] or Class[[topology_switch_trunk_interface]] or Class[[topology_switch_access_po_interface]]
+      or Class[[topology_switch_trunk_po_interface]] or Class[[topology_switch_routed_interface]] or Class[[topology_switch_routed_sub_interface]]
+      or Class[[topology_switch_routed_po_interface]] or Class[[topology_switch_loopback_interface]] or Class[topology_switch_dot1q_host_interface]]
+    mandatory: 'No'
+    default: null
+- class: topology_switch_dot1q_host_interface
+  path: vxlan.topology.switches.interfaces.topology_switch_dot1q_host_interface
+  attributes:
+  - name: name
+    type: String
+    constraint: 'Regex: ^(?:e|eth(?:ernet)?)\d(?:\/\d+){1,2}$'
+    mandatory: 'Yes'
+    default: null
+  - name: mode
+    type: Choice
+    constraint: dot1q
+    mandatory: 'Yes'
+    default: null
+  - name: description
+    type: String
+    constraint: 'max: 256'
+    mandatory: 'No'
+    default: null
+  - name: mtu
+    type: Any
+    constraint: 'Integer[min: 1500, max: 9216] or Choice[default, jumbo]'
+    mandatory: 'No'
+    default: null
+  - name: speed
+    type: String
+    constraint: 'Regex: (?i)^(auto|100mb|1gb|10gb|25gb|40gb|100gb|200gb|400gb|800gb)$'
+    mandatory: 'No'
+    default: null
+  - name: enabled
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: enable_cdp
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: access_vlan
+    type: Integer
+    constraint: 'min: 1, max: 4094'
+    mandatory: 'No'
+    default: null
+  - name: spanning_tree_portfast
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: enable_bpdu_guard
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: duplex
+    type: Choice
+    constraint: auto, full, half
+    mandatory: 'No'
+    default: null
+  - name: orphan_port
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: freeform_config
+    type: String
+    constraint: null
+    mandatory: 'No'
+    default: null
+  - name: fec
+    type: Choice
+    constraint: auto, fc-fec, off, rs-cons16, rs-fec, rs-ieee
+    mandatory: 'No'
+    default: null
+  - name: enable_storm_control
+    type: Boolean
+    constraint: true, false
+    mandatory: 'No'
+    default: null
+  - name: storm_control_action
+    type: Choice
+    constraint: shutdown, trap, default
+    mandatory: 'No'
+    default: null
+  - name: storm_control_broadcast_level_percent
+    type: Number
+    constraint: 'min: 0.0, max: 100.0'
+    mandatory: 'No'
+    default: null
+  - name: storm_control_broadcast_level_pps
+    type: Integer
+    constraint: 'min: 0, max: 200000000'
+    mandatory: 'No'
+    default: null
+  - name: storm_control_multicast_level_percent
+    type: Number
+    constraint: 'min: 0.0, max: 100.0'
+    mandatory: 'No'
+    default: null
+  - name: storm_control_multicast_level_pps
+    type: Integer
+    constraint: 'min: 0, max: 200000000'
+    mandatory: 'No'
+    default: null
+  - name: storm_control_unicast_level_percent
+    type: Number
+    constraint: 'min: 0.0, max: 100.0'
+    mandatory: 'No'
+    default: null
+  - name: storm_control_unicast_level_pps
+    type: Integer
+    constraint: 'min: 0, max: 200000000'
+    mandatory: 'No'
+    default: null

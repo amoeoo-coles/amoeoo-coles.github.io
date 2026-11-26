@@ -1,0 +1,22 @@
+---
+# Sample playbook 110 for role cisco.nac_dc_vxlan.dtc.remove
+# Build order: 110 of 129 (8. Deploy, Day 2 and operations)
+# Reads ../models/role_dtc_remove.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://github.com/netascode/ansible-dc-vxlan/tree/main/roles/dtc/remove
+
+- name: "110 role_dtc_remove (cisco.nac_dc_vxlan.dtc.remove)"
+  hosts: ndfc
+  any_errors_fatal: true
+  gather_facts: false
+  vars_files:
+    - ../models/role_dtc_remove.yml
+  pre_tasks:
+    - name: Apply the role control variables from the model
+      ansible.builtin.set_fact:
+        "{{ item.key }}": "{{ item.value }}"
+      loop: "{{ role_variables | default({}) | dict2items }}"
+      loop_control:
+        label: "{{ item.key }}"
+  roles:
+    - role: cisco.nac_dc_vxlan.dtc.remove

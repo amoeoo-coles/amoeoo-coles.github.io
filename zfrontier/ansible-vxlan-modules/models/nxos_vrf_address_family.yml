@@ -1,0 +1,50 @@
+---
+# Model for cisco.nxos.nxos_vrf_address_family. Options are only those documented by the module.
+# Values come from the module EXAMPLES; null means omit (module default).
+# Secret-like options are placeholders. Do not commit real credentials.
+references:
+  doc_url: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_vrf_address_family_module.html
+  collection: cisco.nxos
+  collection_version: 14.0.0
+  kind: module
+  module: cisco.nxos.nxos_vrf_address_family
+  schema_path: plugins/modules/nxos_vrf_address_family.py DOCUMENTATION.options
+  example_source: module EXAMPLES (first task)
+  options_documented: 3
+  deprecated: false
+nxos_vrf_address_family:
+  config:
+  - name: VRF1
+    address_families:
+    - afi: ipv4
+      safi: unicast
+      route_target:
+      - export: 65512:200
+      maximum:
+        max_routes: 500
+        max_route_options:
+          threshold:
+            threshold_value: 60
+            reinstall_threshold: 80
+      export:
+      - map: '22'
+      - vrf:
+          allow_vpn: true
+          map_import: '44'
+      - vrf:
+          allow_vpn: true
+    - afi: ipv6
+      safi: unicast
+      maximum:
+        max_routes: 1000
+      route_target:
+      - import: 65512:200
+      import:
+      - map: '22'
+      - vrf:
+          advertise_vpn: true
+          map_import: '44'
+      - vrf:
+          advertise_vpn: true
+  running_config: null
+  state: merged

@@ -1,0 +1,21 @@
+---
+# Sample playbook 082 for cisco.nxos.nxos_lacp
+# Build order: 082 of 129 (6. Interfaces and access)
+# Reads ../models/nxos_lacp.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_lacp_module.html
+
+- name: "082 nxos_lacp"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_lacp.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_lacp with the non-null model parameters
+      cisco.nxos.nxos_lacp: "{{ nxos_lacp | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_lacp_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_lacp_result
+        verbosity: 1

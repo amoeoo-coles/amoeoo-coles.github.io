@@ -1,0 +1,21 @@
+---
+# Sample playbook 065 for cisco.dcnm.dcnm_network
+# Build order: 065 of 129 (5. Networks)
+# Reads ../models/dcnm_network.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://github.com/CiscoDevNet/ansible-dcnm/blob/main/docs/cisco.dcnm.dcnm_network_module.rst
+
+- name: "065 dcnm_network"
+  hosts: ndfc
+  gather_facts: false
+  vars_files:
+    - ../models/dcnm_network.yml
+  tasks:
+    - name: Run cisco.dcnm.dcnm_network with the non-null model parameters
+      cisco.dcnm.dcnm_network: "{{ dcnm_network | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: dcnm_network_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: dcnm_network_result
+        verbosity: 1

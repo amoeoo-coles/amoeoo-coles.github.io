@@ -1,0 +1,21 @@
+---
+# Sample playbook 048 for cisco.nxos.nxos_evpn_vni
+# Build order: 048 of 129 (3. Overlay (NVE, EVPN, VNIs))
+# Reads ../models/nxos_evpn_vni.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_evpn_vni_module.html
+
+- name: "048 nxos_evpn_vni"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_evpn_vni.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_evpn_vni with the non-null model parameters
+      cisco.nxos.nxos_evpn_vni: "{{ nxos_evpn_vni | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_evpn_vni_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_evpn_vni_result
+        verbosity: 1

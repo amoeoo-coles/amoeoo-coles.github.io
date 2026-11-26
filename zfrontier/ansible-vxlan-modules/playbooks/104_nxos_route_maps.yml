@@ -1,0 +1,21 @@
+---
+# Sample playbook 104 for cisco.nxos.nxos_route_maps
+# Build order: 104 of 129 (7. Policies and route control)
+# Reads ../models/nxos_route_maps.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_route_maps_module.html
+
+- name: "104 nxos_route_maps"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_route_maps.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_route_maps with the non-null model parameters
+      cisco.nxos.nxos_route_maps: "{{ nxos_route_maps | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_route_maps_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_route_maps_result
+        verbosity: 1

@@ -1,0 +1,21 @@
+---
+# Sample playbook 102 for cisco.dcnm.dcnm_policy
+# Build order: 102 of 129 (7. Policies and route control)
+# Reads ../models/dcnm_policy.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://github.com/CiscoDevNet/ansible-dcnm/blob/main/docs/cisco.dcnm.dcnm_policy_module.rst
+
+- name: "102 dcnm_policy"
+  hosts: ndfc
+  gather_facts: false
+  vars_files:
+    - ../models/dcnm_policy.yml
+  tasks:
+    - name: Run cisco.dcnm.dcnm_policy with the non-null model parameters
+      cisco.dcnm.dcnm_policy: "{{ dcnm_policy | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: dcnm_policy_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: dcnm_policy_result
+        verbosity: 1

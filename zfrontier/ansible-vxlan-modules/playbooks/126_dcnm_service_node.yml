@@ -1,0 +1,21 @@
+---
+# Sample playbook 126 for cisco.dcnm.dcnm_service_node
+# Build order: 126 of 129 (9. Multi-site, services and other)
+# Reads ../models/dcnm_service_node.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://github.com/CiscoDevNet/ansible-dcnm/blob/main/docs/cisco.dcnm.dcnm_service_node_module.rst
+
+- name: "126 dcnm_service_node"
+  hosts: ndfc
+  gather_facts: false
+  vars_files:
+    - ../models/dcnm_service_node.yml
+  tasks:
+    - name: Run cisco.dcnm.dcnm_service_node with the non-null model parameters
+      cisco.dcnm.dcnm_service_node: "{{ dcnm_service_node | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: dcnm_service_node_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: dcnm_service_node_result
+        verbosity: 1

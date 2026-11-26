@@ -1,0 +1,21 @@
+---
+# Sample playbook 078 for cisco.dcnm.dcnm_interface
+# Build order: 078 of 129 (6. Interfaces and access)
+# Reads ../models/dcnm_interface.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://github.com/CiscoDevNet/ansible-dcnm/blob/main/docs/cisco.dcnm.dcnm_interface_module.rst
+
+- name: "078 dcnm_interface"
+  hosts: ndfc
+  gather_facts: false
+  vars_files:
+    - ../models/dcnm_interface.yml
+  tasks:
+    - name: Run cisco.dcnm.dcnm_interface with the non-null model parameters
+      cisco.dcnm.dcnm_interface: "{{ dcnm_interface | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: dcnm_interface_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: dcnm_interface_result
+        verbosity: 1

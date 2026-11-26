@@ -1,0 +1,21 @@
+---
+# Sample playbook 041 for cisco.nxos.nxos_bgp_templates
+# Build order: 041 of 129 (2. Underlay)
+# Reads ../models/nxos_bgp_templates.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_bgp_templates_module.html
+
+- name: "041 nxos_bgp_templates"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_bgp_templates.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_bgp_templates with the non-null model parameters
+      cisco.nxos.nxos_bgp_templates: "{{ nxos_bgp_templates | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_bgp_templates_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_bgp_templates_result
+        verbosity: 1

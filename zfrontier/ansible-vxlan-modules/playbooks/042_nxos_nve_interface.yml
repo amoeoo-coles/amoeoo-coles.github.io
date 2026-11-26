@@ -1,0 +1,21 @@
+---
+# Sample playbook 042 for cisco.nxos.nxos_nve_interface
+# Build order: 042 of 129 (3. Overlay (NVE, EVPN, VNIs))
+# Reads ../models/nxos_nve_interface.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_nve_interface_module.html
+
+- name: "042 nxos_nve_interface"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_nve_interface.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_nve_interface with the non-null model parameters
+      cisco.nxos.nxos_nve_interface: "{{ nxos_nve_interface | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_nve_interface_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_nve_interface_result
+        verbosity: 1

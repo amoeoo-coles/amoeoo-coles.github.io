@@ -1,0 +1,21 @@
+---
+# Sample playbook 038 for cisco.nxos.nxos_pim_rp_address
+# Build order: 038 of 129 (2. Underlay)
+# Reads ../models/nxos_pim_rp_address.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_pim_rp_address_module.html
+
+- name: "038 nxos_pim_rp_address"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_pim_rp_address.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_pim_rp_address with the non-null model parameters
+      cisco.nxos.nxos_pim_rp_address: "{{ nxos_pim_rp_address | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_pim_rp_address_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_pim_rp_address_result
+        verbosity: 1

@@ -1,0 +1,21 @@
+---
+# Sample playbook 010 for cisco.dcnm.dcnm_inventory
+# Build order: 010 of 129 (1. Fabric, global settings and switch inventory)
+# Reads ../models/dcnm_inventory.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://github.com/CiscoDevNet/ansible-dcnm/blob/main/docs/cisco.dcnm.dcnm_inventory_module.rst
+
+- name: "010 dcnm_inventory"
+  hosts: ndfc
+  gather_facts: false
+  vars_files:
+    - ../models/dcnm_inventory.yml
+  tasks:
+    - name: Run cisco.dcnm.dcnm_inventory with the non-null model parameters
+      cisco.dcnm.dcnm_inventory: "{{ dcnm_inventory | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: dcnm_inventory_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: dcnm_inventory_result
+        verbosity: 1

@@ -1,0 +1,21 @@
+---
+# Sample playbook 111 for cisco.dcnm.dcnm_maintenance_mode
+# Build order: 111 of 129 (8. Deploy, Day 2 and operations)
+# Reads ../models/dcnm_maintenance_mode.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://github.com/CiscoDevNet/ansible-dcnm/blob/main/docs/cisco.dcnm.dcnm_maintenance_mode_module.rst
+
+- name: "111 dcnm_maintenance_mode"
+  hosts: ndfc
+  gather_facts: false
+  vars_files:
+    - ../models/dcnm_maintenance_mode.yml
+  tasks:
+    - name: Run cisco.dcnm.dcnm_maintenance_mode with the non-null model parameters
+      cisco.dcnm.dcnm_maintenance_mode: "{{ dcnm_maintenance_mode | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: dcnm_maintenance_mode_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: dcnm_maintenance_mode_result
+        verbosity: 1

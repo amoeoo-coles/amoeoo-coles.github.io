@@ -1,0 +1,21 @@
+---
+# Sample playbook 116 for cisco.dcnm.dcnm_rest
+# Build order: 116 of 129 (8. Deploy, Day 2 and operations)
+# Reads ../models/dcnm_rest.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://github.com/CiscoDevNet/ansible-dcnm/blob/main/docs/cisco.dcnm.dcnm_rest_module.rst
+
+- name: "116 dcnm_rest"
+  hosts: ndfc
+  gather_facts: false
+  vars_files:
+    - ../models/dcnm_rest.yml
+  tasks:
+    - name: Run cisco.dcnm.dcnm_rest with the non-null model parameters
+      cisco.dcnm.dcnm_rest: "{{ dcnm_rest | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: dcnm_rest_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: dcnm_rest_result
+        verbosity: 1

@@ -1,0 +1,21 @@
+---
+# Sample playbook 037 for cisco.nxos.nxos_pim
+# Build order: 037 of 129 (2. Underlay)
+# Reads ../models/nxos_pim.yml with vars_files. Credentials come from the inventory
+# placeholders {{ nxos_host }} {{ ansible_user }} {{ ansible_password }} (and {{ nd_host }} for Nexus Dashboard).
+# Reference: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_pim_module.html
+
+- name: "037 nxos_pim"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_pim.yml
+  tasks:
+    - name: Run cisco.nxos.nxos_pim with the non-null model parameters
+      cisco.nxos.nxos_pim: "{{ nxos_pim | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      register: nxos_pim_result
+
+    - name: Show the result
+      ansible.builtin.debug:
+        var: nxos_pim_result
+        verbosity: 1
