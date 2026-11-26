@@ -16,6 +16,5 @@ Groups (build order):
 - 7. SD-Access: 47
 - 8. Wireless: 32
 - 9. Application policy: 6
-- 10. Other: 0
 
 Credentials are placeholders only. Do not commit real passwords or tokens.
