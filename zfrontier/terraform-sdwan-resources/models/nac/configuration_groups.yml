@@ -1,0 +1,20 @@
+# Data model structure for sdwan.configuration_groups (netascode nac-sdwan, nac/schema.yaml @ 5c49bbf).
+# Each value is the yamale rule; _fields expands include() two levels deep.
+
+sdwan_configuration_groups:
+  configuration_groups:
+    _rule: list(include("configuration_group"), required=False, primary_key="name")
+    _fields:
+      name: regex('^[^&<>! \"]{1,128}$')
+      description: str(required=False)
+      cli_profile: regex('^[^&<>! \"]{1,128}$', required=False)
+      device_tags:
+        _rule: list(include("configuration_group_device_tag"), min=2, max=2, required=False, primary_key="name")
+        _fields:
+          name: regex('^[^&<>! \"]{1,128}$')
+          features: list(regex('^[^&<>! \"]{1,128}$'), required=False)
+      other_profile: regex('^[^&<>! \"]{1,128}$', required=False)
+      policy_object_profile: regex('^[^&<>! \"]{1,128}$', required=False)
+      service_profile: regex('^[^&<>! \"]{1,128}$', required=False)
+      system_profile: regex('^[^&<>! \"]{1,128}$')
+      transport_profile: regex('^[^&<>! \"]{1,128}$')

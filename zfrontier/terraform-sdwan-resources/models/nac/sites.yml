@@ -1,0 +1,27 @@
+# Data model structure for sdwan.sites (netascode nac-sdwan, nac/schema.yaml @ 5c49bbf).
+# Each value is the yamale rule; _fields expands include() two levels deep.
+
+sdwan_sites:
+  sites:
+    _rule: list(include("sites"), required=False, primary_key="id")
+    _fields:
+      id: int(min=1, max=4294967295)
+      routers:
+        _rule: list(include("edge_router"), primary_key="chassis_id")
+        _fields:
+          chassis_id: str()
+          management_ip_variable: regex('^[^"~`$&+,]{1,255}$', required=False)
+          certificate_validity: enum("invalid", "staging", "valid", required=False)
+          configuration_group: regex('^[^<>!&" ]{1,128}$', required=False)
+          configuration_group_deploy: bool(required=False)
+          policy_group: regex('^[^<>!&" ]{1,128}$', required=False)
+          policy_group_deploy: bool(required=False)
+          tags: list(regex('^[^<>!&" ]{1,128}$'), required=False)
+          topology_label: str(required=False)
+          model: enum("ASR-1001-HX", "ASR-1001-X", "ASR-1002-HX", "ASR-1002-X", "ASR-1006-X", "C1101-4P",
+            "C1101-4PLTEP", "C1101-4PLTEPW", "C1109-2PLTEGB", "C1109-2PLTEUS", "C1109-2PLTEVZ", "C1109-4PLTE2P",
+            "C1109-4PL
+          device_template: regex('^[^<>!&" ]{1,128}$', required=False)
+          device_variables: map(key=str(), required=False)
+          policy_variables: map(key=str(), required=False)
+          cor_saas_variables: include("edge_router_cor_saas_variables", required=False)

@@ -1,0 +1,30 @@
+# Data model structure for sdwan.centralized_policies (netascode nac-sdwan, nac/schema.yaml @ 5c49bbf).
+# Each value is the yamale rule; _fields expands include() two levels deep.
+
+sdwan_centralized_policies:
+  centralized_policies:
+    _rule: include("centralized_policies", required=False)
+    _fields:
+      definitions:
+        _rule: include("centralized_policy_definitions", required=False)
+        _fields:
+          control_policy: include("centralized_policy_control", required=False)
+          data_policy: include("centralized_policy_data", required=False)
+      feature_policies:
+        _rule: list(include("centralized_policy_policies"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9\-_]{1,127}$')
+          description: str()
+          hub_and_spoke_topology: list(include("centralized_policy_policies_hubandspoke_entries"), required=False,
+            primary_key="policy_definition")
+          mesh_topology: list(include("centralized_policy_policies_mesh_entries"), required=False, primary_key="policy_definition")
+          custom_control_topology: list(include("centralized_policy_policies_customcontrol_entries"),
+            required=False, primary_key="policy_definition")
+          vpn_membership: list(include("centralized_policy_policies_vpn_membership_entries"), required=False,
+            primary_key="policy_definition")
+          application_aware_routing: list(include("centralized_policy_application_aware_routing_entries"),
+            required=False, primary_key="policy_definition")
+          traffic_data: list(include("centralized_policy_policies_traffic_data_entries"), required=False,
+            primary_key="policy_definition")
+          cflowd: list(include("centralized_policy_policies_cflowd_entries"), required=False, primary_key="policy_definition")
+      activated_policy: str(required=False)

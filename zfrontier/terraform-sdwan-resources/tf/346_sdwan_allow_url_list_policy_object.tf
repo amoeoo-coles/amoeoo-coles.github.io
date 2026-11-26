@@ -1,0 +1,13 @@
+# 346 · resource sdwan_allow_url_list_policy_object · 10. (Classic) policy objects
+# This resource can manage a Allow URL List Policy Object .
+# Reads models/sdwan_allow_url_list_policy_object.yml with yamldecode(file(...)). Provider block: ../providers.tf
+# Provider CiscoDevNet/sdwan 0.12.0. Credentials come from variables only.
+
+locals {
+  m_346 = yamldecode(file("${path.module}/../models/sdwan_allow_url_list_policy_object.yml"))["sdwan_allow_url_list_policy_object"]
+}
+
+resource "sdwan_allow_url_list_policy_object" "n346" {
+  entries = local.m_346["entries"]
+  name    = local.m_346["name"]
+}

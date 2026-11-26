@@ -1,0 +1,26 @@
+# Data model structure for sdwan.application_catalog (netascode nac-sdwan, nac/schema.yaml @ 5c49bbf).
+# Each value is the yamale rule; _fields expands include() two levels deep.
+
+sdwan_application_catalog:
+  application_catalog:
+    _rule: include("application_catalog", required=False)
+    _fields:
+      custom_applications:
+        _rule: list(include("application_catalog_custom_application"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          application_family: enum("instant-messaging", "game", "mail", "routing", "database", "web",
+            "behavioral", "audio-video", "file-server", "network-service", "middleware", "authentication",
+            "erp", "printer", "tunneling", "t
+          application_group: enum("adp-group", "amazon-group", "aol-group", "apple-group", "apple-talk-group",
+            "atlassian-group", "banyan-group", "bittorrent-group", "box-group", "capwap-group", "cisco-jabber-group",
+            "cisco-phone
+          business_relevance: enum("Bronze", "Gold", "Silver", required=False)
+          endpoint_type: enum("ip", "fqdn", "url", required=False)
+          endpoint_value: any(ip(version=4), regex('^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,63}\.?$'),
+            regex('^(https?://)([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(/.*)?$
+          l3l4: list(include("application_catalog_custom_application_l3l4"), required=False)
+          server_names: list(regex('^(\*?[^*,\s]+)$'), required=False)
+          traffic_class: enum("multimedia-conferencing", "network-control", "signaling", "voip-telephony",
+            "ops-admin-mgmt", "multimedia-streaming", "real-time-interactive", "bulk-data", "transactional-data",
+            "broadcast-video

@@ -1,0 +1,37 @@
+# Data model structure for sdwan.network_hierarchy (netascode nac-sdwan, nac/schema.yaml @ 5c49bbf).
+# Each value is the yamale rule; _fields expands include() two levels deep.
+
+sdwan_network_hierarchy:
+  network_hierarchy:
+    _rule: include("network_hierarchy", required=False)
+    _fields:
+      collectors:
+        _rule: include("network_hierarchy_collector", required=False)
+        _fields:
+          cflowd: include("network_hierarchy_collector_cflowd", required=False)
+          security_logging: include("network_hierarchy_collector_security_logging", required=False)
+      groups:
+        _rule: list(include("network_hierarchy_group_l0"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[^&<>! \"]{1,128}$')
+          description: str(required=False)
+          groups: list(include("network_hierarchy_group_l1"), required=False, primary_key="name")
+          regions: list(include("network_hierarchy_region_l1"), required=False, primary_key="name")
+          sites: list(include("network_hierarchy_site"), required=False, primary_key="name")
+      regions:
+        _rule: list(include("network_hierarchy_region_l0"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[^&<>! \"]{1,128}$')
+          description: str(required=False)
+          groups: list(include("network_hierarchy_group_l1"), required=False, primary_key="name")
+          sites: list(include("network_hierarchy_site"), required=False, primary_key="name")
+      sites:
+        _rule: list(include("network_hierarchy_site"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[^&<>! \"]{1,128}$')
+          description: str(required=False)
+          address: include("network_hierarchy_site_address", required=False)
+          latitude: num(required=False)
+          location: str(required=False)
+          longitude: num(required=False)
+          site_id: int(min=1, max=4294967295, required=False)

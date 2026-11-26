@@ -1,0 +1,81 @@
+# Data model structure for sdwan.edge_device_templates (netascode nac-sdwan, nac/schema.yaml @ 5c49bbf).
+# Each value is the yamale rule; _fields expands include() two levels deep.
+
+sdwan_edge_device_templates:
+  edge_device_templates:
+    _rule: list(include("edge_device_templates"), required=False, primary_key="name")
+    _fields:
+      name: regex('^[^<>!&" ]{1,128}$')
+      description: str()
+      device_model: enum("ASR-1001-HX", "ASR-1001-X", "ASR-1002-HX", "ASR-1002-X", "ASR-1006-X", "C1101-4P",
+        "C1101-4PLTEP", "C1101-4PLTEPW", "C1109-2PLTEGB", "C1109-2PLTEUS", "C1109-2PLTEVZ", "C1109-4PLTE2P",
+        "C1109-4PL
+      system_template: regex('^[^<>!&" ]{1,128}$')
+      logging_template: regex('^[^<>!&" ]{1,128}$')
+      ntp_template: regex('^[^<>!&" ]{1,128}$', required=False)
+      aaa_template: regex('^[^<>!&" ]{1,128}$', required=False)
+      bfd_template: regex('^[^<>!&" ]{1,128}$')
+      omp_template: regex('^[^<>!&" ]{1,128}$')
+      security_template: regex('^[^<>!&" ]{1,128}$')
+      vpn_0_template:
+        _rule: include("edge_device_templates_vpn_0")
+        _fields:
+          name: regex('^[^<>!&" ]{1,128}$')
+          bgp_template: regex('^[^<>!&" ]{1,128}$', required=False)
+          ethernet_interface_templates: list(include("edge_device_templates_vpn_0_ethernet_interface"),
+            required=False, primary_key="name")
+          ipsec_interface_templates: list(include("edge_device_templates_vpn_0_interface_ipsec"), required=False,
+            primary_key="name")
+          svi_interface_templates: list(include("edge_device_templates_vpn_0_interface_svi"), required=False,
+            primary_key="name")
+          gre_interface_templates: list(include("edge_device_templates_vpn_0_interface_gre"), required=False,
+            primary_key="name")
+          cellular_interface_templates: list(include("edge_device_templates_vpn_0_interface_cellular"),
+            max=4, required=False, primary_key="name")
+          ospf_template: regex('^[^<>!&" ]{1,128}$', required=False)
+          secure_internet_gateway_template: regex('^[^<>!&" ]{1,128}$', required=False)
+          sig_credentials_template: regex('^[^<>!&" ]{1,128}$', required=False)
+      vpn_512_template:
+        _rule: include("edge_device_templates_vpn_512")
+        _fields:
+          name: regex('^[^<>!&" ]{1,128}$')
+          ethernet_interface_templates: list(include("edge_device_templates_vpn_512_ethernet_interface"),
+            required=False, primary_key="name")
+          svi_interface_templates: list(include("edge_device_templates_vpn_512_interface_svi"), required=False,
+            primary_key="name")
+      vpn_service_templates:
+        _rule: list(include("edge_device_templates_vpn_service"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[^<>!&" ]{1,128}$')
+          bgp_template: regex('^[^<>!&" ]{1,128}$', required=False)
+          ethernet_interface_templates: list(include("edge_device_templates_vpn_service_ethernet_interface"),
+            required=False, primary_key="name")
+          igmp_template: regex('^[^<>!&" ]{1,128}$', required=False)
+          ipsec_interface_templates: list(include("edge_device_templates_vpn_service_interface_ipsec"),
+            required=False, primary_key="name")
+          multicast_template: regex('^[^<>!&" ]{1,128}$', required=False)
+          ospf_template: regex('^[^<>!&" ]{1,128}$', required=False)
+          pim_template: regex('^[^<>!&" ]{1,128}$', required=False)
+          svi_interface_templates: list(include("edge_device_templates_vpn_service_interface_svi"), required=False,
+            primary_key="name")
+      cellular_controller_templates:
+        _rule: list(include("edge_device_templates_cellular_controller"), max=2, required=False, primary_key="name")
+        _fields:
+          name: regex('^[^<>!&" ]{1,128}$')
+          cellular_profile_templates: list(include("edge_device_templates_cellular_controller_cellular_profile"),
+            required=False, primary_key="name")
+      global_settings_template: regex('^[^<>!&" ]{1,128}$')
+      banner_template: regex('^[^<>!&" ]{1,128}$', required=False)
+      snmp_template: regex('^[^<>!&" ]{1,128}$', required=False)
+      cli_template: regex('^[^<>!&" ]{1,128}$', required=False)
+      localized_policy: regex('^[^<>!&" ]{1,128}$', required=False)
+      security_policy:
+        _rule: include("edge_device_templates_security_policy", required=False)
+        _fields:
+          name: regex('^[^<>!&" ]{1,128}$')
+          container_profile: regex('^[^<>!&" ]{1,128}$', required=False)
+      switchport_templates:
+        _rule: list(include("edge_device_templates_switchport"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[^<>!&" ]{1,128}$')
+      thousandeyes_template: regex('^[^<>!&" ]{1,128}$', required=False)

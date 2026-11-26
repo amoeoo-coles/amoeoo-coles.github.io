@@ -1,0 +1,58 @@
+# 155 · resource sdwan_system_remote_access_feature · 5. Features: system
+# This resource can manage a System Remote Access Feature. Minimum SD-WAN Manager version: 20.15.0
+# Reads models/sdwan_system_remote_access_feature.yml with yamldecode(file(...)). Provider block: ../providers.tf
+# Provider CiscoDevNet/sdwan 0.12.0. Credentials come from variables only.
+
+locals {
+  m_155 = yamldecode(file("${path.module}/../models/sdwan_system_remote_access_feature.yml"))["sdwan_system_remote_access_feature"]
+}
+
+resource "sdwan_system_remote_access_feature" "n155" {
+  aaa_derive_name_from_peer_domain             = local.m_155["aaa_derive_name_from_peer_domain"]
+  aaa_derive_name_from_peer_domain_variable    = local.m_155["aaa_derive_name_from_peer_domain_variable"]
+  aaa_derive_name_from_peer_identity           = local.m_155["aaa_derive_name_from_peer_identity"]
+  aaa_derive_name_from_peer_identity_variable  = local.m_155["aaa_derive_name_from_peer_identity_variable"]
+  aaa_enable_accounting                        = local.m_155["aaa_enable_accounting"]
+  aaa_enable_accounting_variable               = local.m_155["aaa_enable_accounting_variable"]
+  aaa_specify_name_policy_name                 = local.m_155["aaa_specify_name_policy_name"]
+  aaa_specify_name_policy_name_variable        = local.m_155["aaa_specify_name_policy_name_variable"]
+  aaa_specify_name_policy_password             = local.m_155["aaa_specify_name_policy_password"]
+  aaa_specify_name_policy_password_variable    = local.m_155["aaa_specify_name_policy_password_variable"]
+  aaa_specify_name_policy_password_wo          = local.m_155["aaa_specify_name_policy_password_wo"]
+  aaa_specify_name_policy_password_wo_version  = local.m_155["aaa_specify_name_policy_password_wo_version"]
+  any_connect_eap_authentication_type          = local.m_155["any_connect_eap_authentication_type"]
+  connection_type_ssl                          = local.m_155["connection_type_ssl"]
+  description                                  = local.m_155["description"]
+  enable_certificate_list_check                = local.m_155["enable_certificate_list_check"]
+  enable_certificate_list_check_variable       = local.m_155["enable_certificate_list_check_variable"]
+  feature_profile_id                           = local.m_155["feature_profile_id"]
+  ikev2_anti_dos_threshold                     = local.m_155["ikev2_anti_dos_threshold"]
+  ikev2_anti_dos_threshold_variable            = local.m_155["ikev2_anti_dos_threshold_variable"]
+  ikev2_local_ike_identity_type                = local.m_155["ikev2_local_ike_identity_type"]
+  ikev2_local_ike_identity_type_variable       = local.m_155["ikev2_local_ike_identity_type_variable"]
+  ikev2_local_ike_identity_value               = local.m_155["ikev2_local_ike_identity_value"]
+  ikev2_local_ike_identity_value_variable      = local.m_155["ikev2_local_ike_identity_value_variable"]
+  ikev2_security_association_lifetime          = local.m_155["ikev2_security_association_lifetime"]
+  ikev2_security_association_lifetime_variable = local.m_155["ikev2_security_association_lifetime_variable"]
+  ipsec_anti_replay_window_size                = local.m_155["ipsec_anti_replay_window_size"]
+  ipsec_anti_replay_window_size_variable       = local.m_155["ipsec_anti_replay_window_size_variable"]
+  ipsec_enable_anti_replay                     = local.m_155["ipsec_enable_anti_replay"]
+  ipsec_enable_anti_replay_variable            = local.m_155["ipsec_enable_anti_replay_variable"]
+  ipsec_enable_perfect_foward_secrecy          = local.m_155["ipsec_enable_perfect_foward_secrecy"]
+  ipsec_enable_perfect_foward_secrecy_variable = local.m_155["ipsec_enable_perfect_foward_secrecy_variable"]
+  ipsec_security_association_lifetime          = local.m_155["ipsec_security_association_lifetime"]
+  ipsec_security_association_lifetime_variable = local.m_155["ipsec_security_association_lifetime_variable"]
+  ipv4_pool_size                               = local.m_155["ipv4_pool_size"]
+  ipv4_pool_size_variable                      = local.m_155["ipv4_pool_size_variable"]
+  ipv6_pool_size                               = local.m_155["ipv6_pool_size"]
+  ipv6_pool_size_variable                      = local.m_155["ipv6_pool_size_variable"]
+  name                                         = local.m_155["name"]
+  psk_authentication_pre_shared_key            = local.m_155["psk_authentication_pre_shared_key"]
+  psk_authentication_pre_shared_key_variable   = local.m_155["psk_authentication_pre_shared_key_variable"]
+  psk_authentication_pre_shared_key_wo         = local.m_155["psk_authentication_pre_shared_key_wo"]
+  psk_authentication_pre_shared_key_wo_version = local.m_155["psk_authentication_pre_shared_key_wo_version"]
+  psk_authentication_type                      = local.m_155["psk_authentication_type"]
+  psk_authentication_type_variable             = local.m_155["psk_authentication_type_variable"]
+  radius_group_name                            = local.m_155["radius_group_name"]
+  radius_group_name_variable                   = local.m_155["radius_group_name_variable"]
+}

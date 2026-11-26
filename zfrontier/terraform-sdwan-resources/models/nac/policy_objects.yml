@@ -1,0 +1,165 @@
+# Data model structure for sdwan.policy_objects (netascode nac-sdwan, nac/schema.yaml @ 5c49bbf).
+# Each value is the yamale rule; _fields expands include() two levels deep.
+
+sdwan_policy_objects:
+  policy_objects:
+    _rule: include("policy_objects", required=False)
+    _fields:
+      app_probe_classes:
+        _rule: list(include("policy_objects_app_probe_class"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          forwarding_class: regex('^[^<>!&$@\\\/"() ]{1,128}$')
+          mappings: list(include("policy_objects_app_probe_class_mapping"), primary_key="color")
+      application_lists:
+        _rule: list(include("policy_objects_application_list"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          applications: list(str(), required=False)
+          application_families: list(enum("application-service", "audio-video", "authentication", "behavioral",
+            "database", "encrypted", "erp", "file-server", "file-transfer", "forum", "game", "instant-messaging",
+            "mail", "microsoft
+      as_path_lists:
+        _rule: list(include("policy_objects_as_path_list"), required=False, primary_key="name")
+        _fields:
+          name: regex('^(?:[1-9]|[1-9][0-9]|[1-4][0-9][0-9]|500)$')
+          as_paths: list(str())
+      class_maps:
+        _rule: list(include("policy_objects_class_map"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          queue: int(min=0, max=7)
+      color_lists:
+        _rule: list(include("policy_objects_color_list"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          colors: list(enum("default", "mpls", "metro-ethernet", "biz-internet", "public-internet", "lte",
+            "3g", "red", "green", "blue", "gold", "silver", "bronze", "custom1", "custom2", "custom3",
+            "private1", "private
+      expanded_community_lists:
+        _rule: list(include("policy_objects_expanded_community_list"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          expanded_communities: list(regex('^[0-9]{1,5}(:)[0-9]{1,5}$'))
+      extended_community_lists:
+        _rule: list(include("policy_objects_extended_community_list"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          extended_communities: list(regex('(soo|rt).*$'))
+      ipv4_data_prefix_lists:
+        _rule: list(include("policy_objects_ipv4_data_prefix_list"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          prefixes: list(ip(version=4))
+      ipv4_prefix_lists:
+        _rule: list(include("policy_objects_ipv4_prefix_list"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          entries: list(include("policy_objects_ipv4_prefix_list_entry"))
+      ipv6_data_prefix_lists:
+        _rule: list(include("policy_objects_ipv6_data_prefix_list"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          prefixes: list(ip(version=6))
+      ipv6_prefix_lists:
+        _rule: list(include("policy_objects_ipv6_prefix_list"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          entries: list(include("policy_objects_ipv6_prefix_list_entry"))
+      mirror_lists:
+        _rule: list(include("policy_objects_mirror_list"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          remote_destination_ip: ip(version=4)
+          source_ip: ip(version=4)
+      policers:
+        _rule: list(include("policy_objects_policer"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          burst_bytes: int(min=15000, max=10000000)
+          exceed_action: enum("drop", "remark")
+          rate_bps: int(min=8, max=100000000000)
+      port_lists:
+        _rule: list(include("policy_objects_port_list"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9\-_]{1,32}$')
+          ports: list(any(int(min=0, max=65535), regex(r'^(6553[0-5]|655[0-2][0-9]|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[1-9][0-9]{0,3}|0)-(6553[0-5]|655[0-2][0-9]|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|
+      preferred_color_groups:
+        _rule: list(include("policy_objects_preferred_color_group"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          primary_colors: list(enum("default", "mpls", "metro-ethernet", "biz-internet", "public-internet",
+            "lte", "3g", "red", "green", "blue", "gold", "silver", "bronze", "custom1", "custom2", "custom3",
+            "private1", "private
+          primary_path: enum("direct-path", "multi-hop-path", "all-paths", required=False)
+          secondary_colors: list(enum("default", "mpls", "metro-ethernet", "biz-internet", "public-internet",
+            "lte", "3g", "red", "green", "blue", "gold", "silver", "bronze", "custom1", "custom2", "custom3",
+            "private1", "private
+          secondary_path: enum("direct-path", "multi-hop-path", "all-paths", required=False)
+          tertiary_colors: list(enum("default", "mpls", "metro-ethernet", "biz-internet", "public-internet",
+            "lte", "3g", "red", "green", "blue", "gold", "silver", "bronze", "custom1", "custom2", "custom3",
+            "private1", "private
+          tertiary_path: enum("direct-path", "multi-hop-path", "all-paths", required=False)
+      region_lists:
+        _rule: list(include("policy_objects_region_list"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          region_ids: list(int(min=0, max=63), required=False)
+          region_id_ranges: list(include('policy_objects_region_list_region_id_range'), required=False,
+            primary_key='from,to')
+      site_lists:
+        _rule: list(include("policy_objects_site_list"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          site_ids: list(any(int(min=1, max=4294967295), regex('^0*[0-9][0-9]{0,9}$')), required=False)
+          site_id_ranges: list(include('policy_objects_site_list_site_id_range'), required=False, primary_key='from,to')
+      sla_classes:
+        _rule: list(include("policy_objects_sla_class"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          jitter_ms: int(min=1, max=1000, required=False)
+          latency_ms: int(min=1, max=1000, required=False)
+          loss_percentage: int(min=1, max=100, required=False)
+          app_probe_class: regex('^[^<>!&$@\\\/"() ]{1,128}$', required=False)
+          fallback_best_tunnel_criteria: enum("loss", "latency", "jitter", "loss-latency", "loss-jitter",
+            "latency-loss", "latency-jitter", "jitter-latency", "jitter-loss", "loss-latency-jitter",
+            "loss-jitter-latency", "latency-loss-jitter",
+          fallback_best_tunnel_jitter: int(min=1, max=1000, required=False)
+          fallback_best_tunnel_latency: int(min=1, max=1000, required=False)
+          fallback_best_tunnel_loss: int(min=1, max=100, required=False)
+      standard_community_lists:
+        _rule: list(include("policy_objects_standard_community_list"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          standard_communities: list(any(enum("internet", "local-AS", "no-advertise", "no-export"), regex('^(0|[1-9]\\d{0,3}|[1-5]\\d{4}|6[0-4]\\d{3}|65[0-4]\\d{2}|655[0-2]\\d|6553[0-5]):(0|[1-9]\\d{0,3}|[1-5]\\d{4}|6[0-4]\\d{3}|65[
+      tloc_lists:
+        _rule: list(include("policy_objects_tloc_list"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          tlocs: list(include("policy_list_tloc_list_tloc"), primary_key="tloc_ip,color,encapsulation")
+      vpn_lists:
+        _rule: list(include("policy_objects_vpn_list"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          vpn_ids: list(any(int(min=0, max=65530), regex('^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|65530)$')),
+            required=False)
+          vpn_id_ranges: list(include('policy_objects_vpn_list_vpn_id_range'), required=False, primary_key='from,to')
+      zones:
+        _rule: list(include("policy_objects_zone"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9\-_]{1,32}$')
+          vpn_ids: list(int(min=0, max=65530), required=False)
+          interfaces: list(regex('^(Ethernet|FastEthernet|FiveGigabitEthernet|FortyGigabitEthernet|GigabitEthernet|HundredGigE|Loopback|TenGigabitEthernet|Tunnel|TwentyFiveGigabitEthernet|TwentyFiveGigE|TwoGigabitEthernet|
+      fqdn_lists:
+        _rule: list(include("policy_objects_fqdn_list"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9\-_]{1,32}$')
+          fqdns: list(regex('^(?=.{1,120}$)((\*|[a-zA-Z0-9-]{1,63})\.)+([a-zA-Z0-9-]{2,63})$'), max=64)
+      local_application_lists:
+        _rule: list(include("policy_objects_local_application_list"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9\-_]{1,32}$')
+          applications: list(str(), required=False)
+          application_families: list(enum("application-service", "audio-video", "authentication", "behavioral",
+            "database", "encrypted", "erp", "file-server", "file-transfer", "forum", "game", "instant-messaging",
+            "mail", "microsoft

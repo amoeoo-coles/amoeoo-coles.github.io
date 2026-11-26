@@ -1,0 +1,24 @@
+# Data model structure for sdwan.security_policies (netascode nac-sdwan, nac/schema.yaml @ 5c49bbf).
+# Each value is the yamale rule; _fields expands include() two levels deep.
+
+sdwan_security_policies:
+  security_policies:
+    _rule: include("security_policies", required=False)
+    _fields:
+      definitions:
+        _rule: include("security_policy_definitions", required=False)
+        _fields:
+          zone_based_firewall: list(include("security_policy_zone_based_firewall"), required=False)
+          intrusion_prevention: list(include("security_policy_intrusion_prevention"), required=False)
+      feature_policies:
+        _rule: list(include("security_policy_feature_policies"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9\-_]{1,32}$')
+          description: str()
+          mode: enum("security", "unified", required=False)
+          use_case: enum("custom")
+          firewall_policies: list(regex('^[A-Za-z0-9\-_]{1,32}$'), required=False)
+          intrusion_prevention_policy: regex('^[A-Za-z0-9\-_]{1,32}$', required=False)
+          unified_firewall_policies: list(include("security_policy_feature_policies_unified_firewall_policies"),
+            required=False, primary_key="firewall_policy")
+          additional_settings: include("security_policy_feature_policies_additional_settings", required=False)

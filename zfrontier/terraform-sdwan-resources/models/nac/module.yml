@@ -1,0 +1,120 @@
+# netascode terraform-sdwan-nac-sdwan: inputs, outputs and data model sections
+# Source: README terraform-docs tables and nac/schema.yaml at commit 5c49bbf.
+
+nac_sdwan_module:
+  module: netascode/nac-sdwan/sdwan
+  repository: https://github.com/netascode/terraform-sdwan-nac-sdwan
+  commit: 5c49bbf6f2dc38b26bb446de96317ae914f10194
+  provider_requirement: CiscoDevNet/sdwan ~> 0.12.0 (main); v1.5.1 pins ~> 0.11.7
+  inputs:
+    - name: handover_sites
+      description: IDs of the sites whose routers this state hands over to another state. Their routers
+        leave the configuration and policy group device resources without being released from their groups
+        (retain_devices), so they stay associated and deployed. Set it in the change that moves the sites
+        to another state, and clear it in the next change.
+      type: list(number)
+      default: '[]'
+      required: 'no'
+    - name: local_set
+      description: Key of this state's entry in ownership.local_definitions, for a site/region state (manage_global
+        = false). The state manages the routers of the entry's sites and the groups, feature profiles
+        and policy objects the entry claims.
+      type: string
+      default: 'null'
+      required: 'no'
+    - name: manage_global
+      description: 'Manage everything that no entry of ownership claims: settings, network hierarchy,
+        custom applications, the policy object profile and its objects, feature profiles and their features,
+        configuration and policy groups, tags, topology, scopes and classic (feature and device templates,
+        their attachments and classic policies), and deploy every router that belongs to no entry. true
+        for a single state and'
+      type: bool
+      default: 'true'
+      required: 'no'
+    - name: model
+      description: As an alternative to YAML files, a native Terraform data structure can be provided
+        as well.
+      type: map(any)
+      default: '{}'
+      required: 'no'
+    - name: ownership
+      description: Which site/region state manages what, for a deployment split across several states
+        that load the same data. Pass the same value to every state (e.g. yamldecode(file("../ownership.yaml"))).
+        local_definitions maps an entry key to sites (site IDs and from-to ranges, matched against the
+        sites in the data), configuration_groups and policy_groups (names), feature_profiles and policy_objects
+        (a list of n
+      type: any
+      default: 'null'
+      required: 'no'
+    - name: write_default_values_file
+      description: Write all default values to a YAML file. Value is a path pointing to the file to be
+        created.
+      type: string
+      default: '""'
+      required: 'no'
+    - name: yaml_directories
+      description: List of paths to YAML directories.
+      type: list(string)
+      default: '[]'
+      required: 'no'
+    - name: yaml_files
+      description: List of paths to YAML files.
+      type: list(string)
+      default: '[]'
+      required: 'no'
+  outputs:
+    - name: default_values
+      description: All default values.
+    - name: model
+      description: Full model.
+    - name: nac_test_scope
+      description: 'What this state manages, for running nac-test per state: whether it manages the global
+        blocks (settings, hierarchy, topology, tags, scopes, classic), and the names of the configuration
+        groups, policy groups, feature profiles and policy objects it manages, plus the sites and routers
+        its device resources deploy. Written to a data file under the key nac_test_scope, it lets the
+        test templates render o'
+    - name: ownership
+      description: 'What this state manages: manage_global, its local_set, the site IDs whose routers
+        its device resources hold, and the groups, feature profiles and policy objects its entry claims.'
+    - name: topology_site_resolution
+      description: 'Named failure for an unresolvable site name, instead of a bare "Invalid index" from
+        local.nh_site_name_to_id further down.  An output precondition rather than a resource: it fails
+        the plan the same way, and also propagates when this module is used as a child module.'
+  data_model_top_level_keys:
+    - manager_version
+    - management_ip_variable
+    - settings
+    - network_hierarchy
+    - application_catalog
+    - policy_objects
+    - feature_profiles
+    - configuration_groups
+    - policy_groups
+    - topology_groups
+    - scopes
+    - sites
+    - edge_feature_templates
+    - edge_device_templates
+    - localized_policies
+    - centralized_policies
+    - security_policies
+    - multi_region_fabric
+  build_order_files:
+    - nac/main.tf
+    - nac/data/01_root.nac.yaml
+    - nac/data/02_settings.nac.yaml
+    - nac/data/03_network_hierarchy.nac.yaml
+    - nac/data/04_application_catalog.nac.yaml
+    - nac/data/05_policy_objects.nac.yaml
+    - nac/data/06_feature_profiles.nac.yaml
+    - nac/data/07_configuration_groups.nac.yaml
+    - nac/data/08_policy_groups.nac.yaml
+    - nac/data/09_topology_groups.nac.yaml
+    - nac/data/10_scopes.nac.yaml
+    - nac/data/11_sites.nac.yaml
+    - nac/data/12_edge_feature_templates.nac.yaml
+    - nac/data/13_edge_device_templates.nac.yaml
+    - nac/data/14_localized_policies.nac.yaml
+    - nac/data/15_centralized_policies.nac.yaml
+    - nac/data/16_security_policies.nac.yaml
+    - nac/data/17_multi_region_fabric.nac.yaml

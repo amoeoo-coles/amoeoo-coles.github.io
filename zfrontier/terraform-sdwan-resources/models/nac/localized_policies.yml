@@ -1,0 +1,39 @@
+# Data model structure for sdwan.localized_policies (netascode nac-sdwan, nac/schema.yaml @ 5c49bbf).
+# Each value is the yamale rule; _fields expands include() two levels deep.
+
+sdwan_localized_policies:
+  localized_policies:
+    _rule: include("localized_policies", required=False)
+    _fields:
+      definitions:
+        _rule: include("localized_policies_definitions", required=False)
+        _fields:
+          ipv4_access_control_lists: list(include("localized_policies_definitions_ipv4_access_control_lists"),
+            required=False, primary_key="name")
+          ipv4_device_access_policies: list(include("localized_policies_definitions_ipv4_device_access_policy"),
+            required=False, primary_key="name")
+          ipv6_access_control_lists: list(include("localized_policies_definitions_ipv6_access_control_lists"),
+            required=False, primary_key="name")
+          ipv6_device_access_policies: list(include("localized_policies_definitions_ipv6_device_access_policy"),
+            required=False, primary_key="name")
+          rewrite_rules: list(include("localized_policies_definitions_rewrite_rule"), required=False,
+            primary_key="name")
+          route_policies: list(include("localized_policies_definitions_route_policy"), required=False,
+            primary_key="name")
+          qos_maps: list(include("localized_policies_definitions_qos_map"), required=False, primary_key="name")
+      feature_policies:
+        _rule: list(include("localized_policies_feature_policies"), required=False, primary_key="name")
+        _fields:
+          name: regex('^[A-Za-z0-9-_]{1,128}$')
+          description: str()
+          definitions: include("localized_policies_feature_policies_definitions", required=False)
+          implicit_acl_logging: bool(required=False)
+          ipv4_application_visibility: bool(required=False)
+          ipv4_flow_visibility: bool(required=False)
+          ipv4_visibility_cache_entries: int(min=16, max=2000000, required=False)
+          ipv6_application_visibility: bool(required=False)
+          ipv6_flow_visibility: bool(required=False)
+          ipv6_visibility_cache_entries: int(min=16, max=2000000, required=False)
+          log_frequency: int(min=1, max=2147483647, required=False)
+          cloud_qos: bool(required=False)
+          cloud_qos_service_side: bool(required=False)
