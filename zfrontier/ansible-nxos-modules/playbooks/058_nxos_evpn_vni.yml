@@ -1,0 +1,22 @@
+---
+# Sample playbook for cisco.nxos.nxos_evpn_vni (cisco.nxos 14.0.0)
+# Build order: 58
+# Manages Cisco EVPN VXLAN Network Identifier (VNI).
+# Reads ../models/nxos_evpn_vni.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_evpn_vni_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "058 nxos_evpn_vni"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_evpn_vni.yml
+  tasks:
+    - name: Run nxos_evpn_vni from model (documented states present, absent)
+      cisco.nxos.nxos_evpn_vni:
+        route_distinguisher: "{{ nxos_evpn_vni.route_distinguisher if nxos_evpn_vni.route_distinguisher is not none else omit }}"
+        route_target_both: "{{ nxos_evpn_vni.route_target_both if nxos_evpn_vni.route_target_both is not none else omit }}"
+        route_target_export: "{{ nxos_evpn_vni.route_target_export if nxos_evpn_vni.route_target_export is not none else omit }}"
+        route_target_import: "{{ omit if (nxos_evpn_vni.route_target_import | nxos_strip_nulls) is none else (nxos_evpn_vni.route_target_import | nxos_strip_nulls) }}"
+        state: "{{ nxos_evpn_vni.state if nxos_evpn_vni.state is not none else omit }}"
+        vni: "{{ nxos_evpn_vni.vni if nxos_evpn_vni.vni is not none else omit }}"
+      register: nxos_evpn_vni_result

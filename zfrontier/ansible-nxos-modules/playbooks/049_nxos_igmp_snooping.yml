@@ -1,0 +1,26 @@
+---
+# Sample playbook for cisco.nxos.nxos_igmp_snooping (cisco.nxos 14.0.0)
+# Build order: 49
+# IGMP snooping resource module.
+# Reads ../models/nxos_igmp_snooping.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_igmp_snooping_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "049 nxos_igmp_snooping"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_igmp_snooping.yml
+  tasks:
+    - name: Apply nxos_igmp_snooping model (state from model; documented states merged, replaced, overridden, deleted, gathered, rendered, parsed)
+      cisco.nxos.nxos_igmp_snooping:
+        config: "{{ nxos_igmp_snooping.config | nxos_strip_nulls }}"
+        state: "{{ nxos_igmp_snooping.state | default('merged') }}"
+      register: nxos_igmp_snooping_result
+
+    - name: Gather current nxos_igmp_snooping state (Day 2 / BAU check)
+      cisco.nxos.nxos_igmp_snooping:
+        state: gathered
+      register: nxos_igmp_snooping_gathered
+      tags:
+        - never
+        - gathered

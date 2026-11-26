@@ -1,0 +1,23 @@
+---
+# Sample playbook for cisco.nxos.nxos_system (cisco.nxos 14.0.0)
+# Build order: 3
+# Manage the system attributes on Cisco NXOS devices
+# Reads ../models/nxos_system.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_system_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "003 nxos_system"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_system.yml
+  tasks:
+    - name: Run nxos_system from model (documented states present, absent)
+      cisco.nxos.nxos_system:
+        domain_lookup: "{{ nxos_system.domain_lookup if nxos_system.domain_lookup is not none else omit }}"
+        domain_name: "{{ nxos_system.domain_name if nxos_system.domain_name is not none else omit }}"
+        domain_search: "{{ nxos_system.domain_search if nxos_system.domain_search is not none else omit }}"
+        hostname: "{{ nxos_system.hostname if nxos_system.hostname is not none else omit }}"
+        name_servers: "{{ nxos_system.name_servers if nxos_system.name_servers is not none else omit }}"
+        state: "{{ nxos_system.state if nxos_system.state is not none else omit }}"
+        system_mtu: "{{ nxos_system.system_mtu if nxos_system.system_mtu is not none else omit }}"
+      register: nxos_system_result

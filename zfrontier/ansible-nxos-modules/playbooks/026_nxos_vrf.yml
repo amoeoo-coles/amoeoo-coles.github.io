@@ -1,0 +1,27 @@
+---
+# Sample playbook for cisco.nxos.nxos_vrf (cisco.nxos 14.0.0)
+# Build order: 26
+# (deprecated, removed after 2026-07-25) Manages global VRF configuration.
+# Reads ../models/nxos_vrf.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_vrf_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "026 nxos_vrf"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_vrf.yml
+  tasks:
+    - name: Run nxos_vrf from model (documented states present, absent)
+      cisco.nxos.nxos_vrf:
+        admin_state: "{{ nxos_vrf.admin_state if nxos_vrf.admin_state is not none else omit }}"
+        aggregate: "{{ omit if (nxos_vrf.aggregate | nxos_strip_nulls) is none else (nxos_vrf.aggregate | nxos_strip_nulls) }}"
+        associated_interfaces: "{{ nxos_vrf.associated_interfaces if nxos_vrf.associated_interfaces is not none else omit }}"
+        delay: "{{ nxos_vrf.delay if nxos_vrf.delay is not none else omit }}"
+        description: "{{ nxos_vrf.description if nxos_vrf.description is not none else omit }}"
+        interfaces: "{{ nxos_vrf.interfaces if nxos_vrf.interfaces is not none else omit }}"
+        name: "{{ nxos_vrf.name if nxos_vrf.name is not none else omit }}"
+        purge: "{{ nxos_vrf.purge if nxos_vrf.purge is not none else omit }}"
+        rd: "{{ nxos_vrf.rd if nxos_vrf.rd is not none else omit }}"
+        state: "{{ nxos_vrf.state if nxos_vrf.state is not none else omit }}"
+        vni: "{{ nxos_vrf.vni if nxos_vrf.vni is not none else omit }}"
+      register: nxos_vrf_result

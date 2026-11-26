@@ -1,0 +1,26 @@
+---
+# Sample playbook for cisco.nxos.nxos_lldp_global (cisco.nxos 14.0.0)
+# Build order: 11
+# LLDP global resource module.
+# Reads ../models/nxos_lldp_global.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_lldp_global_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "011 nxos_lldp_global"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_lldp_global.yml
+  tasks:
+    - name: Apply nxos_lldp_global model (state from model; documented states merged, replaced, overridden, deleted, gathered, rendered, parsed)
+      cisco.nxos.nxos_lldp_global:
+        config: "{{ nxos_lldp_global.config | nxos_strip_nulls }}"
+        state: "{{ nxos_lldp_global.state | default('merged') }}"
+      register: nxos_lldp_global_result
+
+    - name: Gather current nxos_lldp_global state (Day 2 / BAU check)
+      cisco.nxos.nxos_lldp_global:
+        state: gathered
+      register: nxos_lldp_global_gathered
+      tags:
+        - never
+        - gathered

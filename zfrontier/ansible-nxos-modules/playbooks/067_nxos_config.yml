@@ -1,0 +1,33 @@
+---
+# Sample playbook for cisco.nxos.nxos_config (cisco.nxos 14.0.0)
+# Build order: 67
+# Manage Cisco NXOS configuration sections
+# Reads ../models/nxos_config.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_config_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "067 nxos_config"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_config.yml
+  tasks:
+    - name: Run nxos_config from model
+      cisco.nxos.nxos_config:
+        after: "{{ nxos_config.after if nxos_config.after is not none else omit }}"
+        backup: "{{ nxos_config.backup if nxos_config.backup is not none else omit }}"
+        backup_options: "{{ omit if (nxos_config.backup_options | nxos_strip_nulls) is none else (nxos_config.backup_options | nxos_strip_nulls) }}"
+        before: "{{ nxos_config.before if nxos_config.before is not none else omit }}"
+        content: "{{ nxos_config.content if nxos_config.content is not none else omit }}"
+        defaults: "{{ nxos_config.defaults if nxos_config.defaults is not none else omit }}"
+        diff_against: "{{ nxos_config.diff_against if nxos_config.diff_against is not none else omit }}"
+        diff_ignore_lines: "{{ nxos_config.diff_ignore_lines if nxos_config.diff_ignore_lines is not none else omit }}"
+        intended_config: "{{ nxos_config.intended_config if nxos_config.intended_config is not none else omit }}"
+        lines: "{{ nxos_config.lines if nxos_config.lines is not none else omit }}"
+        match: "{{ nxos_config.match if nxos_config.match is not none else omit }}"
+        parents: "{{ nxos_config.parents if nxos_config.parents is not none else omit }}"
+        replace: "{{ nxos_config.replace if nxos_config.replace is not none else omit }}"
+        replace_src: "{{ nxos_config.replace_src if nxos_config.replace_src is not none else omit }}"
+        running_config: "{{ nxos_config.running_config if nxos_config.running_config is not none else omit }}"
+        save_when: "{{ nxos_config.save_when if nxos_config.save_when is not none else omit }}"
+        src: "{{ nxos_config.src if nxos_config.src is not none else omit }}"
+      register: nxos_config_result

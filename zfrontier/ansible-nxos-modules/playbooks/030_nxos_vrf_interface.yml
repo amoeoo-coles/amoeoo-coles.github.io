@@ -1,0 +1,19 @@
+---
+# Sample playbook for cisco.nxos.nxos_vrf_interface (cisco.nxos 14.0.0)
+# Build order: 30
+# (deprecated, removed after 2028-06-01) Manages interface specific VRF configuration.
+# Reads ../models/nxos_vrf_interface.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_vrf_interface_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "030 nxos_vrf_interface"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_vrf_interface.yml
+  tasks:
+    - name: Run nxos_vrf_interface from model (documented states present, absent)
+      cisco.nxos.nxos_vrf_interface:
+        interface: "{{ nxos_vrf_interface.interface if nxos_vrf_interface.interface is not none else omit }}"
+        state: "{{ nxos_vrf_interface.state if nxos_vrf_interface.state is not none else omit }}"
+        vrf: "{{ nxos_vrf_interface.vrf if nxos_vrf_interface.vrf is not none else omit }}"
+      register: nxos_vrf_interface_result

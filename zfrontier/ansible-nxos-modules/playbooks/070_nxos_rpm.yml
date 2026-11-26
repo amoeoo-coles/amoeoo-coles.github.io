@@ -1,0 +1,20 @@
+---
+# Sample playbook for cisco.nxos.nxos_rpm (cisco.nxos 14.0.0)
+# Build order: 70
+# Install patch or feature rpms on Cisco NX-OS devices.
+# Reads ../models/nxos_rpm.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_rpm_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "070 nxos_rpm"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_rpm.yml
+  tasks:
+    - name: Run nxos_rpm from model (documented states present, absent)
+      cisco.nxos.nxos_rpm:
+        aggregate: "{{ omit if (nxos_rpm.aggregate | nxos_strip_nulls) is none else (nxos_rpm.aggregate | nxos_strip_nulls) }}"
+        file_system: "{{ nxos_rpm.file_system if nxos_rpm.file_system is not none else omit }}"
+        pkg: "{{ nxos_rpm.pkg if nxos_rpm.pkg is not none else omit }}"
+        state: "{{ nxos_rpm.state if nxos_rpm.state is not none else omit }}"
+      register: nxos_rpm_result

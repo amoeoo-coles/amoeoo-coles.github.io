@@ -1,0 +1,21 @@
+---
+# Sample playbook for cisco.nxos.nxos_reboot (cisco.nxos 14.0.0)
+# Build order: 76
+# Reboot a network device.
+# Reads ../models/nxos_reboot.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_reboot_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+# DISRUPTIVE: tagged 'never' — runs only with --tags nxos_reboot.
+
+- name: "076 nxos_reboot"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_reboot.yml
+  tasks:
+    - name: Run nxos_reboot from model
+      cisco.nxos.nxos_reboot:
+        confirm: "{{ nxos_reboot.confirm if nxos_reboot.confirm is not none else omit }}"
+      register: nxos_reboot_result
+      tags:
+        - never
+        - nxos_reboot

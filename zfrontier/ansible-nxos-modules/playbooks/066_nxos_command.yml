@@ -1,0 +1,21 @@
+---
+# Sample playbook for cisco.nxos.nxos_command (cisco.nxos 14.0.0)
+# Build order: 66
+# Run arbitrary command on Cisco NXOS devices
+# Reads ../models/nxos_command.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_command_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "066 nxos_command"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_command.yml
+  tasks:
+    - name: Run nxos_command from model
+      cisco.nxos.nxos_command:
+        commands: "{{ nxos_command.commands if nxos_command.commands is not none else omit }}"
+        interval: "{{ nxos_command.interval if nxos_command.interval is not none else omit }}"
+        match: "{{ nxos_command.match if nxos_command.match is not none else omit }}"
+        retries: "{{ nxos_command.retries if nxos_command.retries is not none else omit }}"
+        wait_for: "{{ nxos_command.wait_for if nxos_command.wait_for is not none else omit }}"
+      register: nxos_command_result

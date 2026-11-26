@@ -1,0 +1,17 @@
+---
+# Sample playbook for cisco.nxos.nxos_vsan (cisco.nxos 14.0.0)
+# Build order: 77
+# Configuration of vsan for Cisco NXOS MDS Switches.
+# Reads ../models/nxos_vsan.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_vsan_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "077 nxos_vsan"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_vsan.yml
+  tasks:
+    - name: Run nxos_vsan from model
+      cisco.nxos.nxos_vsan:
+        vsan: "{{ omit if (nxos_vsan.vsan | nxos_strip_nulls) is none else (nxos_vsan.vsan | nxos_strip_nulls) }}"
+      register: nxos_vsan_result

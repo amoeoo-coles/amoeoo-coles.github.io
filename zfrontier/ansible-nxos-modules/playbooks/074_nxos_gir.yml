@@ -1,0 +1,26 @@
+---
+# Sample playbook for cisco.nxos.nxos_gir (cisco.nxos 14.0.0)
+# Build order: 74
+# Trigger a graceful removal or insertion (GIR) of the switch.
+# Reads ../models/nxos_gir.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_gir_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+# DISRUPTIVE: tagged 'never' — runs only with --tags nxos_gir.
+
+- name: "074 nxos_gir"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_gir.yml
+  tasks:
+    - name: Run nxos_gir from model (documented states present, absent)
+      cisco.nxos.nxos_gir:
+        state: "{{ nxos_gir.state if nxos_gir.state is not none else omit }}"
+        system_mode_maintenance: "{{ nxos_gir.system_mode_maintenance if nxos_gir.system_mode_maintenance is not none else omit }}"
+        system_mode_maintenance_dont_generate_profile: "{{ nxos_gir.system_mode_maintenance_dont_generate_profile if nxos_gir.system_mode_maintenance_dont_generate_profile is not none else omit }}"
+        system_mode_maintenance_on_reload_reset_reason: "{{ nxos_gir.system_mode_maintenance_on_reload_reset_reason if nxos_gir.system_mode_maintenance_on_reload_reset_reason is not none else omit }}"
+        system_mode_maintenance_shutdown: "{{ nxos_gir.system_mode_maintenance_shutdown if nxos_gir.system_mode_maintenance_shutdown is not none else omit }}"
+        system_mode_maintenance_timeout: "{{ nxos_gir.system_mode_maintenance_timeout if nxos_gir.system_mode_maintenance_timeout is not none else omit }}"
+      register: nxos_gir_result
+      tags:
+        - never
+        - nxos_gir

@@ -1,0 +1,17 @@
+---
+# Sample playbook for cisco.nxos.nxos_zone_zoneset (cisco.nxos 14.0.0)
+# Build order: 80
+# Configuration of zone/zoneset for Cisco NXOS MDS Switches.
+# Reads ../models/nxos_zone_zoneset.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_zone_zoneset_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "080 nxos_zone_zoneset"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_zone_zoneset.yml
+  tasks:
+    - name: Run nxos_zone_zoneset from model
+      cisco.nxos.nxos_zone_zoneset:
+        zone_zoneset_details: "{{ omit if (nxos_zone_zoneset.zone_zoneset_details | nxos_strip_nulls) is none else (nxos_zone_zoneset.zone_zoneset_details | nxos_strip_nulls) }}"
+      register: nxos_zone_zoneset_result

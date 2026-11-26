@@ -1,0 +1,17 @@
+---
+# Sample playbook for cisco.nxos.nxos_evpn_global (cisco.nxos 14.0.0)
+# Build order: 54
+# Handles the EVPN control plane for VXLAN.
+# Reads ../models/nxos_evpn_global.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_evpn_global_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "054 nxos_evpn_global"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_evpn_global.yml
+  tasks:
+    - name: Run nxos_evpn_global from model
+      cisco.nxos.nxos_evpn_global:
+        nv_overlay_evpn: "{{ nxos_evpn_global.nv_overlay_evpn if nxos_evpn_global.nv_overlay_evpn is not none else omit }}"
+      register: nxos_evpn_global_result

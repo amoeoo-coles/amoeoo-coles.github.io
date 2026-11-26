@@ -1,0 +1,5695 @@
+---
+# Combined sample NX-OS data model for cisco.nxos 14.0.0. Placeholders only.
+
+collection: cisco.nxos
+collection_version: 14.0.0
+description: Combined sample data model for every cisco.nxos module in chronological build order. Values
+  come from module EXAMPLES; null means omit.
+connection:
+  nxos_host: '{{ nxos_host }}'
+  ansible_user: '{{ ansible_user }}'
+  ansible_password: '{{ ansible_password }}'
+  ansible_network_os: cisco.nxos.nxos
+  ansible_connection: ansible.netcommon.network_cli
+groups:
+  system:
+    title: 1. System and bootstrap
+    intro: Feature enablement first, then hostname, system/DNS settings, login banner and NTP.
+    modules:
+      nxos_feature:
+        feature: lacp
+        state: enabled
+      nxos_hostname:
+        state: merged
+        config:
+          hostname: NXOSv-9k
+      nxos_system:
+        domain_lookup: null
+        domain_name: test.example.com
+        domain_search: null
+        hostname: nxos01
+        name_servers: null
+        state: present
+        system_mtu: null
+      nxos_banner:
+        banner: exec
+        multiline_delimiter: null
+        state: present
+        text: 'this is my exec banner
+
+          that contains a multiline
+
+          string
+
+          '
+      nxos_ntp_global:
+        state: merged
+        config:
+          access_group:
+            match_all: null
+            peer:
+              - access_list: PeerAcl1
+            query_only:
+              - access_list: null
+            serve:
+              - access_list: ServeAcl1
+            serve_only:
+              - access_list: null
+          allow:
+            control:
+              rate_limit: null
+            private: null
+          authenticate: true
+          authentication_keys:
+            - encryption: 7
+              id: 1001
+              key: '{{ vault_key }}'
+            - encryption: 7
+              id: 1002
+              key: '{{ vault_key }}'
+          logging: true
+          master:
+            stratum: 2
+          passive: null
+          peers:
+            - key_id: 1
+              maxpoll: 15
+              minpoll: 5
+              peer: 192.0.2.1
+              prefer: null
+              vrf: default
+            - key_id: 2
+              maxpoll: null
+              minpoll: null
+              peer: 192.0.2.2
+              prefer: true
+              vrf: siteA
+          servers:
+            - key_id: 2
+              maxpoll: null
+              minpoll: null
+              prefer: null
+              server: 198.51.100.1
+              vrf: default
+            - key_id: 1
+              maxpoll: null
+              minpoll: null
+              prefer: null
+              server: 203.0.113.1
+              vrf: siteB
+          source: null
+          source_interface: null
+          trusted_keys:
+            - key_id: null
+  aaa:
+    title: 2. AAA, users and management
+    intro: Local users, TACACS+/RADIUS server settings and hosts, and the NX-API management interface.
+    modules:
+      nxos_user:
+        aggregate:
+          - configured_password: null
+            hashed_password: null
+            name: null
+            roles: null
+            sshkey: null
+            state: null
+            update_password: null
+        configured_password: null
+        hashed_password: null
+        name: ansible
+        purge: null
+        roles: null
+        sshkey: '{{ vault_sshkey }}'
+        state: present
+        update_password: null
+      nxos_aaa_server:
+        deadtime: 20
+        directed_request: enabled
+        encrypt_type: null
+        global_key: null
+        server_timeout: 9
+        server_type: radius
+        state: present
+      nxos_aaa_server_host:
+        acct_port: 2084
+        address: 1.2.3.4
+        auth_port: null
+        encrypt_type: null
+        host_timeout: 10
+        key: null
+        server_type: radius
+        state: present
+        tacacs_port: null
+      nxos_nxapi:
+        http: null
+        http_port: null
+        https: null
+        https_port: null
+        sandbox: null
+        ssl_strong_ciphers: null
+        state: present
+        tlsv1_0: null
+        tlsv1_1: null
+        tlsv1_2: null
+  interfaces:
+    title: 3. Interfaces
+    intro: Physical and logical interface attributes, LLDP and UDLD.
+    modules:
+      nxos_interfaces:
+        state: merged
+        config:
+          - description: Configured by Ansible
+            duplex: null
+            enabled: true
+            fabric_forwarding_anycast_gateway: null
+            ip_forward: null
+            logging:
+              link_status: null
+              trunk_status: null
+            mac_address: null
+            mode: null
+            mtu: null
+            name: Ethernet1/1
+            negotiate_auto: null
+            service_policy:
+              input: null
+              output: null
+              type_options:
+                qos:
+                  input: null
+                  output: null
+                queuing:
+                  input: null
+                  output: null
+            snmp:
+              trap:
+                link_status: null
+            speed: null
+          - description: Configured by Ansible Network
+            duplex: null
+            enabled: false
+            fabric_forwarding_anycast_gateway: null
+            ip_forward: null
+            logging:
+              link_status: null
+              trunk_status: null
+            mac_address: null
+            mode: null
+            mtu: null
+            name: Ethernet1/2
+            negotiate_auto: null
+            service_policy:
+              input: null
+              output: null
+              type_options:
+                qos:
+                  input: null
+                  output: null
+                queuing:
+                  input: null
+                  output: null
+            snmp:
+              trap:
+                link_status: null
+            speed: null
+      nxos_lldp_global:
+        state: merged
+        config:
+          holdtime: 100
+          port_id: null
+          reinit: null
+          timer: 35
+          tlv_select:
+            dcbxp: null
+            management_address:
+              v4: null
+              v6: null
+            port:
+              description: null
+              vlan: null
+            power_management: null
+            system:
+              capabilities: null
+              description: null
+              name: null
+      nxos_lldp_interfaces:
+        state: merged
+        config:
+          - name: Ethernet1/4
+            receive: false
+            tlv_set:
+              management_address: 198.51.100.64
+              vlan: null
+            transmit: true
+      nxos_udld:
+        aggressive: disabled
+        msg_time: 20
+        reset: null
+        state: present
+      nxos_udld_interface:
+        interface: Ethernet1/1
+        mode: aggressive
+        state: present
+  l2:
+    title: 4. Layer 2 (VLANs, VTP, LACP, vPC)
+    intro: VLANs, VTP, access/trunk switchports, LACP, port-channels and vPC. cisco.nxos 14.0.0 has no
+      dedicated spanning-tree module.
+    modules:
+      nxos_vlans:
+        state: merged
+        config:
+          - enabled: null
+            mapped_vni: null
+            mode: null
+            name: test-vlan5
+            nve_overlay: null
+            state: null
+            vlan_id: 5
+          - enabled: false
+            mapped_vni: null
+            mode: null
+            name: null
+            nve_overlay: null
+            state: null
+            vlan_id: 10
+      nxos_vtp_domain:
+        domain: ntc
+      nxos_vtp_version:
+        version: 2
+      nxos_vtp_password:
+        state: present
+        vtp_password: null
+      nxos_l2_interfaces:
+        state: merged
+        config:
+          - access:
+              vlan: null
+            beacon: null
+            cdp_enable: null
+            link_flap:
+              error_disable:
+                count: null
+                interval: null
+            mode: null
+            name: Ethernet1/1
+            spanning_tree:
+              bpdufilter: null
+              bpduguard: null
+              cost: null
+              guard: null
+              link_type: null
+              mst:
+                - cost: null
+                  instances: null
+                  port_priority: null
+              port_priority: null
+              port_type: null
+              vlans:
+                - cost: null
+                  port_priority: null
+                  vlans: null
+            storm_control:
+              action: null
+              broadcast:
+                level: null
+              multicast:
+                level: null
+              unicast:
+                level: null
+            trunk:
+              allowed_vlans: 2,4,15
+              allowed_vlans_implicit: null
+              allowed_vlans_none: null
+              native_vlan: 10
+          - access:
+              vlan: 30
+            beacon: null
+            cdp_enable: null
+            link_flap:
+              error_disable:
+                count: null
+                interval: null
+            mode: null
+            name: Ethernet1/2
+            spanning_tree:
+              bpdufilter: null
+              bpduguard: null
+              cost: null
+              guard: null
+              link_type: null
+              mst:
+                - cost: null
+                  instances: null
+                  port_priority: null
+              port_priority: null
+              port_type: null
+              vlans:
+                - cost: null
+                  port_priority: null
+                  vlans: null
+            storm_control:
+              action: null
+              broadcast:
+                level: null
+              multicast:
+                level: null
+              unicast:
+                level: null
+            trunk:
+              allowed_vlans: null
+              allowed_vlans_implicit: null
+              allowed_vlans_none: null
+              native_vlan: null
+      nxos_lacp:
+        state: merged
+        config:
+          system:
+            mac:
+              address: 00c1.4c00.bd15
+              role: null
+            priority: 10
+      nxos_lacp_interfaces:
+        state: merged
+        config:
+          - convergence:
+              graceful: null
+              vpc: null
+            links:
+              max: null
+              min: null
+            mode: null
+            name: Ethernet1/3
+            port_priority: 5
+            rate: fast
+            suspend_individual: null
+      nxos_lag_interfaces:
+        state: merged
+        config:
+          - members:
+              - force: null
+                member: Ethernet1/4
+                mode: null
+            name: port-channel99
+      nxos_vpc:
+        state: merged
+        config:
+          arp_synchronize: null
+          auto_recovery: true
+          auto_recovery_reload_delay: null
+          delay_restore: '150'
+          delay_restore_interface_vlan: null
+          delay_restore_orphan_port: null
+          domain: '10'
+          layer3_peer_router: null
+          nd_synchronize: null
+          peer_gw: true
+          peer_sw: null
+          pkl_dest: 198.51.100.2
+          pkl_src: 198.51.100.1
+          pkl_vrf: management
+          role_priority: '150'
+          system_priority: '2000'
+          virtual_peer_link_dest: null
+          virtual_peer_link_dscp: null
+          virtual_peer_link_src: null
+      nxos_vpc_interface:
+        state: merged
+        config:
+          - name: port-channel10
+            orphan_port_suspend: null
+            peer_link: null
+            vpc: 100
+          - name: port-channel20
+            orphan_port_suspend: null
+            peer_link: true
+            vpc: null
+          - name: Ethernet1/3
+            orphan_port_suspend: true
+            peer_link: null
+            vpc: null
+  l3:
+    title: 5. Layer 3 routing
+    intro: VRFs, L3 interfaces, static routes, prefix lists, route maps, OSPFv2/v3, BGP, BFD, HSRP and
+      VRRP.
+    modules:
+      nxos_vrf_global:
+        state: merged
+        config:
+          vrfs:
+            - description: null
+              ip:
+                auto_discard: null
+                domain_list: null
+                domain_name: null
+                icmp_err:
+                  source_interface:
+                    interface: null
+                    interface_value: null
+                igmp:
+                  ssm_translate:
+                    - group: null
+                      source: null
+                mroutes:
+                  - group: null
+                    preference: null
+                    source: null
+                    vrf: null
+                multicast:
+                  group_range_prefix_list: null
+                  multipath:
+                    resilient: null
+                    splitting_type:
+                      legacy: null
+                      nbm: null
+                      none: null
+                      sg_hash: null
+                      sg_hash_next_hop: null
+                  rpf:
+                    - group_list_range: null
+                      vrf_name: null
+                name_server:
+                  address_list:
+                    - 198.51.100.1
+                  use_vrf:
+                    source_address: null
+                    vrf: null
+                route:
+                  - destination: 198.51.100.1
+                    source: 0.0.0.0/0
+                    tags:
+                      route_pref: null
+                      tag_value: null
+                    track: null
+                    vrf: null
+              ipv6:
+                mld_ssm_translate:
+                  - group: null
+                    icmp: null
+                    source: null
+                multicast:
+                  group_range_prefix_list: null
+                  multipath:
+                    resilient: null
+                    splitting_type:
+                      none: null
+                      sg_hash: null
+                      sg_hash_next_hop: null
+              multicast:
+                service_reflect:
+                  - map_to: null
+                    service_interface: null
+              name: management
+              rd: null
+              vni:
+                layer_3: null
+                vni_number: null
+            - description: Test
+              ip:
+                auto_discard: true
+                domain_list:
+                  - invalid.com
+                  - example.com
+                domain_name: test.org
+                icmp_err:
+                  source_interface:
+                    interface: null
+                    interface_value: null
+                igmp:
+                  ssm_translate:
+                    - group: null
+                      source: null
+                mroutes:
+                  - group: null
+                    preference: null
+                    source: null
+                    vrf: null
+                multicast:
+                  group_range_prefix_list: null
+                  multipath:
+                    resilient: null
+                    splitting_type:
+                      legacy: null
+                      nbm: null
+                      none: null
+                      sg_hash: null
+                      sg_hash_next_hop: null
+                  rpf:
+                    - group_list_range: null
+                      vrf_name: null
+                name_server:
+                  address_list: null
+                  use_vrf:
+                    source_address: null
+                    vrf: null
+                route:
+                  - destination: null
+                    source: null
+                    tags:
+                      route_pref: null
+                      tag_value: null
+                    track: null
+                    vrf: null
+              ipv6:
+                mld_ssm_translate:
+                  - group: null
+                    icmp: null
+                    source: null
+                multicast:
+                  group_range_prefix_list: null
+                  multipath:
+                    resilient: null
+                    splitting_type:
+                      none: null
+                      sg_hash: null
+                      sg_hash_next_hop: null
+              multicast:
+                service_reflect:
+                  - map_to: null
+                    service_interface: null
+              name: temp
+              rd: null
+              vni:
+                layer_3: null
+                vni_number: null
+      nxos_vrf:
+        admin_state: null
+        aggregate:
+          - admin_state: null
+            associated_interfaces: null
+            delay: null
+            description: null
+            interfaces: null
+            name: null
+            rd: null
+            state: null
+            vni: null
+        associated_interfaces: null
+        delay: null
+        description: testing
+        interfaces: null
+        name: ntc
+        purge: null
+        rd: null
+        state: present
+        vni: null
+      nxos_vrf_address_family:
+        state: merged
+        config:
+          - address_families:
+              - afi: ipv4
+                export:
+                  - map: '22'
+                    vrf:
+                      allow_vpn: null
+                      map_import: null
+                      max_prefix: null
+                  - map: null
+                    vrf:
+                      allow_vpn: true
+                      map_import: '44'
+                      max_prefix: null
+                  - map: null
+                    vrf:
+                      allow_vpn: true
+                      map_import: null
+                      max_prefix: null
+                import:
+                  - map: null
+                    vrf:
+                      advertise_vpn: null
+                      map_import: null
+                      max_prefix: null
+                maximum:
+                  max_route_options:
+                    threshold:
+                      reinstall_threshold: 80
+                      threshold_value: 60
+                    warning_only: null
+                  max_routes: 500
+                route_target:
+                  - both: null
+                    evpn: null
+                    export: 65512:200
+                    import: null
+                safi: unicast
+              - afi: ipv6
+                export:
+                  - map: null
+                    vrf:
+                      allow_vpn: null
+                      map_import: null
+                      max_prefix: null
+                import:
+                  - map: '22'
+                    vrf:
+                      advertise_vpn: null
+                      map_import: null
+                      max_prefix: null
+                  - map: null
+                    vrf:
+                      advertise_vpn: true
+                      map_import: '44'
+                      max_prefix: null
+                  - map: null
+                    vrf:
+                      advertise_vpn: true
+                      map_import: null
+                      max_prefix: null
+                maximum:
+                  max_route_options:
+                    threshold:
+                      reinstall_threshold: null
+                      threshold_value: null
+                    warning_only: null
+                  max_routes: 1000
+                route_target:
+                  - both: null
+                    evpn: null
+                    export: null
+                    import: 65512:200
+                safi: unicast
+            name: VRF1
+      nxos_vrf_af:
+        afi: ipv4
+        route_target_both_auto_evpn: true
+        route_targets:
+          - direction: null
+            rt: null
+            state: null
+        state: present
+        vrf: ntc
+      nxos_vrf_interfaces:
+        state: merged
+        config:
+          - name: Ethernet1/1
+            vrf_name: null
+          - name: Ethernet1/2
+            vrf_name: test
+          - name: Ethernet1/3
+            vrf_name: null
+          - name:Ethernet1/4
+      nxos_vrf_interface:
+        interface: Ethernet1/1
+        state: present
+        vrf: ntc
+      nxos_l3_interfaces:
+        state: merged
+        config:
+          - bandwidth:
+              inherit: null
+              kilobits: null
+            dhcp:
+              ipv4:
+                option82:
+                  suboption:
+                    circuit_id: null
+                relay:
+                  address:
+                    - relay_ip: null
+                      vrf_name: null
+                  information:
+                    trusted: null
+                  source_interface:
+                    interface_id: null
+                    interface_type: null
+                  subnet_selection:
+                    subnet_ip: null
+                smart_relay: null
+              ipv6:
+                relay:
+                  address:
+                    - interface_id: null
+                      interface_type: null
+                      relay_ip: null
+                      vrf_name: null
+                  source_interface:
+                    interface_id: null
+                    interface_type: null
+                smart_relay: null
+            dot1q: null
+            evpn_multisite_tracking: null
+            ipv4:
+              address: null
+              ip_network_mask: null
+              route_preference: null
+              secondary: null
+              tag: null
+            ipv6:
+              - address: null
+                aggregate_prefix_length: null
+                anycast: null
+                eui64: null
+                route_preference: null
+                tag: null
+                use_bia: null
+            ipv6_redirects: null
+            ipv6_unreachables: null
+            ipv6_verify:
+              unicast:
+                source:
+                  reachable_via:
+                    allow_default: null
+                    mode: null
+            mac_address: 0011.2233.4455
+            name: Ethernet1/1
+            port_unreachable: null
+            proxy_arp: null
+            redirects: null
+            unreachables: null
+            verify:
+              unicast:
+                source:
+                  reachable_via:
+                    allow_default: null
+                    mode: null
+          - bandwidth:
+              inherit: null
+              kilobits: null
+            dhcp:
+              ipv4:
+                option82:
+                  suboption:
+                    circuit_id: null
+                relay:
+                  address:
+                    - relay_ip: null
+                      vrf_name: null
+                  information:
+                    trusted: null
+                  source_interface:
+                    interface_id: null
+                    interface_type: null
+                  subnet_selection:
+                    subnet_ip: null
+                smart_relay: null
+              ipv6:
+                relay:
+                  address:
+                    - interface_id: null
+                      interface_type: null
+                      relay_ip: null
+                      vrf_name: null
+                  source_interface:
+                    interface_id: null
+                    interface_type: null
+                smart_relay: null
+            dot1q: null
+            evpn_multisite_tracking: null
+            ipv4:
+              - address: null
+                ip_network_mask: null
+                route_preference: null
+                secondary: null
+                tag: null
+            ipv6:
+              address: null
+              aggregate_prefix_length: null
+              anycast: null
+              eui64: null
+              route_preference: null
+              tag: null
+              use_bia: null
+            ipv6_redirects: null
+            ipv6_unreachables: null
+            ipv6_verify:
+              unicast:
+                source:
+                  reachable_via:
+                    allow_default: null
+                    mode: null
+            mac_address: null
+            name: Ethernet1/2
+            port_unreachable: null
+            proxy_arp: null
+            redirects: null
+            unreachables: null
+            verify:
+              unicast:
+                source:
+                  reachable_via:
+                    allow_default: null
+                    mode: null
+      nxos_static_routes:
+        state: merged
+        config:
+          - address_families:
+              - afi: ipv4
+                routes:
+                  - dest: 192.0.2.64/24
+                    next_hops:
+                      - admin_distance: 2
+                        dest_vrf: null
+                        forward_router_address: 192.0.2.22
+                        interface: null
+                        route_name: null
+                        tag: 4
+                        track: null
+            vrf: trial_vrf
+          - address_families:
+              - afi: ipv4
+                routes:
+                  - dest: 192.0.2.16/24
+                    next_hops:
+                      - admin_distance: null
+                        dest_vrf: null
+                        forward_router_address: 192.0.2.24
+                        interface: null
+                        route_name: new_route
+                        tag: null
+                        track: null
+              - afi: ipv6
+                routes:
+                  - dest: 2001:db8::/64
+                    next_hops:
+                      - admin_distance: null
+                        dest_vrf: null
+                        forward_router_address: 2001:db8::12
+                        interface: eth1/3
+                        route_name: null
+                        tag: null
+                        track: null
+            vrf: null
+      nxos_prefix_lists:
+        state: merged
+        config:
+          - afi: ipv4
+            prefix_lists:
+              - description: allows engineering IPv4 networks
+                entries:
+                  - action: permit
+                    eq: 24
+                    ge: null
+                    le: null
+                    mask: null
+                    prefix: 192.0.2.0/23
+                    sequence: 10
+                  - action: permit
+                    eq: null
+                    ge: null
+                    le: null
+                    mask: null
+                    prefix: 198.51.100.128/26
+                    sequence: 20
+                name: AllowPrefix
+              - description: denies lab IPv4 networks
+                entries:
+                  - action: deny
+                    eq: null
+                    ge: null
+                    le: 25
+                    mask: null
+                    prefix: 203.0.113.0/24
+                    sequence: 20
+                name: DenyPrefix
+          - afi: ipv6
+            prefix_lists:
+              - description: allows engineering IPv6 networks
+                entries:
+                  - action: permit
+                    eq: null
+                    ge: null
+                    le: null
+                    mask: null
+                    prefix: 2001:db8:400::/38
+                    sequence: 8
+                  - action: permit
+                    eq: null
+                    ge: null
+                    le: 37
+                    mask: null
+                    prefix: 2001:db8:8000::/35
+                    sequence: 20
+                name: AllowIPv6Prefix
+      nxos_route_maps:
+        state: merged
+        config:
+          - entries:
+              - action: permit
+                continue_sequence: null
+                description: rmap1-10-permit
+                match:
+                  as_number:
+                    as_path_list: null
+                    asn: 65564
+                  as_path: Allow40
+                  community:
+                    community_list: null
+                    exact_match: null
+                  evpn:
+                    route_types: null
+                  extcommunity:
+                    exact_match: null
+                    extcommunity_list: null
+                  interfaces: null
+                  ip:
+                    address:
+                      access_list: acl_1
+                      prefix_lists: null
+                    multicast:
+                      group:
+                        prefix: null
+                      group_range:
+                        first: null
+                        last: null
+                      rp:
+                        prefix: null
+                        rp_type: null
+                      source: null
+                    next_hop:
+                      prefix_lists: null
+                    route_source:
+                      prefix_lists: null
+                  ipv6:
+                    address:
+                      access_list: null
+                      prefix_lists: null
+                    multicast:
+                      group:
+                        prefix: null
+                      group_range:
+                        first: null
+                        last: null
+                      rp:
+                        prefix: null
+                        rp_type: null
+                      source: null
+                    next_hop:
+                      prefix_lists: null
+                    route_source:
+                      prefix_lists: null
+                  mac_list: null
+                  metric:
+                    - deviation: null
+                      value: null
+                  ospf_area: null
+                  route_types: null
+                  source_protocol: null
+                  tags: null
+                sequence: 10
+                set:
+                  as_path:
+                    prepend:
+                      as_number: null
+                      last_as: null
+                    tag: null
+                  comm_list: null
+                  community:
+                    additive: null
+                    graceful_shutdown: null
+                    internet: null
+                    local_as: null
+                    no_advertise: null
+                    no_export: null
+                    number: null
+                  dampening:
+                    half_life: null
+                    max_suppress_time: null
+                    start_reuse_route: null
+                    start_suppress_route: null
+                  distance:
+                    igp_ebgp_routes: null
+                    internal_routes: null
+                    local_routes: null
+                  evpn:
+                    gateway_ip:
+                      ip: null
+                      use_nexthop: null
+                  extcomm_list: null
+                  extcommunity:
+                    rt:
+                      additive: null
+                      extcommunity_numbers: null
+                  forwarding_address: null
+                  ip:
+                    address:
+                      prefix_list: null
+                    next_hop:
+                      address: null
+                      drop_on_fail: null
+                      force_order: null
+                      load_share: null
+                      peer_address: null
+                      redist_unchanged: null
+                      unchanged: null
+                      verify_availability:
+                        - address: null
+                          drop_on_fail: null
+                          force_order: null
+                          load_share: null
+                          track: null
+                    precedence: null
+                  ipv6:
+                    address:
+                      prefix_list: null
+                    precedence: null
+                  label_index: null
+                  level: null
+                  local_preference: null
+                  metric:
+                    bandwidth: null
+                    igrp_delay_metric: null
+                    igrp_effective_bandwidth_metric: null
+                    igrp_mtu: null
+                    igrp_reliability_metric: null
+                  metric_type: null
+                  nssa_only: null
+                  null_interface: null
+                  origin: null
+                  path_selection: null
+                  tag: null
+                  weight: null
+              - action: deny
+                continue_sequence: null
+                description: rmap1-20-deny
+                match:
+                  as_number:
+                    as_path_list: null
+                    asn: null
+                  as_path: null
+                  community:
+                    community_list:
+                      - BGPCommunity1
+                      - BGPCommunity2
+                    exact_match: null
+                  evpn:
+                    route_types: null
+                  extcommunity:
+                    exact_match: null
+                    extcommunity_list: null
+                  interfaces: null
+                  ip:
+                    address:
+                      access_list: null
+                      prefix_lists:
+                        - AllowPrefix1
+                        - AllowPrefix2
+                    multicast:
+                      group:
+                        prefix: null
+                      group_range:
+                        first: null
+                        last: null
+                      rp:
+                        prefix: null
+                        rp_type: null
+                      source: null
+                    next_hop:
+                      prefix_lists: null
+                    route_source:
+                      prefix_lists: null
+                  ipv6:
+                    address:
+                      access_list: null
+                      prefix_lists: null
+                    multicast:
+                      group:
+                        prefix: null
+                      group_range:
+                        first: null
+                        last: null
+                      rp:
+                        prefix: null
+                        rp_type: null
+                      source: null
+                    next_hop:
+                      prefix_lists: null
+                    route_source:
+                      prefix_lists: null
+                  mac_list: null
+                  metric:
+                    - deviation: null
+                      value: null
+                  ospf_area: null
+                  route_types: null
+                  source_protocol: null
+                  tags: null
+                sequence: 20
+                set:
+                  as_path:
+                    prepend:
+                      as_number: null
+                      last_as: null
+                    tag: null
+                  comm_list: null
+                  community:
+                    additive: null
+                    graceful_shutdown: null
+                    internet: null
+                    local_as: null
+                    no_advertise: null
+                    no_export: null
+                    number: null
+                  dampening:
+                    half_life: 30
+                    max_suppress_time: 120
+                    start_reuse_route: 1500
+                    start_suppress_route: 10000
+                  distance:
+                    igp_ebgp_routes: null
+                    internal_routes: null
+                    local_routes: null
+                  evpn:
+                    gateway_ip:
+                      ip: null
+                      use_nexthop: null
+                  extcomm_list: null
+                  extcommunity:
+                    rt:
+                      additive: null
+                      extcommunity_numbers: null
+                  forwarding_address: null
+                  ip:
+                    address:
+                      prefix_list: null
+                    next_hop:
+                      address: null
+                      drop_on_fail: null
+                      force_order: null
+                      load_share: null
+                      peer_address: null
+                      redist_unchanged: null
+                      unchanged: null
+                      verify_availability:
+                        - address: null
+                          drop_on_fail: null
+                          force_order: null
+                          load_share: null
+                          track: null
+                    precedence: null
+                  ipv6:
+                    address:
+                      prefix_list: null
+                    precedence: null
+                  label_index: null
+                  level: null
+                  local_preference: null
+                  metric:
+                    bandwidth: null
+                    igrp_delay_metric: null
+                    igrp_effective_bandwidth_metric: null
+                    igrp_mtu: null
+                    igrp_reliability_metric: null
+                  metric_type: null
+                  nssa_only: null
+                  null_interface: null
+                  origin: null
+                  path_selection: null
+                  tag: null
+                  weight: null
+            route_map: rmap1
+          - entries:
+              - action: permit
+                continue_sequence: 40
+                description: rmap2-20-permit
+                match:
+                  as_number:
+                    as_path_list: null
+                    asn: null
+                  as_path: null
+                  community:
+                    community_list: null
+                    exact_match: null
+                  evpn:
+                    route_types: null
+                  extcommunity:
+                    exact_match: null
+                    extcommunity_list: null
+                  interfaces: '{{ nxos_int1 }}'
+                  ip:
+                    address:
+                      access_list: null
+                      prefix_lists: null
+                    multicast:
+                      group:
+                        prefix: null
+                      group_range:
+                        first: null
+                        last: null
+                      rp:
+                        prefix: null
+                        rp_type: null
+                      source: null
+                    next_hop:
+                      prefix_lists: null
+                    route_source:
+                      prefix_lists: null
+                  ipv6:
+                    address:
+                      access_list: null
+                      prefix_lists: AllowIPv6Prefix
+                    multicast:
+                      group:
+                        prefix: null
+                      group_range:
+                        first: null
+                        last: null
+                      rp:
+                        prefix: null
+                        rp_type: null
+                      source: null
+                    next_hop:
+                      prefix_lists: null
+                    route_source:
+                      prefix_lists: null
+                  mac_list: null
+                  metric:
+                    - deviation: null
+                      value: null
+                  ospf_area: null
+                  route_types: null
+                  source_protocol: null
+                  tags: null
+                sequence: 20
+                set:
+                  as_path:
+                    prepend:
+                      as_number:
+                        - 65563
+                        - 65568
+                        - 65569
+                      last_as: null
+                    tag: null
+                  comm_list: BGPCommunity
+                  community:
+                    additive: null
+                    graceful_shutdown: null
+                    internet: null
+                    local_as: null
+                    no_advertise: null
+                    no_export: null
+                    number: null
+                  dampening:
+                    half_life: null
+                    max_suppress_time: null
+                    start_reuse_route: null
+                    start_suppress_route: null
+                  distance:
+                    igp_ebgp_routes: null
+                    internal_routes: null
+                    local_routes: null
+                  evpn:
+                    gateway_ip:
+                      ip: null
+                      use_nexthop: null
+                  extcomm_list: null
+                  extcommunity:
+                    rt:
+                      additive: null
+                      extcommunity_numbers: null
+                  forwarding_address: null
+                  ip:
+                    address:
+                      prefix_list: null
+                    next_hop:
+                      address: null
+                      drop_on_fail: null
+                      force_order: null
+                      load_share: null
+                      peer_address: null
+                      redist_unchanged: null
+                      unchanged: null
+                      verify_availability:
+                        - address: null
+                          drop_on_fail: null
+                          force_order: null
+                          load_share: null
+                          track: null
+                    precedence: null
+                  ipv6:
+                    address:
+                      prefix_list: null
+                    precedence: null
+                  label_index: null
+                  level: null
+                  local_preference: null
+                  metric:
+                    bandwidth: null
+                    igrp_delay_metric: null
+                    igrp_effective_bandwidth_metric: null
+                    igrp_mtu: null
+                    igrp_reliability_metric: null
+                  metric_type: null
+                  nssa_only: null
+                  null_interface: null
+                  origin: null
+                  path_selection: null
+                  tag: null
+                  weight: null
+              - action: deny
+                continue_sequence: null
+                description: rmap2-40-deny
+                match:
+                  as_number:
+                    as_path_list: null
+                    asn: null
+                  as_path: null
+                  community:
+                    community_list: null
+                    exact_match: null
+                  evpn:
+                    route_types: null
+                  extcommunity:
+                    exact_match: null
+                    extcommunity_list: null
+                  interfaces: null
+                  ip:
+                    address:
+                      access_list: null
+                      prefix_lists: null
+                    multicast:
+                      group:
+                        prefix: null
+                      group_range:
+                        first: 239.0.0.1
+                        last: 239.255.255.255
+                      rp:
+                        prefix: 192.0.2.0/24
+                        rp_type: ASM
+                      source: 203.0.113.0/24
+                    next_hop:
+                      prefix_lists: null
+                    route_source:
+                      prefix_lists: null
+                  ipv6:
+                    address:
+                      access_list: null
+                      prefix_lists: null
+                    multicast:
+                      group:
+                        prefix: null
+                      group_range:
+                        first: null
+                        last: null
+                      rp:
+                        prefix: null
+                        rp_type: null
+                      source: null
+                    next_hop:
+                      prefix_lists: null
+                    route_source:
+                      prefix_lists: null
+                  mac_list: null
+                  metric:
+                    - deviation: null
+                      value: null
+                  ospf_area: null
+                  route_types:
+                    - level-1
+                    - level-2
+                  source_protocol: null
+                  tags: 2
+                sequence: 40
+                set:
+                  as_path:
+                    prepend:
+                      as_number: null
+                      last_as: null
+                    tag: null
+                  comm_list: null
+                  community:
+                    additive: null
+                    graceful_shutdown: null
+                    internet: null
+                    local_as: null
+                    no_advertise: null
+                    no_export: null
+                    number: null
+                  dampening:
+                    half_life: null
+                    max_suppress_time: null
+                    start_reuse_route: null
+                    start_suppress_route: null
+                  distance:
+                    igp_ebgp_routes: null
+                    internal_routes: null
+                    local_routes: null
+                  evpn:
+                    gateway_ip:
+                      ip: null
+                      use_nexthop: null
+                  extcomm_list: null
+                  extcommunity:
+                    rt:
+                      additive: null
+                      extcommunity_numbers: null
+                  forwarding_address: null
+                  ip:
+                    address:
+                      prefix_list: null
+                    next_hop:
+                      address: null
+                      drop_on_fail: null
+                      force_order: null
+                      load_share: null
+                      peer_address: null
+                      redist_unchanged: null
+                      unchanged: null
+                      verify_availability:
+                        - address: null
+                          drop_on_fail: null
+                          force_order: null
+                          load_share: null
+                          track: null
+                    precedence: null
+                  ipv6:
+                    address:
+                      prefix_list: null
+                    precedence: null
+                  label_index: null
+                  level: null
+                  local_preference: null
+                  metric:
+                    bandwidth: null
+                    igrp_delay_metric: null
+                    igrp_effective_bandwidth_metric: null
+                    igrp_mtu: null
+                    igrp_reliability_metric: null
+                  metric_type: null
+                  nssa_only: null
+                  null_interface: null
+                  origin: null
+                  path_selection: null
+                  tag: null
+                  weight: null
+            route_map: rmap2
+          - entries:
+              - action: permit
+                continue_sequence: null
+                description: '*** first stanza ***'
+                match:
+                  as_number:
+                    as_path_list: null
+                    asn: null
+                  as_path: null
+                  community:
+                    community_list: null
+                    exact_match: null
+                  evpn:
+                    route_types: null
+                  extcommunity:
+                    exact_match: null
+                    extcommunity_list: null
+                  interfaces: null
+                  ip:
+                    address:
+                      access_list: null
+                      prefix_lists: null
+                    multicast:
+                      group:
+                        prefix: null
+                      group_range:
+                        first: null
+                        last: null
+                      rp:
+                        prefix: null
+                        rp_type: null
+                      source: null
+                    next_hop:
+                      prefix_lists: null
+                    route_source:
+                      prefix_lists: null
+                  ipv6:
+                    address:
+                      access_list: null
+                      prefix_lists: null
+                    multicast:
+                      group:
+                        prefix: null
+                      group_range:
+                        first: null
+                        last: null
+                      rp:
+                        prefix: null
+                        rp_type: null
+                      source: null
+                    next_hop:
+                      prefix_lists: null
+                    route_source:
+                      prefix_lists: null
+                  mac_list: null
+                  metric:
+                    - deviation: null
+                      value: null
+                  ospf_area: null
+                  route_types: null
+                  source_protocol: null
+                  tags: null
+                sequence: 10
+                set:
+                  as_path:
+                    prepend:
+                      as_number: null
+                      last_as: null
+                    tag: null
+                  comm_list: null
+                  community:
+                    additive: null
+                    graceful_shutdown: null
+                    internet: null
+                    local_as: null
+                    no_advertise: null
+                    no_export: null
+                    number: null
+                  dampening:
+                    half_life: null
+                    max_suppress_time: null
+                    start_reuse_route: null
+                    start_suppress_route: null
+                  distance:
+                    igp_ebgp_routes: null
+                    internal_routes: null
+                    local_routes: null
+                  evpn:
+                    gateway_ip:
+                      ip: null
+                      use_nexthop: null
+                  extcomm_list: null
+                  extcommunity:
+                    rt:
+                      additive: null
+                      extcommunity_numbers: null
+                  forwarding_address: null
+                  ip:
+                    address:
+                      prefix_list: null
+                    next_hop:
+                      address: null
+                      drop_on_fail: null
+                      force_order: null
+                      load_share: null
+                      peer_address: null
+                      redist_unchanged: null
+                      unchanged: null
+                      verify_availability:
+                        - address: 3.3.3.3
+                          drop_on_fail: null
+                          force_order: null
+                          load_share: null
+                          track: 1
+                        - address: 4.4.4.4
+                          drop_on_fail: null
+                          force_order: null
+                          load_share: null
+                          track: 3
+                    precedence: null
+                  ipv6:
+                    address:
+                      prefix_list: null
+                    precedence: null
+                  label_index: null
+                  level: null
+                  local_preference: null
+                  metric:
+                    bandwidth: null
+                    igrp_delay_metric: null
+                    igrp_effective_bandwidth_metric: null
+                    igrp_mtu: null
+                    igrp_reliability_metric: null
+                  metric_type: null
+                  nssa_only: null
+                  null_interface: null
+                  origin: null
+                  path_selection: null
+                  tag: null
+                  weight: null
+              - action: permit
+                continue_sequence: null
+                description: '*** second stanza ***'
+                match:
+                  as_number:
+                    as_path_list: null
+                    asn: null
+                  as_path: null
+                  community:
+                    community_list: null
+                    exact_match: null
+                  evpn:
+                    route_types: null
+                  extcommunity:
+                    exact_match: null
+                    extcommunity_list: null
+                  interfaces: null
+                  ip:
+                    address:
+                      access_list: null
+                      prefix_lists: null
+                    multicast:
+                      group:
+                        prefix: null
+                      group_range:
+                        first: null
+                        last: null
+                      rp:
+                        prefix: null
+                        rp_type: null
+                      source: null
+                    next_hop:
+                      prefix_lists: null
+                    route_source:
+                      prefix_lists: null
+                  ipv6:
+                    address:
+                      access_list: null
+                      prefix_lists: null
+                    multicast:
+                      group:
+                        prefix: null
+                      group_range:
+                        first: null
+                        last: null
+                      rp:
+                        prefix: null
+                        rp_type: null
+                      source: null
+                    next_hop:
+                      prefix_lists: null
+                    route_source:
+                      prefix_lists: null
+                  mac_list: null
+                  metric:
+                    - deviation: null
+                      value: null
+                  ospf_area: null
+                  route_types: null
+                  source_protocol: null
+                  tags: null
+                sequence: 20
+                set:
+                  as_path:
+                    prepend:
+                      as_number: null
+                      last_as: null
+                    tag: null
+                  comm_list: null
+                  community:
+                    additive: null
+                    graceful_shutdown: null
+                    internet: null
+                    local_as: null
+                    no_advertise: null
+                    no_export: null
+                    number: null
+                  dampening:
+                    half_life: null
+                    max_suppress_time: null
+                    start_reuse_route: null
+                    start_suppress_route: null
+                  distance:
+                    igp_ebgp_routes: null
+                    internal_routes: null
+                    local_routes: null
+                  evpn:
+                    gateway_ip:
+                      ip: null
+                      use_nexthop: null
+                  extcomm_list: null
+                  extcommunity:
+                    rt:
+                      additive: null
+                      extcommunity_numbers: null
+                  forwarding_address: null
+                  ip:
+                    address:
+                      prefix_list: null
+                    next_hop:
+                      address: 6.6.6.6 2.2.2.2
+                      drop_on_fail: true
+                      force_order: null
+                      load_share: true
+                      peer_address: null
+                      redist_unchanged: null
+                      unchanged: null
+                      verify_availability:
+                        - address: null
+                          drop_on_fail: null
+                          force_order: null
+                          load_share: null
+                          track: null
+                    precedence: null
+                  ipv6:
+                    address:
+                      prefix_list: null
+                    precedence: null
+                  label_index: null
+                  level: null
+                  local_preference: null
+                  metric:
+                    bandwidth: null
+                    igrp_delay_metric: null
+                    igrp_effective_bandwidth_metric: null
+                    igrp_mtu: null
+                    igrp_reliability_metric: null
+                  metric_type: null
+                  nssa_only: null
+                  null_interface: null
+                  origin: null
+                  path_selection: null
+                  tag: null
+                  weight: null
+              - action: permit
+                continue_sequence: null
+                description: '*** third stanza ***'
+                match:
+                  as_number:
+                    as_path_list: null
+                    asn: null
+                  as_path: null
+                  community:
+                    community_list: null
+                    exact_match: null
+                  evpn:
+                    route_types: null
+                  extcommunity:
+                    exact_match: null
+                    extcommunity_list: null
+                  interfaces: null
+                  ip:
+                    address:
+                      access_list: null
+                      prefix_lists: null
+                    multicast:
+                      group:
+                        prefix: null
+                      group_range:
+                        first: null
+                        last: null
+                      rp:
+                        prefix: null
+                        rp_type: null
+                      source: null
+                    next_hop:
+                      prefix_lists: null
+                    route_source:
+                      prefix_lists: null
+                  ipv6:
+                    address:
+                      access_list: null
+                      prefix_lists: null
+                    multicast:
+                      group:
+                        prefix: null
+                      group_range:
+                        first: null
+                        last: null
+                      rp:
+                        prefix: null
+                        rp_type: null
+                      source: null
+                    next_hop:
+                      prefix_lists: null
+                    route_source:
+                      prefix_lists: null
+                  mac_list: null
+                  metric:
+                    - deviation: null
+                      value: null
+                  ospf_area: null
+                  route_types: null
+                  source_protocol: null
+                  tags: null
+                sequence: 30
+                set:
+                  as_path:
+                    prepend:
+                      as_number: null
+                      last_as: null
+                    tag: null
+                  comm_list: null
+                  community:
+                    additive: null
+                    graceful_shutdown: null
+                    internet: null
+                    local_as: null
+                    no_advertise: null
+                    no_export: null
+                    number: null
+                  dampening:
+                    half_life: null
+                    max_suppress_time: null
+                    start_reuse_route: null
+                    start_suppress_route: null
+                  distance:
+                    igp_ebgp_routes: null
+                    internal_routes: null
+                    local_routes: null
+                  evpn:
+                    gateway_ip:
+                      ip: null
+                      use_nexthop: null
+                  extcomm_list: null
+                  extcommunity:
+                    rt:
+                      additive: null
+                      extcommunity_numbers: null
+                  forwarding_address: null
+                  ip:
+                    address:
+                      prefix_list: null
+                    next_hop:
+                      address: null
+                      drop_on_fail: null
+                      force_order: null
+                      load_share: null
+                      peer_address: true
+                      redist_unchanged: null
+                      unchanged: null
+                      verify_availability:
+                        - address: null
+                          drop_on_fail: null
+                          force_order: null
+                          load_share: null
+                          track: null
+                    precedence: null
+                  ipv6:
+                    address:
+                      prefix_list: null
+                    precedence: null
+                  label_index: null
+                  level: null
+                  local_preference: null
+                  metric:
+                    bandwidth: null
+                    igrp_delay_metric: null
+                    igrp_effective_bandwidth_metric: null
+                    igrp_mtu: null
+                    igrp_reliability_metric: null
+                  metric_type: null
+                  nssa_only: null
+                  null_interface: null
+                  origin: null
+                  path_selection: null
+                  tag: null
+                  weight: null
+              - action: permit
+                continue_sequence: null
+                description: '*** fourth stanza ***'
+                match:
+                  as_number:
+                    as_path_list: null
+                    asn: null
+                  as_path: null
+                  community:
+                    community_list: null
+                    exact_match: null
+                  evpn:
+                    route_types: null
+                  extcommunity:
+                    exact_match: null
+                    extcommunity_list: null
+                  interfaces: null
+                  ip:
+                    address:
+                      access_list: null
+                      prefix_lists: null
+                    multicast:
+                      group:
+                        prefix: null
+                      group_range:
+                        first: null
+                        last: null
+                      rp:
+                        prefix: null
+                        rp_type: null
+                      source: null
+                    next_hop:
+                      prefix_lists: null
+                    route_source:
+                      prefix_lists: null
+                  ipv6:
+                    address:
+                      access_list: null
+                      prefix_lists: null
+                    multicast:
+                      group:
+                        prefix: null
+                      group_range:
+                        first: null
+                        last: null
+                      rp:
+                        prefix: null
+                        rp_type: null
+                      source: null
+                    next_hop:
+                      prefix_lists: null
+                    route_source:
+                      prefix_lists: null
+                  mac_list: null
+                  metric:
+                    - deviation: null
+                      value: null
+                  ospf_area: null
+                  route_types: null
+                  source_protocol: null
+                  tags: null
+                sequence: 40
+                set:
+                  as_path:
+                    prepend:
+                      as_number: null
+                      last_as: null
+                    tag: null
+                  comm_list: null
+                  community:
+                    additive: null
+                    graceful_shutdown: null
+                    internet: null
+                    local_as: null
+                    no_advertise: null
+                    no_export: null
+                    number: null
+                  dampening:
+                    half_life: null
+                    max_suppress_time: null
+                    start_reuse_route: null
+                    start_suppress_route: null
+                  distance:
+                    igp_ebgp_routes: null
+                    internal_routes: null
+                    local_routes: null
+                  evpn:
+                    gateway_ip:
+                      ip: null
+                      use_nexthop: null
+                  extcomm_list: null
+                  extcommunity:
+                    rt:
+                      additive: null
+                      extcommunity_numbers: null
+                  forwarding_address: null
+                  ip:
+                    address:
+                      prefix_list: null
+                    next_hop:
+                      address: null
+                      drop_on_fail: null
+                      force_order: null
+                      load_share: null
+                      peer_address: null
+                      redist_unchanged: true
+                      unchanged: true
+                      verify_availability:
+                        - address: null
+                          drop_on_fail: null
+                          force_order: null
+                          load_share: null
+                          track: null
+                    precedence: null
+                  ipv6:
+                    address:
+                      prefix_list: null
+                    precedence: null
+                  label_index: null
+                  level: null
+                  local_preference: null
+                  metric:
+                    bandwidth: null
+                    igrp_delay_metric: null
+                    igrp_effective_bandwidth_metric: null
+                    igrp_mtu: null
+                    igrp_reliability_metric: null
+                  metric_type: null
+                  nssa_only: null
+                  null_interface: null
+                  origin: null
+                  path_selection: null
+                  tag: null
+                  weight: null
+            route_map: rmap3
+      nxos_ospfv2:
+        state: merged
+        config:
+          processes:
+            - areas:
+                - area_id: null
+                  authentication:
+                    message_digest: null
+                    set: null
+                  default_cost: null
+                  filter_list:
+                    - direction: null
+                      route_map: null
+                  nssa:
+                    default_information_originate: null
+                    no_redistribution: null
+                    no_summary: null
+                    set: null
+                    translate:
+                      type7:
+                        always: null
+                        never: null
+                        supress_fa: null
+                  ranges:
+                    - cost: null
+                      not_advertise: null
+                      prefix: null
+                  stub:
+                    no_summary: null
+                    set: null
+              auto_cost:
+                reference_bandwidth: null
+                unit: null
+              bfd: null
+              default_information:
+                originate:
+                  always: null
+                  route_map: null
+                  set: null
+              default_metric: null
+              distance: null
+              flush_routes: null
+              graceful_restart:
+                grace_period: null
+                helper_disable: null
+                set: null
+              isolate: null
+              log_adjacency_changes:
+                detail: null
+                log: null
+              max_lsa:
+                ignore_count: null
+                ignore_time: null
+                max_non_self_generated_lsa: null
+                reset_time: null
+                threshold: null
+                warning_only: null
+              max_metric:
+                router_lsa:
+                  external_lsa:
+                    max_metric_value: null
+                    set: null
+                  include_stub: null
+                  on_startup:
+                    set: null
+                    wait_for_bgp_asn: null
+                    wait_period: null
+                  set: null
+                  summary_lsa:
+                    max_metric_value: null
+                    set: null
+              maximum_paths: null
+              mpls:
+                traffic_eng:
+                  areas:
+                    - area_id: null
+                  multicast_intact: null
+                  router_id: null
+              name_lookup: null
+              passive_interface:
+                default: null
+              process_id: 100
+              redistribute:
+                - id: null
+                  protocol: null
+                  route_map: null
+              rfc1583compatibility: null
+              router_id: 203.0.113.20
+              shutdown: null
+              summary_address:
+                - not_advertise: null
+                  prefix: null
+                  tag: null
+              table_map:
+                filter: null
+                name: null
+              timers:
+                lsa_arrival: null
+                lsa_group_pacing: null
+                throttle:
+                  lsa:
+                    hold_interval: null
+                    max_interval: null
+                    start_interval: null
+                  spf:
+                    initial_spf_delay: null
+                    max_wait_time: null
+                    min_hold_time: null
+              vrfs:
+                - areas:
+                    - area_id: null
+                      authentication:
+                        message_digest: null
+                        set: null
+                      default_cost: null
+                      filter_list:
+                        - direction: null
+                          route_map: null
+                      nssa:
+                        default_information_originate: null
+                        no_redistribution: null
+                        no_summary: null
+                        set: null
+                        translate:
+                          type7:
+                            always: null
+                            never: null
+                            supress_fa: null
+                      ranges:
+                        - cost: null
+                          not_advertise: null
+                          prefix: null
+                      stub:
+                        no_summary: null
+                        set: null
+                  auto_cost:
+                    reference_bandwidth: null
+                    unit: null
+                  bfd: null
+                  capability:
+                    vrf_lite:
+                      evpn: null
+                      set: null
+                  default_information:
+                    originate:
+                      always: null
+                      route_map: null
+                      set: null
+                  default_metric: null
+                  distance: null
+                  down_bit_ignore: null
+                  graceful_restart:
+                    grace_period: null
+                    helper_disable: null
+                    set: null
+                  log_adjacency_changes:
+                    detail: null
+                    log: null
+                  max_lsa:
+                    ignore_count: null
+                    ignore_time: null
+                    max_non_self_generated_lsa: null
+                    reset_time: null
+                    threshold: null
+                    warning_only: null
+                  max_metric:
+                    router_lsa:
+                      external_lsa:
+                        max_metric_value: null
+                        set: null
+                      include_stub: null
+                      on_startup:
+                        set: null
+                        wait_for_bgp_asn: null
+                        wait_period: null
+                      set: null
+                      summary_lsa:
+                        max_metric_value: null
+                        set: null
+                  maximum_paths: null
+                  name_lookup: null
+                  passive_interface:
+                    default: null
+                  redistribute:
+                    - id: null
+                      protocol: null
+                      route_map: null
+                  rfc1583compatibility: null
+                  router_id: null
+                  shutdown: null
+                  summary_address:
+                    - not_advertise: null
+                      prefix: null
+                      tag: null
+                  table_map:
+                    filter: null
+                    name: null
+                  timers:
+                    lsa_arrival: null
+                    lsa_group_pacing: null
+                    throttle:
+                      lsa:
+                        hold_interval: null
+                        max_interval: null
+                        start_interval: null
+                      spf:
+                        initial_spf_delay: null
+                        max_wait_time: null
+                        min_hold_time: null
+                  vrf: null
+            - areas:
+                - area_id: 0.0.0.100
+                  authentication:
+                    message_digest: null
+                    set: null
+                  default_cost: null
+                  filter_list:
+                    - direction: in
+                      route_map: rmap_1
+                    - direction: out
+                      route_map: rmap_2
+                  nssa:
+                    default_information_originate: null
+                    no_redistribution: null
+                    no_summary: null
+                    set: null
+                    translate:
+                      type7:
+                        always: null
+                        never: null
+                        supress_fa: null
+                  ranges:
+                    - cost: null
+                      not_advertise: true
+                      prefix: 198.51.100.64/27
+                    - cost: 120
+                      not_advertise: null
+                      prefix: 198.51.100.96/27
+                  stub:
+                    no_summary: null
+                    set: null
+                - area_id: 0.0.0.101
+                  authentication:
+                    message_digest: true
+                    set: null
+                  default_cost: null
+                  filter_list:
+                    - direction: null
+                      route_map: null
+                  nssa:
+                    default_information_originate: null
+                    no_redistribution: null
+                    no_summary: null
+                    set: null
+                    translate:
+                      type7:
+                        always: null
+                        never: null
+                        supress_fa: null
+                  ranges:
+                    - cost: null
+                      not_advertise: null
+                      prefix: null
+                  stub:
+                    no_summary: null
+                    set: null
+              auto_cost:
+                reference_bandwidth: null
+                unit: null
+              bfd: null
+              default_information:
+                originate:
+                  always: null
+                  route_map: null
+                  set: null
+              default_metric: null
+              distance: null
+              flush_routes: null
+              graceful_restart:
+                grace_period: null
+                helper_disable: null
+                set: null
+              isolate: null
+              log_adjacency_changes:
+                detail: null
+                log: null
+              max_lsa:
+                ignore_count: null
+                ignore_time: null
+                max_non_self_generated_lsa: null
+                reset_time: null
+                threshold: null
+                warning_only: null
+              max_metric:
+                router_lsa:
+                  external_lsa:
+                    max_metric_value: null
+                    set: null
+                  include_stub: null
+                  on_startup:
+                    set: null
+                    wait_for_bgp_asn: null
+                    wait_period: null
+                  set: null
+                  summary_lsa:
+                    max_metric_value: null
+                    set: null
+              maximum_paths: null
+              mpls:
+                traffic_eng:
+                  areas:
+                    - area_id: null
+                  multicast_intact: null
+                  router_id: null
+              name_lookup: null
+              passive_interface:
+                default: null
+              process_id: 102
+              redistribute:
+                - id: 120
+                  protocol: eigrp
+                  route_map: rmap_1
+                - id: null
+                  protocol: direct
+                  route_map: ospf102-direct-connect
+              rfc1583compatibility: null
+              router_id: 198.51.100.1
+              shutdown: null
+              summary_address:
+                - not_advertise: null
+                  prefix: null
+                  tag: null
+              table_map:
+                filter: null
+                name: null
+              timers:
+                lsa_arrival: null
+                lsa_group_pacing: null
+                throttle:
+                  lsa:
+                    hold_interval: null
+                    max_interval: null
+                    start_interval: null
+                  spf:
+                    initial_spf_delay: null
+                    max_wait_time: null
+                    min_hold_time: null
+              vrfs:
+                - areas:
+                    - area_id: 0.0.0.102
+                      authentication:
+                        message_digest: null
+                        set: null
+                      default_cost: null
+                      filter_list:
+                        - direction: null
+                          route_map: null
+                      nssa:
+                        default_information_originate: true
+                        no_redistribution: null
+                        no_summary: true
+                        set: null
+                        translate:
+                          type7:
+                            always: null
+                            never: null
+                            supress_fa: null
+                      ranges:
+                        - cost: null
+                          not_advertise: null
+                          prefix: null
+                      stub:
+                        no_summary: null
+                        set: null
+                    - area_id: 0.0.0.103
+                      authentication:
+                        message_digest: null
+                        set: null
+                      default_cost: null
+                      filter_list:
+                        - direction: null
+                          route_map: null
+                      nssa:
+                        default_information_originate: null
+                        no_redistribution: null
+                        no_summary: true
+                        set: null
+                        translate:
+                          type7:
+                            always: true
+                            never: null
+                            supress_fa: null
+                      ranges:
+                        - cost: null
+                          not_advertise: null
+                          prefix: null
+                      stub:
+                        no_summary: null
+                        set: null
+                  auto_cost:
+                    reference_bandwidth: null
+                    unit: null
+                  bfd: null
+                  capability:
+                    vrf_lite:
+                      evpn: null
+                      set: null
+                  default_information:
+                    originate:
+                      always: null
+                      route_map: null
+                      set: null
+                  default_metric: null
+                  distance: null
+                  down_bit_ignore: null
+                  graceful_restart:
+                    grace_period: null
+                    helper_disable: null
+                    set: null
+                  log_adjacency_changes:
+                    detail: null
+                    log: null
+                  max_lsa:
+                    ignore_count: null
+                    ignore_time: null
+                    max_non_self_generated_lsa: null
+                    reset_time: null
+                    threshold: null
+                    warning_only: null
+                  max_metric:
+                    router_lsa:
+                      external_lsa:
+                        max_metric_value: null
+                        set: null
+                      include_stub: null
+                      on_startup:
+                        set: null
+                        wait_for_bgp_asn: null
+                        wait_period: null
+                      set: null
+                      summary_lsa:
+                        max_metric_value: null
+                        set: null
+                  maximum_paths: null
+                  name_lookup: null
+                  passive_interface:
+                    default: null
+                  redistribute:
+                    - id: null
+                      protocol: static
+                      route_map: zone1-static-connect
+                  rfc1583compatibility: null
+                  router_id: 198.51.100.129
+                  shutdown: null
+                  summary_address:
+                    - not_advertise: null
+                      prefix: 198.51.100.128/27
+                      tag: 121
+                    - not_advertise: null
+                      prefix: 198.51.100.160/27
+                      tag: null
+                  table_map:
+                    filter: null
+                    name: null
+                  timers:
+                    lsa_arrival: null
+                    lsa_group_pacing: null
+                    throttle:
+                      lsa:
+                        hold_interval: null
+                        max_interval: null
+                        start_interval: null
+                      spf:
+                        initial_spf_delay: null
+                        max_wait_time: null
+                        min_hold_time: null
+                  vrf: zone1
+                - areas:
+                    - area_id: null
+                      authentication:
+                        message_digest: null
+                        set: null
+                      default_cost: null
+                      filter_list:
+                        - direction: null
+                          route_map: null
+                      nssa:
+                        default_information_originate: null
+                        no_redistribution: null
+                        no_summary: null
+                        set: null
+                        translate:
+                          type7:
+                            always: null
+                            never: null
+                            supress_fa: null
+                      ranges:
+                        - cost: null
+                          not_advertise: null
+                          prefix: null
+                      stub:
+                        no_summary: null
+                        set: null
+                  auto_cost:
+                    reference_bandwidth: 45
+                    unit: Gbps
+                  bfd: null
+                  capability:
+                    vrf_lite:
+                      evpn: null
+                      set: null
+                  default_information:
+                    originate:
+                      always: null
+                      route_map: null
+                      set: null
+                  default_metric: null
+                  distance: null
+                  down_bit_ignore: null
+                  graceful_restart:
+                    grace_period: null
+                    helper_disable: null
+                    set: null
+                  log_adjacency_changes:
+                    detail: null
+                    log: null
+                  max_lsa:
+                    ignore_count: null
+                    ignore_time: null
+                    max_non_self_generated_lsa: null
+                    reset_time: null
+                    threshold: null
+                    warning_only: null
+                  max_metric:
+                    router_lsa:
+                      external_lsa:
+                        max_metric_value: null
+                        set: null
+                      include_stub: null
+                      on_startup:
+                        set: null
+                        wait_for_bgp_asn: null
+                        wait_period: null
+                      set: null
+                      summary_lsa:
+                        max_metric_value: null
+                        set: null
+                  maximum_paths: null
+                  name_lookup: null
+                  passive_interface:
+                    default: null
+                  redistribute:
+                    - id: null
+                      protocol: null
+                      route_map: null
+                  rfc1583compatibility: null
+                  router_id: null
+                  shutdown: null
+                  summary_address:
+                    - not_advertise: null
+                      prefix: null
+                      tag: null
+                  table_map:
+                    filter: null
+                    name: null
+                  timers:
+                    lsa_arrival: null
+                    lsa_group_pacing: null
+                    throttle:
+                      lsa:
+                        hold_interval: null
+                        max_interval: null
+                        start_interval: null
+                      spf:
+                        initial_spf_delay: null
+                        max_wait_time: null
+                        min_hold_time: null
+                  vrf: zone2
+      nxos_ospfv3:
+        state: merged
+        config:
+          processes:
+            - address_family:
+                afi: null
+                areas:
+                  - area_id: null
+                    default_cost: null
+                    filter_list:
+                      - direction: null
+                        route_map: null
+                    ranges:
+                      - cost: null
+                        not_advertise: null
+                        prefix: null
+                default_information:
+                  originate:
+                    always: null
+                    route_map: null
+                    set: null
+                distance: null
+                maximum_paths: null
+                redistribute:
+                  - id: null
+                    protocol: null
+                    route_map: null
+                safi: null
+                summary_address:
+                  - not_advertise: null
+                    prefix: null
+                    tag: null
+                table_map:
+                  filter: null
+                  name: null
+                timers:
+                  throttle:
+                    spf:
+                      initial_spf_delay: null
+                      max_wait_time: null
+                      min_hold_time: null
+              areas:
+                - area_id: null
+                  nssa:
+                    default_information_originate: null
+                    no_redistribution: null
+                    no_summary: null
+                    route_map: null
+                    set: null
+                    translate:
+                      type7:
+                        always: null
+                        never: null
+                        supress_fa: null
+                  stub:
+                    no_summary: null
+                    set: null
+              auto_cost:
+                reference_bandwidth: null
+                unit: null
+              flush_routes: null
+              graceful_restart:
+                grace_period: null
+                helper_disable: null
+                planned_only: null
+                set: null
+              isolate: null
+              log_adjacency_changes:
+                detail: null
+                log: null
+              max_lsa:
+                ignore_count: null
+                ignore_time: null
+                max_non_self_generated_lsa: null
+                reset_time: null
+                threshold: null
+                warning_only: null
+              max_metric:
+                router_lsa:
+                  external_lsa:
+                    max_metric_value: null
+                    set: null
+                  inter_area_prefix_lsa:
+                    max_metric_value: null
+                    set: null
+                  on_startup:
+                    set: null
+                    wait_for_bgp_asn: null
+                    wait_period: null
+                  set: null
+                  stub_prefix_lsa: null
+              name_lookup: null
+              passive_interface:
+                default: null
+              process_id: 100
+              router_id: 203.0.113.20
+              shutdown: null
+              timers:
+                lsa_arrival: null
+                lsa_group_pacing: null
+                throttle:
+                  lsa:
+                    hold_interval: null
+                    max_interval: null
+                    start_interval: null
+              vrfs:
+                - areas:
+                    - area_id: null
+                      nssa:
+                        default_information_originate: null
+                        no_redistribution: null
+                        no_summary: null
+                        route_map: null
+                        set: null
+                        translate:
+                          type7:
+                            always: null
+                            never: null
+                            supress_fa: null
+                      stub:
+                        no_summary: null
+                        set: null
+                  auto_cost:
+                    reference_bandwidth: null
+                    unit: null
+                  graceful_restart:
+                    grace_period: null
+                    helper_disable: null
+                    planned_only: null
+                    set: null
+                  log_adjacency_changes:
+                    detail: null
+                    log: null
+                  max_lsa:
+                    ignore_count: null
+                    ignore_time: null
+                    max_non_self_generated_lsa: null
+                    reset_time: null
+                    threshold: null
+                    warning_only: null
+                  max_metric:
+                    router_lsa:
+                      external_lsa:
+                        max_metric_value: null
+                        set: null
+                      inter_area_prefix_lsa:
+                        max_metric_value: null
+                        set: null
+                      on_startup:
+                        set: null
+                        wait_for_bgp_asn: null
+                        wait_period: null
+                      set: null
+                      stub_prefix_lsa: null
+                  name_lookup: null
+                  passive_interface:
+                    default: null
+                  router_id: null
+                  shutdown: null
+                  timers:
+                    lsa_arrival: null
+                    lsa_group_pacing: null
+                    throttle:
+                      lsa:
+                        hold_interval: null
+                        max_interval: null
+                        start_interval: null
+                  vrf: null
+            - address_family:
+                afi: ipv6
+                areas:
+                  - area_id: 0.0.0.100
+                    default_cost: null
+                    filter_list:
+                      - direction: in
+                        route_map: rmap_1
+                      - direction: out
+                        route_map: rmap_2
+                    ranges:
+                      - cost: null
+                        not_advertise: true
+                        prefix: 2001:db2::/32
+                      - cost: 120
+                        not_advertise: null
+                        prefix: 2001:db3::/32
+                default_information:
+                  originate:
+                    always: null
+                    route_map: null
+                    set: null
+                distance: null
+                maximum_paths: null
+                redistribute:
+                  - id: 120
+                    protocol: eigrp
+                    route_map: rmap_1
+                  - id: null
+                    protocol: direct
+                    route_map: ospf102-direct-connect
+                safi: unicast
+                summary_address:
+                  - not_advertise: null
+                    prefix: null
+                    tag: null
+                table_map:
+                  filter: null
+                  name: null
+                timers:
+                  throttle:
+                    spf:
+                      initial_spf_delay: null
+                      max_wait_time: null
+                      min_hold_time: null
+              areas:
+                - area_id: null
+                  nssa:
+                    default_information_originate: null
+                    no_redistribution: null
+                    no_summary: null
+                    route_map: null
+                    set: null
+                    translate:
+                      type7:
+                        always: null
+                        never: null
+                        supress_fa: null
+                  stub:
+                    no_summary: null
+                    set: null
+              auto_cost:
+                reference_bandwidth: null
+                unit: null
+              flush_routes: null
+              graceful_restart:
+                grace_period: null
+                helper_disable: null
+                planned_only: null
+                set: null
+              isolate: null
+              log_adjacency_changes:
+                detail: null
+                log: null
+              max_lsa:
+                ignore_count: null
+                ignore_time: null
+                max_non_self_generated_lsa: null
+                reset_time: null
+                threshold: null
+                warning_only: null
+              max_metric:
+                router_lsa:
+                  external_lsa:
+                    max_metric_value: null
+                    set: null
+                  inter_area_prefix_lsa:
+                    max_metric_value: null
+                    set: null
+                  on_startup:
+                    set: null
+                    wait_for_bgp_asn: null
+                    wait_period: null
+                  set: null
+                  stub_prefix_lsa: null
+              name_lookup: null
+              passive_interface:
+                default: null
+              process_id: 102
+              router_id: 198.51.100.1
+              shutdown: null
+              timers:
+                lsa_arrival: null
+                lsa_group_pacing: null
+                throttle:
+                  lsa:
+                    hold_interval: null
+                    max_interval: null
+                    start_interval: null
+              vrfs:
+                - areas:
+                    - area_id: 0.0.0.102
+                      nssa:
+                        default_information_originate: true
+                        no_redistribution: null
+                        no_summary: true
+                        route_map: null
+                        set: null
+                        translate:
+                          type7:
+                            always: null
+                            never: null
+                            supress_fa: null
+                      stub:
+                        no_summary: null
+                        set: null
+                    - area_id: 0.0.0.103
+                      nssa:
+                        default_information_originate: null
+                        no_redistribution: null
+                        no_summary: true
+                        route_map: null
+                        set: null
+                        translate:
+                          type7:
+                            always: true
+                            never: null
+                            supress_fa: null
+                      stub:
+                        no_summary: null
+                        set: null
+                  auto_cost:
+                    reference_bandwidth: null
+                    unit: null
+                  graceful_restart:
+                    grace_period: null
+                    helper_disable: null
+                    planned_only: null
+                    set: null
+                  log_adjacency_changes:
+                    detail: null
+                    log: null
+                  max_lsa:
+                    ignore_count: null
+                    ignore_time: null
+                    max_non_self_generated_lsa: null
+                    reset_time: null
+                    threshold: null
+                    warning_only: null
+                  max_metric:
+                    router_lsa:
+                      external_lsa:
+                        max_metric_value: null
+                        set: null
+                      inter_area_prefix_lsa:
+                        max_metric_value: null
+                        set: null
+                      on_startup:
+                        set: null
+                        wait_for_bgp_asn: null
+                        wait_period: null
+                      set: null
+                      stub_prefix_lsa: null
+                  name_lookup: null
+                  passive_interface:
+                    default: null
+                  router_id: 198.51.100.129
+                  shutdown: null
+                  timers:
+                    lsa_arrival: null
+                    lsa_group_pacing: null
+                    throttle:
+                      lsa:
+                        hold_interval: null
+                        max_interval: null
+                        start_interval: null
+                  vrf: zone1
+                - areas:
+                    - area_id: null
+                      nssa:
+                        default_information_originate: null
+                        no_redistribution: null
+                        no_summary: null
+                        route_map: null
+                        set: null
+                        translate:
+                          type7:
+                            always: null
+                            never: null
+                            supress_fa: null
+                      stub:
+                        no_summary: null
+                        set: null
+                  auto_cost:
+                    reference_bandwidth: 45
+                    unit: Gbps
+                  graceful_restart:
+                    grace_period: null
+                    helper_disable: null
+                    planned_only: null
+                    set: null
+                  log_adjacency_changes:
+                    detail: null
+                    log: null
+                  max_lsa:
+                    ignore_count: null
+                    ignore_time: null
+                    max_non_self_generated_lsa: null
+                    reset_time: null
+                    threshold: null
+                    warning_only: null
+                  max_metric:
+                    router_lsa:
+                      external_lsa:
+                        max_metric_value: null
+                        set: null
+                      inter_area_prefix_lsa:
+                        max_metric_value: null
+                        set: null
+                      on_startup:
+                        set: null
+                        wait_for_bgp_asn: null
+                        wait_period: null
+                      set: null
+                      stub_prefix_lsa: null
+                  name_lookup: null
+                  passive_interface:
+                    default: null
+                  router_id: null
+                  shutdown: null
+                  timers:
+                    lsa_arrival: null
+                    lsa_group_pacing: null
+                    throttle:
+                      lsa:
+                        hold_interval: null
+                        max_interval: null
+                        start_interval: null
+                  vrf: zone2
+      nxos_ospf_interfaces:
+        state: merged
+        config:
+          - address_family:
+              - afi: ipv4
+                authentication:
+                  enable: null
+                  key_chain: null
+                  message_digest: null
+                  null_auth: null
+                authentication_key:
+                  encryption: null
+                  key: null
+                cost: null
+                dead_interval: null
+                default_passive_interface: null
+                hello_interval: null
+                instance: null
+                message_digest_key:
+                  encryption: null
+                  key: null
+                  key_id: null
+                mtu_ignore: null
+                multi_areas:
+                  - 11.11.11.11
+                network: null
+                passive_interface: null
+                priority: null
+                processes:
+                  - area:
+                      area_id: 1.1.1.1
+                      secondaries: false
+                    multi_areas: null
+                    process_id: '100'
+                retransmit_interval: null
+                shutdown: null
+                transmit_delay: null
+              - afi: ipv6
+                authentication:
+                  enable: null
+                  key_chain: null
+                  message_digest: null
+                  null_auth: null
+                authentication_key:
+                  encryption: null
+                  key: null
+                cost: null
+                dead_interval: null
+                default_passive_interface: null
+                hello_interval: null
+                instance: null
+                message_digest_key:
+                  encryption: null
+                  key: null
+                  key_id: null
+                mtu_ignore: null
+                multi_areas:
+                  - 16.10.10.10
+                network: null
+                passive_interface: null
+                priority: null
+                processes:
+                  - area:
+                      area_id: 2.2.2.2
+                      secondaries: null
+                    multi_areas:
+                      - 21.0.0.0
+                    process_id: '200'
+                  - area:
+                      area_id: null
+                      secondaries: null
+                    multi_areas:
+                      - 50.50.50.50
+                    process_id: '300'
+                retransmit_interval: null
+                shutdown: null
+                transmit_delay: null
+            name: Ethernet1/1
+          - address_family:
+              - afi: ipv4
+                authentication:
+                  enable: true
+                  key_chain: test-1
+                  message_digest: null
+                  null_auth: null
+                authentication_key:
+                  encryption: null
+                  key: null
+                cost: 100
+                dead_interval: null
+                default_passive_interface: null
+                hello_interval: null
+                instance: null
+                message_digest_key:
+                  encryption: 3
+                  key: '{{ vault_key }}'
+                  key_id: 10
+                mtu_ignore: null
+                multi_areas: null
+                network: null
+                passive_interface: null
+                priority: null
+                processes:
+                  - area:
+                      area_id: null
+                      secondaries: null
+                    multi_areas: null
+                    process_id: null
+                retransmit_interval: null
+                shutdown: null
+                transmit_delay: null
+              - afi: ipv6
+                authentication:
+                  enable: null
+                  key_chain: null
+                  message_digest: null
+                  null_auth: null
+                authentication_key:
+                  encryption: null
+                  key: null
+                cost: null
+                dead_interval: null
+                default_passive_interface: null
+                hello_interval: null
+                instance: null
+                message_digest_key:
+                  encryption: null
+                  key: null
+                  key_id: null
+                mtu_ignore: null
+                multi_areas: null
+                network: broadcast
+                passive_interface: null
+                priority: null
+                processes:
+                  - area:
+                      area_id: null
+                      secondaries: null
+                    multi_areas: null
+                    process_id: null
+                retransmit_interval: null
+                shutdown: true
+                transmit_delay: null
+            name: Ethernet1/2
+          - address_family:
+              - afi: ipv4
+                authentication:
+                  enable: null
+                  key_chain: null
+                  message_digest: null
+                  null_auth: null
+                authentication_key:
+                  encryption: 7
+                  key: '{{ vault_key }}'
+                cost: null
+                dead_interval: null
+                default_passive_interface: null
+                hello_interval: null
+                instance: null
+                message_digest_key:
+                  encryption: null
+                  key: null
+                  key_id: null
+                mtu_ignore: null
+                multi_areas: null
+                network: null
+                passive_interface: null
+                priority: null
+                processes:
+                  - area:
+                      area_id: null
+                      secondaries: null
+                    multi_areas: null
+                    process_id: null
+                retransmit_interval: null
+                shutdown: null
+                transmit_delay: null
+            name: Ethernet1/3
+      nxos_bgp_global:
+        state: merged
+        config:
+          affinity_group:
+            group_id: null
+          as_number: 65563
+          bestpath:
+            always_compare_med: null
+            as_path:
+              ignore: null
+              multipath_relax: true
+            compare_neighborid: true
+            compare_routerid: null
+            cost_community_ignore: true
+            igp_metric_ignore: null
+            med:
+              confed: null
+              missing_as_worst: null
+              non_deterministic: null
+          cluster_id: null
+          confederation:
+            identifier: 42
+            peers:
+              - 65020
+              - 65030
+              - 65040
+          disable_policy_batching:
+            ipv4:
+              prefix_list: null
+            ipv6:
+              prefix_list: null
+            nexthop: null
+            set: null
+          dynamic_med_interval: null
+          enforce_first_as: null
+          enhanced_error: null
+          fabric_soo: null
+          fast_external_fallover: null
+          flush_routes: null
+          graceful_restart:
+            helper: null
+            restart_time: null
+            set: null
+            stalepath_time: null
+          graceful_shutdown:
+            activate:
+              route_map: null
+              set: null
+            aware: null
+          isolate:
+            include_local: null
+            set: null
+          log_neighbor_changes: true
+          maxas_limit: 20
+          neighbor_down:
+            fib_accelerate: true
+          neighbors:
+            - bfd:
+                multihop:
+                  interval:
+                    min_rx_interval: null
+                    multiplier: null
+                    tx_interval: null
+                  set: null
+                set: null
+                singlehop: null
+              bmp_activate_server: 1
+              capability:
+                suppress_4_byte_as: null
+              description: NBR-1
+              disable_connected_check: null
+              dont_capability_negotiate: null
+              dscp: null
+              dynamic_capability: null
+              ebgp_multihop: null
+              graceful_shutdown:
+                activate:
+                  route_map: null
+                  set: null
+              inherit:
+                peer: null
+                peer_session: null
+              local_as: null
+              local_as_config:
+                as_number: null
+                dual_as: null
+                no_prepend: null
+                replace_as: null
+              log_neighbor_changes:
+                disable: null
+                set: null
+              low_memory:
+                exempt: true
+              neighbor_address: 198.51.100.100
+              neighbor_affinity_group:
+                group_id: 160
+              password:
+                encryption: null
+                key: null
+              path_attribute:
+                - action: null
+                  range:
+                    end: null
+                    start: null
+                  type: null
+              peer_type: null
+              remote_as: 65563
+              remote_as_route_map: null
+              remove_private_as:
+                all: null
+                replace_as: null
+                set: null
+              shutdown: null
+              timers:
+                holdtime: null
+                keepalive: null
+              transport:
+                connection_mode:
+                  passive: null
+              ttl_security:
+                hops: null
+              update_source: null
+            - bfd:
+                multihop:
+                  interval:
+                    min_rx_interval: null
+                    multiplier: null
+                    tx_interval: null
+                  set: null
+                set: null
+                singlehop: null
+              bmp_activate_server: null
+              capability:
+                suppress_4_byte_as: null
+              description: null
+              disable_connected_check: null
+              dont_capability_negotiate: null
+              dscp: null
+              dynamic_capability: null
+              ebgp_multihop: null
+              graceful_shutdown:
+                activate:
+                  route_map: null
+                  set: null
+              inherit:
+                peer: null
+                peer_session: null
+              local_as: null
+              local_as_config:
+                as_number: null
+                dual_as: null
+                no_prepend: null
+                replace_as: null
+              log_neighbor_changes:
+                disable: null
+                set: null
+              low_memory:
+                exempt: null
+              neighbor_address: 198.51.100.101
+              neighbor_affinity_group:
+                group_id: null
+              password:
+                encryption: 7
+                key: '{{ vault_key }}'
+              path_attribute:
+                - action: null
+                  range:
+                    end: null
+                    start: null
+                  type: null
+              peer_type: null
+              remote_as: 65563
+              remote_as_route_map: null
+              remove_private_as:
+                all: null
+                replace_as: null
+                set: null
+              shutdown: null
+              timers:
+                holdtime: null
+                keepalive: null
+              transport:
+                connection_mode:
+                  passive: null
+              ttl_security:
+                hops: null
+              update_source: null
+          nexthop:
+            suppress_default_resolution: null
+          rd:
+            dual: null
+            id: null
+          reconnect_interval: null
+          router_id: 198.51.100.1
+          shutdown: null
+          suppress_fib_pending: null
+          timers:
+            bestpath_limit:
+              always: null
+              timeout: null
+            bgp:
+              holdtime: null
+              keepalive: null
+            prefix_peer_timeout: null
+            prefix_peer_wait: null
+          vrfs:
+            - allocate_index: 5000
+              bestpath:
+                always_compare_med: null
+                as_path:
+                  ignore: null
+                  multipath_relax: null
+                compare_neighborid: null
+                compare_routerid: null
+                cost_community_ignore: null
+                igp_metric_ignore: null
+                med:
+                  confed: null
+                  missing_as_worst: null
+                  non_deterministic: null
+              cluster_id: null
+              confederation:
+                identifier: null
+                peers: null
+              graceful_restart:
+                helper: null
+                restart_time: null
+                set: null
+                stalepath_time: null
+              local_as: 200
+              log_neighbor_changes: true
+              maxas_limit: null
+              neighbor_down:
+                fib_accelerate: null
+              neighbors:
+                - bfd:
+                    multihop:
+                      interval:
+                        min_rx_interval: null
+                        multiplier: null
+                        tx_interval: null
+                      set: null
+                    set: null
+                    singlehop: null
+                  bmp_activate_server: null
+                  capability:
+                    suppress_4_byte_as: null
+                  description: site-1-nbr-1
+                  disable_connected_check: null
+                  dont_capability_negotiate: null
+                  dscp: null
+                  dynamic_capability: null
+                  ebgp_multihop: null
+                  graceful_shutdown:
+                    activate:
+                      route_map: null
+                      set: null
+                  inherit:
+                    peer: null
+                    peer_session: null
+                  local_as: null
+                  local_as_config:
+                    as_number: null
+                    dual_as: null
+                    no_prepend: null
+                    replace_as: null
+                  log_neighbor_changes:
+                    disable: null
+                    set: null
+                  low_memory:
+                    exempt: null
+                  neighbor_address: 198.51.100.1
+                  neighbor_affinity_group:
+                    group_id: null
+                  password:
+                    encryption: 3
+                    key: '{{ vault_key }}'
+                  path_attribute:
+                    - action: null
+                      range:
+                        end: null
+                        start: null
+                      type: null
+                  peer_type: null
+                  remote_as: 65562
+                  remote_as_route_map: null
+                  remove_private_as:
+                    all: null
+                    replace_as: null
+                    set: null
+                  shutdown: null
+                  timers:
+                    holdtime: null
+                    keepalive: null
+                  transport:
+                    connection_mode:
+                      passive: null
+                  ttl_security:
+                    hops: null
+                  update_source: null
+                - bfd:
+                    multihop:
+                      interval:
+                        min_rx_interval: null
+                        multiplier: null
+                        tx_interval: null
+                      set: null
+                    set: null
+                    singlehop: null
+                  bmp_activate_server: null
+                  capability:
+                    suppress_4_byte_as: null
+                  description: site-1-nbr-2
+                  disable_connected_check: null
+                  dont_capability_negotiate: null
+                  dscp: null
+                  dynamic_capability: null
+                  ebgp_multihop: null
+                  graceful_shutdown:
+                    activate:
+                      route_map: null
+                      set: null
+                  inherit:
+                    peer: null
+                    peer_session: null
+                  local_as: null
+                  local_as_config:
+                    as_number: null
+                    dual_as: null
+                    no_prepend: null
+                    replace_as: null
+                  log_neighbor_changes:
+                    disable: null
+                    set: null
+                  low_memory:
+                    exempt: null
+                  neighbor_address: 198.51.100.2
+                  neighbor_affinity_group:
+                    group_id: null
+                  password:
+                    encryption: null
+                    key: null
+                  path_attribute:
+                    - action: null
+                      range:
+                        end: null
+                        start: null
+                      type: null
+                  peer_type: null
+                  remote_as: 65562
+                  remote_as_route_map: null
+                  remove_private_as:
+                    all: null
+                    replace_as: null
+                    set: null
+                  shutdown: null
+                  timers:
+                    holdtime: null
+                    keepalive: null
+                  transport:
+                    connection_mode:
+                      passive: null
+                  ttl_security:
+                    hops: null
+                  update_source: null
+              reconnect_interval: null
+              router_id: null
+              timers:
+                bestpath_limit:
+                  always: null
+                  timeout: null
+                bgp:
+                  holdtime: null
+                  keepalive: null
+                prefix_peer_timeout: null
+                prefix_peer_wait: null
+              vrf: site-1
+            - allocate_index: null
+              bestpath:
+                always_compare_med: null
+                as_path:
+                  ignore: null
+                  multipath_relax: null
+                compare_neighborid: null
+                compare_routerid: null
+                cost_community_ignore: null
+                igp_metric_ignore: null
+                med:
+                  confed: null
+                  missing_as_worst: null
+                  non_deterministic: null
+              cluster_id: null
+              confederation:
+                identifier: null
+                peers: null
+              graceful_restart:
+                helper: null
+                restart_time: null
+                set: null
+                stalepath_time: null
+              local_as: 300
+              log_neighbor_changes: true
+              maxas_limit: null
+              neighbor_down:
+                fib_accelerate: true
+              neighbors:
+                - bfd:
+                    multihop:
+                      interval:
+                        min_rx_interval: null
+                        multiplier: null
+                        tx_interval: null
+                      set: null
+                    set: null
+                    singlehop: null
+                  bmp_activate_server: null
+                  capability:
+                    suppress_4_byte_as: null
+                  description: site-2-nbr-1
+                  disable_connected_check: null
+                  dont_capability_negotiate: null
+                  dscp: null
+                  dynamic_capability: null
+                  ebgp_multihop: null
+                  graceful_shutdown:
+                    activate:
+                      route_map: null
+                      set: null
+                  inherit:
+                    peer: null
+                    peer_session: null
+                  local_as: null
+                  local_as_config:
+                    as_number: null
+                    dual_as: null
+                    no_prepend: null
+                    replace_as: null
+                  log_neighbor_changes:
+                    disable: null
+                    set: null
+                  low_memory:
+                    exempt: null
+                  neighbor_address: 203.0.113.2
+                  neighbor_affinity_group:
+                    group_id: null
+                  password:
+                    encryption: 3
+                    key: '{{ vault_key }}'
+                  path_attribute:
+                    - action: null
+                      range:
+                        end: null
+                        start: null
+                      type: null
+                  peer_type: null
+                  remote_as: 65568
+                  remote_as_route_map: null
+                  remove_private_as:
+                    all: null
+                    replace_as: null
+                    set: null
+                  shutdown: null
+                  timers:
+                    holdtime: null
+                    keepalive: null
+                  transport:
+                    connection_mode:
+                      passive: null
+                  ttl_security:
+                    hops: null
+                  update_source: null
+              reconnect_interval: null
+              router_id: null
+              timers:
+                bestpath_limit:
+                  always: null
+                  timeout: null
+                bgp:
+                  holdtime: null
+                  keepalive: null
+                prefix_peer_timeout: null
+                prefix_peer_wait: null
+              vrf: site-2
+      nxos_bgp_templates:
+        state: merged
+        config:
+          as_number: 65536
+          neighbor:
+            - address_family:
+                - advertise_map:
+                    exist_map: null
+                    non_exist_map: nemap1
+                    route_map: rmap1
+                  advertisement_interval: 60
+                  afi: ipv4
+                  allowas_in:
+                    max_occurences: null
+                    set: null
+                  as_override: null
+                  capability:
+                    additional_paths:
+                      receive: null
+                      send: null
+                  default_originate:
+                    route_map: null
+                    set: null
+                  disable_peer_as_check: true
+                  filter_list:
+                    inbound: null
+                    outbound: null
+                  inherit:
+                    peer_policy: null
+                  maximum_prefix:
+                    generate_warning_threshold: null
+                    max_prefix_limit: null
+                    restart_interval: null
+                    warning_only: null
+                  next_hop_self:
+                    all_routes: null
+                    set: null
+                  next_hop_third_party: null
+                  prefix_list:
+                    inbound: null
+                    outbound: null
+                  route_map:
+                    inbound: null
+                    outbound: null
+                  route_reflector_client: null
+                  safi: unicast
+                  send_community: null
+                  soft_reconfiguration_inbound:
+                    always: null
+                    set: null
+                  soo: null
+                  suppress_inactive: null
+                  unsuppress_map: null
+                  weight: null
+              bfd:
+                multihop:
+                  interval:
+                    min_rx_interval: null
+                    multiplier: null
+                    tx_interval: null
+                  set: null
+                set: null
+                singlehop: null
+              bmp_activate_server: 2
+              capability:
+                suppress_4_byte_as: true
+              description: Test_BGP_PEER_TEMPLATE_1
+              disable_connected_check: null
+              dont_capability_negotiate: null
+              dscp: null
+              dynamic_capability: null
+              ebgp_multihop: null
+              graceful_shutdown:
+                activate:
+                  route_map: null
+                  set: null
+              inherit:
+                peer_session: null
+              local_as: 65536
+              log_neighbor_changes:
+                disable: null
+                set: null
+              low_memory:
+                exempt: null
+              name: neighbor_tmplt_1
+              password:
+                encryption: null
+                key: null
+              path_attribute:
+                - action: null
+                  range:
+                    end: null
+                    start: null
+                  type: null
+              remote_as: 65001
+              remove_private_as:
+                all: null
+                replace_as: null
+                set: null
+              shutdown: null
+              timers:
+                holdtime: null
+                keepalive: null
+              transport:
+                connection_mode:
+                  passive: null
+              ttl_security:
+                hops: null
+              update_source: null
+            - address_family:
+                - advertise_map:
+                    exist_map: emap1
+                    non_exist_map: null
+                    route_map: rmap1
+                  advertisement_interval: null
+                  afi: ipv4
+                  allowas_in:
+                    max_occurences: null
+                    set: null
+                  as_override: true
+                  capability:
+                    additional_paths:
+                      receive: null
+                      send: null
+                  default_originate:
+                    route_map: null
+                    set: null
+                  disable_peer_as_check: null
+                  filter_list:
+                    inbound: flist1
+                    outbound: flist2
+                  inherit:
+                    peer_policy: null
+                  maximum_prefix:
+                    generate_warning_threshold: null
+                    max_prefix_limit: null
+                    restart_interval: null
+                    warning_only: null
+                  next_hop_self:
+                    all_routes: null
+                    set: null
+                  next_hop_third_party: null
+                  prefix_list:
+                    inbound: null
+                    outbound: null
+                  route_map:
+                    inbound: null
+                    outbound: null
+                  route_reflector_client: null
+                  safi: multicast
+                  send_community: null
+                  soft_reconfiguration_inbound:
+                    always: null
+                    set: null
+                  soo: null
+                  suppress_inactive: null
+                  unsuppress_map: null
+                  weight: null
+              bfd:
+                multihop:
+                  interval:
+                    min_rx_interval: null
+                    multiplier: null
+                    tx_interval: null
+                  set: null
+                set: null
+                singlehop: null
+              bmp_activate_server: null
+              capability:
+                suppress_4_byte_as: null
+              description: Test_BGP_PEER_TEMPLATE_2
+              disable_connected_check: null
+              dont_capability_negotiate: null
+              dscp: null
+              dynamic_capability: null
+              ebgp_multihop: null
+              graceful_shutdown:
+                activate:
+                  route_map: null
+                  set: null
+              inherit:
+                peer_session: psession1
+              local_as: null
+              log_neighbor_changes:
+                disable: null
+                set: null
+              low_memory:
+                exempt: null
+              name: neighbor_tmplt_2
+              password:
+                encryption: null
+                key: null
+              path_attribute:
+                - action: null
+                  range:
+                    end: null
+                    start: null
+                  type: null
+              remote_as: null
+              remove_private_as:
+                all: null
+                replace_as: null
+                set: null
+              shutdown: null
+              timers:
+                holdtime: 100
+                keepalive: 45
+              transport:
+                connection_mode:
+                  passive: null
+              ttl_security:
+                hops: null
+              update_source: null
+      nxos_bgp_address_family:
+        state: merged
+        config:
+          address_family:
+            - additional_paths:
+                install_backup: null
+                receive: null
+                selection:
+                  route_map: null
+                send: null
+              advertise_l2vpn_evpn: null
+              advertise_pip: null
+              advertise_system_mac: null
+              afi: ipv4
+              aggregate_address:
+                - advertise_map: null
+                  as_set: null
+                  attribute_map: null
+                  prefix: null
+                  summary_only: null
+                  suppress_map: null
+              allow_vni_in_ethertag: null
+              client_to_client:
+                no_reflection: null
+              dampen_igp_metric: null
+              dampening:
+                decay_half_life: null
+                max_suppress_time: null
+                route_map: null
+                set: null
+                start_reuse_route: null
+                start_suppress_route: null
+              default_information:
+                originate: null
+              default_metric: null
+              distance:
+                ebgp_routes: null
+                ibgp_routes: null
+                local_routes: null
+              export_gateway_ip: null
+              inject_map:
+                - copy_attributes: null
+                  exist_map: null
+                  route_map: null
+              maximum_paths:
+                eibgp:
+                  parallel_paths: null
+                ibgp:
+                  parallel_paths: null
+                local:
+                  parallel_paths: null
+                mixed:
+                  parallel_paths: null
+                parallel_paths: null
+              networks:
+                - prefix: 192.0.2.32/27
+                  route_map: null
+                - prefix: 192.0.2.64/27
+                  route_map: rmap1
+              nexthop:
+                route_map: rmap2
+                trigger_delay:
+                  critical_delay: 120
+                  non_critical_delay: 180
+              redistribute:
+                - id: null
+                  protocol: null
+                  route_map: null
+              retain:
+                route_target:
+                  retain_all: null
+                  route_map: null
+              safi: multicast
+              suppress_inactive: null
+              table_map:
+                filter: null
+                name: null
+              timers:
+                bestpath_defer:
+                  defer_time: null
+                  maximum_defer_time: null
+              vrf: null
+              wait_igp_convergence: null
+            - additional_paths:
+                install_backup: null
+                receive: null
+                selection:
+                  route_map: null
+                send: null
+              advertise_l2vpn_evpn: null
+              advertise_pip: null
+              advertise_system_mac: null
+              afi: ipv4
+              aggregate_address:
+                - advertise_map: null
+                  as_set: true
+                  attribute_map: null
+                  prefix: 203.0.113.0/24
+                  summary_only: true
+                  suppress_map: null
+              allow_vni_in_ethertag: null
+              client_to_client:
+                no_reflection: null
+              dampen_igp_metric: null
+              dampening:
+                decay_half_life: null
+                max_suppress_time: null
+                route_map: null
+                set: null
+                start_reuse_route: null
+                start_suppress_route: null
+              default_information:
+                originate: true
+              default_metric: null
+              distance:
+                ebgp_routes: null
+                ibgp_routes: null
+                local_routes: null
+              export_gateway_ip: null
+              inject_map:
+                - copy_attributes: null
+                  exist_map: null
+                  route_map: null
+              maximum_paths:
+                eibgp:
+                  parallel_paths: null
+                ibgp:
+                  parallel_paths: null
+                local:
+                  parallel_paths: null
+                mixed:
+                  parallel_paths: null
+                parallel_paths: null
+              networks:
+                - prefix: null
+                  route_map: null
+              nexthop:
+                route_map: null
+                trigger_delay:
+                  critical_delay: null
+                  non_critical_delay: null
+              redistribute:
+                - id: null
+                  protocol: null
+                  route_map: null
+              retain:
+                route_target:
+                  retain_all: null
+                  route_map: null
+              safi: unicast
+              suppress_inactive: null
+              table_map:
+                filter: null
+                name: null
+              timers:
+                bestpath_defer:
+                  defer_time: null
+                  maximum_defer_time: null
+              vrf: site-1
+              wait_igp_convergence: null
+            - additional_paths:
+                install_backup: null
+                receive: null
+                selection:
+                  route_map: null
+                send: null
+              advertise_l2vpn_evpn: null
+              advertise_pip: null
+              advertise_system_mac: null
+              afi: ipv6
+              aggregate_address:
+                - advertise_map: null
+                  as_set: null
+                  attribute_map: null
+                  prefix: null
+                  summary_only: null
+                  suppress_map: null
+              allow_vni_in_ethertag: null
+              client_to_client:
+                no_reflection: null
+              dampen_igp_metric: null
+              dampening:
+                decay_half_life: null
+                max_suppress_time: null
+                route_map: null
+                set: null
+                start_reuse_route: null
+                start_suppress_route: null
+              default_information:
+                originate: null
+              default_metric: null
+              distance:
+                ebgp_routes: null
+                ibgp_routes: null
+                local_routes: null
+              export_gateway_ip: null
+              inject_map:
+                - copy_attributes: null
+                  exist_map: null
+                  route_map: null
+              maximum_paths:
+                eibgp:
+                  parallel_paths: null
+                ibgp:
+                  parallel_paths: null
+                local:
+                  parallel_paths: null
+                mixed:
+                  parallel_paths: null
+                parallel_paths: null
+              networks:
+                - prefix: null
+                  route_map: null
+              nexthop:
+                route_map: null
+                trigger_delay:
+                  critical_delay: null
+                  non_critical_delay: null
+              redistribute:
+                - id: 100
+                  protocol: ospfv3
+                  route_map: rmap-ospf-1
+                - id: 101
+                  protocol: eigrp
+                  route_map: rmap-eigrp-1
+              retain:
+                route_target:
+                  retain_all: null
+                  route_map: null
+              safi: multicast
+              suppress_inactive: null
+              table_map:
+                filter: null
+                name: null
+              timers:
+                bestpath_defer:
+                  defer_time: null
+                  maximum_defer_time: null
+              vrf: site-1
+              wait_igp_convergence: null
+          as_number: 65536
+      nxos_bgp_neighbor_address_family:
+        state: merged
+        config:
+          as_number: 65536
+          neighbors:
+            - address_family:
+                - advertise_map:
+                    exist_map: null
+                    non_exist_map: null
+                    route_map: null
+                  advertisement_interval: null
+                  afi: ipv4
+                  allowas_in:
+                    max_occurences: null
+                    set: null
+                  as_override: null
+                  capability:
+                    additional_paths:
+                      receive: null
+                      send: null
+                  default_originate:
+                    route_map: null
+                    set: null
+                  disable_peer_as_check: null
+                  filter_list:
+                    inbound: null
+                    outbound: null
+                  inherit:
+                    sequence: null
+                    template: null
+                  maximum_prefix:
+                    generate_warning_threshold: 75
+                    max_prefix_limit: 20
+                    restart_interval: null
+                    warning_only: null
+                  next_hop_self:
+                    all_routes: null
+                    set: null
+                  next_hop_third_party: null
+                  prefix_list:
+                    inbound: rmap1
+                    outbound: rmap2
+                  rewrite_evpn_rt_asn: null
+                  rewrite_rt_asn: null
+                  route_map:
+                    inbound: null
+                    outbound: null
+                  route_reflector_client: null
+                  safi: unicast
+                  send_community:
+                    both: null
+                    extended: null
+                    set: null
+                    standard: null
+                  soft_reconfiguration_inbound:
+                    always: null
+                    set: null
+                  soo: null
+                  suppress_inactive: null
+                  unsuppress_map: null
+                  weight: 100
+                - advertise_map:
+                    exist_map: null
+                    non_exist_map: null
+                    route_map: null
+                  advertisement_interval: null
+                  afi: ipv6
+                  allowas_in:
+                    max_occurences: null
+                    set: null
+                  as_override: null
+                  capability:
+                    additional_paths:
+                      receive: null
+                      send: null
+                  default_originate:
+                    route_map: null
+                    set: null
+                  disable_peer_as_check: null
+                  filter_list:
+                    inbound: null
+                    outbound: null
+                  inherit:
+                    sequence: null
+                    template: null
+                  maximum_prefix:
+                    generate_warning_threshold: null
+                    max_prefix_limit: null
+                    restart_interval: null
+                    warning_only: null
+                  next_hop_self:
+                    all_routes: null
+                    set: null
+                  next_hop_third_party: null
+                  prefix_list:
+                    inbound: null
+                    outbound: null
+                  rewrite_evpn_rt_asn: null
+                  rewrite_rt_asn: null
+                  route_map:
+                    inbound: null
+                    outbound: null
+                  route_reflector_client: null
+                  safi: unicast
+                  send_community:
+                    both: null
+                    extended: null
+                    set: null
+                    standard: null
+                  soft_reconfiguration_inbound:
+                    always: null
+                    set: null
+                  soo: null
+                  suppress_inactive: null
+                  unsuppress_map: null
+                  weight: null
+              neighbor_address: 192.0.2.32
+            - address_family:
+                - advertise_map:
+                    exist_map: null
+                    non_exist_map: null
+                    route_map: null
+                  advertisement_interval: null
+                  afi: ipv4
+                  allowas_in:
+                    max_occurences: null
+                    set: null
+                  as_override: null
+                  capability:
+                    additional_paths:
+                      receive: null
+                      send: null
+                  default_originate:
+                    route_map: null
+                    set: null
+                  disable_peer_as_check: null
+                  filter_list:
+                    inbound: null
+                    outbound: null
+                  inherit:
+                    sequence: 200
+                    template: BasePolicy
+                  maximum_prefix:
+                    generate_warning_threshold: null
+                    max_prefix_limit: null
+                    restart_interval: null
+                    warning_only: null
+                  next_hop_self:
+                    all_routes: null
+                    set: null
+                  next_hop_third_party: null
+                  prefix_list:
+                    inbound: null
+                    outbound: null
+                  rewrite_evpn_rt_asn: null
+                  rewrite_rt_asn: null
+                  route_map:
+                    inbound: null
+                    outbound: null
+                  route_reflector_client: null
+                  safi: multicast
+                  send_community:
+                    both: null
+                    extended: null
+                    set: null
+                    standard: null
+                  soft_reconfiguration_inbound:
+                    always: null
+                    set: null
+                  soo: null
+                  suppress_inactive: null
+                  unsuppress_map: null
+                  weight: null
+              neighbor_address: 192.0.2.33
+          vrfs:
+            - neighbors:
+                - address_family:
+                    - advertise_map:
+                        exist_map: null
+                        non_exist_map: null
+                        route_map: null
+                      advertisement_interval: null
+                      afi: ipv4
+                      allowas_in:
+                        max_occurences: null
+                        set: null
+                      as_override: null
+                      capability:
+                        additional_paths:
+                          receive: null
+                          send: null
+                      default_originate:
+                        route_map: null
+                        set: null
+                      disable_peer_as_check: null
+                      filter_list:
+                        inbound: null
+                        outbound: null
+                      inherit:
+                        sequence: null
+                        template: null
+                      maximum_prefix:
+                        generate_warning_threshold: null
+                        max_prefix_limit: null
+                        restart_interval: null
+                        warning_only: null
+                      next_hop_self:
+                        all_routes: null
+                        set: true
+                      next_hop_third_party: null
+                      prefix_list:
+                        inbound: null
+                        outbound: null
+                      rewrite_evpn_rt_asn: null
+                      rewrite_rt_asn: null
+                      route_map:
+                        inbound: null
+                        outbound: null
+                      route_reflector_client: null
+                      safi: unicast
+                      send_community:
+                        both: null
+                        extended: null
+                        set: null
+                        standard: null
+                      soft_reconfiguration_inbound:
+                        always: null
+                        set: null
+                      soo: null
+                      suppress_inactive: true
+                      unsuppress_map: null
+                      weight: null
+                  neighbor_address: 203.0.113.1
+                - address_family:
+                    - advertise_map:
+                        exist_map: null
+                        non_exist_map: null
+                        route_map: null
+                      advertisement_interval: null
+                      afi: ipv6
+                      allowas_in:
+                        max_occurences: null
+                        set: null
+                      as_override: null
+                      capability:
+                        additional_paths:
+                          receive: null
+                          send: null
+                      default_originate:
+                        route_map: null
+                        set: null
+                      disable_peer_as_check: null
+                      filter_list:
+                        inbound: null
+                        outbound: null
+                      inherit:
+                        sequence: null
+                        template: null
+                      maximum_prefix:
+                        generate_warning_threshold: null
+                        max_prefix_limit: null
+                        restart_interval: null
+                        warning_only: null
+                      next_hop_self:
+                        all_routes: null
+                        set: null
+                      next_hop_third_party: null
+                      prefix_list:
+                        inbound: null
+                        outbound: null
+                      rewrite_evpn_rt_asn: null
+                      rewrite_rt_asn: null
+                      route_map:
+                        inbound: null
+                        outbound: null
+                      route_reflector_client: null
+                      safi: unicast
+                      send_community:
+                        both: null
+                        extended: null
+                        set: null
+                        standard: null
+                      soft_reconfiguration_inbound:
+                        always: null
+                        set: null
+                      soo: null
+                      suppress_inactive: null
+                      unsuppress_map: null
+                      weight: null
+                    - advertise_map:
+                        exist_map: null
+                        non_exist_map: null
+                        route_map: null
+                      advertisement_interval: null
+                      afi: ipv4
+                      allowas_in:
+                        max_occurences: null
+                        set: null
+                      as_override: null
+                      capability:
+                        additional_paths:
+                          receive: null
+                          send: null
+                      default_originate:
+                        route_map: null
+                        set: null
+                      disable_peer_as_check: null
+                      filter_list:
+                        inbound: null
+                        outbound: null
+                      inherit:
+                        sequence: null
+                        template: null
+                      maximum_prefix:
+                        generate_warning_threshold: null
+                        max_prefix_limit: null
+                        restart_interval: null
+                        warning_only: null
+                      next_hop_self:
+                        all_routes: null
+                        set: null
+                      next_hop_third_party: null
+                      prefix_list:
+                        inbound: null
+                        outbound: null
+                      rewrite_evpn_rt_asn: null
+                      rewrite_rt_asn: null
+                      route_map:
+                        inbound: null
+                        outbound: null
+                      route_reflector_client: null
+                      safi: multicast
+                      send_community:
+                        both: null
+                        extended: null
+                        set: true
+                        standard: null
+                      soft_reconfiguration_inbound:
+                        always: null
+                        set: null
+                      soo: null
+                      suppress_inactive: null
+                      unsuppress_map: null
+                      weight: null
+                  neighbor_address: 203.0.113.2
+              vrf: site-1
+      nxos_bfd_global:
+        echo_interface: Ethernet1/2
+        echo_rx_interval: 50
+        fabricpath_interval: null
+        fabricpath_slow_timer: null
+        fabricpath_vlan: null
+        interval:
+          tx: 50
+          min_rx: 50
+          multiplier: 4
+        ipv4_echo_rx_interval: null
+        ipv4_interval: null
+        ipv4_slow_timer: null
+        ipv6_echo_rx_interval: null
+        ipv6_interval: null
+        ipv6_slow_timer: null
+        slow_timer: null
+        startup_timer: null
+      nxos_bfd_interfaces:
+        state: merged
+        config:
+          - bfd: enable
+            echo: enable
+            name: Ethernet1/1
+          - bfd: disable
+            echo: disable
+            name: Ethernet1/2
+      nxos_hsrp:
+        auth_string: null
+        auth_type: null
+        group: 10
+        interface: vlan10
+        preempt: enabled
+        priority: 150
+        state: present
+        version: null
+        vip: 10.1.1.1
+      nxos_hsrp_interfaces:
+        state: merged
+        config:
+          - bfd: null
+            name: Ethernet1/1
+            standby:
+              bfd: true
+              delay:
+                minimum: null
+                reload: null
+              mac_refresh: 400
+              use_bia:
+                scope: null
+                set: null
+              version: 2
+            standby_options:
+              - authentication:
+                  key_chain: null
+                  key_string: '{{ vault_key_string }}'
+                  password_text: null
+                follow: null
+                group_name: VLAN10-GROUP
+                group_no: 10
+                ip:
+                  - secondary: true
+                    virtual_ip: 10.10.10.2
+                mac_address: 00CC.10DD.10EE
+                preempt:
+                  minimum: null
+                  reload: null
+                  sync: null
+                priority:
+                  level: null
+                  lower: null
+                  upper: null
+                timer:
+                  hello_interval: null
+                  hold_msec: null
+                  hold_time: null
+                  msec: null
+                track:
+                  - decrement: null
+                    object_no: null
+      nxos_vrrp:
+        admin_state: null
+        authentication: null
+        group: 100
+        interface: vlan10
+        interval: null
+        preempt: null
+        priority: null
+        state: present
+        vip: 10.1.100.1
+  multicast:
+    title: 6. Multicast
+    intro: IGMP, IGMP snooping and PIM (global, interface and RP address).
+    modules:
+      nxos_igmp:
+        enforce_rtr_alert: true
+        flush_routes: true
+        restart: null
+        state: present
+      nxos_igmp_interface:
+        group_timeout: null
+        immediate_leave: null
+        interface: ethernet1/32
+        last_member_qrt: null
+        last_member_query_count: null
+        oif_ps:
+          - prefix: 238.2.2.6
+          - source: 198.51.100.1
+            prefix: 238.2.2.5
+        oif_routemap: null
+        querier_timeout: null
+        query_interval: null
+        query_mrt: null
+        report_llg: null
+        restart: null
+        robustness: null
+        startup_query_count: null
+        startup_query_interval: 30
+        state: present
+        version: null
+      nxos_igmp_snooping:
+        state: merged
+        config:
+          disable_nve_static_router_port: null
+          group_timeout: '300'
+          holddown_timer: null
+          link_local_groups_suppression: null
+          max_gq_miss: null
+          proxy:
+            general_queries: null
+            mrt: null
+          report_suppression: null
+          snooping: null
+          syslog_threshold: null
+          v3_report_suppression: true
+          vlans:
+            - access_group:
+                - interface: null
+                  name: null
+                  policy_type: null
+              explicit_tracking: null
+              fast_leave: null
+              group_timeout: null
+              last_member_query_interval: null
+              link_local_groups_suppression: null
+              mrouter_interfaces: null
+              proxy:
+                general_queries: null
+                mrt: null
+              proxy_leave_use_group_address: null
+              querier: null
+              querier_timeout: null
+              query_interval: null
+              query_max_response_time: null
+              report_flood:
+                all: null
+                interfaces: null
+              report_policy:
+                - interface: null
+                  name: null
+                  policy_type: null
+              report_suppression: null
+              robustness_variable: null
+              snooping: null
+              startup_query_count: null
+              startup_query_interval: null
+              static_groups:
+                - group: 233.252.0.10
+                  interfaces:
+                    - Eth1/10
+                    - Po20
+                  source: null
+                - group: 233.252.0.11
+                  interfaces:
+                    - Ethernet1/10
+                  source: 192.0.2.10
+              v3_report_suppression: null
+              version: null
+              vlan_id: 100
+          vxlan: true
+      nxos_pim:
+        bfd: enable
+        ssm_range: 224.0.0.0/8
+      nxos_pim_interface:
+        bfd: null
+        border: null
+        dr_prio: 10
+        hello_auth_key: null
+        hello_interval: 40
+        hello_interval_ms: null
+        interface: eth1/33
+        jp_policy_in: null
+        jp_policy_out: null
+        jp_type_in: null
+        jp_type_out: null
+        neighbor_policy: null
+        neighbor_type: null
+        sparse: null
+        state: present
+      nxos_pim_rp_address:
+        bidir: null
+        group_list: null
+        prefix_list: null
+        route_map: null
+        rp_address: 10.1.1.20
+        state: present
+  vxlan:
+    title: 7. VXLAN EVPN
+    intro: Anycast gateway MAC, EVPN control plane, NVE interface / VTEP, VNI membership and EVPN VNI
+      settings.
+    modules:
+      nxos_overlay_global:
+        anycast_gateway_mac: b.b.b
+      nxos_evpn_global:
+        nv_overlay_evpn: true
+      nxos_vxlan_vtep:
+        advertise_virtual_rmac: null
+        description: default
+        global_ingress_replication_bgp: null
+        global_mcast_group_L2: null
+        global_mcast_group_L3: null
+        global_suppress_arp: null
+        host_reachability: true
+        interface: nve1
+        multisite_border_gateway_interface: Loopback0
+        shutdown: default
+        source_interface: Loopback0
+        source_interface_hold_down_time: 30
+        state: present
+      nxos_nve_interface:
+        state: merged
+        config:
+          advertise_virtual_rmac: true
+          description: vxlan vtep
+          enabled: true
+          global_ingress_replication_bgp: null
+          global_multicast_group:
+            address: 233.252.0.20
+            mode: L2
+          global_suppress_arp: null
+          host_reachability_bgp: true
+          multisite_interface: null
+          source_interface_hold_time: 60
+          source_interface_name: loopback1
+          vnis:
+            - associate_vrf: true
+              ingress_replication_bgp: null
+              mcast_group:
+                address: null
+                secondary_address: null
+              multisite_ingress_replication: null
+              suppress_arp: null
+              suppress_arp_disable: null
+              vni_id: 11111
+            - associate_vrf: false
+              ingress_replication_bgp: null
+              mcast_group:
+                address: null
+                secondary_address: null
+              multisite_ingress_replication: null
+              suppress_arp: null
+              suppress_arp_disable: null
+              vni_id: 22222
+            - associate_vrf: null
+              ingress_replication_bgp: null
+              mcast_group:
+                address: null
+                secondary_address: null
+              multisite_ingress_replication: null
+              suppress_arp: true
+              suppress_arp_disable: null
+              vni_id: 33333
+            - associate_vrf: null
+              ingress_replication_bgp: null
+              mcast_group:
+                address: 233.252.0.10
+                secondary_address: null
+              multisite_ingress_replication: null
+              suppress_arp: null
+              suppress_arp_disable: null
+              vni_id: 44444
+      nxos_vxlan_vtep_vni:
+        assoc_vrf: null
+        ingress_replication: default
+        interface: nve1
+        multicast_group: null
+        multisite_ingress_replication: enable
+        peer_list: null
+        state: present
+        suppress_arp: null
+        suppress_arp_disable: null
+        vni: 6000
+      nxos_evpn_vni:
+        route_distinguisher: 3610
+        route_target_both: default
+        route_target_export: auto
+        route_target_import:
+          - '5000:10'
+          - 4100:100
+        state: present
+        vni: 6000
+      nxos_evpn_vnis:
+        state: merged
+        config:
+          - route_distinguisher: null
+            route_target_both:
+              - auto
+            route_target_export: null
+            route_target_import: null
+            vni: 10100
+          - route_distinguisher: 65000:10200
+            route_target_both: null
+            route_target_export:
+              - 65000:10200
+            route_target_import:
+              - 65000:10200
+            vni: 10200
+  security:
+    title: 8. Security and ACLs
+    intro: IPv4/IPv6 access lists and their interface bindings.
+    modules:
+      nxos_acls:
+        state: merged
+        config:
+          - acls:
+              - aces:
+                  - destination:
+                      address: 192.0.2.64
+                      any: null
+                      host: null
+                      port_protocol:
+                        eq: null
+                        gt: null
+                        lt: null
+                        neq: null
+                        range:
+                          end: null
+                          start: null
+                      prefix: null
+                      wildcard_bits: 0.0.0.255
+                    dscp: null
+                    fragments: null
+                    grant: deny
+                    log: null
+                    precedence: null
+                    protocol: tcp
+                    protocol_options:
+                      icmp:
+                        administratively_prohibited: null
+                        alternate_address: null
+                        conversion_error: null
+                        dod_host_prohibited: null
+                        dod_net_prohibited: null
+                        echo: null
+                        echo_reply: null
+                        echo_request: null
+                        general_parameter_problem: null
+                        host_isolated: null
+                        host_precedence_unreachable: null
+                        host_redirect: null
+                        host_tos_redirect: null
+                        host_tos_unreachable: null
+                        host_unknown: null
+                        host_unreachable: null
+                        information_reply: null
+                        information_request: null
+                        mask_reply: null
+                        mask_request: null
+                        message_code: null
+                        message_type: null
+                        mobile_redirect: null
+                        net_redirect: null
+                        net_tos_redirect: null
+                        net_tos_unreachable: null
+                        net_unreachable: null
+                        network_unknown: null
+                        no_room_for_option: null
+                        option_missing: null
+                        packet_too_big: null
+                        parameter_problem: null
+                        port_unreachable: null
+                        precedence_unreachable: null
+                        protocol_unreachable: null
+                        reassembly_timeout: null
+                        redirect: null
+                        router_advertisement: null
+                        router_solicitation: null
+                        source_quench: null
+                        source_route_failed: null
+                        time_exceeded: null
+                        timestamp_reply: null
+                        timestamp_request: null
+                        traceroute: null
+                        ttl_exceeded: null
+                        unreachable: null
+                      icmpv6:
+                        beyond_scope: null
+                        destination_unreachable: null
+                        echo_reply: null
+                        echo_request: null
+                        fragments: null
+                        header: null
+                        hop_limit: null
+                        mld_query: null
+                        mld_reduction: null
+                        mld_report: null
+                        mldv2: null
+                        nd_na: null
+                        nd_ns: null
+                        next_header: null
+                        no_admin: null
+                        no_route: null
+                        packet_too_big: null
+                        parameter_option: null
+                        parameter_problem: null
+                        port_unreachable: null
+                        reassembly_timeout: null
+                        renum_command: null
+                        renum_result: null
+                        renum_seq_number: null
+                        router_advertisement: null
+                        router_renumbering: null
+                        router_solicitation: null
+                        telemetry_path: null
+                        telemetry_queue: null
+                        time_exceeded: null
+                        unreachable: null
+                      igmp:
+                        dvmrp: null
+                        host_query: null
+                        host_report: null
+                      tcp:
+                        ack: true
+                        established: null
+                        fin: true
+                        psh: null
+                        rst: null
+                        syn: null
+                        urg: null
+                    remark: null
+                    sequence: 50
+                    source:
+                      address: null
+                      any: true
+                      host: null
+                      port_protocol:
+                        eq: null
+                        gt: null
+                        lt: 55
+                        neq: null
+                        range:
+                          end: null
+                          start: null
+                      prefix: null
+                      wildcard_bits: null
+                name: ACL1v4
+            afi: ipv4
+          - acls:
+              - aces:
+                  - destination:
+                      address: null
+                      any: null
+                      host: null
+                      port_protocol:
+                        eq: null
+                        gt: null
+                        lt: null
+                        neq: null
+                        range:
+                          end: null
+                          start: null
+                      prefix: 2001:db8:12::/32
+                      wildcard_bits: null
+                    dscp: null
+                    fragments: null
+                    grant: permit
+                    log: null
+                    precedence: null
+                    protocol: sctp
+                    protocol_options:
+                      icmp:
+                        administratively_prohibited: null
+                        alternate_address: null
+                        conversion_error: null
+                        dod_host_prohibited: null
+                        dod_net_prohibited: null
+                        echo: null
+                        echo_reply: null
+                        echo_request: null
+                        general_parameter_problem: null
+                        host_isolated: null
+                        host_precedence_unreachable: null
+                        host_redirect: null
+                        host_tos_redirect: null
+                        host_tos_unreachable: null
+                        host_unknown: null
+                        host_unreachable: null
+                        information_reply: null
+                        information_request: null
+                        mask_reply: null
+                        mask_request: null
+                        message_code: null
+                        message_type: null
+                        mobile_redirect: null
+                        net_redirect: null
+                        net_tos_redirect: null
+                        net_tos_unreachable: null
+                        net_unreachable: null
+                        network_unknown: null
+                        no_room_for_option: null
+                        option_missing: null
+                        packet_too_big: null
+                        parameter_problem: null
+                        port_unreachable: null
+                        precedence_unreachable: null
+                        protocol_unreachable: null
+                        reassembly_timeout: null
+                        redirect: null
+                        router_advertisement: null
+                        router_solicitation: null
+                        source_quench: null
+                        source_route_failed: null
+                        time_exceeded: null
+                        timestamp_reply: null
+                        timestamp_request: null
+                        traceroute: null
+                        ttl_exceeded: null
+                        unreachable: null
+                      icmpv6:
+                        beyond_scope: null
+                        destination_unreachable: null
+                        echo_reply: null
+                        echo_request: null
+                        fragments: null
+                        header: null
+                        hop_limit: null
+                        mld_query: null
+                        mld_reduction: null
+                        mld_report: null
+                        mldv2: null
+                        nd_na: null
+                        nd_ns: null
+                        next_header: null
+                        no_admin: null
+                        no_route: null
+                        packet_too_big: null
+                        parameter_option: null
+                        parameter_problem: null
+                        port_unreachable: null
+                        reassembly_timeout: null
+                        renum_command: null
+                        renum_result: null
+                        renum_seq_number: null
+                        router_advertisement: null
+                        router_renumbering: null
+                        router_solicitation: null
+                        telemetry_path: null
+                        telemetry_queue: null
+                        time_exceeded: null
+                        unreachable: null
+                      igmp:
+                        dvmrp: null
+                        host_query: null
+                        host_report: null
+                      tcp:
+                        ack: null
+                        established: null
+                        fin: null
+                        psh: null
+                        rst: null
+                        syn: null
+                        urg: null
+                    remark: null
+                    sequence: 10
+                    source:
+                      address: null
+                      any: true
+                      host: null
+                      port_protocol:
+                        eq: null
+                        gt: null
+                        lt: null
+                        neq: null
+                        range:
+                          end: null
+                          start: null
+                      prefix: null
+                      wildcard_bits: null
+                name: ACL1v6
+            afi: ipv6
+      nxos_acl_interfaces:
+        state: merged
+        config:
+          - access_groups:
+              - acls:
+                  - direction: in
+                    name: ACL1v6
+                    port: null
+                afi: ipv6
+            name: Ethernet1/2
+          - access_groups:
+              - acls:
+                  - direction: in
+                    name: PortACL
+                    port: true
+                  - direction: out
+                    name: ACL1v4
+                    port: null
+                afi: ipv4
+              - acls:
+                  - direction: in
+                    name: ACL1v6
+                    port: null
+                afi: ipv6
+            name: Eth1/5
+  qos:
+    title: 9. QoS
+    intro: cisco.nxos 14.0.0 ships no dedicated QoS module. Use cisco.nxos.nxos_config (group 11) for
+      QoS policy CLI.
+    modules: {}
+  monitoring:
+    title: 10. Monitoring, logging and SNMP
+    intro: Syslog, SNMP server and model-driven telemetry.
+    modules:
+      nxos_logging_global:
+        state: merged
+        config:
+          console:
+            severity: error
+            state: null
+          event:
+            link_status:
+              default: null
+              enable: null
+            trunk_status:
+              default: null
+              enable: null
+          facilities:
+            - facility: auth
+              severity: critical
+            - facility: ospfv3
+              severity: alert
+            - facility: ftp
+              severity: informational
+          history:
+            severity: null
+            size: null
+          hosts:
+            - facility: null
+              host: 203.0.113.100
+              port: null
+              secure:
+                trustpoint:
+                  client_identity: null
+              severity: alert
+              use_vrf: management
+            - facility: local6
+              host: 203.0.113.101
+              port: null
+              secure:
+                trustpoint:
+                  client_identity: null
+              severity: error
+              use_vrf: default
+          ip:
+            access_list:
+              cache:
+                entries: 16384
+                interval: 200
+                threshold: 5000
+              detailed: null
+              include:
+                sgt: null
+          logfile:
+            name: null
+            persistent_threshold: null
+            severity: null
+            size: null
+            state: null
+          module:
+            severity: null
+            state: null
+          monitor:
+            severity: warning
+            state: null
+          origin_id:
+            hostname: true
+            ip: null
+            string: null
+          rate_limit: null
+          rfc_strict: null
+          source_interface: null
+          timestamp: null
+      nxos_snmp_server:
+        state: merged
+        config:
+          aaa_user:
+            cache_timeout: 36000
+          communities:
+            - group: network-operator
+              name: '{{ vault_snmp_community }}'
+              ro: null
+              rw: null
+              use_ipv4acl: null
+              use_ipv6acl: null
+            - group: network-admin
+              name: '{{ vault_snmp_community }}'
+              ro: null
+              rw: null
+              use_ipv4acl: null
+              use_ipv6acl: null
+          contact: nxosswitchadmin@localhost
+          context:
+            instance: null
+            name: null
+            topology: null
+            vrf: null
+          counter:
+            cache:
+              enable: null
+              timeout: null
+          drop:
+            unknown_engine_id: null
+            unknown_user: null
+          engine_id:
+            local: null
+          global_enforce_priv: null
+          hosts:
+            - auth: null
+              community: '{{ vault_community }}'
+              filter_vrf: null
+              host: 192.0.2.1
+              informs: null
+              priv: null
+              source_interface: null
+              traps: true
+              udp_port: null
+              use_vrf: null
+              version: '1'
+            - auth: null
+              community: null
+              filter_vrf: null
+              host: 192.0.2.1
+              informs: null
+              priv: null
+              source_interface: Ethernet1/1
+              traps: null
+              udp_port: null
+              use_vrf: null
+              version: null
+            - auth: NMS
+              community: null
+              filter_vrf: null
+              host: 192.0.2.2
+              informs: true
+              priv: null
+              source_interface: null
+              traps: null
+              udp_port: null
+              use_vrf: null
+              version: '3'
+          location: serverroom-1
+          mib:
+            community_map:
+              community: null
+              context: null
+          packetsize: null
+          protocol:
+            enable: null
+          source_interface:
+            informs: null
+            traps: null
+          system_shutdown: null
+          tcp_session:
+            auth: null
+            enable: null
+          traps:
+            aaa:
+              enable: null
+              server_state_change: true
+            bgp:
+              enable: null
+            bridge:
+              enable: null
+              newroot: null
+              topologychange: null
+            callhome:
+              enable: null
+              event_notify: null
+              smtp_send_fail: null
+            cfs:
+              enable: null
+              merge_failure: null
+              state_change_notif: null
+            config:
+              ccmCLIRunningConfigChanged: null
+              enable: null
+            eigrp:
+              enable: null
+            entity:
+              cefcMIBEnableStatusNotification: null
+              enable: null
+              entity_fan_status_change: null
+              entity_mib_change: null
+              entity_module_inserted: null
+              entity_module_removed: null
+              entity_module_status_change: null
+              entity_power_out_change: null
+              entity_power_status_change: null
+              entity_sensor: null
+              entity_unrecognised_module: null
+            feature_control:
+              ciscoFeatOpStatusChange: null
+              enable: null
+              featureOpStatusChange: null
+            generic:
+              coldStart: null
+              enable: null
+              warmStart: null
+            hsrp:
+              enable: null
+              state_change: null
+            license:
+              enable: null
+              notify_license_expiry: null
+              notify_license_expiry_warning: null
+              notify_licensefile_missing: null
+              notify_no_license_for_feature: null
+            link:
+              cErrDisableInterfaceEventRev1: null
+              cieLinkDown: null
+              cieLinkUp: null
+              cisco_xcvr_mon_status_chg: null
+              cmn_mac_move_notification: null
+              delayed_link_state_change: null
+              enable: null
+              extended_linkDown: null
+              extended_linkUp: null
+              linkDown: null
+              linkUp: null
+            lldp:
+              enable: null
+              lldpRemTablesChange: null
+            mmode:
+              cseMaintModeChangeNotify: null
+              cseNormalModeChangeNotify: null
+              enable: null
+            ospf:
+              enable: null
+            ospfv3:
+              enable: null
+            rf:
+              enable: null
+              redundancy_framework: null
+            rmon:
+              enable: null
+              fallingAlarm: null
+              hcFallingAlarm: null
+              hcRisingAlarm: null
+              risingAlarm: null
+            snmp:
+              authentication: null
+              enable: null
+            storm_control:
+              cpscEventRev1: null
+              enable: null
+              trap_rate: null
+            stpx:
+              enable: null
+              inconsistency: null
+              loop_inconsistency: null
+              root_inconsistency: null
+            syslog:
+              enable: null
+              message_generated: null
+            sysmgr:
+              cseFailSwCoreNotifyExtended: null
+              enable: null
+            system:
+              clock_change_notification: true
+              enable: null
+            upgrade:
+              enable: null
+              upgradeJobStatusNotify: null
+              upgradeOpNotifyOnCompletion: null
+            vtp:
+              enable: null
+              notifs: null
+              vlancreate: null
+              vlandelete: null
+          users:
+            auth:
+              - authentication:
+                  algorithm: md5
+                  engine_id: null
+                  localized_key: true
+                  localizedv2_key: null
+                  password: '{{ vault_password }}'
+                  priv:
+                    aes_128: null
+                    privacy_password: null
+                group: network-operator
+                user: snmp_user_1
+              - authentication:
+                  algorithm: md5
+                  engine_id: null
+                  localized_key: true
+                  localizedv2_key: null
+                  password: '{{ vault_password }}'
+                  priv:
+                    aes_128: true
+                    privacy_password: '{{ vault_privacy_password }}'
+                group: network-operator
+                user: snmp_user_2
+            use_acls:
+              - ipv4: acl1
+                ipv6: acl2
+                user: snmp_user_1
+              - ipv4: acl3
+                ipv6: acl4
+                user: snmp_user_2
+      nxos_telemetry:
+        state: merged
+        config:
+          certificate:
+            hostname: localhost
+            key: /bootflash/server.key
+          compression: gzip
+          destination_groups:
+            - destination:
+                encoding: GPB
+                ip: 198.51.100.2
+                port: 50001
+                protocol: gRPC
+              id: 2
+            - destination:
+                encoding: GPB
+                ip: 198.51.100.55
+                port: 60001
+                protocol: gRPC
+              id: 55
+          sensor_groups:
+            - data_source: NX-API
+              id: 1
+              path:
+                depth: 0
+                filter_condition: null
+                name: '"show lldp neighbors detail"'
+                query_condition: null
+            - data_source: DME
+              id: 55
+              path:
+                depth: unbounded
+                filter_condition: ne(eqptFt.operSt,"ok")
+                name: sys/ch
+                query_condition: null
+          source_interface: Ethernet1/1
+          subscriptions:
+            - destination_group: 55
+              id: 5
+              sensor_group:
+                id: 1
+                sample_interval: 1000
+            - destination_group: 2
+              id: 6
+              sensor_group:
+                id: 55
+                sample_interval: 2000
+          vrf: management
+  ops:
+    title: 11. Operations and utility
+    intro: Facts, show commands, raw config, file copy, NX-OS install, RPM, snapshots, rollback, maintenance
+      mode (GIR), ping and reboot.
+    modules:
+      nxos_facts:
+        available_network_resources: null
+        gather_network_resources: null
+        gather_subset: all
+      nxos_command:
+        commands: show version
+        interval: null
+        match: null
+        retries: null
+        wait_for: null
+      nxos_config:
+        after: null
+        backup: null
+        backup_options:
+          dir_path: null
+          filename: null
+        before: null
+        content: null
+        defaults: null
+        diff_against: null
+        diff_ignore_lines: null
+        intended_config: null
+        lines: hostname {{ inventory_hostname }}
+        match: null
+        parents: null
+        replace: null
+        replace_src: null
+        running_config: null
+        save_when: modified
+        src: null
+      nxos_file_copy:
+        connect_ssh_port: null
+        file_pull: null
+        file_pull_compact: null
+        file_pull_kstack: null
+        file_pull_protocol: null
+        file_pull_timeout: null
+        file_system: null
+        local_file: ./test_file.txt
+        local_file_directory: null
+        remote_file: test_file.txt
+        remote_scp_server: null
+        remote_scp_server_password: null
+        remote_scp_server_user: null
+        vrf: null
+      nxos_install_os:
+        issu: desired
+        kickstart_image_file: null
+        system_image_file: nxos.7.0.3.I6.1.bin
+      nxos_rpm:
+        aggregate:
+          - file_system: null
+            pkg: null
+            state: null
+        file_system: null
+        pkg: nxos.sample-n9k_ALL-1.0.0-7.0.3.I7.3.lib32_n9000.rpm
+        state: present
+      nxos_snapshot:
+        action: create
+        compare_option: null
+        comparison_results_file: null
+        description: Done with Ansible
+        element_key1: null
+        element_key2: null
+        path: /home/user/snapshots/
+        row_id: null
+        save_snapshot_locally: true
+        section: null
+        show_command: null
+        snapshot1: null
+        snapshot2: null
+        snapshot_name: test_snapshot
+      nxos_rollback:
+        checkpoint_file: backup.cfg
+        rollback_to: null
+      nxos_gir_profile_management:
+        commands:
+          - router eigrp 11
+          - isolate
+        mode: maintenance
+        state: present
+      nxos_gir:
+        state: present
+        system_mode_maintenance: null
+        system_mode_maintenance_dont_generate_profile: null
+        system_mode_maintenance_on_reload_reset_reason: manual_reload
+        system_mode_maintenance_shutdown: null
+        system_mode_maintenance_timeout: null
+      nxos_ping:
+        count: null
+        dest: 8.8.8.8
+        df_bit: null
+        size: null
+        source: null
+        state: present
+        vrf: management
+      nxos_reboot:
+        confirm: true
+  san:
+    title: 12. SAN / Fibre Channel
+    intro: VSANs, FC interfaces, device aliases and zones/zonesets. These modules state in their own documentation
+      that they target Fibre Channel (MDS / Nexus FC) platforms.
+    modules:
+      nxos_vsan:
+        vsan:
+          - id: 922
+            interface:
+              - fc1/1
+              - fc1/2
+              - port-channel 1
+            name: vsan-SAN-A
+            remove: false
+            suspend: false
+          - id: 923
+            interface:
+              - fc1/11
+              - fc1/21
+              - port-channel 2
+            name: vsan-SAN-B
+            remove: false
+            suspend: true
+          - id: 1923
+            interface: null
+            name: vsan-SAN-Old
+            remove: true
+            suspend: null
+      nxos_fc_interfaces:
+        state: merged
+        config:
+          - analytics: fc-scsi
+            description: null
+            enabled: null
+            mode: null
+            name: fc18/10
+            speed: null
+            trunk_mode: null
+      nxos_devicealias:
+        da:
+          - name: test1_add
+            pwwn: 56:2:22:11:22:88:11:67
+            remove: null
+          - name: test2_add
+            pwwn: 65:22:22:11:22:22:11:d
+            remove: null
+          - name: dev1
+            pwwn: null
+            remove: true
+          - name: dev2
+            pwwn: null
+            remove: true
+        distribute: true
+        mode: enhanced
+        rename:
+          - new_name: bcd
+            old_name: abc
+          - new_name: bcd1
+            old_name: abc1
+      nxos_zone_zoneset:
+        zone_zoneset_details:
+          - default_zone: null
+            mode: enhanced
+            smart_zoning: null
+            vsan: 22
+            zone:
+              - members:
+                  - devtype: null
+                    pwwn: 31314874576271
+                    remove: null
+                  - devtype: null
+                    pwwn: test123
+                    remove: null
+                  - devtype: null
+                    pwwn: 61:61:62:62:12:12:12:12
+                    remove: true
+                name: zoneA
+                remove: null
+              - members:
+                  - devtype: null
+                    pwwn: 28515514576271
+                    remove: null
+                  - devtype: null
+                    pwwn: 62:62:62:62:21:21:21:21
+                    remove: null
+                name: zoneB
+                remove: null
+              - members:
+                  - devtype: null
+                    pwwn: null
+                    remove: null
+                name: zoneC
+                remove: true
+            zoneset:
+              - action: activate
+                members:
+                  - name: zoneA
+                    remove: null
+                  - name: zoneB
+                    remove: null
+                  - name: zoneC
+                    remove: true
+                name: zsetname1
+                remove: null
+              - action: deactivate
+                members:
+                  - name: null
+                    remove: null
+                name: zsetTestExtra
+                remove: true
+          - default_zone: null
+            mode: basic
+            smart_zoning: true
+            vsan: 21
+            zone:
+              - members:
+                  - devtype: both
+                    pwwn: 31314874576271
+                    remove: null
+                  - devtype: null
+                    pwwn: 62:62:62:62:12:12:12:12
+                    remove: null
+                  - devtype: both
+                    pwwn: 92:62:62:62:12:12:1a:1a
+                    remove: true
+                name: zone21A
+                remove: null
+              - members:
+                  - devtype: null
+                    pwwn: 28515514576271
+                    remove: null
+                  - devtype: null
+                    pwwn: 62:62:62:62:21:21:21:21
+                    remove: null
+                name: zone21B
+                remove: null
+            zoneset:
+              - action: activate
+                members:
+                  - name: zone21A
+                    remove: null
+                  - name: zone21B
+                    remove: null
+                name: zsetname212
+                remove: null
+  other:
+    title: 13. Other
+    intro: Modules that do not fit the groups above. Nothing is guessed into another group. Empty in cisco.nxos
+      14.0.0.
+    modules: {}

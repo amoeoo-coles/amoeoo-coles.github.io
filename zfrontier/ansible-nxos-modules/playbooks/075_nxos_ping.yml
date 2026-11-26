@@ -1,0 +1,23 @@
+---
+# Sample playbook for cisco.nxos.nxos_ping (cisco.nxos 14.0.0)
+# Build order: 75
+# Tests reachability using ping from Nexus switch.
+# Reads ../models/nxos_ping.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_ping_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "075 nxos_ping"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_ping.yml
+  tasks:
+    - name: Run nxos_ping from model (documented states absent, present)
+      cisco.nxos.nxos_ping:
+        count: "{{ nxos_ping.count if nxos_ping.count is not none else omit }}"
+        dest: "{{ nxos_ping.dest if nxos_ping.dest is not none else omit }}"
+        df_bit: "{{ nxos_ping.df_bit if nxos_ping.df_bit is not none else omit }}"
+        size: "{{ nxos_ping.size if nxos_ping.size is not none else omit }}"
+        source: "{{ nxos_ping.source if nxos_ping.source is not none else omit }}"
+        state: "{{ nxos_ping.state if nxos_ping.state is not none else omit }}"
+        vrf: "{{ nxos_ping.vrf if nxos_ping.vrf is not none else omit }}"
+      register: nxos_ping_result

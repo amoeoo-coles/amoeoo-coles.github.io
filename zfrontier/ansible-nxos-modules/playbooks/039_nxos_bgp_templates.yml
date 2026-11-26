@@ -1,0 +1,26 @@
+---
+# Sample playbook for cisco.nxos.nxos_bgp_templates (cisco.nxos 14.0.0)
+# Build order: 39
+# BGP templates resource module.
+# Reads ../models/nxos_bgp_templates.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_bgp_templates_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "039 nxos_bgp_templates"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_bgp_templates.yml
+  tasks:
+    - name: Apply nxos_bgp_templates model (state from model; documented states merged, replaced, overridden, deleted, parsed, gathered, rendered)
+      cisco.nxos.nxos_bgp_templates:
+        config: "{{ nxos_bgp_templates.config | nxos_strip_nulls }}"
+        state: "{{ nxos_bgp_templates.state | default('merged') }}"
+      register: nxos_bgp_templates_result
+
+    - name: Gather current nxos_bgp_templates state (Day 2 / BAU check)
+      cisco.nxos.nxos_bgp_templates:
+        state: gathered
+      register: nxos_bgp_templates_gathered
+      tags:
+        - never
+        - gathered

@@ -1,0 +1,22 @@
+---
+# Sample playbook for cisco.nxos.nxos_rollback (cisco.nxos 14.0.0)
+# Build order: 72
+# Set a checkpoint or rollback to a checkpoint.
+# Reads ../models/nxos_rollback.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_rollback_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+# DISRUPTIVE: tagged 'never' — runs only with --tags nxos_rollback.
+
+- name: "072 nxos_rollback"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_rollback.yml
+  tasks:
+    - name: Run nxos_rollback from model
+      cisco.nxos.nxos_rollback:
+        checkpoint_file: "{{ nxos_rollback.checkpoint_file if nxos_rollback.checkpoint_file is not none else omit }}"
+        rollback_to: "{{ nxos_rollback.rollback_to if nxos_rollback.rollback_to is not none else omit }}"
+      register: nxos_rollback_result
+      tags:
+        - never
+        - nxos_rollback

@@ -1,0 +1,18 @@
+---
+# Sample playbook for cisco.nxos.nxos_feature (cisco.nxos 14.0.0)
+# Build order: 1
+# Manage features in NX-OS switches.
+# Reads ../models/nxos_feature.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_feature_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "001 nxos_feature"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_feature.yml
+  tasks:
+    - name: Run nxos_feature from model (documented states enabled, disabled)
+      cisco.nxos.nxos_feature:
+        feature: "{{ nxos_feature.feature if nxos_feature.feature is not none else omit }}"
+        state: "{{ nxos_feature.state if nxos_feature.state is not none else omit }}"
+      register: nxos_feature_result

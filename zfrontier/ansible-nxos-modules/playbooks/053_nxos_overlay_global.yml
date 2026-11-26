@@ -1,0 +1,17 @@
+---
+# Sample playbook for cisco.nxos.nxos_overlay_global (cisco.nxos 14.0.0)
+# Build order: 53
+# Configures anycast gateway MAC of the switch.
+# Reads ../models/nxos_overlay_global.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_overlay_global_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "053 nxos_overlay_global"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_overlay_global.yml
+  tasks:
+    - name: Run nxos_overlay_global from model
+      cisco.nxos.nxos_overlay_global:
+        anycast_gateway_mac: "{{ nxos_overlay_global.anycast_gateway_mac if nxos_overlay_global.anycast_gateway_mac is not none else omit }}"
+      register: nxos_overlay_global_result

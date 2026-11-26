@@ -1,0 +1,30 @@
+---
+# Sample playbook for cisco.nxos.nxos_bfd_global (cisco.nxos 14.0.0)
+# Build order: 42
+# Bidirectional Forwarding Detection (BFD) global-level configuration
+# Reads ../models/nxos_bfd_global.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_bfd_global_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "042 nxos_bfd_global"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_bfd_global.yml
+  tasks:
+    - name: Run nxos_bfd_global from model
+      cisco.nxos.nxos_bfd_global:
+        echo_interface: "{{ nxos_bfd_global.echo_interface if nxos_bfd_global.echo_interface is not none else omit }}"
+        echo_rx_interval: "{{ nxos_bfd_global.echo_rx_interval if nxos_bfd_global.echo_rx_interval is not none else omit }}"
+        fabricpath_interval: "{{ nxos_bfd_global.fabricpath_interval if nxos_bfd_global.fabricpath_interval is not none else omit }}"
+        fabricpath_slow_timer: "{{ nxos_bfd_global.fabricpath_slow_timer if nxos_bfd_global.fabricpath_slow_timer is not none else omit }}"
+        fabricpath_vlan: "{{ nxos_bfd_global.fabricpath_vlan if nxos_bfd_global.fabricpath_vlan is not none else omit }}"
+        interval: "{{ omit if (nxos_bfd_global.interval | nxos_strip_nulls) is none else (nxos_bfd_global.interval | nxos_strip_nulls) }}"
+        ipv4_echo_rx_interval: "{{ nxos_bfd_global.ipv4_echo_rx_interval if nxos_bfd_global.ipv4_echo_rx_interval is not none else omit }}"
+        ipv4_interval: "{{ nxos_bfd_global.ipv4_interval if nxos_bfd_global.ipv4_interval is not none else omit }}"
+        ipv4_slow_timer: "{{ nxos_bfd_global.ipv4_slow_timer if nxos_bfd_global.ipv4_slow_timer is not none else omit }}"
+        ipv6_echo_rx_interval: "{{ nxos_bfd_global.ipv6_echo_rx_interval if nxos_bfd_global.ipv6_echo_rx_interval is not none else omit }}"
+        ipv6_interval: "{{ nxos_bfd_global.ipv6_interval if nxos_bfd_global.ipv6_interval is not none else omit }}"
+        ipv6_slow_timer: "{{ nxos_bfd_global.ipv6_slow_timer if nxos_bfd_global.ipv6_slow_timer is not none else omit }}"
+        slow_timer: "{{ nxos_bfd_global.slow_timer if nxos_bfd_global.slow_timer is not none else omit }}"
+        startup_timer: "{{ nxos_bfd_global.startup_timer if nxos_bfd_global.startup_timer is not none else omit }}"
+      register: nxos_bfd_global_result

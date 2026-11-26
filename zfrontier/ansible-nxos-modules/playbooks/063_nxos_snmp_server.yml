@@ -1,0 +1,26 @@
+---
+# Sample playbook for cisco.nxos.nxos_snmp_server (cisco.nxos 14.0.0)
+# Build order: 63
+# SNMP server resource module.
+# Reads ../models/nxos_snmp_server.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_snmp_server_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "063 nxos_snmp_server"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_snmp_server.yml
+  tasks:
+    - name: Apply nxos_snmp_server model (state from model; documented states merged, replaced, overridden, deleted, parsed, gathered, rendered)
+      cisco.nxos.nxos_snmp_server:
+        config: "{{ nxos_snmp_server.config | nxos_strip_nulls }}"
+        state: "{{ nxos_snmp_server.state | default('merged') }}"
+      register: nxos_snmp_server_result
+
+    - name: Gather current nxos_snmp_server state (Day 2 / BAU check)
+      cisco.nxos.nxos_snmp_server:
+        state: gathered
+      register: nxos_snmp_server_gathered
+      tags:
+        - never
+        - gathered

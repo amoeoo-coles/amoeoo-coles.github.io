@@ -1,0 +1,26 @@
+---
+# Sample playbook for cisco.nxos.nxos_prefix_lists (cisco.nxos 14.0.0)
+# Build order: 33
+# Prefix lists resource module.
+# Reads ../models/nxos_prefix_lists.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_prefix_lists_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "033 nxos_prefix_lists"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_prefix_lists.yml
+  tasks:
+    - name: Apply nxos_prefix_lists model (state from model; documented states merged, replaced, overridden, deleted, parsed, gathered, rendered)
+      cisco.nxos.nxos_prefix_lists:
+        config: "{{ nxos_prefix_lists.config | nxos_strip_nulls }}"
+        state: "{{ nxos_prefix_lists.state | default('merged') }}"
+      register: nxos_prefix_lists_result
+
+    - name: Gather current nxos_prefix_lists state (Day 2 / BAU check)
+      cisco.nxos.nxos_prefix_lists:
+        state: gathered
+      register: nxos_prefix_lists_gathered
+      tags:
+        - never
+        - gathered

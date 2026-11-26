@@ -1,0 +1,23 @@
+---
+# Example inventory for the cisco.nxos 14.0.0 catalogue. Placeholders only.
+# Supply values at runtime (extra vars or Ansible Vault). Never commit secrets:
+#   ansible-playbook -i inventory.yml site.yml \
+#     -e nxos_host=nxos-01.example.net -e ansible_user=admin -e ansible_password='***'
+# Swap ansible_connection to ansible.netcommon.httpapi to use NX-API instead of SSH.
+
+all:
+  children:
+    nxos:
+      hosts:
+        nxos-01:
+          ansible_host: "{{ nxos_host }}"
+      vars:
+        ansible_network_os: cisco.nxos.nxos
+        ansible_connection: ansible.netcommon.network_cli
+        # ansible_connection: ansible.netcommon.httpapi
+        # ansible_httpapi_use_ssl: true
+        # ansible_httpapi_validate_certs: true
+        ansible_user: "{{ ansible_user }}"
+        ansible_password: "{{ ansible_password }}"
+        ansible_become: true
+        ansible_become_method: enable

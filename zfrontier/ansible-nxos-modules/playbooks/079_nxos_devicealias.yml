@@ -1,0 +1,20 @@
+---
+# Sample playbook for cisco.nxos.nxos_devicealias (cisco.nxos 14.0.0)
+# Build order: 79
+# Configuration of device alias for Cisco NXOS MDS Switches.
+# Reads ../models/nxos_devicealias.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_devicealias_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "079 nxos_devicealias"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_devicealias.yml
+  tasks:
+    - name: Run nxos_devicealias from model
+      cisco.nxos.nxos_devicealias:
+        da: "{{ omit if (nxos_devicealias.da | nxos_strip_nulls) is none else (nxos_devicealias.da | nxos_strip_nulls) }}"
+        distribute: "{{ nxos_devicealias.distribute if nxos_devicealias.distribute is not none else omit }}"
+        mode: "{{ nxos_devicealias.mode if nxos_devicealias.mode is not none else omit }}"
+        rename: "{{ omit if (nxos_devicealias.rename | nxos_strip_nulls) is none else (nxos_devicealias.rename | nxos_strip_nulls) }}"
+      register: nxos_devicealias_result

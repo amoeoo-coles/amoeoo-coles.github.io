@@ -1,0 +1,26 @@
+---
+# Sample playbook for cisco.nxos.nxos_nxapi (cisco.nxos 14.0.0)
+# Build order: 9
+# Manage NXAPI configuration on an NXOS device.
+# Reads ../models/nxos_nxapi.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_nxapi_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "009 nxos_nxapi"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_nxapi.yml
+  tasks:
+    - name: Run nxos_nxapi from model (documented states present, absent)
+      cisco.nxos.nxos_nxapi:
+        http: "{{ nxos_nxapi.http if nxos_nxapi.http is not none else omit }}"
+        http_port: "{{ nxos_nxapi.http_port if nxos_nxapi.http_port is not none else omit }}"
+        https: "{{ nxos_nxapi.https if nxos_nxapi.https is not none else omit }}"
+        https_port: "{{ nxos_nxapi.https_port if nxos_nxapi.https_port is not none else omit }}"
+        sandbox: "{{ nxos_nxapi.sandbox if nxos_nxapi.sandbox is not none else omit }}"
+        ssl_strong_ciphers: "{{ nxos_nxapi.ssl_strong_ciphers if nxos_nxapi.ssl_strong_ciphers is not none else omit }}"
+        state: "{{ nxos_nxapi.state if nxos_nxapi.state is not none else omit }}"
+        tlsv1_0: "{{ nxos_nxapi.tlsv1_0 if nxos_nxapi.tlsv1_0 is not none else omit }}"
+        tlsv1_1: "{{ nxos_nxapi.tlsv1_1 if nxos_nxapi.tlsv1_1 is not none else omit }}"
+        tlsv1_2: "{{ nxos_nxapi.tlsv1_2 if nxos_nxapi.tlsv1_2 is not none else omit }}"
+      register: nxos_nxapi_result

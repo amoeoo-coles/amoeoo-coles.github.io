@@ -1,0 +1,19 @@
+---
+# Sample playbook for cisco.nxos.nxos_facts (cisco.nxos 14.0.0)
+# Build order: 65
+# Gets facts about NX-OS switches
+# Reads ../models/nxos_facts.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_facts_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "065 nxos_facts"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_facts.yml
+  tasks:
+    - name: Run nxos_facts from model
+      cisco.nxos.nxos_facts:
+        available_network_resources: "{{ nxos_facts.available_network_resources if nxos_facts.available_network_resources is not none else omit }}"
+        gather_network_resources: "{{ nxos_facts.gather_network_resources if nxos_facts.gather_network_resources is not none else omit }}"
+        gather_subset: "{{ nxos_facts.gather_subset if nxos_facts.gather_subset is not none else omit }}"
+      register: nxos_facts_result

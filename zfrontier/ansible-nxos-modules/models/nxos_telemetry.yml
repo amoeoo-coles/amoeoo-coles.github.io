@@ -1,0 +1,73 @@
+---
+# Data model for cisco.nxos.nxos_telemetry (cisco.nxos 14.0.0)
+# Keys are only the options documented by the module. Values come from the
+# module's own EXAMPLES where available; null means omit (use device/module default).
+# Credentials and keys are vault placeholders only. Never commit secrets.
+
+references:
+  module: cisco.nxos.nxos_telemetry
+  collection: cisco.nxos
+  collection_version: 14.0.0
+  doc_url: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_telemetry_module.html
+  source_url: https://github.com/ansible-collections/cisco.nxos/blob/v14.0.0/plugins/modules/nxos_telemetry.py
+  galaxy_url: https://galaxy.ansible.com/ui/repo/published/cisco/nxos/
+  module_type: resource
+  documented_states:
+    - merged
+    - replaced
+    - deleted
+    - gathered
+    - overridden
+  build_order: 64
+  group: 10. Monitoring, logging and SNMP
+  sample_values_from: module EXAMPLES (first task with state merged)
+  deprecation: none stated in module documentation
+
+nxos_telemetry:
+  state: merged
+  config:
+    certificate:
+      hostname: localhost
+      key: /bootflash/server.key
+    compression: gzip
+    destination_groups:
+      - destination:
+          encoding: GPB
+          ip: 198.51.100.2
+          port: 50001
+          protocol: gRPC
+        id: 2
+      - destination:
+          encoding: GPB
+          ip: 198.51.100.55
+          port: 60001
+          protocol: gRPC
+        id: 55
+    sensor_groups:
+      - data_source: NX-API
+        id: 1
+        path:
+          depth: 0
+          filter_condition: null
+          name: '"show lldp neighbors detail"'
+          query_condition: null
+      - data_source: DME
+        id: 55
+        path:
+          depth: unbounded
+          filter_condition: ne(eqptFt.operSt,"ok")
+          name: sys/ch
+          query_condition: null
+    source_interface: Ethernet1/1
+    subscriptions:
+      - destination_group: 55
+        id: 5
+        sensor_group:
+          id: 1
+          sample_interval: 1000
+      - destination_group: 2
+        id: 6
+        sensor_group:
+          id: 55
+          sample_interval: 2000
+    vrf: management

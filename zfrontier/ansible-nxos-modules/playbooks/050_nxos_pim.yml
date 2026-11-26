@@ -1,0 +1,18 @@
+---
+# Sample playbook for cisco.nxos.nxos_pim (cisco.nxos 14.0.0)
+# Build order: 50
+# Manages configuration of a PIM instance.
+# Reads ../models/nxos_pim.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_pim_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "050 nxos_pim"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_pim.yml
+  tasks:
+    - name: Run nxos_pim from model
+      cisco.nxos.nxos_pim:
+        bfd: "{{ nxos_pim.bfd if nxos_pim.bfd is not none else omit }}"
+        ssm_range: "{{ nxos_pim.ssm_range if nxos_pim.ssm_range is not none else omit }}"
+      register: nxos_pim_result

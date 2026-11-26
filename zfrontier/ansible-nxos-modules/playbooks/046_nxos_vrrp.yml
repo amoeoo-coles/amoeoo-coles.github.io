@@ -1,0 +1,25 @@
+---
+# Sample playbook for cisco.nxos.nxos_vrrp (cisco.nxos 14.0.0)
+# Build order: 46
+# Manages VRRP configuration on NX-OS switches.
+# Reads ../models/nxos_vrrp.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_vrrp_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "046 nxos_vrrp"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_vrrp.yml
+  tasks:
+    - name: Run nxos_vrrp from model (documented states present, absent)
+      cisco.nxos.nxos_vrrp:
+        admin_state: "{{ nxos_vrrp.admin_state if nxos_vrrp.admin_state is not none else omit }}"
+        authentication: "{{ nxos_vrrp.authentication if nxos_vrrp.authentication is not none else omit }}"
+        group: "{{ nxos_vrrp.group if nxos_vrrp.group is not none else omit }}"
+        interface: "{{ nxos_vrrp.interface if nxos_vrrp.interface is not none else omit }}"
+        interval: "{{ nxos_vrrp.interval if nxos_vrrp.interval is not none else omit }}"
+        preempt: "{{ nxos_vrrp.preempt if nxos_vrrp.preempt is not none else omit }}"
+        priority: "{{ nxos_vrrp.priority if nxos_vrrp.priority is not none else omit }}"
+        state: "{{ nxos_vrrp.state if nxos_vrrp.state is not none else omit }}"
+        vip: "{{ nxos_vrrp.vip if nxos_vrrp.vip is not none else omit }}"
+      register: nxos_vrrp_result

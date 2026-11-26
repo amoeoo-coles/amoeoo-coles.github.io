@@ -1,0 +1,23 @@
+---
+# Sample playbook for cisco.nxos.nxos_install_os (cisco.nxos 14.0.0)
+# Build order: 69
+# Set boot options like boot, kickstart image and issu.
+# Reads ../models/nxos_install_os.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_install_os_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+# DISRUPTIVE: tagged 'never' — runs only with --tags nxos_install_os.
+
+- name: "069 nxos_install_os"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_install_os.yml
+  tasks:
+    - name: Run nxos_install_os from model
+      cisco.nxos.nxos_install_os:
+        issu: "{{ nxos_install_os.issu if nxos_install_os.issu is not none else omit }}"
+        kickstart_image_file: "{{ nxos_install_os.kickstart_image_file if nxos_install_os.kickstart_image_file is not none else omit }}"
+        system_image_file: "{{ nxos_install_os.system_image_file if nxos_install_os.system_image_file is not none else omit }}"
+      register: nxos_install_os_result
+      tags:
+        - never
+        - nxos_install_os

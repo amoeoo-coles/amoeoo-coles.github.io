@@ -1,0 +1,30 @@
+---
+# Sample playbook for cisco.nxos.nxos_snapshot (cisco.nxos 14.0.0)
+# Build order: 71
+# Manage snapshots of the running states of selected features.
+# Reads ../models/nxos_snapshot.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_snapshot_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "071 nxos_snapshot"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_snapshot.yml
+  tasks:
+    - name: Run nxos_snapshot from model
+      cisco.nxos.nxos_snapshot:
+        action: "{{ nxos_snapshot.action if nxos_snapshot.action is not none else omit }}"
+        compare_option: "{{ nxos_snapshot.compare_option if nxos_snapshot.compare_option is not none else omit }}"
+        comparison_results_file: "{{ nxos_snapshot.comparison_results_file if nxos_snapshot.comparison_results_file is not none else omit }}"
+        description: "{{ nxos_snapshot.description if nxos_snapshot.description is not none else omit }}"
+        element_key1: "{{ nxos_snapshot.element_key1 if nxos_snapshot.element_key1 is not none else omit }}"
+        element_key2: "{{ nxos_snapshot.element_key2 if nxos_snapshot.element_key2 is not none else omit }}"
+        path: "{{ nxos_snapshot.path if nxos_snapshot.path is not none else omit }}"
+        row_id: "{{ nxos_snapshot.row_id if nxos_snapshot.row_id is not none else omit }}"
+        save_snapshot_locally: "{{ nxos_snapshot.save_snapshot_locally if nxos_snapshot.save_snapshot_locally is not none else omit }}"
+        section: "{{ nxos_snapshot.section if nxos_snapshot.section is not none else omit }}"
+        show_command: "{{ nxos_snapshot.show_command if nxos_snapshot.show_command is not none else omit }}"
+        snapshot1: "{{ nxos_snapshot.snapshot1 if nxos_snapshot.snapshot1 is not none else omit }}"
+        snapshot2: "{{ nxos_snapshot.snapshot2 if nxos_snapshot.snapshot2 is not none else omit }}"
+        snapshot_name: "{{ nxos_snapshot.snapshot_name if nxos_snapshot.snapshot_name is not none else omit }}"
+      register: nxos_snapshot_result

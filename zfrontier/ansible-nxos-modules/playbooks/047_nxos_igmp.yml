@@ -1,0 +1,20 @@
+---
+# Sample playbook for cisco.nxos.nxos_igmp (cisco.nxos 14.0.0)
+# Build order: 47
+# Manages IGMP global configuration.
+# Reads ../models/nxos_igmp.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_igmp_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "047 nxos_igmp"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_igmp.yml
+  tasks:
+    - name: Run nxos_igmp from model (documented states present, default)
+      cisco.nxos.nxos_igmp:
+        enforce_rtr_alert: "{{ nxos_igmp.enforce_rtr_alert if nxos_igmp.enforce_rtr_alert is not none else omit }}"
+        flush_routes: "{{ nxos_igmp.flush_routes if nxos_igmp.flush_routes is not none else omit }}"
+        restart: "{{ nxos_igmp.restart if nxos_igmp.restart is not none else omit }}"
+        state: "{{ nxos_igmp.state if nxos_igmp.state is not none else omit }}"
+      register: nxos_igmp_result

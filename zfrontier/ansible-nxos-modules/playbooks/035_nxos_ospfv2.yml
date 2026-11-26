@@ -1,0 +1,26 @@
+---
+# Sample playbook for cisco.nxos.nxos_ospfv2 (cisco.nxos 14.0.0)
+# Build order: 35
+# OSPFv2 resource module.
+# Reads ../models/nxos_ospfv2.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_ospfv2_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "035 nxos_ospfv2"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_ospfv2.yml
+  tasks:
+    - name: Apply nxos_ospfv2 model (state from model; documented states merged, replaced, overridden, deleted, gathered, parsed, rendered)
+      cisco.nxos.nxos_ospfv2:
+        config: "{{ nxos_ospfv2.config | nxos_strip_nulls }}"
+        state: "{{ nxos_ospfv2.state | default('merged') }}"
+      register: nxos_ospfv2_result
+
+    - name: Gather current nxos_ospfv2 state (Day 2 / BAU check)
+      cisco.nxos.nxos_ospfv2:
+        state: gathered
+      register: nxos_ospfv2_gathered
+      tags:
+        - never
+        - gathered

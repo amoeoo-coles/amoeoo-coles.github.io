@@ -1,0 +1,20 @@
+---
+# Sample playbook for cisco.nxos.nxos_udld (cisco.nxos 14.0.0)
+# Build order: 13
+# Manages UDLD global configuration params.
+# Reads ../models/nxos_udld.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_udld_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "013 nxos_udld"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_udld.yml
+  tasks:
+    - name: Run nxos_udld from model (documented states present, absent)
+      cisco.nxos.nxos_udld:
+        aggressive: "{{ nxos_udld.aggressive if nxos_udld.aggressive is not none else omit }}"
+        msg_time: "{{ nxos_udld.msg_time if nxos_udld.msg_time is not none else omit }}"
+        reset: "{{ nxos_udld.reset if nxos_udld.reset is not none else omit }}"
+        state: "{{ nxos_udld.state if nxos_udld.state is not none else omit }}"
+      register: nxos_udld_result

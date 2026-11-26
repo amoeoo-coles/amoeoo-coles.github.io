@@ -1,0 +1,23 @@
+---
+# Sample playbook for cisco.nxos.nxos_aaa_server (cisco.nxos 14.0.0)
+# Build order: 7
+# Manages AAA server global configuration.
+# Reads ../models/nxos_aaa_server.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/nxos/nxos_aaa_server_module.html
+# Inventory placeholders: {{ nxos_host }} {{ ansible_user }} {{ ansible_password }}.
+
+- name: "007 nxos_aaa_server"
+  hosts: nxos
+  gather_facts: false
+  vars_files:
+    - ../models/nxos_aaa_server.yml
+  tasks:
+    - name: Run nxos_aaa_server from model (documented states present, default)
+      cisco.nxos.nxos_aaa_server:
+        deadtime: "{{ nxos_aaa_server.deadtime if nxos_aaa_server.deadtime is not none else omit }}"
+        directed_request: "{{ nxos_aaa_server.directed_request if nxos_aaa_server.directed_request is not none else omit }}"
+        encrypt_type: "{{ nxos_aaa_server.encrypt_type if nxos_aaa_server.encrypt_type is not none else omit }}"
+        global_key: "{{ nxos_aaa_server.global_key if nxos_aaa_server.global_key is not none else omit }}"
+        server_timeout: "{{ nxos_aaa_server.server_timeout if nxos_aaa_server.server_timeout is not none else omit }}"
+        server_type: "{{ nxos_aaa_server.server_type if nxos_aaa_server.server_type is not none else omit }}"
+        state: "{{ nxos_aaa_server.state if nxos_aaa_server.state is not none else omit }}"
+      register: nxos_aaa_server_result
