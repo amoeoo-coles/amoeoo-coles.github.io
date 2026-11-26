@@ -1,0 +1,58 @@
+# 077 · resource fmc_group_policy · 2. Objects
+# This resource manages a Group Policy.
+# Reads models/fmc_group_policy.yml with yamldecode(file(...)). Provider block: ../providers.tf
+# Provider CiscoDevNet/fmc 2.8.0. Credentials come from variables only.
+
+locals {
+  m_077 = yamldecode(file("${path.module}/../models/fmc_group_policy.yml"))["fmc_group_policy"]
+}
+
+resource "fmc_group_policy" "n077" {
+  access_hours_time_range_id                           = local.m_077["access_hours_time_range_id"]
+  banner                                               = local.m_077["banner"]
+  client_bypass_protocol                               = local.m_077["client_bypass_protocol"]
+  client_dead_peer_detection                           = local.m_077["client_dead_peer_detection"]
+  client_dead_peer_detection_interval                  = local.m_077["client_dead_peer_detection_interval"]
+  client_firewall_private_network_rules_access_list_id = local.m_077["client_firewall_private_network_rules_access_list_id"]
+  client_firewall_public_network_rules_access_list_id  = local.m_077["client_firewall_public_network_rules_access_list_id"]
+  default_domain                                       = local.m_077["default_domain"]
+  description                                          = local.m_077["description"]
+  dns_request_split_tunnel_domains                     = local.m_077["dns_request_split_tunnel_domains"]
+  dns_request_split_tunnel_policy                      = local.m_077["dns_request_split_tunnel_policy"]
+  domain                                               = local.m_077["domain"]
+  dtls_compression                                     = local.m_077["dtls_compression"]
+  gateway_dead_peer_detection                          = local.m_077["gateway_dead_peer_detection"]
+  gateway_dead_peer_detection_interval                 = local.m_077["gateway_dead_peer_detection_interval"]
+  idle_timeout                                         = local.m_077["idle_timeout"]
+  idle_timeout_alert_interval                          = local.m_077["idle_timeout_alert_interval"]
+  ignore_df_bit                                        = local.m_077["ignore_df_bit"]
+  ipv4_address_pools                                   = local.m_077["ipv4_address_pools"]
+  ipv4_dhcp_network_scope_network_object_id            = local.m_077["ipv4_dhcp_network_scope_network_object_id"]
+  ipv4_split_tunnel_policy                             = local.m_077["ipv4_split_tunnel_policy"]
+  ipv6_split_tunnel_policy                             = local.m_077["ipv6_split_tunnel_policy"]
+  keep_alive_messages                                  = local.m_077["keep_alive_messages"]
+  keep_alive_messages_interval                         = local.m_077["keep_alive_messages_interval"]
+  maximum_connection_time                              = local.m_077["maximum_connection_time"]
+  maximum_connection_time_alert_interval               = local.m_077["maximum_connection_time_alert_interval"]
+  mtu_size                                             = local.m_077["mtu_size"]
+  name                                                 = local.m_077["name"]
+  primary_dns_server_host_id                           = local.m_077["primary_dns_server_host_id"]
+  primary_wins_server_host_id                          = local.m_077["primary_wins_server_host_id"]
+  protocol_ipsec_ikev2                                 = local.m_077["protocol_ipsec_ikev2"]
+  protocol_ssl                                         = local.m_077["protocol_ssl"]
+  restrict_vpn_to_vlan                                 = local.m_077["restrict_vpn_to_vlan"]
+  secondary_dns_server_host_id                         = local.m_077["secondary_dns_server_host_id"]
+  secondary_wins_server_host_id                        = local.m_077["secondary_wins_server_host_id"]
+  secure_client_custom_attributes                      = local.m_077["secure_client_custom_attributes"]
+  secure_client_management_profile_id                  = local.m_077["secure_client_management_profile_id"]
+  secure_client_modules                                = local.m_077["secure_client_modules"]
+  secure_client_profile_id                             = local.m_077["secure_client_profile_id"]
+  simultaneous_logins_per_user                         = local.m_077["simultaneous_logins_per_user"]
+  split_tunnel_access_list_id                          = local.m_077["split_tunnel_access_list_id"]
+  split_tunnel_access_list_type                        = local.m_077["split_tunnel_access_list_type"]
+  ssl_compression                                      = local.m_077["ssl_compression"]
+  ssl_rekey                                            = local.m_077["ssl_rekey"]
+  ssl_rekey_interval                                   = local.m_077["ssl_rekey_interval"]
+  ssl_rekey_method                                     = local.m_077["ssl_rekey_method"]
+  traffic_filter_access_list_id                        = local.m_077["traffic_filter_access_list_id"]
+}
