@@ -17,6 +17,5 @@ Groups (build order):
 - 8. Guest, sponsor and portals: 31
 - 9. pxGrid, ANC and integrations: 31
 - 10. Monitoring and operations: 15
-- 11. Other: 0
 
 Credentials are placeholders only. Do not commit real passwords or tokens.
