@@ -1,0 +1,238 @@
+# SAMPLE ONLY.
+# Do not place this file under .github/workflows in the GitHub Pages repository.
+# Copy it into a private automation repository that can reach APIC, Nexus Dashboard
+# and the IPN/ISN switches from a self-hosted runner.
+#
+# Required repository secrets (values never belong in this file):
+#   APIC_URL, APIC_USERNAME, APIC_PASSWORD
+#   NDO_URL, NDO_USERNAME, NDO_PASSWORD
+#   NXOS_URL, NXOS_USERNAME, NXOS_PASSWORD
+#   NETBOX_URL, NETBOX_TOKEN
+#   TF_HTTP_USERNAME / TF_HTTP_PASSWORD (or equivalent) for the remote backend
+#
+# Command names:
+#   Terragrunt 1.x:  terragrunt hcl format --check
+#                    terragrunt run --all validate|plan|apply
+#   Classic alias:   terragrunt hclfmt --check
+#                    terragrunt run-all validate|plan|apply
+
+name: ACI Remote Leaf Terragrunt
+
+on:
+  workflow_dispatch:
+    inputs:
+      live_dir:
+        description: "Directory containing the Terragrunt live tree"
+        required: false
+        default: "live"
+      environment:
+        description: "lab or prod (subdirectory of live/)"
+        required: false
+        default: "lab"
+      apply:
+        description: "Set true to apply after approval"
+        required: false
+        default: "false"
+  pull_request:
+    paths:
+      - "live/**"
+      - "modules/**"
+      - "data/*.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "live/**"
+      - "modules/**"
+      - "data/*.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  hclfmt:
+    name: 1. terragrunt hcl format --check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout automation repo
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.13.3"
+          terraform_wrapper: false
+
+      - name: Setup Terragrunt
+        uses: autero1/action-terragrunt@v3
+        with:
+          terragrunt-version: "1.2.3"
+
+      - name: terragrunt hcl format --check
+        run: |
+          set -e
+          if terragrunt hcl format --help >/dev/null 2>&1; then
+            terragrunt hcl format --check --working-dir "${{ inputs.live_dir || 'live' }}"
+          else
+            terragrunt hclfmt --check --terragrunt-working-dir "${{ inputs.live_dir || 'live' }}"
+          fi
+
+      - name: terraform fmt -check on modules
+        run: terraform fmt -check -recursive modules
+
+  validate:
+    name: 2. terragrunt run --all validate
+    needs: hclfmt
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout automation repo
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.13.3"
+          terraform_wrapper: false
+
+      - name: Setup Terragrunt
+        uses: autero1/action-terragrunt@v3
+        with:
+          terragrunt-version: "1.2.3"
+
+      - name: terragrunt run --all validate
+        working-directory: ${{ inputs.live_dir || 'live' }}/${{ inputs.environment || 'lab' }}
+        env:
+          TF_VAR_apic_url: https://apic.example.invalid
+          TF_VAR_apic_username: "{{ apic_username }}"
+          TF_VAR_apic_password: "{{ apic_password }}"
+          TF_VAR_ndo_url: https://nd.example.invalid
+          TF_VAR_ndo_username: "{{ ndo_username }}"
+          TF_VAR_ndo_password: "{{ ndo_password }}"
+          TF_VAR_nxos_url: https://ipn1.example.invalid
+          TF_VAR_nxos_username: "{{ nxos_username }}"
+          TF_VAR_nxos_password: "{{ nxos_password }}"
+          TG_NON_INTERACTIVE: "true"
+        run: |
+          set -e
+          if terragrunt run --help >/dev/null 2>&1; then
+            terragrunt run --all validate --non-interactive
+          else
+            terragrunt run-all validate --terragrunt-non-interactive
+          fi
+
+  plan:
+    name: 3. terragrunt run --all plan
+    needs: validate
+    runs-on: self-hosted
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
+    env:
+      TF_VAR_apic_url: ${{ secrets.APIC_URL }}
+      TF_VAR_apic_username: ${{ secrets.APIC_USERNAME }}
+      TF_VAR_apic_password: ${{ secrets.APIC_PASSWORD }}
+      TF_VAR_ndo_url: ${{ secrets.NDO_URL }}
+      TF_VAR_ndo_username: ${{ secrets.NDO_USERNAME }}
+      TF_VAR_ndo_password: ${{ secrets.NDO_PASSWORD }}
+      TF_VAR_nxos_url: ${{ secrets.NXOS_URL }}
+      TF_VAR_nxos_username: ${{ secrets.NXOS_USERNAME }}
+      TF_VAR_nxos_password: ${{ secrets.NXOS_PASSWORD }}
+      TF_HTTP_USERNAME: ${{ secrets.TF_HTTP_USERNAME }}
+      TF_HTTP_PASSWORD: ${{ secrets.TF_HTTP_PASSWORD }}
+      TG_NON_INTERACTIVE: "true"
+    steps:
+      - name: Checkout automation repo
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.13.3"
+          terraform_wrapper: false
+
+      - name: Setup Terragrunt
+        uses: autero1/action-terragrunt@v3
+        with:
+          terragrunt-version: "1.2.3"
+
+      - name: terragrunt run --all plan
+        working-directory: ${{ inputs.live_dir || 'live' }}/${{ inputs.environment || 'lab' }}
+        run: |
+          set -o pipefail
+          if terragrunt run --help >/dev/null 2>&1; then
+            terragrunt run --all plan --non-interactive -input=false -out=tfplan
+          else
+            terragrunt run-all plan --terragrunt-non-interactive -input=false -out=tfplan
+          fi
+
+      - name: Upload plan artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: tgplan
+          path: |
+            ${{ inputs.live_dir || 'live' }}/${{ inputs.environment || 'lab' }}/**/tfplan
+            ${{ inputs.live_dir || 'live' }}/${{ inputs.environment || 'lab' }}/**/plan.txt
+
+  apply:
+    name: 4. Approval then terragrunt run --all apply
+    needs: plan
+    runs-on: self-hosted
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.apply == 'true'
+    environment: production
+    env:
+      TF_VAR_apic_url: ${{ secrets.APIC_URL }}
+      TF_VAR_apic_username: ${{ secrets.APIC_USERNAME }}
+      TF_VAR_apic_password: ${{ secrets.APIC_PASSWORD }}
+      TF_VAR_ndo_url: ${{ secrets.NDO_URL }}
+      TF_VAR_ndo_username: ${{ secrets.NDO_USERNAME }}
+      TF_VAR_ndo_password: ${{ secrets.NDO_PASSWORD }}
+      TF_VAR_nxos_url: ${{ secrets.NXOS_URL }}
+      TF_VAR_nxos_username: ${{ secrets.NXOS_USERNAME }}
+      TF_VAR_nxos_password: ${{ secrets.NXOS_PASSWORD }}
+      TF_HTTP_USERNAME: ${{ secrets.TF_HTTP_USERNAME }}
+      TF_HTTP_PASSWORD: ${{ secrets.TF_HTTP_PASSWORD }}
+      TG_NON_INTERACTIVE: "true"
+    steps:
+      - name: Checkout automation repo
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.13.3"
+          terraform_wrapper: false
+
+      - name: Setup Terragrunt
+        uses: autero1/action-terragrunt@v3
+        with:
+          terragrunt-version: "1.2.3"
+
+      - name: terragrunt run --all apply
+        working-directory: ${{ inputs.live_dir || 'live' }}/${{ inputs.environment || 'lab' }}
+        run: |
+          if terragrunt run --help >/dev/null 2>&1; then
+            terragrunt run --all apply --non-interactive -input=false
+          else
+            terragrunt run-all apply --terragrunt-non-interactive -input=false
+          fi
+
+  netbox:
+    name: 5. NetBox 4.x sync
+    needs: apply
+    runs-on: self-hosted
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.apply == 'true'
+    env:
+      NETBOX_URL: ${{ secrets.NETBOX_URL }}
+      NETBOX_TOKEN: ${{ secrets.NETBOX_TOKEN }}
+    steps:
+      - name: Checkout automation repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pynetbox
+        run: pip install pynetbox pyyaml
+
+      - name: Sync to NetBox
+        run: python cicd/netbox_sync.py --values data/sample.yml
