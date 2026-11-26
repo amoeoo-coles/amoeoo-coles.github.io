@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_sig_feature" "n314" {
   feature_profile_id = local.m_314["feature_profile_id"]
-  id                 = local.m_314["id"]
-  name               = local.m_314["name"]
+  id = local.m_314["id"]
+  name = local.m_314["name"]
 }
 
 output "n314_data_sdwan_sig_feature_id" {

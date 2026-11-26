@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_system_ipv4_device_access_feature" "n142" {
   feature_profile_id = local.m_142["feature_profile_id"]
-  id                 = local.m_142["id"]
-  name               = local.m_142["name"]
+  id = local.m_142["id"]
+  name = local.m_142["name"]
 }
 
 output "n142_data_sdwan_system_ipv4_device_access_feature_id" {

@@ -8,9 +8,9 @@ locals {
 }
 
 resource "sdwan_configuration_group_devices" "n327" {
-  configuration_group_id      = local.m_327["configuration_group_id"]
+  configuration_group_id = local.m_327["configuration_group_id"]
   configuration_group_version = local.m_327["configuration_group_version"]
-  devices                     = local.m_327["devices"]
-  retain_devices              = local.m_327["retain_devices"]
-  solution                    = local.m_327["solution"]
+  devices = local.m_327["devices"]
+  retain_devices = local.m_327["retain_devices"]
+  solution = local.m_327["solution"]
 }

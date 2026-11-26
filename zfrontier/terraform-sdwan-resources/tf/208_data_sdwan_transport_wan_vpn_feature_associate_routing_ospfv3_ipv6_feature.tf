@@ -8,8 +8,8 @@ locals {
 }
 
 data "sdwan_transport_wan_vpn_feature_associate_routing_ospfv3_ipv6_feature" "n208" {
-  feature_profile_id           = local.m_208["feature_profile_id"]
-  id                           = local.m_208["id"]
+  feature_profile_id = local.m_208["feature_profile_id"]
+  id = local.m_208["id"]
   transport_wan_vpn_feature_id = local.m_208["transport_wan_vpn_feature_id"]
 }
 

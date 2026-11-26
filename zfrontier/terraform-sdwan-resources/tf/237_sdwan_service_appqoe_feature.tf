@@ -8,16 +8,16 @@ locals {
 }
 
 resource "sdwan_service_appqoe_feature" "n237" {
-  appqoe_device_role               = local.m_237["appqoe_device_role"]
-  combined_controller_groups       = local.m_237["combined_controller_groups"]
-  combined_service_contexts        = local.m_237["combined_service_contexts"]
-  combined_service_node_groups     = local.m_237["combined_service_node_groups"]
-  description                      = local.m_237["description"]
-  feature_profile_id               = local.m_237["feature_profile_id"]
-  forwarder_controller_groups      = local.m_237["forwarder_controller_groups"]
-  forwarder_service_contexts       = local.m_237["forwarder_service_contexts"]
-  forwarder_service_node_groups    = local.m_237["forwarder_service_node_groups"]
-  name                             = local.m_237["name"]
+  appqoe_device_role = local.m_237["appqoe_device_role"]
+  combined_controller_groups = local.m_237["combined_controller_groups"]
+  combined_service_contexts = local.m_237["combined_service_contexts"]
+  combined_service_node_groups = local.m_237["combined_service_node_groups"]
+  description = local.m_237["description"]
+  feature_profile_id = local.m_237["feature_profile_id"]
+  forwarder_controller_groups = local.m_237["forwarder_controller_groups"]
+  forwarder_service_contexts = local.m_237["forwarder_service_contexts"]
+  forwarder_service_node_groups = local.m_237["forwarder_service_node_groups"]
+  name = local.m_237["name"]
   service_node_service_node_groups = local.m_237["service_node_service_node_groups"]
-  virtual_applications             = local.m_237["virtual_applications"]
+  virtual_applications = local.m_237["virtual_applications"]
 }

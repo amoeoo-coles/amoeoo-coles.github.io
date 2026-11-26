@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_sse_feature_profile" "n120" {
-  id   = local.m_120["id"]
+  id = local.m_120["id"]
   name = local.m_120["name"]
 }
 

@@ -8,11 +8,11 @@ locals {
 }
 
 resource "sdwan_service_switchport_feature" "n297" {
-  age_out_time          = local.m_297["age_out_time"]
+  age_out_time = local.m_297["age_out_time"]
   age_out_time_variable = local.m_297["age_out_time_variable"]
-  description           = local.m_297["description"]
-  feature_profile_id    = local.m_297["feature_profile_id"]
-  interfaces            = local.m_297["interfaces"]
-  name                  = local.m_297["name"]
-  static_mac_addresses  = local.m_297["static_mac_addresses"]
+  description = local.m_297["description"]
+  feature_profile_id = local.m_297["feature_profile_id"]
+  interfaces = local.m_297["interfaces"]
+  name = local.m_297["name"]
+  static_mac_addresses = local.m_297["static_mac_addresses"]
 }

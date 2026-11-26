@@ -8,16 +8,16 @@ locals {
 }
 
 resource "sdwan_system_logging_feature" "n145" {
-  description               = local.m_145["description"]
-  disk_enable               = local.m_145["disk_enable"]
-  disk_enable_variable      = local.m_145["disk_enable_variable"]
-  disk_file_rotate          = local.m_145["disk_file_rotate"]
+  description = local.m_145["description"]
+  disk_enable = local.m_145["disk_enable"]
+  disk_enable_variable = local.m_145["disk_enable_variable"]
+  disk_file_rotate = local.m_145["disk_file_rotate"]
   disk_file_rotate_variable = local.m_145["disk_file_rotate_variable"]
-  disk_file_size            = local.m_145["disk_file_size"]
-  disk_file_size_variable   = local.m_145["disk_file_size_variable"]
-  feature_profile_id        = local.m_145["feature_profile_id"]
-  ipv4_servers              = local.m_145["ipv4_servers"]
-  ipv6_servers              = local.m_145["ipv6_servers"]
-  name                      = local.m_145["name"]
-  tls_profiles              = local.m_145["tls_profiles"]
+  disk_file_size = local.m_145["disk_file_size"]
+  disk_file_size_variable = local.m_145["disk_file_size_variable"]
+  feature_profile_id = local.m_145["feature_profile_id"]
+  ipv4_servers = local.m_145["ipv4_servers"]
+  ipv6_servers = local.m_145["ipv6_servers"]
+  name = local.m_145["name"]
+  tls_profiles = local.m_145["tls_profiles"]
 }

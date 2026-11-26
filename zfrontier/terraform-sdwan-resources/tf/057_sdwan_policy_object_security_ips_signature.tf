@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_policy_object_security_ips_signature" "n057" {
-  description        = local.m_057["description"]
-  entries            = local.m_057["entries"]
+  description = local.m_057["description"]
+  entries = local.m_057["entries"]
   feature_profile_id = local.m_057["feature_profile_id"]
-  name               = local.m_057["name"]
+  name = local.m_057["name"]
 }

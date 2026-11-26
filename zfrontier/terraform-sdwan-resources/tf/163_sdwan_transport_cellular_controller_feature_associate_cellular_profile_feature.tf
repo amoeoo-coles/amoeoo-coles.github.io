@@ -8,7 +8,7 @@ locals {
 }
 
 resource "sdwan_transport_cellular_controller_feature_associate_cellular_profile_feature" "n163" {
-  feature_profile_id                       = local.m_163["feature_profile_id"]
+  feature_profile_id = local.m_163["feature_profile_id"]
   transport_cellular_controller_feature_id = local.m_163["transport_cellular_controller_feature_id"]
-  transport_cellular_profile_feature_id    = local.m_163["transport_cellular_profile_feature_id"]
+  transport_cellular_profile_feature_id = local.m_163["transport_cellular_profile_feature_id"]
 }

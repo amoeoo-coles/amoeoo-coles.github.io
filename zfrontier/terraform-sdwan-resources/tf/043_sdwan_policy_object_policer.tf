@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_policy_object_policer" "n043" {
-  description        = local.m_043["description"]
-  entries            = local.m_043["entries"]
+  description = local.m_043["description"]
+  entries = local.m_043["entries"]
   feature_profile_id = local.m_043["feature_profile_id"]
-  name               = local.m_043["name"]
+  name = local.m_043["name"]
 }

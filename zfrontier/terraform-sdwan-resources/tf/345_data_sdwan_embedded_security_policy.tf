@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_embedded_security_policy" "n345" {
   feature_profile_id = local.m_345["feature_profile_id"]
-  id                 = local.m_345["id"]
-  name               = local.m_345["name"]
+  id = local.m_345["id"]
+  name = local.m_345["name"]
 }
 
 output "n345_data_sdwan_embedded_security_policy_id" {

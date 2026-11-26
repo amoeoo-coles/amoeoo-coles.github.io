@@ -9,5 +9,5 @@ locals {
 
 resource "sdwan_ipv4_prefix_list_policy_object" "n376" {
   entries = local.m_376["entries"]
-  name    = local.m_376["name"]
+  name = local.m_376["name"]
 }

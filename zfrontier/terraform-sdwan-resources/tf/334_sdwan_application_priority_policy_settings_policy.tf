@@ -8,11 +8,11 @@ locals {
 }
 
 resource "sdwan_application_priority_policy_settings_policy" "n334" {
-  description                 = local.m_334["description"]
-  feature_profile_id          = local.m_334["feature_profile_id"]
+  description = local.m_334["description"]
+  feature_profile_id = local.m_334["feature_profile_id"]
   ipv4_application_visibility = local.m_334["ipv4_application_visibility"]
-  ipv4_flow_visibility        = local.m_334["ipv4_flow_visibility"]
+  ipv4_flow_visibility = local.m_334["ipv4_flow_visibility"]
   ipv6_application_visibility = local.m_334["ipv6_application_visibility"]
-  ipv6_flow_visibility        = local.m_334["ipv6_flow_visibility"]
-  name                        = local.m_334["name"]
+  ipv6_flow_visibility = local.m_334["ipv6_flow_visibility"]
+  name = local.m_334["name"]
 }

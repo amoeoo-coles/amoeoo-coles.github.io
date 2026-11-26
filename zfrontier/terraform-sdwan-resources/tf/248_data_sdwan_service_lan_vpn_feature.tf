@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_service_lan_vpn_feature" "n248" {
   feature_profile_id = local.m_248["feature_profile_id"]
-  id                 = local.m_248["id"]
-  name               = local.m_248["name"]
+  id = local.m_248["id"]
+  name = local.m_248["name"]
 }
 
 output "n248_data_sdwan_service_lan_vpn_feature_id" {

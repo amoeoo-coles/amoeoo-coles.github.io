@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_application_priority_feature_profile" "n104" {
-  id   = local.m_104["id"]
+  id = local.m_104["id"]
   name = local.m_104["name"]
 }
 

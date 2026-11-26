@@ -9,6 +9,6 @@ locals {
 
 resource "sdwan_rule_set_policy_definition" "n538" {
   description = local.m_538["description"]
-  name        = local.m_538["name"]
-  rules       = local.m_538["rules"]
+  name = local.m_538["name"]
+  rules = local.m_538["rules"]
 }

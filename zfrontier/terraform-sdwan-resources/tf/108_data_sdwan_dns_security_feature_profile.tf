@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_dns_security_feature_profile" "n108" {
-  id   = local.m_108["id"]
+  id = local.m_108["id"]
   name = local.m_108["name"]
 }
 

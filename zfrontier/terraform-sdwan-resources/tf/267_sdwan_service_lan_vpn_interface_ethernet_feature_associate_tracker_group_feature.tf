@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_service_lan_vpn_interface_ethernet_feature_associate_tracker_group_feature" "n267" {
-  feature_profile_id                            = local.m_267["feature_profile_id"]
-  service_lan_vpn_feature_id                    = local.m_267["service_lan_vpn_feature_id"]
+  feature_profile_id = local.m_267["feature_profile_id"]
+  service_lan_vpn_feature_id = local.m_267["service_lan_vpn_feature_id"]
   service_lan_vpn_interface_ethernet_feature_id = local.m_267["service_lan_vpn_interface_ethernet_feature_id"]
-  service_tracker_group_feature_id              = local.m_267["service_tracker_group_feature_id"]
+  service_tracker_group_feature_id = local.m_267["service_tracker_group_feature_id"]
 }

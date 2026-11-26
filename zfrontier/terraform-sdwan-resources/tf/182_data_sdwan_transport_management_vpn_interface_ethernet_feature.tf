@@ -8,9 +8,9 @@ locals {
 }
 
 data "sdwan_transport_management_vpn_interface_ethernet_feature" "n182" {
-  feature_profile_id                  = local.m_182["feature_profile_id"]
-  id                                  = local.m_182["id"]
-  name                                = local.m_182["name"]
+  feature_profile_id = local.m_182["feature_profile_id"]
+  id = local.m_182["id"]
+  name = local.m_182["name"]
   transport_management_vpn_feature_id = local.m_182["transport_management_vpn_feature_id"]
 }
 

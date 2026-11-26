@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_transport_wan_vpn_interface_gre_feature_associate_tracker_feature" "n229" {
-  feature_profile_id                         = local.m_229["feature_profile_id"]
-  transport_tracker_feature_id               = local.m_229["transport_tracker_feature_id"]
-  transport_wan_vpn_feature_id               = local.m_229["transport_wan_vpn_feature_id"]
+  feature_profile_id = local.m_229["feature_profile_id"]
+  transport_tracker_feature_id = local.m_229["transport_tracker_feature_id"]
+  transport_wan_vpn_feature_id = local.m_229["transport_wan_vpn_feature_id"]
   transport_wan_vpn_interface_gre_feature_id = local.m_229["transport_wan_vpn_interface_gre_feature_id"]
 }

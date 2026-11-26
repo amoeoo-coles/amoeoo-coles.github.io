@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_sse_zscaler_feature" "n318" {
   feature_profile_id = local.m_318["feature_profile_id"]
-  id                 = local.m_318["id"]
-  name               = local.m_318["name"]
+  id = local.m_318["id"]
+  name = local.m_318["name"]
 }
 
 output "n318_data_sdwan_sse_zscaler_feature_id" {

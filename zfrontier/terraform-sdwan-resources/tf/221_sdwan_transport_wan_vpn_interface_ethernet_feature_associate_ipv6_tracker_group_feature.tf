@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_transport_wan_vpn_interface_ethernet_feature_associate_ipv6_tracker_group_feature" "n221" {
-  feature_profile_id                              = local.m_221["feature_profile_id"]
-  transport_ipv6_tracker_group_feature_id         = local.m_221["transport_ipv6_tracker_group_feature_id"]
-  transport_wan_vpn_feature_id                    = local.m_221["transport_wan_vpn_feature_id"]
+  feature_profile_id = local.m_221["feature_profile_id"]
+  transport_ipv6_tracker_group_feature_id = local.m_221["transport_ipv6_tracker_group_feature_id"]
+  transport_wan_vpn_feature_id = local.m_221["transport_wan_vpn_feature_id"]
   transport_wan_vpn_interface_ethernet_feature_id = local.m_221["transport_wan_vpn_interface_ethernet_feature_id"]
 }

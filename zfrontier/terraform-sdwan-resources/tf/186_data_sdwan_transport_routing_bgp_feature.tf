@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_transport_routing_bgp_feature" "n186" {
   feature_profile_id = local.m_186["feature_profile_id"]
-  id                 = local.m_186["id"]
-  name               = local.m_186["name"]
+  id = local.m_186["id"]
+  name = local.m_186["name"]
 }
 
 output "n186_data_sdwan_transport_routing_bgp_feature_id" {

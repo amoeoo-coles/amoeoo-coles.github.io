@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_eigrp_feature_template" "n467" {
-  id   = local.m_467["id"]
+  id = local.m_467["id"]
   name = local.m_467["name"]
 }
 

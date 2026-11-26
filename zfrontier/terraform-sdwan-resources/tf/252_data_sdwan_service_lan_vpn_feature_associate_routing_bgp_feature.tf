@@ -8,8 +8,8 @@ locals {
 }
 
 data "sdwan_service_lan_vpn_feature_associate_routing_bgp_feature" "n252" {
-  feature_profile_id         = local.m_252["feature_profile_id"]
-  id                         = local.m_252["id"]
+  feature_profile_id = local.m_252["feature_profile_id"]
+  id = local.m_252["id"]
   service_lan_vpn_feature_id = local.m_252["service_lan_vpn_feature_id"]
 }
 

@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_system_omp_feature" "n152" {
   feature_profile_id = local.m_152["feature_profile_id"]
-  id                 = local.m_152["id"]
-  name               = local.m_152["name"]
+  id = local.m_152["id"]
+  name = local.m_152["name"]
 }
 
 output "n152_data_sdwan_system_omp_feature_id" {

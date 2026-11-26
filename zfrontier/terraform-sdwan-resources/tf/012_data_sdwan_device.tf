@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_device" "n012" {
-  name          = local.m_012["name"]
+  name = local.m_012["name"]
   serial_number = local.m_012["serial_number"]
 }
 

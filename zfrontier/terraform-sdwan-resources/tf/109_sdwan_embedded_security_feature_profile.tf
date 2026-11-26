@@ -9,5 +9,5 @@ locals {
 
 resource "sdwan_embedded_security_feature_profile" "n109" {
   description = local.m_109["description"]
-  name        = local.m_109["name"]
+  name = local.m_109["name"]
 }

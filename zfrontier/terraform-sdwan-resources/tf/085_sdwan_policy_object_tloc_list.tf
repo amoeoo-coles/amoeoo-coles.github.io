@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_policy_object_tloc_list" "n085" {
-  description        = local.m_085["description"]
-  entries            = local.m_085["entries"]
+  description = local.m_085["description"]
+  entries = local.m_085["entries"]
   feature_profile_id = local.m_085["feature_profile_id"]
-  name               = local.m_085["name"]
+  name = local.m_085["name"]
 }

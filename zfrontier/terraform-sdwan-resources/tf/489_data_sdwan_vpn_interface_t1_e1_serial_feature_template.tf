@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_vpn_interface_t1_e1_serial_feature_template" "n489" {
-  id   = local.m_489["id"]
+  id = local.m_489["id"]
   name = local.m_489["name"]
 }
 

@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_policy_object_policer" "n044" {
   feature_profile_id = local.m_044["feature_profile_id"]
-  id                 = local.m_044["id"]
-  name               = local.m_044["name"]
+  id = local.m_044["id"]
+  name = local.m_044["name"]
 }
 
 output "n044_data_sdwan_policy_object_policer_id" {

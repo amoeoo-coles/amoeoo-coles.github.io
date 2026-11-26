@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_policy_object_preferred_color_group" "n046" {
   feature_profile_id = local.m_046["feature_profile_id"]
-  id                 = local.m_046["id"]
-  name               = local.m_046["name"]
+  id = local.m_046["id"]
+  name = local.m_046["name"]
 }
 
 output "n046_data_sdwan_policy_object_preferred_color_group_id" {

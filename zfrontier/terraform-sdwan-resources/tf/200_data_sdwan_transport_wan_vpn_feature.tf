@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_transport_wan_vpn_feature" "n200" {
   feature_profile_id = local.m_200["feature_profile_id"]
-  id                 = local.m_200["id"]
-  name               = local.m_200["name"]
+  id = local.m_200["id"]
+  name = local.m_200["name"]
 }
 
 output "n200_data_sdwan_transport_wan_vpn_feature_id" {

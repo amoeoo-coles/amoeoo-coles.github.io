@@ -8,8 +8,8 @@ locals {
 }
 
 data "sdwan_network_hierarchy_node" "n008" {
-  id      = local.m_008["id"]
-  name    = local.m_008["name"]
+  id = local.m_008["id"]
+  name = local.m_008["name"]
   site_id = local.m_008["site_id"]
 }
 

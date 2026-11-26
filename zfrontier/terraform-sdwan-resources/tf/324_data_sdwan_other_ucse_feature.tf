@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_other_ucse_feature" "n324" {
   feature_profile_id = local.m_324["feature_profile_id"]
-  id                 = local.m_324["id"]
-  name               = local.m_324["name"]
+  id = local.m_324["id"]
+  name = local.m_324["name"]
 }
 
 output "n324_data_sdwan_other_ucse_feature_id" {

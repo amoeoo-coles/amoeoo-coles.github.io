@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_embedded_security_ngfw_policy" "n343" {
   feature_profile_id = local.m_343["feature_profile_id"]
-  id                 = local.m_343["id"]
-  name               = local.m_343["name"]
+  id = local.m_343["id"]
+  name = local.m_343["name"]
 }
 
 output "n343_data_sdwan_embedded_security_ngfw_policy_id" {

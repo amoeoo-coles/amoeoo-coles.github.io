@@ -10,5 +10,5 @@ locals {
 resource "sdwan_centralized_policy" "n514" {
   definitions = local.m_514["definitions"]
   description = local.m_514["description"]
-  name        = local.m_514["name"]
+  name = local.m_514["name"]
 }

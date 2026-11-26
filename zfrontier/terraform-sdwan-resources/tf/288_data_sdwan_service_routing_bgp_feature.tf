@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_service_routing_bgp_feature" "n288" {
   feature_profile_id = local.m_288["feature_profile_id"]
-  id                 = local.m_288["id"]
-  name               = local.m_288["name"]
+  id = local.m_288["id"]
+  name = local.m_288["name"]
 }
 
 output "n288_data_sdwan_service_routing_bgp_feature_id" {

@@ -9,5 +9,5 @@ locals {
 
 resource "sdwan_standard_community_list_policy_object" "n398" {
   entries = local.m_398["entries"]
-  name    = local.m_398["name"]
+  name = local.m_398["name"]
 }

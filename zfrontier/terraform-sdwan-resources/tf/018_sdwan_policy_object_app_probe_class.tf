@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_policy_object_app_probe_class" "n018" {
-  description        = local.m_018["description"]
-  entries            = local.m_018["entries"]
+  description = local.m_018["description"]
+  entries = local.m_018["entries"]
   feature_profile_id = local.m_018["feature_profile_id"]
-  name               = local.m_018["name"]
+  name = local.m_018["name"]
 }

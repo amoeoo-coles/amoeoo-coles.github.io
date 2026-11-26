@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_other_thousandeyes_feature" "n320" {
   feature_profile_id = local.m_320["feature_profile_id"]
-  id                 = local.m_320["id"]
-  name               = local.m_320["name"]
+  id = local.m_320["id"]
+  name = local.m_320["name"]
 }
 
 output "n320_data_sdwan_other_thousandeyes_feature_id" {

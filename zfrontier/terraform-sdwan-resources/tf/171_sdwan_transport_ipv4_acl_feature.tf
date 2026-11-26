@@ -8,9 +8,9 @@ locals {
 }
 
 resource "sdwan_transport_ipv4_acl_feature" "n171" {
-  default_action     = local.m_171["default_action"]
-  description        = local.m_171["description"]
+  default_action = local.m_171["default_action"]
+  description = local.m_171["description"]
   feature_profile_id = local.m_171["feature_profile_id"]
-  name               = local.m_171["name"]
-  sequences          = local.m_171["sequences"]
+  name = local.m_171["name"]
+  sequences = local.m_171["sequences"]
 }

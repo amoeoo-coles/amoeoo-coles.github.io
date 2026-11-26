@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cisco_bgp_feature_template" "n427" {
-  id   = local.m_427["id"]
+  id = local.m_427["id"]
   name = local.m_427["name"]
 }
 

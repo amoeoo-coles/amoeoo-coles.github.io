@@ -8,9 +8,9 @@ locals {
 }
 
 data "sdwan_service_lan_vpn_interface_svi_feature_associate_dhcp_server_feature" "n278" {
-  feature_profile_id                       = local.m_278["feature_profile_id"]
-  id                                       = local.m_278["id"]
-  service_lan_vpn_feature_id               = local.m_278["service_lan_vpn_feature_id"]
+  feature_profile_id = local.m_278["feature_profile_id"]
+  id = local.m_278["id"]
+  service_lan_vpn_feature_id = local.m_278["service_lan_vpn_feature_id"]
   service_lan_vpn_interface_svi_feature_id = local.m_278["service_lan_vpn_interface_svi_feature_id"]
 }
 

@@ -9,5 +9,5 @@ locals {
 
 resource "sdwan_color_list_policy_object" "n358" {
   entries = local.m_358["entries"]
-  name    = local.m_358["name"]
+  name = local.m_358["name"]
 }

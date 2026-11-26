@@ -8,9 +8,9 @@ locals {
 }
 
 resource "sdwan_embedded_security_ngfw_policy" "n342" {
-  default_action     = local.m_342["default_action"]
-  description        = local.m_342["description"]
+  default_action = local.m_342["default_action"]
+  description = local.m_342["description"]
   feature_profile_id = local.m_342["feature_profile_id"]
-  name               = local.m_342["name"]
-  sequences          = local.m_342["sequences"]
+  name = local.m_342["name"]
+  sequences = local.m_342["sequences"]
 }

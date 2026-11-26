@@ -8,14 +8,14 @@ locals {
 }
 
 resource "sdwan_system_bfd_feature" "n133" {
-  colors                 = local.m_133["colors"]
-  default_dscp           = local.m_133["default_dscp"]
-  default_dscp_variable  = local.m_133["default_dscp_variable"]
-  description            = local.m_133["description"]
-  feature_profile_id     = local.m_133["feature_profile_id"]
-  multiplier             = local.m_133["multiplier"]
-  multiplier_variable    = local.m_133["multiplier_variable"]
-  name                   = local.m_133["name"]
-  poll_interval          = local.m_133["poll_interval"]
+  colors = local.m_133["colors"]
+  default_dscp = local.m_133["default_dscp"]
+  default_dscp_variable = local.m_133["default_dscp_variable"]
+  description = local.m_133["description"]
+  feature_profile_id = local.m_133["feature_profile_id"]
+  multiplier = local.m_133["multiplier"]
+  multiplier_variable = local.m_133["multiplier_variable"]
+  name = local.m_133["name"]
+  poll_interval = local.m_133["poll_interval"]
   poll_interval_variable = local.m_133["poll_interval_variable"]
 }

@@ -9,5 +9,5 @@ locals {
 
 resource "sdwan_zone_list_policy_object" "n404" {
   entries = local.m_404["entries"]
-  name    = local.m_404["name"]
+  name = local.m_404["name"]
 }

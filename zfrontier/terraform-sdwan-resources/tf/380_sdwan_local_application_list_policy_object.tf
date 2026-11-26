@@ -9,5 +9,5 @@ locals {
 
 resource "sdwan_local_application_list_policy_object" "n380" {
   entries = local.m_380["entries"]
-  name    = local.m_380["name"]
+  name = local.m_380["name"]
 }

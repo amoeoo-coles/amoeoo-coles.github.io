@@ -9,5 +9,5 @@ locals {
 
 resource "sdwan_port_list_policy_object" "n386" {
   entries = local.m_386["entries"]
-  name    = local.m_386["name"]
+  name = local.m_386["name"]
 }

@@ -8,9 +8,9 @@ locals {
 }
 
 data "sdwan_transport_wan_vpn_interface_ethernet_feature_associate_ipv6_tracker_group_feature" "n222" {
-  feature_profile_id                              = local.m_222["feature_profile_id"]
-  id                                              = local.m_222["id"]
-  transport_wan_vpn_feature_id                    = local.m_222["transport_wan_vpn_feature_id"]
+  feature_profile_id = local.m_222["feature_profile_id"]
+  id = local.m_222["id"]
+  transport_wan_vpn_feature_id = local.m_222["transport_wan_vpn_feature_id"]
   transport_wan_vpn_interface_ethernet_feature_id = local.m_222["transport_wan_vpn_interface_ethernet_feature_id"]
 }
 

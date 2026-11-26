@@ -9,7 +9,7 @@ locals {
 
 resource "sdwan_traffic_data_policy_definition" "n524" {
   default_action = local.m_524["default_action"]
-  description    = local.m_524["description"]
-  name           = local.m_524["name"]
-  sequences      = local.m_524["sequences"]
+  description = local.m_524["description"]
+  name = local.m_524["name"]
+  sequences = local.m_524["sequences"]
 }

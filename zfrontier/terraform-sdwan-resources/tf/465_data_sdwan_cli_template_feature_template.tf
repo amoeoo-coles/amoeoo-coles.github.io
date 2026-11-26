@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cli_template_feature_template" "n465" {
-  id   = local.m_465["id"]
+  id = local.m_465["id"]
   name = local.m_465["name"]
 }
 

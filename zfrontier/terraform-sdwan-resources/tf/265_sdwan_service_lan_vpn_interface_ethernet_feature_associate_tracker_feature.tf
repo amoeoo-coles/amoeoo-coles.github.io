@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_service_lan_vpn_interface_ethernet_feature_associate_tracker_feature" "n265" {
-  feature_profile_id                            = local.m_265["feature_profile_id"]
-  service_lan_vpn_feature_id                    = local.m_265["service_lan_vpn_feature_id"]
+  feature_profile_id = local.m_265["feature_profile_id"]
+  service_lan_vpn_feature_id = local.m_265["service_lan_vpn_feature_id"]
   service_lan_vpn_interface_ethernet_feature_id = local.m_265["service_lan_vpn_interface_ethernet_feature_id"]
-  service_tracker_feature_id                    = local.m_265["service_tracker_feature_id"]
+  service_tracker_feature_id = local.m_265["service_tracker_feature_id"]
 }

@@ -8,14 +8,14 @@ locals {
 }
 
 resource "sdwan_cisco_bfd_feature_template" "n424" {
-  colors                 = local.m_424["colors"]
-  default_dscp           = local.m_424["default_dscp"]
-  default_dscp_variable  = local.m_424["default_dscp_variable"]
-  description            = local.m_424["description"]
-  device_types           = local.m_424["device_types"]
-  multiplier             = local.m_424["multiplier"]
-  multiplier_variable    = local.m_424["multiplier_variable"]
-  name                   = local.m_424["name"]
-  poll_interval          = local.m_424["poll_interval"]
+  colors = local.m_424["colors"]
+  default_dscp = local.m_424["default_dscp"]
+  default_dscp_variable = local.m_424["default_dscp_variable"]
+  description = local.m_424["description"]
+  device_types = local.m_424["device_types"]
+  multiplier = local.m_424["multiplier"]
+  multiplier_variable = local.m_424["multiplier_variable"]
+  name = local.m_424["name"]
+  poll_interval = local.m_424["poll_interval"]
   poll_interval_variable = local.m_424["poll_interval_variable"]
 }

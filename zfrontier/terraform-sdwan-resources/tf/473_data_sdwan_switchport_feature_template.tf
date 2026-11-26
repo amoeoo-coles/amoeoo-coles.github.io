@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_switchport_feature_template" "n473" {
-  id   = local.m_473["id"]
+  id = local.m_473["id"]
   name = local.m_473["name"]
 }
 

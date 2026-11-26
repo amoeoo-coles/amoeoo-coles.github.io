@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_transport_ipv6_acl_feature" "n174" {
   feature_profile_id = local.m_174["feature_profile_id"]
-  id                 = local.m_174["id"]
-  name               = local.m_174["name"]
+  id = local.m_174["id"]
+  name = local.m_174["name"]
 }
 
 output "n174_data_sdwan_transport_ipv6_acl_feature_id" {

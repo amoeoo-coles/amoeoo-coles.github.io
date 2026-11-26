@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_cli_template_feature_template" "n464" {
-  cli_config   = local.m_464["cli_config"]
-  description  = local.m_464["description"]
+  cli_config = local.m_464["cli_config"]
+  description = local.m_464["description"]
   device_types = local.m_464["device_types"]
-  name         = local.m_464["name"]
+  name = local.m_464["name"]
 }

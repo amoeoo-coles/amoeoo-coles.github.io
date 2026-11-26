@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_transport_routing_ospf_feature" "n188" {
   feature_profile_id = local.m_188["feature_profile_id"]
-  id                 = local.m_188["id"]
-  name               = local.m_188["name"]
+  id = local.m_188["id"]
+  name = local.m_188["name"]
 }
 
 output "n188_data_sdwan_transport_routing_ospf_feature_id" {

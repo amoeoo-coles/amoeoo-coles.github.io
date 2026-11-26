@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_service_lan_vpn_interface_ethernet_feature_associate_dhcp_server_feature" "n263" {
-  feature_profile_id                            = local.m_263["feature_profile_id"]
-  service_dhcp_server_feature_id                = local.m_263["service_dhcp_server_feature_id"]
-  service_lan_vpn_feature_id                    = local.m_263["service_lan_vpn_feature_id"]
+  feature_profile_id = local.m_263["feature_profile_id"]
+  service_dhcp_server_feature_id = local.m_263["service_dhcp_server_feature_id"]
+  service_lan_vpn_feature_id = local.m_263["service_lan_vpn_feature_id"]
   service_lan_vpn_interface_ethernet_feature_id = local.m_263["service_lan_vpn_interface_ethernet_feature_id"]
 }

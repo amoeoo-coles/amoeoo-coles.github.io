@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_policy_object_unified_advanced_inspection_profile" "n088" {
   feature_profile_id = local.m_088["feature_profile_id"]
-  id                 = local.m_088["id"]
-  name               = local.m_088["name"]
+  id = local.m_088["id"]
+  name = local.m_088["name"]
 }
 
 output "n088_data_sdwan_policy_object_unified_advanced_inspection_profile_id" {

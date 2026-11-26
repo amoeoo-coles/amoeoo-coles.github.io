@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_policy_object_security_protocol_list" "n070" {
   feature_profile_id = local.m_070["feature_profile_id"]
-  id                 = local.m_070["id"]
-  name               = local.m_070["name"]
+  id = local.m_070["id"]
+  name = local.m_070["name"]
 }
 
 output "n070_data_sdwan_policy_object_security_protocol_list_id" {

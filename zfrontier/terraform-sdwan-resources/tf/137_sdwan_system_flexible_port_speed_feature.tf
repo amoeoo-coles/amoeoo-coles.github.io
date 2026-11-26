@@ -8,9 +8,9 @@ locals {
 }
 
 resource "sdwan_system_flexible_port_speed_feature" "n137" {
-  description        = local.m_137["description"]
+  description = local.m_137["description"]
   feature_profile_id = local.m_137["feature_profile_id"]
-  name               = local.m_137["name"]
-  port_type          = local.m_137["port_type"]
+  name = local.m_137["name"]
+  port_type = local.m_137["port_type"]
   port_type_variable = local.m_137["port_type_variable"]
 }

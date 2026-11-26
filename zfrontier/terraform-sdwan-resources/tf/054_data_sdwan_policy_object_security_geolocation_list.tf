@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_policy_object_security_geolocation_list" "n054" {
   feature_profile_id = local.m_054["feature_profile_id"]
-  id                 = local.m_054["id"]
-  name               = local.m_054["name"]
+  id = local.m_054["id"]
+  name = local.m_054["name"]
 }
 
 output "n054_data_sdwan_policy_object_security_geolocation_list_id" {

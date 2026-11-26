@@ -9,5 +9,5 @@ locals {
 
 resource "sdwan_ips_signature_list_policy_object" "n374" {
   entries = local.m_374["entries"]
-  name    = local.m_374["name"]
+  name = local.m_374["name"]
 }

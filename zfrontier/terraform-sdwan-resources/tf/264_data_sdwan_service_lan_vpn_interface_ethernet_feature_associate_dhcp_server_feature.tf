@@ -8,9 +8,9 @@ locals {
 }
 
 data "sdwan_service_lan_vpn_interface_ethernet_feature_associate_dhcp_server_feature" "n264" {
-  feature_profile_id                            = local.m_264["feature_profile_id"]
-  id                                            = local.m_264["id"]
-  service_lan_vpn_feature_id                    = local.m_264["service_lan_vpn_feature_id"]
+  feature_profile_id = local.m_264["feature_profile_id"]
+  id = local.m_264["id"]
+  service_lan_vpn_feature_id = local.m_264["service_lan_vpn_feature_id"]
   service_lan_vpn_interface_ethernet_feature_id = local.m_264["service_lan_vpn_interface_ethernet_feature_id"]
 }
 

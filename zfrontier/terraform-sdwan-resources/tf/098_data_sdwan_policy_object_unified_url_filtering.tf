@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_policy_object_unified_url_filtering" "n098" {
   feature_profile_id = local.m_098["feature_profile_id"]
-  id                 = local.m_098["id"]
-  name               = local.m_098["name"]
+  id = local.m_098["id"]
+  name = local.m_098["name"]
 }
 
 output "n098_data_sdwan_policy_object_unified_url_filtering_id" {

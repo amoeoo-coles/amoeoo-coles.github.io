@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cisco_snmp_feature_template" "n447" {
-  id   = local.m_447["id"]
+  id = local.m_447["id"]
   name = local.m_447["name"]
 }
 

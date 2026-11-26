@@ -9,7 +9,7 @@ locals {
 
 resource "sdwan_ipv4_device_acl_policy_definition" "n497" {
   default_action = local.m_497["default_action"]
-  description    = local.m_497["description"]
-  name           = local.m_497["name"]
-  sequences      = local.m_497["sequences"]
+  description = local.m_497["description"]
+  name = local.m_497["name"]
+  sequences = local.m_497["sequences"]
 }

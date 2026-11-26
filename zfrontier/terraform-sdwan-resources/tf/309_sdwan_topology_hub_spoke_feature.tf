@@ -8,11 +8,11 @@ locals {
 }
 
 resource "sdwan_topology_hub_spoke_feature" "n309" {
-  description             = local.m_309["description"]
-  feature_profile_id      = local.m_309["feature_profile_id"]
-  name                    = local.m_309["name"]
+  description = local.m_309["description"]
+  feature_profile_id = local.m_309["feature_profile_id"]
+  name = local.m_309["name"]
   selected_hierarchy_hubs = local.m_309["selected_hierarchy_hubs"]
-  selected_hubs           = local.m_309["selected_hubs"]
-  spokes                  = local.m_309["spokes"]
-  target_vpns             = local.m_309["target_vpns"]
+  selected_hubs = local.m_309["selected_hubs"]
+  spokes = local.m_309["spokes"]
+  target_vpns = local.m_309["target_vpns"]
 }

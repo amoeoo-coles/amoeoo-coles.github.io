@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cisco_dhcp_server_feature_template" "n429" {
-  id   = local.m_429["id"]
+  id = local.m_429["id"]
   name = local.m_429["name"]
 }
 

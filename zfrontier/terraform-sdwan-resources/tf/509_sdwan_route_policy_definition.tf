@@ -9,7 +9,7 @@ locals {
 
 resource "sdwan_route_policy_definition" "n509" {
   default_action = local.m_509["default_action"]
-  description    = local.m_509["description"]
-  name           = local.m_509["name"]
-  sequences      = local.m_509["sequences"]
+  description = local.m_509["description"]
+  name = local.m_509["name"]
+  sequences = local.m_509["sequences"]
 }

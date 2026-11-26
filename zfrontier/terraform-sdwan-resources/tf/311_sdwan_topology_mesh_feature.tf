@@ -8,10 +8,10 @@ locals {
 }
 
 resource "sdwan_topology_mesh_feature" "n311" {
-  description        = local.m_311["description"]
+  description = local.m_311["description"]
   feature_profile_id = local.m_311["feature_profile_id"]
-  hierarchy_uuids    = local.m_311["hierarchy_uuids"]
-  name               = local.m_311["name"]
-  sites              = local.m_311["sites"]
-  target_vpns        = local.m_311["target_vpns"]
+  hierarchy_uuids = local.m_311["hierarchy_uuids"]
+  name = local.m_311["name"]
+  sites = local.m_311["sites"]
+  target_vpns = local.m_311["target_vpns"]
 }

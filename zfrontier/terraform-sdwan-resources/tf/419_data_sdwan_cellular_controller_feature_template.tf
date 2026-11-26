@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cellular_controller_feature_template" "n419" {
-  id   = local.m_419["id"]
+  id = local.m_419["id"]
   name = local.m_419["name"]
 }
 

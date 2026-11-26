@@ -8,11 +8,11 @@ locals {
 }
 
 resource "sdwan_transport_t1_e1_controller_feature" "n193" {
-  description        = local.m_193["description"]
-  entries            = local.m_193["entries"]
+  description = local.m_193["description"]
+  entries = local.m_193["entries"]
   feature_profile_id = local.m_193["feature_profile_id"]
-  name               = local.m_193["name"]
-  slot               = local.m_193["slot"]
-  slot_variable      = local.m_193["slot_variable"]
-  type               = local.m_193["type"]
+  name = local.m_193["name"]
+  slot = local.m_193["slot"]
+  slot_variable = local.m_193["slot_variable"]
+  type = local.m_193["type"]
 }

@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_security_app_hosting_feature_template" "n470" {
-  description          = local.m_470["description"]
-  device_types         = local.m_470["device_types"]
-  name                 = local.m_470["name"]
+  description = local.m_470["description"]
+  device_types = local.m_470["device_types"]
+  name = local.m_470["name"]
   virtual_applications = local.m_470["virtual_applications"]
 }

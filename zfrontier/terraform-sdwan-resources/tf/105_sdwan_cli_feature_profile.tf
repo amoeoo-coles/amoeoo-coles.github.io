@@ -9,5 +9,5 @@ locals {
 
 resource "sdwan_cli_feature_profile" "n105" {
   description = local.m_105["description"]
-  name        = local.m_105["name"]
+  name = local.m_105["name"]
 }

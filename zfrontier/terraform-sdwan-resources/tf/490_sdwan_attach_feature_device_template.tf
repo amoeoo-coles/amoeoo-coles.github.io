@@ -9,6 +9,6 @@ locals {
 
 resource "sdwan_attach_feature_device_template" "n490" {
   devices = local.m_490["devices"]
-  id      = local.m_490["id"]
+  id = local.m_490["id"]
   version = local.m_490["version"]
 }

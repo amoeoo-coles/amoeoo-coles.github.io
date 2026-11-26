@@ -8,9 +8,9 @@ locals {
 }
 
 resource "sdwan_service_dual_router_ha_feature" "n241" {
-  description           = local.m_241["description"]
+  description = local.m_241["description"]
   enable_optimize_paths = local.m_241["enable_optimize_paths"]
-  feature_profile_id    = local.m_241["feature_profile_id"]
-  name                  = local.m_241["name"]
-  redundancy_groups     = local.m_241["redundancy_groups"]
+  feature_profile_id = local.m_241["feature_profile_id"]
+  name = local.m_241["name"]
+  redundancy_groups = local.m_241["redundancy_groups"]
 }

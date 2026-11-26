@@ -8,8 +8,8 @@ locals {
 }
 
 data "sdwan_service_lan_vpn_feature_associate_multicast_feature" "n250" {
-  feature_profile_id         = local.m_250["feature_profile_id"]
-  id                         = local.m_250["id"]
+  feature_profile_id = local.m_250["feature_profile_id"]
+  id = local.m_250["id"]
   service_lan_vpn_feature_id = local.m_250["service_lan_vpn_feature_id"]
 }
 

@@ -9,7 +9,7 @@ locals {
 
 resource "sdwan_scope" "n003" {
   description = local.m_003["description"]
-  name        = local.m_003["name"]
-  objects     = local.m_003["objects"]
-  users       = local.m_003["users"]
+  name = local.m_003["name"]
+  objects = local.m_003["objects"]
+  users = local.m_003["users"]
 }

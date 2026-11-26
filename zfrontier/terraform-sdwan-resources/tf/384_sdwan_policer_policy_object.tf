@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_policer_policy_object" "n384" {
-  burst         = local.m_384["burst"]
+  burst = local.m_384["burst"]
   exceed_action = local.m_384["exceed_action"]
-  name          = local.m_384["name"]
-  rate          = local.m_384["rate"]
+  name = local.m_384["name"]
+  rate = local.m_384["rate"]
 }

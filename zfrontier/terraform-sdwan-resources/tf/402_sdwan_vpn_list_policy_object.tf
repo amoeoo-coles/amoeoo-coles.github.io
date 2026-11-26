@@ -9,5 +9,5 @@ locals {
 
 resource "sdwan_vpn_list_policy_object" "n402" {
   entries = local.m_402["entries"]
-  name    = local.m_402["name"]
+  name = local.m_402["name"]
 }

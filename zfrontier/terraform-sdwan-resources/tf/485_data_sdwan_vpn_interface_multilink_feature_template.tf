@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_vpn_interface_multilink_feature_template" "n485" {
-  id   = local.m_485["id"]
+  id = local.m_485["id"]
   name = local.m_485["name"]
 }
 

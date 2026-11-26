@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_security_app_hosting_feature_template" "n471" {
-  id   = local.m_471["id"]
+  id = local.m_471["id"]
   name = local.m_471["name"]
 }
 

@@ -8,9 +8,9 @@ locals {
 }
 
 resource "sdwan_policy_object_security_object_group" "n065" {
-  description        = local.m_065["description"]
-  entries            = local.m_065["entries"]
+  description = local.m_065["description"]
+  entries = local.m_065["entries"]
   feature_profile_id = local.m_065["feature_profile_id"]
-  name               = local.m_065["name"]
-  sequence_ip_type   = local.m_065["sequence_ip_type"]
+  name = local.m_065["name"]
+  sequence_ip_type = local.m_065["sequence_ip_type"]
 }

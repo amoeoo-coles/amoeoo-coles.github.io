@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_service_routing_ospfv3_ipv4_feature" "n294" {
   feature_profile_id = local.m_294["feature_profile_id"]
-  id                 = local.m_294["id"]
-  name               = local.m_294["name"]
+  id = local.m_294["id"]
+  name = local.m_294["name"]
 }
 
 output "n294_data_sdwan_service_routing_ospfv3_ipv4_feature_id" {

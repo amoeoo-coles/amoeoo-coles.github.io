@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cisco_vpn_feature_template" "n455" {
-  id   = local.m_455["id"]
+  id = local.m_455["id"]
   name = local.m_455["name"]
 }
 

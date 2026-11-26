@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cedge_igmp_feature_template" "n411" {
-  id   = local.m_411["id"]
+  id = local.m_411["id"]
   name = local.m_411["name"]
 }
 

@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_policy_object_security_geolocation_list" "n053" {
-  description        = local.m_053["description"]
-  entries            = local.m_053["entries"]
+  description = local.m_053["description"]
+  entries = local.m_053["entries"]
   feature_profile_id = local.m_053["feature_profile_id"]
-  name               = local.m_053["name"]
+  name = local.m_053["name"]
 }

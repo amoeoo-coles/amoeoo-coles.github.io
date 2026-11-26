@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_service_tracker_group_feature" "n302" {
   feature_profile_id = local.m_302["feature_profile_id"]
-  id                 = local.m_302["id"]
-  name               = local.m_302["name"]
+  id = local.m_302["id"]
+  name = local.m_302["name"]
 }
 
 output "n302_data_sdwan_service_tracker_group_feature_id" {

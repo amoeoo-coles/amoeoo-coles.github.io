@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_policy_object_unified_tls_ssl_decryption" "n094" {
   feature_profile_id = local.m_094["feature_profile_id"]
-  id                 = local.m_094["id"]
-  name               = local.m_094["name"]
+  id = local.m_094["id"]
+  name = local.m_094["name"]
 }
 
 output "n094_data_sdwan_policy_object_unified_tls_ssl_decryption_id" {

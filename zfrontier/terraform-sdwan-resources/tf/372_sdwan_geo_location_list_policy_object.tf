@@ -9,5 +9,5 @@ locals {
 
 resource "sdwan_geo_location_list_policy_object" "n372" {
   entries = local.m_372["entries"]
-  name    = local.m_372["name"]
+  name = local.m_372["name"]
 }

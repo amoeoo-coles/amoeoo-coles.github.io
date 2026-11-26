@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cli_feature_profile" "n106" {
-  id   = local.m_106["id"]
+  id = local.m_106["id"]
   name = local.m_106["name"]
 }
 

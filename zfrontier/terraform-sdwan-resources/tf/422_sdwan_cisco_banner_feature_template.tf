@@ -8,11 +8,11 @@ locals {
 }
 
 resource "sdwan_cisco_banner_feature_template" "n422" {
-  description    = local.m_422["description"]
-  device_types   = local.m_422["device_types"]
-  login          = local.m_422["login"]
+  description = local.m_422["description"]
+  device_types = local.m_422["device_types"]
+  login = local.m_422["login"]
   login_variable = local.m_422["login_variable"]
-  motd           = local.m_422["motd"]
-  motd_variable  = local.m_422["motd_variable"]
-  name           = local.m_422["name"]
+  motd = local.m_422["motd"]
+  motd_variable = local.m_422["motd_variable"]
+  name = local.m_422["name"]
 }

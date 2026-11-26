@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_policy_object_app_probe_class" "n019" {
   feature_profile_id = local.m_019["feature_profile_id"]
-  id                 = local.m_019["id"]
-  name               = local.m_019["name"]
+  id = local.m_019["id"]
+  name = local.m_019["name"]
 }
 
 output "n019_data_sdwan_policy_object_app_probe_class_id" {

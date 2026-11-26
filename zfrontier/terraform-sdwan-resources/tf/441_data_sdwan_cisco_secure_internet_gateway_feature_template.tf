@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cisco_secure_internet_gateway_feature_template" "n441" {
-  id   = local.m_441["id"]
+  id = local.m_441["id"]
   name = local.m_441["name"]
 }
 

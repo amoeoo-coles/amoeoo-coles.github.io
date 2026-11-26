@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_transport_cellular_controller_feature" "n162" {
   feature_profile_id = local.m_162["feature_profile_id"]
-  id                 = local.m_162["id"]
-  name               = local.m_162["name"]
+  id = local.m_162["id"]
+  name = local.m_162["name"]
 }
 
 output "n162_data_sdwan_transport_cellular_controller_feature_id" {

@@ -9,6 +9,6 @@ locals {
 
 resource "sdwan_wan_edge_certificate_validate" "n017" {
   chassis_number = local.m_017["chassis_number"]
-  serial_number  = local.m_017["serial_number"]
-  validity       = local.m_017["validity"]
+  serial_number = local.m_017["serial_number"]
+  validity = local.m_017["validity"]
 }

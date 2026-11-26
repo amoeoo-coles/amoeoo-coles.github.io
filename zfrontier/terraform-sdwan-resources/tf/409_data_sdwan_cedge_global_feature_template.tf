@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cedge_global_feature_template" "n409" {
-  id   = local.m_409["id"]
+  id = local.m_409["id"]
   name = local.m_409["name"]
 }
 

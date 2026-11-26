@@ -8,11 +8,11 @@ locals {
 }
 
 resource "sdwan_configuration_group" "n325" {
-  description           = local.m_325["description"]
-  feature_profile_ids   = local.m_325["feature_profile_ids"]
-  feature_versions      = local.m_325["feature_versions"]
-  name                  = local.m_325["name"]
-  solution              = local.m_325["solution"]
-  topology_devices      = local.m_325["topology_devices"]
+  description = local.m_325["description"]
+  feature_profile_ids = local.m_325["feature_profile_ids"]
+  feature_versions = local.m_325["feature_versions"]
+  name = local.m_325["name"]
+  solution = local.m_325["solution"]
+  topology_devices = local.m_325["topology_devices"]
   topology_site_devices = local.m_325["topology_site_devices"]
 }

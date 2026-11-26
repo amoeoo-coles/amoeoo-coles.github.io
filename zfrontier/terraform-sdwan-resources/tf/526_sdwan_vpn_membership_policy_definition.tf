@@ -9,6 +9,6 @@ locals {
 
 resource "sdwan_vpn_membership_policy_definition" "n526" {
   description = local.m_526["description"]
-  name        = local.m_526["name"]
-  sites       = local.m_526["sites"]
+  name = local.m_526["name"]
+  sites = local.m_526["sites"]
 }

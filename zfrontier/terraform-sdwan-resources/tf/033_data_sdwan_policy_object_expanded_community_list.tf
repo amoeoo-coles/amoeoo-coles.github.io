@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_policy_object_expanded_community_list" "n033" {
   feature_profile_id = local.m_033["feature_profile_id"]
-  id                 = local.m_033["id"]
-  name               = local.m_033["name"]
+  id = local.m_033["id"]
+  name = local.m_033["name"]
 }
 
 output "n033_data_sdwan_policy_object_expanded_community_list_id" {

@@ -9,7 +9,7 @@ locals {
 
 data "sdwan_application_priority_traffic_policy_policy" "n339" {
   feature_profile_id = local.m_339["feature_profile_id"]
-  id                 = local.m_339["id"]
+  id = local.m_339["id"]
 }
 
 output "n339_data_sdwan_application_priority_traffic_policy_policy_id" {

@@ -8,9 +8,9 @@ locals {
 }
 
 data "sdwan_transport_wan_vpn_interface_t1_e1_serial_feature" "n236" {
-  feature_profile_id           = local.m_236["feature_profile_id"]
-  id                           = local.m_236["id"]
-  name                         = local.m_236["name"]
+  feature_profile_id = local.m_236["feature_profile_id"]
+  id = local.m_236["id"]
+  name = local.m_236["name"]
   transport_wan_vpn_feature_id = local.m_236["transport_wan_vpn_feature_id"]
 }
 

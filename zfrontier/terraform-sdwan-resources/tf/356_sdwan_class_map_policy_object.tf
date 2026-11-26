@@ -8,6 +8,6 @@ locals {
 }
 
 resource "sdwan_class_map_policy_object" "n356" {
-  name  = local.m_356["name"]
+  name = local.m_356["name"]
   queue = local.m_356["queue"]
 }

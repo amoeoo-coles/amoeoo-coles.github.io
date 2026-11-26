@@ -8,7 +8,7 @@ locals {
 }
 
 resource "sdwan_service_lan_vpn_feature_associate_multicast_feature" "n249" {
-  feature_profile_id           = local.m_249["feature_profile_id"]
-  service_lan_vpn_feature_id   = local.m_249["service_lan_vpn_feature_id"]
+  feature_profile_id = local.m_249["feature_profile_id"]
+  service_lan_vpn_feature_id = local.m_249["service_lan_vpn_feature_id"]
   service_multicast_feature_id = local.m_249["service_multicast_feature_id"]
 }

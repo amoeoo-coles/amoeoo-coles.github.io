@@ -9,7 +9,7 @@ locals {
 
 data "sdwan_network_hierarchy_nodes" "n009" {
   expand_containers = local.m_009["expand_containers"]
-  names             = local.m_009["names"]
+  names = local.m_009["names"]
 }
 
 output "n009_data_sdwan_network_hierarchy_nodes_id" {

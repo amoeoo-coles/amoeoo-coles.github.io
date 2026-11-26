@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_policy_object_security_data_ipv4_prefix_list" "n047" {
-  description        = local.m_047["description"]
-  entries            = local.m_047["entries"]
+  description = local.m_047["description"]
+  entries = local.m_047["entries"]
   feature_profile_id = local.m_047["feature_profile_id"]
-  name               = local.m_047["name"]
+  name = local.m_047["name"]
 }

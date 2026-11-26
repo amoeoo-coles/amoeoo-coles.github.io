@@ -9,6 +9,6 @@ locals {
 
 resource "sdwan_tag" "n014" {
   description = local.m_014["description"]
-  devices     = local.m_014["devices"]
-  name        = local.m_014["name"]
+  devices = local.m_014["devices"]
+  name = local.m_014["name"]
 }
