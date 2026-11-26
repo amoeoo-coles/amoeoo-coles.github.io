@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ACI Multi-Pod Terraform, Nexus IPN &amp; Nexus Dashboard</title>
+<meta name="description" content="Interactive Cisco ACI Multi-Pod workbench generating Terraform HCL for CiscoDevNet/aci, CiscoDevNet/mso (NDO) and CiscoDevNet/nxos, plus NX-OS CLI, physical and logical diagrams, BOM, rack and cabling plans, and a terraform plan preview.">
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+html{overflow-x:hidden;}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+  background:var(--bg) !important;
+  color:var(--ink) !important;
+}
+main{max-width:none !important;width:100%;margin:0 !important;padding:0 !important;box-sizing:border-box;min-width:0;}
+a:not(#mm-link):not(.kicker){color:var(--link);}
+#tt-wrap{
+  position:static!important;
+  display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;
+  box-sizing:border-box;width:100%;height:36px;padding:8px 0 0;flex:none;
+}
+#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;align-items:center;justify-content:center;
+  height:36px;padding:0 12px;border-radius:18px;
+  border:1px solid var(--btn-bd);background:var(--btn-bg);color:var(--btn-fg);
+  cursor:pointer;opacity:.92;text-decoration:none;white-space:nowrap;flex:none;
+}
+#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+.uv,.uvc{color:#fff!important}
+</style>
+
+<link rel="stylesheet" href="/zfrontier/aci-multipod-terraform/assets/page.css">
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'☀️ Light':'🌙 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+})();</script>
+
+<main class="wrap">
+
+<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:var(--muted,#888)"><a href="/visitors/" style="color:inherit;text-decoration:none"><span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></a><span class="uvt" style="font-size:11px;color:var(--muted,#888)"></span></div><!--/arr-uv-tr17-->
+
+
+<p class="kicker">zFrontier</p>
+<h1>ACI Multi-Pod Terraform, Nexus IPN &amp; Nexus Dashboard</h1>
+<p class="ver"><a href="/zfrontier/aci-multipod-terraform/history/">v1 · 26 Nov 2026, 3:35 PM AEDT</a></p>
+<p class="lede">Browser-only Cisco ACI Multi-Pod workbench with 32 interactive forms that live-generate Terraform HCL for the <code>CiscoDevNet/aci</code>, <code>CiscoDevNet/mso</code> (Nexus Dashboard Orchestrator, <code>platform = &quot;nd&quot;</code>) and <code>CiscoDevNet/nxos</code> providers, plus ready-to-paste NX-OS CLI. Includes original overview, physical and logical diagrams, an indicative BOM, rack elevations, a cabling plan, Day 1 / Day 2 / BAU / troubleshooting forms, a YAML sample model, Before-Push <code>terraform plan</code> previews, and a CI/CD + NetBox 4.x sync pack.</p>
+
+<div class="cred-banner">
+  <strong>Offline &amp; credential-safe by design:</strong> Everything renders locally in your browser; this page never contacts an APIC, Nexus Dashboard, or IPN switch. Generated <code>.tf</code> files always use variables (<code>var.apic_password</code>, <code>var.ndo_password</code>, <code>var.nxos_password</code>) or CI placeholders (<code>{{ apic_password }}</code>, <code>{{ ndo_password }}</code>) and documentation/lab prefixes. The plan panel is a <strong>browser preview</strong> (<code>+</code> to add, <code>~</code> to change). A real <code>terraform fmt</code> / <code>validate</code> / <code>plan</code> / <code>apply</code> runs only on a self-hosted runner.
+</div>
+
+<div class="sample-bar">
+  <div>
+    <strong>YAML data model:</strong> published at <a href="data/sample.yml"><code>data/sample.yml</code></a>
+    and consumed in Terraform with <code>yamldecode(file("${path.module}/data/sample.yml"))</code>.
+    <div class="sample-status">Forms start with built-in defaults (same values as the sample file).</div>
+  </div>
+  <div class="sample-actions">
+    <button type="button" class="yaml-btn" data-action="load-sample">Load sample test data</button>
+    <button type="button" class="yaml-btn" data-action="reset-sample">Reset</button>
+  </div>
+</div>
+<ol class="page-menu" aria-label="On this page">
+  <li><a href="#diagrams">Architecture Diagrams (Overview, Physical &amp; Logical)</a>
+    <ol style="list-style:none;padding-left:18px;">
+      <li><a href="#diag-overview">1.1 Interactive Multi-Pod Overview (Clickable)</a></li>
+      <li><a href="#diag-physical">1.2 Physical Topology (Racks, Optics &amp; Speeds)</a></li>
+      <li><a href="#diag-logical">1.3 Logical Topology (OSPF VLAN-4, PIM Bidir, EVPN, TEPs)</a></li>
+    </ol>
+  </li>
+  <li><a href="#bom">Indicative Bill of Materials (BOM)</a></li>
+  <li><a href="#racks">Rack Elevation, Cabling Plan and Labelling</a>
+    <ol style="list-style:none;padding-left:18px;">
+      <li><a href="#racks">3.1 Example 42U Elevations</a></li>
+      <li><a href="#cabling-plan">3.2 Cabling Plan Table</a></li>
+      <li><a href="#cabling-steps">3.3 Step-by-Step Cabling, Labelling, Power and Airflow</a></li>
+    </ol>
+  </li>
+  <li><a href="#planning">Planning &amp; Prerequisites</a></li>
+  <li><a href="#design">Design Patterns (Terraform per Pattern)</a></li>
+  <li><a href="#ipn-configs">Nexus IPN (NX-OS CLI &amp; CiscoDevNet/nxos)</a></li>
+  <li><a href="#day1">Day 1 — Fabric Bring-Up, Infra L3Out, ND/NDO Onboarding</a></li>
+  <li><a href="#day2">Day 2 — Tenant, VRF, BD, EPG, Contracts and NDO Deploy</a></li>
+  <li><a href="#bau-ops">BAU Operations, Lifecycle and Terraform State</a></li>
+  <li><a href="#troubleshooting">Troubleshooting (Show, moquery, terraform state)</a></li>
+  <li><a href="#sample-test">Sample Test Data &amp; Expected Plan Outcome</a></li>
+  <li><a href="#cicd">CI/CD Pipeline &amp; NetBox 4.x Sync Pack</a></li>
+  <li><a href="#reference-table">Form &amp; Provider Reference Table</a></li>
+  <li><a href="#comments">Comments</a></li>
+  <li><a href="#versions">Versions</a></li>
+</ol>
+
+<section id="diagrams" class="section-block">
+  <h2>1. Architecture Diagrams (Overview, Physical &amp; Logical)</h2>
+  <p class="section-intro">Original artwork for an example two-pod fabric with a dual Nexus IPN and a three-node Nexus Dashboard cluster. Click a highlighted object on the overview to jump to its form.</p>
+  <h3 id="diag-overview">1.1 Interactive Multi-Pod Overview</h3>
+  <div class="svg-frame" id="diag-overview">
+<svg viewBox="0 0 1200 640" role="img" aria-label="Interactive Multi-Pod overview with Nexus Dashboard and IPN">
+  <style>
+    .lab{font:700 14px/1.2 system-ui,Arial,sans-serif;fill:var(--ink,#0f172a)}
+    .sub{font:11px/1.25 system-ui,Arial,sans-serif;fill:var(--muted,#475569)}
+    .wlab{font:700 12px/1.2 system-ui,Arial,sans-serif;fill:#f8fafc}
+    .wsub{font:10px/1.2 system-ui,Arial,sans-serif;fill:#e2e8f0}
+    .hot{cursor:pointer}
+    .hot:hover .box,.hot:focus .box{stroke:#fbbf24;stroke-width:2.4}
+  </style>
+  <rect x="20" y="18" width="1160" height="72" rx="12" fill="#1e3a8a"/>
+  <text class="wlab" x="40" y="46">Mezzanine — Nexus Dashboard cluster (3 nodes) + Orchestrator</text>
+  <text class="wsub" x="40" y="66">One NDO site represents the whole Multi-Pod fabric (one APIC cluster), not one site per pod.</text>
+  <g class="hot" data-jump="form-day1-ndo-onboard">
+    <rect class="box" x="720" y="28" width="90" height="48" rx="6" fill="#312e81" stroke="#93c5fd"/>
+    <text class="wlab" x="765" y="48" text-anchor="middle">ND-1</text>
+    <text class="wsub" x="765" y="64" text-anchor="middle">OOB 203.0.113.x</text>
+  </g>
+  <g class="hot" data-jump="form-day1-ndo-onboard">
+    <rect class="box" x="822" y="28" width="90" height="48" rx="6" fill="#312e81" stroke="#93c5fd"/>
+    <text class="wlab" x="867" y="48" text-anchor="middle">ND-2</text>
+    <text class="wsub" x="867" y="64" text-anchor="middle">cluster</text>
+  </g>
+  <g class="hot" data-jump="form-dp-ndo-schema">
+    <rect class="box" x="924" y="28" width="90" height="48" rx="6" fill="#312e81" stroke="#93c5fd"/>
+    <text class="wlab" x="969" y="48" text-anchor="middle">ND-3</text>
+    <text class="wsub" x="969" y="64" text-anchor="middle">+ NDO</text>
+  </g>
+  <rect class="box" x="1040" y="32" width="120" height="40" rx="16" fill="#0f766e" stroke="#99f6e4"/>
+  <text class="wlab" x="1100" y="56" text-anchor="middle">NDO</text>
+
+  <rect x="20" y="110" width="430" height="410" rx="16" fill="#134e4a"/>
+  <text class="wlab" x="40" y="138">Building A — Pod 1 (seed)</text>
+  <text class="wsub" x="40" y="156">TEP 10.10.0.0/16 · Ext TEP 10.11.0.0/24</text>
+  <g class="hot" data-jump="form-mp-tep-plan">
+    <rect class="box" x="40" y="176" width="120" height="44" rx="6" fill="#0f172a" stroke="#5eead4"/>
+    <text class="wlab" x="100" y="194" text-anchor="middle">APIC-1</text>
+    <text class="wsub" x="100" y="210" text-anchor="middle">cluster</text>
+  </g>
+  <rect class="box" x="170" y="176" width="120" height="44" rx="6" fill="#0f172a" stroke="#5eead4"/>
+  <text class="wlab" x="230" y="194" text-anchor="middle">APIC-2</text>
+  <text class="wsub" x="230" y="210" text-anchor="middle">cluster</text>
+  <rect class="box" x="300" y="176" width="120" height="44" rx="6" fill="#0f172a" stroke="#5eead4"/>
+  <text class="wlab" x="360" y="194" text-anchor="middle">APIC-3</text>
+  <text class="wsub" x="360" y="210" text-anchor="middle">joins later</text>
+  <g class="hot" data-jump="form-apic-infra-l3out">
+    <rect class="box" x="80" y="250" width="140" height="50" rx="6" fill="#164e63" stroke="#67e8f9"/>
+    <text class="wlab" x="150" y="270" text-anchor="middle">Spine 101</text>
+    <text class="wsub" x="150" y="288" text-anchor="middle">100G LR4 to IPN</text>
+  </g>
+  <rect class="box" x="250" y="250" width="140" height="50" rx="6" fill="#164e63" stroke="#67e8f9"/>
+  <text class="wlab" x="320" y="270" text-anchor="middle">Spine 102</text>
+  <text class="wsub" x="320" y="288" text-anchor="middle">100G LR4 to IPN</text>
+  <rect class="box" x="50" y="340" width="160" height="44" rx="6" fill="#1e3a5f" stroke="#93c5fd"/>
+  <text class="wlab" x="130" y="366" text-anchor="middle">Leaf pair 111/112</text>
+  <rect class="box" x="240" y="340" width="160" height="44" rx="6" fill="#1e3a5f" stroke="#93c5fd"/>
+  <text class="wlab" x="320" y="366" text-anchor="middle">Leaf pair 113/114</text>
+  <text class="wsub" x="40" y="410">Leaf–spine 100G SR4 · servers 25G (example)</text>
+  <text class="wsub" x="40" y="428">Mgmt 10G-SR to OOB 203.0.113.0/24</text>
+
+  <rect x="750" y="110" width="430" height="410" rx="16" fill="#4a1c0a"/>
+  <text class="wlab" x="770" y="138">Building B — Pod 2 (expansion)</text>
+  <text class="wsub" x="770" y="156">TEP 10.20.0.0/16 · Ext TEP 10.21.0.0/24</text>
+  <g class="hot" data-jump="form-apic-fabric-setup">
+    <rect class="box" x="900" y="176" width="160" height="44" rx="6" fill="#0f172a" stroke="#fdba74"/>
+    <text class="wlab" x="980" y="202" text-anchor="middle">APIC-3 (optional 4th+)</text>
+  </g>
+  <g class="hot" data-jump="form-apic-spine-routable">
+    <rect class="box" x="800" y="250" width="140" height="50" rx="6" fill="#7c2d12" stroke="#fdba74"/>
+    <text class="wlab" x="870" y="270" text-anchor="middle">Spine 201</text>
+    <text class="wsub" x="870" y="288" text-anchor="middle">DHCP via IPN</text>
+  </g>
+  <rect class="box" x="970" y="250" width="140" height="50" rx="6" fill="#7c2d12" stroke="#fdba74"/>
+  <text class="wlab" x="1040" y="270" text-anchor="middle">Spine 202</text>
+  <text class="wsub" x="1040" y="288" text-anchor="middle">DHCP via IPN</text>
+  <rect class="box" x="800" y="340" width="160" height="44" rx="6" fill="#431407" stroke="#fdba74"/>
+  <text class="wlab" x="880" y="366" text-anchor="middle">Leaf pair 211/212</text>
+  <rect class="box" x="990" y="340" width="160" height="44" rx="6" fill="#431407" stroke="#fdba74"/>
+  <text class="wlab" x="1070" y="366" text-anchor="middle">Leaf pair 213/214</text>
+  <text class="wsub" x="770" y="410">Same access model as Pod 1, stretched tenant/VRF/BD</text>
+
+  <g class="hot" data-jump="form-ipn-ospf">
+    <polygon class="box" points="600,200 690,250 600,300 510,250" fill="#7c2d12" stroke="#fde68a" stroke-width="2"/>
+    <text class="wlab" x="600" y="246" text-anchor="middle">IPN-1</text>
+    <text class="wsub" x="600" y="264" text-anchor="middle">VLAN-4 OSPF</text>
+  </g>
+  <g class="hot" data-jump="form-ipn-pim-bidir">
+    <polygon class="box" points="600,330 690,380 600,430 510,380" fill="#7c2d12" stroke="#fde68a" stroke-width="2"/>
+    <text class="wlab" x="600" y="376" text-anchor="middle">IPN-2</text>
+    <text class="wsub" x="600" y="394" text-anchor="middle">PIM bidir / RP</text>
+  </g>
+  <line x1="450" y1="270" x2="520" y2="250" stroke="#4ade80" stroke-width="3"/>
+  <line x1="450" y1="280" x2="520" y2="380" stroke="#4ade80" stroke-width="2" stroke-dasharray="5 3"/>
+  <line x1="750" y1="270" x2="680" y2="250" stroke="#4ade80" stroke-width="3"/>
+  <line x1="750" y1="280" x2="680" y2="380" stroke="#4ade80" stroke-width="2" stroke-dasharray="5 3"/>
+  <text class="sub" x="600" y="186" text-anchor="middle">Inter-Pod Network · 100G LR4 · MTU 9216</text>
+  <text class="sub" x="600" y="470" text-anchor="middle">OSPF area 0 · DHCP relay to Pod 1 APIC TEPs</text>
+
+  <rect x="20" y="540" width="1160" height="80" rx="12" fill="#0f172a" stroke="#334155"/>
+  <text class="wlab" x="40" y="570">OOB management (documentation prefix 203.0.113.0/24)</text>
+  <text class="wsub" x="40" y="592">APICs, spines, leaves, IPN and ND nodes share an OOB path that is separate from VLAN-4 underlay. Circuit sizes: not collected.</text>
+</svg>
+</div>
+  <h3 id="diag-physical">1.2 Physical Topology</h3>
+  <div class="svg-frame" id="diag-physical">
+<svg viewBox="0 0 1200 560" role="img" aria-label="Physical topology with racks, optics and link speeds">
+  <style>
+    .lab{font:700 13px/1.2 system-ui,Arial,sans-serif;fill:var(--ink,#0f172a)}
+    .wlab{font:700 11px/1.1 system-ui,Arial,sans-serif;fill:#f8fafc}
+    .wsub{font:9px/1.1 system-ui,Arial,sans-serif;fill:#cbd5e1}
+    .sub{font:11px/1.2 system-ui,Arial,sans-serif;fill:var(--muted,#475569)}
+  </style>
+  <text class="lab" x="24" y="28">Row layout (example) — looking from the cold aisle</text>
+  <g>
+    <rect x="30" y="50" width="200" height="380" rx="8" fill="#111827" stroke="#64748b"/>
+    <text class="wlab" x="130" y="74" text-anchor="middle">R1 Pod1-Net</text>
+    <rect x="46" y="90" width="168" height="36" fill="#1e3a8a"/><text class="wlab" x="130" y="112" text-anchor="middle">APIC-1 / APIC-2</text>
+    <rect x="46" y="140" width="168" height="44" fill="#0e7490"/><text class="wlab" x="130" y="166" text-anchor="middle">Spine 101 + 102</text>
+    <rect x="46" y="200" width="168" height="70" fill="#1d4ed8"/><text class="wlab" x="130" y="240" text-anchor="middle">Leaves 111–114</text>
+    <rect x="46" y="300" width="168" height="36" fill="#334155"/><text class="wlab" x="130" y="322" text-anchor="middle">OOB mgmt switch</text>
+    <text class="wsub" x="130" y="410" text-anchor="middle">Front-to-rear airflow (example)</text>
+  </g>
+  <g>
+    <rect x="260" y="50" width="200" height="380" rx="8" fill="#111827" stroke="#64748b"/>
+    <text class="wlab" x="360" y="74" text-anchor="middle">R2 Pod1-Compute</text>
+    <rect x="276" y="120" width="168" height="220" fill="#1e293b"/>
+    <text class="wlab" x="360" y="230" text-anchor="middle">Server rows (example)</text>
+    <text class="wsub" x="360" y="250" text-anchor="middle">25G/100G to leaves</text>
+  </g>
+  <g>
+    <rect x="500" y="50" width="200" height="380" rx="8" fill="#111827" stroke="#fb923c"/>
+    <text class="wlab" x="600" y="74" text-anchor="middle">R3 IPN</text>
+    <rect x="516" y="140" width="168" height="50" fill="#9a3412"/><text class="wlab" x="600" y="170" text-anchor="middle">IPN-1 N9K-C9336C-FX2</text>
+    <rect x="516" y="210" width="168" height="50" fill="#9a3412"/><text class="wlab" x="600" y="240" text-anchor="middle">IPN-2 N9K-C9336C-FX2</text>
+    <text class="wsub" x="600" y="300" text-anchor="middle">QSFP-100G-LR4-S to spines</text>
+    <text class="wsub" x="600" y="316" text-anchor="middle">OSPF VLAN-4 only (no server ports)</text>
+  </g>
+  <g>
+    <rect x="740" y="50" width="200" height="380" rx="8" fill="#111827" stroke="#64748b"/>
+    <text class="wlab" x="840" y="74" text-anchor="middle">R4 Pod2-Net</text>
+    <rect x="756" y="140" width="168" height="44" fill="#7c2d12"/><text class="wlab" x="840" y="166" text-anchor="middle">Spine 201 + 202</text>
+    <rect x="756" y="200" width="168" height="70" fill="#9a3412"/><text class="wlab" x="840" y="240" text-anchor="middle">Leaves 211–214</text>
+    <rect x="756" y="290" width="168" height="36" fill="#334155"/><text class="wlab" x="840" y="312" text-anchor="middle">OOB mgmt switch</text>
+  </g>
+  <g>
+    <rect x="970" y="50" width="200" height="380" rx="8" fill="#111827" stroke="#60a5fa"/>
+    <text class="wlab" x="1070" y="74" text-anchor="middle">R5 ND + OOB</text>
+    <rect x="986" y="120" width="168" height="28" fill="#1e3a8a"/><text class="wlab" x="1070" y="138" text-anchor="middle">ND-1</text>
+    <rect x="986" y="156" width="168" height="28" fill="#1e3a8a"/><text class="wlab" x="1070" y="174" text-anchor="middle">ND-2</text>
+    <rect x="986" y="192" width="168" height="28" fill="#1e3a8a"/><text class="wlab" x="1070" y="210" text-anchor="middle">ND-3 + NDO</text>
+    <rect x="986" y="250" width="168" height="36" fill="#334155"/><text class="wlab" x="1070" y="272" text-anchor="middle">Core OOB / console</text>
+    <text class="wsub" x="1070" y="320" text-anchor="middle">OOB 10G-SR · 203.0.113.0/24</text>
+  </g>
+  <path d="M230 160 C 360 120, 440 120, 516 160" fill="none" stroke="#4ade80" stroke-width="3"/>
+  <path d="M684 160 C 720 120, 760 120, 756 160" fill="none" stroke="#4ade80" stroke-width="3"/>
+  <text class="sub" x="600" y="455" text-anchor="middle">Green = 100G LR4 spine–IPN · Leaf–spine 100G SR4 inside each hall · Mgmt 10G-SR (not drawn through the IPN)</text>
+  <text class="sub" x="600" y="478" text-anchor="middle">Patch lengths, circuit amperage and in-row cooling capacity: not collected. Fibre plant is single-mode for IPN, multimode for in-hall SR4 (example).</text>
+  <text class="sub" x="600" y="520" text-anchor="middle">Racks sit on a raised floor (example). Keep 42U elevations, A/B PDUs and front-to-rear airflow as drawn in the rack section below.</text>
+</svg>
+</div>
+  <h3 id="diag-logical">1.3 Logical Topology</h3>
+  <div class="svg-frame" id="diag-logical">
+<svg viewBox="0 0 1200 580" role="img" aria-label="Logical Multi-Pod underlay, multicast and EVPN overlay">
+  <style>
+    .lab{font:700 13px/1.2 system-ui,Arial,sans-serif;fill:var(--ink,#0f172a)}
+    .wlab{font:700 12px/1.2 system-ui,Arial,sans-serif;fill:#f8fafc}
+    .wsub{font:10px/1.2 system-ui,Arial,sans-serif;fill:#e2e8f0}
+    .sub{font:11px/1.2 system-ui,Arial,sans-serif;fill:var(--muted,#475569)}
+  </style>
+  <rect x="20" y="20" width="1160" height="160" rx="12" fill="#1e3a8a"/>
+  <text class="wlab" x="40" y="48">Overlay — MP-BGP EVPN, COOP and stretched tenant</text>
+  <text class="wsub" x="40" y="68">Spines in both pods are EVPN route reflectors / COOP peers across the IPN. Endpoints in tn-example / vrf-stretched share the same BD GIPo.</text>
+  <rect x="40" y="90" width="240" height="70" rx="8" fill="#312e81" stroke="#c4b5fd"/>
+  <text class="wlab" x="160" y="120" text-anchor="middle">TEP pool Pod 1</text>
+  <text class="wsub" x="160" y="140" text-anchor="middle">10.10.0.0/16</text>
+  <rect x="920" y="90" width="240" height="70" rx="8" fill="#7c2d12" stroke="#fdba74"/>
+  <text class="wlab" x="1040" y="120" text-anchor="middle">TEP pool Pod 2</text>
+  <text class="wsub" x="1040" y="140" text-anchor="middle">10.20.0.0/16</text>
+  <rect x="360" y="90" width="480" height="70" rx="8" fill="#0f766e" stroke="#99f6e4"/>
+  <text class="wlab" x="600" y="120" text-anchor="middle">Stretched tn-example · vrf-stretched · bd-stretched</text>
+  <text class="wsub" x="600" y="140" text-anchor="middle">BD subnet 10.30.1.1/24 · BUM via GIPo 225.0.0.0/15</text>
+
+  <rect x="20" y="200" width="1160" height="160" rx="12" fill="#7c2d12"/>
+  <text class="wlab" x="40" y="228">Multicast underlay — PIM bidir and phantom RP</text>
+  <text class="wsub" x="40" y="248">IPN-1 and IPN-2 advertise 10.254.254.1 with unequal masks so one phantom RP is reachable via OSPF.</text>
+  <rect x="200" y="270" width="200" height="60" rx="8" fill="#9a3412" stroke="#fdba74"/>
+  <text class="wlab" x="300" y="294" text-anchor="middle">IPN-1 Lo1 /30</text>
+  <text class="wsub" x="300" y="314" text-anchor="middle">10.254.254.1/30</text>
+  <rect x="800" y="270" width="200" height="60" rx="8" fill="#9a3412" stroke="#fdba74"/>
+  <text class="wlab" x="900" y="294" text-anchor="middle">IPN-2 Lo1 /29</text>
+  <text class="wsub" x="900" y="314" text-anchor="middle">typical unequal mask</text>
+  <rect x="470" y="270" width="260" height="60" rx="8" fill="#431407" stroke="#fde68a"/>
+  <text class="wlab" x="600" y="294" text-anchor="middle">Phantom RP 10.254.254.1</text>
+  <text class="wsub" x="600" y="314" text-anchor="middle">group-list 225.0.0.0/15 bidir</text>
+
+  <rect x="20" y="380" width="1160" height="180" rx="12" fill="#134e4a"/>
+  <text class="wlab" x="40" y="408">Underlay — OSPF area 0 on VLAN-4, MTU 9216, DHCP relay</text>
+  <text class="wsub" x="40" y="428">Each spine–IPN link is a /30 (example 10.254.1.0/30 and 10.254.2.0/30). Infra VLAN 3967 stays inside the fabric; VLAN 4 is the IPN encapsulation.</text>
+  <rect x="60" y="450" width="200" height="70" rx="8" fill="#115e59" stroke="#5eead4"/>
+  <text class="wlab" x="160" y="478" text-anchor="middle">Pod 1 spines</text>
+  <text class="wsub" x="160" y="498" text-anchor="middle">.1 of 10.254.1.0/30</text>
+  <rect x="500" y="450" width="200" height="70" rx="8" fill="#7c2d12" stroke="#fdba74"/>
+  <text class="wlab" x="600" y="478" text-anchor="middle">IPN pair VRF ACI-IPN</text>
+  <text class="wsub" x="600" y="498" text-anchor="middle">relay to 10.10.0.1–.3</text>
+  <rect x="940" y="450" width="200" height="70" rx="8" fill="#7c2d12" stroke="#fdba74"/>
+  <text class="wlab" x="1040" y="478" text-anchor="middle">Pod 2 spines</text>
+  <text class="wsub" x="1040" y="498" text-anchor="middle">.1 of 10.254.2.0/30</text>
+  <line x1="260" y1="485" x2="500" y2="485" stroke="#4ade80" stroke-width="3"/>
+  <line x1="700" y1="485" x2="940" y2="485" stroke="#4ade80" stroke-width="3"/>
+</svg>
+</div>
+</section>
+
+<section id="bom" class="section-block">
+  <h2>2. Indicative Bill of Materials (BOM)</h2>
+  <p class="section-intro">Hardware and cabling roles for an example two-pod Multi-Pod fabric with redundant Nexus IPN switches and a three-node Nexus Dashboard cluster. Click any column header to sort.</p>
+  <div class="callout-warn">
+    <strong>Example / Indicative BOM only:</strong> Models, quantities and optics below are illustrative. Unit prices and EoL/EoS dates are marked <code>not collected</code> because no vendor quote or Cisco EoL API feed was queried on this static page.
+  </div>
+  <div class="table-wrap">
+    <table class="aci-data-table">
+      <thead>
+        <tr>
+          <th>Layer / Hall</th>
+          <th>Role</th>
+          <th>Example Cisco PID</th>
+          <th>Example Qty</th>
+          <th>Optics &amp; Cabling (Example)</th>
+          <th>Unit Price (USD)</th>
+          <th>EoL / EoS Status</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Pod 1</td><td>ACI Spine</td><td><code>N9K-C9364C</code> (example)</td><td>2</td><td>QSFP-100G-LR4-S to IPN; QSFP-100G-SR4-S to leaves</td><td><span class="tag-unk">not collected</span></td><td><span class="tag-unk">not collected</span></td><td>Cloud Scale spine; Multi-Pod capable</td></tr><tr><td>Pod 1</td><td>ACI Leaf</td><td><code>N9K-C93180YC-FX</code> (example)</td><td>4</td><td>QSFP-100G-SR4-S uplink; 10/25G-SR access (example)</td><td><span class="tag-unk">not collected</span></td><td><span class="tag-unk">not collected</span></td><td>vPC pairs 111/112 and 113/114</td></tr><tr><td>Pod 1</td><td>APIC</td><td><code>APIC-SERVER-M3</code> (example)</td><td>3</td><td>10G-SR OOB + cluster fabric links</td><td><span class="tag-unk">not collected</span></td><td><span class="tag-unk">not collected</span></td><td>Seed cluster; exact SKU not collected</td></tr><tr><td>Pod 2</td><td>ACI Spine</td><td><code>N9K-C9364C</code> (example)</td><td>2</td><td>QSFP-100G-LR4-S to IPN; QSFP-100G-SR4-S to leaves</td><td><span class="tag-unk">not collected</span></td><td><span class="tag-unk">not collected</span></td><td>Discovered after IPN DHCP relay</td></tr><tr><td>Pod 2</td><td>ACI Leaf</td><td><code>N9K-C93180YC-FX</code> (example)</td><td>4</td><td>QSFP-100G-SR4-S uplink</td><td><span class="tag-unk">not collected</span></td><td><span class="tag-unk">not collected</span></td><td>vPC pairs 211/212 and 213/214</td></tr><tr><td>IPN</td><td>IPN Nexus</td><td><code>N9K-C9336C-FX2</code> (example)</td><td>2</td><td>QSFP-100G-LR4-S to both pods (single-mode)</td><td><span class="tag-unk">not collected</span></td><td><span class="tag-unk">not collected</span></td><td>OSPF, PIM bidir, DHCP relay only</td></tr><tr><td>ND</td><td>Nexus Dashboard node</td><td>ND appliance or qualified UCS (example)</td><td>3</td><td>10G-SR OOB 203.0.113.0/24 (documentation)</td><td><span class="tag-unk">not collected</span></td><td><span class="tag-unk">not collected</span></td><td>Cluster install is out of band of CiscoDevNet/mso</td></tr><tr><td>Mgmt</td><td>OOB switch</td><td>Not collected (example 48x 10G)</td><td>2</td><td>10G-SR to APICs, switches and ND</td><td><span class="tag-unk">not collected</span></td><td><span class="tag-unk">not collected</span></td><td>Separate from VLAN-4 underlay</td></tr><tr><td>Optics</td><td>100G LR4</td><td><code>QSFP-100G-LR4-S</code> (example)</td><td>8</td><td>Single-mode LC, spine–IPN</td><td><span class="tag-unk">not collected</span></td><td><span class="tag-unk">not collected</span></td><td>Four links per pod example (2 spines × 2 IPN)</td></tr><tr><td>Optics</td><td>100G SR4</td><td><code>QSFP-100G-SR4-S</code> (example)</td><td>16</td><td>Multimode MPO, leaf–spine</td><td><span class="tag-unk">not collected</span></td><td><span class="tag-unk">not collected</span></td><td>Quantities are indicative only</td></tr><tr><td>Cabling</td><td>SMF / MMF trunks</td><td>Not collected</td><td>not collected</td><td>Pre-term trunks between halls</td><td><span class="tag-unk">not collected</span></td><td><span class="tag-unk">not collected</span></td><td>Measured lengths: not collected</td></tr><tr><td>Power</td><td>PDU A/B</td><td>Not collected</td><td>2 per rack (example)</td><td>C13/C19 (example)</td><td><span class="tag-unk">not collected</span></td><td><span class="tag-unk">not collected</span></td><td>Circuit amperage: not collected</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="racks" class="section-block">
+  <h2>3. Rack Elevation, Cabling Plan and Labelling</h2>
+  <p class="section-intro">Example 42U elevations (U1 at the bottom). Empty units are unused in this sketch. Device placement is illustrative, not a surveyed site plan.</p>
+  <div class="rack-grid"><div class="rack-card">
+<h3>R1 Pod1-Net</h3>
+<p>Example 42U elevation. Positions are illustrative.</p>
+<svg class="rack-svg" viewBox="0 0 200 376" role="img" aria-label="R1 Pod1-Net elevation">
+  <rect x="28" y="16" width="150" height="336" rx="4" fill="#0b1220" stroke="#64748b" stroke-width="2"/>
+  <text x="100" y="12" text-anchor="middle" font-size="9" fill="currentColor">42U</text>
+  <rect x="32" y="8" width="142" height="15" rx="2" fill="#1e3a8a" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="19.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">APIC-1</text>
+  <text x="22" y="19.0" text-anchor="end" font-size="7" fill="currentColor">U42</text>
+  <rect x="32" y="24" width="142" height="15" rx="2" fill="#1e3a8a" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="35.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">APIC-2</text>
+  <text x="22" y="35.0" text-anchor="end" font-size="7" fill="currentColor">U40</text>
+  <rect x="32" y="56" width="142" height="15" rx="2" fill="#0e7490" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="67.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">Spine 101</text>
+  <text x="22" y="67.0" text-anchor="end" font-size="7" fill="currentColor">U36</text>
+  <rect x="32" y="72" width="142" height="15" rx="2" fill="#0e7490" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="83.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">Spine 102</text>
+  <text x="22" y="83.0" text-anchor="end" font-size="7" fill="currentColor">U34</text>
+  <rect x="32" y="120" width="142" height="15" rx="2" fill="#1d4ed8" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="131.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">Leaf 111</text>
+  <text x="22" y="131.0" text-anchor="end" font-size="7" fill="currentColor">U28</text>
+  <rect x="32" y="136" width="142" height="15" rx="2" fill="#1d4ed8" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="147.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">Leaf 112</text>
+  <text x="22" y="147.0" text-anchor="end" font-size="7" fill="currentColor">U26</text>
+  <rect x="32" y="152" width="142" height="15" rx="2" fill="#1d4ed8" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="163.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">Leaf 113</text>
+  <text x="22" y="163.0" text-anchor="end" font-size="7" fill="currentColor">U24</text>
+  <rect x="32" y="168" width="142" height="15" rx="2" fill="#1d4ed8" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="179.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">Leaf 114</text>
+  <text x="22" y="179.0" text-anchor="end" font-size="7" fill="currentColor">U22</text>
+  <rect x="32" y="264" width="142" height="15" rx="2" fill="#334155" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="275.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">OOB SW</text>
+  <text x="22" y="275.0" text-anchor="end" font-size="7" fill="currentColor">U10</text>
+  <rect x="32" y="328" width="142" height="15" rx="2" fill="#57534e" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="339.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">PDU A/B</text>
+  <text x="22" y="339.0" text-anchor="end" font-size="7" fill="currentColor">U2</text>
+</svg></div><div class="rack-card">
+<h3>R3 IPN</h3>
+<p>Example 42U elevation. Positions are illustrative.</p>
+<svg class="rack-svg" viewBox="0 0 200 376" role="img" aria-label="R3 IPN elevation">
+  <rect x="28" y="16" width="150" height="336" rx="4" fill="#0b1220" stroke="#64748b" stroke-width="2"/>
+  <text x="100" y="12" text-anchor="middle" font-size="9" fill="currentColor">42U</text>
+  <rect x="32" y="56" width="142" height="15" rx="2" fill="#9a3412" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="67.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">IPN-1</text>
+  <text x="22" y="67.0" text-anchor="end" font-size="7" fill="currentColor">U36</text>
+  <rect x="32" y="88" width="142" height="15" rx="2" fill="#9a3412" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="99.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">IPN-2</text>
+  <text x="22" y="99.0" text-anchor="end" font-size="7" fill="currentColor">U32</text>
+  <rect x="32" y="264" width="142" height="15" rx="2" fill="#334155" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="275.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">OOB SW</text>
+  <text x="22" y="275.0" text-anchor="end" font-size="7" fill="currentColor">U10</text>
+  <rect x="32" y="328" width="142" height="15" rx="2" fill="#57534e" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="339.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">PDU A/B</text>
+  <text x="22" y="339.0" text-anchor="end" font-size="7" fill="currentColor">U2</text>
+</svg></div><div class="rack-card">
+<h3>R4 Pod2-Net</h3>
+<p>Example 42U elevation. Positions are illustrative.</p>
+<svg class="rack-svg" viewBox="0 0 200 376" role="img" aria-label="R4 Pod2-Net elevation">
+  <rect x="28" y="16" width="150" height="336" rx="4" fill="#0b1220" stroke="#64748b" stroke-width="2"/>
+  <text x="100" y="12" text-anchor="middle" font-size="9" fill="currentColor">42U</text>
+  <rect x="32" y="56" width="142" height="15" rx="2" fill="#7c2d12" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="67.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">Spine 201</text>
+  <text x="22" y="67.0" text-anchor="end" font-size="7" fill="currentColor">U36</text>
+  <rect x="32" y="72" width="142" height="15" rx="2" fill="#7c2d12" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="83.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">Spine 202</text>
+  <text x="22" y="83.0" text-anchor="end" font-size="7" fill="currentColor">U34</text>
+  <rect x="32" y="120" width="142" height="15" rx="2" fill="#9a3412" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="131.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">Leaf 211</text>
+  <text x="22" y="131.0" text-anchor="end" font-size="7" fill="currentColor">U28</text>
+  <rect x="32" y="136" width="142" height="15" rx="2" fill="#9a3412" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="147.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">Leaf 212</text>
+  <text x="22" y="147.0" text-anchor="end" font-size="7" fill="currentColor">U26</text>
+  <rect x="32" y="152" width="142" height="15" rx="2" fill="#9a3412" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="163.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">Leaf 213</text>
+  <text x="22" y="163.0" text-anchor="end" font-size="7" fill="currentColor">U24</text>
+  <rect x="32" y="168" width="142" height="15" rx="2" fill="#9a3412" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="179.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">Leaf 214</text>
+  <text x="22" y="179.0" text-anchor="end" font-size="7" fill="currentColor">U22</text>
+  <rect x="32" y="264" width="142" height="15" rx="2" fill="#334155" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="275.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">OOB SW</text>
+  <text x="22" y="275.0" text-anchor="end" font-size="7" fill="currentColor">U10</text>
+  <rect x="32" y="328" width="142" height="15" rx="2" fill="#57534e" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="339.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">PDU A/B</text>
+  <text x="22" y="339.0" text-anchor="end" font-size="7" fill="currentColor">U2</text>
+</svg></div><div class="rack-card">
+<h3>R5 ND + OOB</h3>
+<p>Example 42U elevation. Positions are illustrative.</p>
+<svg class="rack-svg" viewBox="0 0 200 376" role="img" aria-label="R5 ND + OOB elevation">
+  <rect x="28" y="16" width="150" height="336" rx="4" fill="#0b1220" stroke="#64748b" stroke-width="2"/>
+  <text x="100" y="12" text-anchor="middle" font-size="9" fill="currentColor">42U</text>
+  <rect x="32" y="56" width="142" height="15" rx="2" fill="#1e3a8a" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="67.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">ND-1</text>
+  <text x="22" y="67.0" text-anchor="end" font-size="7" fill="currentColor">U36</text>
+  <rect x="32" y="72" width="142" height="15" rx="2" fill="#1e3a8a" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="83.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">ND-2</text>
+  <text x="22" y="83.0" text-anchor="end" font-size="7" fill="currentColor">U34</text>
+  <rect x="32" y="88" width="142" height="15" rx="2" fill="#1e3a8a" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="99.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">ND-3 / NDO</text>
+  <text x="22" y="99.0" text-anchor="end" font-size="7" fill="currentColor">U32</text>
+  <rect x="32" y="184" width="142" height="15" rx="2" fill="#334155" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="195.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">Console / OOB</text>
+  <text x="22" y="195.0" text-anchor="end" font-size="7" fill="currentColor">U20</text>
+  <rect x="32" y="328" width="142" height="15" rx="2" fill="#57534e" stroke="#e2e8f0" stroke-width="0.6"/>
+  <text x="103" y="339.0" text-anchor="middle" font-size="7.5" fill="#f8fafc">PDU A/B</text>
+  <text x="22" y="339.0" text-anchor="end" font-size="7" fill="currentColor">U2</text>
+</svg></div></div>
+
+  <h3 id="cabling-plan">3.2 Cabling Plan Table</h3>
+  <div class="table-wrap">
+    <table class="aci-data-table">
+      <thead>
+        <tr>
+          <th>Seq</th>
+          <th>From (Rack / U / Port)</th>
+          <th>To (Rack / U / Port)</th>
+          <th>Media (Example)</th>
+          <th>Length</th>
+          <th>Label both ends (Example)</th>
+          <th>Speed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>R1 / Spine 101 / E1/49</td><td>R3 / IPN-1 / E1/1</td><td>SMF LC, QSFP-100G-LR4-S</td><td><span class="tag-unk">not collected</span></td><td>P1-SP101-E1/49 -- IPN1-E1/1</td><td>100G</td></tr>
+        <tr><td>2</td><td>R1 / Spine 101 / E1/50</td><td>R3 / IPN-2 / E1/1</td><td>SMF LC, QSFP-100G-LR4-S</td><td><span class="tag-unk">not collected</span></td><td>P1-SP101-E1/50 -- IPN2-E1/1</td><td>100G</td></tr>
+        <tr><td>3</td><td>R1 / Spine 102 / E1/49</td><td>R3 / IPN-1 / E1/2</td><td>SMF LC, QSFP-100G-LR4-S</td><td><span class="tag-unk">not collected</span></td><td>P1-SP102-E1/49 -- IPN1-E1/2</td><td>100G</td></tr>
+        <tr><td>4</td><td>R1 / Spine 102 / E1/50</td><td>R3 / IPN-2 / E1/2</td><td>SMF LC, QSFP-100G-LR4-S</td><td><span class="tag-unk">not collected</span></td><td>P1-SP102-E1/50 -- IPN2-E1/2</td><td>100G</td></tr>
+        <tr><td>5</td><td>R4 / Spine 201 / E1/49</td><td>R3 / IPN-1 / E1/3</td><td>SMF LC, QSFP-100G-LR4-S</td><td><span class="tag-unk">not collected</span></td><td>P2-SP201-E1/49 -- IPN1-E1/3</td><td>100G</td></tr>
+        <tr><td>6</td><td>R4 / Spine 201 / E1/50</td><td>R3 / IPN-2 / E1/3</td><td>SMF LC, QSFP-100G-LR4-S</td><td><span class="tag-unk">not collected</span></td><td>P2-SP201-E1/50 -- IPN2-E1/3</td><td>100G</td></tr>
+        <tr><td>7</td><td>R4 / Spine 202 / E1/49</td><td>R3 / IPN-1 / E1/4</td><td>SMF LC, QSFP-100G-LR4-S</td><td><span class="tag-unk">not collected</span></td><td>P2-SP202-E1/49 -- IPN1-E1/4</td><td>100G</td></tr>
+        <tr><td>8</td><td>R4 / Spine 202 / E1/50</td><td>R3 / IPN-2 / E1/4</td><td>SMF LC, QSFP-100G-LR4-S</td><td><span class="tag-unk">not collected</span></td><td>P2-SP202-E1/50 -- IPN2-E1/4</td><td>100G</td></tr>
+        <tr><td>9</td><td>R1 / Leaf 111 / E1/49-50</td><td>R1 / Spines 101-102</td><td>MMF MPO, QSFP-100G-SR4-S</td><td><span class="tag-unk">not collected</span></td><td>P1-LF111-E1/49 -- P1-SP101-E1/1</td><td>100G</td></tr>
+        <tr><td>10</td><td>Each switch mgmt0</td><td>R5 / OOB switch</td><td>10G-SR or Cat6 (example)</td><td><span class="tag-unk">not collected</span></td><td>DEV-MGT -- OOB-Pxx</td><td>1/10G</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="cabling-steps">3.3 Step-by-Step Cabling, Labelling, Power and Airflow</h3>
+  <ol class="steps-ol">
+    <li>Print two labels per cable <em>before</em> seating optics, using the scheme in the table (device-port at both ends).</li>
+    <li>Seat spine–IPN 100G LR4 links first (rows 1–8). Confirm light on both ends before moving on. These are the only inter-hall data links in this design.</li>
+    <li>Cable in-hall leaf–spine 100G SR4 MPO trunks, then vPC peer links and keepalive, then access ports.</li>
+    <li>Cable OOB last, onto a management VRF/switch that does not transit VLAN-4. Documentation prefix 203.0.113.0/24 is an example only.</li>
+    <li>Power: land A and B feeds on separate PDUs. Circuit amperage, breaker size and UPS runtime are <code>not collected</code>.</li>
+    <li>Airflow: this sketch assumes port-side intake / front-to-rear exhaust. Confirm each PID’s airflow SKU before ordering; reversed-airflow units are <code>not collected</code>.</li>
+    <li>Leave slack loops, strain-relieve MPO/LC, and photograph each rack after labelling for the as-built pack (not published here).</li>
+    <li>Do not trunk server VLANs onto the IPN switches. IPN carries OSPF, PIM bidir and DHCP relay only.</li>
+  </ol>
+</section>
+
+<section id="planning" class="section-block">
+  <h2>4. Planning &amp; Prerequisites</h2>
+  <p class="section-intro">Lock TEP pools, IPN addressing and MTU/RTT before any device is provisioned. Forms emit Terraform that Day 1 will apply.</p>
+  <div class="tm-wrap">
+  <h3>Planning tree</h3>
+  <div class="svg-frame">
+    <svg viewBox="0 0 1100 180" role="img" aria-label="Planning tree">
+      <style>
+        .tm-node { cursor: pointer; }
+        .tm-node rect { fill: var(--card, #fff); stroke: #2563eb; stroke-width: 1.5; }
+        .tm-node:hover rect, .tm-node:focus rect { stroke: #0f766e; stroke-width: 2.2; }
+        .tm-title { font: 700 13px/1.2 system-ui, Arial, sans-serif; fill: var(--ink, #0f172a); }
+        .tm-sub { font: 11px/1.2 system-ui, Arial, sans-serif; fill: var(--muted, #475569); }
+        .tm-line { stroke: #94a3b8; stroke-width: 1.2; }
+      </style>
+      <text class="tm-title" x="16" y="28">Planning tree</text>
+      <g class="tm-node" data-jump="form-mp-tep-plan"><rect x="16" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="26" y="96">4.1 TEP pools</text><text class="tm-sub" x="26" y="116">fabricSetupP</text></g>
+      <line class="tm-line" x1="220" y1="99" x2="236" y2="99"/>
+      <g class="tm-node" data-jump="form-mp-ipn-addr"><rect x="236" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="246" y="96">4.2 IPN addressing</text><text class="tm-sub" x="246" y="116">VLAN-4 /30s</text></g>
+      <line class="tm-line" x1="440" y1="99" x2="456" y2="99"/>
+      <g class="tm-node" data-jump="form-mp-mtu-prereq"><rect x="456" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="466" y="96">4.3 MTU &amp;amp; pre-flight</text><text class="tm-sub" x="466" y="116">COOP / BGP ASN</text></g>
+    </svg>
+  </div>
+</div>
+  <h3>Step-by-step planning guide</h3>
+  <ol class="steps-ol">
+    <li>Choose non-overlapping TEP pools for each pod and a unique external routable /24 per pod.</li>
+    <li>Assign VLAN-4 /30s between every spine and each IPN switch, plus a phantom RP address.</li>
+    <li>Confirm the IPN can carry ≥ 9150 byte frames and that pod-to-pod RTT is ≤ 50 ms.</li>
+    <li>Load the sample model or type values, then copy the generated <code>.tf</code> into the automation repo.</li>
+  </ol>
+  <div id="forms-planning"></div>
+</section>
+
+<section id="design" class="section-block">
+  <h2>5. Design Patterns (Terraform per Pattern)</h2>
+  <p class="section-intro">Each pattern has its own Terraform module/config. A Multi-Pod fabric is still one APIC cluster, so Nexus Dashboard Orchestrator inventories it as <strong>one site</strong>.</p>
+  <div class="tm-wrap">
+  <h3>Design patterns</h3>
+  <div class="svg-frame">
+    <svg viewBox="0 0 1120 180" role="img" aria-label="Design patterns">
+      <style>
+        .tm-node { cursor: pointer; }
+        .tm-node rect { fill: var(--card, #fff); stroke: #2563eb; stroke-width: 1.5; }
+        .tm-node:hover rect, .tm-node:focus rect { stroke: #0f766e; stroke-width: 2.2; }
+        .tm-title { font: 700 13px/1.2 system-ui, Arial, sans-serif; fill: var(--ink, #0f172a); }
+        .tm-sub { font: 11px/1.2 system-ui, Arial, sans-serif; fill: var(--muted, #475569); }
+        .tm-line { stroke: #94a3b8; stroke-width: 1.2; }
+      </style>
+      <text class="tm-title" x="16" y="28">Design patterns</text>
+      <g class="tm-node" data-jump="form-dp-dual-ipn"><rect x="16" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="26" y="96">5.1 Dual-pod dual-IPN</text><text class="tm-sub" x="26" y="116">One fabric, one NDO site</text></g>
+      <line class="tm-line" x1="220" y1="99" x2="236" y2="99"/>
+      <g class="tm-node" data-jump="form-dp-stretch-vrf"><rect x="236" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="246" y="96">5.2 Stretched VRF</text><text class="tm-sub" x="246" y="116">aci_tenant / aci_vrf</text></g>
+      <line class="tm-line" x1="440" y1="99" x2="456" y2="99"/>
+      <g class="tm-node" data-jump="form-dp-stretch-bd"><rect x="456" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="466" y="96">5.3 Stretched BD + GIPo</text><text class="tm-sub" x="466" y="116">BUM across IPN</text></g>
+      <line class="tm-line" x1="660" y1="99" x2="676" y2="99"/>
+      <g class="tm-node" data-jump="form-dp-local-l3out"><rect x="676" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="686" y="96">5.4 Local-egress L3Out</text><text class="tm-sub" x="686" y="116">Per-pod L3Out</text></g>
+      <line class="tm-line" x1="880" y1="99" x2="896" y2="99"/>
+      <g class="tm-node" data-jump="form-dp-ndo-schema"><rect x="896" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="906" y="96">5.5 NDO schema</text><text class="tm-sub" x="906" y="116">mso_schema</text></g>
+    </svg>
+  </div>
+</div>
+  <h3>Step-by-step design guide</h3>
+  <ol class="steps-ol">
+    <li>Start with the dual-pod dual-IPN root module so later forms share fabric and site names.</li>
+    <li>Decide whether BDs flood BUM (GIPo over PIM bidir) or use hardware-proxy / drop.</li>
+    <li>Pick local-egress L3Outs or a shared L3Out; this page models the local-egress pattern.</li>
+    <li>If NDO will own tenant policy, declare the schema and template before Day 2 deploys.</li>
+  </ol>
+  <div id="forms-design"></div>
+</section>
+
+<section id="ipn-configs" class="section-block">
+  <h2>6. Nexus IPN Switch Configs (NX-OS CLI &amp; CiscoDevNet/nxos)</h2>
+  <p class="section-intro">Bring the IPN up before discovering Pod 2. Each form emits Terraform and paste-ready NX-OS.</p>
+  <div class="tm-wrap">
+  <h3>IPN bring-up</h3>
+  <div class="svg-frame">
+    <svg viewBox="0 0 1340 180" role="img" aria-label="IPN bring-up">
+      <style>
+        .tm-node { cursor: pointer; }
+        .tm-node rect { fill: var(--card, #fff); stroke: #2563eb; stroke-width: 1.5; }
+        .tm-node:hover rect, .tm-node:focus rect { stroke: #0f766e; stroke-width: 2.2; }
+        .tm-title { font: 700 13px/1.2 system-ui, Arial, sans-serif; fill: var(--ink, #0f172a); }
+        .tm-sub { font: 11px/1.2 system-ui, Arial, sans-serif; fill: var(--muted, #475569); }
+        .tm-line { stroke: #94a3b8; stroke-width: 1.2; }
+      </style>
+      <text class="tm-title" x="16" y="28">IPN bring-up</text>
+      <g class="tm-node" data-jump="form-ipn-vrf-features"><rect x="16" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="26" y="96">6.1 Features &amp;amp; VRF</text><text class="tm-sub" x="26" y="116">nxos_feature / nxos_vrf</text></g>
+      <line class="tm-line" x1="220" y1="99" x2="236" y2="99"/>
+      <g class="tm-node" data-jump="form-ipn-subif-vlan4"><rect x="236" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="246" y="96">6.2 VLAN-4 subif</text><text class="tm-sub" x="246" y="116">dot1q 4 / MTU</text></g>
+      <line class="tm-line" x1="440" y1="99" x2="456" y2="99"/>
+      <g class="tm-node" data-jump="form-ipn-ospf"><rect x="456" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="466" y="96">6.3 OSPF area 0</text><text class="tm-sub" x="466" y="116">nxos_ospf_instance</text></g>
+      <line class="tm-line" x1="660" y1="99" x2="676" y2="99"/>
+      <g class="tm-node" data-jump="form-ipn-dhcp-relay"><rect x="676" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="686" y="96">6.4 DHCP relay</text><text class="tm-sub" x="686" y="116">to APIC TEPs</text></g>
+      <line class="tm-line" x1="880" y1="99" x2="896" y2="99"/>
+      <g class="tm-node" data-jump="form-ipn-pim-bidir"><rect x="896" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="906" y="96">6.5 PIM bidir</text><text class="tm-sub" x="906" y="116">Phantom RP</text></g>
+      <line class="tm-line" x1="1100" y1="99" x2="1116" y2="99"/>
+      <g class="tm-node" data-jump="form-ipn-qos-verify"><rect x="1116" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="1126" y="96">6.6 Verify</text><text class="tm-sub" x="1126" y="116">Read-only shows</text></g>
+    </svg>
+  </div>
+</div>
+  <h3>Step-by-step IPN bring-up</h3>
+  <ol class="steps-ol">
+    <li>Enable features and jumbo MTU, create VRF ACI-IPN and Loopback0.</li>
+    <li>Build VLAN-4 subinterfaces toward every spine, then OSPF in that VRF.</li>
+    <li>Enable DHCP relay to the Pod 1 APIC infra TEPs before powering Pod 2 spines.</li>
+    <li>Configure PIM bidir and the phantom RP so GIPo groups can cross the IPN.</li>
+    <li>Run the verify form (OSPF FULL, MTU, PIM neighbors) before Day 1 fabric setup.</li>
+  </ol>
+  <div id="forms-ipn"></div>
+</section>
+
+<section id="day1" class="section-block">
+  <h2>7. Day 1 — Fabric Bring-Up, Infra L3Out, ND/NDO Onboarding</h2>
+  <p class="section-intro">Register the new pod, attach pod policies, build the infra Multi-Pod L3Out, assign external TEPs, and add the fabric to Nexus Dashboard Orchestrator as one site.</p>
+  <div class="tm-wrap">
+  <h3>Day 1 order</h3>
+  <div class="svg-frame">
+    <svg viewBox="0 0 1120 180" role="img" aria-label="Day 1 order">
+      <style>
+        .tm-node { cursor: pointer; }
+        .tm-node rect { fill: var(--card, #fff); stroke: #2563eb; stroke-width: 1.5; }
+        .tm-node:hover rect, .tm-node:focus rect { stroke: #0f766e; stroke-width: 2.2; }
+        .tm-title { font: 700 13px/1.2 system-ui, Arial, sans-serif; fill: var(--ink, #0f172a); }
+        .tm-sub { font: 11px/1.2 system-ui, Arial, sans-serif; fill: var(--muted, #475569); }
+        .tm-line { stroke: #94a3b8; stroke-width: 1.2; }
+      </style>
+      <text class="tm-title" x="16" y="28">Day 1 order</text>
+      <g class="tm-node" data-jump="form-apic-fabric-setup"><rect x="16" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="26" y="96">7.1 Pod setup</text><text class="tm-sub" x="26" y="116">fabricSetupP</text></g>
+      <line class="tm-line" x1="220" y1="99" x2="236" y2="99"/>
+      <g class="tm-node" data-jump="form-apic-pod-profile"><rect x="236" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="246" y="96">7.2 Pod profile</text><text class="tm-sub" x="246" y="116">NTP / SNMP</text></g>
+      <line class="tm-line" x1="440" y1="99" x2="456" y2="99"/>
+      <g class="tm-node" data-jump="form-apic-infra-l3out"><rect x="456" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="466" y="96">7.3 Infra L3Out</text><text class="tm-sub" x="466" y="116">tn-infra multipod</text></g>
+      <line class="tm-line" x1="660" y1="99" x2="676" y2="99"/>
+      <g class="tm-node" data-jump="form-apic-spine-routable"><rect x="676" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="686" y="96">7.4 Ext TEP</text><text class="tm-sub" x="686" y="116">routable spines</text></g>
+      <line class="tm-line" x1="880" y1="99" x2="896" y2="99"/>
+      <g class="tm-node" data-jump="form-day1-ndo-onboard"><rect x="896" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="906" y="96">7.5 ND / NDO</text><text class="tm-sub" x="906" y="116">mso_site</text></g>
+    </svg>
+  </div>
+</div>
+  <h3>Step-by-step Day 1</h3>
+  <ol class="steps-ol">
+    <li>Complete IPN OSPF and DHCP relay first.</li>
+    <li>Push fabricSetupP for Pod 2 and the external routable subnet.</li>
+    <li>Discover and register Pod 2 spines, then leaves.</li>
+    <li>Bring up the infra L3Out so TEP pools are advertised across the IPN.</li>
+    <li>Finish the Nexus Dashboard cluster out of band, enable Orchestrator, then apply <code>mso_site</code>.</li>
+  </ol>
+  <div id="forms-day1"></div>
+</section>
+
+<section id="day2" class="section-block">
+  <h2>8. Day 2 — Tenant, VRF, BD, EPG, Contracts and NDO Deploy</h2>
+  <p class="section-intro">Day 2 objects are fabric-wide in Multi-Pod. Use the ACI provider directly, or declare them in an NDO template and deploy with <code>mso_schema_template_deploy_ndo</code>.</p>
+  <div class="tm-wrap">
+  <h3>Day 2 objects</h3>
+  <div class="svg-frame">
+    <svg viewBox="0 0 1100 180" role="img" aria-label="Day 2 objects">
+      <style>
+        .tm-node { cursor: pointer; }
+        .tm-node rect { fill: var(--card, #fff); stroke: #2563eb; stroke-width: 1.5; }
+        .tm-node:hover rect, .tm-node:focus rect { stroke: #0f766e; stroke-width: 2.2; }
+        .tm-title { font: 700 13px/1.2 system-ui, Arial, sans-serif; fill: var(--ink, #0f172a); }
+        .tm-sub { font: 11px/1.2 system-ui, Arial, sans-serif; fill: var(--muted, #475569); }
+        .tm-line { stroke: #94a3b8; stroke-width: 1.2; }
+      </style>
+      <text class="tm-title" x="16" y="28">Day 2 objects</text>
+      <g class="tm-node" data-jump="form-day2-tenant-vrf"><rect x="16" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="26" y="96">8.1 Tenant + VRF</text><text class="tm-sub" x="26" y="116">aci_tenant / aci_vrf</text></g>
+      <line class="tm-line" x1="220" y1="99" x2="236" y2="99"/>
+      <g class="tm-node" data-jump="form-day2-bd"><rect x="236" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="246" y="96">8.2 BD + subnet</text><text class="tm-sub" x="246" y="116">aci_bridge_domain</text></g>
+      <line class="tm-line" x1="440" y1="99" x2="456" y2="99"/>
+      <g class="tm-node" data-jump="form-day2-epg-contract"><rect x="456" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="466" y="96">8.3 EPG + contract</text><text class="tm-sub" x="466" y="116">aci_application_epg</text></g>
+      <line class="tm-line" x1="660" y1="99" x2="676" y2="99"/>
+      <g class="tm-node" data-jump="form-day2-ndo-deploy"><rect x="676" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="686" y="96">8.4 NDO deploy</text><text class="tm-sub" x="686" y="116">mso_schema_template_deploy_ndo</text></g>
+    </svg>
+  </div>
+</div>
+  <h3>Step-by-step Day 2</h3>
+  <ol class="steps-ol">
+    <li>Create the tenant and VRF, then the stretched BD and subnet.</li>
+    <li>Add an application profile, EPG and contract, and bind the EPG to a domain (domain DN is not collected unless you add it).</li>
+    <li>If NDO owns the policy, deploy the template to the single Multi-Pod site.</li>
+  </ol>
+  <div id="forms-day2"></div>
+</section>
+
+<section id="bau-ops" class="section-block">
+  <h2>9. BAU Operations, Lifecycle and Terraform State</h2>
+  <p class="section-intro">Firmware order, backups, RMA, remote state with locking, and drift detection via <code>terraform plan -detailed-exitcode</code>. The browser cannot see remote state and does not invent drift.</p>
+  <div class="tm-wrap">
+  <h3>BAU &amp;amp; LCM</h3>
+  <div class="svg-frame">
+    <svg viewBox="0 0 1120 180" role="img" aria-label="BAU &amp;amp; LCM">
+      <style>
+        .tm-node { cursor: pointer; }
+        .tm-node rect { fill: var(--card, #fff); stroke: #2563eb; stroke-width: 1.5; }
+        .tm-node:hover rect, .tm-node:focus rect { stroke: #0f766e; stroke-width: 2.2; }
+        .tm-title { font: 700 13px/1.2 system-ui, Arial, sans-serif; fill: var(--ink, #0f172a); }
+        .tm-sub { font: 11px/1.2 system-ui, Arial, sans-serif; fill: var(--muted, #475569); }
+        .tm-line { stroke: #94a3b8; stroke-width: 1.2; }
+      </style>
+      <text class="tm-title" x="16" y="28">BAU &amp;amp; LCM</text>
+      <g class="tm-node" data-jump="form-bau-drift"><rect x="16" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="26" y="96">9.1 Drift plan</text><text class="tm-sub" x="26" y="116">detailed-exitcode</text></g>
+      <line class="tm-line" x1="220" y1="99" x2="236" y2="99"/>
+      <g class="tm-node" data-jump="form-lcm-fw-groups"><rect x="236" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="246" y="96">9.2 Upgrade order</text><text class="tm-sub" x="246" y="116">APIC → spines → leaves → IPN → ND</text></g>
+      <line class="tm-line" x1="440" y1="99" x2="456" y2="99"/>
+      <g class="tm-node" data-jump="form-lcm-backup"><rect x="456" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="466" y="96">9.3 Backups</text><text class="tm-sub" x="466" y="116">configExportP + state pull</text></g>
+      <line class="tm-line" x1="660" y1="99" x2="676" y2="99"/>
+      <g class="tm-node" data-jump="form-lcm-rma"><rect x="676" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="686" y="96">9.4 RMA + import</text><text class="tm-sub" x="686" y="116">terraform import</text></g>
+      <line class="tm-line" x1="880" y1="99" x2="896" y2="99"/>
+      <g class="tm-node" data-jump="form-lcm-backend"><rect x="896" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="906" y="96">9.5 Remote backend</text><text class="tm-sub" x="906" y="116">state locking</text></g>
+    </svg>
+  </div>
+</div>
+  <h3>Upgrade-order matrix</h3>
+  <div class="table-wrap">
+    <table class="aci-data-table">
+      <thead><tr><th>Order</th><th>Component</th><th>Notes</th><th>Target image</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>APIC cluster</td><td>Upgrade the cluster as a unit following Cisco’s APIC procedure.</td><td><span class="tag-unk">not collected</span></td></tr>
+        <tr><td>2</td><td>Spines in the non-seed pod</td><td>One spine at a time; confirm EVPN/COOP after each.</td><td><span class="tag-unk">not collected</span></td></tr>
+        <tr><td>3</td><td>Spines in the seed pod</td><td>Same as above.</td><td><span class="tag-unk">not collected</span></td></tr>
+        <tr><td>4</td><td>Leaves by maintenance group</td><td>Keep vPC peers in different groups.</td><td><span class="tag-unk">not collected</span></td></tr>
+        <tr><td>5</td><td>IPN Nexus pair</td><td>One at a time; OSPF and PIM must stay up on the survivor.</td><td><span class="tag-unk">not collected</span></td></tr>
+        <tr><td>6</td><td>Nexus Dashboard cluster</td><td>Follow the ND upgrade guide for the installed version.</td><td><span class="tag-unk">not collected</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="forms-bau"></div>
+</section>
+
+<section id="troubleshooting" class="section-block">
+  <h2>10. Troubleshooting (Show, moquery, terraform state)</h2>
+  <p class="section-intro">Read-only diagnostics for DHCP relay, MTU, OSPF, EVPN/COOP and Terraform state/import. These forms do not declare write resources.</p>
+  <div class="tm-wrap">
+  <h3>Diagnostics</h3>
+  <div class="svg-frame">
+    <svg viewBox="0 0 1100 180" role="img" aria-label="Diagnostics">
+      <style>
+        .tm-node { cursor: pointer; }
+        .tm-node rect { fill: var(--card, #fff); stroke: #2563eb; stroke-width: 1.5; }
+        .tm-node:hover rect, .tm-node:focus rect { stroke: #0f766e; stroke-width: 2.2; }
+        .tm-title { font: 700 13px/1.2 system-ui, Arial, sans-serif; fill: var(--ink, #0f172a); }
+        .tm-sub { font: 11px/1.2 system-ui, Arial, sans-serif; fill: var(--muted, #475569); }
+        .tm-line { stroke: #94a3b8; stroke-width: 1.2; }
+      </style>
+      <text class="tm-title" x="16" y="28">Diagnostics</text>
+      <g class="tm-node" data-jump="form-ts-dhcp-relay"><rect x="16" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="26" y="96">10.1 DHCP / TEP</text><text class="tm-sub" x="26" y="116">relay to APIC</text></g>
+      <line class="tm-line" x1="220" y1="99" x2="236" y2="99"/>
+      <g class="tm-node" data-jump="form-ts-mtu"><rect x="236" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="246" y="96">10.2 MTU</text><text class="tm-sub" x="246" y="116">9150+ end-to-end</text></g>
+      <line class="tm-line" x1="440" y1="99" x2="456" y2="99"/>
+      <g class="tm-node" data-jump="form-ts-ospf-adj"><rect x="456" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="466" y="96">10.3 OSPF</text><text class="tm-sub" x="466" y="116">FULL on VLAN-4</text></g>
+      <line class="tm-line" x1="660" y1="99" x2="676" y2="99"/>
+      <g class="tm-node" data-jump="form-ts-state-evpn"><rect x="676" y="70" width="204" height="62" rx="6"/><text class="tm-title" x="686" y="96">10.4 State / EVPN</text><text class="tm-sub" x="686" y="116">import + COOP</text></g>
+    </svg>
+  </div>
+</div>
+  <h3>Step-by-step diagnostic order</h3>
+  <ol class="steps-ol">
+    <li>If a new spine has no TEP, check DHCP relay and reachability to Pod 1 APIC TEPs first.</li>
+    <li>If OSPF stays in EXSTART, compare MTU on both ends of VLAN-4.</li>
+    <li>If TEPs exist but endpoints do not learn across pods, check PIM bidir, GIPo and COOP/EVPN.</li>
+    <li>If Terraform drifts from the GUI, use <code>terraform plan</code> and <code>terraform import</code> with the real DN — do not invent import IDs.</li>
+  </ol>
+  <div id="forms-ts"></div>
+</section>
+
+<section id="sample-test" class="section-block">
+  <h2>11. Sample Test Data &amp; Expected Plan Outcome</h2>
+  <p class="section-intro">The published YAML model at <a href="/zfrontier/aci-multipod-terraform/data/sample.yml"><code>data/sample.yml</code></a> uses documentation and lab prefixes (RFC 5737 <code>192.0.2.0/24</code>, <code>198.51.100.0/24</code>, <code>203.0.113.0/24</code>, plus RFC 1918 <code>10.0.0.0/8</code> examples). <strong>Load sample test data</strong> writes those values into every form. <strong>Reset</strong> restores built-in defaults (which already match the sample).</p>
+  <div class="sample-bar">
+  <div>
+    <strong>YAML data model:</strong> published at <a href="data/sample.yml"><code>data/sample.yml</code></a>
+    and consumed in Terraform with <code>yamldecode(file("${path.module}/data/sample.yml"))</code>.
+    <div class="sample-status">Forms start with built-in defaults (same values as the sample file).</div>
+  </div>
+  <div class="sample-actions">
+    <button type="button" class="yaml-btn" data-action="load-sample">Load sample test data</button>
+    <button type="button" class="yaml-btn" data-action="reset-sample">Reset</button>
+  </div>
+</div>
+  <div class="callout-info">
+    <strong>Browser preview only:</strong> the expected plan below is computed in your browser from the generated HCL. It is not a real <code>terraform plan</code>. A real plan needs state, credentials and a self-hosted runner.
+  </div>
+  <h3>Expected plan from sample.yml</h3>
+  <pre class="yaml-pre" id="sample-expected-plan">Computing expected plan from the inlined sample…</pre>
+</section>
+
+<section id="cicd" class="section-block">
+  <h2>12. CI/CD Pipeline &amp; NetBox 4.x Sync Pack</h2>
+  <p class="section-intro">Downloadable starter pack for GitOps-gated Terraform changes: <code>terraform fmt</code>, <code>terraform validate</code>, <code>terraform plan</code>, manual approval, <code>terraform apply</code>, and NetBox 4.x sync. This workflow is <strong>not</strong> installed under <code>.github/workflows</code> and does not run in this Pages repository.</p>
+  <div class="cicd-grid">
+    <div class="cicd-card">
+      <div class="cicd-card-bar">
+        <span class="cicd-card-title">12.1 aci-multipod-terraform-pipeline.yml</span>
+        <div class="cicd-card-actions">
+          <button type="button" class="cicd-btn" data-cicd-copy="cicd-pre-1">Copy</button>
+          <a class="cicd-btn" href="/zfrontier/aci-multipod-terraform/cicd/aci-multipod-terraform-pipeline.yml" download="aci-multipod-terraform-pipeline.yml">Download</a>
+        </div>
+      </div>
+      <pre class="cicd-pre" id="cicd-pre-1" data-cicd-src="/zfrontier/aci-multipod-terraform/cicd/aci-multipod-terraform-pipeline.yml">Loading aci-multipod-terraform-pipeline.yml...</pre>
+    </div>
+    <div class="cicd-card">
+      <div class="cicd-card-bar">
+        <span class="cicd-card-title">12.2 netbox_sync.py</span>
+        <div class="cicd-card-actions">
+          <button type="button" class="cicd-btn" data-cicd-copy="cicd-pre-2">Copy</button>
+          <a class="cicd-btn" href="/zfrontier/aci-multipod-terraform/cicd/netbox_sync.py" download="netbox_sync.py">Download</a>
+        </div>
+      </div>
+      <pre class="cicd-pre" id="cicd-pre-2" data-cicd-src="/zfrontier/aci-multipod-terraform/cicd/netbox_sync.py">Loading netbox_sync.py...</pre>
+    </div>
+    <div class="cicd-card">
+      <div class="cicd-card-bar">
+        <span class="cicd-card-title">12.3 backend.hcl</span>
+        <div class="cicd-card-actions">
+          <button type="button" class="cicd-btn" data-cicd-copy="cicd-pre-3">Copy</button>
+          <a class="cicd-btn" href="/zfrontier/aci-multipod-terraform/cicd/backend.hcl" download="backend.hcl">Download</a>
+        </div>
+      </div>
+      <pre class="cicd-pre" id="cicd-pre-3" data-cicd-src="/zfrontier/aci-multipod-terraform/cicd/backend.hcl">Loading backend.hcl...</pre>
+    </div>
+    <div class="cicd-card">
+      <div class="cicd-card-bar">
+        <span class="cicd-card-title">12.4 terraform.tfvars.example</span>
+        <div class="cicd-card-actions">
+          <button type="button" class="cicd-btn" data-cicd-copy="cicd-pre-4">Copy</button>
+          <a class="cicd-btn" href="/zfrontier/aci-multipod-terraform/cicd/terraform.tfvars.example" download="terraform.tfvars.example">Download</a>
+        </div>
+      </div>
+      <pre class="cicd-pre" id="cicd-pre-4" data-cicd-src="/zfrontier/aci-multipod-terraform/cicd/terraform.tfvars.example">Loading terraform.tfvars.example...</pre>
+    </div>
+    <div class="cicd-card">
+      <div class="cicd-card-bar">
+        <span class="cicd-card-title">12.5 README.md</span>
+        <div class="cicd-card-actions">
+          <button type="button" class="cicd-btn" data-cicd-copy="cicd-pre-5">Copy</button>
+          <a class="cicd-btn" href="/zfrontier/aci-multipod-terraform/cicd/README.md" download="README.md">Download</a>
+        </div>
+      </div>
+      <pre class="cicd-pre" id="cicd-pre-5" data-cicd-src="/zfrontier/aci-multipod-terraform/cicd/README.md">Loading README.md...</pre>
+    </div>
+  </div>
+</section>
+
+<section id="reference-table" class="section-block">
+  <h2>13. Complete Form &amp; Provider Reference Table</h2>
+  <p class="section-intro">Click any column header to sort via <code>sort.js</code>, or click a form link to jump directly to its editor.</p>
+  <div class="table-wrap">
+    <table class="aci-data-table" id="ref-table">
+      <thead>
+        <tr>
+          <th>Section</th>
+          <th>Form</th>
+          <th>GUI / Scope Path</th>
+          <th>Terraform resources / CLI</th>
+          <th>MIT / NX-OS / NDO classes</th>
+        </tr>
+      </thead>
+      <tbody id="ref-table-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<section id="comments" class="section-block">
+  <h2>14. Comments</h2>
+  <p class="section-intro">Questions, peer review notes, or lab test feedback via GitHub Discussions.</p>
+  <div id="comments-mount"></div>
+  <script>
+  (function(){
+    var b=String.fromCharCode(99,111,108,101,115);
+    var repo='amoeoo-'+b+'/amoeoo-'+b+'.github.io';
+    var s=document.createElement('script');
+    s.src='https://giscus.app/client.js';
+    s.setAttribute('data-repo',repo);
+    s.setAttribute('data-repo-id','R_kgDOVM0-Fw');
+    s.setAttribute('data-category','Announcements');
+    s.setAttribute('data-category-id','DIC_kwDOVM0-F84DLoq4');
+    s.setAttribute('data-mapping','pathname');
+    s.setAttribute('data-strict','1');
+    s.setAttribute('data-reactions-enabled','1');
+    s.setAttribute('data-input-position','top');
+    s.setAttribute('data-theme','preferred_color_scheme');
+    s.setAttribute('data-lang','en');
+    s.setAttribute('data-loading','lazy');
+    s.crossOrigin='anonymous';
+    s.async=true;
+    var m=document.getElementById('comments-mount');
+    if(m) m.appendChild(s);
+  })();
+  </script>
+</section>
+
+<section id="versions" class="section-block">
+  <h2>15. Version History</h2>
+  <p>This is <strong>v1 · 26 Nov 2026, 3:35 PM AEDT</strong>. Snapshots are under <a href="/zfrontier/aci-multipod-terraform/history/">history/</a>.</p>
+  <div class="table-wrap">
+    <table class="aci-data-table">
+      <thead>
+        <tr>
+          <th>Version</th>
+          <th>Published (AEDT)</th>
+          <th>Summary of Changes</th>
+          <th>Snapshot</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>v1</strong> (Current)</td>
+          <td>26 Nov 2026, 3:35 PM AEDT</td>
+          <td>Initial Multi-Pod Terraform portal: 3 original SVG diagrams, indicative BOM, rack elevations and cabling plan, 32 forms across planning, design patterns, Nexus IPN, Day 1, Day 2, BAU/LCM (including remote state and drift) and troubleshooting, YAML sample test data, terraform plan browser preview, and a CI/CD pack.</td>
+          <td><a href="/zfrontier/aci-multipod-terraform/history/v1/">View v1 snapshot</a> · <a href="/zfrontier/aci-multipod-terraform/history/">All snapshots</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</main>
+
+<footer class="wrap">
+  <p class="meta">Page: <strong>ACI Multi-Pod Terraform, Nexus IPN &amp; Nexus Dashboard</strong> · Version: <strong>v1 · 26 Nov 2026, 3:35 PM AEDT</strong></p>
+  <p class="meta">Folder links end with <code>/</code>. Generated Terraform uses <code>var.apic_password</code> / <code>var.ndo_password</code> / <code>var.nxos_password</code> and CI placeholders <code>{{ apic_password }}</code> / <code>{{ ndo_password }}</code>. Addresses are RFC 5737 / RFC 1918 examples. Indicative BOM quantities are examples only; unknown site and hardware fields are marked <code>not collected</code>.</p>
+</footer>
+
+<script src="/zfrontier/aci-multipod-terraform/sort.js"></script>
+<script src="/zfrontier/aci-multipod-terraform/assets/aci-multipod-terraform.js"></script>
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/"}}</script>
+<script>(function(){var b=String.fromCharCode(99,111,108,101,115);var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';s.setAttribute('data-goatcounter','https://amoeoo-'+b+'.goatcounter.com/count');document.head.appendChild(s);}());</script>
+
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+
+<!-- uv-badge v2 -->
+<style id="uv-badge-style">
+.uv-pop{position:relative;display:inline-block;vertical-align:middle}
+.uv-pop .uv-card{display:none;position:absolute;right:0;top:calc(100% + 6px);z-index:80;min-width:228px;padding:10px 12px;border-radius:10px;background:var(--card,#0f172a);color:var(--ink,#e2e8f0);border:1px solid var(--line,#334155);box-shadow:0 10px 28px rgba(0,0,0,.28);font:12px/1.4 system-ui,Arial,sans-serif;text-align:left;white-space:normal}
+.uv-pop.open .uv-card{display:block}
+.uv-card svg{display:block;width:204px;height:44px;margin:6px 0 8px}
+.uv-card .uv-k{font-weight:700;margin:0 0 2px}
+.uv-card .uv-m{color:var(--muted,#94a3b8);font-size:11px}
+.uv-card a{color:var(--link,#8ecbff)}
+</style>
+<script id="uv-badge">(function(){
+function norm(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function tzParts(iso){
+  var pt=new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'2-digit',minute:'2-digit',hour12:false,hourCycle:'h23',timeZoneName:'short',day:'2-digit',month:'short'}).formatToParts(new Date(iso));
+  var g=function(t){return (pt.find(function(x){return x.type===t})||{}).value||''};
+  var tz=(g('timeZoneName')||'AEDT').replace('GMT+11','AEDT').replace('GMT+10','AEST');
+  return {hh:g('hour'),mm:g('minute'),tz:tz,day:g('day'),mon:g('month')};
+}
+function last30(daysMap){
+  var out=[], now=new Date();
+  var fmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'});
+  for(var i=29;i>=0;i--){
+    var d=new Date(now.getTime()-i*86400000);
+    var key=fmt.format(d);
+    out.push({day:key,count:+((daysMap||{})[key]||0)});
+  }
+  return out;
+}
+function spark(series){
+  var w=204,h=44,p=2;
+  var max=Math.max.apply(null,series.map(function(x){return x.count}).concat([1]));
+  var n=series.length||1;
+  var pts=series.map(function(x,i){
+    var X=p+(i*(w-2*p)/Math.max(1,n-1));
+    var Y=h-p-((x.count/max)*(h-2*p));
+    return X.toFixed(1)+','+Y.toFixed(1);
+  }).join(' ');
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true"><polyline fill="none" stroke="#22c55e" stroke-width="2" points="'+pts+'"/></svg>';
+}
+function fillStats(d){
+  var total=(d.total&& (d.total.total||d.total.total_utc))||0;
+  var cc=(d.countries||[]).length;
+  var asof=d.as_of_aedt||'';
+  document.querySelectorAll('.im-stat-vis').forEach(function(e){e.textContent=total||'0'});
+  document.querySelectorAll('.im-stat-cc').forEach(function(e){e.textContent=cc||'0'});
+  document.querySelectorAll('.im-stat-asof').forEach(function(e){e.textContent=asof||'n/a'});
+}
+function attachPopover(d, count, series){
+  document.querySelectorAll('.uv').forEach(function(uv){
+    if(uv.closest('.uv-pop')) return;
+    var wrap=document.createElement('span');wrap.className='uv-pop';
+    uv.parentNode.insertBefore(wrap,uv);wrap.appendChild(uv);
+    var card=document.createElement('div');card.className='uv-card';card.setAttribute('role','dialog');
+    var last=series.length?series[series.length-1].count:0;
+    card.innerHTML='<p class="uv-k">This page: '+count+' unique visitors</p>'+spark(series)+'<p class="uv-m">Last 30 days (this page). Today so far: '+last+'.</p><p><a href="/visitors/">Full visitor stats ›</a></p>';
+    wrap.appendChild(card);
+    function tog(ev){ev.preventDefault();ev.stopPropagation();document.querySelectorAll('.uv-pop.open').forEach(function(x){if(x!==wrap)x.classList.remove('open')});wrap.classList.toggle('open')}
+    uv.addEventListener('click',tog);
+    uv.style.cursor='pointer';
+    uv.title='Click for a 30-day sparkline';
+  });
+  document.addEventListener('click',function(){document.querySelectorAll('.uv-pop.open').forEach(function(x){x.classList.remove('open')})});
+}
+function apply(d){
+  var p=norm(location.pathname);
+  var page=(d.pages||[]).filter(function(x){return norm(x.path)===p});
+  var c=page.reduce(function(a,x){return a+(+x.count||0)},0);
+  var days={};
+  page.forEach(function(x){var m=x.days||{};Object.keys(m).forEach(function(k){days[k]=(days[k]||0)+(+m[k]||0)})});
+  document.querySelectorAll('.uvc').forEach(function(e){e.textContent=c});
+  document.querySelectorAll('.uvt').forEach(function(e){
+    if(d.updated_utc){var t=tzParts(d.updated_utc);e.textContent=' (data as of '+t.hh+':'+t.mm+' '+t.tz+')'}
+  });
+  fillStats(d);
+  attachPopover(d,c,last30(days));
+}
+function fail(){
+  document.querySelectorAll('.uvc').forEach(function(e){if(e.textContent==='…'||e.textContent==='...') e.textContent='n/a'});
+  document.querySelectorAll('.im-stat-vis,.im-stat-cc,.im-stat-asof').forEach(function(e){if(e.textContent==='…') e.textContent='n/a'});
+}
+if(!window.__visitorsData){
+  var ac=typeof AbortController==='function'?new AbortController():null;
+  var timer=setTimeout(function(){try{ac&&ac.abort()}catch(e){}},8000);
+  window.__visitorsData=fetch('/data/visitors.json?'+Date.now(),ac?{signal:ac.signal}:undefined).then(function(r){
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('visitors.json '+r.status);
+    return r.json();
+  });
+}
+window.__visitorsData.then(apply).catch(function(){fail()});
+})();</script>
+</body>
+</html>
+
+</body>
+</html>
