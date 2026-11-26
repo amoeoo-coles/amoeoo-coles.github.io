@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_network_access_condition" "n052" {
-  id   = local.m_052["id"]
+  id = local.m_052["id"]
   name = local.m_052["name"]
 }
 

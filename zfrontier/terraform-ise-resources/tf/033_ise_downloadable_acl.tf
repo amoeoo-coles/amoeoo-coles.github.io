@@ -8,8 +8,8 @@ locals {
 }
 
 resource "ise_downloadable_acl" "n033" {
-  dacl        = local.m_033["dacl"]
-  dacl_type   = local.m_033["dacl_type"]
+  dacl = local.m_033["dacl"]
+  dacl_type = local.m_033["dacl_type"]
   description = local.m_033["description"]
-  name        = local.m_033["name"]
+  name = local.m_033["name"]
 }

@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_network_access_dictionary" "n054" {
-  id   = local.m_054["id"]
+  id = local.m_054["id"]
   name = local.m_054["name"]
 }
 

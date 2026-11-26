@@ -9,9 +9,9 @@ locals {
 
 resource "ise_sxp_domain_filter" "n095" {
   description = local.m_095["description"]
-  domains     = local.m_095["domains"]
-  name        = local.m_095["name"]
-  sgt         = local.m_095["sgt"]
-  subnet      = local.m_095["subnet"]
-  vn          = local.m_095["vn"]
+  domains = local.m_095["domains"]
+  name = local.m_095["name"]
+  sgt = local.m_095["sgt"]
+  subnet = local.m_095["subnet"]
+  vn = local.m_095["vn"]
 }

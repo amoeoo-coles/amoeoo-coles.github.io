@@ -8,8 +8,8 @@ locals {
 }
 
 resource "ise_endpoint_identity_group" "n016" {
-  description                       = local.m_016["description"]
-  name                              = local.m_016["name"]
+  description = local.m_016["description"]
+  name = local.m_016["name"]
   parent_endpoint_identity_group_id = local.m_016["parent_endpoint_identity_group_id"]
-  system_defined                    = local.m_016["system_defined"]
+  system_defined = local.m_016["system_defined"]
 }

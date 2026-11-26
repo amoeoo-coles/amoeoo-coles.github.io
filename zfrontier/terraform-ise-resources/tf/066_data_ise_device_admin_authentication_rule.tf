@@ -8,8 +8,8 @@ locals {
 }
 
 data "ise_device_admin_authentication_rule" "n066" {
-  id            = local.m_066["id"]
-  name          = local.m_066["name"]
+  id = local.m_066["id"]
+  name = local.m_066["name"]
   policy_set_id = local.m_066["policy_set_id"]
 }
 

@@ -10,7 +10,7 @@ locals {
 resource "ise_trustsec_security_group_acl" "n114" {
   acl_content = local.m_114["acl_content"]
   description = local.m_114["description"]
-  ip_version  = local.m_114["ip_version"]
-  name        = local.m_114["name"]
-  read_only   = local.m_114["read_only"]
+  ip_version = local.m_114["ip_version"]
+  name = local.m_114["name"]
+  read_only = local.m_114["read_only"]
 }

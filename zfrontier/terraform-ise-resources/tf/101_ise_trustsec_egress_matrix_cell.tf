@@ -8,11 +8,11 @@ locals {
 }
 
 resource "ise_trustsec_egress_matrix_cell" "n101" {
-  default_rule       = local.m_101["default_rule"]
-  description        = local.m_101["description"]
+  default_rule = local.m_101["default_rule"]
+  description = local.m_101["description"]
   destination_sgt_id = local.m_101["destination_sgt_id"]
   matrix_cell_status = local.m_101["matrix_cell_status"]
-  matrix_id          = local.m_101["matrix_id"]
-  sgacls             = local.m_101["sgacls"]
-  source_sgt_id      = local.m_101["source_sgt_id"]
+  matrix_id = local.m_101["matrix_id"]
+  sgacls = local.m_101["sgacls"]
+  source_sgt_id = local.m_101["source_sgt_id"]
 }

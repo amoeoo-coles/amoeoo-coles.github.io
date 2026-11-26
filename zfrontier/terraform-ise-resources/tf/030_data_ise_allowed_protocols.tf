@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_allowed_protocols" "n030" {
-  id   = local.m_030["id"]
+  id = local.m_030["id"]
   name = local.m_030["name"]
 }
 

@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_device_admin_condition" "n082" {
-  id   = local.m_082["id"]
+  id = local.m_082["id"]
   name = local.m_082["name"]
 }
 

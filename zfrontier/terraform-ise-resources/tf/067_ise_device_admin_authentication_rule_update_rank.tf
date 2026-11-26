@@ -9,6 +9,6 @@ locals {
 
 resource "ise_device_admin_authentication_rule_update_rank" "n067" {
   policy_set_id = local.m_067["policy_set_id"]
-  rank          = local.m_067["rank"]
-  rule_id       = local.m_067["rule_id"]
+  rank = local.m_067["rank"]
+  rule_id = local.m_067["rule_id"]
 }

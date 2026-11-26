@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_certificate_authentication_profile" "n011" {
-  id   = local.m_011["id"]
+  id = local.m_011["id"]
   name = local.m_011["name"]
 }
 

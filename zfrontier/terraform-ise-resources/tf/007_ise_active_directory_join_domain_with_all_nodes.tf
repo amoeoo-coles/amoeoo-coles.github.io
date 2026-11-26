@@ -9,5 +9,5 @@ locals {
 
 resource "ise_active_directory_join_domain_with_all_nodes" "n007" {
   additional_data = local.m_007["additional_data"]
-  join_point_id   = local.m_007["join_point_id"]
+  join_point_id = local.m_007["join_point_id"]
 }

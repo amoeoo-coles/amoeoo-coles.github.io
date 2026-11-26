@@ -8,8 +8,8 @@ locals {
 }
 
 resource "ise_tacacs_command_set" "n089" {
-  commands         = local.m_089["commands"]
-  description      = local.m_089["description"]
-  name             = local.m_089["name"]
+  commands = local.m_089["commands"]
+  description = local.m_089["description"]
+  name = local.m_089["name"]
   permit_unmatched = local.m_089["permit_unmatched"]
 }

@@ -9,6 +9,6 @@ locals {
 
 resource "ise_trustsec_work_process_settings" "n116" {
   enable_approval_workflow = local.m_116["enable_approval_workflow"]
-  matrix_mode              = local.m_116["matrix_mode"]
-  use_defcons              = local.m_116["use_defcons"]
+  matrix_mode = local.m_116["matrix_mode"]
+  use_defcons = local.m_116["use_defcons"]
 }

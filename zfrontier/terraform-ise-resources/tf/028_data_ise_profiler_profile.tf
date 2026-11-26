@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_profiler_profile" "n028" {
-  id   = local.m_028["id"]
+  id = local.m_028["id"]
   name = local.m_028["name"]
 }
 

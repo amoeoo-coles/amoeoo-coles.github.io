@@ -8,8 +8,8 @@ locals {
 }
 
 resource "ise_trustsec_egress_matrix_cell_default" "n103" {
-  default_rule       = local.m_103["default_rule"]
-  description        = local.m_103["description"]
+  default_rule = local.m_103["default_rule"]
+  description = local.m_103["description"]
   matrix_cell_status = local.m_103["matrix_cell_status"]
-  sgacls             = local.m_103["sgacls"]
+  sgacls = local.m_103["sgacls"]
 }

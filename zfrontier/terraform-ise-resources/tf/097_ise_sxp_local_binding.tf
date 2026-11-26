@@ -8,11 +8,11 @@ locals {
 }
 
 resource "ise_sxp_local_binding" "n097" {
-  binding_name       = local.m_097["binding_name"]
-  description        = local.m_097["description"]
+  binding_name = local.m_097["binding_name"]
+  description = local.m_097["description"]
   ip_address_or_host = local.m_097["ip_address_or_host"]
-  name               = local.m_097["name"]
-  sgt                = local.m_097["sgt"]
-  sxp_vpn            = local.m_097["sxp_vpn"]
-  vns                = local.m_097["vns"]
+  name = local.m_097["name"]
+  sgt = local.m_097["sgt"]
+  sxp_vpn = local.m_097["sxp_vpn"]
+  vns = local.m_097["vns"]
 }

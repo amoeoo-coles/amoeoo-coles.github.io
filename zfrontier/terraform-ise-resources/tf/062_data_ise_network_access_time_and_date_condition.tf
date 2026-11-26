@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_network_access_time_and_date_condition" "n062" {
-  id   = local.m_062["id"]
+  id = local.m_062["id"]
   name = local.m_062["name"]
 }
 

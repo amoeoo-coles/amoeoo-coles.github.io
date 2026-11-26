@@ -9,6 +9,6 @@ locals {
 
 resource "ise_user_identity_group" "n022" {
   description = local.m_022["description"]
-  name        = local.m_022["name"]
-  parent      = local.m_022["parent"]
+  name = local.m_022["name"]
+  parent = local.m_022["parent"]
 }

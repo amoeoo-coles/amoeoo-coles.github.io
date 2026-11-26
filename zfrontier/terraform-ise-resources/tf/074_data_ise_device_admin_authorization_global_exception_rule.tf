@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_device_admin_authorization_global_exception_rule" "n074" {
-  id   = local.m_074["id"]
+  id = local.m_074["id"]
   name = local.m_074["name"]
 }
 

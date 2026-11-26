@@ -8,6 +8,6 @@ locals {
 }
 
 resource "ise_network_access_authorization_global_exception_rule_update_rank" "n045" {
-  rank    = local.m_045["rank"]
+  rank = local.m_045["rank"]
   rule_id = local.m_045["rule_id"]
 }

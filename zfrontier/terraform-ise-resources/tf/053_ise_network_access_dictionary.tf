@@ -8,8 +8,8 @@ locals {
 }
 
 resource "ise_network_access_dictionary" "n053" {
-  description          = local.m_053["description"]
+  description = local.m_053["description"]
   dictionary_attr_type = local.m_053["dictionary_attr_type"]
-  name                 = local.m_053["name"]
-  version              = local.m_053["version"]
+  name = local.m_053["name"]
+  version = local.m_053["version"]
 }

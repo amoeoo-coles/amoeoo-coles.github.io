@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_sxp_vpn" "n100" {
-  id   = local.m_100["id"]
+  id = local.m_100["id"]
   name = local.m_100["name"]
 }
 

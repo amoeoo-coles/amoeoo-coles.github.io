@@ -8,9 +8,9 @@ locals {
 }
 
 resource "ise_trustsec_security_group" "n112" {
-  description       = local.m_112["description"]
-  is_read_only      = local.m_112["is_read_only"]
-  name              = local.m_112["name"]
+  description = local.m_112["description"]
+  is_read_only = local.m_112["is_read_only"]
+  name = local.m_112["name"]
   propogate_to_apic = local.m_112["propogate_to_apic"]
-  value             = local.m_112["value"]
+  value = local.m_112["value"]
 }

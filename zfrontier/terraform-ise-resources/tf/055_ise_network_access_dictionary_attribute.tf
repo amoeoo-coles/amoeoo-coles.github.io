@@ -8,11 +8,11 @@ locals {
 }
 
 resource "ise_network_access_dictionary_attribute" "n055" {
-  allowed_values  = local.m_055["allowed_values"]
-  data_type       = local.m_055["data_type"]
-  description     = local.m_055["description"]
+  allowed_values = local.m_055["allowed_values"]
+  data_type = local.m_055["data_type"]
+  description = local.m_055["description"]
   dictionary_name = local.m_055["dictionary_name"]
-  direction_type  = local.m_055["direction_type"]
-  internal_name   = local.m_055["internal_name"]
-  name            = local.m_055["name"]
+  direction_type = local.m_055["direction_type"]
+  internal_name = local.m_055["internal_name"]
+  name = local.m_055["name"]
 }

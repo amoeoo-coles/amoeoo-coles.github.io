@@ -8,8 +8,8 @@ locals {
 }
 
 data "ise_network_access_authorization_rule" "n048" {
-  id            = local.m_048["id"]
-  name          = local.m_048["name"]
+  id = local.m_048["id"]
+  name = local.m_048["name"]
   policy_set_id = local.m_048["policy_set_id"]
 }
 
