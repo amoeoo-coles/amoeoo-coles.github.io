@@ -1,0 +1,216 @@
+# YAML data model for nxos_route_policy
+# Provider: CiscoDevNet/nxos 0.22.3   Build order: 019 (4. VRFs and L3VNI)
+# Attribute names, types and required flags come from the provider schema.
+# Values come from the provider's own example (addresses mapped to documentation
+# ranges, secrets removed). null = not collected / omit, so the provider default applies.
+# Credentials are never stored here: use var.* in providers.tf / terraform.tfvars.
+
+references:
+  resource: nxos_route_policy
+  provider: CiscoDevNet/nxos
+  provider_version: 0.22.3
+  registry_doc: https://registry.terraform.io/providers/CiscoDevNet/nxos/0.22.3/docs/resources/route_policy
+  provider_example: https://github.com/CiscoDevNet/terraform-provider-nxos/blob/v0.22.3/examples/resources/nxos_route_policy/resource.tf
+  schema_source: terraform providers schema -json (CiscoDevNet/nxos 0.22.3)
+  build_order: 19
+  group: 4. VRFs and L3VNI
+
+nxos_route_policy:
+  # admin_state: string, optional. The administrative state of the object or policy. - Choices: `enabled`, `disabled`
+  admin_state: null
+  # as_path_access_lists: map of objects, optional. List of AS-Path Access Lists. - Map key: `name` - Object name.
+  as_path_access_lists:
+    AS_PATH_LIST1:
+      description: null
+      entries:
+        '10':
+          action: deny
+          description: null
+          name: null
+          regex: _65110_
+  # community_lists: map of objects, optional. List of Community Lists. - Map key: `name` - Object name.
+  community_lists:
+    COMMUNITY_LIST1:
+      description: null
+      entries:
+        '10':
+          action: permit
+          description: null
+          items:
+            regular:as2-nn2:65001:123:
+              description: null
+              name: null
+          name: null
+          regex: null
+      mode: standard
+      type: null
+  # deletion_policy: string, optional. What happens on the device when objects managed by the resource are removed. `delete` deletes the object on destroy, including any configuration not managed by…
+  deletion_policy: null
+  # device: string, optional. A device name from the provider configuration.
+  device: null
+  # extended_community_lists: map of objects, optional. List of Extended Community Lists. - Map key: `name` - Object name.
+  extended_community_lists:
+    EXT_COMMUNITY_LIST1:
+      entries:
+        '10':
+          action: permit
+          items:
+            transitive;route-target:as2-nn2:65000:100:
+              type: rttarget
+          regex: null
+          rmacs:
+            00:11:22:33:44:55: {}
+      mode: standard
+  # ipv4_policy_interfaces: map of objects, optional. List of interfaces with an IPv4 policy based routing route map. - Map key: `interface_id` - Interface id over which the pbr policy is configured. Must match fi…
+  ipv4_policy_interfaces:
+    vlan10:
+      route_map_name: PBR_ROUTE_MAP_V4
+  # ipv4_prefix_lists: map of objects, optional. List of IPv4 Prefix Lists. - Map key: `name` - Object name.
+  ipv4_prefix_lists:
+    PREFIX_LIST1:
+      description: My prefix list
+      entries:
+        '10':
+          action: permit
+          criteria: inexact
+          from_range: 26
+          mask: 255.255.255.0
+          prefix: 192.168.1.0/24
+          to_range: 32
+      mode: IPV4
+  # ipv6_policy_interfaces: map of objects, optional. List of interfaces with an IPv6 policy based routing route map. - Map key: `interface_id` - Interface id over which the pbr policy is configured. Must match fi…
+  ipv6_policy_interfaces:
+    vlan10:
+      route_map_name: PBR_ROUTE_MAP_V6
+  # ipv6_prefix_lists: map of objects, optional. List of IPv6 Prefix Lists. - Map key: `name` - Object name.
+  ipv6_prefix_lists:
+    PREFIX_LIST_V6_1:
+      description: My IPv6 prefix list
+      entries:
+        '10':
+          action: permit
+          criteria: inexact
+          from_range: 48
+          mask: 'ffff:ff00::'
+          prefix: 2001:db8::/32
+          to_range: 64
+      mode: IPV6
+  # large_community_lists: map of objects, optional. List of Large Community Lists. - Map key: `name` - Object name.
+  large_community_lists:
+    LARGE_COMMUNITY_LIST1:
+      entries:
+        '10':
+          action: permit
+          items:
+            large:xx-yy-zz:65000:1:1: {}
+          regex: null
+  # route_maps: map of objects, optional. List of Route Maps. - Map key: `name` - Object name.
+  route_maps:
+    ROUTE_MAP1:
+      entries:
+        '10':
+          action: permit
+          description: My route map entry
+          drop_on_fail_v4: disabled
+          drop_on_fail_v6: disabled
+          force_order_v4: disabled
+          force_order_v6: disabled
+          load_share_v4: disabled
+          load_share_v6: disabled
+          match_as_number_as_path_lists:
+            sys/rpm/accesslist-[AS_PATH_LIST1]: {}
+          match_as_path_lists:
+            sys/rpm/accesslist-[AS_PATH_LIST1]: {}
+          match_extended_community_criteria: exact
+          match_extended_community_lists:
+            sys/rpm/rtextcom-[EXT_COMMUNITY_LIST1]: {}
+          match_interfaces:
+            eth1/1: {}
+          match_large_community_criteria: exact
+          match_large_community_lists:
+            sys/rpm/rtlargecom-[LARGE_COMMUNITY_LIST1]: {}
+          match_next_hop_prefix_lists:
+            sys/rpm/pfxlistv4-[PREFIX_LIST1]: {}
+          match_regular_community_criteria: exact
+          match_regular_community_lists:
+            sys/rpm/rtregcom-[COMMUNITY_LIST1]: {}
+          match_route_access_lists:
+            sys/rpm/accesslist-[198.51.100.11/32]: {}
+          match_route_ipv6_access_lists: null
+          match_route_prefix_lists:
+            sys/rpm/pfxlistv4-[PREFIX_LIST1]: {}
+          match_route_types:
+            internal: {}
+          match_tags:
+            '12345': {}
+          set_as_path_prepend: 65001 65001
+          set_as_path_prepend_last_as: 2
+          set_community_list_criteria: none
+          set_community_list_delete: enabled
+          set_community_list_name: COMMUNITY_LIST1
+          set_default_next_hop_v4: disabled
+          set_default_next_hop_v6: disabled
+          set_evpn_gateway_ip: null
+          set_evpn_gateway_type: null
+          set_extended_community_additive: enabled
+          set_extended_community_bandwidth: 1000
+          set_extended_community_color: 200
+          set_extended_community_color_only_flag: '01'
+          set_extended_community_costs:
+            pre-bestpath;10:
+              cost: 100
+              criteria: none
+          set_extended_community_criteria: none
+          set_extended_community_items:
+            transitive;extended:as2-nn2:65000:100: {}
+          set_extended_community_list_criteria: none
+          set_extended_community_list_delete: enabled
+          set_extended_community_list_name: EXT_COMMUNITY_LIST1
+          set_extended_community_no_community: disabled
+          set_extended_community_rmac: 00:11:22:33:44:55
+          set_extended_community_route_target_additive: enabled
+          set_extended_community_route_target_criteria: none
+          set_extended_community_route_target_items:
+            transitive;route-target:as2-nn2:65001:100: {}
+          set_extended_community_scope: transitive
+          set_interfaces: null
+          set_large_community_additive: enabled
+          set_large_community_items:
+            large:xx-yy-zz:65000:5:5: {}
+          set_large_community_list_delete: enabled
+          set_large_community_list_name: LARGE_COMMUNITY_LIST1
+          set_large_community_no_community: disabled
+          set_local_preference: 100
+          set_metric: '100'
+          set_metric_delay: 10
+          set_metric_is_bgp: false
+          set_metric_load: 10
+          set_metric_mtu: 1500
+          set_metric_reliability: 100
+          set_metric_type: type-1
+          set_next_hop_v4_peer_address: disabled
+          set_next_hop_v4_redist_unchanged: enabled
+          set_next_hop_v4_unchanged: enabled
+          set_next_hop_v6_peer_address: disabled
+          set_next_hop_v6_redist_unchanged: enabled
+          set_next_hop_v6_unchanged: enabled
+          set_next_hops: null
+          set_origin: egp
+          set_origin_asn: 65001
+          set_path_selection_advertise: ps-all
+          set_policy_tag: 100
+          set_regular_community_additive: disabled
+          set_regular_community_criteria: none
+          set_regular_community_items:
+            regular:as2-nn2:65001:123:
+              description: null
+              name: null
+          set_regular_community_no_community: disabled
+          set_tag: 12345
+          set_vrf: null
+          set_vrf_v4: disabled
+          set_vrf_v6: disabled
+          set_weight: 200
+          verify_availability_v4: disabled
+          verify_availability_v6: disabled
+      pbr_statistics: enabled

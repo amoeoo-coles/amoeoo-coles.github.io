@@ -1,0 +1,386 @@
+# YAML data model for nxos_bgp
+# Provider: CiscoDevNet/nxos 0.22.3   Build order: 017 (3. VTEP and overlay)
+# Attribute names, types and required flags come from the provider schema.
+# Values come from the provider's own example (addresses mapped to documentation
+# ranges, secrets removed). null = not collected / omit, so the provider default applies.
+# Credentials are never stored here: use var.* in providers.tf / terraform.tfvars.
+
+references:
+  resource: nxos_bgp
+  provider: CiscoDevNet/nxos
+  provider_version: 0.22.3
+  registry_doc: https://registry.terraform.io/providers/CiscoDevNet/nxos/0.22.3/docs/resources/bgp
+  provider_example: https://github.com/CiscoDevNet/terraform-provider-nxos/blob/v0.22.3/examples/resources/nxos_bgp/resource.tf
+  schema_source: terraform providers schema -json (CiscoDevNet/nxos 0.22.3)
+  build_order: 17
+  group: 3. VTEP and overlay
+
+nxos_bgp:
+  # admin_state: string, optional. The administrative state of the object or policy. - Choices: `enabled`, `disabled`
+  admin_state: enabled
+  # asn: string, optional. Autonomous system number.
+  asn: '65001'
+  # control: string, optional. The control state. - Choices: `stateful-ha`
+  control: stateful-ha
+  # deletion_policy: string, optional. What happens on the device when objects managed by the resource are removed. `delete` deletes the object on destroy, including any configuration not managed by…
+  deletion_policy: null
+  # device: string, optional. A device name from the provider configuration.
+  device: null
+  # disable_policy_batching: string, optional. Disable Batching Evaluation To All Peers. - Choices: `enabled`, `disabled`
+  disable_policy_batching: disabled
+  # disable_policy_batching_ipv4_prefix_list: string, optional. Disable Batching Evaluation Of IPv4 Prefix Advertisements To All Peers.
+  disable_policy_batching_ipv4_prefix_list: PFX_LIST1
+  # disable_policy_batching_ipv6_prefix_list: string, optional. Disable Batching Evaluation Of IPv6 Prefix Advertisements To All Peers.
+  disable_policy_batching_ipv6_prefix_list: PFX_LIST_V6
+  # disable_policy_batching_nexthop: string, optional. Disable Batching Evaluation To Nexthop. - Choices: `enabled`, `disabled`
+  disable_policy_batching_nexthop: disabled
+  # enhanced_error_handling: bool, optional. Enable BGP Enhanced Error Handling to prevent inadvertent session resets for minor errors. See RFC7606 for more details.
+  enhanced_error_handling: false
+  # fabric_soo: string, optional. Fabric Site of Origin extcommunity.
+  fabric_soo: null
+  # flush_routes: string, optional. Flush routes in RIB upon controlled restart. - Choices: `enabled`, `disabled`
+  flush_routes: disabled
+  # instance_admin_state: string, optional. The administrative state of the object or policy. - Choices: `enabled`, `disabled`
+  instance_admin_state: enabled
+  # isolate: string, optional. Isolate router from BGP perspective. - Choices: `enabled`, `disabled`, `include-local`, `custom`
+  isolate: disabled
+  # isolate_route_map: string, optional. Isolate Route Map Configuration.
+  isolate_route_map: null
+  # med_dampening_interval: number, optional. Setting med dampening interval. - Range: `60`-`4294967295`
+  med_dampening_interval: null
+  # mvpn_vri_id: number, optional. ID to generate VRI with VNI:ID format. - Range: `1`-`65535`
+  mvpn_vri_id: 100
+  # nexthop_suppress_default_resolution: string, optional. Suppress use of default route for nexthop address resolution. - Choices: `enabled`, `disabled`
+  nexthop_suppress_default_resolution: disabled
+  # rd_dual: string, optional. Generate Secondary Route Distinguisher for vxlan multisite border gateway. - Choices: `enabled`, `disabled`
+  rd_dual: enabled
+  # rd_dual_id: number, optional. ID to generate Secondary RD with ID:VNI format. - Range: `1`-`65535`
+  rd_dual_id: null
+  # vrfs: map of objects, optional. List of BGP VRFs. - Map key: `name` - The name of the object.
+  vrfs:
+    default:
+      address_families:
+        ipv4-ucast:
+          additional_paths_capability: send
+          additional_paths_route_map: ADD_PATH_MAP
+          advertise_l2vpn_evpn: disabled
+          advertise_only_active_routes: disabled
+          advertise_physical_ip_for_type5_routes: disabled
+          advertise_system_mac: disabled
+          advertised_prefixes:
+            192.168.1.0/24:
+              evpn: enabled
+              route_map: rt-map
+          aggregate_addresses:
+            10.0.0.0/8:
+              advertise_map: ADV_MAP
+              as_set: enabled
+              attribute_map: ATTR_MAP
+              summary_only: enabled
+              suppress_map: null
+          allocate_label_all: null
+          allocate_label_option_b: null
+          allocate_label_route_map: null
+          bestpath_origin_as_allow_invalid: disabled
+          bestpath_origin_as_use_validity: disabled
+          client_to_client_reflection: enabled
+          critical_nexthop_timeout: '2500'
+          default_information_originate: disabled
+          default_information_originate_route_distinguisher: null
+          default_information_originate_route_target: null
+          default_metric: '100'
+          export_gateway_ip: disabled
+          igp_metric: 600
+          label_allocation_mode: null
+          load_balance_egress_filter_policy_route_map: LB_EGR_FILTER_MAP
+          load_balance_egress_multipath_auto_policy_route_map: LB_EGR_MPATH_MAP
+          max_ecmp_paths: 2
+          max_external_ecmp_paths: 1
+          max_external_internal_ecmp_paths: 1
+          max_local_ecmp_paths: 1
+          max_mixed_ecmp_paths: 1
+          max_path_unequal_cost: disabled
+          next_hop_route_map_name: ROUTEMAP1
+          nexthop_load_balance_egress_multisite: disabled
+          non_critical_nexthop_timeout: '8000'
+          origin_as_validate: disabled
+          origin_as_validate_signal_ibgp: disabled
+          originate_map: null
+          prefix_priority: none
+          redistributions:
+            ospf;OSPF1:
+              asn: null
+              route_map: route_map_ospf_1
+              scope: inter
+              srv6_prefix_type: unspecified
+          retain_rt_all: disabled
+          retain_rt_route_map: null
+          table_map_filter: disabled
+          table_map_route_map_name: ROUTE_MAP1
+          timer_bestpath_defer: null
+          timer_bestpath_defer_max: null
+          vni_ethernet_tag: disabled
+          wait_igp_converged: disabled
+      alloc_index: null
+      bandwidth_reference: 40000
+      bandwidth_reference_unit: mbps
+      bestpath_first_always: disabled
+      bestpath_interval: 300
+      cluster_id: 198.51.100.11
+      graceful_restart_control: complete
+      graceful_restart_interval: 240
+      graceful_restart_stale_interval: 1800
+      hold_time: 180
+      interface_peers:
+        eth1/1:
+          admin_state: enabled
+          affinity_group: null
+          asn_type: none
+          bfd_type: none
+          bmp_server_1: disabled
+          bmp_server_2: disabled
+          capability_suppress_4_byte_asn: disabled
+          connection_mode: passive
+          description: My description
+          dscp: af11
+          dynamic_route_map: DYN_RT_MAP
+          ebgp_multihop_ttl: null
+          egress_peer_engineering: null
+          egress_peer_engineering_peer_set: null
+          hold_time: 45
+          internal_vpn_client: disabled
+          keepalive_interval: 15
+          log_neighbor_changes: none
+          low_memory_exempt: disabled
+          max_peer_count: 10
+          password: null
+          password_type: '0'
+          password_wo_version: null
+          peer_control: bfd
+          peer_template: SPINE-PEERS
+          peer_type: fabric-internal
+          private_as_control: none
+          remote_asn: '65002'
+          session_template: SESS_TEMPLATE
+          ttl_security_hops: null
+      keepalive_interval: 60
+      local_asn: null
+      max_as_limit: null
+      mode: fabric
+      path_control_aigp_ignore: enabled
+      path_control_always_compare_med: enabled
+      path_control_as_path_ignore: enabled
+      path_control_as_path_multipath_relax: enabled
+      path_control_compare_neighbor_id: enabled
+      path_control_compare_router_id: enabled
+      path_control_cost_community_ignore: enabled
+      path_control_igp_metric_ignore: enabled
+      path_control_med_confed: enabled
+      path_control_med_missing_as_worst: enabled
+      path_control_med_non_deterministic: enabled
+      peer_policy_templates:
+        POLICY_TEMPLATE:
+          advertise_local_labeled_route: disabled
+          advertisement_interval: 30
+          aigp: disabled
+          allowed_self_as_count: 3
+          as_override: disabled
+          capability_additional_paths: send
+          control: nh-self
+          default_originate: enabled
+          default_originate_route_map: DEF_ORIG_MAP
+          dmz_link_bandwidth: disabled
+          filter_list_controls:
+            out:
+              list: AS_PATH_LIST1
+          inherit_peer_policies:
+            POLICY_TEMPLATE2:
+              sequence: 10
+          link_bandwidth_cumulative: disabled
+          max_prefix_action: restart
+          max_prefix_number: 10000
+          max_prefix_restart_time: 1
+          max_prefix_threshold: 30
+          next_hop_self_all: false
+          nexthop_thirdparty: enabled
+          prefix_list_controls:
+            in:
+              list: PREFIX_LIST1
+          route_controls:
+            in:
+              route_map_name: ROUTE_MAP1
+          send_community_extended: enabled
+          send_community_standard: enabled
+          site_of_origin: soo:as2-nn2:65001:200
+          soft_reconfiguration_backup: inbound
+          unsuppress_map: UNSUPP_MAP
+          weight: '100'
+      peer_session_templates:
+        SESS_TEMPLATE:
+          admin_state: enabled
+          affinity_group: null
+          asn_type: none
+          bfd_type: none
+          bmp_server_1: disabled
+          bmp_server_2: disabled
+          capability_suppress_4_byte_asn: disabled
+          connection_mode: passive
+          description: My Description
+          dscp: af11
+          ebgp_multihop_ttl: 5
+          egress_peer_engineering: null
+          egress_peer_engineering_peer_set: null
+          hold_time: 30
+          internal_vpn_client: disabled
+          keepalive_interval: 10
+          local_asn: '65009'
+          local_asn_propagation: no-prepend
+          log_neighbor_changes: enable
+          low_memory_exempt: disabled
+          max_peer_count: 10
+          password: null
+          password_type: '0'
+          password_wo_version: null
+          peer_control: bfd
+          peer_type: fabric-external
+          private_as_control: none
+          remote_asn: '65002'
+          session_template: SESS_TEMPLATE2
+          source_interface: lo0
+          ttl_security_hops: null
+      peer_templates:
+        SPINE-PEERS:
+          admin_state: enabled
+          affinity_group: null
+          asn_type: none
+          bfd_type: none
+          bmp_server_1: disabled
+          bmp_server_2: disabled
+          capability_suppress_4_byte_asn: disabled
+          connection_mode: passive
+          description: My Description
+          ebgp_multihop_ttl: 2
+          hold_time: 180
+          keepalive_interval: 60
+          log_neighbor_changes: none
+          low_memory_exempt: disabled
+          max_peer_count: 10
+          password: null
+          password_type: '0'
+          password_wo_version: null
+          peer_control: bfd
+          peer_template_address_families:
+            ipv4-ucast:
+              advertise_gateway_ip: null
+              advertise_local_labeled_route: disabled
+              advertisement_interval: 30
+              aigp: disabled
+              allowed_self_as_count: 0
+              as_override: disabled
+              control: nh-self,rr-client
+              default_originate: enabled
+              default_originate_route_map: DEF_ORIG_MAP
+              dmz_link_bandwidth: disabled
+              encapsulation_mpls: null
+              inherit_peer_policies:
+                POLICY_TEMPLATE:
+                  sequence: 10
+              link_bandwidth_cumulative: disabled
+              max_prefix_action: restart
+              max_prefix_number: 10000
+              max_prefix_restart_time: 1
+              max_prefix_threshold: 30
+              nexthop_thirdparty: enabled
+              prefix_list_controls:
+                in:
+                  list: PREFIX_LIST1
+              rewrite_rt_asn: disabled
+              route_controls:
+                in:
+                  route_map_name: ROUTE_MAP1
+              send_community_extended: enabled
+              send_community_standard: enabled
+              site_of_origin: soo:as2-nn2:65001:200
+              soft_reconfiguration_backup: none
+              unsuppress_map: UNSUPP_MAP
+              weight: '100'
+          peer_type: fabric-internal
+          private_as_control: none
+          remote_asn: '65002'
+          session_template: SESS_TEMPLATE
+          source_interface: lo0
+          ttl_security_hops: null
+      peers:
+        192.168.0.1:
+          admin_state: enabled
+          affinity_group: null
+          asn_type: none
+          bfd_type: none
+          bmp_server_1: disabled
+          bmp_server_2: disabled
+          capability_suppress_4_byte_asn: disabled
+          connection_mode: passive
+          description: My description
+          ebgp_multihop_ttl: 5
+          hold_time: 45
+          keepalive_interval: 15
+          local_asn: '65001'
+          local_asn_propagation: no-prepend
+          log_neighbor_changes: none
+          low_memory_exempt: disabled
+          max_peer_count: null
+          password: null
+          password_type: '0'
+          password_wo_version: null
+          peer_address_families:
+            ipv4-ucast:
+              advertise_gateway_ip: null
+              advertise_local_labeled_route: disabled
+              advertisement_interval: 30
+              aigp: disabled
+              allowed_self_as_count: 0
+              as_override: disabled
+              control: nh-self
+              default_originate: enabled
+              default_originate_route_map: DEF_ORIG_MAP
+              dmz_link_bandwidth: disabled
+              encapsulation_mpls: null
+              inherit_peer_policies:
+                POLICY_TEMPLATE:
+                  sequence: 10
+              link_bandwidth_cumulative: disabled
+              max_prefix_action: restart
+              max_prefix_number: 10000
+              max_prefix_restart_time: 1
+              max_prefix_threshold: 30
+              nexthop_thirdparty: enabled
+              prefix_list_controls:
+                in:
+                  list: PREFIX_LIST1
+              rewrite_rt_asn: disabled
+              route_controls:
+                in:
+                  route_map_name: ROUTE_MAP1
+              send_community_extended: enabled
+              send_community_standard: enabled
+              site_of_origin: null
+              soft_reconfiguration_backup: none
+              unsuppress_map: UNSUPP_MAP
+              weight: '100'
+          peer_control: bfd,dis-conn-check
+          peer_template: SPINE-PEERS
+          peer_type: fabric-internal
+          private_as_control: none
+          remote_asn: '65002'
+          session_template: SESS_TEMPLATE
+          source_interface: lo0
+          ttl_security_hops: null
+      prefix_peer_timeout: 90
+      prefix_peer_wait_time: 90
+      reconnect_interval: 60
+      route_control_enforce_first_as: disabled
+      route_control_fib_accelerate: enabled
+      route_control_log_neighbor_changes: enabled
+      route_control_suppress_routes: disabled
+      router_id: 198.51.100.15
+      router_id_auto: disabled

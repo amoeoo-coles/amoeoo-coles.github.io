@@ -1,0 +1,115 @@
+# YAML data model for nxos_ospf
+# Provider: CiscoDevNet/nxos 0.22.3   Build order: 010 (2. Underlay)
+# Attribute names, types and required flags come from the provider schema.
+# Values come from the provider's own example (addresses mapped to documentation
+# ranges, secrets removed). null = not collected / omit, so the provider default applies.
+# Credentials are never stored here: use var.* in providers.tf / terraform.tfvars.
+
+references:
+  resource: nxos_ospf
+  provider: CiscoDevNet/nxos
+  provider_version: 0.22.3
+  registry_doc: https://registry.terraform.io/providers/CiscoDevNet/nxos/0.22.3/docs/resources/ospf
+  provider_example: https://github.com/CiscoDevNet/terraform-provider-nxos/blob/v0.22.3/examples/resources/nxos_ospf/resource.tf
+  schema_source: terraform providers schema -json (CiscoDevNet/nxos 0.22.3)
+  build_order: 10
+  group: 2. Underlay
+
+nxos_ospf:
+  # admin_state: string, optional. The administrative state of the object or policy. - Choices: `enabled`, `disabled`
+  admin_state: enabled
+  # deletion_policy: string, optional. What happens on the device when objects managed by the resource are removed. `delete` deletes the object on destroy, including any configuration not managed by…
+  deletion_policy: null
+  # device: string, optional. A device name from the provider configuration.
+  device: null
+  # instances: map of objects, optional. List of OSPF instances. - Map key: `name` - OSPF instance name.
+  instances:
+    OSPF1:
+      admin_state: enabled
+      control: stateful-ha
+      vrfs:
+        VRF1:
+          admin_state: enabled
+          areas:
+            0.0.0.10:
+              authentication_type: unspecified
+              control: summary
+              cost: 10
+              nssa_translator_role: always
+              ranges:
+                10.1.0.0/16:
+                  control: no-advertise
+                  cost: '10'
+              segment_routing_mpls: mpls
+              type: stub
+          bandwidth_reference: 400000
+          bandwidth_reference_unit: mbps
+          capability_vrf_lite: l3vpn
+          control: bfd,default-passive
+          default_information_originate_always: 'yes'
+          default_information_originate_route_map: RM_DEFAULT
+          default_metric: 1000
+          default_route_nssa_pbit_clear: true
+          discard_route: ext,int
+          distance: 110
+          down_bit_ignore: true
+          graceful_restart_control: planned-only
+          graceful_restart_helper: false
+          graceful_restart_period: 30
+          interfaces:
+            eth1/10:
+              admin_state: enabled
+              advertise_secondaries: false
+              area: 0.0.0.10
+              authentication_key: null
+              authentication_key_id: 1
+              authentication_key_new: null
+              authentication_key_new_wo_version: null
+              authentication_key_secure_mode: false
+              authentication_key_wo_version: null
+              authentication_keychain: mykeychain
+              authentication_md5_key: null
+              authentication_md5_key_new: null
+              authentication_md5_key_new_wo_version: null
+              authentication_md5_key_secure_mode: false
+              authentication_md5_key_wo_version: null
+              authentication_type: none
+              bfd: disabled
+              control: mtu-ignore
+              cost: 1000
+              dead_interval: 60
+              hello_interval: 15
+              network_type: p2p
+              node_flag: clear
+              passive: enabled
+              priority: 10
+              retransmit_interval: 10
+              transmit_delay: 2
+          log_adjacency_changes: brief
+          lsa_arrival_interval: 50
+          lsa_group_pacing_interval: 20
+          lsa_throttle_hold_interval: 50
+          lsa_throttle_max_interval: 3000
+          lsa_throttle_start_interval: 10
+          max_ecmp: 16
+          max_metric_await_convergence_bgp_asn: '65535'
+          max_metric_control: external-lsa,startup,stub,summary-lsa
+          max_metric_external_lsa: 600
+          max_metric_startup_interval: 300
+          max_metric_summary_lsa: 600
+          name_lookup_vrf: default
+          redistributions:
+            static;none;none:
+              always: 'no'
+              route_map: route_map_ospf
+              srv6_prefix_type: unspecified
+          rfc1583_compatible: true
+          rfc1583_compatible_ios: true
+          router_id: 198.51.100.13
+          spf_throttle_hold_interval: 100
+          spf_throttle_initial_interval: 10
+          spf_throttle_max_interval: 3000
+          summary_addresses:
+            10.0.0.0/8:
+              control: null
+              tag: 5
