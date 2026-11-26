@@ -18,6 +18,5 @@ Groups (build order):
 - 9. Wireless: 360
 - 10. Application policy and endpoint analytics: 61
 - 11. Assurance, events and reports: 171
-- 12. Other: 0
 
 Credentials are placeholders only. Do not commit real passwords or tokens.
