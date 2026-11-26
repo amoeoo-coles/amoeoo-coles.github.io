@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getAllExternalLookup (cisco.fmcansible 1.1.1)
+# Build order: 831 · API path: /api/fmc_config/v1/domain/{domainUUID}/integration/externallookups
+# Reads ../models/operations/getAllExternalLookup.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_all_external_lookup.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0831 getAllExternalLookup"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getAllExternalLookup.yml
+  tasks:
+    - name: Execute getAllExternalLookup
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getAllExternalLookup.operation }}"
+        path_params: "{{ (op_getAllExternalLookup.path_params | cat_strip_nulls) if (op_getAllExternalLookup.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getAllExternalLookup.query_params | cat_strip_nulls) if (op_getAllExternalLookup.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getAllExternalLookup.data | cat_strip_nulls) if (op_getAllExternalLookup.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getAllExternalLookup.register_as if op_getAllExternalLookup.register_as is not none else omit }}"
+      register: getAllExternalLookup_result

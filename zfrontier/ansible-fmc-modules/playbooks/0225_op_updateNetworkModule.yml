@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation updateNetworkModule (cisco.fmcansible 1.1.1)
+# Build order: 225 · API path: /api/fmc_config/v1/domain/{domainUUID}/chassis/fmcmanagedchassis/{containerUUID}/networkmodules/{objectId}
+# Reads ../models/operations/updateNetworkModule.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/update_network_module.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags updateNetworkModule.
+
+- name: "0225 updateNetworkModule"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/updateNetworkModule.yml
+  tasks:
+    - name: Execute updateNetworkModule
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_updateNetworkModule.operation }}"
+        path_params: "{{ (op_updateNetworkModule.path_params | cat_strip_nulls) if (op_updateNetworkModule.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_updateNetworkModule.query_params | cat_strip_nulls) if (op_updateNetworkModule.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_updateNetworkModule.data | cat_strip_nulls) if (op_updateNetworkModule.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_updateNetworkModule.register_as if op_updateNetworkModule.register_as is not none else omit }}"
+      register: updateNetworkModule_result
+      tags:
+        - never
+        - updateNetworkModule

@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation updateUmbrellaConnection (cisco.fmcansible 1.1.1)
+# Build order: 843 · API path: /api/fmc_config/v1/domain/{domainUUID}/integration/umbrellaconnections/{objectId}
+# Reads ../models/operations/updateUmbrellaConnection.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/update_umbrella_connection.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags updateUmbrellaConnection.
+
+- name: "0843 updateUmbrellaConnection"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/updateUmbrellaConnection.yml
+  tasks:
+    - name: Execute updateUmbrellaConnection
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_updateUmbrellaConnection.operation }}"
+        path_params: "{{ (op_updateUmbrellaConnection.path_params | cat_strip_nulls) if (op_updateUmbrellaConnection.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_updateUmbrellaConnection.query_params | cat_strip_nulls) if (op_updateUmbrellaConnection.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_updateUmbrellaConnection.data | cat_strip_nulls) if (op_updateUmbrellaConnection.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_updateUmbrellaConnection.register_as if op_updateUmbrellaConnection.register_as is not none else omit }}"
+      register: updateUmbrellaConnection_result
+      tags:
+        - never
+        - updateUmbrellaConnection

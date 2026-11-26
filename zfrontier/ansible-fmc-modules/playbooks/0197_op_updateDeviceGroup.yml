@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation updateDeviceGroup (cisco.fmcansible 1.1.1)
+# Build order: 197 · API path: /api/fmc_config/v1/domain/{domainUUID}/devicegroups/devicegrouprecords/{objectId}
+# Reads ../models/operations/updateDeviceGroup.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/update_device_group.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags updateDeviceGroup.
+
+- name: "0197 updateDeviceGroup"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/updateDeviceGroup.yml
+  tasks:
+    - name: Execute updateDeviceGroup
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_updateDeviceGroup.operation }}"
+        path_params: "{{ (op_updateDeviceGroup.path_params | cat_strip_nulls) if (op_updateDeviceGroup.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_updateDeviceGroup.query_params | cat_strip_nulls) if (op_updateDeviceGroup.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_updateDeviceGroup.data | cat_strip_nulls) if (op_updateDeviceGroup.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_updateDeviceGroup.register_as if op_updateDeviceGroup.register_as is not none else omit }}"
+      register: updateDeviceGroup_result
+      tags:
+        - never
+        - updateDeviceGroup

@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation updateExtendedCommunityList (cisco.fmcansible 1.1.1)
+# Build order: 550 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/extendedcommunitylists/{objectId}
+# Reads ../models/operations/updateExtendedCommunityList.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/update_extended_community_list.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags updateExtendedCommunityList.
+
+- name: "0550 updateExtendedCommunityList"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/updateExtendedCommunityList.yml
+  tasks:
+    - name: Execute updateExtendedCommunityList
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_updateExtendedCommunityList.operation }}"
+        path_params: "{{ (op_updateExtendedCommunityList.path_params | cat_strip_nulls) if (op_updateExtendedCommunityList.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_updateExtendedCommunityList.query_params | cat_strip_nulls) if (op_updateExtendedCommunityList.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_updateExtendedCommunityList.data | cat_strip_nulls) if (op_updateExtendedCommunityList.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_updateExtendedCommunityList.register_as if op_updateExtendedCommunityList.register_as is not none else omit }}"
+      register: updateExtendedCommunityList_result
+      tags:
+        - never
+        - updateExtendedCommunityList

@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getAllPolicyAssignment (cisco.fmcansible 1.1.1)
+# Build order: 816 · API path: /api/fmc_config/v1/domain/{domainUUID}/assignment/policyassignments
+# Reads ../models/operations/getAllPolicyAssignment.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_all_policy_assignment.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0816 getAllPolicyAssignment"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getAllPolicyAssignment.yml
+  tasks:
+    - name: Execute getAllPolicyAssignment
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getAllPolicyAssignment.operation }}"
+        path_params: "{{ (op_getAllPolicyAssignment.path_params | cat_strip_nulls) if (op_getAllPolicyAssignment.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getAllPolicyAssignment.query_params | cat_strip_nulls) if (op_getAllPolicyAssignment.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getAllPolicyAssignment.data | cat_strip_nulls) if (op_getAllPolicyAssignment.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getAllPolicyAssignment.register_as if op_getAllPolicyAssignment.register_as is not none else omit }}"
+      register: getAllPolicyAssignment_result

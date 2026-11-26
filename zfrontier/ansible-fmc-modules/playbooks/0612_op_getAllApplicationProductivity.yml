@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getAllApplicationProductivity (cisco.fmcansible 1.1.1)
+# Build order: 612 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/applicationproductivities
+# Reads ../models/operations/getAllApplicationProductivity.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_all_application_productivity.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0612 getAllApplicationProductivity"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getAllApplicationProductivity.yml
+  tasks:
+    - name: Execute getAllApplicationProductivity
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getAllApplicationProductivity.operation }}"
+        path_params: "{{ (op_getAllApplicationProductivity.path_params | cat_strip_nulls) if (op_getAllApplicationProductivity.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getAllApplicationProductivity.query_params | cat_strip_nulls) if (op_getAllApplicationProductivity.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getAllApplicationProductivity.data | cat_strip_nulls) if (op_getAllApplicationProductivity.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getAllApplicationProductivity.register_as if op_getAllApplicationProductivity.register_as is not none else omit }}"
+      register: getAllApplicationProductivity_result

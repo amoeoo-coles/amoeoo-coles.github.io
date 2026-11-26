@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation createMultipleTunnelTags (cisco.fmcansible 1.1.1)
+# Build order: 522 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/tunneltags
+# Reads ../models/operations/createMultipleTunnelTags.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/create_multiple_tunnel_tags.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags createMultipleTunnelTags.
+
+- name: "0522 createMultipleTunnelTags"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/createMultipleTunnelTags.yml
+  tasks:
+    - name: Execute createMultipleTunnelTags
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_createMultipleTunnelTags.operation }}"
+        path_params: "{{ (op_createMultipleTunnelTags.path_params | cat_strip_nulls) if (op_createMultipleTunnelTags.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_createMultipleTunnelTags.query_params | cat_strip_nulls) if (op_createMultipleTunnelTags.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_createMultipleTunnelTags.data | cat_strip_nulls) if (op_createMultipleTunnelTags.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_createMultipleTunnelTags.register_as if op_createMultipleTunnelTags.register_as is not none else omit }}"
+      register: createMultipleTunnelTags_result
+      tags:
+        - never
+        - createMultipleTunnelTags

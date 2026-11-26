@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getUpgradePackage (cisco.fmcansible 1.1.1)
+# Build order: 894 · API path: /api/fmc_platform/v1/updates/upgradepackages/{objectId}
+# Reads ../models/operations/getUpgradePackage.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_upgrade_package.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0894 getUpgradePackage"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getUpgradePackage.yml
+  tasks:
+    - name: Execute getUpgradePackage
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getUpgradePackage.operation }}"
+        path_params: "{{ (op_getUpgradePackage.path_params | cat_strip_nulls) if (op_getUpgradePackage.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getUpgradePackage.query_params | cat_strip_nulls) if (op_getUpgradePackage.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getUpgradePackage.data | cat_strip_nulls) if (op_getUpgradePackage.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getUpgradePackage.register_as if op_getUpgradePackage.register_as is not none else omit }}"
+      register: getUpgradePackage_result

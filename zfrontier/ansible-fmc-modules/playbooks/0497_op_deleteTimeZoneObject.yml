@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation deleteTimeZoneObject (cisco.fmcansible 1.1.1)
+# Build order: 497 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/timezoneobjects/{objectId}
+# Reads ../models/operations/deleteTimeZoneObject.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/delete_time_zone_object.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags deleteTimeZoneObject.
+
+- name: "0497 deleteTimeZoneObject"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/deleteTimeZoneObject.yml
+  tasks:
+    - name: Execute deleteTimeZoneObject
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_deleteTimeZoneObject.operation }}"
+        path_params: "{{ (op_deleteTimeZoneObject.path_params | cat_strip_nulls) if (op_deleteTimeZoneObject.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_deleteTimeZoneObject.query_params | cat_strip_nulls) if (op_deleteTimeZoneObject.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_deleteTimeZoneObject.data | cat_strip_nulls) if (op_deleteTimeZoneObject.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_deleteTimeZoneObject.register_as if op_deleteTimeZoneObject.register_as is not none else omit }}"
+      register: deleteTimeZoneObject_result
+      tags:
+        - never
+        - deleteTimeZoneObject

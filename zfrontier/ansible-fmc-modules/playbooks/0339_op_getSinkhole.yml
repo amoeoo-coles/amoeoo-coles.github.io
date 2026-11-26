@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getSinkhole (cisco.fmcansible 1.1.1)
+# Build order: 339 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/sinkholes/{objectId}
+# Reads ../models/operations/getSinkhole.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_sinkhole.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0339 getSinkhole"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getSinkhole.yml
+  tasks:
+    - name: Execute getSinkhole
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getSinkhole.operation }}"
+        path_params: "{{ (op_getSinkhole.path_params | cat_strip_nulls) if (op_getSinkhole.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getSinkhole.query_params | cat_strip_nulls) if (op_getSinkhole.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getSinkhole.data | cat_strip_nulls) if (op_getSinkhole.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getSinkhole.register_as if op_getSinkhole.register_as is not none else omit }}"
+      register: getSinkhole_result

@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation createStandardACL (cisco.fmcansible 1.1.1)
+# Build order: 537 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/standardaccesslists
+# Reads ../models/operations/createStandardACL.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/create_standard_acl.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags createStandardACL.
+
+- name: "0537 createStandardACL"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/createStandardACL.yml
+  tasks:
+    - name: Execute createStandardACL
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_createStandardACL.operation }}"
+        path_params: "{{ (op_createStandardACL.path_params | cat_strip_nulls) if (op_createStandardACL.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_createStandardACL.query_params | cat_strip_nulls) if (op_createStandardACL.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_createStandardACL.data | cat_strip_nulls) if (op_createStandardACL.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_createStandardACL.register_as if op_createStandardACL.register_as is not none else omit }}"
+      register: createStandardACL_result
+      tags:
+        - never
+        - createStandardACL

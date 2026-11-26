@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation createFlexConfigMigration (cisco.fmcansible 1.1.1)
+# Build order: 790 · API path: /api/fmc_config/v1/domain/{domainUUID}/policy/flexconfigpolicies/{containerUUID}/migrate
+# Reads ../models/operations/createFlexConfigMigration.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/create_flex_config_migration.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags createFlexConfigMigration.
+
+- name: "0790 createFlexConfigMigration"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/createFlexConfigMigration.yml
+  tasks:
+    - name: Execute createFlexConfigMigration
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_createFlexConfigMigration.operation }}"
+        path_params: "{{ (op_createFlexConfigMigration.path_params | cat_strip_nulls) if (op_createFlexConfigMigration.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_createFlexConfigMigration.query_params | cat_strip_nulls) if (op_createFlexConfigMigration.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_createFlexConfigMigration.data | cat_strip_nulls) if (op_createFlexConfigMigration.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_createFlexConfigMigration.register_as if op_createFlexConfigMigration.register_as is not none else omit }}"
+      register: createFlexConfigMigration_result
+      tags:
+        - never
+        - createFlexConfigMigration

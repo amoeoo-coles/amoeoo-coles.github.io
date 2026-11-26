@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation updateCloudRegion (cisco.fmcansible 1.1.1)
+# Build order: 834 · API path: /api/fmc_config/v1/domain/{domainUUID}/integration/cloudregions/{objectId}
+# Reads ../models/operations/updateCloudRegion.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/update_cloud_region.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags updateCloudRegion.
+
+- name: "0834 updateCloudRegion"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/updateCloudRegion.yml
+  tasks:
+    - name: Execute updateCloudRegion
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_updateCloudRegion.operation }}"
+        path_params: "{{ (op_updateCloudRegion.path_params | cat_strip_nulls) if (op_updateCloudRegion.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_updateCloudRegion.query_params | cat_strip_nulls) if (op_updateCloudRegion.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_updateCloudRegion.data | cat_strip_nulls) if (op_updateCloudRegion.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_updateCloudRegion.register_as if op_updateCloudRegion.register_as is not none else omit }}"
+      register: updateCloudRegion_result
+      tags:
+        - never
+        - updateCloudRegion

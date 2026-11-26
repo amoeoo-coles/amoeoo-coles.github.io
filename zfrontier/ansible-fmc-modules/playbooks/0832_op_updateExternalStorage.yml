@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation updateExternalStorage (cisco.fmcansible 1.1.1)
+# Build order: 832 · API path: /api/fmc_config/v1/domain/{domainUUID}/integration/externalstorage/{objectId}
+# Reads ../models/operations/updateExternalStorage.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/update_external_storage.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags updateExternalStorage.
+
+- name: "0832 updateExternalStorage"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/updateExternalStorage.yml
+  tasks:
+    - name: Execute updateExternalStorage
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_updateExternalStorage.operation }}"
+        path_params: "{{ (op_updateExternalStorage.path_params | cat_strip_nulls) if (op_updateExternalStorage.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_updateExternalStorage.query_params | cat_strip_nulls) if (op_updateExternalStorage.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_updateExternalStorage.data | cat_strip_nulls) if (op_updateExternalStorage.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_updateExternalStorage.register_as if op_updateExternalStorage.register_as is not none else omit }}"
+      register: updateExternalStorage_result
+      tags:
+        - never
+        - updateExternalStorage

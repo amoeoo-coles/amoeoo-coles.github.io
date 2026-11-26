@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getAllDynamicAccessPolicy (cisco.fmcansible 1.1.1)
+# Build order: 708 · API path: /api/fmc_config/v1/domain/{domainUUID}/policy/dynamicaccesspolicies
+# Reads ../models/operations/getAllDynamicAccessPolicy.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_all_dynamic_access_policy.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0708 getAllDynamicAccessPolicy"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getAllDynamicAccessPolicy.yml
+  tasks:
+    - name: Execute getAllDynamicAccessPolicy
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getAllDynamicAccessPolicy.operation }}"
+        path_params: "{{ (op_getAllDynamicAccessPolicy.path_params | cat_strip_nulls) if (op_getAllDynamicAccessPolicy.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getAllDynamicAccessPolicy.query_params | cat_strip_nulls) if (op_getAllDynamicAccessPolicy.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getAllDynamicAccessPolicy.data | cat_strip_nulls) if (op_getAllDynamicAccessPolicy.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getAllDynamicAccessPolicy.register_as if op_getAllDynamicAccessPolicy.register_as is not none else omit }}"
+      register: getAllDynamicAccessPolicy_result

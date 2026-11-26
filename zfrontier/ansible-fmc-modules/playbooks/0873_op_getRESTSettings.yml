@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getRESTSettings (cisco.fmcansible 1.1.1)
+# Build order: 873 · API path: /api/fmc_tid/v1/domain/{domainUUID}/tid/settings/{objectId}
+# Reads ../models/operations/getRESTSettings.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_rest_settings.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0873 getRESTSettings"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getRESTSettings.yml
+  tasks:
+    - name: Execute getRESTSettings
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getRESTSettings.operation }}"
+        path_params: "{{ (op_getRESTSettings.path_params | cat_strip_nulls) if (op_getRESTSettings.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getRESTSettings.query_params | cat_strip_nulls) if (op_getRESTSettings.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getRESTSettings.data | cat_strip_nulls) if (op_getRESTSettings.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getRESTSettings.register_as if op_getRESTSettings.register_as is not none else omit }}"
+      register: getRESTSettings_result

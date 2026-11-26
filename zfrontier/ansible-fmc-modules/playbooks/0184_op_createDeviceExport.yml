@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation createDeviceExport (cisco.fmcansible 1.1.1)
+# Build order: 184 · API path: /api/fmc_config/v1/domain/{domainUUID}/devices/operational/exports
+# Reads ../models/operations/createDeviceExport.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/create_device_export.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags createDeviceExport.
+
+- name: "0184 createDeviceExport"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/createDeviceExport.yml
+  tasks:
+    - name: Execute createDeviceExport
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_createDeviceExport.operation }}"
+        path_params: "{{ (op_createDeviceExport.path_params | cat_strip_nulls) if (op_createDeviceExport.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_createDeviceExport.query_params | cat_strip_nulls) if (op_createDeviceExport.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_createDeviceExport.data | cat_strip_nulls) if (op_createDeviceExport.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_createDeviceExport.register_as if op_createDeviceExport.register_as is not none else omit }}"
+      register: createDeviceExport_result
+      tags:
+        - never
+        - createDeviceExport

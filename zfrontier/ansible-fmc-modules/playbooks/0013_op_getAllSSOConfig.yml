@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getAllSSOConfig (cisco.fmcansible 1.1.1)
+# Build order: 13 · API path: /api/fmc_config/v1/domain/{domainUUID}/users/ssoconfigs
+# Reads ../models/operations/getAllSSOConfig.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_all_sso_config.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0013 getAllSSOConfig"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getAllSSOConfig.yml
+  tasks:
+    - name: Execute getAllSSOConfig
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getAllSSOConfig.operation }}"
+        path_params: "{{ (op_getAllSSOConfig.path_params | cat_strip_nulls) if (op_getAllSSOConfig.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getAllSSOConfig.query_params | cat_strip_nulls) if (op_getAllSSOConfig.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getAllSSOConfig.data | cat_strip_nulls) if (op_getAllSSOConfig.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getAllSSOConfig.register_as if op_getAllSSOConfig.register_as is not none else omit }}"
+      register: getAllSSOConfig_result

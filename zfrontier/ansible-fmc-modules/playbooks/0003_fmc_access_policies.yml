@@ -1,0 +1,25 @@
+---
+# Sample playbook for cisco.fmcansible.fmc_access_policies (cisco.fmcansible 1.1.1)
+# Build order: 3
+# Manages access policies on Cisco FMC devices over REST API
+# Reads ../models/fmc_access_policies.yml (vars_files). Docs: https://galaxy.ansible.com/ui/repo/published/cisco/fmcansible/content/module/fmc_access_policies/?version=1.1.1
+# Connection placeholders come from inventory.yml: {{ fmc_host }} {{ ansible_user }} {{ ansible_password }} {{ domain_uuid }}.
+
+- name: "0003 fmc_access_policies"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/fmc_access_policies.yml
+  tasks:
+    - name: Run fmc_access_policies from its model
+      cisco.fmcansible.fmc_access_policies:
+        depth: "{{ fmc_access_policies.depth if fmc_access_policies.depth is not none else omit }}"
+        domain_uuid: "{{ fmc_access_policies.domain_uuid if fmc_access_policies.domain_uuid is not none else omit }}"
+        expanded: "{{ fmc_access_policies.expanded if fmc_access_policies.expanded is not none else omit }}"
+        object_type: "{{ fmc_access_policies.object_type if fmc_access_policies.object_type is not none else omit }}"
+        operation: "{{ fmc_access_policies.operation if fmc_access_policies.operation is not none else omit }}"
+        output_dir: "{{ fmc_access_policies.output_dir if fmc_access_policies.output_dir is not none else omit }}"
+        policy_id: "{{ fmc_access_policies.policy_id if fmc_access_policies.policy_id is not none else omit }}"
+        register_as: "{{ fmc_access_policies.register_as if fmc_access_policies.register_as is not none else omit }}"
+        rule_id: "{{ fmc_access_policies.rule_id if fmc_access_policies.rule_id is not none else omit }}"
+      register: fmc_access_policies_result

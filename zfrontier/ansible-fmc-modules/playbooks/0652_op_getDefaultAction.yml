@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getDefaultAction (cisco.fmcansible 1.1.1)
+# Build order: 652 · API path: /api/fmc_config/v1/domain/{domainUUID}/policy/accesspolicies/{containerUUID}/defaultactions/{objectId}
+# Reads ../models/operations/getDefaultAction.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_default_action.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0652 getDefaultAction"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getDefaultAction.yml
+  tasks:
+    - name: Execute getDefaultAction
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getDefaultAction.operation }}"
+        path_params: "{{ (op_getDefaultAction.path_params | cat_strip_nulls) if (op_getDefaultAction.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getDefaultAction.query_params | cat_strip_nulls) if (op_getDefaultAction.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getDefaultAction.data | cat_strip_nulls) if (op_getDefaultAction.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getDefaultAction.register_as if op_getDefaultAction.register_as is not none else omit }}"
+      register: getDefaultAction_result

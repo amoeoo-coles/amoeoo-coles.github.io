@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation updateSecurityGroupTag (cisco.fmcansible 1.1.1)
+# Build order: 357 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/securitygrouptags/{objectId}
+# Reads ../models/operations/updateSecurityGroupTag.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/update_security_group_tag.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags updateSecurityGroupTag.
+
+- name: "0357 updateSecurityGroupTag"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/updateSecurityGroupTag.yml
+  tasks:
+    - name: Execute updateSecurityGroupTag
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_updateSecurityGroupTag.operation }}"
+        path_params: "{{ (op_updateSecurityGroupTag.path_params | cat_strip_nulls) if (op_updateSecurityGroupTag.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_updateSecurityGroupTag.query_params | cat_strip_nulls) if (op_updateSecurityGroupTag.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_updateSecurityGroupTag.data | cat_strip_nulls) if (op_updateSecurityGroupTag.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_updateSecurityGroupTag.register_as if op_updateSecurityGroupTag.register_as is not none else omit }}"
+      register: updateSecurityGroupTag_result
+      tags:
+        - never
+        - updateSecurityGroupTag

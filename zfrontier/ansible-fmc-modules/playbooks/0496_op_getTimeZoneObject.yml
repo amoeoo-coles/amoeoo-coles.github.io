@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getTimeZoneObject (cisco.fmcansible 1.1.1)
+# Build order: 496 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/timezoneobjects/{objectId}
+# Reads ../models/operations/getTimeZoneObject.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_time_zone_object.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0496 getTimeZoneObject"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getTimeZoneObject.yml
+  tasks:
+    - name: Execute getTimeZoneObject
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getTimeZoneObject.operation }}"
+        path_params: "{{ (op_getTimeZoneObject.path_params | cat_strip_nulls) if (op_getTimeZoneObject.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getTimeZoneObject.query_params | cat_strip_nulls) if (op_getTimeZoneObject.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getTimeZoneObject.data | cat_strip_nulls) if (op_getTimeZoneObject.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getTimeZoneObject.register_as if op_getTimeZoneObject.register_as is not none else omit }}"
+      register: getTimeZoneObject_result

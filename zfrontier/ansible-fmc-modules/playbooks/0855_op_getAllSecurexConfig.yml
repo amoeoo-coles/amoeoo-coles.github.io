@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getAllSecurexConfig (cisco.fmcansible 1.1.1)
+# Build order: 855 · API path: /api/fmc_config/v1/domain/{domainUUID}/integration/securexconfigs
+# Reads ../models/operations/getAllSecurexConfig.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_all_securex_config.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0855 getAllSecurexConfig"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getAllSecurexConfig.yml
+  tasks:
+    - name: Execute getAllSecurexConfig
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getAllSecurexConfig.operation }}"
+        path_params: "{{ (op_getAllSecurexConfig.path_params | cat_strip_nulls) if (op_getAllSecurexConfig.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getAllSecurexConfig.query_params | cat_strip_nulls) if (op_getAllSecurexConfig.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getAllSecurexConfig.data | cat_strip_nulls) if (op_getAllSecurexConfig.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getAllSecurexConfig.register_as if op_getAllSecurexConfig.register_as is not none else omit }}"
+      register: getAllSecurexConfig_result

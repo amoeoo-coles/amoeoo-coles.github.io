@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation deleteRESTIncident (cisco.fmcansible 1.1.1)
+# Build order: 860 · API path: /api/fmc_tid/v1/domain/{domainUUID}/tid/incident/{objectId}
+# Reads ../models/operations/deleteRESTIncident.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/delete_rest_incident.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags deleteRESTIncident.
+
+- name: "0860 deleteRESTIncident"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/deleteRESTIncident.yml
+  tasks:
+    - name: Execute deleteRESTIncident
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_deleteRESTIncident.operation }}"
+        path_params: "{{ (op_deleteRESTIncident.path_params | cat_strip_nulls) if (op_deleteRESTIncident.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_deleteRESTIncident.query_params | cat_strip_nulls) if (op_deleteRESTIncident.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_deleteRESTIncident.data | cat_strip_nulls) if (op_deleteRESTIncident.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_deleteRESTIncident.register_as if op_deleteRESTIncident.register_as is not none else omit }}"
+      register: deleteRESTIncident_result
+      tags:
+        - never
+        - deleteRESTIncident

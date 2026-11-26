@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getAllRealmUserGroup (cisco.fmcansible 1.1.1)
+# Build order: 629 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/realmusergroups
+# Reads ../models/operations/getAllRealmUserGroup.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_all_realm_user_group.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0629 getAllRealmUserGroup"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getAllRealmUserGroup.yml
+  tasks:
+    - name: Execute getAllRealmUserGroup
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getAllRealmUserGroup.operation }}"
+        path_params: "{{ (op_getAllRealmUserGroup.path_params | cat_strip_nulls) if (op_getAllRealmUserGroup.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getAllRealmUserGroup.query_params | cat_strip_nulls) if (op_getAllRealmUserGroup.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getAllRealmUserGroup.data | cat_strip_nulls) if (op_getAllRealmUserGroup.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getAllRealmUserGroup.register_as if op_getAllRealmUserGroup.register_as is not none else omit }}"
+      register: getAllRealmUserGroup_result

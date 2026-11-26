@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation deleteDevice (cisco.fmcansible 1.1.1)
+# Build order: 17 · API path: /api/fmc_config/v1/domain/{domainUUID}/devices/devicerecords/{objectId}
+# Reads ../models/operations/deleteDevice.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/delete_device.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags deleteDevice.
+
+- name: "0017 deleteDevice"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/deleteDevice.yml
+  tasks:
+    - name: Execute deleteDevice
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_deleteDevice.operation }}"
+        path_params: "{{ (op_deleteDevice.path_params | cat_strip_nulls) if (op_deleteDevice.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_deleteDevice.query_params | cat_strip_nulls) if (op_deleteDevice.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_deleteDevice.data | cat_strip_nulls) if (op_deleteDevice.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_deleteDevice.register_as if op_deleteDevice.register_as is not none else omit }}"
+      register: deleteDevice_result
+      tags:
+        - never
+        - deleteDevice

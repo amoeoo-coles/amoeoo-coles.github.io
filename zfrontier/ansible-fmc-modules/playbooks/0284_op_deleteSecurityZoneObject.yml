@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation deleteSecurityZoneObject (cisco.fmcansible 1.1.1)
+# Build order: 284 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/securityzones/{objectId}
+# Reads ../models/operations/deleteSecurityZoneObject.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/delete_security_zone_object.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags deleteSecurityZoneObject.
+
+- name: "0284 deleteSecurityZoneObject"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/deleteSecurityZoneObject.yml
+  tasks:
+    - name: Execute deleteSecurityZoneObject
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_deleteSecurityZoneObject.operation }}"
+        path_params: "{{ (op_deleteSecurityZoneObject.path_params | cat_strip_nulls) if (op_deleteSecurityZoneObject.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_deleteSecurityZoneObject.query_params | cat_strip_nulls) if (op_deleteSecurityZoneObject.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_deleteSecurityZoneObject.data | cat_strip_nulls) if (op_deleteSecurityZoneObject.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_deleteSecurityZoneObject.register_as if op_deleteSecurityZoneObject.register_as is not none else omit }}"
+      register: deleteSecurityZoneObject_result
+      tags:
+        - never
+        - deleteSecurityZoneObject

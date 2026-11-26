@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getAllSSOServer (cisco.fmcansible 1.1.1)
+# Build order: 476 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/ssoservers
+# Reads ../models/operations/getAllSSOServer.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_all_sso_server.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0476 getAllSSOServer"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getAllSSOServer.yml
+  tasks:
+    - name: Execute getAllSSOServer
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getAllSSOServer.operation }}"
+        path_params: "{{ (op_getAllSSOServer.path_params | cat_strip_nulls) if (op_getAllSSOServer.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getAllSSOServer.query_params | cat_strip_nulls) if (op_getAllSSOServer.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getAllSSOServer.data | cat_strip_nulls) if (op_getAllSSOServer.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getAllSSOServer.register_as if op_getAllSSOServer.register_as is not none else omit }}"
+      register: getAllSSOServer_result

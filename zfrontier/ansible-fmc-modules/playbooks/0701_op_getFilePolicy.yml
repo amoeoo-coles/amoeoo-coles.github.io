@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getFilePolicy (cisco.fmcansible 1.1.1)
+# Build order: 701 · API path: /api/fmc_config/v1/domain/{domainUUID}/policy/filepolicies/{objectId}
+# Reads ../models/operations/getFilePolicy.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_file_policy.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0701 getFilePolicy"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getFilePolicy.yml
+  tasks:
+    - name: Execute getFilePolicy
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getFilePolicy.operation }}"
+        path_params: "{{ (op_getFilePolicy.path_params | cat_strip_nulls) if (op_getFilePolicy.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getFilePolicy.query_params | cat_strip_nulls) if (op_getFilePolicy.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getFilePolicy.data | cat_strip_nulls) if (op_getFilePolicy.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getFilePolicy.register_as if op_getFilePolicy.register_as is not none else omit }}"
+      register: getFilePolicy_result

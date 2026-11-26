@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation deleteURLObject (cisco.fmcansible 1.1.1)
+# Build order: 318 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/urls/{objectId}
+# Reads ../models/operations/deleteURLObject.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/delete_url_object.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags deleteURLObject.
+
+- name: "0318 deleteURLObject"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/deleteURLObject.yml
+  tasks:
+    - name: Execute deleteURLObject
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_deleteURLObject.operation }}"
+        path_params: "{{ (op_deleteURLObject.path_params | cat_strip_nulls) if (op_deleteURLObject.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_deleteURLObject.query_params | cat_strip_nulls) if (op_deleteURLObject.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_deleteURLObject.data | cat_strip_nulls) if (op_deleteURLObject.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_deleteURLObject.register_as if op_deleteURLObject.register_as is not none else omit }}"
+      register: deleteURLObject_result
+      tags:
+        - never
+        - deleteURLObject

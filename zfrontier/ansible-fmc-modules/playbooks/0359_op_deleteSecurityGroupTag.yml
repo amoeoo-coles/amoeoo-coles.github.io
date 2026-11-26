@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation deleteSecurityGroupTag (cisco.fmcansible 1.1.1)
+# Build order: 359 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/securitygrouptags/{objectId}
+# Reads ../models/operations/deleteSecurityGroupTag.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/delete_security_group_tag.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags deleteSecurityGroupTag.
+
+- name: "0359 deleteSecurityGroupTag"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/deleteSecurityGroupTag.yml
+  tasks:
+    - name: Execute deleteSecurityGroupTag
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_deleteSecurityGroupTag.operation }}"
+        path_params: "{{ (op_deleteSecurityGroupTag.path_params | cat_strip_nulls) if (op_deleteSecurityGroupTag.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_deleteSecurityGroupTag.query_params | cat_strip_nulls) if (op_deleteSecurityGroupTag.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_deleteSecurityGroupTag.data | cat_strip_nulls) if (op_deleteSecurityGroupTag.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_deleteSecurityGroupTag.register_as if op_deleteSecurityGroupTag.register_as is not none else omit }}"
+      register: deleteSecurityGroupTag_result
+      tags:
+        - never
+        - deleteSecurityGroupTag

@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation createMultipleNetmapHost (cisco.fmcansible 1.1.1)
+# Build order: 910 · API path: /api/fmc_netmap/v1/domain/{domainUUID}/hosts
+# Reads ../models/operations/createMultipleNetmapHost.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/create_multiple_netmap_host.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags createMultipleNetmapHost.
+
+- name: "0910 createMultipleNetmapHost"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/createMultipleNetmapHost.yml
+  tasks:
+    - name: Execute createMultipleNetmapHost
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_createMultipleNetmapHost.operation }}"
+        path_params: "{{ (op_createMultipleNetmapHost.path_params | cat_strip_nulls) if (op_createMultipleNetmapHost.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_createMultipleNetmapHost.query_params | cat_strip_nulls) if (op_createMultipleNetmapHost.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_createMultipleNetmapHost.data | cat_strip_nulls) if (op_createMultipleNetmapHost.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_createMultipleNetmapHost.register_as if op_createMultipleNetmapHost.register_as is not none else omit }}"
+      register: createMultipleNetmapHost_result
+      tags:
+        - never
+        - createMultipleNetmapHost

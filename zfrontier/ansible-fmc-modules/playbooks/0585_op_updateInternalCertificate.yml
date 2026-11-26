@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation updateInternalCertificate (cisco.fmcansible 1.1.1)
+# Build order: 585 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/internalcertificates/{objectId}
+# Reads ../models/operations/updateInternalCertificate.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/update_internal_certificate.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags updateInternalCertificate.
+
+- name: "0585 updateInternalCertificate"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/updateInternalCertificate.yml
+  tasks:
+    - name: Execute updateInternalCertificate
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_updateInternalCertificate.operation }}"
+        path_params: "{{ (op_updateInternalCertificate.path_params | cat_strip_nulls) if (op_updateInternalCertificate.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_updateInternalCertificate.query_params | cat_strip_nulls) if (op_updateInternalCertificate.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_updateInternalCertificate.data | cat_strip_nulls) if (op_updateInternalCertificate.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_updateInternalCertificate.register_as if op_updateInternalCertificate.register_as is not none else omit }}"
+      register: updateInternalCertificate_result
+      tags:
+        - never
+        - updateInternalCertificate

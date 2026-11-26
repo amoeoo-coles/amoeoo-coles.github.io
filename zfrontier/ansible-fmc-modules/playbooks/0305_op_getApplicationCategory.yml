@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getApplicationCategory (cisco.fmcansible 1.1.1)
+# Build order: 305 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/applicationcategories/{objectId}
+# Reads ../models/operations/getApplicationCategory.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_application_category.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0305 getApplicationCategory"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getApplicationCategory.yml
+  tasks:
+    - name: Execute getApplicationCategory
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getApplicationCategory.operation }}"
+        path_params: "{{ (op_getApplicationCategory.path_params | cat_strip_nulls) if (op_getApplicationCategory.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getApplicationCategory.query_params | cat_strip_nulls) if (op_getApplicationCategory.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getApplicationCategory.data | cat_strip_nulls) if (op_getApplicationCategory.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getApplicationCategory.register_as if op_getApplicationCategory.register_as is not none else omit }}"
+      register: getApplicationCategory_result

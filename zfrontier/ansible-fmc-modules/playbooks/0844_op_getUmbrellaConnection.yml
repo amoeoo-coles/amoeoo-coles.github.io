@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getUmbrellaConnection (cisco.fmcansible 1.1.1)
+# Build order: 844 · API path: /api/fmc_config/v1/domain/{domainUUID}/integration/umbrellaconnections/{objectId}
+# Reads ../models/operations/getUmbrellaConnection.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_umbrella_connection.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0844 getUmbrellaConnection"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getUmbrellaConnection.yml
+  tasks:
+    - name: Execute getUmbrellaConnection
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getUmbrellaConnection.operation }}"
+        path_params: "{{ (op_getUmbrellaConnection.path_params | cat_strip_nulls) if (op_getUmbrellaConnection.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getUmbrellaConnection.query_params | cat_strip_nulls) if (op_getUmbrellaConnection.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getUmbrellaConnection.data | cat_strip_nulls) if (op_getUmbrellaConnection.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getUmbrellaConnection.register_as if op_getUmbrellaConnection.register_as is not none else omit }}"
+      register: getUmbrellaConnection_result

@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getDeploymentDetail (cisco.fmcansible 1.1.1)
+# Build order: 819 · API path: /api/fmc_config/v1/domain/{domainUUID}/deployment/deployabledevices/{containerUUID}/deployments
+# Reads ../models/operations/getDeploymentDetail.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_deployment_detail.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0819 getDeploymentDetail"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getDeploymentDetail.yml
+  tasks:
+    - name: Execute getDeploymentDetail
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getDeploymentDetail.operation }}"
+        path_params: "{{ (op_getDeploymentDetail.path_params | cat_strip_nulls) if (op_getDeploymentDetail.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getDeploymentDetail.query_params | cat_strip_nulls) if (op_getDeploymentDetail.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getDeploymentDetail.data | cat_strip_nulls) if (op_getDeploymentDetail.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getDeploymentDetail.register_as if op_getDeploymentDetail.register_as is not none else omit }}"
+      register: getDeploymentDetail_result

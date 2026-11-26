@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation deleteVirtualSwitch (cisco.fmcansible 1.1.1)
+# Build order: 35 · API path: /api/fmc_config/v1/domain/{domainUUID}/devices/devicerecords/{containerUUID}/virtualswitches/{objectId}
+# Reads ../models/operations/deleteVirtualSwitch.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/delete_virtual_switch.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags deleteVirtualSwitch.
+
+- name: "0035 deleteVirtualSwitch"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/deleteVirtualSwitch.yml
+  tasks:
+    - name: Execute deleteVirtualSwitch
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_deleteVirtualSwitch.operation }}"
+        path_params: "{{ (op_deleteVirtualSwitch.path_params | cat_strip_nulls) if (op_deleteVirtualSwitch.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_deleteVirtualSwitch.query_params | cat_strip_nulls) if (op_deleteVirtualSwitch.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_deleteVirtualSwitch.data | cat_strip_nulls) if (op_deleteVirtualSwitch.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_deleteVirtualSwitch.register_as if op_deleteVirtualSwitch.register_as is not none else omit }}"
+      register: deleteVirtualSwitch_result
+      tags:
+        - never
+        - deleteVirtualSwitch

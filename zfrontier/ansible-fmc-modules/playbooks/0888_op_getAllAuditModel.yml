@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getAllAuditModel (cisco.fmcansible 1.1.1)
+# Build order: 888 · API path: /api/fmc_platform/v1/domain/{domainUUID}/audit/auditrecords
+# Reads ../models/operations/getAllAuditModel.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_all_audit_model.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0888 getAllAuditModel"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getAllAuditModel.yml
+  tasks:
+    - name: Execute getAllAuditModel
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getAllAuditModel.operation }}"
+        path_params: "{{ (op_getAllAuditModel.path_params | cat_strip_nulls) if (op_getAllAuditModel.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getAllAuditModel.query_params | cat_strip_nulls) if (op_getAllAuditModel.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getAllAuditModel.data | cat_strip_nulls) if (op_getAllAuditModel.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getAllAuditModel.register_as if op_getAllAuditModel.register_as is not none else omit }}"
+      register: getAllAuditModel_result

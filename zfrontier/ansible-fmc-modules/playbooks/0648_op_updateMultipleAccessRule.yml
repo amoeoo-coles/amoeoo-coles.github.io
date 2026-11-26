@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation updateMultipleAccessRule (cisco.fmcansible 1.1.1)
+# Build order: 648 · API path: /api/fmc_config/v1/domain/{domainUUID}/policy/accesspolicies/{containerUUID}/accessrules
+# Reads ../models/operations/updateMultipleAccessRule.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/update_multiple_access_rule.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags updateMultipleAccessRule.
+
+- name: "0648 updateMultipleAccessRule"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/updateMultipleAccessRule.yml
+  tasks:
+    - name: Execute updateMultipleAccessRule
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_updateMultipleAccessRule.operation }}"
+        path_params: "{{ (op_updateMultipleAccessRule.path_params | cat_strip_nulls) if (op_updateMultipleAccessRule.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_updateMultipleAccessRule.query_params | cat_strip_nulls) if (op_updateMultipleAccessRule.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_updateMultipleAccessRule.data | cat_strip_nulls) if (op_updateMultipleAccessRule.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_updateMultipleAccessRule.register_as if op_updateMultipleAccessRule.register_as is not none else omit }}"
+      register: updateMultipleAccessRule_result
+      tags:
+        - never
+        - updateMultipleAccessRule

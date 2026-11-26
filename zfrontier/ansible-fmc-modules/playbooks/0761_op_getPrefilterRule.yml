@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getPrefilterRule (cisco.fmcansible 1.1.1)
+# Build order: 761 · API path: /api/fmc_config/v1/domain/{domainUUID}/policy/prefilterpolicies/{containerUUID}/prefilterrules/{objectId}
+# Reads ../models/operations/getPrefilterRule.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_prefilter_rule.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0761 getPrefilterRule"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getPrefilterRule.yml
+  tasks:
+    - name: Execute getPrefilterRule
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getPrefilterRule.operation }}"
+        path_params: "{{ (op_getPrefilterRule.path_params | cat_strip_nulls) if (op_getPrefilterRule.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getPrefilterRule.query_params | cat_strip_nulls) if (op_getPrefilterRule.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getPrefilterRule.data | cat_strip_nulls) if (op_getPrefilterRule.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getPrefilterRule.register_as if op_getPrefilterRule.register_as is not none else omit }}"
+      register: getPrefilterRule_result

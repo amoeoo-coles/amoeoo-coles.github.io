@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getAccessPolicy (cisco.fmcansible 1.1.1)
+# Build order: 640 · API path: /api/fmc_config/v1/domain/{domainUUID}/policy/accesspolicies/{objectId}
+# Reads ../models/operations/getAccessPolicy.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_access_policy.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0640 getAccessPolicy"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getAccessPolicy.yml
+  tasks:
+    - name: Execute getAccessPolicy
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getAccessPolicy.operation }}"
+        path_params: "{{ (op_getAccessPolicy.path_params | cat_strip_nulls) if (op_getAccessPolicy.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getAccessPolicy.query_params | cat_strip_nulls) if (op_getAccessPolicy.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getAccessPolicy.data | cat_strip_nulls) if (op_getAccessPolicy.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getAccessPolicy.register_as if op_getAccessPolicy.register_as is not none else omit }}"
+      register: getAccessPolicy_result

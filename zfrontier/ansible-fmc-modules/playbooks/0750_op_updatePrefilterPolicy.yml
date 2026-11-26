@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation updatePrefilterPolicy (cisco.fmcansible 1.1.1)
+# Build order: 750 · API path: /api/fmc_config/v1/domain/{domainUUID}/policy/prefilterpolicies/{objectId}
+# Reads ../models/operations/updatePrefilterPolicy.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/update_prefilter_policy.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags updatePrefilterPolicy.
+
+- name: "0750 updatePrefilterPolicy"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/updatePrefilterPolicy.yml
+  tasks:
+    - name: Execute updatePrefilterPolicy
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_updatePrefilterPolicy.operation }}"
+        path_params: "{{ (op_updatePrefilterPolicy.path_params | cat_strip_nulls) if (op_updatePrefilterPolicy.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_updatePrefilterPolicy.query_params | cat_strip_nulls) if (op_updatePrefilterPolicy.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_updatePrefilterPolicy.data | cat_strip_nulls) if (op_updatePrefilterPolicy.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_updatePrefilterPolicy.register_as if op_updatePrefilterPolicy.register_as is not none else omit }}"
+      register: updatePrefilterPolicy_result
+      tags:
+        - never
+        - updatePrefilterPolicy

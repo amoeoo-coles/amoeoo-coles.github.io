@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation createUmbrellaDNSPolicy (cisco.fmcansible 1.1.1)
+# Build order: 782 · API path: /api/fmc_config/v1/domain/{domainUUID}/policy/umbrelladnspolicies
+# Reads ../models/operations/createUmbrellaDNSPolicy.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/create_umbrella_dns_policy.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags createUmbrellaDNSPolicy.
+
+- name: "0782 createUmbrellaDNSPolicy"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/createUmbrellaDNSPolicy.yml
+  tasks:
+    - name: Execute createUmbrellaDNSPolicy
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_createUmbrellaDNSPolicy.operation }}"
+        path_params: "{{ (op_createUmbrellaDNSPolicy.path_params | cat_strip_nulls) if (op_createUmbrellaDNSPolicy.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_createUmbrellaDNSPolicy.query_params | cat_strip_nulls) if (op_createUmbrellaDNSPolicy.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_createUmbrellaDNSPolicy.data | cat_strip_nulls) if (op_createUmbrellaDNSPolicy.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_createUmbrellaDNSPolicy.register_as if op_createUmbrellaDNSPolicy.register_as is not none else omit }}"
+      register: createUmbrellaDNSPolicy_result
+      tags:
+        - never
+        - createUmbrellaDNSPolicy

@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getAllGeoLocationObject (cisco.fmcansible 1.1.1)
+# Build order: 346 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/geolocations
+# Reads ../models/operations/getAllGeoLocationObject.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_all_geo_location_object.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0346 getAllGeoLocationObject"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getAllGeoLocationObject.yml
+  tasks:
+    - name: Execute getAllGeoLocationObject
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getAllGeoLocationObject.operation }}"
+        path_params: "{{ (op_getAllGeoLocationObject.path_params | cat_strip_nulls) if (op_getAllGeoLocationObject.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getAllGeoLocationObject.query_params | cat_strip_nulls) if (op_getAllGeoLocationObject.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getAllGeoLocationObject.data | cat_strip_nulls) if (op_getAllGeoLocationObject.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getAllGeoLocationObject.register_as if op_getAllGeoLocationObject.register_as is not none else omit }}"
+      register: getAllGeoLocationObject_result

@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getPhysicalInterface (cisco.fmcansible 1.1.1)
+# Build order: 233 · API path: /api/fmc_config/v1/domain/{domainUUID}/chassis/fmcmanagedchassis/{containerUUID}/physicalinterfaces/{interfaceUUID}
+# Reads ../models/operations/getPhysicalInterface.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_physical_interface.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0233 getPhysicalInterface"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getPhysicalInterface.yml
+  tasks:
+    - name: Execute getPhysicalInterface
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getPhysicalInterface.operation }}"
+        path_params: "{{ (op_getPhysicalInterface.path_params | cat_strip_nulls) if (op_getPhysicalInterface.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getPhysicalInterface.query_params | cat_strip_nulls) if (op_getPhysicalInterface.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getPhysicalInterface.data | cat_strip_nulls) if (op_getPhysicalInterface.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getPhysicalInterface.register_as if op_getPhysicalInterface.register_as is not none else omit }}"
+      register: getPhysicalInterface_result

@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getSecurityZoneObject (cisco.fmcansible 1.1.1)
+# Build order: 283 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/securityzones/{objectId}
+# Reads ../models/operations/getSecurityZoneObject.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_security_zone_object.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0283 getSecurityZoneObject"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getSecurityZoneObject.yml
+  tasks:
+    - name: Execute getSecurityZoneObject
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getSecurityZoneObject.operation }}"
+        path_params: "{{ (op_getSecurityZoneObject.path_params | cat_strip_nulls) if (op_getSecurityZoneObject.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getSecurityZoneObject.query_params | cat_strip_nulls) if (op_getSecurityZoneObject.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getSecurityZoneObject.data | cat_strip_nulls) if (op_getSecurityZoneObject.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getSecurityZoneObject.register_as if op_getSecurityZoneObject.register_as is not none else omit }}"
+      register: getSecurityZoneObject_result

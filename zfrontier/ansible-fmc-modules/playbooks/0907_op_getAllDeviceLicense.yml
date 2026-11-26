@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getAllDeviceLicense (cisco.fmcansible 1.1.1)
+# Build order: 907 · API path: /api/fmc_platform/v1/license/devicelicenses
+# Reads ../models/operations/getAllDeviceLicense.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_all_device_license.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0907 getAllDeviceLicense"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getAllDeviceLicense.yml
+  tasks:
+    - name: Execute getAllDeviceLicense
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getAllDeviceLicense.operation }}"
+        path_params: "{{ (op_getAllDeviceLicense.path_params | cat_strip_nulls) if (op_getAllDeviceLicense.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getAllDeviceLicense.query_params | cat_strip_nulls) if (op_getAllDeviceLicense.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getAllDeviceLicense.data | cat_strip_nulls) if (op_getAllDeviceLicense.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getAllDeviceLicense.register_as if op_getAllDeviceLicense.register_as is not none else omit }}"
+      register: getAllDeviceLicense_result

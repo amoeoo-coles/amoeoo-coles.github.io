@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation createUpgrade (cisco.fmcansible 1.1.1)
+# Build order: 897 · API path: /api/fmc_platform/v1/updates/upgrades
+# Reads ../models/operations/createUpgrade.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/create_upgrade.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags createUpgrade.
+
+- name: "0897 createUpgrade"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/createUpgrade.yml
+  tasks:
+    - name: Execute createUpgrade
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_createUpgrade.operation }}"
+        path_params: "{{ (op_createUpgrade.path_params | cat_strip_nulls) if (op_createUpgrade.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_createUpgrade.query_params | cat_strip_nulls) if (op_createUpgrade.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_createUpgrade.data | cat_strip_nulls) if (op_createUpgrade.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_createUpgrade.register_as if op_createUpgrade.register_as is not none else omit }}"
+      register: createUpgrade_result
+      tags:
+        - never
+        - createUpgrade

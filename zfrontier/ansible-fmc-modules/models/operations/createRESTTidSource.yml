@@ -1,0 +1,53 @@
+---
+# Data model for fmc_configuration operation createRESTTidSource (cisco.fmcansible 1.1.1)
+# Keys are the module's documented options (operation, path_params, query_params, data,
+# register_as). Values come from the collection's own operation doc example; null = omit.
+
+references:
+  module: cisco.fmcansible.fmc_configuration
+  operation_id: createRESTTidSource
+  api_path: /api/fmc_tid/v1/domain/{domainUUID}/tid/source
+  collection: cisco.fmcansible
+  collection_version: 1.1.1
+  doc_url: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/create_rest_tid_source.md
+  build_order: 870
+  group: '14. fmc_configuration operations: Threat intelligence'
+  sample_values_from: the collection's own operation doc example (samples/docs/operations)
+  path_params:
+    - domainUUID (required, string)
+  query_params: none
+
+op_createRESTTidSource:
+  operation: createRESTTidSource
+  path_params:
+    domainUUID: '{{ domain_uuid }}'
+  query_params: null
+  data:
+    startHour: 2
+    name: Sample TAXII Feed
+    description: Sample TAXII Feed
+    feedType: stix
+    feedContent: stix
+    delivery: taxii
+    uri: http://hailataxii.com/taxii-discovery-service
+    username: username
+    passwd: '{{ vault_passwd }}'
+    refresh: 1440
+    version: 1.0.0
+    downloadOn: true
+    subscribedCollections:
+      - collectionPollIntervalInMinutes: 0
+        collectionName: guest.MalwareDomainList_Hostlist
+        collectionDescription: guest.MalwareDomainList_Hostlist
+        collectionProtocolBinding: urn:taxii.mitre.org:protocol:https:1.0
+        collectionAddress: http://hailataxii.com:80/taxii-data
+        collectionMessageBinding: '[urn:taxii.mitre.org:message:xml:1.1]'
+        type: taxii_collections
+    params:
+      selfSignedServerCertificate: 'false'
+      hostnameVerifier: allow_all
+    property:
+      ttl: 90
+      publish: true
+      action: monitor
+  register_as: null

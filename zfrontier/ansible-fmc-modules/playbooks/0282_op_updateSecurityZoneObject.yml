@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation updateSecurityZoneObject (cisco.fmcansible 1.1.1)
+# Build order: 282 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/securityzones/{objectId}
+# Reads ../models/operations/updateSecurityZoneObject.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/update_security_zone_object.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags updateSecurityZoneObject.
+
+- name: "0282 updateSecurityZoneObject"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/updateSecurityZoneObject.yml
+  tasks:
+    - name: Execute updateSecurityZoneObject
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_updateSecurityZoneObject.operation }}"
+        path_params: "{{ (op_updateSecurityZoneObject.path_params | cat_strip_nulls) if (op_updateSecurityZoneObject.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_updateSecurityZoneObject.query_params | cat_strip_nulls) if (op_updateSecurityZoneObject.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_updateSecurityZoneObject.data | cat_strip_nulls) if (op_updateSecurityZoneObject.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_updateSecurityZoneObject.register_as if op_updateSecurityZoneObject.register_as is not none else omit }}"
+      register: updateSecurityZoneObject_result
+      tags:
+        - never
+        - updateSecurityZoneObject

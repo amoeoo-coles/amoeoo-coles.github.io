@@ -1,0 +1,57 @@
+---
+# Data model for fmc_configuration operation createFTDHADeviceContainer (cisco.fmcansible 1.1.1)
+# Keys are the module's documented options (operation, path_params, query_params, data,
+# register_as). Values come from the collection's own operation doc example; null = omit.
+
+references:
+  module: cisco.fmcansible.fmc_configuration
+  operation_id: createFTDHADeviceContainer
+  api_path: /api/fmc_config/v1/domain/{domainUUID}/devicehapairs/ftddevicehapairs
+  collection: cisco.fmcansible
+  collection_version: 1.1.1
+  doc_url: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/create_ftdha_device_container.md
+  build_order: 205
+  group: '6. fmc_configuration operations: Device HA pairs'
+  sample_values_from: the collection's own operation doc example (samples/docs/operations)
+  path_params:
+    - domainUUID (required, string)
+  query_params: none
+
+op_createFTDHADeviceContainer:
+  operation: createFTDHADeviceContainer
+  path_params:
+    domainUUID: '{{ domain_uuid }}'
+  query_params: null
+  data:
+    primary:
+      id: primary_uuid
+    secondary:
+      id: secondary_uuid
+    name: <ha-name>
+    type: DeviceHAPair
+    ftdHABootstrap:
+      isEncryptionEnabled: 'false'
+      encKeyGenerationScheme: CUSTOM
+      sharedKey: '{{ vault_shared_key }}'
+      useSameLinkForFailovers: 'true'
+      lanFailover:
+        useIPv6Address: 'false'
+        subnetMask: 255.255.255.0
+        interfaceObject:
+          id: <uuid>
+          type: PhysicalInterface
+          name: GigabitEthernet0/0
+        standbyIP: 192.0.2.2
+        logicalName: LAN-INTERFACE
+        activeIP: 192.0.2.1
+      statefulFailover:
+        useIPv6Address: 'true'
+        subnetMask: 255.255.255.0
+        interfaceObject:
+          id: <uuid>
+          type: PhysicalInterface
+          name: GigabitEthernet0/0
+        standbyIP: 192.0.2.2
+        logicalName: STATEFUL-INTERFACE
+        activeIP: 192.0.2.1
+  register_as: null

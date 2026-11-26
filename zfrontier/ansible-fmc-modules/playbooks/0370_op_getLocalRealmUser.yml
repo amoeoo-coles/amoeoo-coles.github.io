@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getLocalRealmUser (cisco.fmcansible 1.1.1)
+# Build order: 370 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/localrealmusers/{objectId}
+# Reads ../models/operations/getLocalRealmUser.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_local_realm_user.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0370 getLocalRealmUser"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getLocalRealmUser.yml
+  tasks:
+    - name: Execute getLocalRealmUser
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getLocalRealmUser.operation }}"
+        path_params: "{{ (op_getLocalRealmUser.path_params | cat_strip_nulls) if (op_getLocalRealmUser.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getLocalRealmUser.query_params | cat_strip_nulls) if (op_getLocalRealmUser.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getLocalRealmUser.data | cat_strip_nulls) if (op_getLocalRealmUser.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getLocalRealmUser.register_as if op_getLocalRealmUser.register_as is not none else omit }}"
+      register: getLocalRealmUser_result

@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation updateAsPathList (cisco.fmcansible 1.1.1)
+# Build order: 556 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/aspathlists/{objectId}
+# Reads ../models/operations/updateAsPathList.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/update_as_path_list.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags updateAsPathList.
+
+- name: "0556 updateAsPathList"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/updateAsPathList.yml
+  tasks:
+    - name: Execute updateAsPathList
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_updateAsPathList.operation }}"
+        path_params: "{{ (op_updateAsPathList.path_params | cat_strip_nulls) if (op_updateAsPathList.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_updateAsPathList.query_params | cat_strip_nulls) if (op_updateAsPathList.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_updateAsPathList.data | cat_strip_nulls) if (op_updateAsPathList.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_updateAsPathList.register_as if op_updateAsPathList.register_as is not none else omit }}"
+      register: updateAsPathList_result
+      tags:
+        - never
+        - updateAsPathList

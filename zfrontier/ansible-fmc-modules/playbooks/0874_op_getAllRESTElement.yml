@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getAllRESTElement (cisco.fmcansible 1.1.1)
+# Build order: 874 · API path: /api/fmc_tid/v1/domain/{domainUUID}/tid/element
+# Reads ../models/operations/getAllRESTElement.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_all_rest_element.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0874 getAllRESTElement"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getAllRESTElement.yml
+  tasks:
+    - name: Execute getAllRESTElement
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getAllRESTElement.operation }}"
+        path_params: "{{ (op_getAllRESTElement.path_params | cat_strip_nulls) if (op_getAllRESTElement.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getAllRESTElement.query_params | cat_strip_nulls) if (op_getAllRESTElement.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getAllRESTElement.data | cat_strip_nulls) if (op_getAllRESTElement.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getAllRESTElement.register_as if op_getAllRESTElement.register_as is not none else omit }}"
+      register: getAllRESTElement_result

@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation createInterfaceEvent (cisco.fmcansible 1.1.1)
+# Build order: 92 · API path: /api/fmc_config/v1/domain/{domainUUID}/devices/devicerecords/{containerUUID}/interfaceevents
+# Reads ../models/operations/createInterfaceEvent.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/create_interface_event.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags createInterfaceEvent.
+
+- name: "0092 createInterfaceEvent"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/createInterfaceEvent.yml
+  tasks:
+    - name: Execute createInterfaceEvent
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_createInterfaceEvent.operation }}"
+        path_params: "{{ (op_createInterfaceEvent.path_params | cat_strip_nulls) if (op_createInterfaceEvent.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_createInterfaceEvent.query_params | cat_strip_nulls) if (op_createInterfaceEvent.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_createInterfaceEvent.data | cat_strip_nulls) if (op_createInterfaceEvent.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_createInterfaceEvent.register_as if op_createInterfaceEvent.register_as is not none else omit }}"
+      register: createInterfaceEvent_result
+      tags:
+        - never
+        - createInterfaceEvent

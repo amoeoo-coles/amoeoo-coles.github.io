@@ -1,0 +1,18 @@
+---
+# Sample playbook for cisco.fmcansible.fmc_facts (cisco.fmcansible 1.1.1)
+# Build order: 1
+# Gather facts about FMC devices
+# Reads ../models/fmc_facts.yml (vars_files). Docs: https://galaxy.ansible.com/ui/repo/published/cisco/fmcansible/content/module/fmc_facts/?version=1.1.1
+# Connection placeholders come from inventory.yml: {{ fmc_host }} {{ ansible_user }} {{ ansible_password }} {{ domain_uuid }}.
+
+- name: "0001 fmc_facts"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/fmc_facts.yml
+  tasks:
+    - name: Run fmc_facts from its model
+      cisco.fmcansible.fmc_facts:
+        domain_uuid: "{{ fmc_facts.domain_uuid if fmc_facts.domain_uuid is not none else omit }}"
+        gather_subset: "{{ (fmc_facts.gather_subset | cat_strip_nulls) if (fmc_facts.gather_subset | cat_strip_nulls) is not none else omit }}"
+      register: fmc_facts_result

@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation createAsPathList (cisco.fmcansible 1.1.1)
+# Build order: 559 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/aspathlists
+# Reads ../models/operations/createAsPathList.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/create_as_path_list.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags createAsPathList.
+
+- name: "0559 createAsPathList"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/createAsPathList.yml
+  tasks:
+    - name: Execute createAsPathList
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_createAsPathList.operation }}"
+        path_params: "{{ (op_createAsPathList.path_params | cat_strip_nulls) if (op_createAsPathList.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_createAsPathList.query_params | cat_strip_nulls) if (op_createAsPathList.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_createAsPathList.data | cat_strip_nulls) if (op_createAsPathList.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_createAsPathList.register_as if op_createAsPathList.register_as is not none else omit }}"
+      register: createAsPathList_result
+      tags:
+        - never
+        - createAsPathList

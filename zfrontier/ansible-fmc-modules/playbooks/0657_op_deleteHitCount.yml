@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation deleteHitCount (cisco.fmcansible 1.1.1)
+# Build order: 657 · API path: /api/fmc_config/v1/domain/{domainUUID}/policy/accesspolicies/{containerUUID}/operational/hitcounts
+# Reads ../models/operations/deleteHitCount.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/delete_hit_count.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags deleteHitCount.
+
+- name: "0657 deleteHitCount"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/deleteHitCount.yml
+  tasks:
+    - name: Execute deleteHitCount
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_deleteHitCount.operation }}"
+        path_params: "{{ (op_deleteHitCount.path_params | cat_strip_nulls) if (op_deleteHitCount.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_deleteHitCount.query_params | cat_strip_nulls) if (op_deleteHitCount.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_deleteHitCount.data | cat_strip_nulls) if (op_deleteHitCount.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_deleteHitCount.register_as if op_deleteHitCount.register_as is not none else omit }}"
+      register: deleteHitCount_result
+      tags:
+        - never
+        - deleteHitCount

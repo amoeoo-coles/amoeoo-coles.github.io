@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getAllApplication (cisco.fmcansible 1.1.1)
+# Build order: 616 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/applications
+# Reads ../models/operations/getAllApplication.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_all_application.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0616 getAllApplication"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getAllApplication.yml
+  tasks:
+    - name: Execute getAllApplication
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getAllApplication.operation }}"
+        path_params: "{{ (op_getAllApplication.path_params | cat_strip_nulls) if (op_getAllApplication.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getAllApplication.query_params | cat_strip_nulls) if (op_getAllApplication.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getAllApplication.data | cat_strip_nulls) if (op_getAllApplication.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getAllApplication.register_as if op_getAllApplication.register_as is not none else omit }}"
+      register: getAllApplication_result

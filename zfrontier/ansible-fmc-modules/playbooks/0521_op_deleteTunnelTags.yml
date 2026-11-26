@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation deleteTunnelTags (cisco.fmcansible 1.1.1)
+# Build order: 521 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/tunneltags/{objectId}
+# Reads ../models/operations/deleteTunnelTags.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/delete_tunnel_tags.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags deleteTunnelTags.
+
+- name: "0521 deleteTunnelTags"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/deleteTunnelTags.yml
+  tasks:
+    - name: Execute deleteTunnelTags
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_deleteTunnelTags.operation }}"
+        path_params: "{{ (op_deleteTunnelTags.path_params | cat_strip_nulls) if (op_deleteTunnelTags.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_deleteTunnelTags.query_params | cat_strip_nulls) if (op_deleteTunnelTags.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_deleteTunnelTags.data | cat_strip_nulls) if (op_deleteTunnelTags.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_deleteTunnelTags.register_as if op_deleteTunnelTags.register_as is not none else omit }}"
+      register: deleteTunnelTags_result
+      tags:
+        - never
+        - deleteTunnelTags

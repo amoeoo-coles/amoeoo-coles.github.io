@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getAllAsPathList (cisco.fmcansible 1.1.1)
+# Build order: 560 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/aspathlists
+# Reads ../models/operations/getAllAsPathList.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_all_as_path_list.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0560 getAllAsPathList"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getAllAsPathList.yml
+  tasks:
+    - name: Execute getAllAsPathList
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getAllAsPathList.operation }}"
+        path_params: "{{ (op_getAllAsPathList.path_params | cat_strip_nulls) if (op_getAllAsPathList.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getAllAsPathList.query_params | cat_strip_nulls) if (op_getAllAsPathList.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getAllAsPathList.data | cat_strip_nulls) if (op_getAllAsPathList.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getAllAsPathList.register_as if op_getAllAsPathList.register_as is not none else omit }}"
+      register: getAllAsPathList_result

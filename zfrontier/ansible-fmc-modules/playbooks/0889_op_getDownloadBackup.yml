@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getDownloadBackup (cisco.fmcansible 1.1.1)
+# Build order: 889 · API path: /api/fmc_config/v1/domain/{domainUUID}/backup/downloadbackup/{targetId}
+# Reads ../models/operations/getDownloadBackup.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_download_backup.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0889 getDownloadBackup"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getDownloadBackup.yml
+  tasks:
+    - name: Execute getDownloadBackup
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getDownloadBackup.operation }}"
+        path_params: "{{ (op_getDownloadBackup.path_params | cat_strip_nulls) if (op_getDownloadBackup.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getDownloadBackup.query_params | cat_strip_nulls) if (op_getDownloadBackup.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getDownloadBackup.data | cat_strip_nulls) if (op_getDownloadBackup.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getDownloadBackup.register_as if op_getDownloadBackup.register_as is not none else omit }}"
+      register: getDownloadBackup_result

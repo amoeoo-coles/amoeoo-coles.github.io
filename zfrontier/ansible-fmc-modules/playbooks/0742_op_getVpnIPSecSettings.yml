@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getVpnIPSecSettings (cisco.fmcansible 1.1.1)
+# Build order: 742 · API path: /api/fmc_config/v1/domain/{domainUUID}/policy/ftds2svpns/{containerUUID}/ipsecsettings/{objectId}
+# Reads ../models/operations/getVpnIPSecSettings.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_vpn_ip_sec_settings.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0742 getVpnIPSecSettings"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getVpnIPSecSettings.yml
+  tasks:
+    - name: Execute getVpnIPSecSettings
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getVpnIPSecSettings.operation }}"
+        path_params: "{{ (op_getVpnIPSecSettings.path_params | cat_strip_nulls) if (op_getVpnIPSecSettings.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getVpnIPSecSettings.query_params | cat_strip_nulls) if (op_getVpnIPSecSettings.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getVpnIPSecSettings.data | cat_strip_nulls) if (op_getVpnIPSecSettings.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getVpnIPSecSettings.register_as if op_getVpnIPSecSettings.register_as is not none else omit }}"
+      register: getVpnIPSecSettings_result

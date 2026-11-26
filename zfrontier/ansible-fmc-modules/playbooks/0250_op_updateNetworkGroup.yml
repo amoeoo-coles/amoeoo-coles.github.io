@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation updateNetworkGroup (cisco.fmcansible 1.1.1)
+# Build order: 250 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/networkgroups/{objectId}
+# Reads ../models/operations/updateNetworkGroup.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/update_network_group.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags updateNetworkGroup.
+
+- name: "0250 updateNetworkGroup"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/updateNetworkGroup.yml
+  tasks:
+    - name: Execute updateNetworkGroup
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_updateNetworkGroup.operation }}"
+        path_params: "{{ (op_updateNetworkGroup.path_params | cat_strip_nulls) if (op_updateNetworkGroup.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_updateNetworkGroup.query_params | cat_strip_nulls) if (op_updateNetworkGroup.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_updateNetworkGroup.data | cat_strip_nulls) if (op_updateNetworkGroup.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_updateNetworkGroup.register_as if op_updateNetworkGroup.register_as is not none else omit }}"
+      register: updateNetworkGroup_result
+      tags:
+        - never
+        - updateNetworkGroup

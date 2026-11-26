@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getNetmapHost (cisco.fmcansible 1.1.1)
+# Build order: 908 · API path: /api/fmc_netmap/v1/domain/{domainUUID}/hosts/{objectId}
+# Reads ../models/operations/getNetmapHost.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_netmap_host.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0908 getNetmapHost"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getNetmapHost.yml
+  tasks:
+    - name: Execute getNetmapHost
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getNetmapHost.operation }}"
+        path_params: "{{ (op_getNetmapHost.path_params | cat_strip_nulls) if (op_getNetmapHost.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getNetmapHost.query_params | cat_strip_nulls) if (op_getNetmapHost.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getNetmapHost.data | cat_strip_nulls) if (op_getNetmapHost.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getNetmapHost.register_as if op_getNetmapHost.register_as is not none else omit }}"
+      register: getNetmapHost_result

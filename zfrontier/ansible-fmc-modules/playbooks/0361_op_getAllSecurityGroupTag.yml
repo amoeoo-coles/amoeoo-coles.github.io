@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getAllSecurityGroupTag (cisco.fmcansible 1.1.1)
+# Build order: 361 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/securitygrouptags
+# Reads ../models/operations/getAllSecurityGroupTag.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_all_security_group_tag.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0361 getAllSecurityGroupTag"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getAllSecurityGroupTag.yml
+  tasks:
+    - name: Execute getAllSecurityGroupTag
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getAllSecurityGroupTag.operation }}"
+        path_params: "{{ (op_getAllSecurityGroupTag.path_params | cat_strip_nulls) if (op_getAllSecurityGroupTag.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getAllSecurityGroupTag.query_params | cat_strip_nulls) if (op_getAllSecurityGroupTag.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getAllSecurityGroupTag.data | cat_strip_nulls) if (op_getAllSecurityGroupTag.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getAllSecurityGroupTag.register_as if op_getAllSecurityGroupTag.register_as is not none else omit }}"
+      register: getAllSecurityGroupTag_result

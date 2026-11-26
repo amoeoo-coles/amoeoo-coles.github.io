@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation deleteGeoLocationObject (cisco.fmcansible 1.1.1)
+# Build order: 344 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/geolocations/{objectId}
+# Reads ../models/operations/deleteGeoLocationObject.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/delete_geo_location_object.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags deleteGeoLocationObject.
+
+- name: "0344 deleteGeoLocationObject"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/deleteGeoLocationObject.yml
+  tasks:
+    - name: Execute deleteGeoLocationObject
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_deleteGeoLocationObject.operation }}"
+        path_params: "{{ (op_deleteGeoLocationObject.path_params | cat_strip_nulls) if (op_deleteGeoLocationObject.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_deleteGeoLocationObject.query_params | cat_strip_nulls) if (op_deleteGeoLocationObject.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_deleteGeoLocationObject.data | cat_strip_nulls) if (op_deleteGeoLocationObject.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_deleteGeoLocationObject.register_as if op_deleteGeoLocationObject.register_as is not none else omit }}"
+      register: deleteGeoLocationObject_result
+      tags:
+        - never
+        - deleteGeoLocationObject

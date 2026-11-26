@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation createHostScanPackageObject (cisco.fmcansible 1.1.1)
+# Build order: 486 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/hostscanpackages
+# Reads ../models/operations/createHostScanPackageObject.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/create_host_scan_package_object.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags createHostScanPackageObject.
+
+- name: "0486 createHostScanPackageObject"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/createHostScanPackageObject.yml
+  tasks:
+    - name: Execute createHostScanPackageObject
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_createHostScanPackageObject.operation }}"
+        path_params: "{{ (op_createHostScanPackageObject.path_params | cat_strip_nulls) if (op_createHostScanPackageObject.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_createHostScanPackageObject.query_params | cat_strip_nulls) if (op_createHostScanPackageObject.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_createHostScanPackageObject.data | cat_strip_nulls) if (op_createHostScanPackageObject.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_createHostScanPackageObject.register_as if op_createHostScanPackageObject.register_as is not none else omit }}"
+      register: createHostScanPackageObject_result
+      tags:
+        - never
+        - createHostScanPackageObject

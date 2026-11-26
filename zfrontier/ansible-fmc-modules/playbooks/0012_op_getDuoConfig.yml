@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getDuoConfig (cisco.fmcansible 1.1.1)
+# Build order: 12 · API path: /api/fmc_config/v1/domain/{domainUUID}/users/duoconfigs/{objectId}
+# Reads ../models/operations/getDuoConfig.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_duo_config.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0012 getDuoConfig"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getDuoConfig.yml
+  tasks:
+    - name: Execute getDuoConfig
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getDuoConfig.operation }}"
+        path_params: "{{ (op_getDuoConfig.path_params | cat_strip_nulls) if (op_getDuoConfig.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getDuoConfig.query_params | cat_strip_nulls) if (op_getDuoConfig.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getDuoConfig.data | cat_strip_nulls) if (op_getDuoConfig.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getDuoConfig.register_as if op_getDuoConfig.register_as is not none else omit }}"
+      register: getDuoConfig_result

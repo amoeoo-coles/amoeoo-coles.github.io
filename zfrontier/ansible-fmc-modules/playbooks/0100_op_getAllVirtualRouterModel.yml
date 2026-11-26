@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getAllVirtualRouterModel (cisco.fmcansible 1.1.1)
+# Build order: 100 · API path: /api/fmc_config/v1/domain/{domainUUID}/devices/devicerecords/{containerUUID}/routing/virtualrouters
+# Reads ../models/operations/getAllVirtualRouterModel.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_all_virtual_router_model.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0100 getAllVirtualRouterModel"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getAllVirtualRouterModel.yml
+  tasks:
+    - name: Execute getAllVirtualRouterModel
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getAllVirtualRouterModel.operation }}"
+        path_params: "{{ (op_getAllVirtualRouterModel.path_params | cat_strip_nulls) if (op_getAllVirtualRouterModel.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getAllVirtualRouterModel.query_params | cat_strip_nulls) if (op_getAllVirtualRouterModel.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getAllVirtualRouterModel.data | cat_strip_nulls) if (op_getAllVirtualRouterModel.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getAllVirtualRouterModel.register_as if op_getAllVirtualRouterModel.register_as is not none else omit }}"
+      register: getAllVirtualRouterModel_result

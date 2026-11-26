@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getPrefilterPolicy (cisco.fmcansible 1.1.1)
+# Build order: 751 · API path: /api/fmc_config/v1/domain/{domainUUID}/policy/prefilterpolicies/{objectId}
+# Reads ../models/operations/getPrefilterPolicy.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_prefilter_policy.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0751 getPrefilterPolicy"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getPrefilterPolicy.yml
+  tasks:
+    - name: Execute getPrefilterPolicy
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getPrefilterPolicy.operation }}"
+        path_params: "{{ (op_getPrefilterPolicy.path_params | cat_strip_nulls) if (op_getPrefilterPolicy.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getPrefilterPolicy.query_params | cat_strip_nulls) if (op_getPrefilterPolicy.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getPrefilterPolicy.data | cat_strip_nulls) if (op_getPrefilterPolicy.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getPrefilterPolicy.register_as if op_getPrefilterPolicy.register_as is not none else omit }}"
+      register: getPrefilterPolicy_result

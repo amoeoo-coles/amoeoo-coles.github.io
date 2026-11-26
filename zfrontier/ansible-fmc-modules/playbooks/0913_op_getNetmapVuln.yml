@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getNetmapVuln (cisco.fmcansible 1.1.1)
+# Build order: 913 · API path: /api/fmc_netmap/v1/domain/{domainUUID}/vulns/{objectId}
+# Reads ../models/operations/getNetmapVuln.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_netmap_vuln.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0913 getNetmapVuln"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getNetmapVuln.yml
+  tasks:
+    - name: Execute getNetmapVuln
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getNetmapVuln.operation }}"
+        path_params: "{{ (op_getNetmapVuln.path_params | cat_strip_nulls) if (op_getNetmapVuln.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getNetmapVuln.query_params | cat_strip_nulls) if (op_getNetmapVuln.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getNetmapVuln.data | cat_strip_nulls) if (op_getNetmapVuln.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getNetmapVuln.register_as if op_getNetmapVuln.register_as is not none else omit }}"
+      register: getNetmapVuln_result

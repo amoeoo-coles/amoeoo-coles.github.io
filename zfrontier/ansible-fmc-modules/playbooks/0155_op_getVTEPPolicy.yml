@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getVTEPPolicy (cisco.fmcansible 1.1.1)
+# Build order: 155 · API path: /api/fmc_config/v1/domain/{domainUUID}/devices/devicerecords/{containerUUID}/vteppolicies/{objectId}
+# Reads ../models/operations/getVTEPPolicy.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_vtep_policy.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0155 getVTEPPolicy"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getVTEPPolicy.yml
+  tasks:
+    - name: Execute getVTEPPolicy
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getVTEPPolicy.operation }}"
+        path_params: "{{ (op_getVTEPPolicy.path_params | cat_strip_nulls) if (op_getVTEPPolicy.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getVTEPPolicy.query_params | cat_strip_nulls) if (op_getVTEPPolicy.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getVTEPPolicy.data | cat_strip_nulls) if (op_getVTEPPolicy.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getVTEPPolicy.register_as if op_getVTEPPolicy.register_as is not none else omit }}"
+      register: getVTEPPolicy_result

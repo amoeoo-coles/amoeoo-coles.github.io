@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getAllVirtualSwitch (cisco.fmcansible 1.1.1)
+# Build order: 37 · API path: /api/fmc_config/v1/domain/{domainUUID}/devices/devicerecords/{containerUUID}/virtualswitches
+# Reads ../models/operations/getAllVirtualSwitch.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_all_virtual_switch.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0037 getAllVirtualSwitch"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getAllVirtualSwitch.yml
+  tasks:
+    - name: Execute getAllVirtualSwitch
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getAllVirtualSwitch.operation }}"
+        path_params: "{{ (op_getAllVirtualSwitch.path_params | cat_strip_nulls) if (op_getAllVirtualSwitch.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getAllVirtualSwitch.query_params | cat_strip_nulls) if (op_getAllVirtualSwitch.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getAllVirtualSwitch.data | cat_strip_nulls) if (op_getAllVirtualSwitch.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getAllVirtualSwitch.register_as if op_getAllVirtualSwitch.register_as is not none else omit }}"
+      register: getAllVirtualSwitch_result

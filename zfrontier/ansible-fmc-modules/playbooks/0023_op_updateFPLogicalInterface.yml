@@ -1,0 +1,24 @@
+---
+# Sample playbook for fmc_configuration operation updateFPLogicalInterface (cisco.fmcansible 1.1.1)
+# Build order: 23 · API path: /api/fmc_config/v1/domain/{domainUUID}/devices/devicerecords/{containerUUID}/fplogicalinterfaces/{objectId}
+# Reads ../models/operations/updateFPLogicalInterface.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/update_fp_logical_interface.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+# State-changing: tagged 'never' - runs only with --tags updateFPLogicalInterface.
+
+- name: "0023 updateFPLogicalInterface"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/updateFPLogicalInterface.yml
+  tasks:
+    - name: Execute updateFPLogicalInterface
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_updateFPLogicalInterface.operation }}"
+        path_params: "{{ (op_updateFPLogicalInterface.path_params | cat_strip_nulls) if (op_updateFPLogicalInterface.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_updateFPLogicalInterface.query_params | cat_strip_nulls) if (op_updateFPLogicalInterface.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_updateFPLogicalInterface.data | cat_strip_nulls) if (op_updateFPLogicalInterface.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_updateFPLogicalInterface.register_as if op_updateFPLogicalInterface.register_as is not none else omit }}"
+      register: updateFPLogicalInterface_result
+      tags:
+        - never
+        - updateFPLogicalInterface

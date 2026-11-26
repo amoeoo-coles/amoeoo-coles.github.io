@@ -1,0 +1,20 @@
+---
+# Sample playbook for fmc_configuration operation getProtocolPortObject (cisco.fmcansible 1.1.1)
+# Build order: 270 · API path: /api/fmc_config/v1/domain/{domainUUID}/object/protocolportobjects/{objectId}
+# Reads ../models/operations/getProtocolPortObject.yml. Docs: https://github.com/CiscoDevNet/FMCAnsible/blob/v1.1.1/samples/docs/operations/get_protocol_port_object.md
+# Path parameters such as domainUUID are placeholders; read them first with fmc_facts or getAllDomain.
+
+- name: "0270 getProtocolPortObject"
+  hosts: fmc
+  gather_facts: false
+  vars_files:
+    - ../models/operations/getProtocolPortObject.yml
+  tasks:
+    - name: Execute getProtocolPortObject
+      cisco.fmcansible.fmc_configuration:
+        operation: "{{ op_getProtocolPortObject.operation }}"
+        path_params: "{{ (op_getProtocolPortObject.path_params | cat_strip_nulls) if (op_getProtocolPortObject.path_params | cat_strip_nulls) is not none else omit }}"
+        query_params: "{{ (op_getProtocolPortObject.query_params | cat_strip_nulls) if (op_getProtocolPortObject.query_params | cat_strip_nulls) is not none else omit }}"
+        data: "{{ (op_getProtocolPortObject.data | cat_strip_nulls) if (op_getProtocolPortObject.data | cat_strip_nulls) is not none else omit }}"
+        register_as: "{{ op_getProtocolPortObject.register_as if op_getProtocolPortObject.register_as is not none else omit }}"
+      register: getProtocolPortObject_result
