@@ -13,6 +13,5 @@ Groups (build order):
 - 4. Devices: 107
 - 5. VPN: 28
 - 6. Integrations: 7
-- 7. Other: 0
 
 Credentials are placeholders only. Do not commit real passwords or tokens.
