@@ -1531,7 +1531,1096 @@
         return playbook("Troubleshooting - Faults, Audit and Event Log Review", t1);
       }
     }
+    ,
+
+    /* ================= 5. SERVICE GRAPHS ================= */
+    {
+      id: "form-l4l7-device",
+      section: "service_graphs",
+      title: "5.1 L4-L7 Device, Concrete Device & Interfaces",
+      guiPath: "Tenants -> [Tenant] -> Services -> L4-L7 -> Devices",
+      modules: "cisco.aci.aci_l4l7_device, cisco.aci.aci_l4l7_concrete_device, cisco.aci.aci_l4l7_concrete_interface, cisco.aci.aci_l4l7_logical_interface, cisco.aci.aci_l4l7_concrete_interface_attachment",
+      mitClasses: "vns:LDevVip, vns:CDev, vns:CIf, vns:LIf, vns:RsCIfAttN",
+      filename: "32-l4l7-device-interfaces.yml",
+      description: "Create an unmanaged or managed L4-L7 Logical Device (physical or virtual), Concrete Device, consumer/provider concrete cluster interfaces, and VLAN-tagged logical interfaces.",
+      fields: [
+        { name: "tenant", label: "Tenant Name", type: "text", default: "PROD_TENANT" },
+        { name: "logical_device", label: "L4-L7 Logical Device Name", type: "text", default: "FW_CLUSTER_1" },
+        { name: "device_type", label: "Device Type", type: "select", default: "physical", options: ["physical", "virtual"] },
+        { name: "function_type", label: "Function Type", type: "select", default: "go_to", options: ["go_to", "go_through", "l1", "l2"] },
+        { name: "service_type", label: "Service Type", type: "select", default: "fw", options: ["fw", "adc", "others"] },
+        { name: "context_aware", label: "Context Aware", type: "select", default: "single", options: ["single", "multi"] },
+        { name: "domain", label: "Physical / VMM Domain", type: "text", default: "PHYS_DOM" },
+        { name: "concrete_device", label: "Concrete Device Name", type: "text", default: "FW_NODE_1" },
+        { name: "pod_id", label: "Pod ID", type: "number", default: "1" },
+        { name: "node_id", label: "Leaf Node ID (or vPC e.g. 101-102)", type: "text", default: "101-102" },
+        { name: "ext_cif", label: "Consumer Concrete Interface", type: "text", default: "cif_ext" },
+        { name: "ext_interface", label: "Consumer Interface / vPC IPG", type: "text", default: "VPC_FW_PO1" },
+        { name: "ext_lif", label: "Consumer Logical Interface", type: "text", default: "lif_ext" },
+        { name: "ext_encap", label: "Consumer VLAN Encap", type: "text", default: "vlan-301" },
+        { name: "int_cif", label: "Provider Concrete Interface", type: "text", default: "cif_int" },
+        { name: "int_interface", label: "Provider Interface / vPC IPG", type: "text", default: "VPC_FW_PO1" },
+        { name: "int_lif", label: "Provider Logical Interface", type: "text", default: "lif_int" },
+        { name: "int_encap", label: "Provider VLAN Encap", type: "text", default: "vlan-302" }
+      ],
+      build: function (v) {
+        var t1 = taskHeader("Create L4-L7 Logical Device " + v.logical_device, "cisco.aci.aci_l4l7_device");
+        t1.push(kv("tenant", q(v.tenant)));
+        t1.push(kv("name", q(v.logical_device)));
+        t1.push(kv("device_type", q(v.device_type)));
+        t1.push(kv("function_type", q(v.function_type)));
+        t1.push(kv("service_type", q(v.service_type)));
+        t1.push(kv("context_aware", q(v.context_aware)));
+        t1.push(kv("managed", false));
+        t1.push(kv("domain", q(v.domain)));
+        t1.push(kv("state", "present"));
+
+        var t2 = taskHeader("Create Concrete Device " + v.concrete_device, "cisco.aci.aci_l4l7_concrete_device");
+        t2.push(kv("tenant", q(v.tenant)));
+        t2.push(kv("logical_device", q(v.logical_device)));
+        t2.push(kv("name", q(v.concrete_device)));
+        t2.push(kv("state", "present"));
+
+        var t3 = taskHeader("Create Consumer Concrete Interface " + v.ext_cif, "cisco.aci.aci_l4l7_concrete_interface");
+        t3.push(kv("tenant", q(v.tenant)));
+        t3.push(kv("logical_device", q(v.logical_device)));
+        t3.push(kv("concrete_device", q(v.concrete_device)));
+        t3.push(kv("name", q(v.ext_cif)));
+        t3.push(kv("pod_id", intVal(v.pod_id, 1)));
+        t3.push(kv("node_id", q(v.node_id)));
+        t3.push(kv("interface", q(v.ext_interface)));
+        t3.push(kv("state", "present"));
+
+        var t4 = taskHeader("Create Provider Concrete Interface " + v.int_cif, "cisco.aci.aci_l4l7_concrete_interface");
+        t4.push(kv("tenant", q(v.tenant)));
+        t4.push(kv("logical_device", q(v.logical_device)));
+        t4.push(kv("concrete_device", q(v.concrete_device)));
+        t4.push(kv("name", q(v.int_cif)));
+        t4.push(kv("pod_id", intVal(v.pod_id, 1)));
+        t4.push(kv("node_id", q(v.node_id)));
+        t4.push(kv("interface", q(v.int_interface)));
+        t4.push(kv("state", "present"));
+
+        var t5 = taskHeader("Create Consumer Logical Interface " + v.ext_lif, "cisco.aci.aci_l4l7_logical_interface");
+        t5.push(kv("tenant", q(v.tenant)));
+        t5.push(kv("logical_device", q(v.logical_device)));
+        t5.push(kv("logical_interface", q(v.ext_lif)));
+        t5.push(kv("encap", q(v.ext_encap)));
+        t5.push(kv("state", "present"));
+
+        var t6 = taskHeader("Create Provider Logical Interface " + v.int_lif, "cisco.aci.aci_l4l7_logical_interface");
+        t6.push(kv("tenant", q(v.tenant)));
+        t6.push(kv("logical_device", q(v.logical_device)));
+        t6.push(kv("logical_interface", q(v.int_lif)));
+        t6.push(kv("encap", q(v.int_encap)));
+        t6.push(kv("state", "present"));
+
+        var t7 = taskHeader("Attach " + v.ext_cif + " to " + v.ext_lif, "cisco.aci.aci_l4l7_concrete_interface_attachment");
+        t7.push(kv("tenant", q(v.tenant)));
+        t7.push(kv("logical_device", q(v.logical_device)));
+        t7.push(kv("logical_interface", q(v.ext_lif)));
+        t7.push(kv("concrete_device", q(v.concrete_device)));
+        t7.push(kv("concrete_interface", q(v.ext_cif)));
+        t7.push(kv("state", "present"));
+
+        var t8 = taskHeader("Attach " + v.int_cif + " to " + v.int_lif, "cisco.aci.aci_l4l7_concrete_interface_attachment");
+        t8.push(kv("tenant", q(v.tenant)));
+        t8.push(kv("logical_device", q(v.logical_device)));
+        t8.push(kv("logical_interface", q(v.int_lif)));
+        t8.push(kv("concrete_device", q(v.concrete_device)));
+        t8.push(kv("concrete_interface", q(v.int_cif)));
+        t8.push(kv("state", "present"));
+
+        return playbook("Service Graphs - L4-L7 Device and Cluster Interfaces", t1.concat(t2, t3, t4, t5, t6, t7, t8));
+      }
+    },
+    {
+      id: "form-sg-template",
+      section: "service_graphs",
+      title: "5.2 Service Graph Function Node & Template",
+      guiPath: "Tenants -> [Tenant] -> Services -> L4-L7 -> Service Graph Templates",
+      modules: "cisco.aci.aci_l4l7_service_graph_template, cisco.aci.aci_l4l7_service_graph_template_term_node, cisco.aci.aci_l4l7_service_graph_template_node, cisco.aci.aci_l4l7_service_graph_template_functional_connection, cisco.aci.aci_l4l7_service_graph_template_connection, cisco.aci.aci_l4l7_service_graph_template_connection_to_connector",
+      mitClasses: "vns:AbsGraph, vns:AbsTermNodeCon, vns:AbsTermNodeProv, vns:AbsNode, vns:AbsConnection",
+      filename: "33-service-graph-template.yml",
+      description: "Build a Service Graph Template with consumer/provider terminal nodes (T1/T2), a function node (N1), redirect or non-redirect connectors, and C1/C2 adjacency connections.",
+      fields: [
+        { name: "tenant", label: "Tenant Name", type: "text", default: "PROD_TENANT" },
+        { name: "service_graph", label: "Service Graph Template Name", type: "text", default: "SG_FW_PBR" },
+        { name: "node_name", label: "Function Node Name", type: "text", default: "N1" },
+        { name: "logical_device", label: "Bound L4-L7 Logical Device", type: "text", default: "FW_CLUSTER_1" },
+        { name: "function_type", label: "Node Function Type", type: "select", default: "go_to", options: ["go_to", "go_through", "l1", "l2"] },
+        { name: "functional_template_type", label: "Functional Template", type: "select", default: "fw_routed", options: ["fw_routed", "fw_trans", "adc_one_arm", "adc_two_arm", "other"] },
+        { name: "routing_mode", label: "Routing / PBR Mode", type: "select", default: "redirect", options: ["redirect", "unspecified"] },
+        { name: "adjacency_type", label: "Connection Adjacency Type", type: "select", default: "l3", options: ["l3", "l2"] }
+      ],
+      build: function (v) {
+        var connType = v.routing_mode === "redirect" ? "redir" : "none";
+        var uniRoute = v.adjacency_type === "l3";
+
+        var t1 = taskHeader("Create Service Graph Template " + v.service_graph, "cisco.aci.aci_l4l7_service_graph_template");
+        t1.push(kv("tenant", q(v.tenant)));
+        t1.push(kv("service_graph", q(v.service_graph)));
+        t1.push(kv("type", q("legacy")));
+        t1.push(kv("filter_between_nodes", q("allow-all")));
+        t1.push(kv("state", "present"));
+
+        var t2 = taskHeader("Add consumer terminal node T1", "cisco.aci.aci_l4l7_service_graph_template_term_node");
+        t2.push(kv("tenant", q(v.tenant)));
+        t2.push(kv("service_graph", q(v.service_graph)));
+        t2.push(kv("node_name", q("T1")));
+        t2.push(kv("state", "present"));
+
+        var t3 = taskHeader("Add provider terminal node T2", "cisco.aci.aci_l4l7_service_graph_template_term_node");
+        t3.push(kv("tenant", q(v.tenant)));
+        t3.push(kv("service_graph", q(v.service_graph)));
+        t3.push(kv("node_name", q("T2")));
+        t3.push(kv("state", "present"));
+
+        var t4 = taskHeader("Add function node " + v.node_name, "cisco.aci.aci_l4l7_service_graph_template_node");
+        t4.push(kv("tenant", q(v.tenant)));
+        t4.push(kv("service_graph", q(v.service_graph)));
+        t4.push(kv("node", q(v.node_name)));
+        t4.push(kv("device", q(v.logical_device)));
+        t4.push(kv("function_type", q(v.function_type)));
+        t4.push(kv("functional_template_type", q(v.functional_template_type)));
+        t4.push(kv("routing_mode", q(v.routing_mode)));
+        t4.push(kv("managed", false));
+        t4.push(kv("state", "present"));
+
+        var t5 = taskHeader("Add consumer connector on " + v.node_name, "cisco.aci.aci_l4l7_service_graph_template_functional_connection");
+        t5.push(kv("tenant", q(v.tenant)));
+        t5.push(kv("service_graph", q(v.service_graph)));
+        t5.push(kv("node", q(v.node_name)));
+        t5.push(kv("connection_name", q("consumer")));
+        t5.push(kv("connection_type", q(connType)));
+        t5.push(kv("state", "present"));
+
+        var t6 = taskHeader("Add provider connector on " + v.node_name, "cisco.aci.aci_l4l7_service_graph_template_functional_connection");
+        t6.push(kv("tenant", q(v.tenant)));
+        t6.push(kv("service_graph", q(v.service_graph)));
+        t6.push(kv("node", q(v.node_name)));
+        t6.push(kv("connection_name", q("provider")));
+        t6.push(kv("connection_type", q(connType)));
+        t6.push(kv("state", "present"));
+
+        var t7 = taskHeader("Create consumer-side connection C1", "cisco.aci.aci_l4l7_service_graph_template_connection");
+        t7.push(kv("tenant", q(v.tenant)));
+        t7.push(kv("service_graph", q(v.service_graph)));
+        t7.push(kv("connection_name", q("C1")));
+        t7.push(kv("connector_direction", q("consumer")));
+        t7.push(kv("adjacency_type", q(v.adjacency_type)));
+        t7.push(kv("unicast_route", uniRoute));
+        t7.push(kv("state", "present"));
+
+        var t8 = taskHeader("Create provider-side connection C2", "cisco.aci.aci_l4l7_service_graph_template_connection");
+        t8.push(kv("tenant", q(v.tenant)));
+        t8.push(kv("service_graph", q(v.service_graph)));
+        t8.push(kv("connection_name", q("C2")));
+        t8.push(kv("connector_direction", q("provider")));
+        t8.push(kv("adjacency_type", q(v.adjacency_type)));
+        t8.push(kv("unicast_route", uniRoute));
+        t8.push(kv("state", "present"));
+
+        var t9 = taskHeader("Wire C1 to T1 and " + v.node_name + " consumer", "cisco.aci.aci_l4l7_service_graph_template_connection_to_connector");
+        t9.push(kv("tenant", q(v.tenant)));
+        t9.push(kv("service_graph", q(v.service_graph)));
+        t9.push(kv("connection_name", q("C1")));
+        t9.push(kv("direction", q("consumer")));
+        t9.push(kv("state", "present"));
+
+        var t10 = taskHeader("Wire C1 to " + v.node_name + " consumer connector", "cisco.aci.aci_l4l7_service_graph_template_connection_to_connector");
+        t10.push(kv("tenant", q(v.tenant)));
+        t10.push(kv("service_graph", q(v.service_graph)));
+        t10.push(kv("connection_name", q("C1")));
+        t10.push(kv("connected_node", q(v.node_name)));
+        t10.push(kv("direction", q("consumer")));
+        t10.push(kv("state", "present"));
+
+        var t11 = taskHeader("Wire C2 to " + v.node_name + " provider connector", "cisco.aci.aci_l4l7_service_graph_template_connection_to_connector");
+        t11.push(kv("tenant", q(v.tenant)));
+        t11.push(kv("service_graph", q(v.service_graph)));
+        t11.push(kv("connection_name", q("C2")));
+        t11.push(kv("connected_node", q(v.node_name)));
+        t11.push(kv("direction", q("provider")));
+        t11.push(kv("state", "present"));
+
+        var t12 = taskHeader("Wire C2 to T2 provider terminal", "cisco.aci.aci_l4l7_service_graph_template_connection_to_connector");
+        t12.push(kv("tenant", q(v.tenant)));
+        t12.push(kv("service_graph", q(v.service_graph)));
+        t12.push(kv("connection_name", q("C2")));
+        t12.push(kv("direction", q("provider")));
+        t12.push(kv("state", "present"));
+
+        return playbook("Service Graphs - Function Node and Graph Template", t1.concat(t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12));
+      }
+    },
+    {
+      id: "form-pbr-policy",
+      section: "service_graphs",
+      title: "5.3 PBR Redirect Policy & IP SLA Health Group",
+      guiPath: "Tenants -> [Tenant] -> Policies -> Protocol -> L4-L7 Policy-Based Redirect",
+      modules: "cisco.aci.aci_ip_sla_monitoring_policy, cisco.aci.aci_l4l7_redirect_health_group, cisco.aci.aci_l4l7_policy_based_redirect, cisco.aci.aci_l4l7_policy_based_redirect_destination",
+      mitClasses: "fv:IPSLAMonitoringPol, vns:RedirectHealthGroup, vns:SvcRedirectPol, vns:RedirectDest",
+      filename: "34-pbr-redirect-policy.yml",
+      description: "Configure Policy-Based Redirect (PBR) with optional IP SLA Monitoring Policy and Redirect Health Group, then bind the next-hop IP/MAC destination.",
+      fields: [
+        { name: "tenant", label: "Tenant Name", type: "text", default: "PROD_TENANT" },
+        { name: "policy_name", label: "PBR Policy Name", type: "text", default: "PBR_FW_EXT" },
+        { name: "destination_type", label: "Destination Type", type: "select", default: "l3", options: ["l3", "l1/l2"] },
+        { name: "hash_algorithm", label: "Hash Algorithm", type: "select", default: "ip_and_protocol", options: ["ip_and_protocol", "source_ip", "destination_ip"] },
+        { name: "resilient_hash", label: "Resilient Hashing", type: "select", default: "true", options: ["true", "false"] },
+        { name: "enable_sla", label: "Include IP SLA & Health Group", type: "select", default: "yes", options: ["yes", "no"] },
+        { name: "sla_policy", label: "IP SLA Monitoring Policy", type: "text", default: "SLA_TCP_443", showWhen: { field: "enable_sla", value: "yes" } },
+        { name: "sla_type", label: "SLA Probe Type", type: "select", default: "tcp", options: ["icmp", "tcp", "http", "l2ping"], showWhen: { field: "enable_sla", value: "yes" } },
+        { name: "sla_port", label: "TCP SLA Port", type: "number", default: "443", showWhen: { field: "enable_sla", value: "yes" } },
+        { name: "health_group", label: "Redirect Health Group", type: "text", default: "HG_FW_CLUSTER", showWhen: { field: "enable_sla", value: "yes" } },
+        { name: "dest_name", label: "PBR Destination Name", type: "text", default: "fw_ext_nh1" },
+        { name: "redirect_ip", label: "Next-Hop IP (L3)", type: "text", default: "198.51.100.254", showWhen: { field: "destination_type", value: "l3" } },
+        { name: "redirect_mac", label: "Next-Hop MAC", type: "text", default: "00:50:56:00:01:01" },
+        { name: "logical_device", label: "Logical Device", type: "text", default: "FW_CLUSTER_1" },
+        { name: "concrete_device", label: "Concrete Device", type: "text", default: "FW_NODE_1" },
+        { name: "concrete_interface", label: "Concrete Interface", type: "text", default: "cif_ext" },
+        { name: "pod_id", label: "Pod ID", type: "number", default: "1" }
+      ],
+      build: function (v) {
+        var tasks = [];
+        if (v.enable_sla === "yes") {
+          var s1 = taskHeader("Create IP SLA Monitoring Policy " + v.sla_policy, "cisco.aci.aci_ip_sla_monitoring_policy");
+          s1.push(kv("tenant", q(v.tenant)));
+          s1.push(kv("name", q(v.sla_policy)));
+          s1.push(kv("sla_type", q(v.sla_type)));
+          if (v.sla_type === "tcp") {
+            s1.push(kv("sla_port", intVal(v.sla_port, 443)));
+          }
+          s1.push(kv("frequency", 10));
+          s1.push(kv("multiplier", 3));
+          s1.push(kv("state", "present"));
+
+          var s2 = taskHeader("Create Redirect Health Group " + v.health_group, "cisco.aci.aci_l4l7_redirect_health_group");
+          s2.push(kv("tenant", q(v.tenant)));
+          s2.push(kv("health_group", q(v.health_group)));
+          s2.push(kv("state", "present"));
+          tasks = tasks.concat(s1, s2);
+        }
+
+        var p1 = taskHeader("Create PBR Policy " + v.policy_name, "cisco.aci.aci_l4l7_policy_based_redirect");
+        p1.push(kv("tenant", q(v.tenant)));
+        p1.push(kv("policy_name", q(v.policy_name)));
+        p1.push(kv("destination_type", q(v.destination_type === "l3" ? "l3" : "l2")));
+        p1.push(kv("hash_algorithm", q(v.hash_algorithm)));
+        p1.push(kv("resilient_hash", boolVal(v.resilient_hash)));
+        if (v.enable_sla === "yes") {
+          p1.push(kv("sla_monitor_policy", q(v.sla_policy)));
+        }
+        p1.push(kv("state", "present"));
+
+        var p2 = taskHeader("Add PBR Destination " + v.dest_name, "cisco.aci.aci_l4l7_policy_based_redirect_destination");
+        p2.push(kv("tenant", q(v.tenant)));
+        p2.push(kv("policy", q(v.policy_name)));
+        p2.push(kv("destination_name", q(v.dest_name)));
+        p2.push(kv("destination_type", q(v.destination_type)));
+        if (v.destination_type === "l3") {
+          p2.push(kv("ip", q(v.redirect_ip)));
+        }
+        p2.push(kv("mac", q(v.redirect_mac)));
+        p2.push(kv("logical_device", q(v.logical_device)));
+        p2.push(kv("concrete_device", q(v.concrete_device)));
+        p2.push(kv("concrete_interface", q(v.concrete_interface)));
+        p2.push(kv("pod_id", intVal(v.pod_id, 1)));
+        if (v.enable_sla === "yes") {
+          p2.push(kv("health_group", q(v.health_group)));
+        }
+        p2.push(kv("state", "present"));
+
+        return playbook("Service Graphs - PBR Redirect Policy and IP SLA", tasks.concat(p1, p2));
+      }
+    },
+    {
+      id: "form-dev-selection",
+      section: "service_graphs",
+      title: "5.4 Device Selection Policy & Logical Interface Contexts",
+      guiPath: "Tenants -> [Tenant] -> Services -> L4-L7 -> Device Selection Policies",
+      modules: "cisco.aci.aci_l4l7_device_selection_policy, cisco.aci.aci_l4l7_device_selection_interface_context",
+      mitClasses: "vns:LDevCtx, vns:LIfCtx",
+      filename: "35-device-selection-policy.yml",
+      description: "Bind a Contract, Service Graph, and Function Node to the Logical Device, then map consumer and provider connectors to Bridge Domains, Logical Interfaces, and PBR policies.",
+      fields: [
+        { name: "tenant", label: "Tenant Name", type: "text", default: "PROD_TENANT" },
+        { name: "contract", label: "Contract Name", type: "text", default: "WEB_TO_APP_SG_CON" },
+        { name: "service_graph", label: "Service Graph Template", type: "text", default: "SG_FW_PBR" },
+        { name: "node_name", label: "Function Node Name", type: "text", default: "N1" },
+        { name: "logical_device", label: "Logical Device Name", type: "text", default: "FW_CLUSTER_1" },
+        { name: "l3_destination", label: "L3 Destination (PBR)", type: "select", default: "true", options: ["true", "false"] },
+        { name: "cons_bd", label: "Consumer Connector BD", type: "text", default: "FW_EXT_BD" },
+        { name: "cons_lif", label: "Consumer Logical Interface", type: "text", default: "lif_ext" },
+        { name: "cons_pbr", label: "Consumer PBR Policy", type: "text", default: "PBR_FW_EXT" },
+        { name: "prov_bd", label: "Provider Connector BD", type: "text", default: "FW_INT_BD" },
+        { name: "prov_lif", label: "Provider Logical Interface", type: "text", default: "lif_int" },
+        { name: "prov_pbr", label: "Provider PBR Policy", type: "text", default: "PBR_FW_INT" }
+      ],
+      build: function (v) {
+        var t1 = taskHeader("Create Device Selection Policy for " + v.contract, "cisco.aci.aci_l4l7_device_selection_policy");
+        t1.push(kv("tenant", q(v.tenant)));
+        t1.push(kv("contract", q(v.contract)));
+        t1.push(kv("graph", q(v.service_graph)));
+        t1.push(kv("node", q(v.node_name)));
+        t1.push(kv("device", q(v.logical_device)));
+        t1.push(kv("state", "present"));
+
+        var t2 = taskHeader("Bind Consumer Logical Interface Context", "cisco.aci.aci_l4l7_device_selection_interface_context");
+        t2.push(kv("tenant", q(v.tenant)));
+        t2.push(kv("contract", q(v.contract)));
+        t2.push(kv("graph", q(v.service_graph)));
+        t2.push(kv("node", q(v.node_name)));
+        t2.push(kv("context", q("consumer")));
+        t2.push(kv("logical_device", q(v.logical_device)));
+        t2.push(kv("logical_interface", q(v.cons_lif)));
+        t2.push(kv("bridge_domain", q(v.cons_bd)));
+        if (v.cons_pbr) t2.push(kv("redirect_policy", q(v.cons_pbr)));
+        t2.push(kv("l3_destination", boolVal(v.l3_destination)));
+        t2.push(kv("state", "present"));
+
+        var t3 = taskHeader("Bind Provider Logical Interface Context", "cisco.aci.aci_l4l7_device_selection_interface_context");
+        t3.push(kv("tenant", q(v.tenant)));
+        t3.push(kv("contract", q(v.contract)));
+        t3.push(kv("graph", q(v.service_graph)));
+        t3.push(kv("node", q(v.node_name)));
+        t3.push(kv("context", q("provider")));
+        t3.push(kv("logical_device", q(v.logical_device)));
+        t3.push(kv("logical_interface", q(v.prov_lif)));
+        t3.push(kv("bridge_domain", q(v.prov_bd)));
+        if (v.prov_pbr) t3.push(kv("redirect_policy", q(v.prov_pbr)));
+        t3.push(kv("l3_destination", boolVal(v.l3_destination)));
+        t3.push(kv("state", "present"));
+
+        return playbook("Service Graphs - Device Selection Policy", t1.concat(t2, t3));
+      }
+    },
+    {
+      id: "form-apply-sg",
+      section: "service_graphs",
+      title: "5.5 Apply Service Graph to Contract Subject",
+      guiPath: "Tenants -> [Tenant] -> Contracts -> Standard -> [Contract] -> Subjects",
+      modules: "cisco.aci.aci_contract, cisco.aci.aci_contract_subject, cisco.aci.aci_contract_subject_to_filter, cisco.aci.aci_contract_subject_to_service_graph, cisco.aci.aci_epg_to_contract",
+      mitClasses: "vz:BrCP, vz:Subj, vz:RsSubjFiltAtt, vz:RsSubjGraphAtt",
+      filename: "36-apply-graph-to-contract.yml",
+      description: "Create or update a Contract Subject, attach its Filter, bind the Service Graph Template to the Subject, and optionally wire consumer/provider EPGs.",
+      fields: [
+        { name: "tenant", label: "Tenant Name", type: "text", default: "PROD_TENANT" },
+        { name: "contract", label: "Contract Name", type: "text", default: "WEB_TO_APP_SG_CON" },
+        { name: "scope", label: "Contract Scope", type: "select", default: "context", options: ["context", "tenant", "application-profile", "global"] },
+        { name: "subject", label: "Subject Name", type: "text", default: "SUBJ_HTTPS_PBR" },
+        { name: "filter_name", label: "Filter Name", type: "text", default: "HTTPS_FLT" },
+        { name: "service_graph", label: "Service Graph Template", type: "text", default: "SG_FW_PBR" },
+        { name: "bind_epgs", label: "Bind Consumer & Provider EPGs", type: "select", default: "yes", options: ["yes", "no"] },
+        { name: "ap", label: "Application Profile", type: "text", default: "ECOMMERCE_AP", showWhen: { field: "bind_epgs", value: "yes" } },
+        { name: "consumer_epg", label: "Consumer EPG", type: "text", default: "WEB_EPG", showWhen: { field: "bind_epgs", value: "yes" } },
+        { name: "provider_epg", label: "Provider EPG", type: "text", default: "APP_EPG", showWhen: { field: "bind_epgs", value: "yes" } }
+      ],
+      build: function (v) {
+        var t1 = taskHeader("Ensure Contract " + v.contract, "cisco.aci.aci_contract");
+        t1.push(kv("tenant", q(v.tenant)));
+        t1.push(kv("contract", q(v.contract)));
+        t1.push(kv("scope", q(v.scope)));
+        t1.push(kv("state", "present"));
+
+        var t2 = taskHeader("Create Contract Subject " + v.subject, "cisco.aci.aci_contract_subject");
+        t2.push(kv("tenant", q(v.tenant)));
+        t2.push(kv("contract", q(v.contract)));
+        t2.push(kv("subject", q(v.subject)));
+        t2.push(kv("apply_both_direction", q("both")));
+        t2.push(kv("reverse_filter", true));
+        t2.push(kv("state", "present"));
+
+        var t3 = taskHeader("Attach Filter " + v.filter_name + " to Subject", "cisco.aci.aci_contract_subject_to_filter");
+        t3.push(kv("tenant", q(v.tenant)));
+        t3.push(kv("contract", q(v.contract)));
+        t3.push(kv("subject", q(v.subject)));
+        t3.push(kv("filter", q(v.filter_name)));
+        t3.push(kv("action", q("permit")));
+        t3.push(kv("direction", q("both")));
+        t3.push(kv("state", "present"));
+
+        var t4 = taskHeader("Apply Service Graph " + v.service_graph + " to Subject", "cisco.aci.aci_contract_subject_to_service_graph");
+        t4.push(kv("tenant", q(v.tenant)));
+        t4.push(kv("contract", q(v.contract)));
+        t4.push(kv("subject", q(v.subject)));
+        t4.push(kv("service_graph", q(v.service_graph)));
+        t4.push(kv("state", "present"));
+
+        var tasks = t1.concat(t2, t3, t4);
+        if (v.bind_epgs === "yes") {
+          var t5 = taskHeader("Bind Consumer EPG " + v.consumer_epg, "cisco.aci.aci_epg_to_contract");
+          t5.push(kv("tenant", q(v.tenant)));
+          t5.push(kv("ap", q(v.ap)));
+          t5.push(kv("epg", q(v.consumer_epg)));
+          t5.push(kv("contract", q(v.contract)));
+          t5.push(kv("contract_type", q("consumer")));
+          t5.push(kv("state", "present"));
+
+          var t6 = taskHeader("Bind Provider EPG " + v.provider_epg, "cisco.aci.aci_epg_to_contract");
+          t6.push(kv("tenant", q(v.tenant)));
+          t6.push(kv("ap", q(v.ap)));
+          t6.push(kv("epg", q(v.provider_epg)));
+          t6.push(kv("contract", q(v.contract)));
+          t6.push(kv("contract_type", q("provider")));
+          t6.push(kv("state", "present"));
+          tasks = tasks.concat(t5, t6);
+        }
+        return playbook("Service Graphs - Apply Graph to Contract Subject", tasks);
+      }
+    },
+    {
+      id: "form-sg-query",
+      section: "service_graphs",
+      title: "5.6 Query Deployed Service Graph & PBR State",
+      guiPath: "Tenants -> [Tenant] -> Services -> L4-L7 -> Deployed Graph Instances",
+      modules: "cisco.aci.aci_rest",
+      mitClasses: "vns:GraphInst, vns:LDevVip, vns:AbsGraph, vns:LDevCtx, vns:SvcRedirectPol",
+      filename: "37-service-graph-verify.yml",
+      description: "Read-only GET check of deployed Service Graph instances (vnsGraphInst), logical devices, device selection policies, or PBR redirect policies.",
+      fields: [
+        { name: "tenant", label: "Tenant Name", type: "text", default: "PROD_TENANT" },
+        { name: "target_class", label: "MIT Class to Inspect", type: "select", default: "vnsGraphInst", options: ["vnsGraphInst", "vnsLDevVip", "vnsAbsGraph", "vnsLDevCtx", "vnsSvcRedirectPol"] },
+        { name: "name_filter", label: "Optional Name / DN Substring", type: "text", default: "PROD_TENANT" }
+      ],
+      build: function (v) {
+        var qs = "rsp-subtree=full";
+        if (String(v.name_filter || "").trim() !== "") {
+          qs = 'query-target-filter=wcard(' + v.target_class + '.dn,"' + v.name_filter.trim() + '")&' + qs;
+        }
+        var t1 = taskHeader("Query deployed " + v.target_class + " objects", "cisco.aci.aci_rest");
+        t1.push(kv("method", "get"));
+        t1.push(kv("path", q("/api/node/class/" + v.target_class + ".json?" + qs)));
+        t1.push("      register: sg_verify");
+        return playbook("Service Graphs - Read-Only Verification", t1);
+      }
+    },
+
+    /* ================= 6. SHARED L3OUT IN TENANT COMMON ================= */
+    {
+      id: "form-common-vrf-bd",
+      section: "shared_l3out",
+      title: "6.1 VRF in common & BD-in-common Pattern",
+      guiPath: "Tenants -> common -> Networking -> VRFs / Bridge Domains",
+      modules: "cisco.aci.aci_vrf, cisco.aci.aci_bd, cisco.aci.aci_bd_subnet, cisco.aci.aci_ap, cisco.aci.aci_epg, cisco.aci.aci_rest",
+      mitClasses: "fv:Ctx, fv:BD, fv:Subnet, fv:RsBd, fv:RsCtx",
+      filename: "38-common-vrf-bd-pattern.yml",
+      description: "Provision a shared VRF in tenant common (uni/tn-common/ctx-default) and model either the BD-in-common pattern (Subnet B & C in common BD consumed by Tenant A/B EPGs) or user-tenant BDs referencing the common VRF.",
+      fields: [
+        { name: "pattern", label: "Shared Topology Pattern", type: "select", default: "bd_in_common", options: ["bd_in_common", "user_bd_common_vrf"] },
+        { name: "common_vrf", label: "Common VRF Name", type: "text", default: "default" },
+        { name: "common_bd", label: "Common BD Name", type: "text", default: "BD-default", showWhen: { field: "pattern", value: "bd_in_common" } },
+        { name: "subnet_b_gw", label: "Common Subnet B Gateway", type: "text", default: "192.0.2.1", showWhen: { field: "pattern", value: "bd_in_common" } },
+        { name: "subnet_b_mask", label: "Subnet B Mask", type: "number", default: "24", showWhen: { field: "pattern", value: "bd_in_common" } },
+        { name: "subnet_c_gw", label: "Common Subnet C Gateway", type: "text", default: "198.51.100.1", showWhen: { field: "pattern", value: "bd_in_common" } },
+        { name: "subnet_c_mask", label: "Subnet C Mask", type: "number", default: "24", showWhen: { field: "pattern", value: "bd_in_common" } },
+        { name: "user_tenant", label: "User Tenant (e.g. Tenant_A)", type: "text", default: "Tenant_A" },
+        { name: "user_ap", label: "User Application Profile", type: "text", default: "APP_AP" },
+        { name: "user_epg", label: "User EPG Name", type: "text", default: "EPG_3" },
+        { name: "user_bd", label: "User Tenant BD Name", type: "text", default: "BD_1", showWhen: { field: "pattern", value: "user_bd_common_vrf" } },
+        { name: "user_gw", label: "User BD Subnet Gateway", type: "text", default: "203.0.113.1", showWhen: { field: "pattern", value: "user_bd_common_vrf" } },
+        { name: "user_mask", label: "User BD Subnet Mask", type: "number", default: "24", showWhen: { field: "pattern", value: "user_bd_common_vrf" } }
+      ],
+      build: function (v) {
+        var t1 = taskHeader("Ensure VRF " + v.common_vrf + " in tenant common", "cisco.aci.aci_vrf");
+        t1.push(kv("tenant", q("common")));
+        t1.push(kv("vrf", q(v.common_vrf)));
+        t1.push(kv("policy_control_enforcement_direction", q("ingress")));
+        t1.push(kv("state", "present"));
+
+        var tasks = t1;
+        if (v.pattern === "bd_in_common") {
+          var t2 = taskHeader("Ensure BD " + v.common_bd + " in tenant common", "cisco.aci.aci_bd");
+          t2.push(kv("tenant", q("common")));
+          t2.push(kv("bd", q(v.common_bd)));
+          t2.push(kv("vrf", q(v.common_vrf)));
+          t2.push(kv("enable_routing", true));
+          t2.push(kv("state", "present"));
+
+          var t3 = taskHeader("Add Subnet B to common BD " + v.common_bd, "cisco.aci.aci_bd_subnet");
+          t3.push(kv("tenant", q("common")));
+          t3.push(kv("bd", q(v.common_bd)));
+          t3.push(kv("gateway", q(v.subnet_b_gw)));
+          t3.push(kv("mask", intVal(v.subnet_b_mask, 24)));
+          t3.push(kv("subnet_name", q("Subnet_B")));
+          t3.push("        scope:");
+          t3.push('          - "public"');
+          t3.push('          - "shared"');
+          t3.push(kv("state", "present"));
+
+          var t4 = taskHeader("Add Subnet C to common BD " + v.common_bd, "cisco.aci.aci_bd_subnet");
+          t4.push(kv("tenant", q("common")));
+          t4.push(kv("bd", q(v.common_bd)));
+          t4.push(kv("gateway", q(v.subnet_c_gw)));
+          t4.push(kv("mask", intVal(v.subnet_c_mask, 24)));
+          t4.push(kv("subnet_name", q("Subnet_C")));
+          t4.push("        scope:");
+          t4.push('          - "public"');
+          t4.push('          - "shared"');
+          t4.push(kv("state", "present"));
+
+          var t5 = taskHeader("Ensure Application Profile " + v.user_ap + " in " + v.user_tenant, "cisco.aci.aci_ap");
+          t5.push(kv("tenant", q(v.user_tenant)));
+          t5.push(kv("ap", q(v.user_ap)));
+          t5.push(kv("state", "present"));
+
+          var t6 = taskHeader("Ensure EPG " + v.user_epg + " in " + v.user_tenant, "cisco.aci.aci_epg");
+          t6.push(kv("tenant", q(v.user_tenant)));
+          t6.push(kv("ap", q(v.user_ap)));
+          t6.push(kv("epg", q(v.user_epg)));
+          t6.push(kv("state", "present"));
+
+          var t7 = taskHeader("Bind " + v.user_epg + " to uni/tn-common/BD-" + v.common_bd, "cisco.aci.aci_rest");
+          t7.push(kv("method", "post"));
+          t7.push(kv("path", q("/api/node/mo/uni/tn-" + v.user_tenant + "/ap-" + v.user_ap + "/epg-" + v.user_epg + "/rsbd.json")));
+          t7.push("        content:");
+          t7.push("          fvRsBd:");
+          t7.push("            attributes:");
+          t7.push("              tnFvBDName: " + q(v.common_bd));
+          t7.push("              tDn: " + q("uni/tn-common/BD-" + v.common_bd));
+
+          tasks = tasks.concat(t2, t3, t4, t5, t6, t7);
+        } else {
+          var u1 = taskHeader("Create BD " + v.user_bd + " in " + v.user_tenant, "cisco.aci.aci_bd");
+          u1.push(kv("tenant", q(v.user_tenant)));
+          u1.push(kv("bd", q(v.user_bd)));
+          u1.push(kv("enable_routing", true));
+          u1.push(kv("state", "present"));
+
+          var u2 = taskHeader("Associate " + v.user_bd + " with uni/tn-common/ctx-" + v.common_vrf, "cisco.aci.aci_rest");
+          u2.push(kv("method", "post"));
+          u2.push(kv("path", q("/api/node/mo/uni/tn-" + v.user_tenant + "/BD-" + v.user_bd + "/rsctx.json")));
+          u2.push("        content:");
+          u2.push("          fvRsCtx:");
+          u2.push("            attributes:");
+          u2.push("              tnFvCtxName: " + q(v.common_vrf));
+          u2.push("              tDn: " + q("uni/tn-common/ctx-" + v.common_vrf));
+
+          var u3 = taskHeader("Add subnet to " + v.user_bd, "cisco.aci.aci_bd_subnet");
+          u3.push(kv("tenant", q(v.user_tenant)));
+          u3.push(kv("bd", q(v.user_bd)));
+          u3.push(kv("gateway", q(v.user_gw)));
+          u3.push(kv("mask", intVal(v.user_mask, 24)));
+          u3.push("        scope:");
+          u3.push('          - "public"');
+          u3.push('          - "shared"');
+          u3.push(kv("state", "present"));
+          tasks = tasks.concat(u1, u2, u3);
+        }
+        return playbook("Shared L3Out - VRF and BD in Tenant common", tasks);
+      }
+    },
+    {
+      id: "form-common-l3out",
+      section: "shared_l3out",
+      title: "6.2 Shared L3Out in Tenant common (BGP or OSPF)",
+      guiPath: "Tenants -> common -> Networking -> L3Outs",
+      modules: "cisco.aci.aci_l3out, cisco.aci.aci_l3out_logical_node_profile, cisco.aci.aci_l3out_logical_node, cisco.aci.aci_l3out_logical_interface_profile, cisco.aci.aci_l3out_interface, cisco.aci.aci_l3out_bgp_peer, cisco.aci.aci_interface_policy_ospf, cisco.aci.aci_l3out_logical_interface_profile_ospf_policy",
+      mitClasses: "l3ext:Out, l3ext:LNodeP, l3ext:LIfP, bgp:PeerP, ospf:IfP",
+      filename: "39-common-l3out-bgp-ospf.yml",
+      description: "Deploy a shared L3Out inside tenant common with node/interface profiles and switch between eBGP/iBGP peering or OSPF interface policy.",
+      fields: [
+        { name: "l3out", label: "Common L3Out Name", type: "text", default: "SHARED_WAN_L3OUT" },
+        { name: "vrf", label: "Common VRF Name", type: "text", default: "default" },
+        { name: "domain", label: "L3 Domain Name", type: "text", default: "L3_DOM" },
+        { name: "l3protocol", label: "Routing Protocol", type: "select", default: "bgp", options: ["bgp", "ospf"] },
+        { name: "pod_id", label: "Border Leaf Pod ID", type: "number", default: "1" },
+        { name: "node_id", label: "Border Leaf Node ID", type: "number", default: "101" },
+        { name: "router_id", label: "Border Leaf Router ID", type: "text", default: "192.0.2.101" },
+        { name: "path_ep", label: "Routed Path (port or IPG)", type: "text", default: "eth1/48" },
+        { name: "if_addr", label: "SVI / Routed Subinterface IP/Mask", type: "text", default: "198.51.100.1/30" },
+        { name: "encap", label: "VLAN Encap (l3-svi)", type: "text", default: "vlan-3900" },
+        { name: "peer_ip", label: "BGP Peer IP", type: "text", default: "198.51.100.2", showWhen: { field: "l3protocol", value: "bgp" } },
+        { name: "remote_asn", label: "BGP Remote ASN", type: "number", default: "65100", showWhen: { field: "l3protocol", value: "bgp" } },
+        { name: "ospf_policy", label: "OSPF Interface Policy Name", type: "text", default: "OSPF_P2P_BFD", showWhen: { field: "l3protocol", value: "ospf" } },
+        { name: "ospf_network_type", label: "OSPF Network Type", type: "select", default: "p2p", options: ["p2p", "bcast"], showWhen: { field: "l3protocol", value: "ospf" } }
+      ],
+      build: function (v) {
+        var np = v.l3out + "_NP";
+        var ip = v.l3out + "_IP";
+        var t1 = taskHeader("Create shared L3Out " + v.l3out + " in tenant common", "cisco.aci.aci_l3out");
+        t1.push(kv("tenant", q("common")));
+        t1.push(kv("name", q(v.l3out)));
+        t1.push(kv("vrf", q(v.vrf)));
+        t1.push(kv("domain", q(v.domain)));
+        t1.push("        l3protocol:");
+        t1.push("          - " + q(v.l3protocol));
+        t1.push(kv("state", "present"));
+
+        var t2 = taskHeader("Create Logical Node Profile " + np, "cisco.aci.aci_l3out_logical_node_profile");
+        t2.push(kv("tenant", q("common")));
+        t2.push(kv("l3out", q(v.l3out)));
+        t2.push(kv("node_profile", q(np)));
+        t2.push(kv("state", "present"));
+
+        var t3 = taskHeader("Add Border Leaf " + v.node_id + " to " + np, "cisco.aci.aci_l3out_logical_node");
+        t3.push(kv("tenant", q("common")));
+        t3.push(kv("l3out", q(v.l3out)));
+        t3.push(kv("node_profile", q(np)));
+        t3.push(kv("pod_id", intVal(v.pod_id, 1)));
+        t3.push(kv("node_id", intVal(v.node_id, 101)));
+        t3.push(kv("router_id", q(v.router_id)));
+        t3.push(kv("state", "present"));
+
+        var t4 = taskHeader("Create Logical Interface Profile " + ip, "cisco.aci.aci_l3out_logical_interface_profile");
+        t4.push(kv("tenant", q("common")));
+        t4.push(kv("l3out", q(v.l3out)));
+        t4.push(kv("node_profile", q(np)));
+        t4.push(kv("interface_profile", q(ip)));
+        t4.push(kv("state", "present"));
+
+        var t5 = taskHeader("Configure L3Out interface " + v.path_ep, "cisco.aci.aci_l3out_interface");
+        t5.push(kv("tenant", q("common")));
+        t5.push(kv("l3out", q(v.l3out)));
+        t5.push(kv("node_profile", q(np)));
+        t5.push(kv("interface_profile", q(ip)));
+        t5.push(kv("pod_id", intVal(v.pod_id, 1)));
+        t5.push(kv("node_id", intVal(v.node_id, 101)));
+        t5.push(kv("path_ep", q(v.path_ep)));
+        t5.push(kv("interface_type", q("l3-svi")));
+        t5.push(kv("encap", q(v.encap)));
+        t5.push(kv("addr", q(v.if_addr)));
+        t5.push(kv("state", "present"));
+
+        var extra = [];
+        if (v.l3protocol === "bgp") {
+          var b1 = taskHeader("Configure BGP Peer " + v.peer_ip, "cisco.aci.aci_l3out_bgp_peer");
+          b1.push(kv("tenant", q("common")));
+          b1.push(kv("l3out", q(v.l3out)));
+          b1.push(kv("node_profile", q(np)));
+          b1.push(kv("interface_profile", q(ip)));
+          b1.push(kv("pod_id", intVal(v.pod_id, 1)));
+          b1.push(kv("node_id", intVal(v.node_id, 101)));
+          b1.push(kv("path_ep", q(v.path_ep)));
+          b1.push(kv("peer_ip", q(v.peer_ip)));
+          b1.push(kv("remote_asn", intVal(v.remote_asn, 65100)));
+          b1.push("        bgp_controls:");
+          b1.push("          - send-com");
+          b1.push("          - send-ext-com");
+          b1.push("        peer_controls:");
+          b1.push("          - bfd");
+          b1.push(kv("state", "present"));
+          extra = b1;
+        } else {
+          var o1 = taskHeader("Create OSPF Interface Policy " + v.ospf_policy + " in common", "cisco.aci.aci_interface_policy_ospf");
+          o1.push(kv("tenant", q("common")));
+          o1.push(kv("ospf", q(v.ospf_policy)));
+          o1.push(kv("network_type", q(v.ospf_network_type)));
+          o1.push("        controls:");
+          o1.push("          - bfd");
+          o1.push("          - advert-subnet");
+          o1.push(kv("state", "present"));
+
+          var o2 = taskHeader("Bind OSPF policy to interface profile " + ip, "cisco.aci.aci_l3out_logical_interface_profile_ospf_policy");
+          o2.push(kv("tenant", q("common")));
+          o2.push(kv("l3out", q(v.l3out)));
+          o2.push(kv("node_profile", q(np)));
+          o2.push(kv("interface_profile", q(ip)));
+          o2.push(kv("ospf_policy", q(v.ospf_policy)));
+          o2.push(kv("state", "present"));
+          extra = o1.concat(o2);
+        }
+
+        return playbook("Shared L3Out - L3Out in Tenant common (" + v.l3protocol.toUpperCase() + ")", t1.concat(t2, t3, t4, t5, extra));
+      }
+    },
+    {
+      id: "form-common-extepg",
+      section: "shared_l3out",
+      title: "6.3 Shared External EPG & Route/Security Subnet Flags",
+      guiPath: "Tenants -> common -> Networking -> L3Outs -> [L3Out] -> External EPGs",
+      modules: "cisco.aci.aci_l3out_extepg, cisco.aci.aci_l3out_extsubnet",
+      mitClasses: "l3ext:InstP, l3ext:Subnet",
+      filename: "40-common-extepg-shared-subnets.yml",
+      description: "Create an External EPG on the common L3Out and mark external prefixes with shared-rtctrl (Shared Route Control) and shared-security (Shared Security Import) for cross-VRF / cross-tenant leaking.",
+      fields: [
+        { name: "l3out", label: "Common L3Out Name", type: "text", default: "SHARED_WAN_L3OUT" },
+        { name: "extepg", label: "External EPG Name", type: "text", default: "WAN_SHARED_EXTEPG" },
+        { name: "network", label: "External Subnet CIDR", type: "text", default: "0.0.0.0/0" },
+        { name: "scope_preset", label: "Subnet Scope Flags", type: "select", default: "shared-rtctrl+shared-security+import-security", options: ["shared-rtctrl+shared-security+import-security", "shared-rtctrl+shared-security+export-rtctrl+import-security", "import-security+export-rtctrl"] },
+        { name: "aggregate_shared", label: "Aggregate shared-rtctrl (0.0.0.0/0)", type: "select", default: "yes", options: ["yes", "no"] }
+      ],
+      build: function (v) {
+        var t1 = taskHeader("Create External EPG " + v.extepg + " in common", "cisco.aci.aci_l3out_extepg");
+        t1.push(kv("tenant", q("common")));
+        t1.push(kv("l3out", q(v.l3out)));
+        t1.push(kv("extepg", q(v.extepg)));
+        t1.push(kv("state", "present"));
+
+        var scopes = v.scope_preset.split("+");
+        var t2 = taskHeader("Add shared subnet " + v.network + " to " + v.extepg, "cisco.aci.aci_l3out_extsubnet");
+        t2.push(kv("tenant", q("common")));
+        t2.push(kv("l3out", q(v.l3out)));
+        t2.push(kv("extepg", q(v.extepg)));
+        t2.push(kv("network", q(v.network)));
+        t2.push("        scope:");
+        scopes.forEach(function (s) {
+          t2.push("          - " + q(s));
+        });
+        if (v.aggregate_shared === "yes" && scopes.indexOf("shared-rtctrl") !== -1) {
+          t2.push("        aggregate:");
+          t2.push('          - "shared-rtctrl"');
+        }
+        t2.push(kv("state", "present"));
+
+        return playbook("Shared L3Out - External EPG with Shared Subnet Flags", t1.concat(t2));
+      }
+    },
+    {
+      id: "form-common-global-contract",
+      section: "shared_l3out",
+      title: "6.4 Global Contract Exported from Tenant common",
+      guiPath: "Tenants -> common -> Contracts -> Standard -> Create Contract (Scope: Global)",
+      modules: "cisco.aci.aci_filter, cisco.aci.aci_filter_entry, cisco.aci.aci_contract, cisco.aci.aci_contract_subject, cisco.aci.aci_contract_subject_to_filter, cisco.aci.aci_l3out_extepg_to_contract, cisco.aci.aci_contract_export",
+      mitClasses: "vz:Filter, vz:BrCP, vz:Subj, fv:RsProv, vz:CPIf",
+      filename: "41-common-global-contract.yml",
+      description: "Create a Filter and Global-scoped Contract in tenant common, provide it on the common External EPG, and optionally export a Contract Interface (vz:CPIf) to a target tenant.",
+      fields: [
+        { name: "filter_name", label: "Filter Name", type: "text", default: "SHARED_WAN_FLT" },
+        { name: "ether_type", label: "EtherType", type: "select", default: "ip", options: ["ip", "arp", "unspecified"] },
+        { name: "ip_protocol", label: "IP Protocol", type: "select", default: "tcp", options: ["tcp", "udp", "icmp", "unspecified"] },
+        { name: "dst_port", label: "Destination Port", type: "text", default: "443" },
+        { name: "contract", label: "Global Contract Name", type: "text", default: "SHARED_L3OUT_GLOBAL_CON" },
+        { name: "subject", label: "Contract Subject", type: "text", default: "PERMIT_WAN" },
+        { name: "l3out", label: "Common L3Out Name", type: "text", default: "SHARED_WAN_L3OUT" },
+        { name: "extepg", label: "Common External EPG", type: "text", default: "WAN_SHARED_EXTEPG" },
+        { name: "export_cpif", label: "Also Export vz:CPIf Interface", type: "select", default: "no", options: ["no", "yes"] },
+        { name: "dest_tenant", label: "Export Destination Tenant", type: "text", default: "Tenant_A", showWhen: { field: "export_cpif", value: "yes" } },
+        { name: "cpif_name", label: "Contract Interface Name", type: "text", default: "CPIF_SHARED_WAN", showWhen: { field: "export_cpif", value: "yes" } }
+      ],
+      build: function (v) {
+        var t1 = taskHeader("Create Filter " + v.filter_name + " in common", "cisco.aci.aci_filter");
+        t1.push(kv("tenant", q("common")));
+        t1.push(kv("filter", q(v.filter_name)));
+        t1.push(kv("state", "present"));
+
+        var t2 = taskHeader("Add entry to " + v.filter_name, "cisco.aci.aci_filter_entry");
+        t2.push(kv("tenant", q("common")));
+        t2.push(kv("filter", q(v.filter_name)));
+        t2.push(kv("entry", q("entry_" + v.ip_protocol)));
+        t2.push(kv("ether_type", q(v.ether_type)));
+        if (v.ether_type === "ip") {
+          t2.push(kv("ip_protocol", q(v.ip_protocol)));
+          if (v.ip_protocol === "tcp" || v.ip_protocol === "udp") {
+            t2.push(kv("dst_port_start", q(v.dst_port)));
+            t2.push(kv("dst_port_end", q(v.dst_port)));
+          }
+        }
+        t2.push(kv("state", "present"));
+
+        var t3 = taskHeader("Create Global Contract " + v.contract + " in common", "cisco.aci.aci_contract");
+        t3.push(kv("tenant", q("common")));
+        t3.push(kv("contract", q(v.contract)));
+        t3.push(kv("scope", q("global")));
+        t3.push(kv("state", "present"));
+
+        var t4 = taskHeader("Create Subject " + v.subject, "cisco.aci.aci_contract_subject");
+        t4.push(kv("tenant", q("common")));
+        t4.push(kv("contract", q(v.contract)));
+        t4.push(kv("subject", q(v.subject)));
+        t4.push(kv("reverse_filter", true));
+        t4.push(kv("state", "present"));
+
+        var t5 = taskHeader("Attach Filter to Subject", "cisco.aci.aci_contract_subject_to_filter");
+        t5.push(kv("tenant", q("common")));
+        t5.push(kv("contract", q(v.contract)));
+        t5.push(kv("subject", q(v.subject)));
+        t5.push(kv("filter", q(v.filter_name)));
+        t5.push(kv("state", "present"));
+
+        var t6 = taskHeader("Provide Global Contract from " + v.extepg, "cisco.aci.aci_l3out_extepg_to_contract");
+        t6.push(kv("tenant", q("common")));
+        t6.push(kv("l3out", q(v.l3out)));
+        t6.push(kv("extepg", q(v.extepg)));
+        t6.push(kv("contract", q(v.contract)));
+        t6.push(kv("contract_type", q("provider")));
+        t6.push(kv("state", "present"));
+
+        var tasks = t1.concat(t2, t3, t4, t5, t6);
+        if (v.export_cpif === "yes") {
+          var t7 = taskHeader("Export Contract Interface " + v.cpif_name + " to " + v.dest_tenant, "cisco.aci.aci_contract_export");
+          t7.push(kv("tenant", q("common")));
+          t7.push(kv("name", q(v.cpif_name)));
+          t7.push(kv("contract", q(v.contract)));
+          t7.push(kv("destination_tenant", q(v.dest_tenant)));
+          t7.push(kv("state", "present"));
+          tasks = tasks.concat(t7);
+        }
+        return playbook("Shared L3Out - Global Contract in Tenant common", tasks);
+      }
+    },
+    {
+      id: "form-tenant-bd-common-l3out",
+      section: "shared_l3out",
+      title: "6.5 User Tenant BD External Subnet & Common L3Out Binding",
+      guiPath: "Tenants -> [Tenant] -> Networking -> Bridge Domains -> [BD] -> Subnets & L3 Configurations",
+      modules: "cisco.aci.aci_bd, cisco.aci.aci_bd_subnet, cisco.aci.aci_bd_to_l3out, cisco.aci.aci_rest",
+      mitClasses: "fv:BD, fv:Subnet, fv:RsBDToOut",
+      filename: "42-tenant-bd-shared-l3out.yml",
+      description: "On the user tenant side, mark the Bridge Domain subnet as Advertised Externally (public) + Shared Between VRFs (shared), and bind the BD to the common L3Out.",
+      fields: [
+        { name: "tenant", label: "User Tenant Name", type: "text", default: "Tenant_A" },
+        { name: "bd", label: "Bridge Domain Name", type: "text", default: "BD_1" },
+        { name: "vrf", label: "Tenant VRF Name", type: "text", default: "VRF_A" },
+        { name: "gateway", label: "Subnet Gateway IP", type: "text", default: "203.0.113.1" },
+        { name: "mask", label: "Prefix Length", type: "number", default: "24" },
+        { name: "subnet_name", label: "Subnet Label", type: "text", default: "Subnet_A" },
+        { name: "subnet_scope", label: "Subnet Scope (public = Advertised Externally)", type: "select", default: "public+shared", options: ["public+shared", "public", "private+shared"] },
+        { name: "common_l3out", label: "Common L3Out Name", type: "text", default: "SHARED_WAN_L3OUT" },
+        { name: "binding_mode", label: "BD-to-L3Out Binding Scope", type: "select", default: "cross_tenant_fvRsBDToOut", options: ["cross_tenant_fvRsBDToOut", "same_tenant_common"] }
+      ],
+      build: function (v) {
+        var scopes = v.subnet_scope.split("+");
+        var bdTenant = v.binding_mode === "same_tenant_common" ? "common" : v.tenant;
+
+        var t1 = taskHeader("Ensure Bridge Domain " + v.bd + " in " + bdTenant, "cisco.aci.aci_bd");
+        t1.push(kv("tenant", q(bdTenant)));
+        t1.push(kv("bd", q(v.bd)));
+        t1.push(kv("vrf", q(v.vrf)));
+        t1.push(kv("enable_routing", true));
+        t1.push(kv("state", "present"));
+
+        var t2 = taskHeader("Configure Advertised Externally & Shared Subnet on " + v.bd, "cisco.aci.aci_bd_subnet");
+        t2.push(kv("tenant", q(bdTenant)));
+        t2.push(kv("bd", q(v.bd)));
+        t2.push(kv("gateway", q(v.gateway)));
+        t2.push(kv("mask", intVal(v.mask, 24)));
+        t2.push(kv("subnet_name", q(v.subnet_name)));
+        t2.push("        scope:");
+        scopes.forEach(function (s) {
+          t2.push("          - " + q(s));
+        });
+        t2.push(kv("state", "present"));
+
+        var t3;
+        if (v.binding_mode === "same_tenant_common") {
+          t3 = taskHeader("Associate " + v.bd + " to L3Out " + v.common_l3out + " in common", "cisco.aci.aci_bd_to_l3out");
+          t3.push(kv("tenant", q("common")));
+          t3.push(kv("bd", q(v.bd)));
+          t3.push(kv("l3out", q(v.common_l3out)));
+          t3.push(kv("state", "present"));
+        } else {
+          t3 = taskHeader("Bind " + v.tenant + "/" + v.bd + " to uni/tn-common/out-" + v.common_l3out, "cisco.aci.aci_rest");
+          t3.push(kv("method", "post"));
+          t3.push(kv("path", q("/api/node/mo/uni/tn-" + v.tenant + "/BD-" + v.bd + "/rsBDToOut-" + v.common_l3out + ".json")));
+          t3.push("        content:");
+          t3.push("          fvRsBDToOut:");
+          t3.push("            attributes:");
+          t3.push("              tnL3extOutName: " + q(v.common_l3out));
+          t3.push("              tDn: " + q("uni/tn-common/out-" + v.common_l3out));
+        }
+
+        return playbook("Shared L3Out - User Tenant BD Subnet and L3Out Association", t1.concat(t2, t3));
+      }
+    },
+    {
+      id: "form-tenant-epg-consume-global",
+      section: "shared_l3out",
+      title: "6.6 User Tenant EPG Consuming Global Contract",
+      guiPath: "Tenants -> [Tenant] -> Application Profiles -> [AP] -> Application EPGs -> [EPG] -> Contracts",
+      modules: "cisco.aci.aci_ap, cisco.aci.aci_epg, cisco.aci.aci_epg_to_contract",
+      mitClasses: "fv:Ap, fv:AEPg, fv:RsCons, fv:RsConsIf",
+      filename: "43-tenant-epg-consume-global-contract.yml",
+      description: "Bind a user-tenant EPG (Tenant A / Tenant B) to consume the Global Contract defined in tenant common (or consume an exported Contract Interface vz:CPIf).",
+      fields: [
+        { name: "tenant", label: "User Tenant Name", type: "text", default: "Tenant_A" },
+        { name: "ap", label: "Application Profile", type: "text", default: "APP_AP" },
+        { name: "epg", label: "Consumer EPG Name", type: "text", default: "EPG_1" },
+        { name: "bd", label: "EPG Bridge Domain", type: "text", default: "BD_1" },
+        { name: "consume_mode", label: "Consumption Mode", type: "select", default: "common_global_contract", options: ["common_global_contract", "exported_contract_interface"] },
+        { name: "contract", label: "Global Contract / CPIf Name", type: "text", default: "SHARED_L3OUT_GLOBAL_CON" }
+      ],
+      build: function (v) {
+        var t1 = taskHeader("Ensure Application Profile " + v.ap, "cisco.aci.aci_ap");
+        t1.push(kv("tenant", q(v.tenant)));
+        t1.push(kv("ap", q(v.ap)));
+        t1.push(kv("state", "present"));
+
+        var t2 = taskHeader("Ensure EPG " + v.epg + " mapped to BD " + v.bd, "cisco.aci.aci_epg");
+        t2.push(kv("tenant", q(v.tenant)));
+        t2.push(kv("ap", q(v.ap)));
+        t2.push(kv("epg", q(v.epg)));
+        t2.push(kv("bd", q(v.bd)));
+        t2.push(kv("state", "present"));
+
+        var cType = v.consume_mode === "exported_contract_interface" ? "interface" : "consumer";
+        var t3 = taskHeader("Consume " + v.contract + " (" + cType + ") from " + v.epg, "cisco.aci.aci_epg_to_contract");
+        t3.push(kv("tenant", q(v.tenant)));
+        t3.push(kv("ap", q(v.ap)));
+        t3.push(kv("epg", q(v.epg)));
+        t3.push(kv("contract", q(v.contract)));
+        t3.push(kv("contract_type", q(cType)));
+        t3.push(kv("state", "present"));
+
+        return playbook("Shared L3Out - User EPG Consumes Global Contract", t1.concat(t2, t3));
+      }
+    }
   ];
+
+  function parseTasksFromYaml(yamlText) {
+    var lines = String(yamlText || "").split("\n");
+    var tasks = [];
+    var cur = null;
+    lines.forEach(function (line) {
+      var mTask = line.match(/^\s{4}-\s+name:\s*(.+)$/);
+      if (mTask) {
+        if (cur) tasks.push(cur);
+        cur = { name: mTask[1].replace(/^"|"$/g, ""), module: "", attrs: {} };
+        return;
+      }
+      if (!cur) return;
+      var mMod = line.match(/^\s{6}(cisco\.aci\.[a-z0-9_]+):\s*$/);
+      if (mMod) {
+        cur.module = mMod[1];
+        return;
+      }
+      var mKv = line.match(/^\s{8}([a-zA-Z0-9_]+):\s*(.+)$/);
+      if (mKv) {
+        cur.attrs[mKv[1]] = mKv[2].replace(/^"|"$/g, "");
+      }
+    });
+    if (cur) tasks.push(cur);
+    return tasks;
+  }
+
+  function buildDryRunPreview(spec, yamlText) {
+    var tasks = parseTasksFromYaml(yamlText);
+    var out = [
+      "PLAY [Check-mode preview for " + spec.filename + "] ****",
+      ""
+    ];
+    var changedCount = 0;
+    var okCount = 0;
+    tasks.forEach(function (t) {
+      var isReadOnly = t.attrs.method === "get" || t.attrs.state === "query";
+      var target = t.attrs.path || (t.attrs.tenant ? ("uni/tn-" + t.attrs.tenant) : "uni/fabric");
+      var objHint = t.attrs.bd || t.attrs.vrf || t.attrs.epg || t.attrs.contract || t.attrs.l3out || t.attrs.service_graph || t.attrs.policy_name || t.attrs.name || t.attrs.pool || t.attrs.domain || "";
+      out.push("TASK [" + t.name + "] ****");
+      if (isReadOnly) {
+        okCount += 1;
+        out.push("ok: [apic1] => {\"changed\": false, \"method\": \"GET\", \"path\": \"" + target + "\"}");
+      } else {
+        changedCount += 1;
+        out.push("changed: [apic1] => (would ensure " + t.module + " -> " + target + (objHint ? "/" + objHint : "") + ")");
+      }
+    });
+    okCount += changedCount;
+    out.push("");
+    out.push("PLAY RECAP *****************************************************");
+    out.push("apic1 : ok=" + okCount + "  changed=" + changedCount + "  unreachable=0  failed=0  skipped=0");
+    return out.join("\n");
+  }
+
+  function cidrFromGwMask(gw, mask) {
+    var parts = String(gw || "").trim().split(".");
+    var m = parseInt(mask, 10);
+    if (parts.length !== 4 || isNaN(m)) return String(gw || "") + "/" + String(mask || "");
+    var ipInt = ((parseInt(parts[0], 10) << 24) >>> 0) + ((parseInt(parts[1], 10) << 16) >>> 0) + ((parseInt(parts[2], 10) << 8) >>> 0) + (parseInt(parts[3], 10) >>> 0);
+    var netmask = m === 0 ? 0 : (0xffffffff << (32 - m)) >>> 0;
+    var netInt = (ipInt & netmask) >>> 0;
+    return [(netInt >>> 24) & 255, (netInt >>> 16) & 255, (netInt >>> 8) & 255, netInt & 255].join(".") + "/" + m;
+  }
+
+  function extractVlanNum(raw) {
+    var s = String(raw || "").trim().toLowerCase().replace(/^vlan-/, "");
+    return /^\d+$/.test(s) ? parseInt(s, 10) : null;
+  }
+
+  function buildNetBoxPreview(spec, values, yamlText) {
+    var tasks = parseTasksFromYaml(yamlText);
+    var payload = {
+      "tenancy.tenants": [],
+      "ipam.vrfs": [],
+      "ipam.prefixes": [],
+      "ipam.vlans": [],
+      "custom_fields_and_tags": {
+        "aci_section": spec.section,
+        "aci_form": spec.id,
+        "tags": ["cisco-aci", spec.section]
+      }
+    };
+    var seenT = {};
+    var seenV = {};
+    var seenP = {};
+    var seenVl = {};
+
+    tasks.forEach(function (t) {
+      var a = t.attrs;
+      if (a.tenant && a.tenant.indexOf("{{") === -1 && !seenT[a.tenant]) {
+        seenT[a.tenant] = true;
+        payload["tenancy.tenants"].push({ name: a.tenant, slug: a.tenant.toLowerCase().replace(/[^a-z0-9]+/g, "-") });
+      }
+      if (t.module === "cisco.aci.aci_vrf" && a.vrf) {
+        var tn = a.tenant || "common";
+        var vkey = tn + ":" + a.vrf;
+        if (!seenV[vkey]) {
+          seenV[vkey] = true;
+          payload["ipam.vrfs"].push({ name: vkey, tenant: tn, custom_fields: { aci_tenant: tn, aci_vrf: a.vrf } });
+        }
+      }
+      if (t.module === "cisco.aci.aci_bd_subnet" && a.gateway && a.mask) {
+        var pfx = cidrFromGwMask(a.gateway, a.mask);
+        if (!seenP[pfx]) {
+          seenP[pfx] = true;
+          payload["ipam.prefixes"].push({ prefix: pfx, tenant: a.tenant || null, custom_fields: { aci_tenant: a.tenant || "", aci_bd: a.bd || "" } });
+        }
+      }
+      if (t.module === "cisco.aci.aci_l3out_extsubnet" && a.network && !seenP[a.network]) {
+        seenP[a.network] = true;
+        payload["ipam.prefixes"].push({ prefix: a.network, tenant: a.tenant || null, custom_fields: { aci_tenant: a.tenant || "", aci_l3out: a.l3out || "", aci_epg: a.extepg || "" } });
+      }
+      if (t.module === "cisco.aci.aci_l3out_interface" && a.addr && a.addr.indexOf("/") !== -1 && !seenP[a.addr]) {
+        seenP[a.addr] = true;
+        payload["ipam.prefixes"].push({ prefix: a.addr, tenant: a.tenant || null, custom_fields: { aci_tenant: a.tenant || "", aci_l3out: a.l3out || "" } });
+      }
+      if (t.module === "cisco.aci.aci_vlan_pool_encap_block" && a.block_start && a.block_end) {
+        var s = parseInt(a.block_start, 10);
+        var e = parseInt(a.block_end, 10);
+        if (!isNaN(s) && !isNaN(e)) {
+          payload["ipam.vlans"].push({ range: s + "-" + e, pool: a.pool || "aci-pool", count: Math.max(0, e - s + 1) });
+        }
+      }
+      if ((t.module === "cisco.aci.aci_static_binding_to_epg" || t.module === "cisco.aci.aci_l4l7_logical_interface") && (a.encap_id || a.encap)) {
+        var vid = extractVlanNum(a.encap_id || a.encap);
+        if (vid !== null && !seenVl[vid]) {
+          seenVl[vid] = true;
+          payload["ipam.vlans"].push({ vid: vid, name: (a.epg || a.logical_interface || "aci") + "-vlan-" + vid, custom_fields: { aci_tenant: a.tenant || "", aci_epg: a.epg || "" } });
+        }
+      }
+    });
+
+    if (values.contract) payload.custom_fields_and_tags.aci_contract = values.contract;
+    if (values.epg) payload.custom_fields_and_tags.aci_epg = values.epg;
+    if (values.bd) payload.custom_fields_and_tags.aci_bd = values.bd;
+    if (values.l3out) payload.custom_fields_and_tags.aci_l3out = values.l3out;
+    if (values.service_graph) payload.custom_fields_and_tags.aci_service_graph = values.service_graph;
+
+    return JSON.stringify(payload, null, 2);
+  }
+
+  function createPushStagesStrip() {
+    var stages = ["Form", "Lint", "Dry run (--check --diff)", "Approval", "Apply", "NetBox sync"];
+    var strip = document.createElement("div");
+    strip.className = "push-stages";
+    var lbl = document.createElement("span");
+    lbl.className = "push-stages-label";
+    lbl.textContent = "Push stages:";
+    strip.appendChild(lbl);
+    stages.forEach(function (st, idx) {
+      if (idx > 0) {
+        var arr = document.createElement("span");
+        arr.className = "stage-arrow";
+        arr.textContent = "->";
+        strip.appendChild(arr);
+      }
+      var pill = document.createElement("span");
+      pill.className = "stage-pill" + (idx === 0 ? " is-active" : "");
+      pill.textContent = st;
+      strip.appendChild(pill);
+    });
+    return strip;
+  }
 
   function createFormCard(spec) {
     var card = document.createElement("article");
@@ -1665,6 +2754,78 @@
     grid.appendChild(right);
     card.appendChild(grid);
 
+    // Push stages strip
+    card.appendChild(createPushStagesStrip());
+
+    // Before push 3-panel container
+    var bpWrap = document.createElement("div");
+    bpWrap.className = "before-push-wrap";
+
+    var bpHead = document.createElement("div");
+    bpHead.className = "before-push-head";
+    var bpTitle = document.createElement("h4");
+    bpTitle.className = "before-push-title";
+    bpTitle.textContent = "Before push — Pre-flight inspection";
+    var bpBadge = document.createElement("span");
+    bpBadge.className = "bp-disclaimer";
+    bpBadge.textContent = "Preview computed in browser; the real dry run runs in CI";
+    bpHead.appendChild(bpTitle);
+    bpHead.appendChild(bpBadge);
+    bpWrap.appendChild(bpHead);
+
+    var bpGrid = document.createElement("div");
+    bpGrid.className = "before-push-grid";
+
+    // (a) Change data panel
+    var pChange = document.createElement("div");
+    pChange.className = "bp-panel";
+    var pChangeH = document.createElement("h4");
+    pChangeH.textContent = "(a) Change data";
+    var pChangeWrap = document.createElement("div");
+    pChangeWrap.className = "bp-table-wrap";
+    var pChangeTbl = document.createElement("table");
+    pChangeTbl.className = "bp-table no-sort";
+    pChangeTbl.innerHTML = "<thead><tr><th>Field</th><th>Value</th></tr></thead>";
+    var pChangeBody = document.createElement("tbody");
+    pChangeTbl.appendChild(pChangeBody);
+    pChangeWrap.appendChild(pChangeTbl);
+    pChange.appendChild(pChangeH);
+    pChange.appendChild(pChangeWrap);
+
+    // (b) Dry-run outcome panel
+    var pDry = document.createElement("div");
+    pDry.className = "bp-panel";
+    var pDryH = document.createElement("h4");
+    pDryH.textContent = "(b) Dry-run outcome (--check --diff)";
+    var pDryPre = document.createElement("pre");
+    pDryPre.className = "bp-pre";
+    var pDryNote = document.createElement("p");
+    pDryNote.className = "bp-note";
+    pDryNote.textContent = "Preview computed in browser; the real dry run runs in CI against a self-hosted APIC runner.";
+    pDry.appendChild(pDryH);
+    pDry.appendChild(pDryPre);
+    pDry.appendChild(pDryNote);
+
+    // (c) NetBox data panel
+    var pNb = document.createElement("div");
+    pNb.className = "bp-panel";
+    var pNbH = document.createElement("h4");
+    pNbH.textContent = "(c) NetBox 4.x sync data";
+    var pNbPre = document.createElement("pre");
+    pNbPre.className = "bp-pre";
+    var pNbNote = document.createElement("p");
+    pNbNote.className = "bp-note";
+    pNbNote.textContent = "Payloads written by cicd/netbox_sync.py after apply (custom fields: aci_tenant, aci_vrf, aci_bd, aci_epg, aci_contract, aci_l3out, aci_service_graph).";
+    pNb.appendChild(pNbH);
+    pNb.appendChild(pNbPre);
+    pNb.appendChild(pNbNote);
+
+    bpGrid.appendChild(pChange);
+    bpGrid.appendChild(pDry);
+    bpGrid.appendChild(pNb);
+    bpWrap.appendChild(bpGrid);
+    card.appendChild(bpWrap);
+
     function syncVisibility() {
       fieldRows.forEach(function (item) {
         if (!item.spec.showWhen) return;
@@ -1674,9 +2835,30 @@
       });
     }
 
+    function updateChangeDataTable() {
+      pChangeBody.innerHTML = "";
+      fieldRows.forEach(function (item) {
+        if (item.row.classList.contains("is-hidden")) return;
+        var tr = document.createElement("tr");
+        var td1 = document.createElement("td");
+        td1.textContent = item.spec.label;
+        var td2 = document.createElement("td");
+        var c = document.createElement("code");
+        c.textContent = String(values[item.spec.name] || "");
+        td2.appendChild(c);
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        pChangeBody.appendChild(tr);
+      });
+    }
+
     function render() {
       syncVisibility();
-      pre.textContent = spec.build(values);
+      var yamlText = spec.build(values);
+      pre.textContent = yamlText;
+      updateChangeDataTable();
+      pDryPre.textContent = buildDryRunPreview(spec, yamlText);
+      pNbPre.textContent = buildNetBoxPreview(spec, values, yamlText);
     }
 
     fieldRows.forEach(function (item) {
@@ -1775,7 +2957,9 @@
       initial: "1. Initial Setup",
       bau: "2. BAU Operations",
       monitoring: "3. Monitoring Policies",
-      troubleshooting: "4. Troubleshooting Policies"
+      troubleshooting: "4. Troubleshooting Policies",
+      service_graphs: "5. Service Graphs",
+      shared_l3out: "6. Shared L3Out (common)"
     };
     FORMS.forEach(function (f) {
       var tr = document.createElement("tr");
@@ -1815,12 +2999,46 @@
     });
   }
 
+  function initCicdPack() {
+    if (typeof fetch !== "function") return;
+    document.querySelectorAll("[data-cicd-src]").forEach(function (pre) {
+      var src = pre.getAttribute("data-cicd-src");
+      fetch(src).then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.text();
+      }).then(function (txt) {
+        pre.textContent = txt;
+      }).catch(function () {
+        pre.textContent = "Unable to preview " + src + " in this context. Use the Download link above.";
+      });
+    });
+    document.querySelectorAll("[data-cicd-copy]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var targetId = btn.getAttribute("data-cicd-copy");
+        var el = document.getElementById(targetId);
+        if (!el) return;
+        var text = el.textContent;
+        function done() {
+          btn.textContent = "Copied";
+          setTimeout(function () { btn.textContent = "Copy"; }, 1400);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done).catch(function () { fallbackCopy(text, done); });
+        } else {
+          fallbackCopy(text, done);
+        }
+      });
+    });
+  }
+
   function mountAll() {
     var containers = {
       initial: document.getElementById("forms-initial"),
       bau: document.getElementById("forms-bau"),
       monitoring: document.getElementById("forms-monitoring"),
-      troubleshooting: document.getElementById("forms-troubleshooting")
+      troubleshooting: document.getElementById("forms-troubleshooting"),
+      service_graphs: document.getElementById("forms-service-graphs"),
+      shared_l3out: document.getElementById("forms-shared-l3out")
     };
     FORMS.forEach(function (spec) {
       var host = containers[spec.section];
@@ -1828,6 +3046,7 @@
     });
     buildRefTable();
     initTreeMaps();
+    initCicdPack();
     if (typeof window.ltopoSortInit === "function") {
       window.ltopoSortInit();
     }

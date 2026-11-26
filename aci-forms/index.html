@@ -168,8 +168,8 @@ apply(preferred());
 
 <p class="kicker">Hidden page</p>
 <h1>ACI GUI Forms &amp; Live Ansible YAML Generator</h1>
-<p class="ver"><a href="/aci-forms/history/">v1 · 26 Nov 2026, 11:34 AM AEDT</a></p>
-<p class="lede">Browser-only Cisco APIC GUI-style forms that live-generate ready-to-run <code>cisco.aci</code> Ansible YAML playbooks as you type. Every section includes an interactive object-hierarchy tree map (click any node to jump to its form), an APIC GUI click-order checklist, and copy/download YAML controls.</p>
+<p class="ver"><a href="/aci-forms/history/">v2 · 26 Nov 2026, 12:06 PM AEDT</a></p>
+<p class="lede">Browser-only Cisco APIC GUI-style forms that live-generate ready-to-run <code>cisco.aci</code> Ansible YAML playbooks as you type. Every section includes an interactive object-hierarchy tree map (click any node to jump to its form), an APIC GUI click-order checklist, copy/download YAML controls, a live Before-Push inspection bar (Change data, simulated --check --diff preview, and NetBox 4.x sync payload), and a CI/CD workflow pack.</p>
 
 <div class="cred-banner">
   <strong>Offline &amp; credential-safe by design:</strong> All form rendering and YAML generation run locally in your browser. This page never contacts an APIC. Generated playbooks always emit Ansible vault/inventory placeholders (<code>host: "{{ apic_host }}"</code>, <code>username: "{{ apic_username }}"</code>, <code>password: "{{ apic_password }}"</code>) and use RFC 5737 documentation IP addresses by default.
@@ -204,6 +204,22 @@ apply(preferred());
       <li><a href="#forms-troubleshooting">Interactive Forms (4.1 – 4.6)</a></li>
     </ol>
   </li>
+  <li><a href="#service-graphs">5. Service Graphs</a>
+    <ol>
+      <li><a href="#tm-service-graphs">Object Hierarchy Tree Map</a></li>
+      <li><a href="#guide-service-graphs">APIC GUI Step-by-Step Guide</a></li>
+      <li><a href="#forms-service-graphs">Interactive Forms (5.1 – 5.6)</a></li>
+    </ol>
+  </li>
+  <li><a href="#shared-l3out">6. Shared L3Out in Tenant common</a>
+    <ol>
+      <li><a href="#tm-shared-l3out">Object Hierarchy Tree Map</a></li>
+      <li><a href="#guide-shared-l3out">APIC GUI Step-by-Step Guide</a></li>
+      <li><a href="#forms-shared-l3out">Interactive Forms (6.1 – 6.6)</a></li>
+    </ol>
+  </li>
+  <li><a href="#tenant-model-diagram">Tenant Object Model &amp; Shared common Diagram</a></li>
+  <li><a href="#cicd-pack">CI/CD Pipeline &amp; NetBox 4.x Sync Pack</a></li>
   <li><a href="#reference-table">Form &amp; Module Reference Table</a></li>
   <li><a href="#comments">Comments</a></li>
   <li><a href="#versions">Versions</a></li>
@@ -583,6 +599,445 @@ apply(preferred());
   <div id="forms-troubleshooting"></div>
 </section>
 
+
+<!-- ==================== ORIGINAL SLIDE DIAGRAM ==================== -->
+<section id="tenant-model-diagram" class="section-block">
+  <h2>Tenant Object Model &amp; Shared <code>common</code> Topology Diagram</h2>
+  <p class="section-intro">Original SVG based on Aung’s tenant architecture slide: top shows parent/child containment (solid) vs policy relationships (dashed) with <code>1:n</code> / <code>n:1</code> cardinality; bottom shows <code>root/uni</code> splitting into <code>Tenant A</code> and <code>Tenant B</code> sharing <code>uni/tn-common/ctx-default</code> and <code>uni/tn-common/BD-default</code>. Click any object box to jump to its form.</p>
+
+  <div class="slide-diagram-card">
+    <h3>Tenant Object Model (Top) &amp; Shared <code>common</code> Tenant Layout (Bottom)</h3>
+    <p class="treemap-hint">Solid line = parent/child containment · Dashed line = relationship object (<code>fvRsBd</code>, <code>fvRsCtx</code>, <code>l3extRsEctx</code>, <code>fvRsProv/Cons</code>, <code>vzRsSubjFiltAtt</code>). Click any highlighted box to jump to its form.</p>
+    <div class="treemap-scroll">
+      <svg class="aci-slide-svg" viewBox="0 0 1160 760" role="img" aria-label="Original SVG diagram of ACI Tenant Object Model and Shared common VRF/BD topology">
+        <defs>
+          <marker id="sd-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="currentColor"/>
+          </marker>
+          <marker id="sd-dash-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#d97706"/>
+          </marker>
+        </defs>
+
+        <!-- TOP PART: TENANT OBJECT MODEL -->
+        <rect class="sd-bg-box" x="10" y="10" width="1140" height="360" rx="10"/>
+
+        <!-- Legend -->
+        <rect class="sd-card-static" x="26" y="22" width="320" height="58" rx="6"/>
+        <line class="sd-solid" x1="38" y1="40" x2="78" y2="40"/>
+        <text class="sd-sub" x="88" y="44">Solid = Parent / Child (1:n)</text>
+        <line class="sd-dash" x1="38" y1="62" x2="78" y2="62"/>
+        <text class="sd-sub" x="88" y="66">Dashed = Relationship Object (1/n)</text>
+
+        <!-- Root Tenant -->
+        <g class="sd-node" data-jump="form-tenant-vrf">
+          <rect class="sd-root-bar" x="500" y="24" width="160" height="40" rx="8"/>
+          <text class="sd-root-txt" x="580" y="49" text-anchor="middle">Tenant (fv:Tenant)</text>
+        </g>
+
+        <!-- Group boxes -->
+        <rect class="sd-grp-net" x="26" y="104" width="525" height="250" rx="8"/>
+        <text class="sd-grp-lbl" x="42" y="126">Tenant Networking</text>
+
+        <rect class="sd-grp-pol" x="572" y="104" width="562" height="250" rx="8"/>
+        <text class="sd-grp-lbl" x="588" y="126">Tenant Policies</text>
+
+        <!-- Solid parent-child lines from Tenant (580,64) to 6 children -->
+        <path class="sd-solid" d="M580 64 V86 M102 86 H1058 M102 86 V142 M235 86 V142 M370 86 V142 M645 86 V142 M850 86 V142 M1058 86 V142"/>
+        <text class="sd-cardinal" x="588" y="79">1</text>
+        <text class="sd-cardinal" x="108" y="136">n</text>
+        <text class="sd-cardinal" x="241" y="136">n</text>
+        <text class="sd-cardinal" x="376" y="136">n</text>
+        <text class="sd-cardinal" x="651" y="136">n</text>
+        <text class="sd-cardinal" x="856" y="136">n</text>
+        <text class="sd-cardinal" x="1064" y="136">n</text>
+
+        <!-- Networking Nodes: L3Out, VRF, BD, Subnet -->
+        <g class="sd-node" data-jump="form-l3out">
+          <rect class="sd-card" x="38" y="142" width="128" height="46" rx="6"/>
+          <text class="sd-title" x="102" y="162" text-anchor="middle">L3Out</text>
+          <text class="sd-sub" x="102" y="178" text-anchor="middle">l3ext:Out</text>
+        </g>
+        <g class="sd-node" data-jump="form-tenant-vrf">
+          <rect class="sd-card" x="176" y="142" width="118" height="46" rx="6"/>
+          <text class="sd-title" x="235" y="162" text-anchor="middle">VRF</text>
+          <text class="sd-sub" x="235" y="178" text-anchor="middle">fv:Ctx</text>
+        </g>
+        <g class="sd-node" data-jump="form-bd-subnet">
+          <rect class="sd-card" x="308" y="142" width="126" height="46" rx="6"/>
+          <text class="sd-title" x="371" y="162" text-anchor="middle">Bridge Domain</text>
+          <text class="sd-sub" x="371" y="178" text-anchor="middle">fv:BD</text>
+        </g>
+        <g class="sd-node" data-jump="form-bd-subnet">
+          <rect class="sd-card" x="308" y="250" width="126" height="46" rx="6"/>
+          <text class="sd-title" x="371" y="270" text-anchor="middle">Subnet</text>
+          <text class="sd-sub" x="371" y="286" text-anchor="middle">fv:Subnet</text>
+        </g>
+        <!-- BD to Subnet 1:n -->
+        <line class="sd-solid" x1="371" y1="188" x2="371" y2="250"/>
+        <text class="sd-cardinal" x="378" y="203">1</text>
+        <text class="sd-cardinal" x="378" y="242">n</text>
+
+        <!-- Policies Nodes: AP, EPG, Contract, Subject, Filter -->
+        <g class="sd-node" data-jump="form-ap-epg">
+          <rect class="sd-card" x="586" y="142" width="126" height="46" rx="6"/>
+          <text class="sd-title" x="649" y="162" text-anchor="middle">App Profile (AP)</text>
+          <text class="sd-sub" x="649" y="178" text-anchor="middle">fv:Ap</text>
+        </g>
+        <g class="sd-node" data-jump="form-ap-epg">
+          <rect class="sd-card" x="586" y="250" width="126" height="46" rx="6"/>
+          <text class="sd-title" x="649" y="270" text-anchor="middle">EPG</text>
+          <text class="sd-sub" x="649" y="286" text-anchor="middle">fv:AEPg</text>
+        </g>
+        <!-- AP to EPG 1:n -->
+        <line class="sd-solid" x1="649" y1="188" x2="649" y2="250"/>
+        <text class="sd-cardinal" x="656" y="203">1</text>
+        <text class="sd-cardinal" x="656" y="242">n</text>
+
+        <g class="sd-node" data-jump="form-contract">
+          <rect class="sd-card" x="786" y="142" width="128" height="46" rx="6"/>
+          <text class="sd-title" x="850" y="162" text-anchor="middle">Contract</text>
+          <text class="sd-sub" x="850" y="178" text-anchor="middle">vz:BrCP</text>
+        </g>
+        <g class="sd-node" data-jump="form-contract">
+          <rect class="sd-card" x="786" y="250" width="128" height="46" rx="6"/>
+          <text class="sd-title" x="850" y="270" text-anchor="middle">Subject</text>
+          <text class="sd-sub" x="850" y="286" text-anchor="middle">vz:Subj</text>
+        </g>
+        <!-- Contract to Subject 1:n -->
+        <line class="sd-solid" x1="850" y1="188" x2="850" y2="250"/>
+        <text class="sd-cardinal" x="857" y="203">1</text>
+        <text class="sd-cardinal" x="857" y="242">n</text>
+
+        <g class="sd-node" data-jump="form-contract">
+          <rect class="sd-card" x="994" y="142" width="126" height="46" rx="6"/>
+          <text class="sd-title" x="1057" y="162" text-anchor="middle">Filter</text>
+          <text class="sd-sub" x="1057" y="178" text-anchor="middle">vz:Filter</text>
+        </g>
+
+        <!-- Dashed relationship lines -->
+        <path class="sd-dash" d="M166 165 H176"/>
+        <text class="sd-cardinal" x="150" y="137">n</text>
+        <text class="sd-cardinal" x="178" y="137">1</text>
+        <path class="sd-dash" d="M308 165 H294"/>
+        <text class="sd-cardinal" x="299" y="160">n</text>
+        <text class="sd-cardinal" x="296" y="182">1</text>
+        <path class="sd-dash" d="M586 273 H468 V176 H434"/>
+        <text class="sd-cardinal" x="572" y="268">n</text>
+        <text class="sd-cardinal" x="440" y="172">1 (fvRsBd)</text>
+        <path class="sd-dash" d="M712 268 H746 V165 H786"/>
+        <text class="sd-cardinal" x="717" y="263">n</text>
+        <text class="sd-cardinal" x="748" y="159">n (Prov/Cons)</text>
+        <path class="sd-dash" d="M914 273 H964 V165 H994"/>
+        <text class="sd-cardinal" x="920" y="268">n</text>
+        <text class="sd-cardinal" x="966" y="159">n</text>
+
+        <!-- BOTTOM PART: ROOT/UNI SHARED COMMON TOPOLOGY -->
+        <rect class="sd-bg-box" x="10" y="388" width="1140" height="362" rx="10"/>
+
+        <rect class="sd-root-bar" x="26" y="402" width="1108" height="34" rx="6"/>
+        <text class="sd-root-txt" x="580" y="424" text-anchor="middle">root / uni</text>
+
+        <rect class="sd-tenant-col" x="26" y="446" width="540" height="288" rx="8"/>
+        <text class="sd-title" x="296" y="468" text-anchor="middle">Tenant A (uni/tn-Tenant_A)</text>
+
+        <rect class="sd-tenant-col" x="594" y="446" width="540" height="288" rx="8"/>
+        <text class="sd-title" x="864" y="468" text-anchor="middle">Tenant B (uni/tn-Tenant_B)</text>
+
+        <line class="sd-divider" x1="580" y1="442" x2="580" y2="740"/>
+
+        <g class="sd-node" data-jump="form-common-vrf-bd">
+          <rect class="sd-common-vrf" x="48" y="482" width="1064" height="32" rx="6"/>
+          <text class="sd-root-txt" x="580" y="502" text-anchor="middle">Shared VRF: uni/tn-common/ctx-default</text>
+        </g>
+
+        <g class="sd-node" data-jump="form-tenant-bd-common-l3out">
+          <rect class="sd-bd-box" x="48" y="530" width="248" height="106" rx="8"/>
+          <text class="sd-title" x="172" y="550" text-anchor="middle">BD 1 (Tenant A)</text>
+          <rect class="sd-sub-pill" x="72" y="564" width="200" height="28" rx="5"/>
+          <text class="sd-sub" x="172" y="582" text-anchor="middle">Subnet A (Advertised Ext.)</text>
+        </g>
+
+        <g class="sd-node" data-jump="form-common-vrf-bd">
+          <rect class="sd-common-bd" x="322" y="530" width="516" height="106" rx="8"/>
+          <text class="sd-title" x="580" y="550" text-anchor="middle">Shared BD: uni/tn-common/BD-default</text>
+          <rect class="sd-sub-pill" x="352" y="566" width="208" height="28" rx="5"/>
+          <text class="sd-sub" x="456" y="584" text-anchor="middle">Subnet B (common)</text>
+          <rect class="sd-sub-pill" x="600" y="566" width="208" height="28" rx="5"/>
+          <text class="sd-sub" x="704" y="584" text-anchor="middle">Subnet C (common)</text>
+        </g>
+
+        <g class="sd-node" data-jump="form-tenant-bd-common-l3out">
+          <rect class="sd-bd-box" x="864" y="530" width="248" height="106" rx="8"/>
+          <text class="sd-title" x="988" y="550" text-anchor="middle">BD 2 (Tenant B)</text>
+          <rect class="sd-sub-pill" x="888" y="564" width="200" height="28" rx="5"/>
+          <text class="sd-sub" x="988" y="582" text-anchor="middle">Subnet D (Advertised Ext.)</text>
+        </g>
+
+        <line class="sd-solid" x1="110" y1="636" x2="110" y2="664"/>
+        <line class="sd-solid" x1="232" y1="636" x2="232" y2="664"/>
+        <line class="sd-dash" x1="382" y1="636" x2="382" y2="664"/>
+        <line class="sd-dash" x1="504" y1="636" x2="504" y2="664"/>
+
+        <g class="sd-node" data-jump="form-tenant-epg-consume-global">
+          <rect class="sd-epg-pill" x="54" y="664" width="112" height="44" rx="6"/>
+          <text class="sd-title" x="110" y="684" text-anchor="middle">EPG 1</text>
+          <text class="sd-sub" x="110" y="699" text-anchor="middle">Tenant A / BD 1</text>
+        </g>
+        <g class="sd-node" data-jump="form-tenant-epg-consume-global">
+          <rect class="sd-epg-pill" x="176" y="664" width="112" height="44" rx="6"/>
+          <text class="sd-title" x="232" y="684" text-anchor="middle">EPG 2</text>
+          <text class="sd-sub" x="232" y="699" text-anchor="middle">Tenant A / BD 1</text>
+        </g>
+        <g class="sd-node" data-jump="form-common-vrf-bd">
+          <rect class="sd-epg-pill" x="326" y="664" width="112" height="44" rx="6"/>
+          <text class="sd-title" x="382" y="684" text-anchor="middle">EPG 3</text>
+          <text class="sd-sub" x="382" y="699" text-anchor="middle">common BD</text>
+        </g>
+        <g class="sd-node" data-jump="form-common-vrf-bd">
+          <rect class="sd-epg-pill" x="448" y="664" width="112" height="44" rx="6"/>
+          <text class="sd-title" x="504" y="684" text-anchor="middle">EPG 4</text>
+          <text class="sd-sub" x="504" y="699" text-anchor="middle">common BD</text>
+        </g>
+
+        <line class="sd-dash" x1="656" y1="636" x2="656" y2="664"/>
+        <line class="sd-dash" x1="778" y1="636" x2="778" y2="664"/>
+        <line class="sd-solid" x1="928" y1="636" x2="928" y2="664"/>
+        <line class="sd-solid" x1="1050" y1="636" x2="1050" y2="664"/>
+
+        <g class="sd-node" data-jump="form-common-vrf-bd">
+          <rect class="sd-epg-pill" x="600" y="664" width="112" height="44" rx="6"/>
+          <text class="sd-title" x="656" y="684" text-anchor="middle">EPG 1</text>
+          <text class="sd-sub" x="656" y="699" text-anchor="middle">common BD</text>
+        </g>
+        <g class="sd-node" data-jump="form-common-vrf-bd">
+          <rect class="sd-epg-pill" x="722" y="664" width="112" height="44" rx="6"/>
+          <text class="sd-title" x="778" y="684" text-anchor="middle">EPG 2</text>
+          <text class="sd-sub" x="778" y="699" text-anchor="middle">common BD</text>
+        </g>
+        <g class="sd-node" data-jump="form-tenant-epg-consume-global">
+          <rect class="sd-epg-pill" x="872" y="664" width="112" height="44" rx="6"/>
+          <text class="sd-title" x="928" y="684" text-anchor="middle">EPG 3</text>
+          <text class="sd-sub" x="928" y="699" text-anchor="middle">Tenant B / BD 2</text>
+        </g>
+        <g class="sd-node" data-jump="form-tenant-epg-consume-global">
+          <rect class="sd-epg-pill" x="994" y="664" width="112" height="44" rx="6"/>
+          <text class="sd-title" x="1050" y="684" text-anchor="middle">EPG 4</text>
+          <text class="sd-sub" x="1050" y="699" text-anchor="middle">Tenant B / BD 2</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SECTION 5: SERVICE GRAPHS ==================== -->
+<section id="service-graphs" class="section-block">
+  <h2>5. Service Graphs</h2>
+  <p class="section-intro">L4-L7 firewall and ADC insertion using <code>cisco.aci</code> L4-L7 modules: Logical &amp; Concrete Devices with cluster interfaces, Service Graph Templates with function nodes, Policy-Based Redirect (PBR) with optional IP SLA health groups, Device Selection Policies, and Contract Subject attachment.</p>
+
+  <div id="tm-service-graphs" class="treemap-card">
+    <h3>Object Hierarchy Tree Map — Service Graphs</h3>
+    <p class="treemap-hint">Click any node box below to jump to and highlight its form.</p>
+    <div class="treemap-scroll">
+      <svg class="aci-treemap" viewBox="0 0 1145 270" role="img" aria-label="Service Graphs ACI object hierarchy tree map">
+        <path class="tm-edge" d="M560 46 V70 M190 70 H930 M190 70 V92 M560 70 V92 M930 70 V92"/>
+        <path class="tm-edge" d="M190 124 V212 M190 162 H210 M190 212 H210"/>
+        <path class="tm-edge" d="M560 124 V212 M560 162 H580 M560 212 H580"/>
+        <path class="tm-edge" d="M930 124 V212 M930 162 H950 M930 212 H950"/>
+
+        <rect class="tm-root" x="415" y="10" width="290" height="36" rx="8"/>
+        <text class="tm-root-txt" x="560" y="33" text-anchor="middle">Tenant Services (L4-L7 &amp; PBR)</text>
+
+        <rect class="tm-grp" x="80" y="92" width="220" height="32" rx="6"/>
+        <text class="tm-grp-txt" x="190" y="112" text-anchor="middle">Devices &amp; Graph Template</text>
+
+        <rect class="tm-grp" x="450" y="92" width="220" height="32" rx="6"/>
+        <text class="tm-grp-txt" x="560" y="112" text-anchor="middle">PBR &amp; Device Selection</text>
+
+        <rect class="tm-grp" x="820" y="92" width="220" height="32" rx="6"/>
+        <text class="tm-grp-txt" x="930" y="112" text-anchor="middle">Contract Binding &amp; Verify</text>
+
+        <g class="tm-node" data-jump="form-l4l7-device">
+          <rect x="210" y="140" width="180" height="44" rx="6"/>
+          <text class="tm-title" x="220" y="159">5.1 L4-L7 Device &amp; Ifs</text>
+          <text class="tm-sub" x="220" y="175">vns:LDevVip / CDev / LIf</text>
+        </g>
+        <g class="tm-node" data-jump="form-sg-template">
+          <rect x="210" y="192" width="180" height="44" rx="6"/>
+          <text class="tm-title" x="220" y="211">5.2 Function Node &amp; Graph</text>
+          <text class="tm-sub" x="220" y="227">vns:AbsGraph / AbsNode</text>
+        </g>
+
+        <g class="tm-node" data-jump="form-pbr-policy">
+          <rect x="580" y="140" width="185" height="44" rx="6"/>
+          <text class="tm-title" x="590" y="159">5.3 PBR &amp; IP SLA</text>
+          <text class="tm-sub" x="590" y="175">vns:SvcRedirectPol / SLA</text>
+        </g>
+        <g class="tm-node" data-jump="form-dev-selection">
+          <rect x="580" y="192" width="185" height="44" rx="6"/>
+          <text class="tm-title" x="590" y="211">5.4 Device Selection</text>
+          <text class="tm-sub" x="590" y="227">vns:LDevCtx / LIfCtx</text>
+        </g>
+
+        <g class="tm-node" data-jump="form-apply-sg">
+          <rect x="945" y="140" width="185" height="44" rx="6"/>
+          <text class="tm-title" x="955" y="159">5.5 Apply to Subject</text>
+          <text class="tm-sub" x="955" y="175">vz:RsSubjGraphAtt</text>
+        </g>
+        <g class="tm-node" data-jump="form-sg-query">
+          <rect x="945" y="192" width="185" height="44" rx="6"/>
+          <text class="tm-title" x="955" y="211">5.6 Verify Graph State</text>
+          <text class="tm-sub" x="955" y="227">vns:GraphInst (GET)</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div id="guide-service-graphs" class="guide-card">
+    <h3>Step-by-Step APIC GUI Order — Service Graphs</h3>
+    <ol class="guide-steps">
+      <li><a href="#form-l4l7-device">5.1 Create L4-L7 Logical Device, Concrete Device &amp; Cluster Interfaces</a>: <em>Tenants → [Tenant] → Services → L4-L7 → Devices</em>.</li>
+      <li><a href="#form-sg-template">5.2 Build Service Graph Template &amp; Function Node</a>: <em>Tenants → [Tenant] → Services → L4-L7 → Service Graph Templates</em>.</li>
+      <li><a href="#form-pbr-policy">5.3 Create IP SLA, Health Group &amp; PBR Redirect Policy</a>: <em>Tenants → [Tenant] → Policies → Protocol → L4-L7 Policy-Based Redirect</em>.</li>
+      <li><a href="#form-dev-selection">5.4 Configure Device Selection Policy &amp; Logical Interface Contexts</a>: <em>Tenants → [Tenant] → Services → L4-L7 → Device Selection Policies</em>.</li>
+      <li><a href="#form-apply-sg">5.5 Apply Service Graph Template to Contract Subject</a>: <em>Tenants → [Tenant] → Contracts → Standard → [Contract] → Subjects</em> (and bind consumer/provider EPGs).</li>
+      <li><a href="#form-sg-query">5.6 Verify Deployed Graph Instance &amp; PBR Destinations</a>: <em>Tenants → [Tenant] → Services → L4-L7 → Deployed Graph Instances</em>.</li>
+    </ol>
+  </div>
+
+  <div id="forms-service-graphs"></div>
+</section>
+
+<!-- ==================== SECTION 6: SHARED L3OUT IN TENANT COMMON ==================== -->
+<section id="shared-l3out" class="section-block">
+  <h2>6. Shared L3Out in Tenant <code>common</code></h2>
+  <p class="section-intro">Shared WAN/border connectivity in <code>tenant: common</code> consumed by user tenants (<code>Tenant A</code> / <code>Tenant B</code>): shared VRF &amp; BD-in-common patterns, BGP/OSPF L3Out in <code>common</code>, External EPG with <code>shared-rtctrl</code> / <code>shared-security</code> subnet flags, global-scoped contracts, and user-tenant BD/EPG consumption.</p>
+
+  <div id="tm-shared-l3out" class="treemap-card">
+    <h3>Object Hierarchy Tree Map — Shared L3Out in Tenant <code>common</code></h3>
+    <p class="treemap-hint">Click any node box below to jump to and highlight its form.</p>
+    <div class="treemap-scroll">
+      <svg class="aci-treemap" viewBox="0 0 1145 270" role="img" aria-label="Shared L3Out in Tenant common ACI object hierarchy tree map">
+        <path class="tm-edge" d="M560 46 V70 M190 70 H930 M190 70 V92 M560 70 V92 M930 70 V92"/>
+        <path class="tm-edge" d="M190 124 V212 M190 162 H210 M190 212 H210"/>
+        <path class="tm-edge" d="M560 124 V212 M560 162 H580 M560 212 H580"/>
+        <path class="tm-edge" d="M930 124 V212 M930 162 H950 M930 212 H950"/>
+
+        <rect class="tm-root" x="405" y="10" width="310" height="36" rx="8"/>
+        <text class="tm-root-txt" x="560" y="33" text-anchor="middle">uni/tn-common &lt;--&gt; User Tenants</text>
+
+        <rect class="tm-grp" x="80" y="92" width="220" height="32" rx="6"/>
+        <text class="tm-grp-txt" x="190" y="112" text-anchor="middle">common Networking</text>
+
+        <rect class="tm-grp" x="450" y="92" width="220" height="32" rx="6"/>
+        <text class="tm-grp-txt" x="560" y="112" text-anchor="middle">common ExtEPG &amp; Global Contract</text>
+
+        <rect class="tm-grp" x="820" y="92" width="220" height="32" rx="6"/>
+        <text class="tm-grp-txt" x="930" y="112" text-anchor="middle">User Tenant Consumption</text>
+
+        <g class="tm-node" data-jump="form-common-vrf-bd">
+          <rect x="210" y="140" width="180" height="44" rx="6"/>
+          <text class="tm-title" x="220" y="159">6.1 VRF &amp; BD in common</text>
+          <text class="tm-sub" x="220" y="175">ctx-default / BD-default</text>
+        </g>
+        <g class="tm-node" data-jump="form-common-l3out">
+          <rect x="210" y="192" width="180" height="44" rx="6"/>
+          <text class="tm-title" x="220" y="211">6.2 L3Out (BGP / OSPF)</text>
+          <text class="tm-sub" x="220" y="227">l3ext:Out / bgp / ospf</text>
+        </g>
+
+        <g class="tm-node" data-jump="form-common-extepg">
+          <rect x="580" y="140" width="185" height="44" rx="6"/>
+          <text class="tm-title" x="590" y="159">6.3 Shared ExtEPG Flags</text>
+          <text class="tm-sub" x="590" y="175">shared-rtctrl / security</text>
+        </g>
+        <g class="tm-node" data-jump="form-common-global-contract">
+          <rect x="580" y="192" width="185" height="44" rx="6"/>
+          <text class="tm-title" x="590" y="211">6.4 Global Contract</text>
+          <text class="tm-sub" x="590" y="227">vz:BrCP (global) / CPIf</text>
+        </g>
+
+        <g class="tm-node" data-jump="form-tenant-bd-common-l3out">
+          <rect x="945" y="140" width="185" height="44" rx="6"/>
+          <text class="tm-title" x="955" y="159">6.5 User BD &amp; L3Out</text>
+          <text class="tm-sub" x="955" y="175">public+shared / fvRsBDToOut</text>
+        </g>
+        <g class="tm-node" data-jump="form-tenant-epg-consume-global">
+          <rect x="945" y="192" width="185" height="44" rx="6"/>
+          <text class="tm-title" x="955" y="211">6.6 User EPG Consume</text>
+          <text class="tm-sub" x="955" y="227">fv:RsCons / fv:RsConsIf</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div id="guide-shared-l3out" class="guide-card">
+    <h3>Step-by-Step APIC GUI Order — Shared L3Out in Tenant <code>common</code></h3>
+    <ol class="guide-steps">
+      <li><a href="#form-common-vrf-bd">6.1 Configure Shared VRF &amp; Optional BD-in-common</a>: <em>Tenants → common → Networking → VRFs / Bridge Domains</em>.</li>
+      <li><a href="#form-common-l3out">6.2 Create L3Out in Tenant common (BGP or OSPF)</a>: <em>Tenants → common → Networking → L3Outs</em> (node profile, interface profile, routed SVI/subinterface, peer/OSPF policy).</li>
+      <li><a href="#form-common-extepg">6.3 Create External EPG with Shared Route Control &amp; Shared Security Subnets</a>: <em>External EPGs → Subnets → Scope: Shared Route Control + Shared Security Import + Import Security</em>.</li>
+      <li><a href="#form-common-global-contract">6.4 Create Global Contract in common &amp; Provide on External EPG</a>: <em>Tenants → common → Contracts → Standard (Scope: Global)</em>, optionally export <code>vz:CPIf</code>.</li>
+      <li><a href="#form-tenant-bd-common-l3out">6.5 Set User Tenant BD Subnet to Advertised Externally + Shared &amp; Associate Common L3Out</a>: <em>Tenants → [User Tenant] → Networking → Bridge Domains → [BD]</em>.</li>
+      <li><a href="#form-tenant-epg-consume-global">6.6 Consume the Global Contract from User Tenant EPG</a>: <em>Tenants → [User Tenant] → Application Profiles → [AP] → EPGs → Contracts → Add Consumed Contract</em>.</li>
+    </ol>
+  </div>
+
+  <div id="forms-shared-l3out"></div>
+</section>
+
+<!-- ==================== CI/CD AUTOMATION PACK ==================== -->
+<section id="cicd-pack" class="section-block">
+  <h2>CI/CD Pipeline &amp; NetBox 4.x Sync Pack</h2>
+  <p class="section-intro">The workflow below lives at <code>/aci-forms/cicd/aci-pipeline.yml</code> (<strong>not</strong> under <code>.github/workflows/</code> of this static GitHub Pages repo, so it never runs here). Copy the <code>cicd/</code> files into your dedicated Ansible automation repository, placing <code>aci-pipeline.yml</code> at <code>.github/workflows/aci-pipeline.yml</code> there. All credentials use GitHub Secrets (<code>APIC_HOST</code>, <code>APIC_USERNAME</code>, <code>APIC_PASSWORD</code>, <code>NETBOX_URL</code>, <code>NETBOX_TOKEN</code>) and placeholder inventory variables.</p>
+
+  <div class="cicd-grid">
+    <div class="cicd-card">
+      <div class="cicd-card-bar">
+        <h3 class="cicd-card-title">/aci-forms/cicd/aci-pipeline.yml</h3>
+        <div class="cicd-card-actions">
+          <button type="button" class="cicd-btn" data-cicd-copy="cicd-pre-pipeline">Copy</button>
+          <a class="cicd-btn" href="/aci-forms/cicd/aci-pipeline.yml" download="aci-pipeline.yml">Download</a>
+        </div>
+      </div>
+      <pre id="cicd-pre-pipeline" class="cicd-pre" data-cicd-src="/aci-forms/cicd/aci-pipeline.yml">Loading /aci-forms/cicd/aci-pipeline.yml...</pre>
+    </div>
+
+    <div class="cicd-card">
+      <div class="cicd-card-bar">
+        <h3 class="cicd-card-title">/aci-forms/cicd/netbox_sync.py</h3>
+        <div class="cicd-card-actions">
+          <button type="button" class="cicd-btn" data-cicd-copy="cicd-pre-netbox">Copy</button>
+          <a class="cicd-btn" href="/aci-forms/cicd/netbox_sync.py" download="netbox_sync.py">Download</a>
+        </div>
+      </div>
+      <pre id="cicd-pre-netbox" class="cicd-pre" data-cicd-src="/aci-forms/cicd/netbox_sync.py">Loading /aci-forms/cicd/netbox_sync.py...</pre>
+    </div>
+
+    <div class="cicd-card">
+      <div class="cicd-card-bar">
+        <h3 class="cicd-card-title">/aci-forms/cicd/inventory.yml</h3>
+        <div class="cicd-card-actions">
+          <button type="button" class="cicd-btn" data-cicd-copy="cicd-pre-inventory">Copy</button>
+          <a class="cicd-btn" href="/aci-forms/cicd/inventory.yml" download="inventory.yml">Download</a>
+        </div>
+      </div>
+      <pre id="cicd-pre-inventory" class="cicd-pre" data-cicd-src="/aci-forms/cicd/inventory.yml">Loading /aci-forms/cicd/inventory.yml...</pre>
+    </div>
+
+    <div class="cicd-card">
+      <div class="cicd-card-bar">
+        <h3 class="cicd-card-title">/aci-forms/cicd/README.md</h3>
+        <div class="cicd-card-actions">
+          <button type="button" class="cicd-btn" data-cicd-copy="cicd-pre-readme">Copy</button>
+          <a class="cicd-btn" href="/aci-forms/cicd/README.md" download="README.md">Download</a>
+        </div>
+      </div>
+      <pre id="cicd-pre-readme" class="cicd-pre" data-cicd-src="/aci-forms/cicd/README.md">Loading /aci-forms/cicd/README.md...</pre>
+    </div>
+  </div>
+</section>
+
 <!-- ==================== REFERENCE TABLE ==================== -->
 <section id="reference-table" class="section-block">
   <h2>Form &amp; Module Reference Table</h2>
@@ -631,15 +1086,16 @@ apply(preferred());
 
 <section id="versions" class="section-block">
   <h2>Versions</h2>
-  <p>This is <strong>v1 · 26 Nov 2026, 11:34 AM AEDT</strong>. Snapshots are under <a href="/aci-forms/history/">history/</a>.</p>
+  <p>This is <strong>v2 · 26 Nov 2026, 12:06 PM AEDT</strong>. Snapshots are under <a href="/aci-forms/history/">history/</a>.</p>
   <ul>
+    <li><a href="/aci-forms/history/v2/">v2 · 26 Nov 2026, 12:06 PM AEDT</a> — added Section 5 (Service Graphs, 6 forms), Section 6 (Shared L3Out in tenant <code>common</code>, 6 forms), original slide-based Tenant Object Model &amp; Shared <code>common</code> SVG diagram, live Before-Push inspection panels (Change data, simulated <code>--check --diff</code> preview, and NetBox 4.x sync data) on all 43 forms, and the downloadable <code>/aci-forms/cicd/</code> pipeline &amp; <code>pynetbox</code> sync pack.</li>
     <li><a href="/aci-forms/history/v1/">v1 · 26 Nov 2026, 11:34 AM AEDT</a> — initial publication of the hidden ACI GUI forms &amp; live <code>cisco.aci</code> Ansible YAML generator (31 forms across Initial Setup, BAU Operations, Monitoring Policies, and Troubleshooting Policies, with clickable SVG tree maps and APIC GUI guides).</li>
   </ul>
 </section>
 </main>
 
 <footer class="wrap">
-  <p class="meta">Page: <strong>ACI GUI Forms &amp; Live Ansible YAML Generator</strong> · Version: <strong>v1 · 26 Nov 2026, 11:34 AM AEDT</strong></p>
+  <p class="meta">Page: <strong>ACI GUI Forms &amp; Live Ansible YAML Generator</strong> · Version: <strong>v2 · 26 Nov 2026, 12:06 PM AEDT</strong></p>
   <p class="meta">This page is hidden and is not listed in the public site menu. Folder links end with <code>/</code>. All generated playbooks use <code>{{ apic_host }}</code>, <code>{{ apic_username }}</code>, and <code>{{ apic_password }}</code> placeholders and RFC 5737 documentation IPs. Verify module options against your target <code>cisco.aci</code> collection version before running against a fabric.</p>
 </footer>
 
