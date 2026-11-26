@@ -1,0 +1,36 @@
+---
+# Sample playbook for cisco.aci.aci_epg_to_contract_interface
+# Build order: 210
+# Bind EPGs to Consumed Contracts Interface (fv:RsConsIf)
+# Reads models/aci_epg_to_contract_interface.yml and uses inventory placeholders
+# {{ apic_host }} {{ apic_username }} {{ apic_password }}.
+# Default model state is present: the present and query tasks run.
+# The absent task runs only when the model state is set to absent.
+
+- name: "210 aci_epg_to_contract_interface"
+  hosts: apic
+  gather_facts: false
+  collections:
+    - cisco.aci
+  vars_files:
+    - ../models/aci_epg_to_contract_interface.yml
+  tasks:
+    - name: Ensure aci_epg_to_contract_interface is present
+      cisco.aci.aci_epg_to_contract_interface: "{{ aci_epg_to_contract_interface | dict2items | rejectattr('value', 'none') | list | items2dict | combine({'state': 'present'}) }}"
+      delegate_to: localhost
+      when: (aci_epg_to_contract_interface.state | default('present')) == 'present'
+      register: present_result
+
+    - name: Query aci_epg_to_contract_interface
+      cisco.aci.aci_epg_to_contract_interface: "{{ aci_epg_to_contract_interface | dict2items | rejectattr('value', 'none') | list | items2dict | combine({'state': 'query'}) }}"
+      delegate_to: localhost
+      when: (aci_epg_to_contract_interface.state | default('present')) in ['present', 'query']
+      register: query_result
+
+    - name: Remove aci_epg_to_contract_interface (only when model state is absent)
+      cisco.aci.aci_epg_to_contract_interface: "{{ aci_epg_to_contract_interface | dict2items | rejectattr('value', 'none') | list | items2dict | combine({'state': 'absent'}) }}"
+      delegate_to: localhost
+      when: (aci_epg_to_contract_interface.state | default('present')) == 'absent'
+      register: absent_result
+      tags:
+        - absent

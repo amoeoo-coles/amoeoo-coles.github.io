@@ -1,0 +1,36 @@
+---
+# Sample playbook for cisco.aci.aci_l4l7_policy_based_redirect_destination
+# Build order: 239
+# Manage L4-L7 Policy Based Redirect Destinations (vns:RedirectDest and vns:L1L2RedirectDest)
+# Reads models/aci_l4l7_policy_based_redirect_destination.yml and uses inventory placeholders
+# {{ apic_host }} {{ apic_username }} {{ apic_password }}.
+# Default model state is present: the present and query tasks run.
+# The absent task runs only when the model state is set to absent.
+
+- name: "239 aci_l4l7_policy_based_redirect_destination"
+  hosts: apic
+  gather_facts: false
+  collections:
+    - cisco.aci
+  vars_files:
+    - ../models/aci_l4l7_policy_based_redirect_destination.yml
+  tasks:
+    - name: Ensure aci_l4l7_policy_based_redirect_destination is present
+      cisco.aci.aci_l4l7_policy_based_redirect_destination: "{{ aci_l4l7_policy_based_redirect_destination | dict2items | rejectattr('value', 'none') | list | items2dict | combine({'state': 'present'}) }}"
+      delegate_to: localhost
+      when: (aci_l4l7_policy_based_redirect_destination.state | default('present')) == 'present'
+      register: present_result
+
+    - name: Query aci_l4l7_policy_based_redirect_destination
+      cisco.aci.aci_l4l7_policy_based_redirect_destination: "{{ aci_l4l7_policy_based_redirect_destination | dict2items | rejectattr('value', 'none') | list | items2dict | combine({'state': 'query'}) }}"
+      delegate_to: localhost
+      when: (aci_l4l7_policy_based_redirect_destination.state | default('present')) in ['present', 'query']
+      register: query_result
+
+    - name: Remove aci_l4l7_policy_based_redirect_destination (only when model state is absent)
+      cisco.aci.aci_l4l7_policy_based_redirect_destination: "{{ aci_l4l7_policy_based_redirect_destination | dict2items | rejectattr('value', 'none') | list | items2dict | combine({'state': 'absent'}) }}"
+      delegate_to: localhost
+      when: (aci_l4l7_policy_based_redirect_destination.state | default('present')) == 'absent'
+      register: absent_result
+      tags:
+        - absent

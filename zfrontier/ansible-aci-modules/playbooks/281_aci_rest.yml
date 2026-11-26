@@ -1,0 +1,21 @@
+---
+# Sample playbook for cisco.aci.aci_rest
+# Build order: 281
+# Direct access to the Cisco APIC REST API
+# Reads models/aci_rest.yml and uses inventory placeholders
+# {{ apic_host }} {{ apic_username }} {{ apic_password }}.
+# Default model state is present: the present and query tasks run.
+# The absent task runs only when the model state is set to absent.
+
+- name: "281 aci_rest"
+  hosts: apic
+  gather_facts: false
+  collections:
+    - cisco.aci
+  vars_files:
+    - ../models/aci_rest.yml
+  tasks:
+    - name: Run cisco.aci.aci_rest (sample; method from model, default get)
+      cisco.aci.aci_rest: "{{ aci_rest | dict2items | rejectattr('value', 'none') | list | items2dict }}"
+      delegate_to: localhost
+      register: result

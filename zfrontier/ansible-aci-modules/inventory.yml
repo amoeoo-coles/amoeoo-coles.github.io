@@ -1,0 +1,42 @@
+---
+# Example Ansible inventory for the cisco.aci 3.0.0 catalogue.
+# Placeholders only — replace at runtime or via --extra-vars. Never commit secrets.
+#
+# Documented connection options from the cisco.aci.aci documentation fragment:
+#   - certificate_name (str, optional, default: none)
+#   - host (str, optional, default: none)
+#   - output_level (str, optional, default: normal)
+#   - output_path (str, optional, default: none)
+#   - password (str, optional, default: none)
+#   - port (int, optional, default: none)
+#   - private_key (str, optional, default: none)
+#   - suppress_previous (bool, optional, default: none)
+#   - suppress_verification (bool, optional, default: none)
+#   - timeout (int, optional, default: none)
+#   - use_proxy (bool, optional, default: none)
+#   - use_ssl (bool, optional, default: none)
+#   - username (str, optional, default: none)
+#   - validate_certs (bool, optional, default: none)
+#
+# Run with:
+#   ansible-playbook -i inventory.yml site.yml \
+#     -e apic_host=apic.example.com \
+#     -e apic_username=admin \
+#     -e apic_password='***'
+
+all:
+  children:
+    apic:
+      hosts:
+        apic01:
+          ansible_connection: local
+      vars:
+        apic_host: "{{ apic_host }}"
+        apic_username: "{{ apic_username }}"
+        apic_password: "{{ apic_password }}"
+        # Documented defaults from cisco.aci.aci (override as needed):
+        aci_use_ssl: true
+        aci_validate_certs: true
+        aci_use_proxy: true
+        aci_timeout: 30
+        aci_output_level: normal

@@ -1,0 +1,36 @@
+---
+# Sample playbook for cisco.aci.aci_fabric_management_access_https_cipher
+# Build order: 057
+# Manage Fabric Management Access HTTPS SSL Cipher Configuration (comm:Cipher)
+# Reads models/aci_fabric_management_access_https_cipher.yml and uses inventory placeholders
+# {{ apic_host }} {{ apic_username }} {{ apic_password }}.
+# Default model state is present: the present and query tasks run.
+# The absent task runs only when the model state is set to absent.
+
+- name: "057 aci_fabric_management_access_https_cipher"
+  hosts: apic
+  gather_facts: false
+  collections:
+    - cisco.aci
+  vars_files:
+    - ../models/aci_fabric_management_access_https_cipher.yml
+  tasks:
+    - name: Ensure aci_fabric_management_access_https_cipher is present
+      cisco.aci.aci_fabric_management_access_https_cipher: "{{ aci_fabric_management_access_https_cipher | dict2items | rejectattr('value', 'none') | list | items2dict | combine({'state': 'present'}) }}"
+      delegate_to: localhost
+      when: (aci_fabric_management_access_https_cipher.state | default('present')) == 'present'
+      register: present_result
+
+    - name: Query aci_fabric_management_access_https_cipher
+      cisco.aci.aci_fabric_management_access_https_cipher: "{{ aci_fabric_management_access_https_cipher | dict2items | rejectattr('value', 'none') | list | items2dict | combine({'state': 'query'}) }}"
+      delegate_to: localhost
+      when: (aci_fabric_management_access_https_cipher.state | default('present')) in ['present', 'query']
+      register: query_result
+
+    - name: Remove aci_fabric_management_access_https_cipher (only when model state is absent)
+      cisco.aci.aci_fabric_management_access_https_cipher: "{{ aci_fabric_management_access_https_cipher | dict2items | rejectattr('value', 'none') | list | items2dict | combine({'state': 'absent'}) }}"
+      delegate_to: localhost
+      when: (aci_fabric_management_access_https_cipher.state | default('present')) == 'absent'
+      register: absent_result
+      tags:
+        - absent
