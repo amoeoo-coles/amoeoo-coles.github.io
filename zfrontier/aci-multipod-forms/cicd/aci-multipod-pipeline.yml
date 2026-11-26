@@ -1,0 +1,151 @@
+# Copy this file to .github/workflows/aci-multipod-pipeline.yml in your dedicated
+# Ansible automation repository (do NOT place it under .github/workflows in
+# the static GitHub Pages documentation repo).
+name: Cisco ACI Multi-Pod & IPN Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      playbook_file:
+        description: "Relative path to Multi-Pod or IPN playbook (e.g. playbooks/53-multipod-infra-l3out.yml)"
+        required: true
+        type: string
+  pull_request:
+    paths:
+      - "playbooks/**/*.yml"
+      - "inventory.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "playbooks/**/*.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: 1. Lint (yamllint + ansible-lint)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout automation repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install yamllint, ansible-lint, and collections
+        run: |
+          python -m pip install --upgrade pip
+          pip install yamllint ansible-lint ansible-core
+          ansible-galaxy collection install cisco.aci cisco.nxos
+
+      - name: Run yamllint
+        run: yamllint playbooks/ inventory.yml
+
+      - name: Run ansible-lint
+        run: |
+          if [ -n "${{ inputs.playbook_file }}" ]; then
+            ansible-lint "${{ inputs.playbook_file }}"
+          else
+            ansible-lint playbooks/
+          fi
+
+  dry-run:
+    name: 2. Dry run (--check --diff)
+    needs: lint
+    runs-on: self-hosted
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
+    env:
+      ANSIBLE_HOST_KEY_CHECKING: "false"
+      TARGET_PLAYBOOK: ${{ inputs.playbook_file != '' && inputs.playbook_file || 'playbooks/site.yml' }}
+    steps:
+      - name: Checkout automation repo
+        uses: actions/checkout@v4
+
+      - name: Run ansible-playbook --check --diff against APIC and IPN
+        env:
+          APIC_HOST: ${{ secrets.APIC_HOST }}
+          APIC_USERNAME: ${{ secrets.APIC_USERNAME }}
+          APIC_PASSWORD: ${{ secrets.APIC_PASSWORD }}
+          NXOS_IPN1_HOST: ${{ secrets.NXOS_IPN1_HOST }}
+          NXOS_IPN2_HOST: ${{ secrets.NXOS_IPN2_HOST }}
+          NXOS_USERNAME: ${{ secrets.NXOS_USERNAME }}
+          NXOS_PASSWORD: ${{ secrets.NXOS_PASSWORD }}
+        run: |
+          set -o pipefail
+          ansible-playbook -i inventory.yml "$TARGET_PLAYBOOK" \
+            --check --diff \
+            -e "apic_host=$APIC_HOST apic_username=$APIC_USERNAME apic_password=$APIC_PASSWORD" \
+            -e "nxos_ipn1_host=$NXOS_IPN1_HOST nxos_ipn2_host=$NXOS_IPN2_HOST nxos_username=$NXOS_USERNAME nxos_password=$NXOS_PASSWORD" \
+            | tee dry-run.log
+
+      - name: Upload dry-run log artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aci-multipod-dry-run-log
+          path: dry-run.log
+          retention-days: 30
+
+  apply:
+    name: 3. Apply change (manual approval gate)
+    needs: dry-run
+    runs-on: self-hosted
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    environment:
+      name: aci-production
+    env:
+      TARGET_PLAYBOOK: ${{ inputs.playbook_file != '' && inputs.playbook_file || 'playbooks/site.yml' }}
+    steps:
+      - name: Checkout automation repo
+        uses: actions/checkout@v4
+
+      - name: Apply Ansible playbook to APIC / Nexus IPN
+        env:
+          APIC_HOST: ${{ secrets.APIC_HOST }}
+          APIC_USERNAME: ${{ secrets.APIC_USERNAME }}
+          APIC_PASSWORD: ${{ secrets.APIC_PASSWORD }}
+          NXOS_IPN1_HOST: ${{ secrets.NXOS_IPN1_HOST }}
+          NXOS_IPN2_HOST: ${{ secrets.NXOS_IPN2_HOST }}
+          NXOS_USERNAME: ${{ secrets.NXOS_USERNAME }}
+          NXOS_PASSWORD: ${{ secrets.NXOS_PASSWORD }}
+        run: |
+          set -o pipefail
+          ansible-playbook -i inventory.yml "$TARGET_PLAYBOOK" \
+            --diff \
+            -e "apic_host=$APIC_HOST apic_username=$APIC_USERNAME apic_password=$APIC_PASSWORD" \
+            -e "nxos_ipn1_host=$NXOS_IPN1_HOST nxos_ipn2_host=$NXOS_IPN2_HOST nxos_username=$NXOS_USERNAME nxos_password=$NXOS_PASSWORD" \
+            | tee apply.log
+
+      - name: Upload apply log artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aci-multipod-apply-log
+          path: apply.log
+          retention-days: 90
+
+  netbox-sync:
+    name: 4. Sync applied intent to NetBox 4.x
+    needs: apply
+    runs-on: self-hosted
+    environment:
+      name: aci-production
+    env:
+      TARGET_PLAYBOOK: ${{ inputs.playbook_file != '' && inputs.playbook_file || 'playbooks/site.yml' }}
+    steps:
+      - name: Checkout automation repo
+        uses: actions/checkout@v4
+
+      - name: Install pynetbox and PyYAML
+        run: python3 -m pip install --upgrade pynetbox pyyaml
+
+      - name: Run NetBox sync script
+        env:
+          NETBOX_URL: ${{ secrets.NETBOX_URL }}
+          NETBOX_TOKEN: ${{ secrets.NETBOX_TOKEN }}
+        run: |
+          python3 cicd/netbox_sync.py --playbook "$TARGET_PLAYBOOK"
