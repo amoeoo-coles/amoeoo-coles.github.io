@@ -1,0 +1,91 @@
+# 392 · resource aci_bridge_domain · 3. Tenant and networking
+# Manages ACI Bridge Domain
+# APIC class: fvBD · DN: uni/tn-{name}/BD-{name}
+# Reads models/aci_bridge_domain.yml with yamldecode(file(...)). Provider block: ../providers.tf
+# Provider CiscoDevNet/aci 2.21.0. Credentials come from variables only.
+
+locals {
+  m_392 = yamldecode(file("${path.module}/../models/aci_bridge_domain.yml"))["aci_bridge_domain"]
+}
+
+resource "aci_bridge_domain" "n392" {
+  advertise_host_routes                           = local.m_392["advertise_host_routes"]
+  annotation                                      = local.m_392["annotation"]
+  annotations                                     = local.m_392["annotations"]
+  arp_flood                                       = local.m_392["arp_flood"]
+  arp_flooding                                    = local.m_392["arp_flooding"]
+  bridge_domain_type                              = local.m_392["bridge_domain_type"]
+  clear_remote_mac_entries                        = local.m_392["clear_remote_mac_entries"]
+  custom_mac_address                              = local.m_392["custom_mac_address"]
+  description                                     = local.m_392["description"]
+  drop_arp_with_multicast_smac                    = local.m_392["drop_arp_with_multicast_smac"]
+  enable_intersite_bum_traffic                    = local.m_392["enable_intersite_bum_traffic"]
+  enable_rogue_exception_mac                      = local.m_392["enable_rogue_exception_mac"]
+  endpoint_move_detection_mode                    = local.m_392["endpoint_move_detection_mode"]
+  ep_clear                                        = local.m_392["ep_clear"]
+  ep_move_detect_mode                             = local.m_392["ep_move_detect_mode"]
+  host_based_routing                              = local.m_392["host_based_routing"]
+  intersite_bum_traffic_allow                     = local.m_392["intersite_bum_traffic_allow"]
+  intersite_l2_stretch                            = local.m_392["intersite_l2_stretch"]
+  ip_learning                                     = local.m_392["ip_learning"]
+  ipv6_l3_unknown_multicast_flooding              = local.m_392["ipv6_l3_unknown_multicast_flooding"]
+  ipv6_mcast_allow                                = local.m_392["ipv6_mcast_allow"]
+  l2_unknown_unicast_flooding                     = local.m_392["l2_unknown_unicast_flooding"]
+  l3_unknown_multicast_flooding                   = local.m_392["l3_unknown_multicast_flooding"]
+  legacy_mode                                     = local.m_392["legacy_mode"]
+  limit_ip_learn_to_subnets                       = local.m_392["limit_ip_learn_to_subnets"]
+  link_local_ipv6_address                         = local.m_392["link_local_ipv6_address"]
+  ll_addr                                         = local.m_392["ll_addr"]
+  mac                                             = local.m_392["mac"]
+  mcast_allow                                     = local.m_392["mcast_allow"]
+  multi_destination_flooding                      = local.m_392["multi_destination_flooding"]
+  multi_dst_pkt_act                               = local.m_392["multi_dst_pkt_act"]
+  name                                            = local.m_392["name"]
+  name_alias                                      = local.m_392["name_alias"]
+  optimize_wan_bandwidth                          = local.m_392["optimize_wan_bandwidth"]
+  owner_key                                       = local.m_392["owner_key"]
+  owner_tag                                       = local.m_392["owner_tag"]
+  parent_dn                                       = local.m_392["parent_dn"]
+  pim                                             = local.m_392["pim"]
+  pim_ipv6                                        = local.m_392["pim_ipv6"]
+  relation_fv_rs_abd_pol_mon_pol                  = local.m_392["relation_fv_rs_abd_pol_mon_pol"]
+  relation_fv_rs_bd_flood_to                      = local.m_392["relation_fv_rs_bd_flood_to"]
+  relation_fv_rs_bd_to_ep_ret                     = local.m_392["relation_fv_rs_bd_to_ep_ret"]
+  relation_fv_rs_bd_to_fhs                        = local.m_392["relation_fv_rs_bd_to_fhs"]
+  relation_fv_rs_bd_to_nd_p                       = local.m_392["relation_fv_rs_bd_to_nd_p"]
+  relation_fv_rs_bd_to_out                        = local.m_392["relation_fv_rs_bd_to_out"]
+  relation_fv_rs_bd_to_profile                    = local.m_392["relation_fv_rs_bd_to_profile"]
+  relation_fv_rs_bd_to_relay_p                    = local.m_392["relation_fv_rs_bd_to_relay_p"]
+  relation_fv_rs_ctx                              = local.m_392["relation_fv_rs_ctx"]
+  relation_fv_rs_igmpsn                           = local.m_392["relation_fv_rs_igmpsn"]
+  relation_fv_rs_mldsn                            = local.m_392["relation_fv_rs_mldsn"]
+  relation_to_dhcp_relay_policy                   = local.m_392["relation_to_dhcp_relay_policy"]
+  relation_to_end_point_retention_policy          = local.m_392["relation_to_end_point_retention_policy"]
+  relation_to_first_hop_security_policy           = local.m_392["relation_to_first_hop_security_policy"]
+  relation_to_igmp_snooping_policy                = local.m_392["relation_to_igmp_snooping_policy"]
+  relation_to_l3_outsides                         = local.m_392["relation_to_l3_outsides"]
+  relation_to_mld_snooping_policy                 = local.m_392["relation_to_mld_snooping_policy"]
+  relation_to_monitoring_policy                   = local.m_392["relation_to_monitoring_policy"]
+  relation_to_neighbor_discovery_interface_policy = local.m_392["relation_to_neighbor_discovery_interface_policy"]
+  relation_to_netflow_monitor_policies            = local.m_392["relation_to_netflow_monitor_policies"]
+  relation_to_route_control_profile               = local.m_392["relation_to_route_control_profile"]
+  relation_to_vrf                                 = local.m_392["relation_to_vrf"]
+  rogue_coop_exceptions                           = local.m_392["rogue_coop_exceptions"]
+  service_bd_routing_disable                      = local.m_392["service_bd_routing_disable"]
+  tags                                            = local.m_392["tags"]
+  tenant_dn                                       = local.m_392["tenant_dn"]
+  unicast_route                                   = local.m_392["unicast_route"]
+  unicast_routing                                 = local.m_392["unicast_routing"]
+  unk_mac_ucast_act                               = local.m_392["unk_mac_ucast_act"]
+  unk_mcast_act                                   = local.m_392["unk_mcast_act"]
+  v6unk_mcast_act                                 = local.m_392["v6unk_mcast_act"]
+  virtual_mac_address                             = local.m_392["virtual_mac_address"]
+  vmac                                            = local.m_392["vmac"]
+  dynamic "relation_fv_rs_bd_to_netflow_monitor_pol" {
+    for_each = local.m_392["relation_fv_rs_bd_to_netflow_monitor_pol"] == null ? [] : local.m_392["relation_fv_rs_bd_to_netflow_monitor_pol"]
+    content {
+      flt_type                    = lookup(relation_fv_rs_bd_to_netflow_monitor_pol.value, "flt_type", null)
+      tn_netflow_monitor_pol_name = lookup(relation_fv_rs_bd_to_netflow_monitor_pol.value, "tn_netflow_monitor_pol_name", null)
+    }
+  }
+}
