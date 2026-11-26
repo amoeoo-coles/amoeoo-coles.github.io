@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ansible VXLAN EVPN Catalogue</title>
+<meta name="description" content="Ansible catalogue for Cisco VXLAN EVPN: every cisco.nac_dc_vxlan role and data-model section, the VXLAN EVPN modules of cisco.nxos and every cisco.dcnm module, each with a YAML model (with a references block) and a numbered sample playbook in build order.">
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+html{overflow-x:hidden;}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+  background:var(--bg) !important;
+  color:var(--ink) !important;
+}
+main{max-width:none !important;width:100%;margin:0 !important;padding:0 !important;box-sizing:border-box;min-width:0;}
+a:not(#mm-link):not(.kicker){color:var(--link);}
+#tt-wrap{
+  position:static!important;
+  display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;
+  box-sizing:border-box;width:100%;height:36px;padding:8px 0 0;flex:none;
+}
+#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;align-items:center;justify-content:center;
+  height:36px;padding:0 12px;border-radius:18px;
+  border:1px solid var(--btn-bd);background:var(--btn-bg);color:var(--btn-fg);
+  cursor:pointer;opacity:.92;text-decoration:none;white-space:nowrap;flex:none;
+}
+#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+.uv,.uvc{color:#fff!important}
+</style>
+
+<link rel="stylesheet" href="/zfrontier/ansible-vxlan-modules/assets/page.css">
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'☀️ Light':'🌙 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+})();</script>
+
+<main class="wrap" id="catalogue-ready">
+
+<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:var(--muted,#888)"><a href="/visitors/" style="color:inherit;text-decoration:none"><span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></a><span class="uvt" style="font-size:11px;color:var(--muted,#888)"></span></div><!--/arr-uv-tr17-->
+
+<p class="kicker">zFrontier</p>
+<h1>Ansible VXLAN EVPN Catalogue</h1>
+<p class="ver"><a href="/zfrontier/ansible-vxlan-modules/history/">v2 · 26 Nov 2026, 8:48 PM AEDT</a></p>
+<p class="lede">An Ansible catalogue for VXLAN EVPN fabrics with <strong id="module-total">129</strong> items:
+every role (7) and every data-model section (42) of Cisco&rsquo;s
+VXLAN-as-code collection <code>cisco.nac_dc_vxlan</code> <strong id="collection-version">0.9.1</strong>,
+the VXLAN EVPN modules of <code>cisco.nxos</code> 14.0.0 (59), and every module of
+<code>cisco.dcnm</code> 3.13.1 (21). Each item has its own YAML model and a numbered sample
+playbook that reads it with <code>vars_files</code>. Every model starts with a <code>references</code> block giving the
+documentation URL, the collection and version, the module or role, and the schema path. The playbooks run in build order:
+fabric and global settings, underlay, overlay, VRFs, networks, interfaces, policies, then deploy and Day 2.
+Attribute names, types, defaults and examples come only from the published data-model schema tables and the
+collections&rsquo; own documentation. Where a value isn&rsquo;t documented, the model shows <code>null</code>.</p>
+
+<div class="cred-banner">
+  <strong>Credential-safe by design:</strong> This page is a static catalogue and never contacts a switch or
+  Nexus Dashboard. The inventory uses only the placeholders <code>{{ nxos_host }}</code>, <code>{{ nd_host }}</code>,
+  <code>{{ ansible_user }}</code> and <code>{{ ansible_password }}</code>. Secret-like model fields are
+  <code>{{ ..._placeholder }}</code> values. Do not commit real passwords. A live run belongs on a self-hosted runner
+  that can reach your switches or Nexus Dashboard.
+</div>
+
+<ol class="page-menu">
+<li><a href="#tree">Build tree map</a></li>
+<li><a href="#files">Playbooks, models and inventory</a></li>
+<li><a href="#index">Catalogue index table</a></li>
+<li>Groups
+<ul>
+<li><a href="#group-fabric">1. Fabric, global settings and switch inventory</a><span class="menu-count">20</span></li>
+<li><a href="#group-underlay">2. Underlay</a><span class="menu-count">21</span></li>
+<li><a href="#group-overlay">3. Overlay (NVE, EVPN, VNIs)</a><span class="menu-count">12</span></li>
+<li><a href="#group-vrfs">4. VRFs</a><span class="menu-count">10</span></li>
+<li><a href="#group-networks">5. Networks</a><span class="menu-count">3</span></li>
+<li><a href="#group-interfaces">6. Interfaces and access</a><span class="menu-count">23</span></li>
+<li><a href="#group-policies">7. Policies and route control</a><span class="menu-count">17</span></li>
+<li><a href="#group-day2">8. Deploy, Day 2 and operations</a><span class="menu-count">17</span></li>
+<li><a href="#group-other">9. Multi-site, services and other</a><span class="menu-count">6</span></li>
+</ul></li>
+<li><a href="#approval-emails">Approval email templates</a><span class="menu-count">129</span></li>
+<li><a href="#comments">Comments</a></li>
+<li><a href="#versions">Version history</a></li>
+</ol>
+
+<div class="stats-row" id="stats"></div>
+<p id="catalogue-error" class="cred-banner" hidden></p>
+
+<section id="tree" class="section-block">
+  <h2>Build tree map</h2>
+  <p class="section-intro">Click a group to jump to its cards, or a labelled item to open it. The map follows VXLAN EVPN build order. It isn&rsquo;t a live fabric discovery.</p>
+  <div class="treemap-card">
+    <h3>VXLAN EVPN build tree</h3>
+    <p class="treemap-hint">Scroll sideways on a narrow screen. Group counts match the catalogue index.</p>
+    <div class="treemap-scroll">
+<svg class="aci-treemap" viewBox="0 0 1180 577" role="img" aria-label="Clickable VXLAN EVPN build tree">
+<rect class="tm-root" x="420.0" y="8" width="340" height="40" rx="8"/>
+<text class="tm-root-txt" x="590.0" y="34" text-anchor="middle">VXLAN EVPN build tree · 129 items</text>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 138.0 76, 138.0 92"/>
+<a href="#group-fabric" class="tm-grp">
+<rect x="34.0" y="92" width="208" height="36" rx="7" fill="#1e3a8a" stroke="#1e3a8a"/>
+<text class="tm-grp-txt" x="138.0" y="115" text-anchor="middle">Fabric / global (20)</text>
+</a>
+<a href="#mod-role_validate" class="tm-node">
+<rect x="40.0" y="136" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="138.0" y="150" text-anchor="middle">validate role</text>
+</a>
+<a href="#mod-nac_fabric" class="tm-node">
+<rect x="40.0" y="159" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="138.0" y="173" text-anchor="middle">Fabric</text>
+</a>
+<a href="#mod-dcnm_fabric" class="tm-node">
+<rect x="40.0" y="182" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="138.0" y="196" text-anchor="middle">dcnm_fabric</text>
+</a>
+<a href="#mod-nac_vxlan_evpn_ibgp" class="tm-node">
+<rect x="40.0" y="205" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="138.0" y="219" text-anchor="middle">Global iBGP</text>
+</a>
+<a href="#mod-nac_switch" class="tm-node">
+<rect x="40.0" y="228" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="138.0" y="242" text-anchor="middle">Switches</text>
+</a>
+<a href="#mod-dcnm_inventory" class="tm-node">
+<rect x="40.0" y="251" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="138.0" y="265" text-anchor="middle">dcnm_inventory</text>
+</a>
+<a href="#mod-nac_vpc_peer" class="tm-node">
+<rect x="40.0" y="274" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="138.0" y="288" text-anchor="middle">vPC peers</text>
+</a>
+<a href="#mod-nxos_feature" class="tm-node">
+<rect x="40.0" y="297" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="138.0" y="311" text-anchor="middle">nxos_feature</text>
+</a>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 364.0 76, 364.0 92"/>
+<a href="#group-underlay" class="tm-grp">
+<rect x="260.0" y="92" width="208" height="36" rx="7" fill="#0f766e" stroke="#0f766e"/>
+<text class="tm-grp-txt" x="364.0" y="115" text-anchor="middle">Underlay (21)</text>
+</a>
+<a href="#mod-nac_general" class="tm-node">
+<rect x="266.0" y="136" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="364.0" y="150" text-anchor="middle">General</text>
+</a>
+<a href="#mod-nac_ospf" class="tm-node">
+<rect x="266.0" y="159" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="364.0" y="173" text-anchor="middle">OSPF</text>
+</a>
+<a href="#mod-nac_isis" class="tm-node">
+<rect x="266.0" y="182" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="364.0" y="196" text-anchor="middle">IS-IS</text>
+</a>
+<a href="#mod-nac_bgp" class="tm-node">
+<rect x="266.0" y="205" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="364.0" y="219" text-anchor="middle">BGP</text>
+</a>
+<a href="#mod-nac_multicast" class="tm-node">
+<rect x="266.0" y="228" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="364.0" y="242" text-anchor="middle">Multicast</text>
+</a>
+<a href="#mod-nac_fabric_link" class="tm-node">
+<rect x="266.0" y="251" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="364.0" y="265" text-anchor="middle">Fabric links</text>
+</a>
+<a href="#mod-dcnm_links" class="tm-node">
+<rect x="266.0" y="274" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="364.0" y="288" text-anchor="middle">dcnm_links</text>
+</a>
+<a href="#mod-nxos_bgp_global" class="tm-node">
+<rect x="266.0" y="297" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="364.0" y="311" text-anchor="middle">nxos_bgp_global</text>
+</a>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 590.0 76, 590.0 92"/>
+<a href="#group-overlay" class="tm-grp">
+<rect x="486.0" y="92" width="208" height="36" rx="7" fill="#1d4ed8" stroke="#1d4ed8"/>
+<text class="tm-grp-txt" x="590.0" y="115" text-anchor="middle">Overlay (12)</text>
+</a>
+<a href="#mod-nxos_nve_interface" class="tm-node">
+<rect x="492.0" y="136" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="590.0" y="150" text-anchor="middle">NVE interface</text>
+</a>
+<a href="#mod-nxos_vxlan_vtep" class="tm-node">
+<rect x="492.0" y="159" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="590.0" y="173" text-anchor="middle">VTEP</text>
+</a>
+<a href="#mod-nxos_evpn_global" class="tm-node">
+<rect x="492.0" y="182" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="590.0" y="196" text-anchor="middle">EVPN global</text>
+</a>
+<a href="#mod-nxos_bgp_address_family" class="tm-node">
+<rect x="492.0" y="205" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="590.0" y="219" text-anchor="middle">BGP L2VPN EVPN</text>
+</a>
+<a href="#mod-nxos_evpn_vni" class="tm-node">
+<rect x="492.0" y="228" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="590.0" y="242" text-anchor="middle">EVPN VNI</text>
+</a>
+<a href="#mod-nxos_vxlan_vtep_vni" class="tm-node">
+<rect x="492.0" y="251" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="590.0" y="265" text-anchor="middle">VTEP VNI</text>
+</a>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 816.0 76, 816.0 92"/>
+<a href="#group-vrfs" class="tm-grp">
+<rect x="712.0" y="92" width="208" height="36" rx="7" fill="#6d28d9" stroke="#6d28d9"/>
+<text class="tm-grp-txt" x="816.0" y="115" text-anchor="middle">VRFs (10)</text>
+</a>
+<a href="#mod-nac_vrf" class="tm-node">
+<rect x="718.0" y="136" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="816.0" y="150" text-anchor="middle">VRFs</text>
+</a>
+<a href="#mod-nac_extension_vrf_lite" class="tm-node">
+<rect x="718.0" y="159" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="816.0" y="173" text-anchor="middle">VRF-Lite</text>
+</a>
+<a href="#mod-dcnm_vrf" class="tm-node">
+<rect x="718.0" y="182" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="816.0" y="196" text-anchor="middle">dcnm_vrf</text>
+</a>
+<a href="#mod-nxos_vrf" class="tm-node">
+<rect x="718.0" y="205" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="816.0" y="219" text-anchor="middle">nxos_vrf</text>
+</a>
+<a href="#mod-nxos_vrf_af" class="tm-node">
+<rect x="718.0" y="228" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="816.0" y="242" text-anchor="middle">nxos_vrf_af</text>
+</a>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 1042.0 76, 1042.0 92"/>
+<a href="#group-networks" class="tm-grp">
+<rect x="938.0" y="92" width="208" height="36" rx="7" fill="#c2410c" stroke="#c2410c"/>
+<text class="tm-grp-txt" x="1042.0" y="115" text-anchor="middle">Networks (3)</text>
+</a>
+<a href="#mod-nac_network" class="tm-node">
+<rect x="944.0" y="136" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="1042.0" y="150" text-anchor="middle">Networks</text>
+</a>
+<a href="#mod-dcnm_network" class="tm-node">
+<rect x="944.0" y="159" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="1042.0" y="173" text-anchor="middle">dcnm_network</text>
+</a>
+<a href="#mod-nxos_vlans" class="tm-node">
+<rect x="944.0" y="182" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="1042.0" y="196" text-anchor="middle">nxos_vlans</text>
+</a>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 251.0 340, 251.0 356"/>
+<a href="#group-interfaces" class="tm-grp">
+<rect x="147.0" y="356" width="208" height="36" rx="7" fill="#0369a1" stroke="#0369a1"/>
+<text class="tm-grp-txt" x="251.0" y="379" text-anchor="middle">Interfaces / access (23)</text>
+</a>
+<a href="#mod-nac_if_access_interface" class="tm-node">
+<rect x="153.0" y="400" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="251.0" y="414" text-anchor="middle">Access</text>
+</a>
+<a href="#mod-nac_if_trunk_interface" class="tm-node">
+<rect x="153.0" y="423" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="251.0" y="437" text-anchor="middle">Trunk</text>
+</a>
+<a href="#mod-nac_if_trunk_po_interface" class="tm-node">
+<rect x="153.0" y="446" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="251.0" y="460" text-anchor="middle">Trunk PO</text>
+</a>
+<a href="#mod-nac_if_routed_interface" class="tm-node">
+<rect x="153.0" y="469" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="251.0" y="483" text-anchor="middle">Routed</text>
+</a>
+<a href="#mod-dcnm_vpc_pair" class="tm-node">
+<rect x="153.0" y="492" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="251.0" y="506" text-anchor="middle">dcnm_vpc_pair</text>
+</a>
+<a href="#mod-dcnm_interface" class="tm-node">
+<rect x="153.0" y="515" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="251.0" y="529" text-anchor="middle">dcnm_interface</text>
+</a>
+<a href="#mod-nxos_vpc" class="tm-node">
+<rect x="153.0" y="538" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="251.0" y="552" text-anchor="middle">nxos_vpc</text>
+</a>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 477.0 340, 477.0 356"/>
+<a href="#group-policies" class="tm-grp">
+<rect x="373.0" y="356" width="208" height="36" rx="7" fill="#0e7490" stroke="#0e7490"/>
+<text class="tm-grp-txt" x="477.0" y="379" text-anchor="middle">Policies (17)</text>
+</a>
+<a href="#mod-nac_route_control_top" class="tm-node">
+<rect x="379.0" y="400" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="477.0" y="414" text-anchor="middle">Route control</text>
+</a>
+<a href="#mod-nac_rc_pfx" class="tm-node">
+<rect x="379.0" y="423" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="477.0" y="437" text-anchor="middle">Prefix lists</text>
+</a>
+<a href="#mod-nac_route_map" class="tm-node">
+<rect x="379.0" y="446" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="477.0" y="460" text-anchor="middle">Route-maps</text>
+</a>
+<a href="#mod-nac_policy" class="tm-node">
+<rect x="379.0" y="469" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="477.0" y="483" text-anchor="middle">Policy</text>
+</a>
+<a href="#mod-dcnm_policy" class="tm-node">
+<rect x="379.0" y="492" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="477.0" y="506" text-anchor="middle">dcnm_policy</text>
+</a>
+<a href="#mod-nxos_route_maps" class="tm-node">
+<rect x="379.0" y="515" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="477.0" y="529" text-anchor="middle">nxos_route_maps</text>
+</a>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 703.0 340, 703.0 356"/>
+<a href="#group-day2" class="tm-grp">
+<rect x="599.0" y="356" width="208" height="36" rx="7" fill="#334155" stroke="#334155"/>
+<text class="tm-grp-txt" x="703.0" y="379" text-anchor="middle">Deploy / Day 2 (17)</text>
+</a>
+<a href="#mod-role_dtc_create" class="tm-node">
+<rect x="605.0" y="400" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="703.0" y="414" text-anchor="middle">dtc.create</text>
+</a>
+<a href="#mod-role_dtc_deploy" class="tm-node">
+<rect x="605.0" y="423" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="703.0" y="437" text-anchor="middle">dtc.deploy</text>
+</a>
+<a href="#mod-role_dtc_remove" class="tm-node">
+<rect x="605.0" y="446" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="703.0" y="460" text-anchor="middle">dtc.remove</text>
+</a>
+<a href="#mod-dcnm_image_upgrade" class="tm-node">
+<rect x="605.0" y="469" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="703.0" y="483" text-anchor="middle">Image upgrade</text>
+</a>
+<a href="#mod-nxos_facts" class="tm-node">
+<rect x="605.0" y="492" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="703.0" y="506" text-anchor="middle">nxos_facts</text>
+</a>
+<a href="#mod-nxos_snapshot" class="tm-node">
+<rect x="605.0" y="515" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="703.0" y="529" text-anchor="middle">Snapshot</text>
+</a>
+<path class="tm-edge" d="M 590.0 48 C 590.0 64, 929.0 340, 929.0 356"/>
+<a href="#group-other" class="tm-grp">
+<rect x="825.0" y="356" width="208" height="36" rx="7" fill="#64748b" stroke="#64748b"/>
+<text class="tm-grp-txt" x="929.0" y="379" text-anchor="middle">Multi-site / other (6)</text>
+</a>
+<a href="#mod-nac_multisite" class="tm-node">
+<rect x="831.0" y="400" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="929.0" y="414" text-anchor="middle">Multi-site</text>
+</a>
+<a href="#mod-dcnm_fabric_group" class="tm-node">
+<rect x="831.0" y="423" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="929.0" y="437" text-anchor="middle">Fabric group</text>
+</a>
+<a href="#mod-dcnm_service_node" class="tm-node">
+<rect x="831.0" y="446" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="929.0" y="460" text-anchor="middle">Service node</text>
+</a>
+<a href="#mod-dcnm_log" class="tm-node">
+<rect x="831.0" y="469" width="196" height="20" rx="4"/>
+<text class="tm-node-txt" x="929.0" y="483" text-anchor="middle">dcnm_log</text>
+</a>
+</svg>
+    </div>
+  </div>
+</section>
+
+<section id="files" class="section-block">
+  <h2>Playbooks, models and inventory</h2>
+  <div class="sample-bar">
+    <p>All 129 models and playbooks are published as real files, along with a combined playbook and one combined sample data model.</p>
+    <ul>
+      <li>Combined end-to-end playbook: <a href="/zfrontier/ansible-vxlan-modules/site.yml"><code>site.yml</code></a> (imports every playbook in build order)</li>
+      <li>Combined sample data model: <a href="/zfrontier/ansible-vxlan-modules/sample/vxlan-model.yml"><code>sample/vxlan-model.yml</code></a> (one iBGP VXLAN EVPN fabric, plus every module model)</li>
+      <li>Inventory example: <a href="/zfrontier/ansible-vxlan-modules/inventory.yml"><code>inventory.yml</code></a> with placeholders <code>{{ nxos_host }}</code> <code>{{ ansible_user }}</code> <code>{{ ansible_password }}</code></li>
+      <li>Per-item models: <a href="/zfrontier/ansible-vxlan-modules/models/"><code>models/&lt;name&gt;.yml</code></a> (a <code>references</code> block first, then the model)</li>
+      <li>Per-item playbooks: <a href="/zfrontier/ansible-vxlan-modules/playbooks/"><code>playbooks/&lt;NNN&gt;_&lt;name&gt;.yml</code></a></li>
+    </ul>
+    <p style="margin:10px 0 0">How the three collections fit together:</p>
+    <ul>
+      <li><strong>cisco.nac_dc_vxlan</strong>: you describe the fabric in <code>vxlan:</code> YAML under <code>host_vars/&lt;fabric&gt;/</code>. The <code>validate</code> role checks it, and <code>dtc.create</code>, <code>dtc.deploy</code> and <code>dtc.remove</code> push it through Nexus Dashboard. Each data-model playbook here checks its section and can stage it into <code>host_vars</code> (<code>-e stage_model=true</code>), then run <code>validate</code> (<code>--tags validate</code>).</li>
+      <li><strong>cisco.dcnm</strong>: modules that call Nexus Dashboard Fabric Controller directly. The collection roles use them underneath.</li>
+      <li><strong>cisco.nxos</strong>: modules that configure switches directly over CLI, without a controller.</li>
+    </ul>
+    <p style="margin:10px 0 0">Syntax-check locally with the collections installed:</p>
+    <pre style="margin:8px 0 0;padding:12px;background:var(--code);color:var(--code-fg);border-radius:8px;overflow:auto">ansible-galaxy collection install cisco.nac_dc_vxlan:0.9.1 cisco.nxos:14.0.0 cisco.dcnm:3.13.1
+ansible-playbook --syntax-check -i inventory.yml site.yml</pre>
+  </div>
+</section>
+
+<section id="index" class="section-block">
+  <h2>Catalogue index</h2>
+  <p class="section-intro">Sort any column. Search filters this table and the cards below.</p>
+  <div class="search-bar">
+    <label for="module-search">Search</label>
+    <input type="search" id="module-search" placeholder="Name, module, schema path, collection or group" autocomplete="off">
+    <span class="search-meta" id="search-meta">129 items</span>
+  </div>
+  <p id="search-empty" hidden>No items match that search.</p>
+  <div class="table-wrap">
+    <table class="aci-data-table" id="index-table">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Name</th>
+          <th>Kind</th>
+          <th>Group</th>
+          <th>Module / role / schema path</th>
+          <th>Files</th>
+        </tr>
+      </thead>
+      <tbody id="index-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<section id="group-fabric" class="section-block" data-group="fabric">
+  <h2>1. Fabric, global settings and switch inventory <span class="menu-count">20</span></h2>
+  <p class="section-intro">Pre-checks and fabric creation: collection roles that load defaults, validate the data model and test the controller, then the fabric type, global settings, switch inventory, vPC and ToR pairing, and NX-OS baseline modules. Cards load their YAML model and sample playbook when they scroll into view.</p>
+  <div id="group-mount-fabric"></div>
+</section>
+<section id="group-underlay" class="section-block" data-group="underlay">
+  <h2>2. Underlay <span class="menu-count">21</span></h2>
+  <p class="section-intro">Underlay addressing, IGP, BGP, BFD and multicast, fabric links and edge connections, then the matching NX-OS routing modules. Cards load their YAML model and sample playbook when they scroll into view.</p>
+  <div id="group-mount-underlay"></div>
+</section>
+<section id="group-overlay" class="section-block" data-group="overlay">
+  <h2>3. Overlay (NVE, EVPN, VNIs) <span class="menu-count">12</span></h2>
+  <p class="section-intro">VTEP and NVE interface, EVPN control plane, BGP L2VPN EVPN address family, VNI mapping and IGMP snooping for BUM traffic. Cards load their YAML model and sample playbook when they scroll into view.</p>
+  <div id="group-mount-overlay"></div>
+</section>
+<section id="group-vrfs" class="section-block" data-group="vrfs">
+  <h2>4. VRFs <span class="menu-count">10</span></h2>
+  <p class="section-intro">Tenant VRFs and VRF attach groups, VRF-Lite extensions, then the controller and NX-OS VRF modules. Cards load their YAML model and sample playbook when they scroll into view.</p>
+  <div id="group-mount-vrfs"></div>
+</section>
+<section id="group-networks" class="section-block" data-group="networks">
+  <h2>5. Networks <span class="menu-count">3</span></h2>
+  <p class="section-intro">Overlay networks (L2 and L3 VNIs) and network attach groups, then controller networks and NX-OS VLAN-to-VNI mapping. Cards load their YAML model and sample playbook when they scroll into view.</p>
+  <div id="group-mount-networks"></div>
+</section>
+<section id="group-interfaces" class="section-block" data-group="interfaces">
+  <h2>6. Interfaces and access <span class="menu-count">23</span></h2>
+  <p class="section-intro">Breakouts, access and trunk ports, port-channels, routed and sub-interfaces, loopbacks and dot1q tunnels, then vPC pairs and NX-OS interface modules. Cards load their YAML model and sample playbook when they scroll into view.</p>
+  <div id="group-mount-interfaces"></div>
+</section>
+<section id="group-policies" class="section-block" data-group="policies">
+  <h2>7. Policies and route control <span class="menu-count">17</span></h2>
+  <p class="section-intro">Route-control objects (prefix lists, community lists, AS-path lists, MAC lists, object groups, ACLs, time ranges, route-maps) and freeform policies, then the controller policy and template modules and NX-OS policy modules. Cards load their YAML model and sample playbook when they scroll into view.</p>
+  <div id="group-mount-policies"></div>
+</section>
+<section id="group-day2" class="section-block" data-group="day2">
+  <h2>8. Deploy, Day 2 and operations <span class="menu-count">17</span></h2>
+  <p class="section-intro">Collection roles that create, deploy and remove controller state, then image management, maintenance mode, REST and NX-OS operational modules. Cards load their YAML model and sample playbook when they scroll into view.</p>
+  <div id="group-mount-day2"></div>
+</section>
+<section id="group-other" class="section-block" data-group="other">
+  <h2>9. Multi-site, services and other <span class="menu-count">6</span></h2>
+  <p class="section-intro">Multi-Site Domain (MSD) data model and fabric groups, L4-L7 service nodes and policies, and controller logging. Cards load their YAML model and sample playbook when they scroll into view.</p>
+  <div id="group-mount-other"></div>
+</section>
+
+<section id="approval-emails" class="section-block">
+  <h2>Approval email templates <span class="menu-count">129</span></h2>
+  <p class="section-intro">Every item on this page has a click-to-approve provisioning approval email in the ACI NaC Pipeline layout: status banner, six-stage pipeline, context box, Approve and Deny buttons (a reply to 179172@gmail.com with APPROVE or REJECT), an original topology and logical view, design values and a pre-test summary. They are templates built from the example values here. Nothing is sent or applied, and pre-test, health and fault results are marked not collected.</p>
+  <p><a href="/zfrontier/ansible-vxlan-modules/approval/">Open the approval email index (129 templates)</a>. Each card below also links to its own approval email.</p>
+</section>
+
+<section id="comments" class="section-block">
+  <h2>Comments</h2>
+  <p class="section-intro">Questions, peer review notes, or lab test feedback via GitHub Discussions.</p>
+  <div id="comments-mount"></div>
+  <script>
+  (function(){
+    var b=String.fromCharCode(99,111,108,101,115);
+    var repo='amoeoo-'+b+'/amoeoo-'+b+'.github.io';
+    var s=document.createElement('script');
+    s.src='https://giscus.app/client.js';
+    s.setAttribute('data-repo',repo);
+    s.setAttribute('data-repo-id','R_kgDOVM0-Fw');
+    s.setAttribute('data-category','Announcements');
+    s.setAttribute('data-category-id','DIC_kwDOVM0-F84DLoq4');
+    s.setAttribute('data-mapping','pathname');
+    s.setAttribute('data-strict','1');
+    s.setAttribute('data-reactions-enabled','1');
+    s.setAttribute('data-input-position','top');
+    s.setAttribute('data-theme','preferred_color_scheme');
+    s.setAttribute('data-lang','en');
+    s.setAttribute('data-loading','lazy');
+    s.crossOrigin='anonymous';
+    s.async=true;
+    var m=document.getElementById('comments-mount');
+    if(m) m.appendChild(s);
+  })();
+  </script>
+</section>
+
+<section id="versions" class="section-block">
+  <h2>Version history</h2>
+  <p>This is <strong>v2 · 26 Nov 2026, 8:48 PM AEDT</strong>. Snapshots are under <a href="/zfrontier/ansible-vxlan-modules/history/">history/</a>.</p>
+  <div class="table-wrap">
+    <table class="aci-data-table">
+      <thead>
+        <tr>
+          <th>Version</th>
+          <th>Published (AEDT)</th>
+          <th>Summary of changes</th>
+          <th>Snapshot</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>v2</strong> (Current)</td>
+          <td>26 Nov 2026, 8:48 PM AEDT</td>
+          <td>Added 129 click-to-approve provisioning approval email templates (one per item) with a sortable index at <a href="/zfrontier/ansible-vxlan-modules/approval/">approval/</a>, and an approval email link on every card.</td>
+          <td><a href="/zfrontier/ansible-vxlan-modules/history/v2/">View v2 snapshot</a></td>
+        </tr>
+        <tr>
+          <td><strong>v1</strong></td>
+          <td>26 Nov 2026, 6:01 PM AEDT</td>
+          <td>Initial catalogue with 129 items: 7 <code>cisco.nac_dc_vxlan</code> roles,
+          42 data-model sections, 59 <code>cisco.nxos</code> VXLAN EVPN modules and
+          21 <code>cisco.dcnm</code> modules. Each has a model with a <code>references</code> block and a numbered
+          sample playbook. Also includes a combined <code>site.yml</code>, a sample model, an inventory with placeholders, a tree map and a searchable index.</td>
+          <td><a href="/zfrontier/ansible-vxlan-modules/history/v1/">View v1 snapshot</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  <p class="meta">Page: <strong>Ansible VXLAN EVPN Catalogue</strong> · Version: <strong>v2 · 26 Nov 2026, 8:48 PM AEDT</strong></p>
+  <p class="meta">Collections from <a href="https://galaxy.ansible.com/ui/repo/published/cisco/nac_dc_vxlan/">Ansible Galaxy</a>:
+  <strong>cisco.nac_dc_vxlan 0.9.1</strong> (latest on Galaxy; it needs ansible-core &gt;=2.15,&lt;2.19),
+  <strong>cisco.nxos 14.0.0</strong> and <strong>cisco.dcnm 3.13.1</strong>.
+  Data-model attributes come from the schema tables and examples on the
+  <a href="https://netascode.cisco.com/docs/data_models/vxlan/overview/">Network as Code VXLAN data model</a> pages (fetched 26 Nov 2026; that site isn&rsquo;t version-pinned).
+  Module options come from each module&rsquo;s <code>DOCUMENTATION</code> and <code>EXAMPLES</code>, read with <code>ansible-doc</code>.
+  Role variables and tags come from the role files and READMEs.</p>
+  <p class="meta">These 21 <code>cisco.nxos</code> modules aren&rsquo;t VXLAN EVPN related and are left out: nxos_aaa_server, nxos_aaa_server_host, nxos_banner, nxos_devicealias, nxos_fc_interfaces, nxos_file_copy, nxos_gir, nxos_gir_profile_management, nxos_hsrp, nxos_hsrp_interfaces, nxos_install_os, nxos_nxapi, nxos_reboot, nxos_rpm, nxos_user, nxos_vrrp, nxos_vsan, nxos_vtp_domain, nxos_vtp_password, nxos_vtp_version, nxos_zone_zoneset.</p>
+  <p class="meta">Folder links end with <code>/</code>. Addresses come from the documentation examples. Anything not documented is <code>null</code> or marked not collected.</p>
+</footer>
+
+<script src="/zfrontier/ansible-vxlan-modules/sort.js"></script>
+<script src="/zfrontier/ansible-vxlan-modules/assets/app.js"></script>
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/"}}</script>
+<script>(function(){var b=String.fromCharCode(99,111,108,101,115);var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';s.setAttribute('data-goatcounter','https://amoeoo-'+b+'.goatcounter.com/count');document.head.appendChild(s);}());</script>
+
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+
+<!-- uv-badge v2 -->
+<style id="uv-badge-style">
+.uv-pop{position:relative;display:inline-block;vertical-align:middle}
+.uv-pop .uv-card{display:none;position:absolute;right:0;top:calc(100% + 6px);z-index:80;min-width:228px;padding:10px 12px;border-radius:10px;background:var(--card,#0f172a);color:var(--ink,#e2e8f0);border:1px solid var(--line,#334155);box-shadow:0 10px 28px rgba(0,0,0,.28);font:12px/1.4 system-ui,Arial,sans-serif;text-align:left;white-space:normal}
+.uv-pop.open .uv-card{display:block}
+.uv-card svg{display:block;width:204px;height:44px;margin:6px 0 8px}
+.uv-card .uv-k{font-weight:700;margin:0 0 2px}
+.uv-card .uv-m{color:var(--muted,#94a3b8);font-size:11px}
+.uv-card a{color:var(--link,#8ecbff)}
+</style>
+<script id="uv-badge">(function(){
+function norm(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function tzParts(iso){
+  var pt=new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'2-digit',minute:'2-digit',hour12:false,hourCycle:'h23',timeZoneName:'short',day:'2-digit',month:'short'}).formatToParts(new Date(iso));
+  var g=function(t){return (pt.find(function(x){return x.type===t})||{}).value||''};
+  var tz=(g('timeZoneName')||'AEDT').replace('GMT+11','AEDT').replace('GMT+10','AEST');
+  return {hh:g('hour'),mm:g('minute'),tz:tz,day:g('day'),mon:g('month')};
+}
+function last30(daysMap){
+  var out=[], now=new Date();
+  var fmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'});
+  for(var i=29;i>=0;i--){
+    var d=new Date(now.getTime()-i*86400000);
+    var key=fmt.format(d);
+    out.push({day:key,count:+((daysMap||{})[key]||0)});
+  }
+  return out;
+}
+function spark(series){
+  var w=204,h=44,p=2;
+  var max=Math.max.apply(null,series.map(function(x){return x.count}).concat([1]));
+  var n=series.length||1;
+  var pts=series.map(function(x,i){
+    var X=p+(i*(w-2*p)/Math.max(1,n-1));
+    var Y=h-p-((x.count/max)*(h-2*p));
+    return X.toFixed(1)+','+Y.toFixed(1);
+  }).join(' ');
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true"><polyline fill="none" stroke="#22c55e" stroke-width="2" points="'+pts+'"/></svg>';
+}
+function fillStats(d){
+  var total=(d.total&& (d.total.total||d.total.total_utc))||0;
+  var cc=(d.countries||[]).length;
+  var asof=d.as_of_aedt||'';
+  document.querySelectorAll('.im-stat-vis').forEach(function(e){e.textContent=total||'0'});
+  document.querySelectorAll('.im-stat-cc').forEach(function(e){e.textContent=cc||'0'});
+  document.querySelectorAll('.im-stat-asof').forEach(function(e){e.textContent=asof||'n/a'});
+}
+function attachPopover(d, count, series){
+  document.querySelectorAll('.uv').forEach(function(uv){
+    if(uv.closest('.uv-pop')) return;
+    var wrap=document.createElement('span');wrap.className='uv-pop';
+    uv.parentNode.insertBefore(wrap,uv);wrap.appendChild(uv);
+    var card=document.createElement('div');card.className='uv-card';card.setAttribute('role','dialog');
+    var last=series.length?series[series.length-1].count:0;
+    card.innerHTML='<p class="uv-k">This page: '+count+' unique visitors</p>'+spark(series)+'<p class="uv-m">Last 30 days (this page). Today so far: '+last+'.</p><p><a href="/visitors/">Full visitor stats ›</a></p>';
+    wrap.appendChild(card);
+    function tog(ev){ev.preventDefault();ev.stopPropagation();document.querySelectorAll('.uv-pop.open').forEach(function(x){if(x!==wrap)x.classList.remove('open')});wrap.classList.toggle('open')}
+    uv.addEventListener('click',tog);
+    uv.style.cursor='pointer';
+    uv.title='Click for a 30-day sparkline';
+  });
+  document.addEventListener('click',function(){document.querySelectorAll('.uv-pop.open').forEach(function(x){x.classList.remove('open')})});
+}
+function apply(d){
+  var p=norm(location.pathname);
+  var page=(d.pages||[]).filter(function(x){return norm(x.path)===p});
+  var c=page.reduce(function(a,x){return a+(+x.count||0)},0);
+  var days={};
+  page.forEach(function(x){var m=x.days||{};Object.keys(m).forEach(function(k){days[k]=(days[k]||0)+(+m[k]||0)})});
+  document.querySelectorAll('.uvc').forEach(function(e){e.textContent=c});
+  document.querySelectorAll('.uvt').forEach(function(e){
+    if(d.updated_utc){var t=tzParts(d.updated_utc);e.textContent=' (data as of '+t.hh+':'+t.mm+' '+t.tz+')'}
+  });
+  fillStats(d);
+  attachPopover(d,c,last30(days));
+}
+function fail(){
+  document.querySelectorAll('.uvc').forEach(function(e){if(e.textContent==='…'||e.textContent==='...') e.textContent='n/a'});
+  document.querySelectorAll('.im-stat-vis,.im-stat-cc,.im-stat-asof').forEach(function(e){if(e.textContent==='…') e.textContent='n/a'});
+}
+if(!window.__visitorsData){
+  var ac=typeof AbortController==='function'?new AbortController():null;
+  var timer=setTimeout(function(){try{ac&&ac.abort()}catch(e){}},8000);
+  window.__visitorsData=fetch('/data/visitors.json?'+Date.now(),ac?{signal:ac.signal}:undefined).then(function(r){
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('visitors.json '+r.status);
+    return r.json();
+  });
+}
+window.__visitorsData.then(apply).catch(function(){fail()});
+})();</script>
+<!-- approval-links v1 -->
+<style>.ap-link{font-weight:600}</style>
+<script id="approval-links">(function(){var M={"mod-role_common_global":"001-role_common_global","mod-role_validate":"002-role_validate","mod-role_dtc_connectivity_check":"003-role_dtc_connectivity_check","mod-nac_fabric":"004-nac_fabric","mod-dcnm_fabric":"005-dcnm_fabric","mod-nac_vxlan_evpn_ibgp":"006-nac_vxlan_evpn_ibgp","mod-nac_vxlan_evpn_ebgp":"007-nac_vxlan_evpn_ebgp","mod-nac_external":"008-nac_external","mod-nac_switch":"009-nac_switch","mod-dcnm_inventory":"010-dcnm_inventory","mod-nac_vpc_peer":"011-nac_vpc_peer","mod-nac_tor_peer":"012-nac_tor_peer","mod-dcnm_resource_manager":"013-dcnm_resource_manager","mod-nxos_feature":"014-nxos_feature","mod-nxos_hostname":"015-nxos_hostname","mod-nxos_system":"016-nxos_system","mod-nxos_ntp_global":"017-nxos_ntp_global","mod-nxos_logging_global":"018-nxos_logging_global","mod-nxos_snmp_server":"019-nxos_snmp_server","mod-nxos_lldp_global":"020-nxos_lldp_global","mod-nac_general":"021-nac_general","mod-nac_ipv4":"022-nac_ipv4","mod-nac_ipv6":"023-nac_ipv6","mod-nac_ospf":"024-nac_ospf","mod-nac_isis":"025-nac_isis","mod-nac_bgp":"026-nac_bgp","mod-nac_bfd":"027-nac_bfd","mod-nac_multicast":"028-nac_multicast","mod-nac_fabric_link":"029-nac_fabric_link","mod-nac_edge_connection":"030-nac_edge_connection","mod-dcnm_links":"031-dcnm_links","mod-nxos_ospfv2":"032-nxos_ospfv2","mod-nxos_ospfv3":"033-nxos_ospfv3","mod-nxos_ospf_interfaces":"034-nxos_ospf_interfaces","mod-nxos_bfd_global":"035-nxos_bfd_global","mod-nxos_bfd_interfaces":"036-nxos_bfd_interfaces","mod-nxos_pim":"037-nxos_pim","mod-nxos_pim_rp_address":"038-nxos_pim_rp_address","mod-nxos_pim_interface":"039-nxos_pim_interface","mod-nxos_bgp_global":"040-nxos_bgp_global","mod-nxos_bgp_templates":"041-nxos_bgp_templates","mod-nxos_nve_interface":"042-nxos_nve_interface","mod-nxos_vxlan_vtep":"043-nxos_vxlan_vtep","mod-nxos_overlay_global":"044-nxos_overlay_global","mod-nxos_evpn_global":"045-nxos_evpn_global","mod-nxos_bgp_address_family":"046-nxos_bgp_address_family","mod-nxos_bgp_neighbor_address_family":"047-nxos_bgp_neighbor_address_family","mod-nxos_evpn_vni":"048-nxos_evpn_vni","mod-nxos_evpn_vnis":"049-nxos_evpn_vnis","mod-nxos_vxlan_vtep_vni":"050-nxos_vxlan_vtep_vni","mod-nxos_igmp":"051-nxos_igmp","mod-nxos_igmp_interface":"052-nxos_igmp_interface","mod-nxos_igmp_snooping":"053-nxos_igmp_snooping","mod-nac_vrf":"054-nac_vrf","mod-nac_extension_vrf_lite":"055-nac_extension_vrf_lite","mod-dcnm_vrf":"056-dcnm_vrf","mod-nxos_vrf_global":"057-nxos_vrf_global","mod-nxos_vrf":"058-nxos_vrf","mod-nxos_vrf_af":"059-nxos_vrf_af","mod-nxos_vrf_address_family":"060-nxos_vrf_address_family","mod-nxos_vrf_interface":"061-nxos_vrf_interface","mod-nxos_vrf_interfaces":"062-nxos_vrf_interfaces","mod-nxos_static_routes":"063-nxos_static_routes","mod-nac_network":"064-nac_network","mod-dcnm_network":"065-dcnm_network","mod-nxos_vlans":"066-nxos_vlans","mod-nac_if_breakout_interface":"067-nac_if_breakout_interface","mod-nac_if_access_interface":"068-nac_if_access_interface","mod-nac_if_trunk_interface":"069-nac_if_trunk_interface","mod-nac_if_access_po_interface":"070-nac_if_access_po_interface","mod-nac_if_trunk_po_interface":"071-nac_if_trunk_po_interface","mod-nac_if_routed_interface":"072-nac_if_routed_interface","mod-nac_if_routed_sub_interface":"073-nac_if_routed_sub_interface","mod-nac_if_routed_po_interface":"074-nac_if_routed_po_interface","mod-nac_if_loopback_interface":"075-nac_if_loopback_interface","mod-nac_if_dot1q_tunnel_interface":"076-nac_if_dot1q_tunnel_interface","mod-dcnm_vpc_pair":"077-dcnm_vpc_pair","mod-dcnm_interface":"078-dcnm_interface","mod-nxos_interfaces":"079-nxos_interfaces","mod-nxos_l2_interfaces":"080-nxos_l2_interfaces","mod-nxos_l3_interfaces":"081-nxos_l3_interfaces","mod-nxos_lacp":"082-nxos_lacp","mod-nxos_lag_interfaces":"083-nxos_lag_interfaces","mod-nxos_lacp_interfaces":"084-nxos_lacp_interfaces","mod-nxos_vpc":"085-nxos_vpc","mod-nxos_vpc_interface":"086-nxos_vpc_interface","mod-nxos_lldp_interfaces":"087-nxos_lldp_interfaces","mod-nxos_udld":"088-nxos_udld","mod-nxos_udld_interface":"089-nxos_udld_interface","mod-nac_route_control_top":"090-nac_route_control_top","mod-nac_rc_pfx":"091-nac_rc_pfx","mod-nac_rc_standard_community_lists":"092-nac_rc_standard_community_lists","mod-nac_rc_extended_community_lists":"093-nac_rc_extended_community_lists","mod-nac_rc_ip_as_path_access_lists":"094-nac_rc_ip_as_path_access_lists","mod-nac_rc_mac_lists":"095-nac_rc_mac_lists","mod-nac_rc_object_groups":"096-nac_rc_object_groups","mod-nac_rc_ip_acl":"097-nac_rc_ip_acl","mod-nac_rc_time_range":"098-nac_rc_time_range","mod-nac_route_map":"099-nac_route_map","mod-nac_policy":"100-nac_policy","mod-dcnm_template":"101-dcnm_template","mod-dcnm_policy":"102-dcnm_policy","mod-nxos_prefix_lists":"103-nxos_prefix_lists","mod-nxos_route_maps":"104-nxos_route_maps","mod-nxos_acls":"105-nxos_acls","mod-nxos_acl_interfaces":"106-nxos_acl_interfaces","mod-role_dtc_common":"107-role_dtc_common","mod-role_dtc_create":"108-role_dtc_create","mod-role_dtc_deploy":"109-role_dtc_deploy","mod-role_dtc_remove":"110-role_dtc_remove","mod-dcnm_maintenance_mode":"111-dcnm_maintenance_mode","mod-dcnm_image_upload":"112-dcnm_image_upload","mod-dcnm_image_policy":"113-dcnm_image_policy","mod-dcnm_image_upgrade":"114-dcnm_image_upgrade","mod-dcnm_bootflash":"115-dcnm_bootflash","mod-dcnm_rest":"116-dcnm_rest","mod-nxos_facts":"117-nxos_facts","mod-nxos_command":"118-nxos_command","mod-nxos_config":"119-nxos_config","mod-nxos_ping":"120-nxos_ping","mod-nxos_snapshot":"121-nxos_snapshot","mod-nxos_rollback":"122-nxos_rollback","mod-nxos_telemetry":"123-nxos_telemetry","mod-nac_multisite":"124-nac_multisite","mod-dcnm_fabric_group":"125-dcnm_fabric_group","mod-dcnm_service_node":"126-dcnm_service_node","mod-dcnm_service_route_peering":"127-dcnm_service_route_peering","mod-dcnm_service_policy":"128-dcnm_service_policy","mod-dcnm_log":"129-dcnm_log"};var B='/zfrontier/ansible-vxlan-modules/approval/',K=Object.keys(M),tries=0;function run(){var left=0;K.forEach(function(id){var c=document.getElementById(id);if(!c){left++;return}if(c.querySelector('.ap-link'))return;var a=document.createElement('a');a.className='ap-link';a.href=B+M[id]+'/';a.textContent='Approval email \u203a';var h=c.querySelector('.mod-links');if(h){h.appendChild(a)}else{var p=document.createElement('p');p.style.margin='8px 12px';p.appendChild(a);c.appendChild(p)}});return left}(function t(){var l=run();if(l>0&&tries++<60)setTimeout(t,500)})();})();</script>
+</body>
+</html>
