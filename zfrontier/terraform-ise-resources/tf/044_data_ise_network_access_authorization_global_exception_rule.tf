@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_network_access_authorization_global_exception_rule" "n044" {
-  id = local.m_044["id"]
+  id   = local.m_044["id"]
   name = local.m_044["name"]
 }
 

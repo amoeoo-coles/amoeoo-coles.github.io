@@ -8,9 +8,9 @@ locals {
 }
 
 data "ise_active_directory_groups_by_domain" "n006" {
-  domain = local.m_006["domain"]
-  filter = local.m_006["filter"]
+  domain        = local.m_006["domain"]
+  filter        = local.m_006["filter"]
   join_point_id = local.m_006["join_point_id"]
-  sid_filter = local.m_006["sid_filter"]
-  type_filter = local.m_006["type_filter"]
+  sid_filter    = local.m_006["sid_filter"]
+  type_filter   = local.m_006["type_filter"]
 }

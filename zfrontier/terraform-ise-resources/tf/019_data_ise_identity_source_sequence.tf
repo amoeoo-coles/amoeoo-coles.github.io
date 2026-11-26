@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_identity_source_sequence" "n019" {
-  id = local.m_019["id"]
+  id   = local.m_019["id"]
   name = local.m_019["name"]
 }
 

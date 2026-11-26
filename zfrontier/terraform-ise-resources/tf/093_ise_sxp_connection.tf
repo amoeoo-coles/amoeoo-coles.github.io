@@ -9,12 +9,12 @@ locals {
 
 resource "ise_sxp_connection" "n093" {
   description = local.m_093["description"]
-  enabled = local.m_093["enabled"]
-  ip_address = local.m_093["ip_address"]
-  name = local.m_093["name"]
-  sxp_mode = local.m_093["sxp_mode"]
-  sxp_node = local.m_093["sxp_node"]
-  sxp_peer = local.m_093["sxp_peer"]
+  enabled     = local.m_093["enabled"]
+  ip_address  = local.m_093["ip_address"]
+  name        = local.m_093["name"]
+  sxp_mode    = local.m_093["sxp_mode"]
+  sxp_node    = local.m_093["sxp_node"]
+  sxp_peer    = local.m_093["sxp_peer"]
   sxp_version = local.m_093["sxp_version"]
-  sxp_vpn = local.m_093["sxp_vpn"]
+  sxp_vpn     = local.m_093["sxp_vpn"]
 }

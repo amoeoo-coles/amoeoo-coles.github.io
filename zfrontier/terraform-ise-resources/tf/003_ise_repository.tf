@@ -8,13 +8,13 @@ locals {
 }
 
 resource "ise_repository" "n003" {
-  enable_pki = local.m_003["enable_pki"]
-  name = local.m_003["name"]
-  password = local.m_003["password"]
-  password_wo = try(var.secrets["ise_repository.password_wo"], local.m_003["password_wo"])
+  enable_pki          = local.m_003["enable_pki"]
+  name                = local.m_003["name"]
+  password            = local.m_003["password"]
+  password_wo         = try(var.secrets["ise_repository.password_wo"], local.m_003["password_wo"])
   password_wo_version = local.m_003["password_wo_version"]
-  path = local.m_003["path"]
-  protocol = local.m_003["protocol"]
-  server_name = local.m_003["server_name"]
-  user_name = local.m_003["user_name"]
+  path                = local.m_003["path"]
+  protocol            = local.m_003["protocol"]
+  server_name         = local.m_003["server_name"]
+  user_name           = local.m_003["user_name"]
 }

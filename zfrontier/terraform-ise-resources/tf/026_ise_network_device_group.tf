@@ -9,6 +9,6 @@ locals {
 
 resource "ise_network_device_group" "n026" {
   description = local.m_026["description"]
-  name = local.m_026["name"]
-  root_group = local.m_026["root_group"]
+  name        = local.m_026["name"]
+  root_group  = local.m_026["root_group"]
 }

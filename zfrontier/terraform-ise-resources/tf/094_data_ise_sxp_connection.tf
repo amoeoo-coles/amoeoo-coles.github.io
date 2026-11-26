@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_sxp_connection" "n094" {
-  id = local.m_094["id"]
+  id   = local.m_094["id"]
   name = local.m_094["name"]
 }
 

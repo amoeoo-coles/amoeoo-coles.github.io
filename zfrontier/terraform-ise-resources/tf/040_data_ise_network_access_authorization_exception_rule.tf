@@ -8,8 +8,8 @@ locals {
 }
 
 data "ise_network_access_authorization_exception_rule" "n040" {
-  id = local.m_040["id"]
-  name = local.m_040["name"]
+  id            = local.m_040["id"]
+  name          = local.m_040["name"]
   policy_set_id = local.m_040["policy_set_id"]
 }
 

@@ -9,8 +9,8 @@ locals {
 
 data "ise_network_access_dictionary_attribute" "n056" {
   dictionary_name = local.m_056["dictionary_name"]
-  id = local.m_056["id"]
-  name = local.m_056["name"]
+  id              = local.m_056["id"]
+  name            = local.m_056["name"]
 }
 
 output "n056_data_ise_network_access_dictionary_attribute_id" {

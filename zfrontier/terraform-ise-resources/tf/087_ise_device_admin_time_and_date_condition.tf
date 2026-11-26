@@ -8,17 +8,17 @@ locals {
 }
 
 resource "ise_device_admin_time_and_date_condition" "n087" {
-  description = local.m_087["description"]
-  end_date = local.m_087["end_date"]
-  end_time = local.m_087["end_time"]
-  exception_end_date = local.m_087["exception_end_date"]
-  exception_end_time = local.m_087["exception_end_time"]
+  description          = local.m_087["description"]
+  end_date             = local.m_087["end_date"]
+  end_time             = local.m_087["end_time"]
+  exception_end_date   = local.m_087["exception_end_date"]
+  exception_end_time   = local.m_087["exception_end_time"]
   exception_start_date = local.m_087["exception_start_date"]
   exception_start_time = local.m_087["exception_start_time"]
-  is_negate = local.m_087["is_negate"]
-  name = local.m_087["name"]
-  start_date = local.m_087["start_date"]
-  start_time = local.m_087["start_time"]
-  week_days = local.m_087["week_days"]
-  week_days_exception = local.m_087["week_days_exception"]
+  is_negate            = local.m_087["is_negate"]
+  name                 = local.m_087["name"]
+  start_date           = local.m_087["start_date"]
+  start_time           = local.m_087["start_time"]
+  week_days            = local.m_087["week_days"]
+  week_days_exception  = local.m_087["week_days_exception"]
 }

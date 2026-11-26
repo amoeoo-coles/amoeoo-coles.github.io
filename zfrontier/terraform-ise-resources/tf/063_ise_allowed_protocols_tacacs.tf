@@ -8,9 +8,9 @@ locals {
 }
 
 resource "ise_allowed_protocols_tacacs" "n063" {
-  allow_chap = local.m_063["allow_chap"]
+  allow_chap       = local.m_063["allow_chap"]
   allow_ms_chap_v1 = local.m_063["allow_ms_chap_v1"]
-  allow_pap_ascii = local.m_063["allow_pap_ascii"]
-  description = local.m_063["description"]
-  name = local.m_063["name"]
+  allow_pap_ascii  = local.m_063["allow_pap_ascii"]
+  description      = local.m_063["description"]
+  name             = local.m_063["name"]
 }

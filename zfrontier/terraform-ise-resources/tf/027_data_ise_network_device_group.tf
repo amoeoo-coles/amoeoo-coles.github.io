@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_network_device_group" "n027" {
-  id = local.m_027["id"]
+  id   = local.m_027["id"]
   name = local.m_027["name"]
 }
 

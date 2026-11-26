@@ -8,9 +8,9 @@ locals {
 }
 
 resource "ise_identity_source_sequence" "n018" {
-  break_on_store_fail = local.m_018["break_on_store_fail"]
+  break_on_store_fail                = local.m_018["break_on_store_fail"]
   certificate_authentication_profile = local.m_018["certificate_authentication_profile"]
-  description = local.m_018["description"]
-  identity_sources = local.m_018["identity_sources"]
-  name = local.m_018["name"]
+  description                        = local.m_018["description"]
+  identity_sources                   = local.m_018["identity_sources"]
+  name                               = local.m_018["name"]
 }

@@ -8,9 +8,9 @@ locals {
 }
 
 resource "ise_trustsec_ip_to_sgt_mapping_group" "n108" {
-  deploy_to = local.m_108["deploy_to"]
+  deploy_to   = local.m_108["deploy_to"]
   deploy_type = local.m_108["deploy_type"]
   description = local.m_108["description"]
-  name = local.m_108["name"]
-  sgt = local.m_108["sgt"]
+  name        = local.m_108["name"]
+  sgt         = local.m_108["sgt"]
 }

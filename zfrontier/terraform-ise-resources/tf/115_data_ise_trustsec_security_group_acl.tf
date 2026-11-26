@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_trustsec_security_group_acl" "n115" {
-  id = local.m_115["id"]
+  id   = local.m_115["id"]
   name = local.m_115["name"]
 }
 

@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_endpoint_identity_group" "n017" {
-  id = local.m_017["id"]
+  id   = local.m_017["id"]
   name = local.m_017["name"]
 }
 

@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_trustsec_matrix" "n111" {
-  id = local.m_111["id"]
+  id   = local.m_111["id"]
   name = local.m_111["name"]
 }
 

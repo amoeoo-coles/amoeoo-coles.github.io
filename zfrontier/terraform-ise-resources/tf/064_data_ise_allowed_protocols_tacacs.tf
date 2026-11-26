@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_allowed_protocols_tacacs" "n064" {
-  id = local.m_064["id"]
+  id   = local.m_064["id"]
   name = local.m_064["name"]
 }
 

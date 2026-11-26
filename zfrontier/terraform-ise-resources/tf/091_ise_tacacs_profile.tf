@@ -8,7 +8,7 @@ locals {
 }
 
 resource "ise_tacacs_profile" "n091" {
-  description = local.m_091["description"]
-  name = local.m_091["name"]
+  description        = local.m_091["description"]
+  name               = local.m_091["name"]
   session_attributes = local.m_091["session_attributes"]
 }

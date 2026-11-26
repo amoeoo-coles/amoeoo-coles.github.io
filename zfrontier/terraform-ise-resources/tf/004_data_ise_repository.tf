@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_repository" "n004" {
-  id = local.m_004["id"]
+  id   = local.m_004["id"]
   name = local.m_004["name"]
 }
 

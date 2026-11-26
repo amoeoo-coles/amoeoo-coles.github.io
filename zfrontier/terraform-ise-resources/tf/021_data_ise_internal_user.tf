@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_internal_user" "n021" {
-  id = local.m_021["id"]
+  id   = local.m_021["id"]
   name = local.m_021["name"]
 }
 

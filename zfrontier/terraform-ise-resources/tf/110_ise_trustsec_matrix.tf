@@ -8,9 +8,9 @@ locals {
 }
 
 resource "ise_trustsec_matrix" "n110" {
-  copy_policy_from = local.m_110["copy_policy_from"]
-  defcon_level = local.m_110["defcon_level"]
-  description = local.m_110["description"]
+  copy_policy_from   = local.m_110["copy_policy_from"]
+  defcon_level       = local.m_110["defcon_level"]
+  description        = local.m_110["description"]
   matrix_policy_type = local.m_110["matrix_policy_type"]
-  name = local.m_110["name"]
+  name               = local.m_110["name"]
 }

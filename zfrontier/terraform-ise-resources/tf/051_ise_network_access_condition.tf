@@ -8,14 +8,14 @@ locals {
 }
 
 resource "ise_network_access_condition" "n051" {
-  attribute_name = local.m_051["attribute_name"]
-  attribute_value = local.m_051["attribute_value"]
-  children = local.m_051["children"]
-  condition_type = local.m_051["condition_type"]
-  description = local.m_051["description"]
-  dictionary_name = local.m_051["dictionary_name"]
+  attribute_name   = local.m_051["attribute_name"]
+  attribute_value  = local.m_051["attribute_value"]
+  children         = local.m_051["children"]
+  condition_type   = local.m_051["condition_type"]
+  description      = local.m_051["description"]
+  dictionary_name  = local.m_051["dictionary_name"]
   dictionary_value = local.m_051["dictionary_value"]
-  is_negate = local.m_051["is_negate"]
-  name = local.m_051["name"]
-  operator = local.m_051["operator"]
+  is_negate        = local.m_051["is_negate"]
+  name             = local.m_051["name"]
+  operator         = local.m_051["operator"]
 }

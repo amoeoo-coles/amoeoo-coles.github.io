@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_trustsec_ip_to_sgt_mapping_group" "n109" {
-  id = local.m_109["id"]
+  id   = local.m_109["id"]
   name = local.m_109["name"]
 }
 

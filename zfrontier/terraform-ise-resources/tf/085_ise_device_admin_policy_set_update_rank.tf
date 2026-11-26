@@ -9,5 +9,5 @@ locals {
 
 resource "ise_device_admin_policy_set_update_rank" "n085" {
   policy_set_id = local.m_085["policy_set_id"]
-  rank = local.m_085["rank"]
+  rank          = local.m_085["rank"]
 }

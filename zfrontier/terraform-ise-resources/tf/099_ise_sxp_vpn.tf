@@ -8,7 +8,7 @@ locals {
 }
 
 resource "ise_sxp_vpn" "n099" {
-  description = local.m_099["description"]
-  name = local.m_099["name"]
+  description  = local.m_099["description"]
+  name         = local.m_099["name"]
   sxp_vpn_name = local.m_099["sxp_vpn_name"]
 }

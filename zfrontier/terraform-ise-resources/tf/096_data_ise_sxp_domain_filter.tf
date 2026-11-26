@@ -8,7 +8,7 @@ locals {
 }
 
 data "ise_sxp_domain_filter" "n096" {
-  id = local.m_096["id"]
+  id   = local.m_096["id"]
   name = local.m_096["name"]
 }
 
