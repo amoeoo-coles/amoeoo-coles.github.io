@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 APITestsApi (ansible.builtin.uri, not an official collection)
+# Build order: 15 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-tests/docs/APITestsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "015 api_tests"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/api_tests.yml
+  tasks:
+    - name: "GET /tests/api (List API tests)"
+      ansible.builtin.uri:
+        url: "{{ te_api_tests.base_url }}/tests/api{% if te_api_tests.aid %}?aid={{ te_api_tests.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: api_tests_get
+
+    - name: "POST /tests/api (Create API test)"
+      ansible.builtin.uri:
+        url: "{{ te_api_tests.base_url }}/tests/api{% if te_api_tests.aid %}?aid={{ te_api_tests.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_api_tests.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: api_tests_create
+      tags:
+        - never
+        - api_tests

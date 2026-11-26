@@ -1,0 +1,27 @@
+---
+# Sample playbook for ThousandEyes v7 VoiceInstantTestsApi (ansible.builtin.uri, not an official collection)
+# Build order: 57 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-instant-tests/docs/VoiceInstantTestsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "057 voice_instant_tests"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/voice_instant_tests.yml
+  tasks:
+
+    - name: "POST /tests/voice/instant (Create voice instant test)"
+      ansible.builtin.uri:
+        url: "{{ te_voice_instant_tests.base_url }}/tests/voice/instant{% if te_voice_instant_tests.aid %}?aid={{ te_voice_instant_tests.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_voice_instant_tests.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: voice_instant_tests_create
+      tags:
+        - never
+        - voice_instant_tests

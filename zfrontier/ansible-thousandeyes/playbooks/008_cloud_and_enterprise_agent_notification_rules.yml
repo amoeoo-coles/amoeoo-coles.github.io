@@ -1,0 +1,22 @@
+---
+# Sample playbook for ThousandEyes v7 CloudAndEnterpriseAgentNotificationRulesApi (ansible.builtin.uri, not an official collection)
+# Build order: 8 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-agents/docs/CloudAndEnterpriseAgentNotificationRulesApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "008 cloud_and_enterprise_agent_notification_rules"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/cloud_and_enterprise_agent_notification_rules.yml
+  tasks:
+    - name: "GET /agents/notification-rules (List agent notification rules)"
+      ansible.builtin.uri:
+        url: "{{ te_cloud_and_enterprise_agent_notification_rules.base_url }}/agents/notification-rules{% if te_cloud_and_enterprise_agent_notification_rules.aid %}?aid={{ te_cloud_and_enterprise_agent_notification_rules.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: cloud_and_enterprise_agent_notification_rules_get

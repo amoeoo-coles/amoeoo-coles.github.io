@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 PathVisualizationInterfaceGroupsApi (ansible.builtin.uri, not an official collection)
+# Build order: 25 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-tests/docs/PathVisualizationInterfaceGroupsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "025 path_visualization_interface_groups"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/path_visualization_interface_groups.yml
+  tasks:
+    - name: "GET /network/path-vis/interface-groups (List interface groups for path visualization)"
+      ansible.builtin.uri:
+        url: "{{ te_path_visualization_interface_groups.base_url }}/network/path-vis/interface-groups{% if te_path_visualization_interface_groups.aid %}?aid={{ te_path_visualization_interface_groups.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: path_visualization_interface_groups_get
+
+    - name: "POST /network/path-vis/interface-groups (Create interface group for path visualization)"
+      ansible.builtin.uri:
+        url: "{{ te_path_visualization_interface_groups.base_url }}/network/path-vis/interface-groups{% if te_path_visualization_interface_groups.aid %}?aid={{ te_path_visualization_interface_groups.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_path_visualization_interface_groups.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: path_visualization_interface_groups_create
+      tags:
+        - never
+        - path_visualization_interface_groups

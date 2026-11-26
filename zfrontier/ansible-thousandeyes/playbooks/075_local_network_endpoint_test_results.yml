@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 LocalNetworkEndpointTestResultsApi (ansible.builtin.uri, not an official collection)
+# Build order: 75 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-endpoint-test-results/docs/LocalNetworkEndpointTestResultsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "075 local_network_endpoint_test_results"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/local_network_endpoint_test_results.yml
+  tasks:
+    - name: "GET /endpoint/test-results/local-networks (List local networks)"
+      ansible.builtin.uri:
+        url: "{{ te_local_network_endpoint_test_results.base_url }}/endpoint/test-results/local-networks{% if te_local_network_endpoint_test_results.aid %}?aid={{ te_local_network_endpoint_test_results.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: local_network_endpoint_test_results_get
+
+    - name: "POST /endpoint/test-results/local-networks/topologies/filter (List endpoint network topologies probes)"
+      ansible.builtin.uri:
+        url: "{{ te_local_network_endpoint_test_results.base_url }}/endpoint/test-results/local-networks/topologies/filter{% if te_local_network_endpoint_test_results.aid %}?aid={{ te_local_network_endpoint_test_results.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_local_network_endpoint_test_results.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: local_network_endpoint_test_results_create
+      tags:
+        - never
+        - local_network_endpoint_test_results

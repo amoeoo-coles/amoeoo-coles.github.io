@@ -1,0 +1,27 @@
+---
+# Sample playbook for ThousandEyes v7 RunEndpointInstantScheduledTestsApi (ansible.builtin.uri, not an official collection)
+# Build order: 61 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-endpoint-instant-tests/docs/RunEndpointInstantScheduledTestsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "061 run_endpoint_instant_scheduled_tests"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/run_endpoint_instant_scheduled_tests.yml
+  tasks:
+
+    - name: "POST /endpoint/tests/scheduled-tests/{testId}/run (Run endpoint instant scheduled test)"
+      ansible.builtin.uri:
+        url: "{{ te_run_endpoint_instant_scheduled_tests.base_url }}/endpoint/tests/scheduled-tests/{{ te_run_endpoint_instant_scheduled_tests.path_params.testId }}/run{% if te_run_endpoint_instant_scheduled_tests.aid %}?aid={{ te_run_endpoint_instant_scheduled_tests.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_run_endpoint_instant_scheduled_tests.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: run_endpoint_instant_scheduled_tests_create
+      tags:
+        - never
+        - run_endpoint_instant_scheduled_tests

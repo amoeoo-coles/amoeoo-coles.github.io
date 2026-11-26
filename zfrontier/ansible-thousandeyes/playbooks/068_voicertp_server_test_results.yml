@@ -1,0 +1,22 @@
+---
+# Sample playbook for ThousandEyes v7 VoiceRTPServerTestResultsApi (ansible.builtin.uri, not an official collection)
+# Build order: 68 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-test-results/docs/VoiceRTPServerTestResultsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "068 voicertp_server_test_results"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/voicertp_server_test_results.yml
+  tasks:
+    - name: "GET /test-results/{testId}/rtp-server (Retrieve RTP server test metrics)"
+      ansible.builtin.uri:
+        url: "{{ te_voicertp_server_test_results.base_url }}/test-results/{{ te_voicertp_server_test_results.path_params.testId }}/rtp-server{% if te_voicertp_server_test_results.aid %}?aid={{ te_voicertp_server_test_results.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: voicertp_server_test_results_get

@@ -1,0 +1,22 @@
+---
+# Sample playbook for ThousandEyes v7 TestsApi (ansible.builtin.uri, not an official collection)
+# Build order: 27 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-tests/docs/TestsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "027 tests"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/tests.yml
+  tasks:
+    - name: "GET /tests (List configured tests)"
+      ansible.builtin.uri:
+        url: "{{ te_tests.base_url }}/tests{% if te_tests.aid %}?aid={{ te_tests.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: tests_get

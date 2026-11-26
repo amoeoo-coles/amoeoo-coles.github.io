@@ -1,0 +1,27 @@
+---
+# Sample playbook for ThousandEyes v7 EndpointAgentsTransferApi (ansible.builtin.uri, not an official collection)
+# Build order: 38 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-endpoint-agents/docs/EndpointAgentsTransferApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "038 endpoint_agents_transfer"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/endpoint_agents_transfer.yml
+  tasks:
+
+    - name: "POST /endpoint/agents/transfer/bulk (Bulk transfer agents)"
+      ansible.builtin.uri:
+        url: "{{ te_endpoint_agents_transfer.base_url }}/endpoint/agents/transfer/bulk{% if te_endpoint_agents_transfer.aid %}?aid={{ te_endpoint_agents_transfer.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_endpoint_agents_transfer.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: endpoint_agents_transfer_create
+      tags:
+        - never
+        - endpoint_agents_transfer

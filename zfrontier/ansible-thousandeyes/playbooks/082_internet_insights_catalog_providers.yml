@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 InternetInsightsCatalogProvidersApi (ansible.builtin.uri, not an official collection)
+# Build order: 82 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-internet-insights/docs/InternetInsightsCatalogProvidersApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "082 internet_insights_catalog_providers"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/internet_insights_catalog_providers.yml
+  tasks:
+    - name: "GET /internet-insights/catalog/providers/{providerId} (Retrieve a catalog provider)"
+      ansible.builtin.uri:
+        url: "{{ te_internet_insights_catalog_providers.base_url }}/internet-insights/catalog/providers/{{ te_internet_insights_catalog_providers.path_params.providerId }}{% if te_internet_insights_catalog_providers.aid %}?aid={{ te_internet_insights_catalog_providers.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: internet_insights_catalog_providers_get
+
+    - name: "POST /internet-insights/catalog/providers/filter (List catalog providers)"
+      ansible.builtin.uri:
+        url: "{{ te_internet_insights_catalog_providers.base_url }}/internet-insights/catalog/providers/filter{% if te_internet_insights_catalog_providers.aid %}?aid={{ te_internet_insights_catalog_providers.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_internet_insights_catalog_providers.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: internet_insights_catalog_providers_create
+      tags:
+        - never
+        - internet_insights_catalog_providers

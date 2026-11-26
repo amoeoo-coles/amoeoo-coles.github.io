@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 TagsApi (ansible.builtin.uri, not an official collection)
+# Build order: 14 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-tags/docs/TagsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "014 tags"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/tags.yml
+  tasks:
+    - name: "GET /tags (List tags)"
+      ansible.builtin.uri:
+        url: "{{ te_tags.base_url }}/tags{% if te_tags.aid %}?aid={{ te_tags.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: tags_get
+
+    - name: "POST /tags (Create tag)"
+      ansible.builtin.uri:
+        url: "{{ te_tags.base_url }}/tags{% if te_tags.aid %}?aid={{ te_tags.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_tags.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: tags_create
+      tags:
+        - never
+        - tags

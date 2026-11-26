@@ -1,0 +1,22 @@
+---
+# Sample playbook for ThousandEyes v7 UserEventsApi (ansible.builtin.uri, not an official collection)
+# Build order: 4 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-administrative/docs/UserEventsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "004 user_events"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/user_events.yml
+  tasks:
+    - name: "GET /audit-user-events (List activity log events)"
+      ansible.builtin.uri:
+        url: "{{ te_user_events.base_url }}/audit-user-events{% if te_user_events.aid %}?aid={{ te_user_events.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: user_events_get

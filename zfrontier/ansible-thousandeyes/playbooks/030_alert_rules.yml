@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 AlertRulesApi (ansible.builtin.uri, not an official collection)
+# Build order: 30 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-alerts/docs/AlertRulesApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "030 alert_rules"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/alert_rules.yml
+  tasks:
+    - name: "GET /alerts/rules (List alert rules)"
+      ansible.builtin.uri:
+        url: "{{ te_alert_rules.base_url }}/alerts/rules{% if te_alert_rules.aid %}?aid={{ te_alert_rules.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: alert_rules_get
+
+    - name: "POST /alerts/rules (Create alert rule)"
+      ansible.builtin.uri:
+        url: "{{ te_alert_rules.base_url }}/alerts/rules{% if te_alert_rules.aid %}?aid={{ te_alert_rules.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_alert_rules.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: alert_rules_create
+      tags:
+        - never
+        - alert_rules

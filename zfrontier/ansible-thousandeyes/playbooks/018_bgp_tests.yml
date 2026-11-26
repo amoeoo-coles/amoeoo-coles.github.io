@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 BGPTestsApi (ansible.builtin.uri, not an official collection)
+# Build order: 18 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-tests/docs/BGPTestsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "018 bgp_tests"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/bgp_tests.yml
+  tasks:
+    - name: "GET /tests/bgp (List BGP tests)"
+      ansible.builtin.uri:
+        url: "{{ te_bgp_tests.base_url }}/tests/bgp{% if te_bgp_tests.aid %}?aid={{ te_bgp_tests.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: bgp_tests_get
+
+    - name: "POST /tests/bgp (Create BGP test)"
+      ansible.builtin.uri:
+        url: "{{ te_bgp_tests.base_url }}/tests/bgp{% if te_bgp_tests.aid %}?aid={{ te_bgp_tests.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_bgp_tests.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: bgp_tests_create
+      tags:
+        - never
+        - bgp_tests

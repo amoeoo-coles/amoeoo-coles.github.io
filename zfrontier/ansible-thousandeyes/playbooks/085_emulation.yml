@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 EmulationApi (ansible.builtin.uri, not an official collection)
+# Build order: 85 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-emulation/docs/EmulationApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "085 emulation"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/emulation.yml
+  tasks:
+    - name: "GET /emulated-devices (List emulated devices)"
+      ansible.builtin.uri:
+        url: "{{ te_emulation.base_url }}/emulated-devices{% if te_emulation.aid %}?aid={{ te_emulation.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: emulation_get
+
+    - name: "POST /emulated-devices (Create emulated device)"
+      ansible.builtin.uri:
+        url: "{{ te_emulation.base_url }}/emulated-devices{% if te_emulation.aid %}?aid={{ te_emulation.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_emulation.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: emulation_create
+      tags:
+        - never
+        - emulation

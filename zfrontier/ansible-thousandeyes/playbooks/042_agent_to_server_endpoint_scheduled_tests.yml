@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 AgentToServerEndpointScheduledTestsApi (ansible.builtin.uri, not an official collection)
+# Build order: 42 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-endpoint-tests/docs/AgentToServerEndpointScheduledTestsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "042 agent_to_server_endpoint_scheduled_tests"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/agent_to_server_endpoint_scheduled_tests.yml
+  tasks:
+    - name: "GET /endpoint/tests/scheduled-tests/agent-to-server (List agent to server endpoint scheduled tests)"
+      ansible.builtin.uri:
+        url: "{{ te_agent_to_server_endpoint_scheduled_tests.base_url }}/endpoint/tests/scheduled-tests/agent-to-server{% if te_agent_to_server_endpoint_scheduled_tests.aid %}?aid={{ te_agent_to_server_endpoint_scheduled_tests.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: agent_to_server_endpoint_scheduled_tests_get
+
+    - name: "POST /endpoint/tests/scheduled-tests/agent-to-server (Creates agent to server endpoint scheduled test)"
+      ansible.builtin.uri:
+        url: "{{ te_agent_to_server_endpoint_scheduled_tests.base_url }}/endpoint/tests/scheduled-tests/agent-to-server{% if te_agent_to_server_endpoint_scheduled_tests.aid %}?aid={{ te_agent_to_server_endpoint_scheduled_tests.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_agent_to_server_endpoint_scheduled_tests.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: agent_to_server_endpoint_scheduled_tests_create
+      tags:
+        - never
+        - agent_to_server_endpoint_scheduled_tests

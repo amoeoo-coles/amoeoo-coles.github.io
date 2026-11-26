@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 HTTPServerEndpointScheduledTestsApi (ansible.builtin.uri, not an official collection)
+# Build order: 45 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-endpoint-tests/docs/HTTPServerEndpointScheduledTestsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "045 http_server_endpoint_scheduled_tests"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/http_server_endpoint_scheduled_tests.yml
+  tasks:
+    - name: "GET /endpoint/tests/scheduled-tests/http-server (List HTTP server endpoint scheduled tests)"
+      ansible.builtin.uri:
+        url: "{{ te_http_server_endpoint_scheduled_tests.base_url }}/endpoint/tests/scheduled-tests/http-server{% if te_http_server_endpoint_scheduled_tests.aid %}?aid={{ te_http_server_endpoint_scheduled_tests.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: http_server_endpoint_scheduled_tests_get
+
+    - name: "POST /endpoint/tests/scheduled-tests/http-server (Create HTTP server endpoint scheduled test)"
+      ansible.builtin.uri:
+        url: "{{ te_http_server_endpoint_scheduled_tests.base_url }}/endpoint/tests/scheduled-tests/http-server{% if te_http_server_endpoint_scheduled_tests.aid %}?aid={{ te_http_server_endpoint_scheduled_tests.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_http_server_endpoint_scheduled_tests.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: http_server_endpoint_scheduled_tests_create
+      tags:
+        - never
+        - http_server_endpoint_scheduled_tests

@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 GenericConnectorsApi (ansible.builtin.uri, not an official collection)
+# Build order: 88 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-connectors/docs/GenericConnectorsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "088 generic_connectors"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/generic_connectors.yml
+  tasks:
+    - name: "GET /connectors/generic (List connectors)"
+      ansible.builtin.uri:
+        url: "{{ te_generic_connectors.base_url }}/connectors/generic{% if te_generic_connectors.aid %}?aid={{ te_generic_connectors.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: generic_connectors_get
+
+    - name: "POST /connectors/generic (Create connector)"
+      ansible.builtin.uri:
+        url: "{{ te_generic_connectors.base_url }}/connectors/generic{% if te_generic_connectors.aid %}?aid={{ te_generic_connectors.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_generic_connectors.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: generic_connectors_create
+      tags:
+        - never
+        - generic_connectors

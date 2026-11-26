@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 DashboardsApi (ansible.builtin.uri, not an official collection)
+# Build order: 34 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-dashboards/docs/DashboardsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "034 dashboards"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/dashboards.yml
+  tasks:
+    - name: "GET /dashboards (List dashboards)"
+      ansible.builtin.uri:
+        url: "{{ te_dashboards.base_url }}/dashboards{% if te_dashboards.aid %}?aid={{ te_dashboards.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: dashboards_get
+
+    - name: "POST /dashboards (Create dashboard)"
+      ansible.builtin.uri:
+        url: "{{ te_dashboards.base_url }}/dashboards{% if te_dashboards.aid %}?aid={{ te_dashboards.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_dashboards.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: dashboards_create
+      tags:
+        - never
+        - dashboards

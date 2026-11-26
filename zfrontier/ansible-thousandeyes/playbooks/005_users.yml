@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 UsersApi (ansible.builtin.uri, not an official collection)
+# Build order: 5 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-administrative/docs/UsersApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "005 users"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/users.yml
+  tasks:
+    - name: "GET /users/current (Retrieve current user)"
+      ansible.builtin.uri:
+        url: "{{ te_users.base_url }}/users/current{% if te_users.aid %}?aid={{ te_users.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: users_get
+
+    - name: "POST /users (Create user)"
+      ansible.builtin.uri:
+        url: "{{ te_users.base_url }}/users{% if te_users.aid %}?aid={{ te_users.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_users.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: users_create
+      tags:
+        - never
+        - users

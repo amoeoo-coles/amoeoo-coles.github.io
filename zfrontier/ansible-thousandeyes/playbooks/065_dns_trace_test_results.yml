@@ -1,0 +1,22 @@
+---
+# Sample playbook for ThousandEyes v7 DNSTraceTestResultsApi (ansible.builtin.uri, not an official collection)
+# Build order: 65 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-test-results/docs/DNSTraceTestResultsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "065 dns_trace_test_results"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/dns_trace_test_results.yml
+  tasks:
+    - name: "GET /test-results/{testId}/dns-trace (Get DNS trace test results)"
+      ansible.builtin.uri:
+        url: "{{ te_dns_trace_test_results.base_url }}/test-results/{{ te_dns_trace_test_results.path_params.testId }}/dns-trace{% if te_dns_trace_test_results.aid %}?aid={{ te_dns_trace_test_results.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: dns_trace_test_results_get

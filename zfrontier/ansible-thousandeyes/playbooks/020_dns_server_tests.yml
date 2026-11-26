@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 DNSServerTestsApi (ansible.builtin.uri, not an official collection)
+# Build order: 20 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-tests/docs/DNSServerTestsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "020 dns_server_tests"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/dns_server_tests.yml
+  tasks:
+    - name: "GET /tests/dns-server (List DNS Server tests)"
+      ansible.builtin.uri:
+        url: "{{ te_dns_server_tests.base_url }}/tests/dns-server{% if te_dns_server_tests.aid %}?aid={{ te_dns_server_tests.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: dns_server_tests_get
+
+    - name: "POST /tests/dns-server (Create DNS Server test)"
+      ansible.builtin.uri:
+        url: "{{ te_dns_server_tests.base_url }}/tests/dns-server{% if te_dns_server_tests.aid %}?aid={{ te_dns_server_tests.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_dns_server_tests.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: dns_server_tests_create
+      tags:
+        - never
+        - dns_server_tests

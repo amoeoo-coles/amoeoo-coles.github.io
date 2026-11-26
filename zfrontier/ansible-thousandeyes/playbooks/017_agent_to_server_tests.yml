@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 AgentToServerTestsApi (ansible.builtin.uri, not an official collection)
+# Build order: 17 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-tests/docs/AgentToServerTestsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "017 agent_to_server_tests"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/agent_to_server_tests.yml
+  tasks:
+    - name: "GET /tests/agent-to-server (List Agent to Server tests)"
+      ansible.builtin.uri:
+        url: "{{ te_agent_to_server_tests.base_url }}/tests/agent-to-server{% if te_agent_to_server_tests.aid %}?aid={{ te_agent_to_server_tests.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: agent_to_server_tests_get
+
+    - name: "POST /tests/agent-to-server (Create Agent to Server test)"
+      ansible.builtin.uri:
+        url: "{{ te_agent_to_server_tests.base_url }}/tests/agent-to-server{% if te_agent_to_server_tests.aid %}?aid={{ te_agent_to_server_tests.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_agent_to_server_tests.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: agent_to_server_tests_create
+      tags:
+        - never
+        - agent_to_server_tests

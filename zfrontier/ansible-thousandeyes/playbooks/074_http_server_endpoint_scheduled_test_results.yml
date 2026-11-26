@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 HTTPServerEndpointScheduledTestResultsApi (ansible.builtin.uri, not an official collection)
+# Build order: 74 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-endpoint-test-results/docs/HTTPServerEndpointScheduledTestResultsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "074 http_server_endpoint_scheduled_test_results"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/http_server_endpoint_scheduled_test_results.yml
+  tasks:
+    - name: "GET /endpoint/test-results/scheduled-tests/{testId}/http-server (Retrieve HTTP server scheduled test results)"
+      ansible.builtin.uri:
+        url: "{{ te_http_server_endpoint_scheduled_test_results.base_url }}/endpoint/test-results/scheduled-tests/{{ te_http_server_endpoint_scheduled_test_results.path_params.testId }}/http-server{% if te_http_server_endpoint_scheduled_test_results.aid %}?aid={{ te_http_server_endpoint_scheduled_test_results.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: http_server_endpoint_scheduled_test_results_get
+
+    - name: "POST /endpoint/test-results/scheduled-tests/http-server/filter (Filter HTTP server scheduled test results)"
+      ansible.builtin.uri:
+        url: "{{ te_http_server_endpoint_scheduled_test_results.base_url }}/endpoint/test-results/scheduled-tests/http-server/filter{% if te_http_server_endpoint_scheduled_test_results.aid %}?aid={{ te_http_server_endpoint_scheduled_test_results.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_http_server_endpoint_scheduled_test_results.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: http_server_endpoint_scheduled_test_results_create
+      tags:
+        - never
+        - http_server_endpoint_scheduled_test_results

@@ -1,0 +1,27 @@
+---
+# Sample playbook for ThousandEyes v7 TestSnapshotsApi (ansible.builtin.uri, not an official collection)
+# Build order: 84 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-snapshots/docs/TestSnapshotsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "084 test_snapshots"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/test_snapshots.yml
+  tasks:
+
+    - name: "POST /tests/{testId}/snapshot (Create test snapshot)"
+      ansible.builtin.uri:
+        url: "{{ te_test_snapshots.base_url }}/tests/{{ te_test_snapshots.path_params.testId }}/snapshot{% if te_test_snapshots.aid %}?aid={{ te_test_snapshots.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_test_snapshots.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: test_snapshots_create
+      tags:
+        - never
+        - test_snapshots

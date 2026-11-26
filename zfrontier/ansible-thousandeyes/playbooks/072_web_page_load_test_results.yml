@@ -1,0 +1,22 @@
+---
+# Sample playbook for ThousandEyes v7 WebPageLoadTestResultsApi (ansible.builtin.uri, not an official collection)
+# Build order: 72 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-test-results/docs/WebPageLoadTestResultsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "072 web_page_load_test_results"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/web_page_load_test_results.yml
+  tasks:
+    - name: "GET /test-results/{testId}/page-load (Get page load server test results)"
+      ansible.builtin.uri:
+        url: "{{ te_web_page_load_test_results.base_url }}/test-results/{{ te_web_page_load_test_results.path_params.testId }}/page-load{% if te_web_page_load_test_results.aid %}?aid={{ te_web_page_load_test_results.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: web_page_load_test_results_get

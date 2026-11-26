@@ -1,0 +1,22 @@
+---
+# Sample playbook for ThousandEyes v7 NetworkBGPTestResultsApi (ansible.builtin.uri, not an official collection)
+# Build order: 66 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-test-results/docs/NetworkBGPTestResultsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "066 networkbgp_test_results"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/networkbgp_test_results.yml
+  tasks:
+    - name: "GET /test-results/{testId}/bgp (Get BGP test results)"
+      ansible.builtin.uri:
+        url: "{{ te_networkbgp_test_results.base_url }}/test-results/{{ te_networkbgp_test_results.path_params.testId }}/bgp{% if te_networkbgp_test_results.aid %}?aid={{ te_networkbgp_test_results.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: networkbgp_test_results_get

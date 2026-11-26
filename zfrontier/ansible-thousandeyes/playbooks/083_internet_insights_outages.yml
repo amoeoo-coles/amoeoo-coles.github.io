@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 InternetInsightsOutagesApi (ansible.builtin.uri, not an official collection)
+# Build order: 83 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-internet-insights/docs/InternetInsightsOutagesApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "083 internet_insights_outages"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/internet_insights_outages.yml
+  tasks:
+    - name: "GET /internet-insights/outages/app/{outageId} (Retrieve application outage)"
+      ansible.builtin.uri:
+        url: "{{ te_internet_insights_outages.base_url }}/internet-insights/outages/app/{{ te_internet_insights_outages.path_params.outageId }}{% if te_internet_insights_outages.aid %}?aid={{ te_internet_insights_outages.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: internet_insights_outages_get
+
+    - name: "POST /internet-insights/outages/filter (List network and application outages)"
+      ansible.builtin.uri:
+        url: "{{ te_internet_insights_outages.base_url }}/internet-insights/outages/filter{% if te_internet_insights_outages.aid %}?aid={{ te_internet_insights_outages.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_internet_insights_outages.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: internet_insights_outages_create
+      tags:
+        - never
+        - internet_insights_outages

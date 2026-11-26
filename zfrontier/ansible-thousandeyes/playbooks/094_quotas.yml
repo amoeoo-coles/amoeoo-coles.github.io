@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 QuotasApi (ansible.builtin.uri, not an official collection)
+# Build order: 94 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-usage/docs/QuotasApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "094 quotas"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/quotas.yml
+  tasks:
+    - name: "GET /quotas (Get organization and account group usage quota)"
+      ansible.builtin.uri:
+        url: "{{ te_quotas.base_url }}/quotas{% if te_quotas.aid %}?aid={{ te_quotas.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: quotas_get
+
+    - name: "POST /quotas/account-groups/assign (Create or update accout group quotas)"
+      ansible.builtin.uri:
+        url: "{{ te_quotas.base_url }}/quotas/account-groups/assign{% if te_quotas.aid %}?aid={{ te_quotas.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_quotas.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: quotas_create
+      tags:
+        - never
+        - quotas

@@ -1,0 +1,22 @@
+---
+# Sample playbook for ThousandEyes v7 PermissionsApi (ansible.builtin.uri, not an official collection)
+# Build order: 2 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-administrative/docs/PermissionsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "002 permissions"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/permissions.yml
+  tasks:
+    - name: "GET /permissions (List assignable permissions)"
+      ansible.builtin.uri:
+        url: "{{ te_permissions.base_url }}/permissions{% if te_permissions.aid %}?aid={{ te_permissions.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: permissions_get

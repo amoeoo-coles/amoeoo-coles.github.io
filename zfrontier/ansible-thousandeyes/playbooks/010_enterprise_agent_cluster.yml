@@ -1,0 +1,27 @@
+---
+# Sample playbook for ThousandEyes v7 EnterpriseAgentClusterApi (ansible.builtin.uri, not an official collection)
+# Build order: 10 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-agents/docs/EnterpriseAgentClusterApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "010 enterprise_agent_cluster"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/enterprise_agent_cluster.yml
+  tasks:
+
+    - name: "POST /agents/{agentId}/cluster/assign (Add member to Enterprise Agent cluster)"
+      ansible.builtin.uri:
+        url: "{{ te_enterprise_agent_cluster.base_url }}/agents/{{ te_enterprise_agent_cluster.path_params.agentId }}/cluster/assign{% if te_enterprise_agent_cluster.aid %}?aid={{ te_enterprise_agent_cluster.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_enterprise_agent_cluster.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: enterprise_agent_cluster_create
+      tags:
+        - never
+        - enterprise_agent_cluster

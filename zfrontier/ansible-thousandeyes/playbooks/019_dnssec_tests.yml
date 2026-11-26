@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 DNSSECTestsApi (ansible.builtin.uri, not an official collection)
+# Build order: 19 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-tests/docs/DNSSECTestsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "019 dnssec_tests"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/dnssec_tests.yml
+  tasks:
+    - name: "GET /tests/dnssec (List DNSSEC tests)"
+      ansible.builtin.uri:
+        url: "{{ te_dnssec_tests.base_url }}/tests/dnssec{% if te_dnssec_tests.aid %}?aid={{ te_dnssec_tests.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: dnssec_tests_get
+
+    - name: "POST /tests/dnssec (Create DNSSEC test)"
+      ansible.builtin.uri:
+        url: "{{ te_dnssec_tests.base_url }}/tests/dnssec{% if te_dnssec_tests.aid %}?aid={{ te_dnssec_tests.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_dnssec_tests.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: dnssec_tests_create
+      tags:
+        - never
+        - dnssec_tests

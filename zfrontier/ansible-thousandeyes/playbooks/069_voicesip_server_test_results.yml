@@ -1,0 +1,22 @@
+---
+# Sample playbook for ThousandEyes v7 VoiceSIPServerTestResultsApi (ansible.builtin.uri, not an official collection)
+# Build order: 69 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-test-results/docs/VoiceSIPServerTestResultsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "069 voicesip_server_test_results"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/voicesip_server_test_results.yml
+  tasks:
+    - name: "GET /test-results/{testId}/sip-server (Get SIP server test results)"
+      ansible.builtin.uri:
+        url: "{{ te_voicesip_server_test_results.base_url }}/test-results/{{ te_voicesip_server_test_results.path_params.testId }}/sip-server{% if te_voicesip_server_test_results.aid %}?aid={{ te_voicesip_server_test_results.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: voicesip_server_test_results_get

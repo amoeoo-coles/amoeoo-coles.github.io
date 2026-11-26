@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 HTTPServerTestsApi (ansible.builtin.uri, not an official collection)
+# Build order: 23 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-tests/docs/HTTPServerTestsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "023 http_server_tests"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/http_server_tests.yml
+  tasks:
+    - name: "GET /tests/http-server (List HTTP Server tests)"
+      ansible.builtin.uri:
+        url: "{{ te_http_server_tests.base_url }}/tests/http-server{% if te_http_server_tests.aid %}?aid={{ te_http_server_tests.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: http_server_tests_get
+
+    - name: "POST /tests/http-server (Create HTTP Server test)"
+      ansible.builtin.uri:
+        url: "{{ te_http_server_tests.base_url }}/tests/http-server{% if te_http_server_tests.aid %}?aid={{ te_http_server_tests.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_http_server_tests.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: http_server_tests_create
+      tags:
+        - never
+        - http_server_tests

@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 EndpointAgentsApi (ansible.builtin.uri, not an official collection)
+# Build order: 37 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-endpoint-agents/docs/EndpointAgentsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "037 endpoint_agents"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/endpoint_agents.yml
+  tasks:
+    - name: "GET /endpoint/agents (List endpoint agents)"
+      ansible.builtin.uri:
+        url: "{{ te_endpoint_agents.base_url }}/endpoint/agents{% if te_endpoint_agents.aid %}?aid={{ te_endpoint_agents.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: endpoint_agents_get
+
+    - name: "POST /endpoint/agents/filter (Filter endpoint agents)"
+      ansible.builtin.uri:
+        url: "{{ te_endpoint_agents.base_url }}/endpoint/agents/filter{% if te_endpoint_agents.aid %}?aid={{ te_endpoint_agents.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_endpoint_agents.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: endpoint_agents_create
+      tags:
+        - never
+        - endpoint_agents

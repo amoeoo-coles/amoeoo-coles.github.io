@@ -1,0 +1,22 @@
+---
+# Sample playbook for ThousandEyes v7 AgentProxiesApi (ansible.builtin.uri, not an official collection)
+# Build order: 7 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-agents/docs/AgentProxiesApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "007 agent_proxies"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/agent_proxies.yml
+  tasks:
+    - name: "GET /agents/proxies (List Enterprise Agent Proxies)"
+      ansible.builtin.uri:
+        url: "{{ te_agent_proxies.base_url }}/agents/proxies{% if te_agent_proxies.aid %}?aid={{ te_agent_proxies.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: agent_proxies_get

@@ -1,0 +1,27 @@
+---
+# Sample playbook for ThousandEyes v7 DNSSECInstantTestsApi (ansible.builtin.uri, not an official collection)
+# Build order: 49 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-instant-tests/docs/DNSSECInstantTestsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "049 dnssec_instant_tests"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/dnssec_instant_tests.yml
+  tasks:
+
+    - name: "POST /tests/dnssec/instant (Create DNSSEC instant test)"
+      ansible.builtin.uri:
+        url: "{{ te_dnssec_instant_tests.base_url }}/tests/dnssec/instant{% if te_dnssec_instant_tests.aid %}?aid={{ te_dnssec_instant_tests.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_dnssec_instant_tests.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: dnssec_instant_tests_create
+      tags:
+        - never
+        - dnssec_instant_tests

@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 RolesApi (ansible.builtin.uri, not an official collection)
+# Build order: 3 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-administrative/docs/RolesApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "003 roles"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/roles.yml
+  tasks:
+    - name: "GET /roles (List roles)"
+      ansible.builtin.uri:
+        url: "{{ te_roles.base_url }}/roles{% if te_roles.aid %}?aid={{ te_roles.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: roles_get
+
+    - name: "POST /roles (Create role)"
+      ansible.builtin.uri:
+        url: "{{ te_roles.base_url }}/roles{% if te_roles.aid %}?aid={{ te_roles.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_roles.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: roles_create
+      tags:
+        - never
+        - roles

@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 PanoramaConnectorsApi (ansible.builtin.uri, not an official collection)
+# Build order: 90 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-connectors/docs/PanoramaConnectorsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "090 panorama_connectors"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/panorama_connectors.yml
+  tasks:
+    - name: "GET /connectors/panorama (List Panorama connectors)"
+      ansible.builtin.uri:
+        url: "{{ te_panorama_connectors.base_url }}/connectors/panorama{% if te_panorama_connectors.aid %}?aid={{ te_panorama_connectors.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: panorama_connectors_get
+
+    - name: "POST /connectors/panorama (Create Panorama connector)"
+      ansible.builtin.uri:
+        url: "{{ te_panorama_connectors.base_url }}/connectors/panorama{% if te_panorama_connectors.aid %}?aid={{ te_panorama_connectors.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_panorama_connectors.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: panorama_connectors_create
+      tags:
+        - never
+        - panorama_connectors

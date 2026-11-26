@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 DNSTraceTestsApi (ansible.builtin.uri, not an official collection)
+# Build order: 21 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-tests/docs/DNSTraceTestsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "021 dns_trace_tests"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/dns_trace_tests.yml
+  tasks:
+    - name: "GET /tests/dns-trace (List DNS Trace tests)"
+      ansible.builtin.uri:
+        url: "{{ te_dns_trace_tests.base_url }}/tests/dns-trace{% if te_dns_trace_tests.aid %}?aid={{ te_dns_trace_tests.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: dns_trace_tests_get
+
+    - name: "POST /tests/dns-trace (Create DNS Trace test)"
+      ansible.builtin.uri:
+        url: "{{ te_dns_trace_tests.base_url }}/tests/dns-trace{% if te_dns_trace_tests.aid %}?aid={{ te_dns_trace_tests.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_dns_trace_tests.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: dns_trace_tests_create
+      tags:
+        - never
+        - dns_trace_tests

@@ -1,0 +1,37 @@
+---
+# Sample playbook for ThousandEyes v7 AccountGroupsApi (ansible.builtin.uri, not an official collection)
+# Build order: 1 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-administrative/docs/AccountGroupsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "001 account_groups"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/account_groups.yml
+  tasks:
+    - name: "GET /account-groups (List account groups)"
+      ansible.builtin.uri:
+        url: "{{ te_account_groups.base_url }}/account-groups{% if te_account_groups.aid %}?aid={{ te_account_groups.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: account_groups_get
+
+    - name: "POST /account-groups (Create account group)"
+      ansible.builtin.uri:
+        url: "{{ te_account_groups.base_url }}/account-groups{% if te_account_groups.aid %}?aid={{ te_account_groups.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_account_groups.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: account_groups_create
+      tags:
+        - never
+        - account_groups

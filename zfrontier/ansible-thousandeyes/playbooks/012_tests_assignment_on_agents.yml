@@ -1,0 +1,27 @@
+---
+# Sample playbook for ThousandEyes v7 TestsAssignmentOnAgentsApi (ansible.builtin.uri, not an official collection)
+# Build order: 12 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-agents/docs/TestsAssignmentOnAgentsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "012 tests_assignment_on_agents"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/tests_assignment_on_agents.yml
+  tasks:
+
+    - name: "POST /agents/{agentId}/tests/assign (Assign tests to an agent)"
+      ansible.builtin.uri:
+        url: "{{ te_tests_assignment_on_agents.base_url }}/agents/{{ te_tests_assignment_on_agents.path_params.agentId }}/tests/assign{% if te_tests_assignment_on_agents.aid %}?aid={{ te_tests_assignment_on_agents.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_tests_assignment_on_agents.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: tests_assignment_on_agents_create
+      tags:
+        - never
+        - tests_assignment_on_agents

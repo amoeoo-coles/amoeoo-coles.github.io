@@ -1,0 +1,22 @@
+---
+# Sample playbook for ThousandEyes v7 EndpointAgentLogItemsApi (ansible.builtin.uri, not an official collection)
+# Build order: 36 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-endpoint-agents/docs/EndpointAgentLogItemsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "036 endpoint_agent_log_items"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/endpoint_agent_log_items.yml
+  tasks:
+    - name: "GET /endpoint/agents/{agentId}/logs (List endpoint agent log items)"
+      ansible.builtin.uri:
+        url: "{{ te_endpoint_agent_log_items.base_url }}/endpoint/agents/{{ te_endpoint_agent_log_items.path_params.agentId }}/logs{% if te_endpoint_agent_log_items.aid %}?aid={{ te_endpoint_agent_log_items.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: endpoint_agent_log_items_get

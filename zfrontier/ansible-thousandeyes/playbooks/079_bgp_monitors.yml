@@ -1,0 +1,22 @@
+---
+# Sample playbook for ThousandEyes v7 BGPMonitorsApi (ansible.builtin.uri, not an official collection)
+# Build order: 79 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-bgp-monitors/docs/BGPMonitorsApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "079 bgp_monitors"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/bgp_monitors.yml
+  tasks:
+    - name: "GET /monitors (List BGP monitors)"
+      ansible.builtin.uri:
+        url: "{{ te_bgp_monitors.base_url }}/monitors{% if te_bgp_monitors.aid %}?aid={{ te_bgp_monitors.aid }}{% endif %}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Accept: application/hal+json
+        return_content: true
+        status_code: [200]
+      register: bgp_monitors_get

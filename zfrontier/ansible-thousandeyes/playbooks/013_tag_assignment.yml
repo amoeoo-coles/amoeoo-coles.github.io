@@ -1,0 +1,27 @@
+---
+# Sample playbook for ThousandEyes v7 TagAssignmentApi (ansible.builtin.uri, not an official collection)
+# Build order: 13 · Docs: https://github.com/thousandeyes/thousandeyes-sdk-python/blob/ad7fe76/thousandeyes-sdk-tags/docs/TagAssignmentApi.md
+# Token placeholder: {{ te_token }} (Bearer). Account group: model aid (optional).
+
+- name: "013 tag_assignment"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../models/tag_assignment.yml
+  tasks:
+
+    - name: "POST /tags/assign (Assign multiple tags to multiple objects)"
+      ansible.builtin.uri:
+        url: "{{ te_tag_assignment.base_url }}/tags/assign{% if te_tag_assignment.aid %}?aid={{ te_tag_assignment.aid }}{% endif %}"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ te_token }}"
+          Content-Type: application/json
+        body_format: json
+        body: "{{ te_tag_assignment.create_body | cat_strip_nulls | default({}, true) }}"
+        status_code: [200, 201, 202]
+      register: tag_assignment_create
+      tags:
+        - never
+        - tag_assignment
