@@ -1,0 +1,23 @@
+---
+# Sample playbook for cisco.intersight.intersight_organization_info (cisco.intersight 2.23.0)
+# Build order: 87
+# Gather information about Organizations in Cisco Intersight
+# Reads ../models/intersight_organization_info.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/intersight/intersight_organization_info_module.html
+# Connection placeholders: {{ intersight_api_private_key }} {{ intersight_api_key_id }} {{ intersight_api_bearer_token }}.
+
+- name: "0087 intersight_organization_info"
+  hosts: intersight
+  gather_facts: false
+  vars_files:
+    - ../models/intersight_organization_info.yml
+  tasks:
+    - name: Run intersight_organization_info from its model
+      cisco.intersight.intersight_organization_info:
+        api_bearer_token: "{{ intersight_organization_info.api_bearer_token if intersight_organization_info.api_bearer_token is not none else omit }}"
+        api_key_id: "{{ intersight_organization_info.api_key_id if intersight_organization_info.api_key_id is not none else omit }}"
+        api_private_key: "{{ intersight_organization_info.api_private_key if intersight_organization_info.api_private_key is not none else omit }}"
+        api_uri: "{{ intersight_organization_info.api_uri if intersight_organization_info.api_uri is not none else omit }}"
+        name: "{{ intersight_organization_info.name if intersight_organization_info.name is not none else omit }}"
+        use_proxy: "{{ intersight_organization_info.use_proxy if intersight_organization_info.use_proxy is not none else omit }}"
+        validate_certs: "{{ intersight_organization_info.validate_certs if intersight_organization_info.validate_certs is not none else omit }}"
+      register: intersight_organization_info_result

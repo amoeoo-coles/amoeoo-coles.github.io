@@ -1,0 +1,35 @@
+---
+# Sample playbook for cisco.intersight.intersight_chassis_profile (cisco.intersight 2.23.0)
+# Build order: 13
+# Manage Chassis Profiles in Cisco Intersight
+# Reads ../models/intersight_chassis_profile.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/intersight/intersight_chassis_profile_module.html
+# Connection placeholders: {{ intersight_api_private_key }} {{ intersight_api_key_id }} {{ intersight_api_bearer_token }}.
+
+- name: "0013 intersight_chassis_profile"
+  hosts: intersight
+  gather_facts: false
+  vars_files:
+    - ../models/intersight_chassis_profile.yml
+  tasks:
+    - name: Run intersight_chassis_profile from its model
+      cisco.intersight.intersight_chassis_profile:
+        api_bearer_token: "{{ intersight_chassis_profile.api_bearer_token if intersight_chassis_profile.api_bearer_token is not none else omit }}"
+        api_key_id: "{{ intersight_chassis_profile.api_key_id if intersight_chassis_profile.api_key_id is not none else omit }}"
+        api_private_key: "{{ intersight_chassis_profile.api_private_key if intersight_chassis_profile.api_private_key is not none else omit }}"
+        api_uri: "{{ intersight_chassis_profile.api_uri if intersight_chassis_profile.api_uri is not none else omit }}"
+        assigned_chassis_name: "{{ intersight_chassis_profile.assigned_chassis_name if intersight_chassis_profile.assigned_chassis_name is not none else omit }}"
+        description: "{{ intersight_chassis_profile.description if intersight_chassis_profile.description is not none else omit }}"
+        imc_access_policy: "{{ intersight_chassis_profile.imc_access_policy if intersight_chassis_profile.imc_access_policy is not none else omit }}"
+        name: "{{ intersight_chassis_profile.name if intersight_chassis_profile.name is not none else omit }}"
+        organization: "{{ intersight_chassis_profile.organization if intersight_chassis_profile.organization is not none else omit }}"
+        power_policy: "{{ intersight_chassis_profile.power_policy if intersight_chassis_profile.power_policy is not none else omit }}"
+        snmp_policy: "{{ intersight_chassis_profile.snmp_policy if intersight_chassis_profile.snmp_policy is not none else omit }}"
+        state: "{{ intersight_chassis_profile.state if intersight_chassis_profile.state is not none else omit }}"
+        tags: "{{ (intersight_chassis_profile.tags | cat_strip_nulls) if (intersight_chassis_profile.tags | cat_strip_nulls) is not none else omit }}"
+        thermal_policy: "{{ intersight_chassis_profile.thermal_policy if intersight_chassis_profile.thermal_policy is not none else omit }}"
+        use_proxy: "{{ intersight_chassis_profile.use_proxy if intersight_chassis_profile.use_proxy is not none else omit }}"
+        validate_certs: "{{ intersight_chassis_profile.validate_certs if intersight_chassis_profile.validate_certs is not none else omit }}"
+      register: intersight_chassis_profile_result
+      tags:
+        - never
+        - intersight_chassis_profile

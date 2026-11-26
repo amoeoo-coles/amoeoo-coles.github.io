@@ -1,0 +1,34 @@
+---
+# Sample playbook for cisco.cml.cml_node (cisco.cml 1.2.0)
+# Build order: 3
+# Create, update or delete a node in a CML Lab
+# Reads ../models/cml_node.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/cml/cml_node_module.html
+# Connection placeholders: {{ cml_username }} {{ cml_password }}.
+
+- name: "0003 cml_node"
+  hosts: cml
+  gather_facts: false
+  vars_files:
+    - ../models/cml_node.yml
+  tasks:
+    - name: Run cml_node from its model
+      cisco.cml.cml_node:
+        config: "{{ cml_node.config if cml_node.config is not none else omit }}"
+        host: "{{ cml_node.host if cml_node.host is not none else omit }}"
+        image_definition: "{{ cml_node.image_definition if cml_node.image_definition is not none else omit }}"
+        lab: "{{ cml_node.lab if cml_node.lab is not none else omit }}"
+        name: "{{ cml_node.name if cml_node.name is not none else omit }}"
+        node_definition: "{{ cml_node.node_definition if cml_node.node_definition is not none else omit }}"
+        password: "{{ cml_node.password if cml_node.password is not none else omit }}"
+        state: "{{ cml_node.state if cml_node.state is not none else omit }}"
+        tags: "{{ cml_node.tags if cml_node.tags is not none else omit }}"
+        timeout: "{{ cml_node.timeout if cml_node.timeout is not none else omit }}"
+        username: "{{ cml_node.username if cml_node.username is not none else omit }}"
+        validate_certs: "{{ cml_node.validate_certs if cml_node.validate_certs is not none else omit }}"
+        wait: "{{ cml_node.wait if cml_node.wait is not none else omit }}"
+        x: "{{ cml_node.x if cml_node.x is not none else omit }}"
+        y: "{{ cml_node.y if cml_node.y is not none else omit }}"
+      register: cml_node_result
+      tags:
+        - never
+        - cml_node

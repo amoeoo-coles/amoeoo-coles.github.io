@@ -1,0 +1,33 @@
+---
+# Sample playbook for cisco.intersight.intersight_ntp_policy (cisco.intersight 2.23.0)
+# Build order: 84
+# NTP policy configuration for Cisco Intersight
+# Reads ../models/intersight_ntp_policy.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/intersight/intersight_ntp_policy_module.html
+# Connection placeholders: {{ intersight_api_private_key }} {{ intersight_api_key_id }} {{ intersight_api_bearer_token }}.
+
+- name: "0084 intersight_ntp_policy"
+  hosts: intersight
+  gather_facts: false
+  vars_files:
+    - ../models/intersight_ntp_policy.yml
+  tasks:
+    - name: Run intersight_ntp_policy from its model
+      cisco.intersight.intersight_ntp_policy:
+        api_bearer_token: "{{ intersight_ntp_policy.api_bearer_token if intersight_ntp_policy.api_bearer_token is not none else omit }}"
+        api_key_id: "{{ intersight_ntp_policy.api_key_id if intersight_ntp_policy.api_key_id is not none else omit }}"
+        api_private_key: "{{ intersight_ntp_policy.api_private_key if intersight_ntp_policy.api_private_key is not none else omit }}"
+        api_uri: "{{ intersight_ntp_policy.api_uri if intersight_ntp_policy.api_uri is not none else omit }}"
+        description: "{{ intersight_ntp_policy.description if intersight_ntp_policy.description is not none else omit }}"
+        enable: "{{ intersight_ntp_policy.enable if intersight_ntp_policy.enable is not none else omit }}"
+        name: "{{ intersight_ntp_policy.name if intersight_ntp_policy.name is not none else omit }}"
+        ntp_servers: "{{ (intersight_ntp_policy.ntp_servers | cat_strip_nulls) if (intersight_ntp_policy.ntp_servers | cat_strip_nulls) is not none else omit }}"
+        organization: "{{ intersight_ntp_policy.organization if intersight_ntp_policy.organization is not none else omit }}"
+        state: "{{ intersight_ntp_policy.state if intersight_ntp_policy.state is not none else omit }}"
+        tags: "{{ (intersight_ntp_policy.tags | cat_strip_nulls) if (intersight_ntp_policy.tags | cat_strip_nulls) is not none else omit }}"
+        timezone: "{{ intersight_ntp_policy.timezone if intersight_ntp_policy.timezone is not none else omit }}"
+        use_proxy: "{{ intersight_ntp_policy.use_proxy if intersight_ntp_policy.use_proxy is not none else omit }}"
+        validate_certs: "{{ intersight_ntp_policy.validate_certs if intersight_ntp_policy.validate_certs is not none else omit }}"
+      register: intersight_ntp_policy_result
+      tags:
+        - never
+        - intersight_ntp_policy

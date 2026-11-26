@@ -1,0 +1,34 @@
+---
+# Sample playbook for cisco.intersight.intersight_firmware_policy (cisco.intersight 2.23.0)
+# Build order: 39
+# Firmware Policy configuration for Cisco Intersight
+# Reads ../models/intersight_firmware_policy.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/intersight/intersight_firmware_policy_module.html
+# Connection placeholders: {{ intersight_api_private_key }} {{ intersight_api_key_id }} {{ intersight_api_bearer_token }}.
+
+- name: "0039 intersight_firmware_policy"
+  hosts: intersight
+  gather_facts: false
+  vars_files:
+    - ../models/intersight_firmware_policy.yml
+  tasks:
+    - name: Run intersight_firmware_policy from its model
+      cisco.intersight.intersight_firmware_policy:
+        api_bearer_token: "{{ intersight_firmware_policy.api_bearer_token if intersight_firmware_policy.api_bearer_token is not none else omit }}"
+        api_key_id: "{{ intersight_firmware_policy.api_key_id if intersight_firmware_policy.api_key_id is not none else omit }}"
+        api_private_key: "{{ intersight_firmware_policy.api_private_key if intersight_firmware_policy.api_private_key is not none else omit }}"
+        api_uri: "{{ intersight_firmware_policy.api_uri if intersight_firmware_policy.api_uri is not none else omit }}"
+        description: "{{ intersight_firmware_policy.description if intersight_firmware_policy.description is not none else omit }}"
+        exclude_drives: "{{ intersight_firmware_policy.exclude_drives if intersight_firmware_policy.exclude_drives is not none else omit }}"
+        exclude_storage_controllers: "{{ intersight_firmware_policy.exclude_storage_controllers if intersight_firmware_policy.exclude_storage_controllers is not none else omit }}"
+        model_bundle_combo: "{{ (intersight_firmware_policy.model_bundle_combo | cat_strip_nulls) if (intersight_firmware_policy.model_bundle_combo | cat_strip_nulls) is not none else omit }}"
+        name: "{{ intersight_firmware_policy.name if intersight_firmware_policy.name is not none else omit }}"
+        organization: "{{ intersight_firmware_policy.organization if intersight_firmware_policy.organization is not none else omit }}"
+        state: "{{ intersight_firmware_policy.state if intersight_firmware_policy.state is not none else omit }}"
+        tags: "{{ (intersight_firmware_policy.tags | cat_strip_nulls) if (intersight_firmware_policy.tags | cat_strip_nulls) is not none else omit }}"
+        target_platform: "{{ intersight_firmware_policy.target_platform if intersight_firmware_policy.target_platform is not none else omit }}"
+        use_proxy: "{{ intersight_firmware_policy.use_proxy if intersight_firmware_policy.use_proxy is not none else omit }}"
+        validate_certs: "{{ intersight_firmware_policy.validate_certs if intersight_firmware_policy.validate_certs is not none else omit }}"
+      register: intersight_firmware_policy_result
+      tags:
+        - never
+        - intersight_firmware_policy

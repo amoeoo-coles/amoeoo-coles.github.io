@@ -1,0 +1,32 @@
+---
+# Sample playbook for cisco.intersight.intersight_rest_api (cisco.intersight 2.23.0)
+# Build order: 95
+# REST API configuration for Cisco Intersight
+# Reads ../models/intersight_rest_api.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/intersight/intersight_rest_api_module.html
+# Connection placeholders: {{ intersight_api_private_key }} {{ intersight_api_key_id }} {{ intersight_api_bearer_token }}.
+
+- name: "0095 intersight_rest_api"
+  hosts: intersight
+  gather_facts: false
+  vars_files:
+    - ../models/intersight_rest_api.yml
+  tasks:
+    - name: Run intersight_rest_api from its model
+      cisco.intersight.intersight_rest_api:
+        api_bearer_token: "{{ intersight_rest_api.api_bearer_token if intersight_rest_api.api_bearer_token is not none else omit }}"
+        api_body: "{{ (intersight_rest_api.api_body | cat_strip_nulls) if (intersight_rest_api.api_body | cat_strip_nulls) is not none else omit }}"
+        api_key_id: "{{ intersight_rest_api.api_key_id if intersight_rest_api.api_key_id is not none else omit }}"
+        api_private_key: "{{ intersight_rest_api.api_private_key if intersight_rest_api.api_private_key is not none else omit }}"
+        api_uri: "{{ intersight_rest_api.api_uri if intersight_rest_api.api_uri is not none else omit }}"
+        list_body: "{{ intersight_rest_api.list_body if intersight_rest_api.list_body is not none else omit }}"
+        query_params: "{{ (intersight_rest_api.query_params | cat_strip_nulls) if (intersight_rest_api.query_params | cat_strip_nulls) is not none else omit }}"
+        resource_path: "{{ intersight_rest_api.resource_path if intersight_rest_api.resource_path is not none else omit }}"
+        return_list: "{{ intersight_rest_api.return_list if intersight_rest_api.return_list is not none else omit }}"
+        state: "{{ intersight_rest_api.state if intersight_rest_api.state is not none else omit }}"
+        update_method: "{{ intersight_rest_api.update_method if intersight_rest_api.update_method is not none else omit }}"
+        use_proxy: "{{ intersight_rest_api.use_proxy if intersight_rest_api.use_proxy is not none else omit }}"
+        validate_certs: "{{ intersight_rest_api.validate_certs if intersight_rest_api.validate_certs is not none else omit }}"
+      register: intersight_rest_api_result
+      tags:
+        - never
+        - intersight_rest_api

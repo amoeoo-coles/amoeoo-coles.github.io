@@ -1,0 +1,23 @@
+---
+# Sample playbook for cisco.intersight.intersight_info (cisco.intersight 2.23.0)
+# Build order: 47
+# Gather information about Intersight
+# Reads ../models/intersight_info.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/intersight/intersight_info_module.html
+# Connection placeholders: {{ intersight_api_private_key }} {{ intersight_api_key_id }} {{ intersight_api_bearer_token }}.
+
+- name: "0047 intersight_info"
+  hosts: intersight
+  gather_facts: false
+  vars_files:
+    - ../models/intersight_info.yml
+  tasks:
+    - name: Run intersight_info from its model
+      cisco.intersight.intersight_info:
+        api_bearer_token: "{{ intersight_info.api_bearer_token if intersight_info.api_bearer_token is not none else omit }}"
+        api_key_id: "{{ intersight_info.api_key_id if intersight_info.api_key_id is not none else omit }}"
+        api_private_key: "{{ intersight_info.api_private_key if intersight_info.api_private_key is not none else omit }}"
+        api_uri: "{{ intersight_info.api_uri if intersight_info.api_uri is not none else omit }}"
+        server_names: "{{ intersight_info.server_names if intersight_info.server_names is not none else omit }}"
+        use_proxy: "{{ intersight_info.use_proxy if intersight_info.use_proxy is not none else omit }}"
+        validate_certs: "{{ intersight_info.validate_certs if intersight_info.validate_certs is not none else omit }}"
+      register: intersight_info_result

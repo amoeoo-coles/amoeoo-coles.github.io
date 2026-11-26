@@ -1,0 +1,22 @@
+---
+# Sample playbook for cisco.cml.cml_lab_facts (cisco.cml 1.2.0)
+# Build order: 2
+# Get facts about a CML Lab
+# Reads ../models/cml_lab_facts.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/cml/cml_lab_facts_module.html
+# Connection placeholders: {{ cml_username }} {{ cml_password }}.
+
+- name: "0002 cml_lab_facts"
+  hosts: cml
+  gather_facts: false
+  vars_files:
+    - ../models/cml_lab_facts.yml
+  tasks:
+    - name: Run cml_lab_facts from its model
+      cisco.cml.cml_lab_facts:
+        host: "{{ cml_lab_facts.host if cml_lab_facts.host is not none else omit }}"
+        lab: "{{ cml_lab_facts.lab if cml_lab_facts.lab is not none else omit }}"
+        password: "{{ cml_lab_facts.password if cml_lab_facts.password is not none else omit }}"
+        timeout: "{{ cml_lab_facts.timeout if cml_lab_facts.timeout is not none else omit }}"
+        username: "{{ cml_lab_facts.username if cml_lab_facts.username is not none else omit }}"
+        validate_certs: "{{ cml_lab_facts.validate_certs if cml_lab_facts.validate_certs is not none else omit }}"
+      register: cml_lab_facts_result

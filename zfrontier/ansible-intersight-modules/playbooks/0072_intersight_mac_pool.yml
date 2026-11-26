@@ -1,0 +1,32 @@
+---
+# Sample playbook for cisco.intersight.intersight_mac_pool (cisco.intersight 2.23.0)
+# Build order: 72
+# MAC Pool configuration for Cisco Intersight
+# Reads ../models/intersight_mac_pool.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/intersight/intersight_mac_pool_module.html
+# Connection placeholders: {{ intersight_api_private_key }} {{ intersight_api_key_id }} {{ intersight_api_bearer_token }}.
+
+- name: "0072 intersight_mac_pool"
+  hosts: intersight
+  gather_facts: false
+  vars_files:
+    - ../models/intersight_mac_pool.yml
+  tasks:
+    - name: Run intersight_mac_pool from its model
+      cisco.intersight.intersight_mac_pool:
+        api_bearer_token: "{{ intersight_mac_pool.api_bearer_token if intersight_mac_pool.api_bearer_token is not none else omit }}"
+        api_key_id: "{{ intersight_mac_pool.api_key_id if intersight_mac_pool.api_key_id is not none else omit }}"
+        api_private_key: "{{ intersight_mac_pool.api_private_key if intersight_mac_pool.api_private_key is not none else omit }}"
+        api_uri: "{{ intersight_mac_pool.api_uri if intersight_mac_pool.api_uri is not none else omit }}"
+        assignment_order: "{{ intersight_mac_pool.assignment_order if intersight_mac_pool.assignment_order is not none else omit }}"
+        description: "{{ intersight_mac_pool.description if intersight_mac_pool.description is not none else omit }}"
+        mac_blocks: "{{ (intersight_mac_pool.mac_blocks | cat_strip_nulls) if (intersight_mac_pool.mac_blocks | cat_strip_nulls) is not none else omit }}"
+        name: "{{ intersight_mac_pool.name if intersight_mac_pool.name is not none else omit }}"
+        organization: "{{ intersight_mac_pool.organization if intersight_mac_pool.organization is not none else omit }}"
+        state: "{{ intersight_mac_pool.state if intersight_mac_pool.state is not none else omit }}"
+        tags: "{{ (intersight_mac_pool.tags | cat_strip_nulls) if (intersight_mac_pool.tags | cat_strip_nulls) is not none else omit }}"
+        use_proxy: "{{ intersight_mac_pool.use_proxy if intersight_mac_pool.use_proxy is not none else omit }}"
+        validate_certs: "{{ intersight_mac_pool.validate_certs if intersight_mac_pool.validate_certs is not none else omit }}"
+      register: intersight_mac_pool_result
+      tags:
+        - never
+        - intersight_mac_pool

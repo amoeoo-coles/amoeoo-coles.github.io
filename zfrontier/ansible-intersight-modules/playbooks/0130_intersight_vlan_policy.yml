@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.intersight.intersight_vlan_policy (cisco.intersight 2.23.0)
+# Build order: 130
+# Manage VLAN Policies and VLANs for Cisco Intersight
+# Reads ../models/intersight_vlan_policy.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/intersight/intersight_vlan_policy_module.html
+# Connection placeholders: {{ intersight_api_private_key }} {{ intersight_api_key_id }} {{ intersight_api_bearer_token }}.
+
+- name: "0130 intersight_vlan_policy"
+  hosts: intersight
+  gather_facts: false
+  vars_files:
+    - ../models/intersight_vlan_policy.yml
+  tasks:
+    - name: Run intersight_vlan_policy from its model
+      cisco.intersight.intersight_vlan_policy:
+        api_bearer_token: "{{ intersight_vlan_policy.api_bearer_token if intersight_vlan_policy.api_bearer_token is not none else omit }}"
+        api_key_id: "{{ intersight_vlan_policy.api_key_id if intersight_vlan_policy.api_key_id is not none else omit }}"
+        api_private_key: "{{ intersight_vlan_policy.api_private_key if intersight_vlan_policy.api_private_key is not none else omit }}"
+        api_uri: "{{ intersight_vlan_policy.api_uri if intersight_vlan_policy.api_uri is not none else omit }}"
+        description: "{{ intersight_vlan_policy.description if intersight_vlan_policy.description is not none else omit }}"
+        name: "{{ intersight_vlan_policy.name if intersight_vlan_policy.name is not none else omit }}"
+        organization: "{{ intersight_vlan_policy.organization if intersight_vlan_policy.organization is not none else omit }}"
+        state: "{{ intersight_vlan_policy.state if intersight_vlan_policy.state is not none else omit }}"
+        tags: "{{ (intersight_vlan_policy.tags | cat_strip_nulls) if (intersight_vlan_policy.tags | cat_strip_nulls) is not none else omit }}"
+        use_proxy: "{{ intersight_vlan_policy.use_proxy if intersight_vlan_policy.use_proxy is not none else omit }}"
+        validate_certs: "{{ intersight_vlan_policy.validate_certs if intersight_vlan_policy.validate_certs is not none else omit }}"
+        vlans: "{{ (intersight_vlan_policy.vlans | cat_strip_nulls) if (intersight_vlan_policy.vlans | cat_strip_nulls) is not none else omit }}"
+      register: intersight_vlan_policy_result
+      tags:
+        - never
+        - intersight_vlan_policy

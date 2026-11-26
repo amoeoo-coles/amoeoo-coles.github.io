@@ -1,0 +1,28 @@
+---
+# Sample playbook for cisco.intersight.intersight_target_claim (cisco.intersight 2.23.0)
+# Build order: 119
+# Target claim configuraiton for Cisco Intersight
+# Reads ../models/intersight_target_claim.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/intersight/intersight_target_claim_module.html
+# Connection placeholders: {{ intersight_api_private_key }} {{ intersight_api_key_id }} {{ intersight_api_bearer_token }}.
+
+- name: "0119 intersight_target_claim"
+  hosts: intersight
+  gather_facts: false
+  vars_files:
+    - ../models/intersight_target_claim.yml
+  tasks:
+    - name: Run intersight_target_claim from its model
+      cisco.intersight.intersight_target_claim:
+        api_bearer_token: "{{ intersight_target_claim.api_bearer_token if intersight_target_claim.api_bearer_token is not none else omit }}"
+        api_key_id: "{{ intersight_target_claim.api_key_id if intersight_target_claim.api_key_id is not none else omit }}"
+        api_private_key: "{{ intersight_target_claim.api_private_key if intersight_target_claim.api_private_key is not none else omit }}"
+        api_uri: "{{ intersight_target_claim.api_uri if intersight_target_claim.api_uri is not none else omit }}"
+        claim_code: "{{ intersight_target_claim.claim_code if intersight_target_claim.claim_code is not none else omit }}"
+        device_id: "{{ intersight_target_claim.device_id if intersight_target_claim.device_id is not none else omit }}"
+        state: "{{ intersight_target_claim.state if intersight_target_claim.state is not none else omit }}"
+        use_proxy: "{{ intersight_target_claim.use_proxy if intersight_target_claim.use_proxy is not none else omit }}"
+        validate_certs: "{{ intersight_target_claim.validate_certs if intersight_target_claim.validate_certs is not none else omit }}"
+      register: intersight_target_claim_result
+      tags:
+        - never
+        - intersight_target_claim

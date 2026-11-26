@@ -1,0 +1,36 @@
+---
+# Sample playbook for cisco.intersight.intersight_ip_pool (cisco.intersight 2.23.0)
+# Build order: 48
+# IP Pool configuration for Cisco Intersight
+# Reads ../models/intersight_ip_pool.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/intersight/intersight_ip_pool_module.html
+# Connection placeholders: {{ intersight_api_private_key }} {{ intersight_api_key_id }} {{ intersight_api_bearer_token }}.
+
+- name: "0048 intersight_ip_pool"
+  hosts: intersight
+  gather_facts: false
+  vars_files:
+    - ../models/intersight_ip_pool.yml
+  tasks:
+    - name: Run intersight_ip_pool from its model
+      cisco.intersight.intersight_ip_pool:
+        api_bearer_token: "{{ intersight_ip_pool.api_bearer_token if intersight_ip_pool.api_bearer_token is not none else omit }}"
+        api_key_id: "{{ intersight_ip_pool.api_key_id if intersight_ip_pool.api_key_id is not none else omit }}"
+        api_private_key: "{{ intersight_ip_pool.api_private_key if intersight_ip_pool.api_private_key is not none else omit }}"
+        api_uri: "{{ intersight_ip_pool.api_uri if intersight_ip_pool.api_uri is not none else omit }}"
+        assignment_order: "{{ intersight_ip_pool.assignment_order if intersight_ip_pool.assignment_order is not none else omit }}"
+        description: "{{ intersight_ip_pool.description if intersight_ip_pool.description is not none else omit }}"
+        enable_block_level_subnet_config: "{{ intersight_ip_pool.enable_block_level_subnet_config if intersight_ip_pool.enable_block_level_subnet_config is not none else omit }}"
+        ipv4_blocks: "{{ (intersight_ip_pool.ipv4_blocks | cat_strip_nulls) if (intersight_ip_pool.ipv4_blocks | cat_strip_nulls) is not none else omit }}"
+        ipv4_config: "{{ (intersight_ip_pool.ipv4_config | cat_strip_nulls) if (intersight_ip_pool.ipv4_config | cat_strip_nulls) is not none else omit }}"
+        ipv6_blocks: "{{ (intersight_ip_pool.ipv6_blocks | cat_strip_nulls) if (intersight_ip_pool.ipv6_blocks | cat_strip_nulls) is not none else omit }}"
+        ipv6_config: "{{ (intersight_ip_pool.ipv6_config | cat_strip_nulls) if (intersight_ip_pool.ipv6_config | cat_strip_nulls) is not none else omit }}"
+        name: "{{ intersight_ip_pool.name if intersight_ip_pool.name is not none else omit }}"
+        organization: "{{ intersight_ip_pool.organization if intersight_ip_pool.organization is not none else omit }}"
+        state: "{{ intersight_ip_pool.state if intersight_ip_pool.state is not none else omit }}"
+        tags: "{{ (intersight_ip_pool.tags | cat_strip_nulls) if (intersight_ip_pool.tags | cat_strip_nulls) is not none else omit }}"
+        use_proxy: "{{ intersight_ip_pool.use_proxy if intersight_ip_pool.use_proxy is not none else omit }}"
+        validate_certs: "{{ intersight_ip_pool.validate_certs if intersight_ip_pool.validate_certs is not none else omit }}"
+      register: intersight_ip_pool_result
+      tags:
+        - never
+        - intersight_ip_pool

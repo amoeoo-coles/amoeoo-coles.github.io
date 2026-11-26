@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.intersight.intersight_adapter_config_policy (cisco.intersight 2.23.0)
+# Build order: 1
+# Adapter Configuration Policy for Cisco Intersight
+# Reads ../models/intersight_adapter_config_policy.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/intersight/intersight_adapter_config_policy_module.html
+# Connection placeholders: {{ intersight_api_private_key }} {{ intersight_api_key_id }} {{ intersight_api_bearer_token }}.
+
+- name: "0001 intersight_adapter_config_policy"
+  hosts: intersight
+  gather_facts: false
+  vars_files:
+    - ../models/intersight_adapter_config_policy.yml
+  tasks:
+    - name: Run intersight_adapter_config_policy from its model
+      cisco.intersight.intersight_adapter_config_policy:
+        api_bearer_token: "{{ intersight_adapter_config_policy.api_bearer_token if intersight_adapter_config_policy.api_bearer_token is not none else omit }}"
+        api_key_id: "{{ intersight_adapter_config_policy.api_key_id if intersight_adapter_config_policy.api_key_id is not none else omit }}"
+        api_private_key: "{{ intersight_adapter_config_policy.api_private_key if intersight_adapter_config_policy.api_private_key is not none else omit }}"
+        api_uri: "{{ intersight_adapter_config_policy.api_uri if intersight_adapter_config_policy.api_uri is not none else omit }}"
+        description: "{{ intersight_adapter_config_policy.description if intersight_adapter_config_policy.description is not none else omit }}"
+        name: "{{ intersight_adapter_config_policy.name if intersight_adapter_config_policy.name is not none else omit }}"
+        organization: "{{ intersight_adapter_config_policy.organization if intersight_adapter_config_policy.organization is not none else omit }}"
+        settings: "{{ (intersight_adapter_config_policy.settings | cat_strip_nulls) if (intersight_adapter_config_policy.settings | cat_strip_nulls) is not none else omit }}"
+        state: "{{ intersight_adapter_config_policy.state if intersight_adapter_config_policy.state is not none else omit }}"
+        tags: "{{ intersight_adapter_config_policy.tags if intersight_adapter_config_policy.tags is not none else omit }}"
+        use_proxy: "{{ intersight_adapter_config_policy.use_proxy if intersight_adapter_config_policy.use_proxy is not none else omit }}"
+        validate_certs: "{{ intersight_adapter_config_policy.validate_certs if intersight_adapter_config_policy.validate_certs is not none else omit }}"
+      register: intersight_adapter_config_policy_result
+      tags:
+        - never
+        - intersight_adapter_config_policy

@@ -1,0 +1,36 @@
+---
+# Sample playbook for cisco.intersight.intersight_smtp_policy (cisco.intersight 2.23.0)
+# Build order: 105
+# SMTP Policy configuration for Cisco Intersight
+# Reads ../models/intersight_smtp_policy.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/intersight/intersight_smtp_policy_module.html
+# Connection placeholders: {{ intersight_api_private_key }} {{ intersight_api_key_id }} {{ intersight_api_bearer_token }}.
+
+- name: "0105 intersight_smtp_policy"
+  hosts: intersight
+  gather_facts: false
+  vars_files:
+    - ../models/intersight_smtp_policy.yml
+  tasks:
+    - name: Run intersight_smtp_policy from its model
+      cisco.intersight.intersight_smtp_policy:
+        api_bearer_token: "{{ intersight_smtp_policy.api_bearer_token if intersight_smtp_policy.api_bearer_token is not none else omit }}"
+        api_key_id: "{{ intersight_smtp_policy.api_key_id if intersight_smtp_policy.api_key_id is not none else omit }}"
+        api_private_key: "{{ intersight_smtp_policy.api_private_key if intersight_smtp_policy.api_private_key is not none else omit }}"
+        api_uri: "{{ intersight_smtp_policy.api_uri if intersight_smtp_policy.api_uri is not none else omit }}"
+        description: "{{ intersight_smtp_policy.description if intersight_smtp_policy.description is not none else omit }}"
+        enabled: "{{ intersight_smtp_policy.enabled if intersight_smtp_policy.enabled is not none else omit }}"
+        min_severity: "{{ intersight_smtp_policy.min_severity if intersight_smtp_policy.min_severity is not none else omit }}"
+        name: "{{ intersight_smtp_policy.name if intersight_smtp_policy.name is not none else omit }}"
+        organization: "{{ intersight_smtp_policy.organization if intersight_smtp_policy.organization is not none else omit }}"
+        sender_email: "{{ intersight_smtp_policy.sender_email if intersight_smtp_policy.sender_email is not none else omit }}"
+        smtp_port: "{{ intersight_smtp_policy.smtp_port if intersight_smtp_policy.smtp_port is not none else omit }}"
+        smtp_recipients: "{{ (intersight_smtp_policy.smtp_recipients | cat_strip_nulls) if (intersight_smtp_policy.smtp_recipients | cat_strip_nulls) is not none else omit }}"
+        smtp_server: "{{ intersight_smtp_policy.smtp_server if intersight_smtp_policy.smtp_server is not none else omit }}"
+        state: "{{ intersight_smtp_policy.state if intersight_smtp_policy.state is not none else omit }}"
+        tags: "{{ (intersight_smtp_policy.tags | cat_strip_nulls) if (intersight_smtp_policy.tags | cat_strip_nulls) is not none else omit }}"
+        use_proxy: "{{ intersight_smtp_policy.use_proxy if intersight_smtp_policy.use_proxy is not none else omit }}"
+        validate_certs: "{{ intersight_smtp_policy.validate_certs if intersight_smtp_policy.validate_certs is not none else omit }}"
+      register: intersight_smtp_policy_result
+      tags:
+        - never
+        - intersight_smtp_policy

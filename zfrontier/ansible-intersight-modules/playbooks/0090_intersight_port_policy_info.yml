@@ -1,0 +1,24 @@
+---
+# Sample playbook for cisco.intersight.intersight_port_policy_info (cisco.intersight 2.23.0)
+# Build order: 90
+# Gather information about Cisco Intersight Port Policies
+# Reads ../models/intersight_port_policy_info.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/intersight/intersight_port_policy_info_module.html
+# Connection placeholders: {{ intersight_api_private_key }} {{ intersight_api_key_id }} {{ intersight_api_bearer_token }}.
+
+- name: "0090 intersight_port_policy_info"
+  hosts: intersight
+  gather_facts: false
+  vars_files:
+    - ../models/intersight_port_policy_info.yml
+  tasks:
+    - name: Run intersight_port_policy_info from its model
+      cisco.intersight.intersight_port_policy_info:
+        api_bearer_token: "{{ intersight_port_policy_info.api_bearer_token if intersight_port_policy_info.api_bearer_token is not none else omit }}"
+        api_key_id: "{{ intersight_port_policy_info.api_key_id if intersight_port_policy_info.api_key_id is not none else omit }}"
+        api_private_key: "{{ intersight_port_policy_info.api_private_key if intersight_port_policy_info.api_private_key is not none else omit }}"
+        api_uri: "{{ intersight_port_policy_info.api_uri if intersight_port_policy_info.api_uri is not none else omit }}"
+        name: "{{ intersight_port_policy_info.name if intersight_port_policy_info.name is not none else omit }}"
+        organization: "{{ intersight_port_policy_info.organization if intersight_port_policy_info.organization is not none else omit }}"
+        use_proxy: "{{ intersight_port_policy_info.use_proxy if intersight_port_policy_info.use_proxy is not none else omit }}"
+        validate_certs: "{{ intersight_port_policy_info.validate_certs if intersight_port_policy_info.validate_certs is not none else omit }}"
+      register: intersight_port_policy_info_result

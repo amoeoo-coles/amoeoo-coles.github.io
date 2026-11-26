@@ -1,0 +1,36 @@
+---
+# Sample playbook for cisco.intersight.intersight_local_user_policy (cisco.intersight 2.23.0)
+# Build order: 70
+# Local User Policy configuration for Cisco Intersight
+# Reads ../models/intersight_local_user_policy.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/intersight/intersight_local_user_policy_module.html
+# Connection placeholders: {{ intersight_api_private_key }} {{ intersight_api_key_id }} {{ intersight_api_bearer_token }}.
+
+- name: "0070 intersight_local_user_policy"
+  hosts: intersight
+  gather_facts: false
+  vars_files:
+    - ../models/intersight_local_user_policy.yml
+  tasks:
+    - name: Run intersight_local_user_policy from its model
+      cisco.intersight.intersight_local_user_policy:
+        always_update_password: "{{ intersight_local_user_policy.always_update_password if intersight_local_user_policy.always_update_password is not none else omit }}"
+        api_bearer_token: "{{ intersight_local_user_policy.api_bearer_token if intersight_local_user_policy.api_bearer_token is not none else omit }}"
+        api_key_id: "{{ intersight_local_user_policy.api_key_id if intersight_local_user_policy.api_key_id is not none else omit }}"
+        api_private_key: "{{ intersight_local_user_policy.api_private_key if intersight_local_user_policy.api_private_key is not none else omit }}"
+        api_uri: "{{ intersight_local_user_policy.api_uri if intersight_local_user_policy.api_uri is not none else omit }}"
+        description: "{{ intersight_local_user_policy.description if intersight_local_user_policy.description is not none else omit }}"
+        enable_password_expiry: "{{ intersight_local_user_policy.enable_password_expiry if intersight_local_user_policy.enable_password_expiry is not none else omit }}"
+        enforce_strong_password: "{{ intersight_local_user_policy.enforce_strong_password if intersight_local_user_policy.enforce_strong_password is not none else omit }}"
+        local_users: "{{ (intersight_local_user_policy.local_users | cat_strip_nulls) if (intersight_local_user_policy.local_users | cat_strip_nulls) is not none else omit }}"
+        name: "{{ intersight_local_user_policy.name if intersight_local_user_policy.name is not none else omit }}"
+        organization: "{{ intersight_local_user_policy.organization if intersight_local_user_policy.organization is not none else omit }}"
+        password_history: "{{ intersight_local_user_policy.password_history if intersight_local_user_policy.password_history is not none else omit }}"
+        purge: "{{ intersight_local_user_policy.purge if intersight_local_user_policy.purge is not none else omit }}"
+        state: "{{ intersight_local_user_policy.state if intersight_local_user_policy.state is not none else omit }}"
+        tags: "{{ (intersight_local_user_policy.tags | cat_strip_nulls) if (intersight_local_user_policy.tags | cat_strip_nulls) is not none else omit }}"
+        use_proxy: "{{ intersight_local_user_policy.use_proxy if intersight_local_user_policy.use_proxy is not none else omit }}"
+        validate_certs: "{{ intersight_local_user_policy.validate_certs if intersight_local_user_policy.validate_certs is not none else omit }}"
+      register: intersight_local_user_policy_result
+      tags:
+        - never
+        - intersight_local_user_policy

@@ -1,0 +1,30 @@
+---
+# Sample playbook for cisco.intersight.intersight_server_profile_derive (cisco.intersight 2.23.0)
+# Build order: 101
+# Derive Server Profiles from Templates in Cisco Intersight
+# Reads ../models/intersight_server_profile_derive.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/intersight/intersight_server_profile_derive_module.html
+# Connection placeholders: {{ intersight_api_private_key }} {{ intersight_api_key_id }} {{ intersight_api_bearer_token }}.
+
+- name: "0101 intersight_server_profile_derive"
+  hosts: intersight
+  gather_facts: false
+  vars_files:
+    - ../models/intersight_server_profile_derive.yml
+  tasks:
+    - name: Run intersight_server_profile_derive from its model
+      cisco.intersight.intersight_server_profile_derive:
+        api_bearer_token: "{{ intersight_server_profile_derive.api_bearer_token if intersight_server_profile_derive.api_bearer_token is not none else omit }}"
+        api_key_id: "{{ intersight_server_profile_derive.api_key_id if intersight_server_profile_derive.api_key_id is not none else omit }}"
+        api_private_key: "{{ intersight_server_profile_derive.api_private_key if intersight_server_profile_derive.api_private_key is not none else omit }}"
+        api_uri: "{{ intersight_server_profile_derive.api_uri if intersight_server_profile_derive.api_uri is not none else omit }}"
+        force_sync: "{{ intersight_server_profile_derive.force_sync if intersight_server_profile_derive.force_sync is not none else omit }}"
+        organization: "{{ intersight_server_profile_derive.organization if intersight_server_profile_derive.organization is not none else omit }}"
+        profile_names: "{{ (intersight_server_profile_derive.profile_names | cat_strip_nulls) if (intersight_server_profile_derive.profile_names | cat_strip_nulls) is not none else omit }}"
+        state: "{{ intersight_server_profile_derive.state if intersight_server_profile_derive.state is not none else omit }}"
+        template_name: "{{ intersight_server_profile_derive.template_name if intersight_server_profile_derive.template_name is not none else omit }}"
+        use_proxy: "{{ intersight_server_profile_derive.use_proxy if intersight_server_profile_derive.use_proxy is not none else omit }}"
+        validate_certs: "{{ intersight_server_profile_derive.validate_certs if intersight_server_profile_derive.validate_certs is not none else omit }}"
+      register: intersight_server_profile_derive_result
+      tags:
+        - never
+        - intersight_server_profile_derive

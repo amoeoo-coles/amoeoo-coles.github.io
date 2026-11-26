@@ -1,0 +1,33 @@
+---
+# Sample playbook for cisco.intersight.intersight_iqn_pool (cisco.intersight 2.23.0)
+# Build order: 52
+# IQN Pool configuration for Cisco Intersight
+# Reads ../models/intersight_iqn_pool.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/intersight/intersight_iqn_pool_module.html
+# Connection placeholders: {{ intersight_api_private_key }} {{ intersight_api_key_id }} {{ intersight_api_bearer_token }}.
+
+- name: "0052 intersight_iqn_pool"
+  hosts: intersight
+  gather_facts: false
+  vars_files:
+    - ../models/intersight_iqn_pool.yml
+  tasks:
+    - name: Run intersight_iqn_pool from its model
+      cisco.intersight.intersight_iqn_pool:
+        api_bearer_token: "{{ intersight_iqn_pool.api_bearer_token if intersight_iqn_pool.api_bearer_token is not none else omit }}"
+        api_key_id: "{{ intersight_iqn_pool.api_key_id if intersight_iqn_pool.api_key_id is not none else omit }}"
+        api_private_key: "{{ intersight_iqn_pool.api_private_key if intersight_iqn_pool.api_private_key is not none else omit }}"
+        api_uri: "{{ intersight_iqn_pool.api_uri if intersight_iqn_pool.api_uri is not none else omit }}"
+        assignment_order: "{{ intersight_iqn_pool.assignment_order if intersight_iqn_pool.assignment_order is not none else omit }}"
+        description: "{{ intersight_iqn_pool.description if intersight_iqn_pool.description is not none else omit }}"
+        iqn_suffix_blocks: "{{ (intersight_iqn_pool.iqn_suffix_blocks | cat_strip_nulls) if (intersight_iqn_pool.iqn_suffix_blocks | cat_strip_nulls) is not none else omit }}"
+        name: "{{ intersight_iqn_pool.name if intersight_iqn_pool.name is not none else omit }}"
+        organization: "{{ intersight_iqn_pool.organization if intersight_iqn_pool.organization is not none else omit }}"
+        prefix: "{{ intersight_iqn_pool.prefix if intersight_iqn_pool.prefix is not none else omit }}"
+        state: "{{ intersight_iqn_pool.state if intersight_iqn_pool.state is not none else omit }}"
+        tags: "{{ (intersight_iqn_pool.tags | cat_strip_nulls) if (intersight_iqn_pool.tags | cat_strip_nulls) is not none else omit }}"
+        use_proxy: "{{ intersight_iqn_pool.use_proxy if intersight_iqn_pool.use_proxy is not none else omit }}"
+        validate_certs: "{{ intersight_iqn_pool.validate_certs if intersight_iqn_pool.validate_certs is not none else omit }}"
+      register: intersight_iqn_pool_result
+      tags:
+        - never
+        - intersight_iqn_pool

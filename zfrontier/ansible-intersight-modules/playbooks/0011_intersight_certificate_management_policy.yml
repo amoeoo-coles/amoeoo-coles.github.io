@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.intersight.intersight_certificate_management_policy (cisco.intersight 2.23.0)
+# Build order: 11
+# Certificate Management Policy configuration for Cisco Intersight
+# Reads ../models/intersight_certificate_management_policy.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/intersight/intersight_certificate_management_policy_module.html
+# Connection placeholders: {{ intersight_api_private_key }} {{ intersight_api_key_id }} {{ intersight_api_bearer_token }}.
+
+- name: "0011 intersight_certificate_management_policy"
+  hosts: intersight
+  gather_facts: false
+  vars_files:
+    - ../models/intersight_certificate_management_policy.yml
+  tasks:
+    - name: Run intersight_certificate_management_policy from its model
+      cisco.intersight.intersight_certificate_management_policy:
+        api_bearer_token: "{{ intersight_certificate_management_policy.api_bearer_token if intersight_certificate_management_policy.api_bearer_token is not none else omit }}"
+        api_key_id: "{{ intersight_certificate_management_policy.api_key_id if intersight_certificate_management_policy.api_key_id is not none else omit }}"
+        api_private_key: "{{ intersight_certificate_management_policy.api_private_key if intersight_certificate_management_policy.api_private_key is not none else omit }}"
+        api_uri: "{{ intersight_certificate_management_policy.api_uri if intersight_certificate_management_policy.api_uri is not none else omit }}"
+        certificates: "{{ (intersight_certificate_management_policy.certificates | cat_strip_nulls) if (intersight_certificate_management_policy.certificates | cat_strip_nulls) is not none else omit }}"
+        description: "{{ intersight_certificate_management_policy.description if intersight_certificate_management_policy.description is not none else omit }}"
+        name: "{{ intersight_certificate_management_policy.name if intersight_certificate_management_policy.name is not none else omit }}"
+        organization: "{{ intersight_certificate_management_policy.organization if intersight_certificate_management_policy.organization is not none else omit }}"
+        state: "{{ intersight_certificate_management_policy.state if intersight_certificate_management_policy.state is not none else omit }}"
+        tags: "{{ intersight_certificate_management_policy.tags if intersight_certificate_management_policy.tags is not none else omit }}"
+        use_proxy: "{{ intersight_certificate_management_policy.use_proxy if intersight_certificate_management_policy.use_proxy is not none else omit }}"
+        validate_certs: "{{ intersight_certificate_management_policy.validate_certs if intersight_certificate_management_policy.validate_certs is not none else omit }}"
+      register: intersight_certificate_management_policy_result
+      tags:
+        - never
+        - intersight_certificate_management_policy

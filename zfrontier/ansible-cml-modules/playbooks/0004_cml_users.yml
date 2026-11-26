@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.cml.cml_users (cisco.cml 1.2.0)
+# Build order: 4
+# Manage CML Users
+# Reads ../models/cml_users.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/cml/cml_users_module.html
+# Connection placeholders: {{ cml_username }} {{ cml_password }}.
+
+- name: "0004 cml_users"
+  hosts: cml
+  gather_facts: false
+  vars_files:
+    - ../models/cml_users.yml
+  tasks:
+    - name: Run cml_users from its model
+      cisco.cml.cml_users:
+        admin: "{{ cml_users.admin if cml_users.admin is not none else omit }}"
+        description: "{{ cml_users.description if cml_users.description is not none else omit }}"
+        fullname: "{{ cml_users.fullname if cml_users.fullname is not none else omit }}"
+        groups: "{{ cml_users.groups if cml_users.groups is not none else omit }}"
+        host: "{{ cml_users.host if cml_users.host is not none else omit }}"
+        name: "{{ cml_users.name if cml_users.name is not none else omit }}"
+        password: "{{ cml_users.password if cml_users.password is not none else omit }}"
+        state: "{{ cml_users.state if cml_users.state is not none else omit }}"
+        timeout: "{{ cml_users.timeout if cml_users.timeout is not none else omit }}"
+        user_pass: "{{ cml_users.user_pass if cml_users.user_pass is not none else omit }}"
+        username: "{{ cml_users.username if cml_users.username is not none else omit }}"
+        validate_certs: "{{ cml_users.validate_certs if cml_users.validate_certs is not none else omit }}"
+      register: cml_users_result
+      tags:
+        - never
+        - cml_users

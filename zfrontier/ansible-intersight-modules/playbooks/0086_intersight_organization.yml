@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.intersight.intersight_organization (cisco.intersight 2.23.0)
+# Build order: 86
+# Organization configuration for Cisco Intersight
+# Reads ../models/intersight_organization.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/intersight/intersight_organization_module.html
+# Connection placeholders: {{ intersight_api_private_key }} {{ intersight_api_key_id }} {{ intersight_api_bearer_token }}.
+
+- name: "0086 intersight_organization"
+  hosts: intersight
+  gather_facts: false
+  vars_files:
+    - ../models/intersight_organization.yml
+  tasks:
+    - name: Run intersight_organization from its model
+      cisco.intersight.intersight_organization:
+        api_bearer_token: "{{ intersight_organization.api_bearer_token if intersight_organization.api_bearer_token is not none else omit }}"
+        api_key_id: "{{ intersight_organization.api_key_id if intersight_organization.api_key_id is not none else omit }}"
+        api_private_key: "{{ intersight_organization.api_private_key if intersight_organization.api_private_key is not none else omit }}"
+        api_uri: "{{ intersight_organization.api_uri if intersight_organization.api_uri is not none else omit }}"
+        description: "{{ intersight_organization.description if intersight_organization.description is not none else omit }}"
+        name: "{{ intersight_organization.name if intersight_organization.name is not none else omit }}"
+        resource_groups: "{{ (intersight_organization.resource_groups | cat_strip_nulls) if (intersight_organization.resource_groups | cat_strip_nulls) is not none else omit }}"
+        share_resources: "{{ intersight_organization.share_resources if intersight_organization.share_resources is not none else omit }}"
+        shared_orgs: "{{ intersight_organization.shared_orgs if intersight_organization.shared_orgs is not none else omit }}"
+        state: "{{ intersight_organization.state if intersight_organization.state is not none else omit }}"
+        use_proxy: "{{ intersight_organization.use_proxy if intersight_organization.use_proxy is not none else omit }}"
+        validate_certs: "{{ intersight_organization.validate_certs if intersight_organization.validate_certs is not none else omit }}"
+      register: intersight_organization_result
+      tags:
+        - never
+        - intersight_organization

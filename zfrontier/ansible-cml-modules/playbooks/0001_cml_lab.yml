@@ -1,0 +1,29 @@
+---
+# Sample playbook for cisco.cml.cml_lab (cisco.cml 1.2.0)
+# Build order: 1
+# Create, update or delete a CML Lab
+# Reads ../models/cml_lab.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/cml/cml_lab_module.html
+# Connection placeholders: {{ cml_username }} {{ cml_password }}.
+
+- name: "0001 cml_lab"
+  hosts: cml
+  gather_facts: false
+  vars_files:
+    - ../models/cml_lab.yml
+  tasks:
+    - name: Run cml_lab from its model
+      cisco.cml.cml_lab:
+        file: "{{ cml_lab.file if cml_lab.file is not none else omit }}"
+        host: "{{ cml_lab.host if cml_lab.host is not none else omit }}"
+        lab: "{{ cml_lab.lab if cml_lab.lab is not none else omit }}"
+        password: "{{ cml_lab.password if cml_lab.password is not none else omit }}"
+        state: "{{ cml_lab.state if cml_lab.state is not none else omit }}"
+        timeout: "{{ cml_lab.timeout if cml_lab.timeout is not none else omit }}"
+        topology: "{{ cml_lab.topology if cml_lab.topology is not none else omit }}"
+        username: "{{ cml_lab.username if cml_lab.username is not none else omit }}"
+        validate_certs: "{{ cml_lab.validate_certs if cml_lab.validate_certs is not none else omit }}"
+        wait: "{{ cml_lab.wait if cml_lab.wait is not none else omit }}"
+      register: cml_lab_result
+      tags:
+        - never
+        - cml_lab

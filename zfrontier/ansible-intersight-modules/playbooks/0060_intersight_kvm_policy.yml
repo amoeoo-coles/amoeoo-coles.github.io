@@ -1,0 +1,36 @@
+---
+# Sample playbook for cisco.intersight.intersight_kvm_policy (cisco.intersight 2.23.0)
+# Build order: 60
+# Virtual KVM Policy configuration for Cisco Intersight
+# Reads ../models/intersight_kvm_policy.yml (vars_files). Docs: https://docs.ansible.com/projects/ansible/latest/collections/cisco/intersight/intersight_kvm_policy_module.html
+# Connection placeholders: {{ intersight_api_private_key }} {{ intersight_api_key_id }} {{ intersight_api_bearer_token }}.
+
+- name: "0060 intersight_kvm_policy"
+  hosts: intersight
+  gather_facts: false
+  vars_files:
+    - ../models/intersight_kvm_policy.yml
+  tasks:
+    - name: Run intersight_kvm_policy from its model
+      cisco.intersight.intersight_kvm_policy:
+        api_bearer_token: "{{ intersight_kvm_policy.api_bearer_token if intersight_kvm_policy.api_bearer_token is not none else omit }}"
+        api_key_id: "{{ intersight_kvm_policy.api_key_id if intersight_kvm_policy.api_key_id is not none else omit }}"
+        api_private_key: "{{ intersight_kvm_policy.api_private_key if intersight_kvm_policy.api_private_key is not none else omit }}"
+        api_uri: "{{ intersight_kvm_policy.api_uri if intersight_kvm_policy.api_uri is not none else omit }}"
+        description: "{{ intersight_kvm_policy.description if intersight_kvm_policy.description is not none else omit }}"
+        enable_local_server_video: "{{ intersight_kvm_policy.enable_local_server_video if intersight_kvm_policy.enable_local_server_video is not none else omit }}"
+        enable_video_encryption: "{{ intersight_kvm_policy.enable_video_encryption if intersight_kvm_policy.enable_video_encryption is not none else omit }}"
+        enabled: "{{ intersight_kvm_policy.enabled if intersight_kvm_policy.enabled is not none else omit }}"
+        maximum_sessions: "{{ intersight_kvm_policy.maximum_sessions if intersight_kvm_policy.maximum_sessions is not none else omit }}"
+        name: "{{ intersight_kvm_policy.name if intersight_kvm_policy.name is not none else omit }}"
+        organization: "{{ intersight_kvm_policy.organization if intersight_kvm_policy.organization is not none else omit }}"
+        remote_port: "{{ intersight_kvm_policy.remote_port if intersight_kvm_policy.remote_port is not none else omit }}"
+        state: "{{ intersight_kvm_policy.state if intersight_kvm_policy.state is not none else omit }}"
+        tags: "{{ (intersight_kvm_policy.tags | cat_strip_nulls) if (intersight_kvm_policy.tags | cat_strip_nulls) is not none else omit }}"
+        tunneled_kvm_enabled: "{{ intersight_kvm_policy.tunneled_kvm_enabled if intersight_kvm_policy.tunneled_kvm_enabled is not none else omit }}"
+        use_proxy: "{{ intersight_kvm_policy.use_proxy if intersight_kvm_policy.use_proxy is not none else omit }}"
+        validate_certs: "{{ intersight_kvm_policy.validate_certs if intersight_kvm_policy.validate_certs is not none else omit }}"
+      register: intersight_kvm_policy_result
+      tags:
+        - never
+        - intersight_kvm_policy
