@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- site-hidden-page: no menu, noindex, skip inject -->
+<meta name="robots" content="noindex,nofollow">
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Compact 28px pills, 6 columns on wide screens, 4 mid, 2 on mobile.
+   Per-section accent colour is set as --im-accent on each pill. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:6px 12px 8px;
+  gap:6px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:650 11.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:4px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im details.im-sub,
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:4px;
+  margin:0;
+  padding:6px 8px;
+  border-left:3px solid var(--im-accent,var(--menu-on,#2563eb))!important;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 10%,transparent)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl,
+nav.site.im summary.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+  list-style:none;
+}
+nav.site.im summary.sl::-webkit-details-marker{display:none}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:5px;
+  box-sizing:border-box;
+  width:100%;
+  height:28px;
+  min-height:28px;
+  max-height:28px;
+  min-width:0;
+  padding:0 8px;
+  border-radius:999px;
+  border:1px solid color-mix(in srgb,var(--im-accent,#2563eb) 40%,var(--menu-pill-bd,#3a4456))!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:color-mix(in srgb,var(--im-accent,#2563eb) 16%,var(--menu-hover))!important}
+nav.site.im a.mi.on{
+  background:var(--im-accent,var(--menu-on,#2563eb))!important;
+  border-color:var(--im-accent,var(--menu-on,#2563eb))!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:11px;height:28px;min-height:28px;max-height:28px}
+nav.site.im a.mi .ic{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 22%,transparent);
+  font-size:11px;
+  line-height:1;
+}
+nav.site.im a.mi.on .ic{background:rgba(255,255,255,.22)}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  line-height:1;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:14px;
+  height:14px;
+  padding:0 4px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:700;
+  line-height:1;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 35%,#93c5fd);
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:16px;
+  height:16px;
+  padding:0 4px;
+  border-radius:999px;
+  font-size:10px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:var(--im-accent,#1d4ed8)!important;
+}
+nav.site.im a.mi .im-dot{
+  width:7px;height:7px;border-radius:50%;background:#22c55e;flex:none;
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--im-accent,#2563eb) 18%,transparent);
+}
+nav.site.im .im-stats{
+  display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;
+  font:600 11px/1.3 system-ui,Arial,sans-serif;color:var(--menu-fg);padding:2px 2px 0;opacity:.9;
+}
+nav.site.im .im-stats a{color:var(--link);text-decoration:none}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:28px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:28px;
+  padding:0 12px;
+  border-radius:999px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:28px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:28px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:28px;padding:0 10px}
+  nav.site.im summary.sl .im-toggle{display:inline}
+}
+@media (min-width:721px){
+  nav.site.im summary.sl .im-toggle{display:none}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Southwest Chief sightseeing — Chicago to Los Angeles — zFrontier Travel (hidden)</title>
+<meta name="description" content="Hidden sightseeing guide for Amtrak’s Southwest Chief from Chicago to Los Angeles: official westbound train 3 times, scenic stretches and which side of the train to sit on, and pages for major stops including Santa Fe from Lamy and the Grand Canyon from Flagstaff.">
+<style>
+
+
+
+:root {
+  color-scheme: light dark;
+  --bg: #f4f6f8;
+  --bg-accent: #e8eef4;
+  --card: #ffffff;
+  --ink: #15202b;
+  --muted: #5b6b7c;
+  --line: #d5dee7;
+  --accent: #0e7490;
+  --accent-soft: #e0f4f8;
+  --link: #0e7490;
+  --good: #047857;
+  --warn: #a16207;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --radius: 14px;
+  --mono: "IBM Plex Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+  --sans: "Source Sans 3", "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --map-land: #dfe8ef;
+  --map-stroke: #8aa0b3;
+  --map-water: #c5d6e6;
+  --leg1: #0e7490;
+  --leg2: #6d28d9;
+  --leg3: #b45309;
+  --leg4: #047857;
+  --sc-fill: #dc2626;
+  --sc-stroke: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+    --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+    --link: #5eead4; --good: #34d399; --warn: #fbbf24;
+    --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+    --map-land: #1b2a3d; --map-stroke: #4b6480; --map-water: #0f2740;
+    --leg1: #5eead4; --leg2: #c4b5fd; --leg3: #fdba74; --leg4: #34d399;
+    --sc-fill: #f87171; --sc-stroke: #0b1220;
+  }
+}
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f4f6f8; --bg-accent: #e8eef4; --card: #ffffff; --ink: #15202b;
+  --muted: #5b6b7c; --line: #d5dee7; --accent: #0e7490; --accent-soft: #e0f4f8;
+  --link: #0e7490; --good: #047857; --warn: #a16207;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --map-land: #dfe8ef; --map-stroke: #8aa0b3; --map-water: #c5d6e6;
+  --leg1: #0e7490; --leg2: #6d28d9; --leg3: #b45309; --leg4: #047857;
+  --sc-fill: #dc2626; --sc-stroke: #ffffff;
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+  --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+  --link: #5eead4; --good: #34d399; --warn: #fbbf24;
+  --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+  --map-land: #1b2a3d; --map-stroke: #4b6480; --map-water: #0f2740;
+  --leg1: #5eead4; --leg2: #c4b5fd; --leg3: #fdba74; --leg4: #34d399;
+  --sc-fill: #f87171; --sc-stroke: #0b1220;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--sans);
+  background: radial-gradient(1200px 500px at 10% -10%, var(--bg-accent), transparent 60%), var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  min-height: 100vh;
+}
+a { color: var(--link); }
+code, .mono { font-family: var(--mono); font-size: 0.92em; }
+main.wrap, footer.wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem; }
+main.wrap { padding-top: 0.4rem; padding-bottom: 2.2rem; }
+footer.wrap { padding-bottom: 3.5rem; }
+.tr17 { margin: 0 0 8px; }
+h1 { font-size: clamp(1.7rem, 3vw, 2.25rem); margin: 0 0 0.35rem; letter-spacing: -0.03em; font-weight: 700; }
+.ver { margin: 0 0 0.85rem; color: var(--muted); font-weight: 650; }
+.lede { font-size: 1.05rem; margin: 0 0 1rem; max-width: 78ch; }
+h2 { font-size: 1.25rem; margin: 2rem 0 0.7rem; letter-spacing: -0.02em; scroll-margin-top: 80px; }
+h3 { font-size: 1.05rem; margin: 1.2rem 0 0.45rem; }
+p, ul, ol { margin: 0 0 0.85rem; }
+ul, ol { padding-left: 1.25rem; }
+li { margin: 0.2rem 0; }
+.kicker {
+  display: inline-block; text-transform: uppercase; letter-spacing: 0.14em;
+  font-size: 0.72rem; color: var(--accent); font-weight: 700; margin: 0 0 0.35rem;
+}
+.note, .muted, .meta, .footer { color: var(--muted); }
+.meta { margin: 0 0 0.25rem; }
+.footer { margin: 0.4rem 0 0; font-size: 0.92rem; }
+.na { font-style: italic; color: var(--warn); }
+.callout, .card, .module, .leg, .comment-notes {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 1rem 1.15rem; margin: 0 0 1.1rem;
+  min-width: 0;
+}
+.module h3, .leg h2 { margin-top: 0; }
+.table-wrap { overflow-x: auto; margin: 0 0 1rem; max-width: 100%; }
+table {
+  width: 100%; border-collapse: collapse; background: var(--card);
+  border: 1px solid var(--line); border-radius: var(--radius);
+}
+th, td { text-align: left; padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--line); vertical-align: top; overflow-wrap: break-word; }
+.table-wrap table td:first-child { overflow-wrap: normal; word-break: normal; }
+th { font-size: 0.82rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); background: var(--bg-accent); }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.toc a { margin-right: 0.75rem; }
+.mapwrap { overflow-x: auto; max-width: 100%; margin: 0 0 1rem; }
+.mapwrap > svg { display: block; width: 100%; max-width: 100%; height: auto; }
+.map-legend { display: flex; flex-wrap: wrap; gap: 0.6rem 1.1rem; margin: 0 0 0.8rem; font-size: 0.92rem; }
+.map-legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+.map-swatch { width: 18px; height: 4px; border-radius: 2px; display: inline-block; }
+.map-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; background: var(--sc-fill); border: 2px solid var(--sc-stroke); box-sizing: content-box; }
+.gap { border-left: 4px solid var(--warn); padding-left: 0.8rem; margin: 0.8rem 0; }
+.sources li { overflow-wrap: anywhere; }
+.ad-card h2 { margin: 0 0 0.4rem; }
+
+.leg-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem;
+  margin: 0 0 1.1rem;
+  min-width: 0;
+}
+.leg-cards .card { margin: 0; min-width: 0; }
+.leg-cards h3 { margin: 0 0 0.35rem; font-size: 1.02rem; overflow-wrap: anywhere; }
+
+.hire-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem;
+  margin: 0 0 1.1rem;
+  min-width: 0;
+}
+.hire-cards .card { margin: 0; min-width: 0; }
+.hire-cards h3 { margin: 0 0 0.35rem; font-size: 1.02rem; overflow-wrap: anywhere; }
+.price { font-variant-numeric: tabular-nums; font-weight: 700; }
+@media (max-width: 390px) {
+  main.wrap, footer.wrap { padding-left: 0.85rem; padding-right: 0.85rem; }
+  th, td { padding: 0.45rem 0.5rem; }
+  .leg-cards { grid-template-columns: 1fr; }
+  .hire-cards { grid-template-columns: 1fr; }
+}
+
+
+
+.page-menu { margin: 0 0 1.2rem; padding-left: 1.3rem; }
+.page-menu li { margin: 0 0 0.25rem; }
+
+
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.6rem 1rem;margin:0 0 1rem}
+.facts div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.6rem .8rem}
+.facts b{display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.rt{font-size:.85em;color:var(--muted);font-style:italic}
+svg.ov{width:100%;height:auto;display:block}
+.ov-bg{fill:var(--bg-accent);stroke:var(--line)}
+.ov-edge{stroke:var(--leg1);stroke-width:3;opacity:.75}
+.ov-chip{fill:var(--card);stroke:var(--line)}
+.ov-chip-t{font:600 12px var(--sans);fill:var(--muted)}
+.ov-n{stroke:var(--card);stroke-width:3}
+.ov-hub{fill:var(--sc-fill)}.ov-sight{fill:var(--leg2)}.ov-trip{fill:var(--leg3)}.ov-air{fill:var(--leg4)}
+.ov-l{font:600 13px var(--sans);fill:var(--ink);paint-order:stroke;stroke:var(--bg-accent);stroke-width:4px;stroke-linejoin:round}.ov-lh{font-weight:800;font-size:14px}
+.ov-note{font:11px var(--sans);fill:var(--muted)}
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.9rem;margin:0 0 1.1rem}
+.gallery figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.gallery img{display:block;width:100%;height:220px;object-fit:cover}
+.gallery figcaption{padding:.55rem .75rem;font-size:.88rem}
+.gallery .cred{display:block;color:var(--muted);font-size:.8rem;margin-top:.2rem;overflow-wrap:anywhere}
+.tcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:.85rem;margin:0 0 1.2rem}
+.tcards a.card{display:block;text-decoration:none;color:var(--ink);margin:0}
+.tcards a.card h3{margin:0 0 .3rem;color:var(--link)}
+.tcards a.card p{margin:0;font-size:.92rem;color:var(--muted)}
+
+</style>
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'☀️ Light':'🌙 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+})();</script>
+<main class="wrap">
+<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:#bbb"><a href="/visitors/" style="color:#fff;text-decoration:none"><span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></a><span class="uvt" style="font-size:11px;color:#888"></span></div><!--/arr-uv-tr17-->
+<p class="kicker">zFrontier · Travel · Hidden</p>
+<h1>Southwest Chief sightseeing — Chicago to Los Angeles</h1>
+<p class="ver"><a href="/zfrontier/travel/southwest-chief-sightseeing/history/">v1 · 26 Nov 2026, 10:20 PM AEDT</a></p>
+<p class="lede">A hidden sightseeing guide for Amtrak’s Southwest Chief from <a href="/zfrontier/travel/chicago-visit-plan/">Chicago</a> to <a href="/zfrontier/travel/los-angeles-visit-plan/">Los Angeles</a>. Every westbound station time is taken from Amtrak’s official route timetable dated Thursday, 26 November 2026. Scenic sides come from the older official onboard route guide (written eastbound; left and right are reversed here for westbound, as that guide instructs). Separate arrival times, mileposts and receive/discharge flags that the official PDF does not print are labelled as GTFS-derived. If a figure cannot be confirmed, it is marked “not collected”. This site also has a public <a href="/zfrontier/southwest-chief/">Southwest Chief station catalogue</a> with an interactive map; this page is the hidden sightseeing set, with a page for each major stop.</p>
+<ol class="page-menu" aria-label="On this page"><li><a href="#map">Route map</a></li><li><a href="#stops">Every westbound stop</a></li><li><a href="#scenic">Scenic stretches and which side to sit on</a></li><li><a href="#major">Major stop pages</a></li><li><a href="#connections">Santa Fe and Grand Canyon connections</a></li><li><a href="#sources">Sources</a></li><li><a href="#not-collected">Not collected</a></li><li><a href="#comments">Planning &amp; comments</a></li><li><a href="#versions">Versions</a></li></ol><div class="facts"><div><b>Train</b>Amtrak Southwest Chief, westbound train 3, daily</div><div><b>Official duration</b>43h 57m</div><div><b>Ends</b>Chicago Union Station (CHI) to Los Angeles Union Station (LAX)</div><div><b>Time zones</b>CT, MT, Arizona MST, PT</div></div><h2 id="map">Route map</h2>
+<p>An original schematic of westbound train 3. Distances along the line follow GTFS miles from Chicago; the vertical wobble is only a cue for the Raton Pass climb, not a real elevation profile. It is not a live tracker and is not to scale. Filled markers are the major stops that have their own pages, plus Chicago and Los Angeles.</p>
+<div class="mapwrap"><svg viewBox="0 0 960 420" role="img" aria-label="Southwest Chief westbound schematic from Chicago to Los Angeles" xmlns="http://www.w3.org/2000/svg" class="ov">
+<title>Southwest Chief westbound schematic (not to scale)</title>
+<rect x="1" y="1" width="958" height="418" rx="14" class="ov-bg"/>
+<polyline fill="none" class="ov-edge" points="40.0,150.0 50.9,150.6 72.2,151.7 80.4,152.1 102.9,153.3 125.5,154.4 155.8,156.0 209.8,158.8 225.3,159.6 235.4,160.1 287.9,162.8 300.7,163.5 347.3,165.9 366.7,166.9 405.6,169.0 425.8,170.0 457.3,231.7 466.6,250.0 509.7,218.0 535.0,199.3 561.0,180.0 628.2,170.3 677.6,163.2 700.1,160.0 767.7,166.1 793.7,168.5 859.4,174.5 873.8,175.8 892.0,177.5 895.9,177.8 909.9,179.1 920.0,180.0"/>
+<polyline fill="none" class="ov-edge" stroke-width="6" opacity="0.45" points="457.3,231.7 466.6,250.0"/>
+<polyline fill="none" class="ov-edge" stroke-width="6" opacity="0.45" points="509.7,218.0 535.0,199.3 561.0,180.0"/>
+<rect class="ov-chip" x="26.1" y="38" width="90" height="20" rx="10"/><text class="ov-chip-t" x="71.1" y="53" text-anchor="middle">day 1 · CT</text><rect class="ov-chip" x="368.5" y="38" width="120" height="20" rx="10"/><text class="ov-chip-t" x="428.5" y="53" text-anchor="middle">day 2 · MT / MST</text><rect class="ov-chip" x="835.3" y="38" width="80" height="20" rx="10"/><text class="ov-chip-t" x="875.3" y="53" text-anchor="middle">day 3 · PT</text>
+<circle class="ov-n ov-hub" cx="40.0" cy="150.0" r="7"/><circle class="ov-n ov-trip" cx="50.9" cy="150.6" r="3.5"/><circle class="ov-n ov-trip" cx="72.2" cy="151.7" r="3.5"/><circle class="ov-n ov-trip" cx="80.4" cy="152.1" r="3.5"/><circle class="ov-n ov-trip" cx="102.9" cy="153.3" r="3.5"/><circle class="ov-n ov-sight" cx="125.5" cy="154.4" r="6"/><circle class="ov-n ov-trip" cx="155.8" cy="156.0" r="3.5"/><circle class="ov-n ov-sight" cx="209.8" cy="158.8" r="6"/><circle class="ov-n ov-trip" cx="225.3" cy="159.6" r="3.5"/><circle class="ov-n ov-trip" cx="235.4" cy="160.1" r="3.5"/><circle class="ov-n ov-trip" cx="287.9" cy="162.8" r="3.5"/><circle class="ov-n ov-trip" cx="300.7" cy="163.5" r="3.5"/><circle class="ov-n ov-trip" cx="347.3" cy="165.9" r="3.5"/><circle class="ov-n ov-trip" cx="366.7" cy="166.9" r="3.5"/><circle class="ov-n ov-trip" cx="405.6" cy="169.0" r="3.5"/><circle class="ov-n ov-sight" cx="425.8" cy="170.0" r="6"/><circle class="ov-n ov-sight" cx="457.3" cy="231.7" r="6"/><circle class="ov-n ov-sight" cx="466.6" cy="250.0" r="6"/><circle class="ov-n ov-sight" cx="509.7" cy="218.0" r="6"/><circle class="ov-n ov-sight" cx="535.0" cy="199.3" r="6"/><circle class="ov-n ov-sight" cx="561.0" cy="180.0" r="6"/><circle class="ov-n ov-sight" cx="628.2" cy="170.3" r="6"/><circle class="ov-n ov-sight" cx="677.6" cy="163.2" r="6"/><circle class="ov-n ov-sight" cx="700.1" cy="160.0" r="6"/><circle class="ov-n ov-sight" cx="767.7" cy="166.1" r="6"/><circle class="ov-n ov-trip" cx="793.7" cy="168.5" r="3.5"/><circle class="ov-n ov-trip" cx="859.4" cy="174.5" r="3.5"/><circle class="ov-n ov-trip" cx="873.8" cy="175.8" r="3.5"/><circle class="ov-n ov-trip" cx="892.0" cy="177.5" r="3.5"/><circle class="ov-n ov-trip" cx="895.9" cy="177.8" r="3.5"/><circle class="ov-n ov-trip" cx="909.9" cy="179.1" r="3.5"/><circle class="ov-n ov-hub" cx="920.0" cy="180.0" r="7"/>
+<text class="ov-l ov-lh" x="40.0" y="132.0" text-anchor="middle">Chicago</text><text class="ov-l" x="125.5" y="176.4" text-anchor="middle">Fort Madison</text><text class="ov-l" x="209.8" y="140.8" text-anchor="middle">Kansas City</text><text class="ov-l" x="425.8" y="192.0" text-anchor="middle">La Junta</text><text class="ov-l" x="449.3" y="213.7" text-anchor="middle">Trinidad</text><text class="ov-l" x="474.6" y="272.0" text-anchor="middle">Raton</text><text class="ov-l" x="509.7" y="200.0" text-anchor="middle">Las Vegas, N.M.</text><text class="ov-l" x="535.0" y="221.3" text-anchor="middle">Lamy</text><text class="ov-l" x="561.0" y="162.0" text-anchor="middle">Albuquerque</text><text class="ov-l" x="628.2" y="192.3" text-anchor="middle">Gallup</text><text class="ov-l" x="677.6" y="145.2" text-anchor="middle">Winslow</text><text class="ov-l" x="700.1" y="182.0" text-anchor="middle">Flagstaff</text><text class="ov-l" x="767.7" y="148.1" text-anchor="middle">Kingman</text><text class="ov-l ov-lh" x="920.0" y="198.0" text-anchor="middle">Los Angeles</text>
+<text class="ov-note" x="461.9" y="204.9" text-anchor="middle">Raton Pass</text><text class="ov-note" x="521.8" y="173.1" text-anchor="middle">Glorieta / Apache Canyon</text><text class="ov-note" x="549.0" y="224.9" text-anchor="middle">Sandia Mtns</text>
+<text class="ov-note" x="480" y="400" text-anchor="middle">Original schematic. Horizontal spacing follows GTFS miles; vertical position is only a cue for the mountain stretch, not a real elevation profile. Not to scale.</text>
+</svg></div><h2 id="stops">Every westbound stop</h2>
+<p>Train 3, daily, official duration 43 h 57 m. Times are local. Williams Junction (WMJ) is printed in the official timetable between Kingman and Flagstaff with em-dashes in both directions. The PDF’s symbol legend says an em-dash means no scheduled stop. It is not treated as a passenger stop on these pages. Riverside and Fullerton are discharge-only westbound, and Naperville is receive-only westbound, in the GTFS-derived timetable; those flags are not printed as letters in the official PDF extract used here.</p>
+<div class="table-wrap"><table class="sortable"><thead><tr><th>Day</th><th>Code</th><th>Station</th><th>State</th><th>Time zone</th><th>Miles (GTFS)</th><th>Official westbound time</th><th>Separate arrival (GTFS, if printed)</th><th>Stop flag (GTFS)</th></tr></thead><tbody><tr><td>1</td><td><code>CHI</code></td><td><a href="/zfrontier/travel/chicago-visit-plan/">Chicago, IL — Union Station</a></td><td>IL</td><td>CT</td><td>0</td><td>1:30 p.m.</td><td>—</td><td>—</td></tr><tr><td>1</td><td><code>NPV</code></td><td>Naperville, IL</td><td>IL</td><td>CT</td><td>28</td><td>2:03 p.m.</td><td>not collected</td><td>Receive only (GTFS)</td></tr><tr><td>1</td><td><code>MDT</code></td><td>Mendota, IL</td><td>IL</td><td>CT</td><td>83</td><td>2:54 p.m.</td><td>not collected</td><td>—</td></tr><tr><td>1</td><td><code>PCT</code></td><td>Princeton, IL</td><td>IL</td><td>CT</td><td>104</td><td>3:16 p.m.</td><td>not collected</td><td>—</td></tr><tr><td>1</td><td><code>GBB</code></td><td>Galesburg, IL</td><td>IL</td><td>CT</td><td>162</td><td>4:09 p.m.</td><td>not collected</td><td>—</td></tr><tr><td>1</td><td><code>FMD</code></td><td><a href="/zfrontier/travel/southwest-chief-sightseeing/fort-madison/">Fort Madison, IA</a></td><td>IA</td><td>CT</td><td>220</td><td>5:10 p.m.</td><td>5:05 p.m.</td><td>—</td></tr><tr><td>1</td><td><code>LAP</code></td><td>La Plata, MO</td><td>MO</td><td>CT</td><td>298</td><td>6:24 p.m.</td><td>not collected</td><td>—</td></tr><tr><td>1</td><td><code>KCY</code></td><td><a href="/zfrontier/travel/southwest-chief-sightseeing/kansas-city/">Kansas City, MO — Union Station</a></td><td>MO</td><td>CT</td><td>437</td><td>9:37 p.m.</td><td>8:53 p.m.</td><td>—</td></tr><tr><td>1</td><td><code>LRC</code></td><td>Lawrence, KS</td><td>KS</td><td>CT</td><td>477</td><td>10:47 p.m.</td><td>not collected</td><td>—</td></tr><tr><td>1</td><td><code>TOP</code></td><td>Topeka, KS</td><td>KS</td><td>CT</td><td>503</td><td>11:24 p.m.</td><td>not collected</td><td>—</td></tr><tr><td>2</td><td><code>NEW</code></td><td>Newton, KS</td><td>KS</td><td>CT</td><td>638</td><td>1:40 a.m.</td><td>not collected</td><td>—</td></tr><tr><td>2</td><td><code>HUT</code></td><td>Hutchinson, KS</td><td>KS</td><td>CT</td><td>671</td><td>2:15 a.m.</td><td>not collected</td><td>—</td></tr><tr><td>2</td><td><code>DDG</code></td><td>Dodge City, KS</td><td>KS</td><td>CT</td><td>791</td><td>4:14 a.m.</td><td>4:08 a.m.</td><td>—</td></tr><tr><td>2</td><td><code>GCK</code></td><td>Garden City, KS</td><td>KS</td><td>CT</td><td>841</td><td>5:05 a.m.</td><td>not collected</td><td>—</td></tr><tr><td>2</td><td><code>LMR</code></td><td>Lamar, CO</td><td>CO</td><td>MT</td><td>941</td><td>5:33 a.m.</td><td>not collected</td><td>—</td></tr><tr><td>2</td><td><code>LAJ</code></td><td><a href="/zfrontier/travel/southwest-chief-sightseeing/la-junta/">La Junta, CO</a></td><td>CO</td><td>MT</td><td>993</td><td>6:50 a.m.</td><td>6:35 a.m.</td><td>—</td></tr><tr><td>2</td><td><code>TRI</code></td><td><a href="/zfrontier/travel/southwest-chief-sightseeing/trinidad/">Trinidad, CO</a></td><td>CO</td><td>MT</td><td>1074</td><td>8:10 a.m.</td><td>not collected</td><td>—</td></tr><tr><td>2</td><td><code>RAT</code></td><td><a href="/zfrontier/travel/southwest-chief-sightseeing/raton/">Raton, NM</a></td><td>NM</td><td>MT</td><td>1098</td><td>9:12 a.m.</td><td>9:07 a.m.</td><td>—</td></tr><tr><td>2</td><td><code>LSV</code></td><td><a href="/zfrontier/travel/southwest-chief-sightseeing/las-vegas-nm/">Las Vegas, NM</a></td><td>NM</td><td>MT</td><td>1209</td><td>10:57 a.m.</td><td>not collected</td><td>—</td></tr><tr><td>2</td><td><code>LMY</code></td><td><a href="/zfrontier/travel/southwest-chief-sightseeing/lamy/">Lamy, NM</a></td><td>NM</td><td>MT</td><td>1274</td><td>12:53 p.m.</td><td>12:49 p.m.</td><td>—</td></tr><tr><td>2</td><td><code>ABQ</code></td><td><a href="/zfrontier/travel/southwest-chief-sightseeing/albuquerque/">Albuquerque, NM</a></td><td>NM</td><td>MT</td><td>1341</td><td>3:14 p.m.</td><td>2:24 p.m.</td><td>—</td></tr><tr><td>2</td><td><code>GLP</code></td><td><a href="/zfrontier/travel/southwest-chief-sightseeing/gallup/">Gallup, NM</a></td><td>NM</td><td>MT</td><td>1514</td><td>5:54 p.m.</td><td>not collected</td><td>—</td></tr><tr><td>2</td><td><code>WLO</code></td><td><a href="/zfrontier/travel/southwest-chief-sightseeing/winslow/">Winslow, AZ</a></td><td>AZ</td><td>MST</td><td>1641</td><td>7:43 p.m.</td><td>not collected</td><td>—</td></tr><tr><td>2</td><td><code>FLG</code></td><td><a href="/zfrontier/travel/southwest-chief-sightseeing/flagstaff/">Flagstaff, AZ — Amtrak Station</a></td><td>AZ</td><td>MST</td><td>1699</td><td>8:55 p.m.</td><td>8:49 p.m.</td><td>—</td></tr><tr><td>2</td><td><code>KNG</code></td><td><a href="/zfrontier/travel/southwest-chief-sightseeing/kingman/">Kingman, AZ</a></td><td>AZ</td><td>MST</td><td>1873</td><td>11:49 p.m.</td><td>11:42 p.m.</td><td>—</td></tr><tr><td>2</td><td><code>NDL</code></td><td>Needles, CA</td><td>CA</td><td>PT</td><td>1940</td><td>11:54 p.m.</td><td>11:49 p.m.</td><td>—</td></tr><tr><td>3</td><td><code>BAR</code></td><td>Barstow, CA — Harvey House Railroad Depot</td><td>CA</td><td>PT</td><td>2109</td><td>3:13 a.m.</td><td>3:08 a.m.</td><td>—</td></tr><tr><td>3</td><td><code>VRV</code></td><td>Victorville, CA — Amtrak Station</td><td>CA</td><td>PT</td><td>2146</td><td>3:52 a.m.</td><td>not collected</td><td>—</td></tr><tr><td>3</td><td><code>SNB</code></td><td>San Bernardino, CA</td><td>CA</td><td>PT</td><td>2193</td><td>5:21 a.m.</td><td>5:16 a.m.</td><td>—</td></tr><tr><td>3</td><td><code>RIV</code></td><td>Riverside, CA</td><td>CA</td><td>PT</td><td>2203</td><td>5:40 a.m.</td><td>not collected</td><td>Discharge only (GTFS)</td></tr><tr><td>3</td><td><code>FUL</code></td><td>Fullerton, CA</td><td>CA</td><td>PT</td><td>2239</td><td>6:39 a.m.</td><td>not collected</td><td>Discharge only (GTFS)</td></tr><tr><td>3</td><td><code>LAX</code></td><td><a href="/zfrontier/travel/los-angeles-visit-plan/">Los Angeles, CA — Union Station</a></td><td>CA</td><td>PT</td><td>2265</td><td>7:27 a.m.</td><td>7:27 a.m.</td><td>—</td></tr></tbody></table></div><p>The official PDF lists one time per station. Where that is the only official figure, a separate arrival is marked “not collected” unless the Juckins GTFS rendering prints one. Miles and receive/discharge flags come only from that GTFS rendering, not from the official PDF. All times are local in the zone shown.</p><h2 id="scenic">Scenic stretches and which side to sit on</h2>
+<p>Sides are for westbound travel. They are reversed from the older Amtrak route guide, which is written west to east. Daylight depends on the date and on delays; this page does not compute sunrise or sunset.</p>
+<div class="table-wrap"><table class="sortable"><thead><tr><th>Stretch (westbound)</th><th>Published times</th><th>Side to sit on (westbound, from the older Amtrak route guide)</th><th>Notes and sources</th></tr></thead><tbody><tr><td>Chicago departure</td><td>Day 1, 1:30 p.m. CT</td><td>not collected</td><td>The older route guide describes the Chicago skyline on the right when arriving eastbound. A westbound departure view is not described the same way, so a recommended side leaving Union Station is not collected.</td></tr><tr><td>Galesburg–Fort Madison: Mississippi River crossing</td><td>Day 1, official times 4:09 p.m. (Galesburg) and 5:10 p.m. (Fort Madison), CT</td><td>Nauvoo, across the river: left (westbound). The swing-span bridge itself is not assigned a side in the guide.</td><td>Older route guide (eastbound wording, sides reversed): shortly before Fort Madison westbound, cross the Illinois–Iowa line on a 3,347-foot steel bridge described as a double-track, double-decker swing span. Nauvoo is “across the river to the right” eastbound, so on the left westbound. Official Amtrak station text also notes the Santa Fe bridge over the Mississippi.</td></tr><tr><td>La Plata–Kansas City: Missouri River</td><td>Day 1, official times 6:24 p.m. and 9:37 p.m. CT</td><td>not collected</td><td>Amtrak’s route page says the train takes you across the Mississippi and through eight states, but a Missouri River crossing side is not collected from the official PDF or the older guide excerpt used here. In late November this stretch may already be dusk or dark; sunset is not computed on this page.</td></tr><tr><td>Kansas–eastern Colorado (overnight)</td><td>Day 1 evening through day 2 early morning (Lawrence 10:47 p.m. CT through Lamar 5:33 a.m. MT)</td><td>not collected</td><td>These official times are overnight westbound. Scenic sides are not usefully collected for a scheduled night stretch.</td></tr><tr><td>La Junta–Trinidad: plains to the foothills</td><td>Day 2, official times 6:50 a.m. and 8:10 a.m. MT</td><td>Pike’s Peak, if visible to the north: right (westbound). At Trinidad, Fisher’s Peak: left; Simpson’s Rest: right.</td><td>Older route guide: from La Junta, Pike’s Peak is 100 miles north; eastbound it is on the left, so westbound on the right. Approaching Trinidad, the guide (eastbound) puts Simpson’s Rest on the left and Fisher’s Peak on the right; westbound those sides reverse. Spanish Peaks are described as east of Trinidad.</td></tr><tr><td>Trinidad–Raton: Raton Pass</td><td>Day 2, official times 8:10 a.m. and 9:12 a.m. MT</td><td>State line marker: right. Wootton Ranch and the old Santa Fe Trail: right. Interstate 25: left.</td><td>This is the morning mountain climb westbound. Amtrak’s route page describes curving canyon passages only a few feet wider than the train. The older guide (eastbound, then reversed) places the Colorado–New Mexico line marker, Wootton Ranch and the Santa Fe Trail on the right westbound, and Interstate 25 on the left. It also describes a summit tunnel; elevation figures in the guide are not re-surveyed here. The Sightseer Lounge, when the consist includes one, has windows on both sides; whether every train 3 carries a lounge car is not collected from the current timetable.</td></tr><tr><td>Las Vegas, N.M.–Lamy: Starvation Peak, Apache Canyon, Glorieta Pass</td><td>Day 2, official times 10:57 a.m. and 12:53 p.m. MT</td><td>Starvation Peak: left. Pecos / San Miguel mission: left. Pecos National Monument ruins across the valley: right. Glorieta Mesa: left. Glorieta Baptist Assembly: right. First look at the Sangre de Cristo range at Cañoncito: right. Apache Canyon is a narrow gorge close to both sides of the train.</td><td>Older route guide, sides reversed for westbound. The guide also describes a large S-curve from which both ends of the train can be seen, and Apache Canyon as a granite gorge sometimes only a foot from the train. Those distance claims are the guide’s wording.</td></tr><tr><td>Lamy–Albuquerque: Sandia Mountains</td><td>Day 2, official times 12:53 p.m. and 3:14 p.m. MT</td><td>Sandia Mountains and the Sandia Crest view near Sandia Pueblo: left (westbound).</td><td>Older route guide, written eastbound, places the Sandia Mountains to the right of Albuquerque and a church and Crest view at Sandia Pueblo on the right; reversed for westbound, those views are on the left as you approach the city.</td></tr><tr><td>Albuquerque–Gallup–Winslow: high desert, Painted Desert hints</td><td>Day 2, official times 3:14 p.m., 5:54 p.m. and 7:43 p.m. (MT, then MST in Arizona)</td><td>Near Holbrook, striped sandstone / Painted Desert hint: left. Blevins House (guide landmark): right. Little Colorado power station: right. Canyon Diablo ruins and trading post: right.</td><td>Older route guide, sides reversed for westbound (the guide’s eastbound order is Flagstaff toward Gallup). Daylight at Gallup (5:54 p.m.) and Winslow (7:43 p.m.) depends on the date and whether the train is on time; sunset is not computed here. Onboard cultural guides between Gallup and Albuquerque were described in the older guide; whether they still ride is not collected.</td></tr><tr><td>Winslow–Flagstaff: San Francisco Peaks</td><td>Day 2, official times 7:43 p.m. and 8:55 p.m. MST</td><td>San Francisco Peaks / Humphreys and Agassiz, described as north of Flagstaff: right (westbound).</td><td>Older route guide: peaks visible to the left eastbound (north of Flagstaff); westbound, north is on the right. Lowell Observatory is described on a hill to the left only on the eastbound approach from the west; the westbound approach is not collected. These official times may be after dark in late November.</td></tr><tr><td>Flagstaff–Kingman–Needles: Colorado River at night</td><td>Day 2, official times 8:55 p.m. MST, 11:49 p.m. MST and 11:54 p.m. PT</td><td>not collected</td><td>The older guide says the train crosses into Arizona over the Colorado River at the headwaters of Lake Havasu during the night, but does not assign a side in the excerpt used here. Official westbound times at Kingman and Needles are late evening, so this is not a daylight highlight on the published schedule.</td></tr><tr><td>San Bernardino–Los Angeles (early morning)</td><td>Day 3, official times 5:21 a.m. through 7:27 a.m. PT</td><td>not collected as a recommended viewing side for this early-morning urban stretch</td><td>The older guide (eastbound) describes the Los Angeles River, Redondo Junction yards and two depots at Fullerton; those notes are not rewritten as westbound viewing advice here. Arrive Los Angeles Union Station at the official 7:27 a.m. time and use the <a href="/zfrontier/travel/los-angeles-visit-plan/">Los Angeles visit plan</a>.</td></tr></tbody></table></div><p>The guide is written from Los Angeles toward Chicago and says that westbound travellers should reverse the listed left and right. Sides in the tables below are that reversal. Some superlatives, attractions and onboard programmes in the guide may be out of date; they are quoted as the guide’s wording, not as current official facts. Unofficial trip reports sometimes disagree on a single “best” side for Raton Pass; where they conflict with the older official guide, this page follows the guide and notes the conflict only in this sentence. The Sightseer Lounge, if carried, looks both ways.</p><h2 id="major">Major stop pages</h2>
+<p>These stops were chosen because the official schedule puts them in daylight, they have a longer published dwell, or they are the documented transfer points for Santa Fe and the Grand Canyon. Chicago and Los Angeles link to the existing visit plans instead of duplicating them. Overnight Kansas and eastern Colorado stations are in the full stop table above but do not have sightseeing sub-pages.</p>
+<div class="tcards"><a class="card" href="/zfrontier/travel/chicago-visit-plan/"><h3>Chicago, Illinois (origin)</h3><p>Official westbound departure 1:30 p.m. day 1, CT, from Union Station. Use the existing Chicago visit plan rather than a new stop page.</p></a><a class="card" href="/zfrontier/travel/southwest-chief-sightseeing/fort-madison/"><h3>Fort Madison, Iowa</h3><p>Westbound official time: 5:10 p.m., day 1, CT. Short layover or what-to-see notes, map search links and connections.</p></a><a class="card" href="/zfrontier/travel/southwest-chief-sightseeing/kansas-city/"><h3>Kansas City, Missouri</h3><p>Westbound official time: 9:37 p.m., day 1, CT. Short layover or what-to-see notes, map search links and connections.</p></a><a class="card" href="/zfrontier/travel/southwest-chief-sightseeing/la-junta/"><h3>La Junta, Colorado</h3><p>Westbound official time: 6:50 a.m., day 2, MT. Short layover or what-to-see notes, map search links and connections.</p></a><a class="card" href="/zfrontier/travel/southwest-chief-sightseeing/trinidad/"><h3>Trinidad, Colorado</h3><p>Westbound official time: 8:10 a.m., day 2, MT. Short layover or what-to-see notes, map search links and connections.</p></a><a class="card" href="/zfrontier/travel/southwest-chief-sightseeing/raton/"><h3>Raton, New Mexico</h3><p>Westbound official time: 9:12 a.m., day 2, MT. Short layover or what-to-see notes, map search links and connections.</p></a><a class="card" href="/zfrontier/travel/southwest-chief-sightseeing/las-vegas-nm/"><h3>Las Vegas, New Mexico</h3><p>Westbound official time: 10:57 a.m., day 2, MT. Short layover or what-to-see notes, map search links and connections.</p></a><a class="card" href="/zfrontier/travel/southwest-chief-sightseeing/lamy/"><h3>Lamy, New Mexico (for Santa Fe)</h3><p>Westbound official time: 12:53 p.m., day 2, MT. Short layover or what-to-see notes, map search links and connections.</p></a><a class="card" href="/zfrontier/travel/southwest-chief-sightseeing/albuquerque/"><h3>Albuquerque, New Mexico</h3><p>Westbound official time: 3:14 p.m., day 2, MT. Short layover or what-to-see notes, map search links and connections.</p></a><a class="card" href="/zfrontier/travel/southwest-chief-sightseeing/gallup/"><h3>Gallup, New Mexico</h3><p>Westbound official time: 5:54 p.m., day 2, MT. Short layover or what-to-see notes, map search links and connections.</p></a><a class="card" href="/zfrontier/travel/southwest-chief-sightseeing/winslow/"><h3>Winslow, Arizona</h3><p>Westbound official time: 7:43 p.m., day 2, MST. Short layover or what-to-see notes, map search links and connections.</p></a><a class="card" href="/zfrontier/travel/southwest-chief-sightseeing/flagstaff/"><h3>Flagstaff, Arizona (for Grand Canyon)</h3><p>Westbound official time: 8:55 p.m., day 2, MST. Short layover or what-to-see notes, map search links and connections.</p></a><a class="card" href="/zfrontier/travel/southwest-chief-sightseeing/kingman/"><h3>Kingman, Arizona</h3><p>Westbound official time: 11:49 p.m., day 2, MST. Short layover or what-to-see notes, map search links and connections.</p></a><a class="card" href="/zfrontier/travel/los-angeles-visit-plan/"><h3>Los Angeles, California (terminus)</h3><p>Official westbound arrival 7:27 a.m. day 3, PT, at Union Station. Use the existing Los Angeles visit plan rather than a new stop page.</p></a></div><h2 id="connections">Santa Fe and Grand Canyon connections</h2>
+<p><strong>Santa Fe from Lamy.</strong> The official timetable includes a daily RoadRunneR Shuttle Thruway from Lamy to Santa Fe (Central and Four Seasons Area) and Los Alamos. Detail, including the printed clock times, is on the <a href="/zfrontier/travel/southwest-chief-sightseeing/lamy/">Lamy page</a>.</p>
+<p><strong>Grand Canyon from Flagstaff.</strong> The official 26 November 2026 timetable does not print a Flagstaff–Grand Canyon Thruway table. The National Park Service says Amtrak serves Flagstaff with connecting bus service to the canyon, and that the Grand Canyon Railway runs from Williams. Groome Transportation publishes a reservation-only shuttle from Flagstaff Amtrak Station toward Williams, Tusayan and the South Rim. Westbound train 3’s official 8:55 p.m. arrival does not meet those same-day outbound shuttles. See the <a href="/zfrontier/travel/southwest-chief-sightseeing/flagstaff/">Flagstaff page</a>.</p>
+<h2 id="sources">Sources</h2>
+<ul>
+<li><a href="https://content.amtrak.com/content/timetable/Southwest%20Chief.pdf">Amtrak Southwest Chief Route Timetable</a> — PDF dated Thursday, 26 November 2026, fetched 26 Nov 2026, 9:54 PM AEDT. Westbound train 3 official times and Thruway tables on this page come from this timetable unless a line says otherwise.</li>
+<li><a href="https://juckins.net/amtrak_timetables/timetables_Southwest_Chief_20261101_external.pdf">Christopher Juckins / timetable_kit rendering of Amtrak GTFS (Southwest Chief, effective 1 Nov 2026)</a> — intended validity 1 Nov 2026 through 11 Mar 2027; generated 2 Nov 2026. Used only for miles, receive/discharge flags, and separate arrival times where the official PDF prints one time. This is not an official Amtrak product.</li>
+<li><a href="https://www.amtrak.com/southwest-chief-train">Amtrak Southwest Chief train page</a> — fetched 26 Nov 2026. Route description and city highlights (Kansas City, Albuquerque, Flagstaff, Chicago, Los Angeles).</li>
+<li><a href="http://www.trainweb.com/routes/route_03/rg_3old.htm">Older Amtrak Southwest Chief Route Guide (written west to east), archived on TrainWeb</a> — used for scenic landmarks and left/right sides, reversed for westbound as the guide instructs. The guide is written from Los Angeles toward Chicago and says that westbound travellers should reverse the listed left and right. Sides in the tables below are that reversal. Some superlatives, attractions and onboard programmes in the guide may be out of date; they are quoted as the guide’s wording, not as current official facts.</li>
+<li>Station addresses, staffing, building type and official introductions were taken from the official Amtrak station pages as already collected in this site’s <a href="/zfrontier/southwest-chief/stations/stations.json">stations.json</a> (Amtrak pages retrieved 24 Nov 2026). Official station URLs are the <code>amtrak.com/stations/&lt;code&gt;</code> pages linked from each stop page.</li>
+<li><a href="https://www.nps.gov/grca/planyourvisit/directions_s_rim.htm">National Park Service, “How Do I Travel to the South Rim?”</a> — last updated 12 September 2026. Distances from Flagstaff and Williams, and the statement that Amtrak provides rail service to Flagstaff with connecting bus service to the canyon, plus the Grand Canyon Railway from Williams.</li>
+<li><a href="https://www.nps.gov/petr/index.htm">National Park Service, Petroglyph National Monument</a> — official monument page, cited from the Albuquerque stop page.</li>
+<li><a href="https://www.nps.gov/safe/index.htm">National Park Service, Santa Fe National Historic Trail</a> — cited from the Lamy / Santa Fe stop page.</li>
+<li><a href="https://groometransportation.com/grand-canyon/">Groome Transportation, Grand Canyon shuttle</a> and <a href="https://groometransportation.com/flagstaff-faq/">Flagstaff FAQ</a> — operator tables for the Flagstaff Amtrak–canyon shuttle, and the 1 October 2026 end of Flagstaff–Sedona service. Not a substitute for the official Amtrak timetable.</li>
+<li>Related pages on this site: <a href="/zfrontier/travel/chicago-visit-plan/">Chicago visit plan</a>, <a href="/zfrontier/travel/los-angeles-visit-plan/">Los Angeles visit plan</a>, and the existing public <a href="/zfrontier/southwest-chief/">Southwest Chief station catalogue</a>.</li>
+</ul>
+<h2 id="not-collected">Not collected</h2>
+<p>Anything not verified from the sources listed on this page is marked “not collected”. This page does not invent times, hours, prices or sides of the train.</p>
+<ul><li>Sunrise, sunset and whether a given stretch will be in daylight on your date.</li><li>Live delay status and whether a Thruway vehicle will wait for a late train.</li><li>Current onboard consist (whether a Sightseer Lounge is carried on your date).</li><li>Ticket prices, bedroom or coach availability, and dining menus.</li><li>Williams Junction passenger service (the official PDF shows no scheduled stop).</li><li>A Flagstaff–Grand Canyon Thruway table in the official 26 November 2026 PDF (none is printed there).</li><li>Spelled-out names of Thruway codes CVD and SDC in that official PDF.</li><li>Hours and prices for museums, parks and Harvey House hotels named on the stop pages.</li></ul>
+<section id="comments" aria-labelledby="comments-h">
+<h2 id="comments-h">Planning &amp; comments</h2>
+<p>Use this thread for questions, tips and planning notes about Southwest Chief sightseeing — Chicago to Los Angeles. Sign in with GitHub to comment. Comments are stored as GitHub Discussions in this site’s repository, one thread per page (mapped by pathname).</p>
+<div id="comments-mount"></div>
+<script>
+(function(){
+  var b=String.fromCharCode(99,111,108,101,115);
+  var repo='amoeoo-'+b+'/amoeoo-'+b+'.github.io';
+  var s=document.createElement('script');
+  s.src='https://giscus.app/client.js';
+  s.setAttribute('data-repo',repo);
+  s.setAttribute('data-repo-id','R_kgDOVM0-Fw');
+  s.setAttribute('data-category','Announcements');
+  s.setAttribute('data-category-id','DIC_kwDOVM0-F84DLoq4');
+  s.setAttribute('data-mapping','pathname');
+  s.setAttribute('data-strict','1');
+  s.setAttribute('data-reactions-enabled','1');
+  s.setAttribute('data-input-position','top');
+  s.setAttribute('data-theme','preferred_color_scheme');
+  s.setAttribute('data-lang','en');
+  s.setAttribute('data-loading','lazy');
+  s.crossOrigin='anonymous';
+  s.async=true;
+  var m=document.getElementById('comments-mount');
+  if(m) m.appendChild(s);
+})();
+</script>
+</section>
+<section id="versions">
+<h2>Versions</h2>
+<p>This is <strong>v1 · 26 Nov 2026, 10:20 PM AEDT</strong>. Snapshots are under <a href="/zfrontier/travel/southwest-chief-sightseeing/history/">history/</a>.</p>
+<ul><li><b>v1 (current)</b> · 26 Nov 2026, 10:20 PM AEDT (Melbourne time) · first publication: official westbound timetable, scenic sides from the older Amtrak route guide, original schematic, and twelve major-stop pages. · <a href="/zfrontier/travel/southwest-chief-sightseeing/history/v1/">history/v1/</a></li></ul>
+</section>
+</main>
+<footer class="wrap">
+<p class="meta">Page: <strong>Southwest Chief sightseeing — Chicago to Los Angeles</strong> · Version: <strong>v1 · 26 Nov 2026, 10:20 PM AEDT</strong> · Hidden page (noindex, not in menus)</p>
+<p class="meta">Travel planning notes compiled from the official sources listed on this page. Rules, hours, prices and times change: anything not confirmed on an official site is marked “check official site” or “not collected”. Scheduled times are local times as published. Diagrams are original schematics, not to scale. Not affiliated with Amtrak, the National Park Service, or any station, city or museum. Folder links end with <code>/</code>.</p>
+</footer>
+<script src="/zfrontier/travel/sort.js"></script>
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/"}}</script>
+<script>(function(){var b=String.fromCharCode(99,111,108,101,115);var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';s.setAttribute('data-goatcounter','https://amoeoo-'+b+'.goatcounter.com/count');document.head.appendChild(s);}());</script>
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+<!-- uv-badge v2 -->
+<style id="uv-badge-style">
+.uv-pop{position:relative;display:inline-block;vertical-align:middle}
+.uv-pop .uv-card{display:none;position:absolute;right:0;top:calc(100% + 6px);z-index:80;min-width:228px;padding:10px 12px;border-radius:10px;background:var(--card,#0f172a);color:var(--ink,#e2e8f0);border:1px solid var(--line,#334155);box-shadow:0 10px 28px rgba(0,0,0,.28);font:12px/1.4 system-ui,Arial,sans-serif;text-align:left;white-space:normal}
+.uv-pop.open .uv-card{display:block}
+.uv-card svg{display:block;width:204px;height:44px;margin:6px 0 8px}
+.uv-card .uv-k{font-weight:700;margin:0 0 2px}
+.uv-card .uv-m{color:var(--muted,#94a3b8);font-size:11px}
+.uv-card a{color:var(--link,#8ecbff)}
+</style>
+<script id="uv-badge">(function(){
+function norm(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function tzParts(iso){
+  var pt=new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'2-digit',minute:'2-digit',hour12:false,hourCycle:'h23',timeZoneName:'short',day:'2-digit',month:'short'}).formatToParts(new Date(iso));
+  var g=function(t){return (pt.find(function(x){return x.type===t})||{}).value||''};
+  var tz=(g('timeZoneName')||'AEDT').replace('GMT+11','AEDT').replace('GMT+10','AEST');
+  return {hh:g('hour'),mm:g('minute'),tz:tz,day:g('day'),mon:g('month')};
+}
+function last30(daysMap){
+  var out=[], now=new Date();
+  var fmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'});
+  for(var i=29;i>=0;i--){
+    var d=new Date(now.getTime()-i*86400000);
+    var key=fmt.format(d);
+    out.push({day:key,count:+((daysMap||{})[key]||0)});
+  }
+  return out;
+}
+function spark(series){
+  var w=204,h=44,p=2;
+  var max=Math.max.apply(null,series.map(function(x){return x.count}).concat([1]));
+  var n=series.length||1;
+  var pts=series.map(function(x,i){
+    var X=p+(i*(w-2*p)/Math.max(1,n-1));
+    var Y=h-p-((x.count/max)*(h-2*p));
+    return X.toFixed(1)+','+Y.toFixed(1);
+  }).join(' ');
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true"><polyline fill="none" stroke="#22c55e" stroke-width="2" points="'+pts+'"/></svg>';
+}
+function fillStats(d){
+  var total=(d.total&& (d.total.total||d.total.total_utc))||0;
+  var cc=(d.countries||[]).length;
+  var asof=d.as_of_aedt||'';
+  document.querySelectorAll('.im-stat-vis').forEach(function(e){e.textContent=total||'0'});
+  document.querySelectorAll('.im-stat-cc').forEach(function(e){e.textContent=cc||'0'});
+  document.querySelectorAll('.im-stat-asof').forEach(function(e){e.textContent=asof||'n/a'});
+}
+function attachPopover(d, count, series){
+  document.querySelectorAll('.uv').forEach(function(uv){
+    if(uv.closest('.uv-pop')) return;
+    var wrap=document.createElement('span');wrap.className='uv-pop';
+    uv.parentNode.insertBefore(wrap,uv);wrap.appendChild(uv);
+    var card=document.createElement('div');card.className='uv-card';card.setAttribute('role','dialog');
+    var last=series.length?series[series.length-1].count:0;
+    card.innerHTML='<p class="uv-k">This page: '+count+' unique visitors</p>'+spark(series)+'<p class="uv-m">Last 30 days (this page). Today so far: '+last+'.</p><p><a href="/visitors/">Full visitor stats \u203A</a></p>';
+    wrap.appendChild(card);
+    function tog(ev){ev.preventDefault();ev.stopPropagation();document.querySelectorAll('.uv-pop.open').forEach(function(x){if(x!==wrap)x.classList.remove('open')});wrap.classList.toggle('open')}
+    uv.addEventListener('click',tog);
+    uv.style.cursor='pointer';
+    uv.title='Click for a 30-day sparkline';
+  });
+  document.addEventListener('click',function(){document.querySelectorAll('.uv-pop.open').forEach(function(x){x.classList.remove('open')})});
+}
+function apply(d){
+  var p=norm(location.pathname);
+  var page=(d.pages||[]).filter(function(x){return norm(x.path)===p});
+  var c=page.reduce(function(a,x){return a+(+x.count||0)},0);
+  var days={};
+  page.forEach(function(x){var m=x.days||{};Object.keys(m).forEach(function(k){days[k]=(days[k]||0)+(+m[k]||0)})});
+  document.querySelectorAll('.uvc').forEach(function(e){e.textContent=c});
+  document.querySelectorAll('.uvt').forEach(function(e){
+    if(d.updated_utc){var t=tzParts(d.updated_utc);e.textContent=' (data as of '+t.hh+':'+t.mm+' '+t.tz+')'}
+  });
+  fillStats(d);
+  attachPopover(d,c,last30(days));
+}
+function fail(){
+  document.querySelectorAll('.uvc').forEach(function(e){if(e.textContent==='\u2026'||e.textContent==='...') e.textContent='n/a'});
+  document.querySelectorAll('.im-stat-vis,.im-stat-cc,.im-stat-asof').forEach(function(e){if(e.textContent==='\u2026') e.textContent='n/a'});
+}
+if(!window.__visitorsData){
+  var ac=typeof AbortController==='function'?new AbortController():null;
+  var timer=setTimeout(function(){try{ac&&ac.abort()}catch(e){}},8000);
+  window.__visitorsData=fetch('/data/visitors.json?'+Date.now(),ac?{signal:ac.signal}:undefined).then(function(r){
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('visitors.json '+r.status);
+    return r.json();
+  });
+}
+window.__visitorsData.then(apply).catch(function(){fail()});
+})();</script>
+</body>
+</html>
