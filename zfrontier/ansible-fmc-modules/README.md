@@ -30,6 +30,5 @@ Groups (build order):
 - 21. fmc_configuration operations: Search: 4
 - 22. fmc_configuration operations: Status and task status: 2
 - 23. fmc_configuration operations: Troubleshooting: 8
-- 24. fmc_configuration operations: Other: 0
 
 Credentials are placeholders only. Do not commit real passwords or tokens.
