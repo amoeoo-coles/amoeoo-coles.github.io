@@ -1,0 +1,71 @@
+---
+title: "ACI Core Quiz #10 — Automation ACI Course — bilingual guide"
+page: /roadmap/automation-aci-course/11-shared-services/quiz-10/
+sitemap: false
+robots: noindex,nofollow
+hidden: true
+lang: [en, my]
+---
+<!-- site-hidden-page: no menu, noindex, skip inject -->
+<meta name="robots" content="noindex,nofollow">
+
+# ACI Core Quiz #10 — Automation ACI Course
+
+Step-by-step guide · အဆင့်ဆင့် လမ်းညွှန် (English · မြန်မာ)
+
+- Page / စာမျက်နှာ: [/roadmap/automation-aci-course/11-shared-services/quiz-10/](/roadmap/automation-aci-course/11-shared-services/quiz-10/)
+- Version label on page / ဗားရှင်း: v6 · 25 Nov 2026, 7:40 AM AEDT
+- Visibility / မြင်နိုင်မှု: Hidden (noindex, not in menus) / လျှို့ဝှက်စာမျက်နှာ
+
+## English
+
+### Purpose
+
+AI-assisted study quiz covering section 11 of the Automation ACI Course.
+
+### Step by step
+
+1. Open the page at [/roadmap/automation-aci-course/11-shared-services/quiz-10/](/roadmap/automation-aci-course/11-shared-services/quiz-10/). The version label shown at the top is: v6 · 25 Nov 2026, 7:40 AM AEDT.
+2. Check the main heading: “ACI Core Quiz #10”.
+3. Read the introduction at the top to understand what the page covers (see Purpose above).
+4. Use the numbered menu near the top to jump to a section, or scroll through its 2 sections, in this order:
+   - Lessons covered
+   - Questions
+5. Fill in the form fields: the page has 40 input field(s), 0 drop-down(s) and 0 text area(s) in 1 form element(s). Use example or lab values only; keep any credential as a placeholder such as `{{ apic_password }}`.
+6. Use the page's buttons (14 in total). Button labels found:
+   - Outline
+   - Check
+   - Check remaining
+   - Reset
+7. The visitor badge at the top right shows this page's unique-visitor count (GoatCounter).
+8. This is a hidden page: it is not linked from menus and asks search engines not to index it. Share the link only with people who need it.
+
+## မြန်မာ
+
+### ရည်ရွယ်ချက်
+
+ဤစာမျက်နှာသည် «/roadmap/» အပိုင်းတွင် ပါဝင်သည် — လေ့လာရေးနှင့် လုပ်ငန်းအစီအစဉ်များကို ပြသော RoadMap စာမျက်နှာများ ဖြစ်သည်။
+
+စာမျက်နှာပေါ်ရှိ မူရင်းဖော်ပြချက် (အင်္ဂလိပ်)— AI-assisted study quiz covering section 11 of the Automation ACI Course.
+
+### အဆင့်ဆင့် အသုံးပြုပုံ
+
+1. [/roadmap/automation-aci-course/11-shared-services/quiz-10/](/roadmap/automation-aci-course/11-shared-services/quiz-10/) ကို ဖွင့်ပါ။ ထိပ်တွင် ပြထားသော ဗားရှင်း အမှတ်အသားမှာ — v6 · 25 Nov 2026, 7:40 AM AEDT ဖြစ်သည်။
+2. ခေါင်းစဉ်ကြီး “ACI Core Quiz #10” ကို စစ်ကြည့်ပါ။
+3. စာမျက်နှာက ဘာအကြောင်း ဖော်ပြသည်ကို နားလည်ရန် ထိပ်ပိုင်းရှိ နိဒါန်းကို ဖတ်ပါ (အထက်ပါ ရည်ရွယ်ချက် ကို ကြည့်ပါ)။
+4. ထိပ်နားရှိ နံပါတ်တပ်ထားသော မီနူးကို နှိပ်၍ အပိုင်းတစ်ခုချင်းစီသို့ တိုက်ရိုက်သွားနိုင်သည်၊ သို့မဟုတ် အောက်သို့ ဆွဲချ၍ ဖတ်ပါ။ အပိုင်း 2 ခုကို အောက်ပါ အစီအစဉ်အတိုင်း ဖော်ပြထားသည်—
+   - Lessons covered
+   - Questions
+5. ဖောင်ကွက်လပ်များကို ဖြည့်ပါ — ထည့်သွင်းရန်ကွက်လပ် 40 ခု၊ ရွေးချယ်စရာစာရင်း (drop-down) 0 ခုနှင့် စာသားရေးကွက် 0 ခု ပါဝင်သည် (form 1 ခုအတွင်း)။ နမူနာ သို့မဟုတ် lab တန်ဖိုးများကိုသာ သုံးပါ၊ စကားဝှက်ကို `{{ apic_password }}` ကဲ့သို့ placeholder အဖြစ်သာ ထားပါ။
+6. စာမျက်နှာရှိ ခလုတ်များကို အသုံးပြုပါ (စုစုပေါင်း 14 ခု)။ တွေ့ရှိသော ခလုတ်အမည်များ—
+   - Outline
+   - Check
+   - Check remaining
+   - Reset
+7. ညာဘက်ထိပ်ရှိ visitor badge သည် ဤစာမျက်နှာ၏ ထူးခြားသော ဧည့်သည်အရေအတွက်ကို ပြသည် (GoatCounter)။
+8. ဤစာမျက်နှာသည် လျှို့ဝှက်စာမျက်နှာ ဖြစ်သည် — မီနူးများတွင် မပါဝင်ဘဲ search engine များကို index မလုပ်ရန် တောင်းဆိုထားသည်။ လိုအပ်သူများကိုသာ လင့်ခ် မျှဝေပါ။
+
+---
+
+Generated 26 Nov 2026, 5:06 PM AEDT from the page's own HTML (headings, forms, tables, diagrams). Values that are not on the page are marked “not collected”. Credentials appear only as placeholders such as `{{ apic_password }}`.  
+စာမျက်နှာ၏ HTML (ခေါင်းစဉ်၊ ဖောင်၊ ဇယား၊ ပုံကြမ်း) မှ 26 Nov 2026, 5:06 PM AEDT တွင် ထုတ်လုပ်ထားသည်။ စာမျက်နှာပေါ်တွင် မပါသော တန်ဖိုးများကို “not collected” ဟု မှတ်ထားသည်။

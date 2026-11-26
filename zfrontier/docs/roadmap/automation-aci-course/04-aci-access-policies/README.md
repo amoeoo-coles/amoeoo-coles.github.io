@@ -1,0 +1,87 @@
+---
+title: "[4] ACI Access Policies — Automation ACI Course — bilingual guide"
+page: /roadmap/automation-aci-course/04-aci-access-policies/
+sitemap: false
+robots: noindex,nofollow
+hidden: true
+lang: [en, my]
+---
+<!-- site-hidden-page: no menu, noindex, skip inject -->
+<meta name="robots" content="noindex,nofollow">
+
+# \[4\] ACI Access Policies — Automation ACI Course
+
+Step-by-step guide · အဆင့်ဆင့် လမ်းညွှန် (English · မြန်မာ)
+
+- Page / စာမျက်နှာ: [/roadmap/automation-aci-course/04-aci-access-policies/](/roadmap/automation-aci-course/04-aci-access-policies/)
+- Version label on page / ဗားရှင်း: v6 · 25 Nov 2026, 7:40 AM AEDT
+- Visibility / မြင်နိုင်မှု: Hidden (noindex, not in menus) / လျှို့ဝှက်စာမျက်နှာ
+
+## English
+
+### Purpose
+
+Section 4: ACI Access Policies.
+
+### Step by step
+
+1. Open the page at [/roadmap/automation-aci-course/04-aci-access-policies/](/roadmap/automation-aci-course/04-aci-access-policies/). The version label shown at the top is: v6 · 25 Nov 2026, 7:40 AM AEDT.
+2. Check the main heading: “\[4\] ACI Access Policies”.
+3. Read the introduction at the top to understand what the page covers (see Purpose above).
+4. Scroll down through its 1 sections, in this order:
+   - Pages in this section
+5. Use the page's buttons (2 in total). Button labels found:
+   - Outline
+6. Open the 12 sub-page(s) below this page; each has its own guide:
+   - [(16) ACI Access Policies Overview — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/16-aci-access-policies-overview/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/16-aci-access-policies-overview/README.md)
+   - [(17) ACI Switch Profiles & Selectors — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/17-aci-switch-profiles-selectors/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/17-aci-switch-profiles-selectors/README.md)
+   - [(18) ACI Switch Policies & Policy Groups — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/18-aci-switch-policies-policy-groups/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/18-aci-switch-policies-policy-groups/README.md)
+   - [(19) ACI Interface Profiles & Selectors — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/19-aci-interface-profiles-selectors/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/19-aci-interface-profiles-selectors/README.md)
+   - [(20) ACI Interface Policies & Policy Groups (IPG) — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/20-aci-interface-policies-policy-groups-ipg/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/20-aci-interface-policies-policy-groups-ipg/README.md)
+   - [(21) ACI Port-Channels (PC) — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/21-aci-port-channels-pc/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/21-aci-port-channels-pc/README.md)
+   - [(22) ACI Virtual Port-Channels (VPC) — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/22-aci-virtual-port-channels-vpc/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/22-aci-virtual-port-channels-vpc/README.md)
+   - [(23) ACI VLAN Pools — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/23-aci-vlan-pools/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/23-aci-vlan-pools/README.md)
+   - [(24) ACI Domains — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/24-aci-domains/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/24-aci-domains/README.md)
+   - [(25) ACI Attachable Entity Profiles (AEPs) — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/25-aci-attachable-entity-profiles-aeps/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/25-aci-attachable-entity-profiles-aeps/README.md)
+   - [(26) ACI & Fabric Extenders (FEX) — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/26-aci-and-fabric-extenders-fex/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/26-aci-and-fabric-extenders-fex/README.md)
+   - [ACI Core Quiz #4 — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/quiz-4/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/quiz-4/README.md)
+7. The visitor badge at the top right shows this page's unique-visitor count (GoatCounter).
+8. This is a hidden page: it is not linked from menus and asks search engines not to index it. Share the link only with people who need it.
+
+## မြန်မာ
+
+### ရည်ရွယ်ချက်
+
+ဤစာမျက်နှာသည် «/roadmap/» အပိုင်းတွင် ပါဝင်သည် — လေ့လာရေးနှင့် လုပ်ငန်းအစီအစဉ်များကို ပြသော RoadMap စာမျက်နှာများ ဖြစ်သည်။
+
+စာမျက်နှာပေါ်ရှိ မူရင်းဖော်ပြချက် (အင်္ဂလိပ်)— Section 4: ACI Access Policies.
+
+### အဆင့်ဆင့် အသုံးပြုပုံ
+
+1. [/roadmap/automation-aci-course/04-aci-access-policies/](/roadmap/automation-aci-course/04-aci-access-policies/) ကို ဖွင့်ပါ။ ထိပ်တွင် ပြထားသော ဗားရှင်း အမှတ်အသားမှာ — v6 · 25 Nov 2026, 7:40 AM AEDT ဖြစ်သည်။
+2. ခေါင်းစဉ်ကြီး “\[4\] ACI Access Policies” ကို စစ်ကြည့်ပါ။
+3. စာမျက်နှာက ဘာအကြောင်း ဖော်ပြသည်ကို နားလည်ရန် ထိပ်ပိုင်းရှိ နိဒါန်းကို ဖတ်ပါ (အထက်ပါ ရည်ရွယ်ချက် ကို ကြည့်ပါ)။
+4. အောက်သို့ ဆွဲချ၍ ဖတ်ပါ။ အပိုင်း 1 ခုကို အောက်ပါ အစီအစဉ်အတိုင်း ဖော်ပြထားသည်—
+   - Pages in this section
+5. စာမျက်နှာရှိ ခလုတ်များကို အသုံးပြုပါ (စုစုပေါင်း 2 ခု)။ တွေ့ရှိသော ခလုတ်အမည်များ—
+   - Outline
+6. ဤစာမျက်နှာအောက်ရှိ စာမျက်နှာခွဲ 12 ခုကို ဖွင့်ပါ၊ တစ်ခုချင်းစီတွင် ကိုယ်ပိုင်လမ်းညွှန် ရှိသည်—
+   - [(16) ACI Access Policies Overview — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/16-aci-access-policies-overview/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/16-aci-access-policies-overview/README.md)
+   - [(17) ACI Switch Profiles & Selectors — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/17-aci-switch-profiles-selectors/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/17-aci-switch-profiles-selectors/README.md)
+   - [(18) ACI Switch Policies & Policy Groups — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/18-aci-switch-policies-policy-groups/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/18-aci-switch-policies-policy-groups/README.md)
+   - [(19) ACI Interface Profiles & Selectors — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/19-aci-interface-profiles-selectors/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/19-aci-interface-profiles-selectors/README.md)
+   - [(20) ACI Interface Policies & Policy Groups (IPG) — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/20-aci-interface-policies-policy-groups-ipg/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/20-aci-interface-policies-policy-groups-ipg/README.md)
+   - [(21) ACI Port-Channels (PC) — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/21-aci-port-channels-pc/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/21-aci-port-channels-pc/README.md)
+   - [(22) ACI Virtual Port-Channels (VPC) — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/22-aci-virtual-port-channels-vpc/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/22-aci-virtual-port-channels-vpc/README.md)
+   - [(23) ACI VLAN Pools — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/23-aci-vlan-pools/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/23-aci-vlan-pools/README.md)
+   - [(24) ACI Domains — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/24-aci-domains/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/24-aci-domains/README.md)
+   - [(25) ACI Attachable Entity Profiles (AEPs) — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/25-aci-attachable-entity-profiles-aeps/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/25-aci-attachable-entity-profiles-aeps/README.md)
+   - [(26) ACI & Fabric Extenders (FEX) — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/26-aci-and-fabric-extenders-fex/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/26-aci-and-fabric-extenders-fex/README.md)
+   - [ACI Core Quiz #4 — Automation ACI Course](/roadmap/automation-aci-course/04-aci-access-policies/quiz-4/) · [guide / လမ်းညွှန်](/zfrontier/docs/roadmap/automation-aci-course/04-aci-access-policies/quiz-4/README.md)
+7. ညာဘက်ထိပ်ရှိ visitor badge သည် ဤစာမျက်နှာ၏ ထူးခြားသော ဧည့်သည်အရေအတွက်ကို ပြသည် (GoatCounter)။
+8. ဤစာမျက်နှာသည် လျှို့ဝှက်စာမျက်နှာ ဖြစ်သည် — မီနူးများတွင် မပါဝင်ဘဲ search engine များကို index မလုပ်ရန် တောင်းဆိုထားသည်။ လိုအပ်သူများကိုသာ လင့်ခ် မျှဝေပါ။
+
+---
+
+Generated 26 Nov 2026, 5:06 PM AEDT from the page's own HTML (headings, forms, tables, diagrams). Values that are not on the page are marked “not collected”. Credentials appear only as placeholders such as `{{ apic_password }}`.  
+စာမျက်နှာ၏ HTML (ခေါင်းစဉ်၊ ဖောင်၊ ဇယား၊ ပုံကြမ်း) မှ 26 Nov 2026, 5:06 PM AEDT တွင် ထုတ်လုပ်ထားသည်။ စာမျက်နှာပေါ်တွင် မပါသော တန်ဖိုးများကို “not collected” ဟု မှတ်ထားသည်။
