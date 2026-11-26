@@ -8,10 +8,10 @@ locals {
 }
 
 resource "catalystcenter_transit_network" "n151" {
-  autonomous_system_number = local.m_151["autonomous_system_number"]
-  control_plane_network_device_ids = local.m_151["control_plane_network_device_ids"]
+  autonomous_system_number          = local.m_151["autonomous_system_number"]
+  control_plane_network_device_ids  = local.m_151["control_plane_network_device_ids"]
   is_multicast_over_transit_enabled = local.m_151["is_multicast_over_transit_enabled"]
-  name = local.m_151["name"]
-  routing_protocol_name = local.m_151["routing_protocol_name"]
-  type = local.m_151["type"]
+  name                              = local.m_151["name"]
+  routing_protocol_name             = local.m_151["routing_protocol_name"]
+  type                              = local.m_151["type"]
 }

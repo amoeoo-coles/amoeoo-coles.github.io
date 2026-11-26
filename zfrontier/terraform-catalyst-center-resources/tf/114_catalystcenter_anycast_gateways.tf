@@ -9,5 +9,5 @@ locals {
 
 resource "catalystcenter_anycast_gateways" "n114" {
   anycast_gateways = local.m_114["anycast_gateways"]
-  fabric_id = local.m_114["fabric_id"]
+  fabric_id        = local.m_114["fabric_id"]
 }

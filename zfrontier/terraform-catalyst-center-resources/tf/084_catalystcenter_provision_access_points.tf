@@ -8,8 +8,8 @@ locals {
 }
 
 resource "catalystcenter_provision_access_points" "n084" {
-  ap_zone_name = local.m_084["ap_zone_name"]
+  ap_zone_name    = local.m_084["ap_zone_name"]
   network_devices = local.m_084["network_devices"]
   rf_profile_name = local.m_084["rf_profile_name"]
-  site_id = local.m_084["site_id"]
+  site_id         = local.m_084["site_id"]
 }

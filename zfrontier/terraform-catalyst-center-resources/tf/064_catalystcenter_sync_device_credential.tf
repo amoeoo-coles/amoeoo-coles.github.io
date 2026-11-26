@@ -8,7 +8,7 @@ locals {
 }
 
 resource "catalystcenter_sync_device_credential" "n064" {
-  configure_device = local.m_064["configure_device"]
+  configure_device     = local.m_064["configure_device"]
   device_credential_id = local.m_064["device_credential_id"]
-  site_id = local.m_064["site_id"]
+  site_id              = local.m_064["site_id"]
 }

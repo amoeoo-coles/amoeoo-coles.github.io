@@ -9,7 +9,7 @@ locals {
 
 data "catalystcenter_update_authentication_profile" "n154" {
   authentication_profile_name = local.m_154["authentication_profile_name"]
-  fabric_id = local.m_154["fabric_id"]
+  fabric_id                   = local.m_154["fabric_id"]
 }
 
 output "n154_data_catalystcenter_update_authentication_profile_id" {

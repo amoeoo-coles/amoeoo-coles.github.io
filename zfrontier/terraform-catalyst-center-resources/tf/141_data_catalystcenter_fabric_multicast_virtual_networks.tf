@@ -9,7 +9,7 @@ locals {
 
 data "catalystcenter_fabric_multicast_virtual_networks" "n141" {
   fabric_id = local.m_141["fabric_id"]
-  id = local.m_141["id"]
+  id        = local.m_141["id"]
 }
 
 output "n141_data_catalystcenter_fabric_multicast_virtual_networks_id" {

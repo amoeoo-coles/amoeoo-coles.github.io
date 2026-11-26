@@ -9,6 +9,6 @@ locals {
 
 resource "catalystcenter_pnp_config_preview" "n090" {
   device_id = local.m_090["device_id"]
-  site_id = local.m_090["site_id"]
-  type = local.m_090["type"]
+  site_id   = local.m_090["site_id"]
+  type      = local.m_090["type"]
 }

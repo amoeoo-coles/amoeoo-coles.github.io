@@ -8,7 +8,7 @@ locals {
 }
 
 data "catalystcenter_role" "n009" {
-  id = local.m_009["id"]
+  id   = local.m_009["id"]
   name = local.m_009["name"]
 }
 

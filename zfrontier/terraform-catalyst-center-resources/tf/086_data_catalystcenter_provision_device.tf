@@ -9,7 +9,7 @@ locals {
 
 data "catalystcenter_provision_device" "n086" {
   network_device_id = local.m_086["network_device_id"]
-  site_id = local.m_086["site_id"]
+  site_id           = local.m_086["site_id"]
 }
 
 output "n086_data_catalystcenter_provision_device_id" {

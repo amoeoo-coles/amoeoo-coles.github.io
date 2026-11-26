@@ -8,6 +8,6 @@ locals {
 }
 
 resource "catalystcenter_fabric_multicast_replication_mode" "n136" {
-  fabric_id = local.m_136["fabric_id"]
+  fabric_id        = local.m_136["fabric_id"]
   replication_mode = local.m_136["replication_mode"]
 }

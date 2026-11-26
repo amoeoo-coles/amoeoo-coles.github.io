@@ -8,6 +8,6 @@ locals {
 }
 
 resource "catalystcenter_wireless_fabric_multicast" "n157" {
-  fabric_id = local.m_157["fabric_id"]
+  fabric_id         = local.m_157["fabric_id"]
   multicast_enabled = local.m_157["multicast_enabled"]
 }

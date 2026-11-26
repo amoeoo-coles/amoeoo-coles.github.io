@@ -9,8 +9,8 @@ locals {
 
 resource "catalystcenter_image_activation" "n097" {
   activate_lower_image_version = local.m_097["activate_lower_image_version"]
-  device_upgrade_mode = local.m_097["device_upgrade_mode"]
-  device_uuid = local.m_097["device_uuid"]
-  distribute_if_needed = local.m_097["distribute_if_needed"]
-  image_uuid_list = local.m_097["image_uuid_list"]
+  device_upgrade_mode          = local.m_097["device_upgrade_mode"]
+  device_uuid                  = local.m_097["device_uuid"]
+  distribute_if_needed         = local.m_097["distribute_if_needed"]
+  image_uuid_list              = local.m_097["image_uuid_list"]
 }

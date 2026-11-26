@@ -8,11 +8,11 @@ locals {
 }
 
 resource "catalystcenter_ip_pool" "n053" {
-  address_space_dhcp_servers = local.m_053["address_space_dhcp_servers"]
-  address_space_dns_servers = local.m_053["address_space_dns_servers"]
-  address_space_gateway = local.m_053["address_space_gateway"]
+  address_space_dhcp_servers  = local.m_053["address_space_dhcp_servers"]
+  address_space_dns_servers   = local.m_053["address_space_dns_servers"]
+  address_space_gateway       = local.m_053["address_space_gateway"]
   address_space_prefix_length = local.m_053["address_space_prefix_length"]
-  address_space_subnet = local.m_053["address_space_subnet"]
-  name = local.m_053["name"]
-  pool_type = local.m_053["pool_type"]
+  address_space_subnet        = local.m_053["address_space_subnet"]
+  name                        = local.m_053["name"]
+  pool_type                   = local.m_053["pool_type"]
 }

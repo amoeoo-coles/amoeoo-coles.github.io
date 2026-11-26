@@ -9,7 +9,7 @@ locals {
 
 data "catalystcenter_planned_access_point_position" "n026" {
   floor_id = local.m_026["floor_id"]
-  name = local.m_026["name"]
+  name     = local.m_026["name"]
 }
 
 output "n026_data_catalystcenter_planned_access_point_position_id" {

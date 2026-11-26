@@ -8,9 +8,9 @@ locals {
 }
 
 resource "catalystcenter_application" "n191" {
-  application_set_id = local.m_191["application_set_id"]
+  application_set_id          = local.m_191["application_set_id"]
   indicative_network_identity = local.m_191["indicative_network_identity"]
-  name = local.m_191["name"]
-  network_applications = local.m_191["network_applications"]
-  network_identity = local.m_191["network_identity"]
+  name                        = local.m_191["name"]
+  network_applications        = local.m_191["network_applications"]
+  network_identity            = local.m_191["network_identity"]
 }

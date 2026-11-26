@@ -9,5 +9,5 @@ locals {
 
 resource "catalystcenter_project" "n101" {
   description = local.m_101["description"]
-  name = local.m_101["name"]
+  name        = local.m_101["name"]
 }

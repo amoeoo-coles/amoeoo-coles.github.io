@@ -9,7 +9,7 @@ locals {
 
 data "catalystcenter_fabric_multicast_replication_mode" "n137" {
   fabric_id = local.m_137["fabric_id"]
-  id = local.m_137["id"]
+  id        = local.m_137["id"]
 }
 
 output "n137_data_catalystcenter_fabric_multicast_replication_mode_id" {

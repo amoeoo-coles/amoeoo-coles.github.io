@@ -8,7 +8,7 @@ locals {
 }
 
 resource "catalystcenter_role" "n008" {
-  description = local.m_008["description"]
-  name = local.m_008["name"]
+  description    = local.m_008["description"]
+  name           = local.m_008["name"]
   resource_types = local.m_008["resource_types"]
 }

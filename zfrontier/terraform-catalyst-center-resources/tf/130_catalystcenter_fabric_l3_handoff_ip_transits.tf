@@ -8,7 +8,7 @@ locals {
 }
 
 resource "catalystcenter_fabric_l3_handoff_ip_transits" "n130" {
-  fabric_id = local.m_130["fabric_id"]
-  l3_handoffs = local.m_130["l3_handoffs"]
+  fabric_id         = local.m_130["fabric_id"]
+  l3_handoffs       = local.m_130["l3_handoffs"]
   network_device_id = local.m_130["network_device_id"]
 }

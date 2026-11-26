@@ -8,10 +8,10 @@ locals {
 }
 
 resource "catalystcenter_image" "n096" {
-  family = local.m_096["family"]
-  is_third_party = local.m_096["is_third_party"]
-  name = local.m_096["name"]
-  source_path = local.m_096["source_path"]
+  family                       = local.m_096["family"]
+  is_third_party               = local.m_096["is_third_party"]
+  name                         = local.m_096["name"]
+  source_path                  = local.m_096["source_path"]
   third_party_application_type = local.m_096["third_party_application_type"]
-  third_party_vendor = local.m_096["third_party_vendor"]
+  third_party_vendor           = local.m_096["third_party_vendor"]
 }

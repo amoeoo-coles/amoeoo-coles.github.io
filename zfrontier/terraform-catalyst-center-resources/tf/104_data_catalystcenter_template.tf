@@ -8,8 +8,8 @@ locals {
 }
 
 data "catalystcenter_template" "n104" {
-  id = local.m_104["id"]
-  name = local.m_104["name"]
+  id         = local.m_104["id"]
+  name       = local.m_104["name"]
   project_id = local.m_104["project_id"]
 }
 

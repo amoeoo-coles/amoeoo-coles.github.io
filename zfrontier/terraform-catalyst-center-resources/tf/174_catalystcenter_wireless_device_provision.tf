@@ -8,12 +8,12 @@ locals {
 }
 
 resource "catalystcenter_wireless_device_provision" "n174" {
-  ap_authorization_list_name = local.m_174["ap_authorization_list_name"]
-  ap_reboot_percentage = local.m_174["ap_reboot_percentage"]
+  ap_authorization_list_name                = local.m_174["ap_authorization_list_name"]
+  ap_reboot_percentage                      = local.m_174["ap_reboot_percentage"]
   authorize_mesh_and_non_mesh_access_points = local.m_174["authorize_mesh_and_non_mesh_access_points"]
-  enable_rolling_ap_upgrade = local.m_174["enable_rolling_ap_upgrade"]
-  interfaces = local.m_174["interfaces"]
-  network_device_id = local.m_174["network_device_id"]
-  reprovision = local.m_174["reprovision"]
-  skip_ap_provision = local.m_174["skip_ap_provision"]
+  enable_rolling_ap_upgrade                 = local.m_174["enable_rolling_ap_upgrade"]
+  interfaces                                = local.m_174["interfaces"]
+  network_device_id                         = local.m_174["network_device_id"]
+  reprovision                               = local.m_174["reprovision"]
+  skip_ap_provision                         = local.m_174["skip_ap_provision"]
 }

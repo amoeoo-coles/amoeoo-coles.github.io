@@ -9,5 +9,5 @@ locals {
 
 resource "catalystcenter_qos_policy_setting" "n195" {
   deploy_by_default_on_wired_devices = local.m_195["deploy_by_default_on_wired_devices"]
-  name = local.m_195["name"]
+  name                               = local.m_195["name"]
 }

@@ -8,8 +8,8 @@ locals {
 }
 
 resource "catalystcenter_fabric_l3_virtual_network" "n134" {
-  anchored_site_id = local.m_134["anchored_site_id"]
-  fabric_ids = local.m_134["fabric_ids"]
-  merge_fabric_sites = local.m_134["merge_fabric_sites"]
+  anchored_site_id     = local.m_134["anchored_site_id"]
+  fabric_ids           = local.m_134["fabric_ids"]
+  merge_fabric_sites   = local.m_134["merge_fabric_sites"]
   virtual_network_name = local.m_134["virtual_network_name"]
 }

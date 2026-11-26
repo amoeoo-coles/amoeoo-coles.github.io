@@ -9,7 +9,7 @@ locals {
 
 data "catalystcenter_fabric_vlan_to_ssid" "n169" {
   fabric_id = local.m_169["fabric_id"]
-  id = local.m_169["id"]
+  id        = local.m_169["id"]
 }
 
 output "n169_data_catalystcenter_fabric_vlan_to_ssid_id" {

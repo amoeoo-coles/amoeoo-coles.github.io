@@ -8,7 +8,7 @@ locals {
 }
 
 data "catalystcenter_assign_credentials" "n032" {
-  id = local.m_032["id"]
+  id      = local.m_032["id"]
   site_id = local.m_032["site_id"]
 }
 

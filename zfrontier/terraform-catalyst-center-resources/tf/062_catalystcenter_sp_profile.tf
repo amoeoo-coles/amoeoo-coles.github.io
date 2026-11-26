@@ -8,7 +8,7 @@ locals {
 }
 
 resource "catalystcenter_sp_profile" "n062" {
-  model = local.m_062["model"]
-  name = local.m_062["name"]
+  model        = local.m_062["model"]
+  name         = local.m_062["name"]
   wan_provider = local.m_062["wan_provider"]
 }

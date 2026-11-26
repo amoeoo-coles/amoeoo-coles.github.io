@@ -8,6 +8,6 @@ locals {
 }
 
 resource "catalystcenter_floor_image" "n022" {
-  floor_id = local.m_022["floor_id"]
+  floor_id    = local.m_022["floor_id"]
   source_path = local.m_022["source_path"]
 }

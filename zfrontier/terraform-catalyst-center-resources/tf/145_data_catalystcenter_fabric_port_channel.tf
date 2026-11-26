@@ -8,8 +8,8 @@ locals {
 }
 
 data "catalystcenter_fabric_port_channel" "n145" {
-  fabric_id = local.m_145["fabric_id"]
-  id = local.m_145["id"]
+  fabric_id         = local.m_145["fabric_id"]
+  id                = local.m_145["id"]
   network_device_id = local.m_145["network_device_id"]
 }
 

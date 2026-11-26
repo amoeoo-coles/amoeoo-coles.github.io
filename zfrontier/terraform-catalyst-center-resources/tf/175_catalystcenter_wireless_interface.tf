@@ -9,5 +9,5 @@ locals {
 
 resource "catalystcenter_wireless_interface" "n175" {
   interface_name = local.m_175["interface_name"]
-  vlan_id = local.m_175["vlan_id"]
+  vlan_id        = local.m_175["vlan_id"]
 }

@@ -8,8 +8,8 @@ locals {
 }
 
 data "catalystcenter_wireless_profile_site_tag" "n184" {
-  id = local.m_184["id"]
-  site_tag_id = local.m_184["site_tag_id"]
+  id                  = local.m_184["id"]
+  site_tag_id         = local.m_184["site_tag_id"]
   wireless_profile_id = local.m_184["wireless_profile_id"]
 }
 

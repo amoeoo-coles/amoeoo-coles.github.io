@@ -8,7 +8,7 @@ locals {
 }
 
 data "catalystcenter_fabric_l3_handoff_sda_transit" "n133" {
-  fabric_id = local.m_133["fabric_id"]
+  fabric_id         = local.m_133["fabric_id"]
   network_device_id = local.m_133["network_device_id"]
 }
 

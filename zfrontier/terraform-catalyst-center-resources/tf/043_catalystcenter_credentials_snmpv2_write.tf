@@ -8,8 +8,8 @@ locals {
 }
 
 resource "catalystcenter_credentials_snmpv2_write" "n043" {
-  description = local.m_043["description"]
-  write_community = local.m_043["write_community"]
-  write_community_wo = try(var.secrets["catalystcenter_credentials_snmpv2_write.write_community_wo"], local.m_043["write_community_wo"])
+  description                = local.m_043["description"]
+  write_community            = local.m_043["write_community"]
+  write_community_wo         = try(var.secrets["catalystcenter_credentials_snmpv2_write.write_community_wo"], local.m_043["write_community_wo"])
   write_community_wo_version = local.m_043["write_community_wo_version"]
 }

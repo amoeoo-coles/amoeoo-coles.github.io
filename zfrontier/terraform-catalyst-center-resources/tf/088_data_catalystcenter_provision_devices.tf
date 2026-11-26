@@ -8,7 +8,7 @@ locals {
 }
 
 data "catalystcenter_provision_devices" "n088" {
-  id = local.m_088["id"]
+  id      = local.m_088["id"]
   site_id = local.m_088["site_id"]
 }
 

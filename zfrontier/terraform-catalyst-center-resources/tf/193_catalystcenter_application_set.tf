@@ -8,7 +8,7 @@ locals {
 }
 
 resource "catalystcenter_application_set" "n193" {
-  default_business_relevance = local.m_193["default_business_relevance"]
-  name = local.m_193["name"]
+  default_business_relevance     = local.m_193["default_business_relevance"]
+  name                           = local.m_193["name"]
   scalable_group_external_handle = local.m_193["scalable_group_external_handle"]
 }

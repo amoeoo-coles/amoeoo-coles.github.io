@@ -8,8 +8,8 @@ locals {
 }
 
 data "catalystcenter_wireless_profile_policy_tag" "n182" {
-  id = local.m_182["id"]
-  policy_tag_id = local.m_182["policy_tag_id"]
+  id                  = local.m_182["id"]
+  policy_tag_id       = local.m_182["policy_tag_id"]
   wireless_profile_id = local.m_182["wireless_profile_id"]
 }
 

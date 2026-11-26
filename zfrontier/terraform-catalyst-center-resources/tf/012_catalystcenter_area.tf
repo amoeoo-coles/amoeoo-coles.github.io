@@ -8,6 +8,6 @@ locals {
 }
 
 resource "catalystcenter_area" "n012" {
-  name = local.m_012["name"]
+  name      = local.m_012["name"]
   parent_id = local.m_012["parent_id"]
 }

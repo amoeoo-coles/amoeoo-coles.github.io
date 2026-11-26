@@ -9,5 +9,5 @@ locals {
 
 resource "catalystcenter_assign_device_to_site" "n015" {
   device_ids = local.m_015["device_ids"]
-  site_id = local.m_015["site_id"]
+  site_id    = local.m_015["site_id"]
 }

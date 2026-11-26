@@ -8,9 +8,9 @@ locals {
 }
 
 resource "catalystcenter_fabric_ewlc" "n123" {
-  ap_reboot_percentage = local.m_123["ap_reboot_percentage"]
+  ap_reboot_percentage      = local.m_123["ap_reboot_percentage"]
   enable_rolling_ap_upgrade = local.m_123["enable_rolling_ap_upgrade"]
-  enable_wireless = local.m_123["enable_wireless"]
-  fabric_id = local.m_123["fabric_id"]
-  network_device_id = local.m_123["network_device_id"]
+  enable_wireless           = local.m_123["enable_wireless"]
+  fabric_id                 = local.m_123["fabric_id"]
+  network_device_id         = local.m_123["network_device_id"]
 }

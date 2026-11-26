@@ -9,5 +9,5 @@ locals {
 
 resource "catalystcenter_assign_devices_to_tag" "n069" {
   device_ids = local.m_069["device_ids"]
-  tag_id = local.m_069["tag_id"]
+  tag_id     = local.m_069["tag_id"]
 }

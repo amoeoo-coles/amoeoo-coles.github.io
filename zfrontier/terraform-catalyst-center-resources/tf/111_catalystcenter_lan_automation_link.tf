@@ -8,10 +8,10 @@ locals {
 }
 
 resource "catalystcenter_lan_automation_link" "n111" {
-  action = local.m_111["action"]
-  ip_pool_name = local.m_111["ip_pool_name"]
-  peer_device_interface_name = local.m_111["peer_device_interface_name"]
-  peer_device_management_ip_address = local.m_111["peer_device_management_ip_address"]
-  primary_device_interface_name = local.m_111["primary_device_interface_name"]
+  action                               = local.m_111["action"]
+  ip_pool_name                         = local.m_111["ip_pool_name"]
+  peer_device_interface_name           = local.m_111["peer_device_interface_name"]
+  peer_device_management_ip_address    = local.m_111["peer_device_management_ip_address"]
+  primary_device_interface_name        = local.m_111["primary_device_interface_name"]
   primary_device_management_ip_address = local.m_111["primary_device_management_ip_address"]
 }

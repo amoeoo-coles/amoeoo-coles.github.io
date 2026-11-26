@@ -8,6 +8,6 @@ locals {
 }
 
 resource "catalystcenter_network_profile_for_sites_assignments" "n107" {
-  items = local.m_107["items"]
+  items              = local.m_107["items"]
   network_profile_id = local.m_107["network_profile_id"]
 }

@@ -8,8 +8,8 @@ locals {
 }
 
 resource "catalystcenter_pnp_device" "n091" {
-  hostname = local.m_091["hostname"]
-  pid = local.m_091["pid"]
+  hostname      = local.m_091["hostname"]
+  pid           = local.m_091["pid"]
   serial_number = local.m_091["serial_number"]
-  stack = local.m_091["stack"]
+  stack         = local.m_091["stack"]
 }

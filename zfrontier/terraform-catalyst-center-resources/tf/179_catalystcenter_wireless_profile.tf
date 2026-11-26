@@ -9,8 +9,8 @@ locals {
 
 resource "catalystcenter_wireless_profile" "n179" {
   additional_interfaces = local.m_179["additional_interfaces"]
-  ap_zones = local.m_179["ap_zones"]
-  feature_templates = local.m_179["feature_templates"]
-  ssid_details = local.m_179["ssid_details"]
+  ap_zones              = local.m_179["ap_zones"]
+  feature_templates     = local.m_179["feature_templates"]
+  ssid_details          = local.m_179["ssid_details"]
   wireless_profile_name = local.m_179["wireless_profile_name"]
 }

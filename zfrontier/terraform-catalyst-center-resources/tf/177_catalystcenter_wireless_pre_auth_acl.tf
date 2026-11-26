@@ -8,10 +8,10 @@ locals {
 }
 
 resource "catalystcenter_wireless_pre_auth_acl" "n177" {
-  acl_list_name = local.m_177["acl_list_name"]
-  acl_name = local.m_177["acl_name"]
+  acl_list_name                = local.m_177["acl_list_name"]
+  acl_name                     = local.m_177["acl_name"]
   include_auto_generated_rules = local.m_177["include_auto_generated_rules"]
-  ip_acl_rules = local.m_177["ip_acl_rules"]
-  ipv6_acl_enabled = local.m_177["ipv6_acl_enabled"]
-  walled_garden_urls = local.m_177["walled_garden_urls"]
+  ip_acl_rules                 = local.m_177["ip_acl_rules"]
+  ipv6_acl_enabled             = local.m_177["ipv6_acl_enabled"]
+  walled_garden_urls           = local.m_177["walled_garden_urls"]
 }

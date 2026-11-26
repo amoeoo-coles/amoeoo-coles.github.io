@@ -8,12 +8,12 @@ locals {
 }
 
 resource "catalystcenter_credentials_cli" "n035" {
-  description = local.m_035["description"]
-  enable_password = local.m_035["enable_password"]
-  enable_password_wo = local.m_035["enable_password_wo"]
+  description                = local.m_035["description"]
+  enable_password            = local.m_035["enable_password"]
+  enable_password_wo         = local.m_035["enable_password_wo"]
   enable_password_wo_version = local.m_035["enable_password_wo_version"]
-  password = local.m_035["password"]
-  password_wo = try(var.secrets["catalystcenter_credentials_cli.password_wo"], local.m_035["password_wo"])
-  password_wo_version = local.m_035["password_wo_version"]
-  username = local.m_035["username"]
+  password                   = local.m_035["password"]
+  password_wo                = try(var.secrets["catalystcenter_credentials_cli.password_wo"], local.m_035["password_wo"])
+  password_wo_version        = local.m_035["password_wo_version"]
+  username                   = local.m_035["username"]
 }

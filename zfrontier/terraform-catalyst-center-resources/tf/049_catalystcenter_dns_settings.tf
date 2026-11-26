@@ -10,5 +10,5 @@ locals {
 resource "catalystcenter_dns_settings" "n049" {
   dns_servers = local.m_049["dns_servers"]
   domain_name = local.m_049["domain_name"]
-  site_id = local.m_049["site_id"]
+  site_id     = local.m_049["site_id"]
 }

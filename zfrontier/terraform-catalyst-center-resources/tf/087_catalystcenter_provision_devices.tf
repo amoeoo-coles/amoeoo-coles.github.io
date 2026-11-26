@@ -9,5 +9,5 @@ locals {
 
 resource "catalystcenter_provision_devices" "n087" {
   provision_devices = local.m_087["provision_devices"]
-  site_id = local.m_087["site_id"]
+  site_id           = local.m_087["site_id"]
 }

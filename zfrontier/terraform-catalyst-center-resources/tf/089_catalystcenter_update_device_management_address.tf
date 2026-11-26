@@ -9,5 +9,5 @@ locals {
 
 resource "catalystcenter_update_device_management_address" "n089" {
   device_id = local.m_089["device_id"]
-  new_ip = local.m_089["new_ip"]
+  new_ip    = local.m_089["new_ip"]
 }

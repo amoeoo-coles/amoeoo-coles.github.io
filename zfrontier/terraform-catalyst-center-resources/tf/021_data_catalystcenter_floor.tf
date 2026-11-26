@@ -8,7 +8,7 @@ locals {
 }
 
 data "catalystcenter_floor" "n021" {
-  id = local.m_021["id"]
+  id               = local.m_021["id"]
   units_of_measure = local.m_021["units_of_measure"]
 }
 

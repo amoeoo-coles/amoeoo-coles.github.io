@@ -8,10 +8,10 @@ locals {
 }
 
 resource "catalystcenter_credentials_https_write" "n039" {
-  description = local.m_039["description"]
-  password = local.m_039["password"]
-  password_wo = try(var.secrets["catalystcenter_credentials_https_write.password_wo"], local.m_039["password_wo"])
+  description         = local.m_039["description"]
+  password            = local.m_039["password"]
+  password_wo         = try(var.secrets["catalystcenter_credentials_https_write.password_wo"], local.m_039["password_wo"])
   password_wo_version = local.m_039["password_wo_version"]
-  port = local.m_039["port"]
-  username = local.m_039["username"]
+  port                = local.m_039["port"]
+  username            = local.m_039["username"]
 }
