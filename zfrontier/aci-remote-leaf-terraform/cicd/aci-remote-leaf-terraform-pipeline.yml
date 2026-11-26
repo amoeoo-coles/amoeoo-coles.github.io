@@ -1,0 +1,178 @@
+# SAMPLE ONLY.
+# Do not place this file under .github/workflows in the GitHub Pages repository.
+# Copy it into a private automation repository that can reach APIC, Nexus Dashboard
+# and the IPN/ISN switches from a self-hosted runner.
+#
+# Required repository secrets (values never belong in this file):
+#   APIC_URL, APIC_USERNAME, APIC_PASSWORD
+#   NDO_URL, NDO_USERNAME, NDO_PASSWORD
+#   NXOS_URL, NXOS_USERNAME, NXOS_PASSWORD
+#   NETBOX_URL, NETBOX_TOKEN
+#   TF_HTTP_USERNAME / TF_HTTP_PASSWORD (or equivalent) for the remote backend
+
+name: ACI Remote Leaf Terraform
+
+on:
+  workflow_dispatch:
+    inputs:
+      tf_dir:
+        description: "Directory containing .tf files"
+        required: false
+        default: "terraform"
+      apply:
+        description: "Set true to apply after approval"
+        required: false
+        default: "false"
+  pull_request:
+    paths:
+      - "terraform/**.tf"
+      - "terraform/**.tfvars"
+      - "data/*.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "terraform/**.tf"
+      - "data/*.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  fmt-validate:
+    name: 1. terraform fmt and validate
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.tf_dir || 'terraform' }}
+    steps:
+      - name: Checkout automation repo
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.13.3"
+
+      - name: terraform fmt -check
+        run: terraform fmt -check -recursive
+
+      - name: terraform init (no backend)
+        run: terraform init -backend=false
+
+      - name: terraform validate
+        run: terraform validate
+
+  plan:
+    name: 2. terraform plan
+    needs: fmt-validate
+    runs-on: self-hosted
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
+    defaults:
+      run:
+        working-directory: ${{ inputs.tf_dir || 'terraform' }}
+    env:
+      TF_VAR_apic_url: ${{ secrets.APIC_URL }}
+      TF_VAR_apic_username: ${{ secrets.APIC_USERNAME }}
+      TF_VAR_apic_password: ${{ secrets.APIC_PASSWORD }}
+      TF_VAR_ndo_url: ${{ secrets.NDO_URL }}
+      TF_VAR_ndo_username: ${{ secrets.NDO_USERNAME }}
+      TF_VAR_ndo_password: ${{ secrets.NDO_PASSWORD }}
+      TF_VAR_nxos_url: ${{ secrets.NXOS_URL }}
+      TF_VAR_nxos_username: ${{ secrets.NXOS_USERNAME }}
+      TF_VAR_nxos_password: ${{ secrets.NXOS_PASSWORD }}
+    steps:
+      - name: Checkout automation repo
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.13.3"
+
+      - name: terraform init (remote backend)
+        run: terraform init -backend-config=../cicd/backend.hcl
+
+      - name: terraform plan
+        run: |
+          set -o pipefail
+          terraform plan -input=false -out=tfplan -var-file=../cicd/terraform.tfvars.example
+          terraform show -no-color tfplan | tee plan.txt
+          terraform show -json tfplan > plan.json
+
+      - name: Upload plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: |
+            ${{ inputs.tf_dir || 'terraform' }}/tfplan
+            ${{ inputs.tf_dir || 'terraform' }}/plan.txt
+            ${{ inputs.tf_dir || 'terraform' }}/plan.json
+
+  apply:
+    name: 3. terraform apply (after approval)
+    needs: plan
+    runs-on: self-hosted
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.apply == 'true'
+    environment: production
+    defaults:
+      run:
+        working-directory: ${{ inputs.tf_dir || 'terraform' }}
+    env:
+      TF_VAR_apic_url: ${{ secrets.APIC_URL }}
+      TF_VAR_apic_username: ${{ secrets.APIC_USERNAME }}
+      TF_VAR_apic_password: ${{ secrets.APIC_PASSWORD }}
+      TF_VAR_ndo_url: ${{ secrets.NDO_URL }}
+      TF_VAR_ndo_username: ${{ secrets.NDO_USERNAME }}
+      TF_VAR_ndo_password: ${{ secrets.NDO_PASSWORD }}
+      TF_VAR_nxos_url: ${{ secrets.NXOS_URL }}
+      TF_VAR_nxos_username: ${{ secrets.NXOS_USERNAME }}
+      TF_VAR_nxos_password: ${{ secrets.NXOS_PASSWORD }}
+    steps:
+      - name: Checkout automation repo
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.13.3"
+
+      - name: Download plan
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: ${{ inputs.tf_dir || 'terraform' }}
+
+      - name: terraform init (remote backend)
+        run: terraform init -backend-config=../cicd/backend.hcl
+
+      - name: terraform apply
+        run: terraform apply -input=false tfplan
+
+  netbox:
+    name: 4. NetBox 4.x sync
+    needs: apply
+    runs-on: self-hosted
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.apply == 'true'
+    env:
+      NETBOX_URL: ${{ secrets.NETBOX_URL }}
+      NETBOX_TOKEN: ${{ secrets.NETBOX_TOKEN }}
+    steps:
+      - name: Checkout automation repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pynetbox
+        run: pip install pynetbox pyyaml
+
+      - name: Download plan JSON
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+
+      - name: Sync to NetBox
+        run: python cicd/netbox_sync.py --plan-json plan.json
