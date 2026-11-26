@@ -9,8 +9,8 @@ locals {
 
 data "fmc_single_sign_on_server" "n219" {
   domain = local.m_219["domain"]
-  id = local.m_219["id"]
-  name = local.m_219["name"]
+  id     = local.m_219["id"]
+  name   = local.m_219["name"]
 }
 
 output "n219_data_fmc_single_sign_on_server_id" {

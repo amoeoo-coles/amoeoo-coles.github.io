@@ -8,8 +8,8 @@ locals {
 }
 
 resource "fmc_smart_license" "n003" {
-  force = local.m_003["force"]
-  registration_type = local.m_003["registration_type"]
+  force               = local.m_003["force"]
+  registration_type   = local.m_003["registration_type"]
   retain_registration = local.m_003["retain_registration"]
-  token = try(var.secrets["fmc_smart_license.token"], local.m_003["token"])
+  token               = try(var.secrets["fmc_smart_license.token"], local.m_003["token"])
 }

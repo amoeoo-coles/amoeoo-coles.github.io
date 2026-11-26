@@ -8,10 +8,10 @@ locals {
 }
 
 resource "fmc_ipv6_address_pool" "n125" {
-  description = local.m_125["description"]
-  domain = local.m_125["domain"]
-  name = local.m_125["name"]
+  description         = local.m_125["description"]
+  domain              = local.m_125["domain"]
+  name                = local.m_125["name"]
   number_of_addresses = local.m_125["number_of_addresses"]
-  overridable = local.m_125["overridable"]
-  start_address = local.m_125["start_address"]
+  overridable         = local.m_125["overridable"]
+  start_address       = local.m_125["start_address"]
 }

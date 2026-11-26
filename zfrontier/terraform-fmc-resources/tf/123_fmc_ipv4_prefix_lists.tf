@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_ipv4_prefix_lists" "n123" {
   domain = local.m_123["domain"]
-  items = local.m_123["items"]
+  items  = local.m_123["items"]
 }

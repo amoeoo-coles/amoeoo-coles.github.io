@@ -8,11 +8,11 @@ locals {
 }
 
 data "fmc_device_bridge_group_interface" "n328" {
-  device_id = local.m_328["device_id"]
-  domain = local.m_328["domain"]
-  id = local.m_328["id"]
+  device_id    = local.m_328["device_id"]
+  domain       = local.m_328["domain"]
+  id           = local.m_328["id"]
   logical_name = local.m_328["logical_name"]
-  name = local.m_328["name"]
+  name         = local.m_328["name"]
 }
 
 output "n328_data_fmc_device_bridge_group_interface_id" {

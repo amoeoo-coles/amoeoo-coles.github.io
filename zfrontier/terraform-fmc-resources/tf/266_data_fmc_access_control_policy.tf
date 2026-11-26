@@ -8,11 +8,11 @@ locals {
 }
 
 data "fmc_access_control_policy" "n266" {
-  domain = local.m_266["domain"]
-  id = local.m_266["id"]
+  domain            = local.m_266["domain"]
+  id                = local.m_266["id"]
   manage_categories = local.m_266["manage_categories"]
-  manage_rules = local.m_266["manage_rules"]
-  name = local.m_266["name"]
+  manage_rules      = local.m_266["manage_rules"]
+  name              = local.m_266["name"]
 }
 
 output "n266_data_fmc_access_control_policy_id" {

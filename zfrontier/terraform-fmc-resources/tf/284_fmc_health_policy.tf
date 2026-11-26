@@ -8,12 +8,12 @@ locals {
 }
 
 resource "fmc_health_policy" "n284" {
-  description = local.m_284["description"]
-  domain = local.m_284["domain"]
+  description                     = local.m_284["description"]
+  domain                          = local.m_284["domain"]
   health_module_run_time_interval = local.m_284["health_module_run_time_interval"]
-  health_modules = local.m_284["health_modules"]
-  is_default_policy = local.m_284["is_default_policy"]
-  metric_collection_interval = local.m_284["metric_collection_interval"]
-  name = local.m_284["name"]
-  policy_type = local.m_284["policy_type"]
+  health_modules                  = local.m_284["health_modules"]
+  is_default_policy               = local.m_284["is_default_policy"]
+  metric_collection_interval      = local.m_284["metric_collection_interval"]
+  name                            = local.m_284["name"]
+  policy_type                     = local.m_284["policy_type"]
 }

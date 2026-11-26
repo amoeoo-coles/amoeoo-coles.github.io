@@ -9,8 +9,8 @@ locals {
 
 data "fmc_ikev1_policy" "n100" {
   domain = local.m_100["domain"]
-  id = local.m_100["id"]
-  name = local.m_100["name"]
+  id     = local.m_100["id"]
+  name   = local.m_100["name"]
 }
 
 output "n100_data_fmc_ikev1_policy_id" {

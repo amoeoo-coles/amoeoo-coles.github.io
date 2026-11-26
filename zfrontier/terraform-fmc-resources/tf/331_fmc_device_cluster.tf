@@ -8,16 +8,16 @@ locals {
 }
 
 resource "fmc_device_cluster" "n331" {
-  cluster_key = try(var.secrets["fmc_device_cluster.cluster_key"], local.m_331["cluster_key"])
+  cluster_key                   = try(var.secrets["fmc_device_cluster.cluster_key"], local.m_331["cluster_key"])
   control_node_ccl_ipv4_address = local.m_331["control_node_ccl_ipv4_address"]
-  control_node_ccl_prefix = local.m_331["control_node_ccl_prefix"]
-  control_node_device_id = local.m_331["control_node_device_id"]
-  control_node_interface_id = local.m_331["control_node_interface_id"]
-  control_node_interface_name = local.m_331["control_node_interface_name"]
-  control_node_interface_type = local.m_331["control_node_interface_type"]
-  control_node_priority = local.m_331["control_node_priority"]
-  control_node_vni_prefix = local.m_331["control_node_vni_prefix"]
-  data_nodes = local.m_331["data_nodes"]
-  domain = local.m_331["domain"]
-  name = local.m_331["name"]
+  control_node_ccl_prefix       = local.m_331["control_node_ccl_prefix"]
+  control_node_device_id        = local.m_331["control_node_device_id"]
+  control_node_interface_id     = local.m_331["control_node_interface_id"]
+  control_node_interface_name   = local.m_331["control_node_interface_name"]
+  control_node_interface_type   = local.m_331["control_node_interface_type"]
+  control_node_priority         = local.m_331["control_node_priority"]
+  control_node_vni_prefix       = local.m_331["control_node_vni_prefix"]
+  data_nodes                    = local.m_331["data_nodes"]
+  domain                        = local.m_331["domain"]
+  name                          = local.m_331["name"]
 }

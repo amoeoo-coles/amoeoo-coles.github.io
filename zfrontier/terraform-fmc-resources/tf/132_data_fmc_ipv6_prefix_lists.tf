@@ -9,7 +9,7 @@ locals {
 
 data "fmc_ipv6_prefix_lists" "n132" {
   domain = local.m_132["domain"]
-  items = local.m_132["items"]
+  items  = local.m_132["items"]
 }
 
 output "n132_data_fmc_ipv6_prefix_lists_id" {

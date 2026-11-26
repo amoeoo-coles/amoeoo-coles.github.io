@@ -9,8 +9,8 @@ locals {
 
 data "fmc_standard_access_list" "n229" {
   domain = local.m_229["domain"]
-  id = local.m_229["id"]
-  name = local.m_229["name"]
+  id     = local.m_229["id"]
+  name   = local.m_229["name"]
 }
 
 output "n229_data_fmc_standard_access_list_id" {

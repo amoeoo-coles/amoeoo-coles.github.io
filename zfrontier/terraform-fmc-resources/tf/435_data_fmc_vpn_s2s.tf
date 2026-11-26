@@ -9,8 +9,8 @@ locals {
 
 data "fmc_vpn_s2s" "n435" {
   domain = local.m_435["domain"]
-  id = local.m_435["id"]
-  name = local.m_435["name"]
+  id     = local.m_435["id"]
+  name   = local.m_435["name"]
 }
 
 output "n435_data_fmc_vpn_s2s_id" {

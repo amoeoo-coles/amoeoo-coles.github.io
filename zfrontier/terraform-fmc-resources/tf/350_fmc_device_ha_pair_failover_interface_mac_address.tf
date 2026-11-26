@@ -8,11 +8,11 @@ locals {
 }
 
 resource "fmc_device_ha_pair_failover_interface_mac_address" "n350" {
-  active_mac_address = local.m_350["active_mac_address"]
-  domain = local.m_350["domain"]
-  ha_pair_id = local.m_350["ha_pair_id"]
-  interface_id = local.m_350["interface_id"]
-  interface_name = local.m_350["interface_name"]
-  interface_type = local.m_350["interface_type"]
+  active_mac_address  = local.m_350["active_mac_address"]
+  domain              = local.m_350["domain"]
+  ha_pair_id          = local.m_350["ha_pair_id"]
+  interface_id        = local.m_350["interface_id"]
+  interface_name      = local.m_350["interface_name"]
+  interface_type      = local.m_350["interface_type"]
   standby_mac_address = local.m_350["standby_mac_address"]
 }

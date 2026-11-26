@@ -9,8 +9,8 @@ locals {
 
 data "fmc_route_map" "n179" {
   domain = local.m_179["domain"]
-  id = local.m_179["id"]
-  name = local.m_179["name"]
+  id     = local.m_179["id"]
+  name   = local.m_179["name"]
 }
 
 output "n179_data_fmc_route_map_id" {

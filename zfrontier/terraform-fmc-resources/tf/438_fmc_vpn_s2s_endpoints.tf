@@ -8,7 +8,7 @@ locals {
 }
 
 resource "fmc_vpn_s2s_endpoints" "n438" {
-  domain = local.m_438["domain"]
-  items = local.m_438["items"]
+  domain     = local.m_438["domain"]
+  items      = local.m_438["items"]
   vpn_s2s_id = local.m_438["vpn_s2s_id"]
 }

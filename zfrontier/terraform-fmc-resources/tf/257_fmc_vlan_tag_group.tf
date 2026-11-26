@@ -9,9 +9,9 @@ locals {
 
 resource "fmc_vlan_tag_group" "n257" {
   description = local.m_257["description"]
-  domain = local.m_257["domain"]
-  literals = local.m_257["literals"]
-  name = local.m_257["name"]
+  domain      = local.m_257["domain"]
+  literals    = local.m_257["literals"]
+  name        = local.m_257["name"]
   overridable = local.m_257["overridable"]
-  vlan_tags = local.m_257["vlan_tags"]
+  vlan_tags   = local.m_257["vlan_tags"]
 }

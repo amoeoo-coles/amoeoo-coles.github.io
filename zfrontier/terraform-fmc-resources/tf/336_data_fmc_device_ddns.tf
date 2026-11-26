@@ -9,8 +9,8 @@ locals {
 
 data "fmc_device_ddns" "n336" {
   device_id = local.m_336["device_id"]
-  domain = local.m_336["domain"]
-  id = local.m_336["id"]
+  domain    = local.m_336["domain"]
+  id        = local.m_336["id"]
 }
 
 output "n336_data_fmc_device_ddns_id" {

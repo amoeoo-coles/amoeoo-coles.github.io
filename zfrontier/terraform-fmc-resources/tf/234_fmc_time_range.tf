@@ -8,10 +8,10 @@ locals {
 }
 
 resource "fmc_time_range" "n234" {
-  description = local.m_234["description"]
-  domain = local.m_234["domain"]
-  end_time = local.m_234["end_time"]
-  name = local.m_234["name"]
+  description     = local.m_234["description"]
+  domain          = local.m_234["domain"]
+  end_time        = local.m_234["end_time"]
+  name            = local.m_234["name"]
   recurrence_list = local.m_234["recurrence_list"]
-  start_time = local.m_234["start_time"]
+  start_time      = local.m_234["start_time"]
 }

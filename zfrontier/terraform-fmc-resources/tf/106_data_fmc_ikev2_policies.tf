@@ -9,7 +9,7 @@ locals {
 
 data "fmc_ikev2_policies" "n106" {
   domain = local.m_106["domain"]
-  items = local.m_106["items"]
+  items  = local.m_106["items"]
 }
 
 output "n106_data_fmc_ikev2_policies_id" {

@@ -8,8 +8,8 @@ locals {
 }
 
 data "fmc_vpn_ra_ldap_attribute_map" "n429" {
-  domain = local.m_429["domain"]
-  id = local.m_429["id"]
+  domain    = local.m_429["domain"]
+  id        = local.m_429["id"]
   vpn_ra_id = local.m_429["vpn_ra_id"]
 }
 

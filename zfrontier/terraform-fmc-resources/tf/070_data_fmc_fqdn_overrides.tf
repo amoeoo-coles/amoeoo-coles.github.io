@@ -8,8 +8,8 @@ locals {
 }
 
 data "fmc_fqdn_overrides" "n070" {
-  domain = local.m_070["domain"]
-  id = local.m_070["id"]
+  domain      = local.m_070["domain"]
+  id          = local.m_070["id"]
   parent_name = local.m_070["parent_name"]
 }
 

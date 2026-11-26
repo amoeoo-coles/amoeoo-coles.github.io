@@ -8,10 +8,10 @@ locals {
 }
 
 resource "fmc_vpn_s2s" "n434" {
-  domain = local.m_434["domain"]
-  ikev1 = local.m_434["ikev1"]
-  ikev2 = local.m_434["ikev2"]
-  name = local.m_434["name"]
+  domain           = local.m_434["domain"]
+  ikev1            = local.m_434["ikev1"]
+  ikev2            = local.m_434["ikev2"]
+  name             = local.m_434["name"]
   network_topology = local.m_434["network_topology"]
-  route_based = local.m_434["route_based"]
+  route_based      = local.m_434["route_based"]
 }

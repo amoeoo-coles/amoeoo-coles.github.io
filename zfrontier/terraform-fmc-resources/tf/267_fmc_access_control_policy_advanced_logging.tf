@@ -8,11 +8,11 @@ locals {
 }
 
 resource "fmc_access_control_policy_advanced_logging" "n267" {
-  access_control_policy_id = local.m_267["access_control_policy_id"]
-  domain = local.m_267["domain"]
-  enabled = local.m_267["enabled"]
-  log_format = local.m_267["log_format"]
+  access_control_policy_id  = local.m_267["access_control_policy_id"]
+  domain                    = local.m_267["domain"]
+  enabled                   = local.m_267["enabled"]
+  log_format                = local.m_267["log_format"]
   send_to_other_destination = local.m_267["send_to_other_destination"]
-  send_to_splunk = local.m_267["send_to_splunk"]
-  syslog_alert_id = local.m_267["syslog_alert_id"]
+  send_to_splunk            = local.m_267["send_to_splunk"]
+  syslog_alert_id           = local.m_267["syslog_alert_id"]
 }

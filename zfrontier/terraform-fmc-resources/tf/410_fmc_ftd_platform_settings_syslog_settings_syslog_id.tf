@@ -8,10 +8,10 @@ locals {
 }
 
 resource "fmc_ftd_platform_settings_syslog_settings_syslog_id" "n410" {
-  domain = local.m_410["domain"]
-  enabled = local.m_410["enabled"]
-  ftd_platform_settings_id = local.m_410["ftd_platform_settings_id"]
+  domain                                   = local.m_410["domain"]
+  enabled                                  = local.m_410["enabled"]
+  ftd_platform_settings_id                 = local.m_410["ftd_platform_settings_id"]
   ftd_platform_settings_syslog_settings_id = local.m_410["ftd_platform_settings_syslog_settings_id"]
-  logging_level = local.m_410["logging_level"]
-  syslog_id = local.m_410["syslog_id"]
+  logging_level                            = local.m_410["logging_level"]
+  syslog_id                                = local.m_410["syslog_id"]
 }

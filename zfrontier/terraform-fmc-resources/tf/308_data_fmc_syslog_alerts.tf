@@ -9,7 +9,7 @@ locals {
 
 data "fmc_syslog_alerts" "n308" {
   domain = local.m_308["domain"]
-  items = local.m_308["items"]
+  items  = local.m_308["items"]
 }
 
 output "n308_data_fmc_syslog_alerts_id" {

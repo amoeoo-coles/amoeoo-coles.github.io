@@ -8,9 +8,9 @@ locals {
 }
 
 resource "fmc_ftd_platform_settings_http_access" "n388" {
-  configurations = local.m_388["configurations"]
-  domain = local.m_388["domain"]
+  configurations           = local.m_388["configurations"]
+  domain                   = local.m_388["domain"]
   ftd_platform_settings_id = local.m_388["ftd_platform_settings_id"]
-  server_enabled = local.m_388["server_enabled"]
-  server_port = local.m_388["server_port"]
+  server_enabled           = local.m_388["server_enabled"]
+  server_port              = local.m_388["server_port"]
 }

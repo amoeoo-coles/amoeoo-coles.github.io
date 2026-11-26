@@ -9,8 +9,8 @@ locals {
 
 data "fmc_ikev1_ipsec_proposal" "n094" {
   domain = local.m_094["domain"]
-  id = local.m_094["id"]
-  name = local.m_094["name"]
+  id     = local.m_094["id"]
+  name   = local.m_094["name"]
 }
 
 output "n094_data_fmc_ikev1_ipsec_proposal_id" {

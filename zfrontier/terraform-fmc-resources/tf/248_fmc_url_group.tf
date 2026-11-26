@@ -9,9 +9,9 @@ locals {
 
 resource "fmc_url_group" "n248" {
   description = local.m_248["description"]
-  domain = local.m_248["domain"]
-  literals = local.m_248["literals"]
-  name = local.m_248["name"]
+  domain      = local.m_248["domain"]
+  literals    = local.m_248["literals"]
+  name        = local.m_248["name"]
   overridable = local.m_248["overridable"]
-  urls = local.m_248["urls"]
+  urls        = local.m_248["urls"]
 }

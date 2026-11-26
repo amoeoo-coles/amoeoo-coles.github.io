@@ -9,9 +9,9 @@ locals {
 
 resource "fmc_vlan_tag" "n255" {
   description = local.m_255["description"]
-  domain = local.m_255["domain"]
-  end_tag = local.m_255["end_tag"]
-  name = local.m_255["name"]
+  domain      = local.m_255["domain"]
+  end_tag     = local.m_255["end_tag"]
+  name        = local.m_255["name"]
   overridable = local.m_255["overridable"]
-  start_tag = local.m_255["start_tag"]
+  start_tag   = local.m_255["start_tag"]
 }

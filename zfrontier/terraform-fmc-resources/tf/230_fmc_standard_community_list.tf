@@ -8,7 +8,7 @@ locals {
 }
 
 resource "fmc_standard_community_list" "n230" {
-  domain = local.m_230["domain"]
+  domain  = local.m_230["domain"]
   entries = local.m_230["entries"]
-  name = local.m_230["name"]
+  name    = local.m_230["name"]
 }

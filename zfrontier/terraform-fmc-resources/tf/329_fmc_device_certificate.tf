@@ -9,6 +9,6 @@ locals {
 
 resource "fmc_device_certificate" "n329" {
   certificate_enrollment_id = local.m_329["certificate_enrollment_id"]
-  device_id = local.m_329["device_id"]
-  domain = local.m_329["domain"]
+  device_id                 = local.m_329["device_id"]
+  domain                    = local.m_329["domain"]
 }

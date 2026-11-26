@@ -8,11 +8,11 @@ locals {
 }
 
 resource "fmc_chassis_subinterface" "n317" {
-  chassis_id = local.m_317["chassis_id"]
-  domain = local.m_317["domain"]
-  interface_id = local.m_317["interface_id"]
-  interface_name = local.m_317["interface_name"]
-  port_type = local.m_317["port_type"]
+  chassis_id       = local.m_317["chassis_id"]
+  domain           = local.m_317["domain"]
+  interface_id     = local.m_317["interface_id"]
+  interface_name   = local.m_317["interface_name"]
+  port_type        = local.m_317["port_type"]
   sub_interface_id = local.m_317["sub_interface_id"]
-  vlan_id = local.m_317["vlan_id"]
+  vlan_id          = local.m_317["vlan_id"]
 }

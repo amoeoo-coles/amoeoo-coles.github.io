@@ -9,8 +9,8 @@ locals {
 
 data "fmc_security_intelligence_network_list" "n200" {
   domain = local.m_200["domain"]
-  id = local.m_200["id"]
-  name = local.m_200["name"]
+  id     = local.m_200["id"]
+  name   = local.m_200["name"]
 }
 
 output "n200_data_fmc_security_intelligence_network_list_id" {

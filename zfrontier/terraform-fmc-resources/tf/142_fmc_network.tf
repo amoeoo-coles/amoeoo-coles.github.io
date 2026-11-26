@@ -9,8 +9,8 @@ locals {
 
 resource "fmc_network" "n142" {
   description = local.m_142["description"]
-  domain = local.m_142["domain"]
-  name = local.m_142["name"]
+  domain      = local.m_142["domain"]
+  name        = local.m_142["name"]
   overridable = local.m_142["overridable"]
-  prefix = local.m_142["prefix"]
+  prefix      = local.m_142["prefix"]
 }

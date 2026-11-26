@@ -9,9 +9,9 @@ locals {
 
 data "fmc_device_ipv4_static_route" "n357" {
   device_id = local.m_357["device_id"]
-  domain = local.m_357["domain"]
-  id = local.m_357["id"]
-  vrf_id = local.m_357["vrf_id"]
+  domain    = local.m_357["domain"]
+  id        = local.m_357["id"]
+  vrf_id    = local.m_357["vrf_id"]
 }
 
 output "n357_data_fmc_device_ipv4_static_route_id" {

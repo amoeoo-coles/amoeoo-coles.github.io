@@ -8,7 +8,7 @@ locals {
 }
 
 resource "fmc_extended_access_list" "n055" {
-  domain = local.m_055["domain"]
+  domain  = local.m_055["domain"]
   entries = local.m_055["entries"]
-  name = local.m_055["name"]
+  name    = local.m_055["name"]
 }

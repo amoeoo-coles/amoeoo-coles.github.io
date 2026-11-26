@@ -8,8 +8,8 @@ locals {
 }
 
 resource "fmc_interface_group" "n109" {
-  domain = local.m_109["domain"]
+  domain         = local.m_109["domain"]
   interface_type = local.m_109["interface_type"]
-  interfaces = local.m_109["interfaces"]
-  name = local.m_109["name"]
+  interfaces     = local.m_109["interfaces"]
+  name           = local.m_109["name"]
 }

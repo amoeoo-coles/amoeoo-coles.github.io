@@ -8,11 +8,11 @@ locals {
 }
 
 data "fmc_device_redundant_interface" "n369" {
-  device_id = local.m_369["device_id"]
-  domain = local.m_369["domain"]
-  id = local.m_369["id"]
+  device_id    = local.m_369["device_id"]
+  domain       = local.m_369["domain"]
+  id           = local.m_369["id"]
   logical_name = local.m_369["logical_name"]
-  name = local.m_369["name"]
+  name         = local.m_369["name"]
 }
 
 output "n369_data_fmc_device_redundant_interface_id" {

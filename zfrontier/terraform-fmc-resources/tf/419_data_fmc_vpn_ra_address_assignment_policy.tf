@@ -8,8 +8,8 @@ locals {
 }
 
 data "fmc_vpn_ra_address_assignment_policy" "n419" {
-  domain = local.m_419["domain"]
-  id = local.m_419["id"]
+  domain    = local.m_419["domain"]
+  id        = local.m_419["id"]
   vpn_ra_id = local.m_419["vpn_ra_id"]
 }
 

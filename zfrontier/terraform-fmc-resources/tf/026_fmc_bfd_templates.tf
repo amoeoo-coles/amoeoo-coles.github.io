@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_bfd_templates" "n026" {
   domain = local.m_026["domain"]
-  items = local.m_026["items"]
+  items  = local.m_026["items"]
 }

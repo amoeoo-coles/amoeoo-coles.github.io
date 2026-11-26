@@ -9,7 +9,7 @@ locals {
 
 data "fmc_file_types" "n066" {
   domain = local.m_066["domain"]
-  items = local.m_066["items"]
+  items  = local.m_066["items"]
 }
 
 output "n066_data_fmc_file_types_id" {

@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_mac_address_pools" "n140" {
   domain = local.m_140["domain"]
-  items = local.m_140["items"]
+  items  = local.m_140["items"]
 }

@@ -8,15 +8,15 @@ locals {
 }
 
 resource "fmc_chassis_etherchannel_interface" "n311" {
-  admin_state = local.m_311["admin_state"]
-  auto_negotiation = local.m_311["auto_negotiation"]
-  chassis_id = local.m_311["chassis_id"]
-  domain = local.m_311["domain"]
-  duplex = local.m_311["duplex"]
-  ether_channel_id = local.m_311["ether_channel_id"]
-  lacp_mode = local.m_311["lacp_mode"]
-  lacp_rate = local.m_311["lacp_rate"]
-  port_type = local.m_311["port_type"]
+  admin_state         = local.m_311["admin_state"]
+  auto_negotiation    = local.m_311["auto_negotiation"]
+  chassis_id          = local.m_311["chassis_id"]
+  domain              = local.m_311["domain"]
+  duplex              = local.m_311["duplex"]
+  ether_channel_id    = local.m_311["ether_channel_id"]
+  lacp_mode           = local.m_311["lacp_mode"]
+  lacp_rate           = local.m_311["lacp_rate"]
+  port_type           = local.m_311["port_type"]
   selected_interfaces = local.m_311["selected_interfaces"]
-  speed = local.m_311["speed"]
+  speed               = local.m_311["speed"]
 }

@@ -9,8 +9,8 @@ locals {
 
 data "fmc_device_dhcp_server" "n341" {
   device_id = local.m_341["device_id"]
-  domain = local.m_341["domain"]
-  id = local.m_341["id"]
+  domain    = local.m_341["domain"]
+  id        = local.m_341["id"]
 }
 
 output "n341_data_fmc_device_dhcp_server_id" {

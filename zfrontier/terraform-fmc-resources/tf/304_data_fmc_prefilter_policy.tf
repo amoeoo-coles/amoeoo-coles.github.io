@@ -9,8 +9,8 @@ locals {
 
 data "fmc_prefilter_policy" "n304" {
   domain = local.m_304["domain"]
-  id = local.m_304["id"]
-  name = local.m_304["name"]
+  id     = local.m_304["id"]
+  name   = local.m_304["name"]
 }
 
 output "n304_data_fmc_prefilter_policy_id" {

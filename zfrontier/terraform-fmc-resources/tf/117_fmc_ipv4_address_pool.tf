@@ -9,9 +9,9 @@ locals {
 
 resource "fmc_ipv4_address_pool" "n117" {
   description = local.m_117["description"]
-  domain = local.m_117["domain"]
-  name = local.m_117["name"]
-  netmask = local.m_117["netmask"]
+  domain      = local.m_117["domain"]
+  name        = local.m_117["name"]
+  netmask     = local.m_117["netmask"]
   overridable = local.m_117["overridable"]
-  range = local.m_117["range"]
+  range       = local.m_117["range"]
 }

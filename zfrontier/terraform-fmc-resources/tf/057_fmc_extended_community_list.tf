@@ -8,8 +8,8 @@ locals {
 }
 
 resource "fmc_extended_community_list" "n057" {
-  domain = local.m_057["domain"]
-  entries = local.m_057["entries"]
-  name = local.m_057["name"]
+  domain   = local.m_057["domain"]
+  entries  = local.m_057["entries"]
+  name     = local.m_057["name"]
   sub_type = local.m_057["sub_type"]
 }

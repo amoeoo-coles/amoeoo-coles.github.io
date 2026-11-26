@@ -8,9 +8,9 @@ locals {
 }
 
 resource "fmc_device_ecmp_zone" "n342" {
-  device_id = local.m_342["device_id"]
-  domain = local.m_342["domain"]
+  device_id  = local.m_342["device_id"]
+  domain     = local.m_342["domain"]
   interfaces = local.m_342["interfaces"]
-  name = local.m_342["name"]
-  vrf_id = local.m_342["vrf_id"]
+  name       = local.m_342["name"]
+  vrf_id     = local.m_342["vrf_id"]
 }

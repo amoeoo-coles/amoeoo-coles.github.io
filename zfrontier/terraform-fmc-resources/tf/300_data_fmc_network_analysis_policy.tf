@@ -9,8 +9,8 @@ locals {
 
 data "fmc_network_analysis_policy" "n300" {
   domain = local.m_300["domain"]
-  id = local.m_300["id"]
-  name = local.m_300["name"]
+  id     = local.m_300["id"]
+  name   = local.m_300["name"]
 }
 
 output "n300_data_fmc_network_analysis_policy_id" {

@@ -8,9 +8,9 @@ locals {
 }
 
 resource "fmc_ikev1_ipsec_proposal" "n093" {
-  description = local.m_093["description"]
-  domain = local.m_093["domain"]
+  description    = local.m_093["description"]
+  domain         = local.m_093["domain"]
   esp_encryption = local.m_093["esp_encryption"]
-  esp_hash = local.m_093["esp_hash"]
-  name = local.m_093["name"]
+  esp_hash       = local.m_093["esp_hash"]
+  name           = local.m_093["name"]
 }

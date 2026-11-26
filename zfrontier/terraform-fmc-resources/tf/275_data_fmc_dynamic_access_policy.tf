@@ -9,8 +9,8 @@ locals {
 
 data "fmc_dynamic_access_policy" "n275" {
   domain = local.m_275["domain"]
-  id = local.m_275["id"]
-  name = local.m_275["name"]
+  id     = local.m_275["id"]
+  name   = local.m_275["name"]
 }
 
 output "n275_data_fmc_dynamic_access_policy_id" {

@@ -9,8 +9,8 @@ locals {
 
 resource "fmc_access_rules" "n273" {
   access_control_policy_id = local.m_273["access_control_policy_id"]
-  category_name = local.m_273["category_name"]
-  domain = local.m_273["domain"]
-  items = local.m_273["items"]
-  section = local.m_273["section"]
+  category_name            = local.m_273["category_name"]
+  domain                   = local.m_273["domain"]
+  items                    = local.m_273["items"]
+  section                  = local.m_273["section"]
 }

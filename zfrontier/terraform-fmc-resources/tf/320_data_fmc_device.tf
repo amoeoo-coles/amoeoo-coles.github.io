@@ -9,8 +9,8 @@ locals {
 
 data "fmc_device" "n320" {
   domain = local.m_320["domain"]
-  id = local.m_320["id"]
-  name = local.m_320["name"]
+  id     = local.m_320["id"]
+  name   = local.m_320["name"]
 }
 
 output "n320_data_fmc_device_id" {

@@ -8,9 +8,9 @@ locals {
 }
 
 resource "fmc_ftd_platform_settings_icmp_access" "n390" {
-  burst_size = local.m_390["burst_size"]
-  configurations = local.m_390["configurations"]
-  domain = local.m_390["domain"]
+  burst_size               = local.m_390["burst_size"]
+  configurations           = local.m_390["configurations"]
+  domain                   = local.m_390["domain"]
   ftd_platform_settings_id = local.m_390["ftd_platform_settings_id"]
-  rate_limit = local.m_390["rate_limit"]
+  rate_limit               = local.m_390["rate_limit"]
 }

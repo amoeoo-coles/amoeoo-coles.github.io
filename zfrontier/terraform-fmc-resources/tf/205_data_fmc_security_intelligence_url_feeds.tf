@@ -9,7 +9,7 @@ locals {
 
 data "fmc_security_intelligence_url_feeds" "n205" {
   domain = local.m_205["domain"]
-  items = local.m_205["items"]
+  items  = local.m_205["items"]
 }
 
 output "n205_data_fmc_security_intelligence_url_feeds_id" {

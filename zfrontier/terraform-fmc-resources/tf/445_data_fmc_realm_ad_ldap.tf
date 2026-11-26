@@ -9,8 +9,8 @@ locals {
 
 data "fmc_realm_ad_ldap" "n445" {
   domain = local.m_445["domain"]
-  id = local.m_445["id"]
-  name = local.m_445["name"]
+  id     = local.m_445["id"]
+  name   = local.m_445["name"]
 }
 
 output "n445_data_fmc_realm_ad_ldap_id" {

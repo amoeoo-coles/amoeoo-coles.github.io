@@ -8,8 +8,8 @@ locals {
 }
 
 data "fmc_realm_users" "n449" {
-  domain = local.m_449["domain"]
-  items = local.m_449["items"]
+  domain   = local.m_449["domain"]
+  items    = local.m_449["items"]
   realm_id = local.m_449["realm_id"]
 }
 

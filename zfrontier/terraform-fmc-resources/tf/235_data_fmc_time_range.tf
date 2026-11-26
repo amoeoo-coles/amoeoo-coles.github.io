@@ -9,8 +9,8 @@ locals {
 
 data "fmc_time_range" "n235" {
   domain = local.m_235["domain"]
-  id = local.m_235["id"]
-  name = local.m_235["name"]
+  id     = local.m_235["id"]
+  name   = local.m_235["name"]
 }
 
 output "n235_data_fmc_time_range_id" {

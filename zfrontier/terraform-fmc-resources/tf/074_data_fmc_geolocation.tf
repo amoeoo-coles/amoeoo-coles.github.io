@@ -9,8 +9,8 @@ locals {
 
 data "fmc_geolocation" "n074" {
   domain = local.m_074["domain"]
-  id = local.m_074["id"]
-  name = local.m_074["name"]
+  id     = local.m_074["id"]
+  name   = local.m_074["name"]
 }
 
 output "n074_data_fmc_geolocation_id" {

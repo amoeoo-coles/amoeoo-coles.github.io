@@ -8,9 +8,9 @@ locals {
 }
 
 data "fmc_ftd_platform_settings_ssh_access" "n395" {
-  domain = local.m_395["domain"]
+  domain                   = local.m_395["domain"]
   ftd_platform_settings_id = local.m_395["ftd_platform_settings_id"]
-  id = local.m_395["id"]
+  id                       = local.m_395["id"]
 }
 
 output "n395_data_fmc_ftd_platform_settings_ssh_access_id" {

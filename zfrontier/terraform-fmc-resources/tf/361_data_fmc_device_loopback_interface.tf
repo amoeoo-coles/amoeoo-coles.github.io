@@ -8,11 +8,11 @@ locals {
 }
 
 data "fmc_device_loopback_interface" "n361" {
-  device_id = local.m_361["device_id"]
-  domain = local.m_361["domain"]
-  id = local.m_361["id"]
+  device_id    = local.m_361["device_id"]
+  domain       = local.m_361["domain"]
+  id           = local.m_361["id"]
   logical_name = local.m_361["logical_name"]
-  name = local.m_361["name"]
+  name         = local.m_361["name"]
 }
 
 output "n361_data_fmc_device_loopback_interface_id" {

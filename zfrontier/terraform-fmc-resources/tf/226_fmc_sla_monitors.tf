@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_sla_monitors" "n226" {
   domain = local.m_226["domain"]
-  items = local.m_226["items"]
+  items  = local.m_226["items"]
 }

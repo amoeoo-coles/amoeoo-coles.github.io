@@ -8,10 +8,10 @@ locals {
 }
 
 resource "fmc_ftd_nat_policy" "n282" {
-  auto_nat_rules = local.m_282["auto_nat_rules"]
-  description = local.m_282["description"]
-  domain = local.m_282["domain"]
-  manage_rules = local.m_282["manage_rules"]
+  auto_nat_rules   = local.m_282["auto_nat_rules"]
+  description      = local.m_282["description"]
+  domain           = local.m_282["domain"]
+  manage_rules     = local.m_282["manage_rules"]
   manual_nat_rules = local.m_282["manual_nat_rules"]
-  name = local.m_282["name"]
+  name             = local.m_282["name"]
 }

@@ -9,8 +9,8 @@ locals {
 
 resource "fmc_internal_certificate" "n113" {
   certificate = local.m_113["certificate"]
-  domain = local.m_113["domain"]
-  name = local.m_113["name"]
-  password = local.m_113["password"]
+  domain      = local.m_113["domain"]
+  name        = local.m_113["name"]
+  password    = local.m_113["password"]
   private_key = try(var.secrets["fmc_internal_certificate.private_key"], local.m_113["private_key"])
 }

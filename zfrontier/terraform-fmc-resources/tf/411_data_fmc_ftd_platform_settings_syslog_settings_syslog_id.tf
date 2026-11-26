@@ -8,10 +8,10 @@ locals {
 }
 
 data "fmc_ftd_platform_settings_syslog_settings_syslog_id" "n411" {
-  domain = local.m_411["domain"]
-  ftd_platform_settings_id = local.m_411["ftd_platform_settings_id"]
+  domain                                   = local.m_411["domain"]
+  ftd_platform_settings_id                 = local.m_411["ftd_platform_settings_id"]
   ftd_platform_settings_syslog_settings_id = local.m_411["ftd_platform_settings_syslog_settings_id"]
-  id = local.m_411["id"]
+  id                                       = local.m_411["id"]
 }
 
 output "n411_data_fmc_ftd_platform_settings_syslog_settings_syslog_id_id" {

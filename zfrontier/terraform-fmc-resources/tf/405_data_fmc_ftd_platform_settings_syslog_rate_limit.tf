@@ -8,9 +8,9 @@ locals {
 }
 
 data "fmc_ftd_platform_settings_syslog_rate_limit" "n405" {
-  domain = local.m_405["domain"]
+  domain                   = local.m_405["domain"]
   ftd_platform_settings_id = local.m_405["ftd_platform_settings_id"]
-  id = local.m_405["id"]
+  id                       = local.m_405["id"]
 }
 
 output "n405_data_fmc_ftd_platform_settings_syslog_rate_limit_id" {

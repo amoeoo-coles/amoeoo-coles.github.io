@@ -9,7 +9,7 @@ locals {
 
 resource "fmc_secure_client_image" "n186" {
   description = local.m_186["description"]
-  domain = local.m_186["domain"]
-  name = local.m_186["name"]
-  path = local.m_186["path"]
+  domain      = local.m_186["domain"]
+  name        = local.m_186["name"]
+  path        = local.m_186["path"]
 }

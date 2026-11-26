@@ -9,8 +9,8 @@ locals {
 
 data "fmc_access_control_policy_inheritance" "n269" {
   access_control_policy_id = local.m_269["access_control_policy_id"]
-  domain = local.m_269["domain"]
-  id = local.m_269["id"]
+  domain                   = local.m_269["domain"]
+  id                       = local.m_269["id"]
 }
 
 output "n269_data_fmc_access_control_policy_inheritance_id" {

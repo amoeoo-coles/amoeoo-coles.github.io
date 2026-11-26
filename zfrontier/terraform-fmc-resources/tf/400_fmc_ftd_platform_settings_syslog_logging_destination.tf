@@ -8,10 +8,10 @@ locals {
 }
 
 resource "fmc_ftd_platform_settings_syslog_logging_destination" "n400" {
-  domain = local.m_400["domain"]
-  event_class_filters = local.m_400["event_class_filters"]
-  ftd_platform_settings_id = local.m_400["ftd_platform_settings_id"]
+  domain                             = local.m_400["domain"]
+  event_class_filters                = local.m_400["event_class_filters"]
+  ftd_platform_settings_id           = local.m_400["ftd_platform_settings_id"]
   global_event_class_filter_criteria = local.m_400["global_event_class_filter_criteria"]
-  global_event_class_filter_value = local.m_400["global_event_class_filter_value"]
-  logging_destination = local.m_400["logging_destination"]
+  global_event_class_filter_value    = local.m_400["global_event_class_filter_value"]
+  logging_destination                = local.m_400["logging_destination"]
 }

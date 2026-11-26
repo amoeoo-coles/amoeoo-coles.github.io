@@ -9,8 +9,8 @@ locals {
 
 data "fmc_cipher_suite_list" "n035" {
   domain = local.m_035["domain"]
-  id = local.m_035["id"]
-  name = local.m_035["name"]
+  id     = local.m_035["id"]
+  name   = local.m_035["name"]
 }
 
 output "n035_data_fmc_cipher_suite_list_id" {

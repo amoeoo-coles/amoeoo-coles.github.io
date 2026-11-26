@@ -9,8 +9,8 @@ locals {
 
 data "fmc_ipv4_prefix_list" "n122" {
   domain = local.m_122["domain"]
-  id = local.m_122["id"]
-  name = local.m_122["name"]
+  id     = local.m_122["id"]
+  name   = local.m_122["name"]
 }
 
 output "n122_data_fmc_ipv4_prefix_list_id" {

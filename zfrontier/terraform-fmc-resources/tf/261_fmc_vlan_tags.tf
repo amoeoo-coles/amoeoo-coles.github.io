@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_vlan_tags" "n261" {
   domain = local.m_261["domain"]
-  items = local.m_261["items"]
+  items  = local.m_261["items"]
 }

@@ -8,7 +8,7 @@ locals {
 }
 
 resource "fmc_security_zone" "n208" {
-  domain = local.m_208["domain"]
+  domain         = local.m_208["domain"]
   interface_type = local.m_208["interface_type"]
-  name = local.m_208["name"]
+  name           = local.m_208["name"]
 }

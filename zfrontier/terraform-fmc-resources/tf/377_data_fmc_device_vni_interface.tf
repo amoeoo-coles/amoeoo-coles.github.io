@@ -8,9 +8,9 @@ locals {
 }
 
 data "fmc_device_vni_interface" "n377" {
-  device_id = local.m_377["device_id"]
-  domain = local.m_377["domain"]
-  id = local.m_377["id"]
+  device_id    = local.m_377["device_id"]
+  domain       = local.m_377["domain"]
+  id           = local.m_377["id"]
   logical_name = local.m_377["logical_name"]
 }
 

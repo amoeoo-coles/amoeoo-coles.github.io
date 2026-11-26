@@ -9,7 +9,7 @@ locals {
 
 data "fmc_dns_server_groups" "n047" {
   domain = local.m_047["domain"]
-  items = local.m_047["items"]
+  items  = local.m_047["items"]
 }
 
 output "n047_data_fmc_dns_server_groups_id" {

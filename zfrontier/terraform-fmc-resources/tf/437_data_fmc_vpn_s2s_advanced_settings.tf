@@ -8,8 +8,8 @@ locals {
 }
 
 data "fmc_vpn_s2s_advanced_settings" "n437" {
-  domain = local.m_437["domain"]
-  id = local.m_437["id"]
+  domain     = local.m_437["domain"]
+  id         = local.m_437["id"]
   vpn_s2s_id = local.m_437["vpn_s2s_id"]
 }
 

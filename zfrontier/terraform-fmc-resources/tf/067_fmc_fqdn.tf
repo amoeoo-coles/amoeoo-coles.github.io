@@ -8,10 +8,10 @@ locals {
 }
 
 resource "fmc_fqdn" "n067" {
-  description = local.m_067["description"]
+  description    = local.m_067["description"]
   dns_resolution = local.m_067["dns_resolution"]
-  domain = local.m_067["domain"]
-  fqdn = local.m_067["fqdn"]
-  name = local.m_067["name"]
-  overridable = local.m_067["overridable"]
+  domain         = local.m_067["domain"]
+  fqdn           = local.m_067["fqdn"]
+  name           = local.m_067["name"]
+  overridable    = local.m_067["overridable"]
 }

@@ -9,9 +9,9 @@ locals {
 
 data "fmc_access_category" "n264" {
   access_control_policy_id = local.m_264["access_control_policy_id"]
-  domain = local.m_264["domain"]
-  id = local.m_264["id"]
-  name = local.m_264["name"]
+  domain                   = local.m_264["domain"]
+  id                       = local.m_264["id"]
+  name                     = local.m_264["name"]
 }
 
 output "n264_data_fmc_access_category_id" {

@@ -8,9 +8,9 @@ locals {
 }
 
 data "fmc_ftd_platform_settings_syslog_email_setup" "n397" {
-  domain = local.m_397["domain"]
+  domain                   = local.m_397["domain"]
   ftd_platform_settings_id = local.m_397["ftd_platform_settings_id"]
-  id = local.m_397["id"]
+  id                       = local.m_397["id"]
 }
 
 output "n397_data_fmc_ftd_platform_settings_syslog_email_setup_id" {

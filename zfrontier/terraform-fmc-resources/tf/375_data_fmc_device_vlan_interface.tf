@@ -8,11 +8,11 @@ locals {
 }
 
 data "fmc_device_vlan_interface" "n375" {
-  device_id = local.m_375["device_id"]
-  domain = local.m_375["domain"]
-  id = local.m_375["id"]
+  device_id    = local.m_375["device_id"]
+  domain       = local.m_375["domain"]
+  id           = local.m_375["id"]
   logical_name = local.m_375["logical_name"]
-  name = local.m_375["name"]
+  name         = local.m_375["name"]
 }
 
 output "n375_data_fmc_device_vlan_interface_id" {

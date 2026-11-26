@@ -9,8 +9,8 @@ locals {
 
 data "fmc_expanded_community_list" "n052" {
   domain = local.m_052["domain"]
-  id = local.m_052["id"]
-  name = local.m_052["name"]
+  id     = local.m_052["id"]
+  name   = local.m_052["name"]
 }
 
 output "n052_data_fmc_expanded_community_list_id" {

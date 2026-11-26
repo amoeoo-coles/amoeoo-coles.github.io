@@ -8,13 +8,13 @@ locals {
 }
 
 resource "fmc_ftd_platform_settings_trusted_dns_servers" "n414" {
-  domain = local.m_414["domain"]
-  ftd_platform_settings_id = local.m_414["ftd_platform_settings_id"]
-  trust_any_dns_server = local.m_414["trust_any_dns_server"]
-  trust_dhcp_client = local.m_414["trust_dhcp_client"]
-  trust_dhcp_pool = local.m_414["trust_dhcp_pool"]
-  trust_dhcp_relay = local.m_414["trust_dhcp_relay"]
-  trust_dns_server_group = local.m_414["trust_dns_server_group"]
+  domain                       = local.m_414["domain"]
+  ftd_platform_settings_id     = local.m_414["ftd_platform_settings_id"]
+  trust_any_dns_server         = local.m_414["trust_any_dns_server"]
+  trust_dhcp_client            = local.m_414["trust_dhcp_client"]
+  trust_dhcp_pool              = local.m_414["trust_dhcp_pool"]
+  trust_dhcp_relay             = local.m_414["trust_dhcp_relay"]
+  trust_dns_server_group       = local.m_414["trust_dns_server_group"]
   trusted_dns_servers_literals = local.m_414["trusted_dns_servers_literals"]
-  trusted_dns_servers_objects = local.m_414["trusted_dns_servers_objects"]
+  trusted_dns_servers_objects  = local.m_414["trusted_dns_servers_objects"]
 }

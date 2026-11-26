@@ -9,7 +9,7 @@ locals {
 
 data "fmc_realms" "n450" {
   domain = local.m_450["domain"]
-  items = local.m_450["items"]
+  items  = local.m_450["items"]
 }
 
 output "n450_data_fmc_realms_id" {

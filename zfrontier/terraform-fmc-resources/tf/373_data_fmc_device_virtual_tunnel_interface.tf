@@ -8,11 +8,11 @@ locals {
 }
 
 data "fmc_device_virtual_tunnel_interface" "n373" {
-  device_id = local.m_373["device_id"]
-  domain = local.m_373["domain"]
-  id = local.m_373["id"]
+  device_id    = local.m_373["device_id"]
+  domain       = local.m_373["domain"]
+  id           = local.m_373["id"]
   logical_name = local.m_373["logical_name"]
-  name = local.m_373["name"]
+  name         = local.m_373["name"]
 }
 
 output "n373_data_fmc_device_virtual_tunnel_interface_id" {

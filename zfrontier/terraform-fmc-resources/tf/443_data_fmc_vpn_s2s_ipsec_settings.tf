@@ -8,8 +8,8 @@ locals {
 }
 
 data "fmc_vpn_s2s_ipsec_settings" "n443" {
-  domain = local.m_443["domain"]
-  id = local.m_443["id"]
+  domain     = local.m_443["domain"]
+  id         = local.m_443["id"]
   vpn_s2s_id = local.m_443["vpn_s2s_id"]
 }
 

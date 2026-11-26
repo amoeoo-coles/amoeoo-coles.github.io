@@ -8,9 +8,9 @@ locals {
 }
 
 resource "fmc_vpn_ra_certificate_map" "n420" {
-  certificate_to_connection_profile_mappings = local.m_420["certificate_to_connection_profile_mappings"]
-  domain = local.m_420["domain"]
-  use_alias_url = local.m_420["use_alias_url"]
+  certificate_to_connection_profile_mappings     = local.m_420["certificate_to_connection_profile_mappings"]
+  domain                                         = local.m_420["domain"]
+  use_alias_url                                  = local.m_420["use_alias_url"]
   use_certificate_to_connection_profile_mappings = local.m_420["use_certificate_to_connection_profile_mappings"]
-  vpn_ra_id = local.m_420["vpn_ra_id"]
+  vpn_ra_id                                      = local.m_420["vpn_ra_id"]
 }

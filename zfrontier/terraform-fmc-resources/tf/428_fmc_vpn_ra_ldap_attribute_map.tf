@@ -8,7 +8,7 @@ locals {
 }
 
 resource "fmc_vpn_ra_ldap_attribute_map" "n428" {
-  domain = local.m_428["domain"]
-  realms = local.m_428["realms"]
+  domain    = local.m_428["domain"]
+  realms    = local.m_428["realms"]
   vpn_ra_id = local.m_428["vpn_ra_id"]
 }

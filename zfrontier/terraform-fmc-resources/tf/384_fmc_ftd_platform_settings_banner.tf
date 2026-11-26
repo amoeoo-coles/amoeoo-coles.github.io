@@ -8,7 +8,7 @@ locals {
 }
 
 resource "fmc_ftd_platform_settings_banner" "n384" {
-  domain = local.m_384["domain"]
+  domain                   = local.m_384["domain"]
   ftd_platform_settings_id = local.m_384["ftd_platform_settings_id"]
-  text_lines = local.m_384["text_lines"]
+  text_lines               = local.m_384["text_lines"]
 }

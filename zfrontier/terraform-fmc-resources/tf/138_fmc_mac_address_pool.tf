@@ -8,9 +8,9 @@ locals {
 }
 
 resource "fmc_mac_address_pool" "n138" {
-  description = local.m_138["description"]
-  domain = local.m_138["domain"]
+  description       = local.m_138["description"]
+  domain            = local.m_138["domain"]
   mac_address_range = local.m_138["mac_address_range"]
-  name = local.m_138["name"]
-  overridable = local.m_138["overridable"]
+  name              = local.m_138["name"]
+  overridable       = local.m_138["overridable"]
 }

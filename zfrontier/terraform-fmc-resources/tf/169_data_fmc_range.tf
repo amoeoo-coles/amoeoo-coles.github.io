@@ -9,8 +9,8 @@ locals {
 
 data "fmc_range" "n169" {
   domain = local.m_169["domain"]
-  id = local.m_169["id"]
-  name = local.m_169["name"]
+  id     = local.m_169["id"]
+  name   = local.m_169["name"]
 }
 
 output "n169_data_fmc_range_id" {

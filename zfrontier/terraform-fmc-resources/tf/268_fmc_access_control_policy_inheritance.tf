@@ -8,7 +8,7 @@ locals {
 }
 
 resource "fmc_access_control_policy_inheritance" "n268" {
-  access_control_policy_id = local.m_268["access_control_policy_id"]
+  access_control_policy_id      = local.m_268["access_control_policy_id"]
   base_access_control_policy_id = local.m_268["base_access_control_policy_id"]
-  domain = local.m_268["domain"]
+  domain                        = local.m_268["domain"]
 }

@@ -8,9 +8,9 @@ locals {
 }
 
 resource "fmc_intrusion_policy" "n288" {
-  base_policy_id = local.m_288["base_policy_id"]
-  description = local.m_288["description"]
-  domain = local.m_288["domain"]
+  base_policy_id  = local.m_288["base_policy_id"]
+  description     = local.m_288["description"]
+  domain          = local.m_288["domain"]
   inspection_mode = local.m_288["inspection_mode"]
-  name = local.m_288["name"]
+  name            = local.m_288["name"]
 }

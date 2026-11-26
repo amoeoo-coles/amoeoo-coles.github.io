@@ -9,8 +9,8 @@ locals {
 
 data "fmc_vlan_tag" "n256" {
   domain = local.m_256["domain"]
-  id = local.m_256["id"]
-  name = local.m_256["name"]
+  id     = local.m_256["id"]
+  name   = local.m_256["name"]
 }
 
 output "n256_data_fmc_vlan_tag_id" {

@@ -8,9 +8,9 @@ locals {
 }
 
 data "fmc_device_ha_pair_failover_interface_mac_address" "n351" {
-  domain = local.m_351["domain"]
-  ha_pair_id = local.m_351["ha_pair_id"]
-  id = local.m_351["id"]
+  domain         = local.m_351["domain"]
+  ha_pair_id     = local.m_351["ha_pair_id"]
+  id             = local.m_351["id"]
   interface_name = local.m_351["interface_name"]
 }
 

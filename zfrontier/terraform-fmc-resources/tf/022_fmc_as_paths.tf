@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_as_paths" "n022" {
   domain = local.m_022["domain"]
-  items = local.m_022["items"]
+  items  = local.m_022["items"]
 }

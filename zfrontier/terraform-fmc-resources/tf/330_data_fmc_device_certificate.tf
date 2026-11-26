@@ -9,9 +9,9 @@ locals {
 
 data "fmc_device_certificate" "n330" {
   certificate_enrollment_id = local.m_330["certificate_enrollment_id"]
-  device_id = local.m_330["device_id"]
-  domain = local.m_330["domain"]
-  id = local.m_330["id"]
+  device_id                 = local.m_330["device_id"]
+  domain                    = local.m_330["domain"]
+  id                        = local.m_330["id"]
 }
 
 output "n330_data_fmc_device_certificate_id" {

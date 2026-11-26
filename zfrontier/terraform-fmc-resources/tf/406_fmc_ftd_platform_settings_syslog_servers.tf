@@ -9,8 +9,8 @@ locals {
 
 resource "fmc_ftd_platform_settings_syslog_servers" "n406" {
   allow_user_traffic_when_tcp_syslog_server_is_down = local.m_406["allow_user_traffic_when_tcp_syslog_server_is_down"]
-  domain = local.m_406["domain"]
-  ftd_platform_settings_id = local.m_406["ftd_platform_settings_id"]
-  message_queue_size = local.m_406["message_queue_size"]
-  servers = local.m_406["servers"]
+  domain                                            = local.m_406["domain"]
+  ftd_platform_settings_id                          = local.m_406["ftd_platform_settings_id"]
+  message_queue_size                                = local.m_406["message_queue_size"]
+  servers                                           = local.m_406["servers"]
 }

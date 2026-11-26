@@ -9,7 +9,7 @@ locals {
 
 resource "fmc_service_access" "n212" {
   default_action = local.m_212["default_action"]
-  domain = local.m_212["domain"]
-  name = local.m_212["name"]
-  rules = local.m_212["rules"]
+  domain         = local.m_212["domain"]
+  name           = local.m_212["name"]
+  rules          = local.m_212["rules"]
 }

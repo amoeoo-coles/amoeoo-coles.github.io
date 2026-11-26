@@ -9,8 +9,8 @@ locals {
 
 data "fmc_certificate_enrollment" "n029" {
   domain = local.m_029["domain"]
-  id = local.m_029["id"]
-  name = local.m_029["name"]
+  id     = local.m_029["id"]
+  name   = local.m_029["name"]
 }
 
 output "n029_data_fmc_certificate_enrollment_id" {

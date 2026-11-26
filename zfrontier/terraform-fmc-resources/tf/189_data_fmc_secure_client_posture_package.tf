@@ -9,8 +9,8 @@ locals {
 
 data "fmc_secure_client_posture_package" "n189" {
   domain = local.m_189["domain"]
-  id = local.m_189["id"]
-  name = local.m_189["name"]
+  id     = local.m_189["id"]
+  name   = local.m_189["name"]
 }
 
 output "n189_data_fmc_secure_client_posture_package_id" {

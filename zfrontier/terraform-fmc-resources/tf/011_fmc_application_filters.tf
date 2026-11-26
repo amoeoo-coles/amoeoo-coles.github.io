@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_application_filters" "n011" {
   domain = local.m_011["domain"]
-  items = local.m_011["items"]
+  items  = local.m_011["items"]
 }

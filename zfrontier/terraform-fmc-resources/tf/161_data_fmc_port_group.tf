@@ -9,8 +9,8 @@ locals {
 
 data "fmc_port_group" "n161" {
   domain = local.m_161["domain"]
-  id = local.m_161["id"]
-  name = local.m_161["name"]
+  id     = local.m_161["id"]
+  name   = local.m_161["name"]
 }
 
 output "n161_data_fmc_port_group_id" {

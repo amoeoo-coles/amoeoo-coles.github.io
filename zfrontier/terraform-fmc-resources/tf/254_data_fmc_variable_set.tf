@@ -9,8 +9,8 @@ locals {
 
 data "fmc_variable_set" "n254" {
   domain = local.m_254["domain"]
-  id = local.m_254["id"]
-  name = local.m_254["name"]
+  id     = local.m_254["id"]
+  name   = local.m_254["name"]
 }
 
 output "n254_data_fmc_variable_set_id" {

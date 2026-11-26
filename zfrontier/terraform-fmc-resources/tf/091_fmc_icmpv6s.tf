@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_icmpv6s" "n091" {
   domain = local.m_091["domain"]
-  items = local.m_091["items"]
+  items  = local.m_091["items"]
 }

@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_dynamic_objects" "n048" {
   domain = local.m_048["domain"]
-  items = local.m_048["items"]
+  items  = local.m_048["items"]
 }

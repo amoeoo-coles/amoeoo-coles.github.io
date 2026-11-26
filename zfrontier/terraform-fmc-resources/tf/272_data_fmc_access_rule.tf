@@ -9,9 +9,9 @@ locals {
 
 data "fmc_access_rule" "n272" {
   access_control_policy_id = local.m_272["access_control_policy_id"]
-  domain = local.m_272["domain"]
-  id = local.m_272["id"]
-  name = local.m_272["name"]
+  domain                   = local.m_272["domain"]
+  id                       = local.m_272["id"]
+  name                     = local.m_272["name"]
 }
 
 output "n272_data_fmc_access_rule_id" {

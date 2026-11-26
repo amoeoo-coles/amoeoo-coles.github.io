@@ -10,8 +10,8 @@ locals {
 data "fmc_device_eigrp" "n345" {
   as_number = local.m_345["as_number"]
   device_id = local.m_345["device_id"]
-  domain = local.m_345["domain"]
-  id = local.m_345["id"]
+  domain    = local.m_345["domain"]
+  id        = local.m_345["id"]
 }
 
 output "n345_data_fmc_device_eigrp_id" {

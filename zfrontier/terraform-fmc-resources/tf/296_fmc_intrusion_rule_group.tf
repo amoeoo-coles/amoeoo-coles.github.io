@@ -9,6 +9,6 @@ locals {
 
 resource "fmc_intrusion_rule_group" "n296" {
   description = local.m_296["description"]
-  domain = local.m_296["domain"]
-  name = local.m_296["name"]
+  domain      = local.m_296["domain"]
+  name        = local.m_296["name"]
 }

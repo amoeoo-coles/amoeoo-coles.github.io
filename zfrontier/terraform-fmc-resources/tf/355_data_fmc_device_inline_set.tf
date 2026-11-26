@@ -9,9 +9,9 @@ locals {
 
 data "fmc_device_inline_set" "n355" {
   device_id = local.m_355["device_id"]
-  domain = local.m_355["domain"]
-  id = local.m_355["id"]
-  name = local.m_355["name"]
+  domain    = local.m_355["domain"]
+  id        = local.m_355["id"]
+  name      = local.m_355["name"]
 }
 
 output "n355_data_fmc_device_inline_set_id" {

@@ -9,7 +9,7 @@ locals {
 
 data "fmc_ipv6_address_pools" "n128" {
   domain = local.m_128["domain"]
-  items = local.m_128["items"]
+  items  = local.m_128["items"]
 }
 
 output "n128_data_fmc_ipv6_address_pools_id" {

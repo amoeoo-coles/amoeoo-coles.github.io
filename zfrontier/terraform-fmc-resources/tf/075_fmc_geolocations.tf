@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_geolocations" "n075" {
   domain = local.m_075["domain"]
-  items = local.m_075["items"]
+  items  = local.m_075["items"]
 }

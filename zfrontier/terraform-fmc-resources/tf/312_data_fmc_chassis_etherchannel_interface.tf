@@ -9,9 +9,9 @@ locals {
 
 data "fmc_chassis_etherchannel_interface" "n312" {
   chassis_id = local.m_312["chassis_id"]
-  domain = local.m_312["domain"]
-  id = local.m_312["id"]
-  name = local.m_312["name"]
+  domain     = local.m_312["domain"]
+  id         = local.m_312["id"]
+  name       = local.m_312["name"]
 }
 
 output "n312_data_fmc_chassis_etherchannel_interface_id" {

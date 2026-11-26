@@ -9,8 +9,8 @@ locals {
 
 resource "fmc_host" "n079" {
   description = local.m_079["description"]
-  domain = local.m_079["domain"]
-  ip = local.m_079["ip"]
-  name = local.m_079["name"]
+  domain      = local.m_079["domain"]
+  ip          = local.m_079["ip"]
+  name        = local.m_079["name"]
   overridable = local.m_079["overridable"]
 }
