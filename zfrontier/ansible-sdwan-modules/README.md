@@ -13,6 +13,5 @@ Groups (build order):
 - 4. Classic templates: 7
 - 5. Configuration groups (UX 2.0): 3
 - 6. Monitoring and operations: 3
-- 7. Other: 0
 
 Credentials are placeholders only. Do not commit real passwords or tokens.
