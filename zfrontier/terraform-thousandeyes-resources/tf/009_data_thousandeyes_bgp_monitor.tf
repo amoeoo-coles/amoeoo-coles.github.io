@@ -8,8 +8,8 @@ locals {
 }
 
 data "thousandeyes_bgp_monitor" "n009" {
-  id = local.m_009["id"]
-  monitor_id = local.m_009["monitor_id"]
+  id           = local.m_009["id"]
+  monitor_id   = local.m_009["monitor_id"]
   monitor_name = local.m_009["monitor_name"]
 }
 

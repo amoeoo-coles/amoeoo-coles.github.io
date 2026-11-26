@@ -8,7 +8,7 @@ locals {
 }
 
 resource "thousandeyes_role" "n003" {
-  id = local.m_003["id"]
-  name = local.m_003["name"]
+  id          = local.m_003["id"]
+  name        = local.m_003["name"]
   permissions = local.m_003["permissions"]
 }

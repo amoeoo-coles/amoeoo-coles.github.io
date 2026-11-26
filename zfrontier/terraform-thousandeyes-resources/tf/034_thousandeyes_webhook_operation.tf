@@ -8,19 +8,19 @@ locals {
 }
 
 resource "thousandeyes_webhook_operation" "n034" {
-  category = local.m_034["category"]
-  enabled = local.m_034["enabled"]
-  name = local.m_034["name"]
-  path = local.m_034["path"]
-  payload = local.m_034["payload"]
+  category     = local.m_034["category"]
+  enabled      = local.m_034["enabled"]
+  name         = local.m_034["name"]
+  path         = local.m_034["path"]
+  payload      = local.m_034["payload"]
   query_params = local.m_034["query_params"]
-  status = local.m_034["status"]
-  type = local.m_034["type"]
+  status       = local.m_034["status"]
+  type         = local.m_034["type"]
   dynamic "headers" {
     iterator = headers_1
     for_each = local.m_034["headers"] == null ? [] : range(length(local.m_034["headers"]))
     content {
-      name = lookup(local.m_034["headers"][headers_1.value], "name", null)
+      name  = lookup(local.m_034["headers"][headers_1.value], "name", null)
       value = lookup(local.m_034["headers"][headers_1.value], "value", null)
     }
   }

@@ -9,7 +9,7 @@ locals {
 
 data "thousandeyes_agent" "n006" {
   agent_name = local.m_006["agent_name"]
-  id = local.m_006["id"]
+  id         = local.m_006["id"]
 }
 
 output "n006_data_thousandeyes_agent_id" {

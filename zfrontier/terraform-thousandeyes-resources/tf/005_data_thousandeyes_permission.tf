@@ -8,7 +8,7 @@ locals {
 }
 
 data "thousandeyes_permission" "n005" {
-  id = local.m_005["id"]
+  id              = local.m_005["id"]
   permission_name = local.m_005["permission_name"]
 }
 

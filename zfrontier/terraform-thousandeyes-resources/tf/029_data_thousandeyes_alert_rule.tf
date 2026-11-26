@@ -8,7 +8,7 @@ locals {
 }
 
 data "thousandeyes_alert_rule" "n029" {
-  id = local.m_029["id"]
+  id        = local.m_029["id"]
   rule_name = local.m_029["rule_name"]
 }
 

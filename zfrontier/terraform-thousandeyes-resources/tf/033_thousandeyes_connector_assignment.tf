@@ -8,6 +8,6 @@ locals {
 }
 
 resource "thousandeyes_connector_assignment" "n033" {
-  connector_id = local.m_033["connector_id"]
+  connector_id  = local.m_033["connector_id"]
   operation_ids = local.m_033["operation_ids"]
 }

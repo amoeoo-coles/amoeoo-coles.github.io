@@ -9,21 +9,21 @@ locals {
 
 resource "thousandeyes_tag" "n010" {
   access_type = local.m_010["access_type"]
-  color = local.m_010["color"]
+  color       = local.m_010["color"]
   description = local.m_010["description"]
-  icon = local.m_010["icon"]
-  key = try(var.secrets["thousandeyes_tag.key"], local.m_010["key"])
-  match_type = local.m_010["match_type"]
+  icon        = local.m_010["icon"]
+  key         = try(var.secrets["thousandeyes_tag.key"], local.m_010["key"])
+  match_type  = local.m_010["match_type"]
   object_type = local.m_010["object_type"]
-  type = local.m_010["type"]
-  value = local.m_010["value"]
+  type        = local.m_010["type"]
+  value       = local.m_010["value"]
   dynamic "filters" {
     iterator = filters_1
     for_each = local.m_010["filters"] == null ? [] : range(length(local.m_010["filters"]))
     content {
-      key = lookup(local.m_010["filters"][filters_1.value], "key", null)
-      mode = lookup(local.m_010["filters"][filters_1.value], "mode", null)
-      scope = lookup(local.m_010["filters"][filters_1.value], "scope", null)
+      key    = lookup(local.m_010["filters"][filters_1.value], "key", null)
+      mode   = lookup(local.m_010["filters"][filters_1.value], "mode", null)
+      scope  = lookup(local.m_010["filters"][filters_1.value], "scope", null)
       values = lookup(local.m_010["filters"][filters_1.value], "values", null)
     }
   }
