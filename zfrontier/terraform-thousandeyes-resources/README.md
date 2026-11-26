@@ -14,6 +14,5 @@ Groups (build order):
 - 5. Alert rules: 2
 - 6. Dashboards: 2
 - 7. Connectors and webhooks: 3
-- 8. Other: 0
 
 Credentials are placeholders only. Do not commit real passwords or tokens.
