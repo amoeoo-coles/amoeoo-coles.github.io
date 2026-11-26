@@ -1,0 +1,49 @@
+---
+# Example Ansible inventory for Cisco ACI Multi-Site + Nexus Dashboard Orchestrator + ISN.
+# Uses placeholders only — supply values via GitHub Secrets / Ansible Vault / group_vars.
+all:
+  children:
+    ndo:
+      hosts:
+        ndo1:
+          ansible_host: "{{ ndo_host }}"
+      vars:
+        ndo_host: "{{ ndo_host }}"
+        ndo_username: "{{ ndo_username }}"
+        ndo_password: "{{ ndo_password }}"
+        ndo_validate_certs: false
+    nd:
+      hosts:
+        nd1:
+          ansible_host: "{{ nd_host }}"
+      vars:
+        nd_host: "{{ nd_host }}"
+        nd_username: "{{ nd_username }}"
+        nd_password: "{{ nd_password }}"
+        nd_validate_certs: false
+    apic:
+      hosts:
+        apic-site1:
+          ansible_host: "{{ apic_site1_host }}"
+        apic-site2:
+          ansible_host: "{{ apic_site2_host }}"
+      vars:
+        apic_username: "{{ apic_username }}"
+        apic_password: "{{ apic_password }}"
+        apic_validate_certs: false
+    isn:
+      hosts:
+        isn-nxos-1:
+          ansible_host: "{{ nxos_isn1_host }}"
+        isn-nxos-2:
+          ansible_host: "{{ nxos_isn2_host }}"
+      vars:
+        ansible_connection: ansible.netcommon.network_cli
+        ansible_network_os: cisco.nxos.nxos
+        ansible_user: "{{ nxos_username }}"
+        ansible_password: "{{ nxos_password }}"
+        ansible_become: true
+        ansible_become_method: enable
+    all_vars:
+      vars:
+        netbox_url: "{{ netbox_url }}"

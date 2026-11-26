@@ -1,0 +1,281 @@
+---
+# Example / sample test data for the ACI Multi-Site forms page.
+# Documentation and lab ranges only:
+#   - 10.0.0.0/8 example lab addressing
+#   - 192.0.2.0/24  (TEST-NET-1, RFC 5737)
+#   - 198.51.100.0/24 (TEST-NET-2, RFC 5737)
+# Never contains passwords. Use inventory / vault placeholders
+# {{ ndo_password }}, {{ nd_password }}, {{ apic_password }}, {{ nxos_password }}.
+# Two-site example fabric: site1 (West) and site2 (East).
+
+shared:
+  site1_name: site1
+  site2_name: site2
+  tenant: prod
+  schema: prod-schema
+  template: stretched-core
+  site_local_template: site1-local
+  vrf: vrf-core
+  bd: bd-app
+  bd_subnet: 10.30.10.1/24
+  epg: epg-app
+  anp: anp-app
+  contract: contract-app-web
+  filter_name: filter-https
+  filter_dport: "443"
+  l3out: l3out-shared
+  ext_epg: ext-epg-shared
+  shared_tenant: shared-svc
+  shared_vrf: vrf-shared
+  shared_schema: shared-schema
+  shared_template: shared-core
+
+forms:
+  form-ms-tep-plan:
+    site1_name: site1
+    site2_name: site2
+    site1_tep: 10.1.0.0/16
+    site2_tep: 10.2.0.0/16
+    site1_outtep: 192.0.2.11/32
+    site2_outtep: 198.51.100.11/32
+    site1_omtep: 192.0.2.12/32
+    site2_omtep: 198.51.100.12/32
+    site1_bgp_rid_spine1: 192.0.2.1
+    site2_bgp_rid_spine1: 198.51.100.1
+    bgp_asn_site1: "65001"
+    bgp_asn_site2: "65002"
+  form-ms-isn-addr:
+    isn_vrf: ACI-ISN
+    isn_vlan: "4"
+    site1_p2p: 10.254.1.0/30
+    site2_p2p: 10.254.2.0/30
+    isn_core_p2p: 10.254.3.0/30
+    fabric_mtu: "9216"
+    rtt_ms: "12"
+    ospf_area: 0.0.0.0
+  form-ms-stretched-tenant:
+    tenant: prod
+    schema: prod-schema
+    template: stretched-core
+    vrf: vrf-core
+    site1_name: site1
+    site2_name: site2
+  form-ms-bd-bum:
+    tenant: prod
+    schema: prod-schema
+    template: stretched-core
+    vrf: vrf-core
+    bd: bd-app
+    bd_subnet: 10.30.10.1/24
+    l2_stretch: "true"
+    intersite_bum: "true"
+  form-ms-bd-nobum:
+    tenant: prod
+    schema: prod-schema
+    template: stretched-core
+    vrf: vrf-core
+    bd: bd-app-wan
+    bd_subnet: 10.30.20.1/24
+    l2_stretch: "true"
+    intersite_bum: "false"
+    optimize_wan: "true"
+  form-ms-sitelocal:
+    tenant: prod
+    schema: prod-schema
+    template: site1-local
+    site_name: site1
+    vrf: vrf-site1-local
+    bd: bd-site1-local
+    bd_subnet: 10.31.10.1/24
+  form-ms-shared-svc:
+    shared_tenant: shared-svc
+    schema: shared-schema
+    template: shared-core
+    shared_vrf: vrf-shared
+    consumer_tenant: prod
+    consumer_schema: prod-schema
+    consumer_template: stretched-core
+    contract: contract-shared-svc
+    site1_name: site1
+    site2_name: site2
+  form-ms-intersite-l3out:
+    tenant: prod
+    schema: prod-schema
+    template: stretched-core
+    vrf: vrf-core
+    l3out: l3out-shared
+    ext_epg: ext-epg-shared
+    site1_name: site1
+    site2_name: site2
+    ext_subnet: 0.0.0.0/0
+  form-ms-plus-multipod:
+    site_name: site1
+    site_type: multipod
+    pod1_tep: 10.1.0.0/16
+    pod2_tep: 10.11.0.0/16
+    ipn_vrf: ACI-IPN
+    isn_vrf: ACI-ISN
+    ndo_schema: prod-schema
+  form-isn-vrf-features:
+    isn_hostname: isn-nxos-1
+    isn_vrf: ACI-ISN
+    jumbo_mtu: "9216"
+    lo0_ip: 10.254.0.1/32
+    vrf_rd: 65000:4
+  form-isn-subif-vlan4:
+    isn_vrf: ACI-ISN
+    parent_if: Ethernet1/1
+    subif_vlan: "4"
+    subif_ip: 10.254.1.2/30
+    subif_mtu: "9150"
+    description: site1-spine-101
+  form-isn-ospf:
+    isn_vrf: ACI-ISN
+    ospf_process: "1"
+    ospf_area: 0.0.0.0
+    lo0_ip: 10.254.0.1/32
+    subif: Ethernet1/1.4
+    router_id: 10.254.0.1
+  form-isn-qos:
+    qos_policy: isn-trust-dscp
+    trust_type: dscp
+    control_dscp: CS6
+  form-isn-pim-note:
+    isn_vrf: ACI-ISN
+    bum_mode: head-end-replication
+    enable_pim: "false"
+  form-nd-cluster:
+    cluster_name: nd-cluster-1
+    nd_node1: 10.10.10.11
+    nd_node2: 10.10.10.12
+    nd_node3: 10.10.10.13
+    nd_vip: 10.10.10.10
+    dns_server: 10.10.10.53
+    ntp_server: 10.10.10.123
+    data_network: 10.10.20.0/24
+  form-nd-onboard-sites:
+    site1_name: site1
+    site2_name: site2
+    site1_apic: 10.10.1.11
+    site2_apic: 10.10.2.11
+    site1_apic_id: "1"
+    site2_apic_id: "2"
+    site1_lat: "-37.8136"
+    site1_long: "144.9631"
+    site2_lat: "-33.8688"
+    site2_long: "151.2093"
+  form-ndo-infra:
+    site1_name: site1
+    site2_name: site2
+    ospf_area: 0.0.0.0
+    site1_outtep: 192.0.2.11
+    site2_outtep: 198.51.100.11
+    site1_omtep: 192.0.2.12
+    site2_omtep: 198.51.100.12
+    bgp_asn_site1: "65001"
+    bgp_asn_site2: "65002"
+    isn_vlan: "4"
+  form-ndo-first-schema:
+    tenant: prod
+    schema: prod-schema
+    template: stretched-core
+    site1_name: site1
+    site2_name: site2
+  form-d2-tenant:
+    tenant: prod
+    display_name: prod
+    site1_name: site1
+    site2_name: site2
+    description: Example production tenant managed by NDO
+  form-d2-schema:
+    tenant: prod
+    schema: prod-schema
+    template: stretched-core
+    site1_name: site1
+    site2_name: site2
+  form-d2-vrf:
+    schema: prod-schema
+    template: stretched-core
+    vrf: vrf-core
+    display_name: vrf-core
+    layer3_multicast: "false"
+    preferred_group: "false"
+  form-d2-bd:
+    schema: prod-schema
+    template: stretched-core
+    bd: bd-app
+    vrf: vrf-core
+    bd_subnet: 10.30.10.1/24
+    l2_stretch: "true"
+    intersite_bum: "false"
+    l2unk_unicast: proxy
+  form-d2-epg:
+    schema: prod-schema
+    template: stretched-core
+    anp: anp-app
+    epg: epg-app
+    bd: bd-app
+    vrf: vrf-core
+  form-d2-contract:
+    schema: prod-schema
+    template: stretched-core
+    contract: contract-app-web
+    filter_name: filter-https
+    filter_ether: ip
+    filter_ip: tcp
+    filter_dport: "443"
+    provider_epg: epg-web
+    consumer_epg: epg-app
+    anp: anp-app
+  form-d2-deploy:
+    schema: prod-schema
+    template: stretched-core
+    site1_name: site1
+    site2_name: site2
+    undeploy: "false"
+  form-bau-health:
+    site1_name: site1
+    site2_name: site2
+    schema: prod-schema
+  form-bau-upgrade:
+    start_with: nexus-dashboard
+    site_order: site1-then-site2
+    apic_target: not collected
+    switch_target: not collected
+    nd_target: not collected
+  form-bau-backup:
+    backup_name: ndo-daily
+    backup_location: remote-scp
+    remote_host: 10.10.10.50
+    remote_path: /backups/ndo
+    schedule: daily-02:00
+  form-bau-rma:
+    device_role: leaf
+    site_name: site1
+    node_id: "1011"
+    serial_old: not collected
+    serial_new: not collected
+  form-bau-capacity:
+    site1_tep: 10.1.0.0/16
+    site2_tep: 10.2.0.0/16
+    tep_alert_pct: "75"
+    eol_status: not collected
+  form-ts-evpn:
+    site1_spine: 101
+    site2_spine: 201
+    evpn_peer: 198.51.100.1
+  form-ts-ospf:
+    isn_vrf: ACI-ISN
+    isn_interface: Ethernet1/1.4
+  form-ts-mtu:
+    src_isn_ip: 10.254.1.2
+    dst_isn_ip: 10.254.2.2
+    ping_size: "9122"
+  form-ts-deploy-fail:
+    schema: prod-schema
+    template: stretched-core
+    site_name: site1
+  form-ts-consistency:
+    site1_name: site1
+    site2_name: site2
+    schema: prod-schema
