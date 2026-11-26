@@ -90,11 +90,11 @@
       filename: "31-multipod-tep-plan.yml",
       description: "Validate non-overlapping Pod 1 and Pod 2 internal TEP pools, Spine External Routable TEP /24 subnets, and the shared Data-Plane TEP before touching the fabric.",
       fields: [
-        { name: "pod1_tep", label: "Pod 1 TEP Pool (Example)", type: "text", default: "10.10.0.0/16", hint: "Must not overlap Pod 2 TEP or tenant subnets" },
-        { name: "pod2_tep", label: "Pod 2 TEP Pool (Example)", type: "text", default: "10.20.0.0/16", hint: "Minimum /22 recommended per pod" },
-        { name: "pod1_ext_tep", label: "Pod 1 External Routable TEP", type: "text", default: "10.11.0.0/24", hint: "Dedicated spine loopback / L3Out routable pool" },
-        { name: "pod2_ext_tep", label: "Pod 2 External Routable TEP", type: "text", default: "10.21.0.0/24" },
-        { name: "dataplane_tep", label: "Data-Plane TEP (Anycast VTEP)", type: "text", default: "10.100.0.1/32", hint: "Shared /32 across Multi-Pod spines" },
+        { name: "pod1_tep", label: "Pod 1 TEP Pool (Example)", type: "text", default: "198.51.100.0/16", hint: "Must not overlap Pod 2 TEP or tenant subnets" },
+        { name: "pod2_tep", label: "Pod 2 TEP Pool (Example)", type: "text", default: "198.51.100.0/16", hint: "Minimum /22 recommended per pod" },
+        { name: "pod1_ext_tep", label: "Pod 1 External Routable TEP", type: "text", default: "198.51.100.0/24", hint: "Dedicated spine loopback / L3Out routable pool" },
+        { name: "pod2_ext_tep", label: "Pod 2 External Routable TEP", type: "text", default: "198.51.100.0/24" },
+        { name: "dataplane_tep", label: "Data-Plane TEP (Anycast VTEP)", type: "text", default: "198.51.100.1/32", hint: "Shared /32 across Multi-Pod spines" },
         { name: "gipo_pool", label: "GIPo Multicast Pool", type: "text", default: "225.0.0.0/15", hint: "ACI default multicast GIPo space" }
       ],
       build: function (v) {
@@ -130,9 +130,9 @@
       fields: [
         { name: "ipn_vrf", label: "IPN VRF Name", type: "text", default: "ACI-IPN" },
         { name: "infra_vlan", label: "ACI Infra VLAN", type: "number", default: "3967", hint: "Must match across all pods; VLAN 4 used on spine-IPN" },
-        { name: "pod1_p2p", label: "Pod 1 Spine-IPN VLAN-4 Subnet", type: "text", default: "10.254.1.0/30" },
-        { name: "pod2_p2p", label: "Pod 2 Spine-IPN VLAN-4 Subnet", type: "text", default: "10.254.2.0/30" },
-        { name: "phantom_rp_ip", label: "Phantom RP Anycast Address", type: "text", default: "10.254.254.1", hint: "Hosted with /30 on IPN-1 and /29 on IPN-2" },
+        { name: "pod1_p2p", label: "Pod 1 Spine-IPN VLAN-4 Subnet", type: "text", default: "198.51.100.0/30" },
+        { name: "pod2_p2p", label: "Pod 2 Spine-IPN VLAN-4 Subnet", type: "text", default: "198.51.100.0/30" },
+        { name: "phantom_rp_ip", label: "Phantom RP Anycast Address", type: "text", default: "198.51.100.1", hint: "Hosted with /30 on IPN-1 and /29 on IPN-2" },
         { name: "ospf_area", label: "OSPF Area ID", type: "text", default: "0.0.0.0" }
       ],
       build: function (v) {
@@ -196,7 +196,7 @@
         { name: "ipn_hostname", label: "IPN Switch Hostname", type: "text", default: "ipn-nxos-1" },
         { name: "ipn_vrf", label: "IPN VRF Name", type: "text", default: "ACI-IPN" },
         { name: "jumbo_mtu", label: "System Jumbo MTU", type: "number", default: "9216" },
-        { name: "lo0_ip", label: "Loopback0 IP/Mask", type: "text", default: "10.254.0.1/32" },
+        { name: "lo0_ip", label: "Loopback0 IP/Mask", type: "text", default: "198.51.100.1/32" },
         { name: "vrf_rd", label: "VRF Route Distinguisher", type: "text", default: "65001:4" }
       ],
       buildCli: function (v) {
@@ -266,7 +266,7 @@
         { name: "parent_intf", label: "IPN Parent Interface", type: "text", default: "Ethernet1/1" },
         { name: "subif_vlan", label: "Dot1q Subinterface VLAN", type: "number", default: "4", hint: "ACI Multi-Pod requires VLAN 4" },
         { name: "ipn_vrf", label: "IPN VRF Name", type: "text", default: "ACI-IPN" },
-        { name: "subif_ip", label: "IPN Subinterface IP/Mask", type: "text", default: "10.254.1.1/30" },
+        { name: "subif_ip", label: "IPN Subinterface IP/Mask", type: "text", default: "198.51.100.1/30" },
         { name: "mtu", label: "Subinterface MTU", type: "number", default: "9150" },
         { name: "description", label: "Interface Description", type: "text", default: "To Pod1-Spine-201 Eth1/33 (VLAN 4)", span2: true }
       ],
@@ -338,7 +338,7 @@
       fields: [
         { name: "ospf_proc", label: "OSPF Process ID", type: "text", default: "1" },
         { name: "ipn_vrf", label: "IPN VRF Name", type: "text", default: "ACI-IPN" },
-        { name: "router_id", label: "OSPF Router-ID", type: "text", default: "10.254.0.1" },
+        { name: "router_id", label: "OSPF Router-ID", type: "text", default: "198.51.100.1" },
         { name: "ospf_area", label: "OSPF Area", type: "text", default: "0.0.0.0" },
         { name: "spine_subif", label: "Spine-Facing Subinterface", type: "text", default: "Ethernet1/1.4" },
         { name: "inter_ipn_intf", label: "Inter-IPN Routed Link", type: "text", default: "Ethernet1/49" },
@@ -410,9 +410,9 @@
       fields: [
         { name: "spine_subif", label: "Pod 2 Spine-Facing Subinterface", type: "text", default: "Ethernet1/2.4" },
         { name: "ipn_vrf", label: "IPN VRF Name", type: "text", default: "ACI-IPN" },
-        { name: "apic1_tep", label: "APIC-1 Infra TEP IP", type: "text", default: "10.10.0.1" },
-        { name: "apic2_tep", label: "APIC-2 Infra TEP IP", type: "text", default: "10.10.0.2" },
-        { name: "apic3_tep", label: "APIC-3 Infra TEP IP (optional)", type: "text", default: "10.20.0.1" },
+        { name: "apic1_tep", label: "APIC-1 Infra TEP IP", type: "text", default: "198.51.100.1" },
+        { name: "apic2_tep", label: "APIC-2 Infra TEP IP", type: "text", default: "198.51.100.2" },
+        { name: "apic3_tep", label: "APIC-3 Infra TEP IP (optional)", type: "text", default: "198.51.100.1" },
         { name: "src_intf", label: "DHCP Relay Source Interface", type: "text", default: "loopback0", hint: "Must be reachable from Pod 1 APIC via OSPF" }
       ],
       buildCli: function (v) {
@@ -467,8 +467,8 @@
       fields: [
         { name: "ipn_vrf", label: "IPN VRF Name", type: "text", default: "ACI-IPN" },
         { name: "ipn_role", label: "IPN Switch Role", type: "select", default: "primary", options: ["primary", "secondary"], hint: "Primary uses /30 mask; Secondary uses /29 mask" },
-        { name: "phantom_rp_ip", label: "Phantom RP Address (Group Target)", type: "text", default: "10.254.254.1" },
-        { name: "phantom_loopback_ip", label: "Loopback10 IP (Non-RP host IP)", type: "text", default: "10.254.254.2", hint: "Must be inside the /30 or /29 subnet, not .1 itself" },
+        { name: "phantom_rp_ip", label: "Phantom RP Address (Group Target)", type: "text", default: "198.51.100.1" },
+        { name: "phantom_loopback_ip", label: "Loopback10 IP (Non-RP host IP)", type: "text", default: "198.51.100.2", hint: "Must be inside the /30 or /29 subnet, not .1 itself" },
         { name: "gipo_group_list", label: "GIPo Group Range", type: "text", default: "225.0.0.0/15" },
         { name: "spine_subif", label: "Spine-Facing Subinterface", type: "text", default: "Ethernet1/1.4" }
       ],
@@ -534,7 +534,7 @@
         { name: "ipn_vrf", label: "IPN VRF Name", type: "text", default: "ACI-IPN" },
         { name: "qos_policy", label: "IPN Ingress QoS Policy Name", type: "text", default: "ACI-IPN-TRUST-DSCP" },
         { name: "spine_subif", label: "Spine-Facing Subinterface", type: "text", default: "Ethernet1/1.4" },
-        { name: "peer_ip", label: "Remote Spine VLAN-4 IP (for MTU ping)", type: "text", default: "10.254.1.2" }
+        { name: "peer_ip", label: "Remote Spine VLAN-4 IP (for MTU ping)", type: "text", default: "198.51.100.2" }
       ],
       buildCli: function (v) {
         return [
@@ -588,7 +588,7 @@
       description: "Define Pod 1 and Pod 2 internal TEP pools under uni/controller/setuppol via fabricSetupPol before Pod 2 spines request DHCP addresses.",
       fields: [
         { name: "pod_id", label: "Pod ID", type: "number", default: "2" },
-        { name: "tep_pool", label: "Pod TEP Pool CIDR", type: "text", default: "10.20.0.0/16", hint: "Must match Planning section 3.1" },
+        { name: "tep_pool", label: "Pod TEP Pool CIDR", type: "text", default: "198.51.100.0/16", hint: "Must match Planning section 3.1" },
         { name: "pod_type", label: "Pod Type", type: "select", default: "physical", options: ["physical", "virtual"] }
       ],
       build: function (v) {
@@ -686,7 +686,7 @@
         { name: "pod_id", label: "Pod ID", type: "number", default: "1" },
         { name: "spine_id", label: "Spine Node ID", type: "number", default: "201" },
         { name: "spine_port", label: "Spine Port to IPN", type: "text", default: "eth1/33" },
-        { name: "spine_ip", label: "Spine VLAN-4 IP/Mask", type: "text", default: "10.254.1.2/30" },
+        { name: "spine_ip", label: "Spine VLAN-4 IP/Mask", type: "text", default: "198.51.100.2/30" },
         { name: "mtu", label: "Subinterface MTU", type: "number", default: "9150" }
       ],
       build: function (v) {
@@ -754,8 +754,8 @@
         { name: "node_profile", label: "Logical Node Profile", type: "text", default: "pod1-spines-np" },
         { name: "pod_id", label: "Pod ID", type: "number", default: "1" },
         { name: "spine_id", label: "Spine Node ID", type: "number", default: "201" },
-        { name: "router_id", label: "Spine Router-ID & EVPN Loopback", type: "text", default: "10.11.0.1" },
-        { name: "ext_routable_pool", label: "Pod External Routable TEP Pool", type: "text", default: "10.11.0.0/24" }
+        { name: "router_id", label: "Spine Router-ID & EVPN Loopback", type: "text", default: "198.51.100.1" },
+        { name: "ext_routable_pool", label: "Pod External Routable TEP Pool", type: "text", default: "198.51.100.0/24" }
       ],
       build: function (v) {
         var pid = intVal(v.pod_id, 1);
@@ -795,9 +795,9 @@
         { name: "policy_name", label: "Fabric Ext Conn Policy", type: "text", default: "multipod-ext-conn" },
         { name: "fabric_id", label: "Site / Fabric ID", type: "number", default: "1" },
         { name: "rt_comm", label: "BGP Route-Target Community", type: "text", default: "extended:as2-nn4:65001:100" },
-        { name: "dataplane_tep", label: "Pod Data-Plane TEP (/32)", type: "text", default: "10.100.0.1/32" },
+        { name: "dataplane_tep", label: "Pod Data-Plane TEP (/32)", type: "text", default: "198.51.100.1/32" },
         { name: "pod_id", label: "Pod ID", type: "number", default: "1" },
-        { name: "pod_tep_pool", label: "Exported Pod TEP Pool", type: "text", default: "10.10.0.0/16" }
+        { name: "pod_tep_pool", label: "Exported Pod TEP Pool", type: "text", default: "198.51.100.0/16" }
       ],
       build: function (v) {
         var pid = intVal(v.pod_id, 1);
@@ -966,9 +966,9 @@
         { name: "node_profile", label: "Pod 2 Logical Node Profile", type: "text", default: "pod2-spines-np" },
         { name: "if_profile", label: "Pod 2 Logical Interface Profile", type: "text", default: "pod2-ipn-vlan4-ifp" },
         { name: "spine_id", label: "Pod 2 Spine ID", type: "number", default: "2201" },
-        { name: "router_id", label: "Pod 2 Spine Router-ID", type: "text", default: "10.21.0.1" },
+        { name: "router_id", label: "Pod 2 Spine Router-ID", type: "text", default: "198.51.100.1" },
         { name: "spine_port", label: "Spine Port to IPN", type: "text", default: "eth1/33" },
-        { name: "spine_ip", label: "Pod 2 Spine VLAN-4 IP/Mask", type: "text", default: "10.254.2.2/30" }
+        { name: "spine_ip", label: "Pod 2 Spine VLAN-4 IP/Mask", type: "text", default: "198.51.100.2/30" }
       ],
       build: function (v) {
         var sid = intVal(v.spine_id, 2201);
@@ -1327,9 +1327,9 @@
       description: "Verify end-to-end 9150+ byte MTU across Spine -> IPN -> Spine using DF-bit pings (9122 payload + 28 IP/ICMP = 9150) and inspect OSPF MTU mismatch states.",
       fields: [
         { name: "ipn_vrf", label: "IPN VRF Name", type: "text", default: "ACI-IPN" },
-        { name: "pod1_spine_ip", label: "Pod 1 Spine VLAN-4 IP", type: "text", default: "10.254.1.2" },
-        { name: "pod2_spine_ip", label: "Pod 2 Spine VLAN-4 IP", type: "text", default: "10.254.2.2" },
-        { name: "pod2_spine_lo", label: "Pod 2 Spine Routable Loopback", type: "text", default: "10.21.0.1" }
+        { name: "pod1_spine_ip", label: "Pod 1 Spine VLAN-4 IP", type: "text", default: "198.51.100.2" },
+        { name: "pod2_spine_ip", label: "Pod 2 Spine VLAN-4 IP", type: "text", default: "198.51.100.2" },
+        { name: "pod2_spine_lo", label: "Pod 2 Spine Routable Loopback", type: "text", default: "198.51.100.1" }
       ],
       buildCli: function (v) {
         return [
@@ -1368,7 +1368,7 @@
       description: "Verify PIM Bidir RP mapping on IPN switches and ACI spines, check that the primary IPN /30 Phantom RP wins over the secondary /29, and inspect (*,G) mroutes for BD GIPo.",
       fields: [
         { name: "ipn_vrf", label: "IPN VRF Name", type: "text", default: "ACI-IPN" },
-        { name: "phantom_rp_ip", label: "Phantom RP Address", type: "text", default: "10.254.254.1" },
+        { name: "phantom_rp_ip", label: "Phantom RP Address", type: "text", default: "198.51.100.1" },
         { name: "gipo_group", label: "Sample BD GIPo Group", type: "text", default: "225.0.1.10" }
       ],
       buildCli: function (v) {
@@ -1409,8 +1409,8 @@
       description: "Inspect OSPF neighbor states (INIT / EXSTART / FULL), area 0 alignment, point-to-point network type, and exported Pod TEP routes in overlay-1.",
       fields: [
         { name: "ipn_vrf", label: "IPN VRF Name", type: "text", default: "ACI-IPN" },
-        { name: "pod1_tep", label: "Pod 1 TEP Pool", type: "text", default: "10.10.0.0/16" },
-        { name: "pod2_tep", label: "Pod 2 TEP Pool", type: "text", default: "10.20.0.0/16" }
+        { name: "pod1_tep", label: "Pod 1 TEP Pool", type: "text", default: "198.51.100.0/16" },
+        { name: "pod2_tep", label: "Pod 2 TEP Pool", type: "text", default: "198.51.100.0/16" }
       ],
       buildCli: function (v) {
         return [
@@ -1449,8 +1449,8 @@
       cliFilename: "85-ts-evpn-coop-commands.txt",
       description: "Verify spine-to-spine MP-BGP EVPN sessions across pods, COOP database synchronization, and Data-Plane TEP tunnel interfaces.",
       fields: [
-        { name: "pod2_spine_lo", label: "Remote Pod 2 Spine EVPN Loopback", type: "text", default: "10.21.0.1" },
-        { name: "dataplane_tep", label: "Data-Plane TEP", type: "text", default: "10.100.0.1" }
+        { name: "pod2_spine_lo", label: "Remote Pod 2 Spine EVPN Loopback", type: "text", default: "198.51.100.1" },
+        { name: "dataplane_tep", label: "Data-Plane TEP", type: "text", default: "198.51.100.1" }
       ],
       buildCli: function (v) {
         return [

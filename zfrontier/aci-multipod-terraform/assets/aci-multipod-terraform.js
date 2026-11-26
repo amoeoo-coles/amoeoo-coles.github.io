@@ -928,7 +928,7 @@
     mitClasses: "fabric:SetupP, fabric:ExtRoutablePodSubnet",
     filename: "41-multipod-tep-plan.tf",
     description: "Declare non-overlapping Pod 1 and Pod 2 internal TEP pools, spine external routable TEP /24 subnets, and the shared data-plane TEP before touching the fabric. Values are example lab prefixes.",
-    fields: [{"name": "pod1_tep", "label": "Pod 1 TEP Pool (Example)", "type": "text", "default": "10.10.0.0/16", "hint": "Must not overlap Pod 2 TEP or tenant subnets"}, {"name": "pod2_tep", "label": "Pod 2 TEP Pool (Example)", "type": "text", "default": "10.20.0.0/16", "hint": "Minimum /22 recommended per pod"}, {"name": "pod1_ext_tep", "label": "Pod 1 External Routable TEP", "type": "text", "default": "10.11.0.0/24"}, {"name": "pod2_ext_tep", "label": "Pod 2 External Routable TEP", "type": "text", "default": "10.21.0.0/24"}, {"name": "dataplane_tep", "label": "Data-Plane TEP (Anycast VTEP)", "type": "text", "default": "10.100.0.1/32", "hint": "Shared /32 across Multi-Pod spines"}, {"name": "gipo_pool", "label": "GIPo Multicast Pool", "type": "text", "default": "225.0.0.0/15", "hint": "ACI default multicast GIPo space"}],
+    fields: [{"name": "pod1_tep", "label": "Pod 1 TEP Pool (Example)", "type": "text", "default": "198.51.100.0/16", "hint": "Must not overlap Pod 2 TEP or tenant subnets"}, {"name": "pod2_tep", "label": "Pod 2 TEP Pool (Example)", "type": "text", "default": "198.51.100.0/16", "hint": "Minimum /22 recommended per pod"}, {"name": "pod1_ext_tep", "label": "Pod 1 External Routable TEP", "type": "text", "default": "198.51.100.0/24"}, {"name": "pod2_ext_tep", "label": "Pod 2 External Routable TEP", "type": "text", "default": "198.51.100.0/24"}, {"name": "dataplane_tep", "label": "Data-Plane TEP (Anycast VTEP)", "type": "text", "default": "198.51.100.1/32", "hint": "Shared /32 across Multi-Pod spines"}, {"name": "gipo_pool", "label": "GIPo Multicast Pool", "type": "text", "default": "225.0.0.0/15", "hint": "ACI default multicast GIPo space"}],
     build: function (v) {
     return tfFile(["aci"], [
     "# Planning objects that Day-1 apply will push. Confirm pools do not overlap first.",
@@ -982,7 +982,7 @@
     mitClasses: "l3ext:Ip, ospf:DomP, pim:RPGrpRangePol",
     filename: "42-multipod-ipn-addressing.tf",
     description: "Plan /30 (or /31) dot1q VLAN-4 links between spines and IPN Nexus switches, OSPF Area 0, Phantom RP loopbacks, and the ACI infra VLAN.",
-    fields: [{"name": "ipn_vrf", "label": "IPN VRF Name", "type": "text", "default": "ACI-IPN"}, {"name": "infra_vlan", "label": "ACI Infra VLAN", "type": "number", "default": "3967", "hint": "Must match across pods; VLAN 4 is used on spine-IPN subinterfaces"}, {"name": "pod1_p2p", "label": "Pod 1 Spine-IPN VLAN-4 Subnet", "type": "text", "default": "10.254.1.0/30"}, {"name": "pod2_p2p", "label": "Pod 2 Spine-IPN VLAN-4 Subnet", "type": "text", "default": "10.254.2.0/30"}, {"name": "phantom_rp_ip", "label": "Phantom RP Anycast Address", "type": "text", "default": "10.254.254.1", "hint": "Hosted with unequal masks on the two IPN switches"}, {"name": "ospf_area", "label": "OSPF Area ID", "type": "text", "default": "0.0.0.0"}],
+    fields: [{"name": "ipn_vrf", "label": "IPN VRF Name", "type": "text", "default": "ACI-IPN"}, {"name": "infra_vlan", "label": "ACI Infra VLAN", "type": "number", "default": "3967", "hint": "Must match across pods; VLAN 4 is used on spine-IPN subinterfaces"}, {"name": "pod1_p2p", "label": "Pod 1 Spine-IPN VLAN-4 Subnet", "type": "text", "default": "198.51.100.0/30"}, {"name": "pod2_p2p", "label": "Pod 2 Spine-IPN VLAN-4 Subnet", "type": "text", "default": "198.51.100.0/30"}, {"name": "phantom_rp_ip", "label": "Phantom RP Anycast Address", "type": "text", "default": "198.51.100.1", "hint": "Hosted with unequal masks on the two IPN switches"}, {"name": "ospf_area", "label": "OSPF Area ID", "type": "text", "default": "0.0.0.0"}],
     build: function (v) {
     return tfFile(["aci"], [
     "locals {",
@@ -1111,7 +1111,7 @@
     mitClasses: "fv:BD, fv:Subnet",
     filename: "53-design-stretched-bd.tf",
     description: "A stretched BD in Multi-Pod uses a GIPo group so BUM traffic can be forwarded between pods over the IPN. Set L2 unknown unicast to flood or hardware-proxy according to the design.",
-    fields: [{"name": "tenant", "label": "Tenant Name", "type": "text", "default": "tn-example"}, {"name": "vrf", "label": "VRF Name", "type": "text", "default": "vrf-stretched"}, {"name": "bd", "label": "Bridge Domain", "type": "text", "default": "bd-stretched"}, {"name": "bd_subnet", "label": "BD Subnet (Gateway/Mask)", "type": "text", "default": "10.30.1.1/24"}, {"name": "unk_mac", "label": "L2 Unknown Unicast", "type": "select", "default": "proxy", "options": ["proxy", "flood"]}, {"name": "multi_dest", "label": "Multi-Destination (BUM)", "type": "select", "default": "bd-flood", "options": ["bd-flood", "encap-flood", "drop"]}],
+    fields: [{"name": "tenant", "label": "Tenant Name", "type": "text", "default": "tn-example"}, {"name": "vrf", "label": "VRF Name", "type": "text", "default": "vrf-stretched"}, {"name": "bd", "label": "Bridge Domain", "type": "text", "default": "bd-stretched"}, {"name": "bd_subnet", "label": "BD Subnet (Gateway/Mask)", "type": "text", "default": "198.51.100.1/24"}, {"name": "unk_mac", "label": "L2 Unknown Unicast", "type": "select", "default": "proxy", "options": ["proxy", "flood"]}, {"name": "multi_dest", "label": "Multi-Destination (BUM)", "type": "select", "default": "bd-flood", "options": ["bd-flood", "encap-flood", "drop"]}],
     build: function (v) {
     return tfFile(["aci"], [
     'resource "aci_bridge_domain" "stretched" {',
@@ -1223,7 +1223,7 @@
     description: "Enable NX-OS features (OSPF, PIM, interface-vlan, DHCP), set system jumbomtu, create the dedicated IPN VRF, and assign the IPN router-ID loopback.",
     cliFilename: "61-ipn-base-vrf-features.cfg",
     cliKind: "Generated NX-OS CLI",
-    fields: [{"name": "ipn_hostname", "label": "IPN Switch Hostname", "type": "text", "default": "ipn-nxos-1"}, {"name": "ipn_vrf", "label": "IPN VRF Name", "type": "text", "default": "ACI-IPN"}, {"name": "jumbo_mtu", "label": "System Jumbo MTU", "type": "number", "default": "9216"}, {"name": "lo0_ip", "label": "Loopback0 IP/Mask", "type": "text", "default": "10.254.0.1/32"}, {"name": "vrf_rd", "label": "VRF Route Distinguisher", "type": "text", "default": "65001:4"}],
+    fields: [{"name": "ipn_hostname", "label": "IPN Switch Hostname", "type": "text", "default": "ipn-nxos-1"}, {"name": "ipn_vrf", "label": "IPN VRF Name", "type": "text", "default": "ACI-IPN"}, {"name": "jumbo_mtu", "label": "System Jumbo MTU", "type": "number", "default": "9216"}, {"name": "lo0_ip", "label": "Loopback0 IP/Mask", "type": "text", "default": "198.51.100.1/32"}, {"name": "vrf_rd", "label": "VRF Route Distinguisher", "type": "text", "default": "65001:4"}],
     build: function (v) {
     return tfFile(["nxos"], [
     'resource "nxos_feature" "ipn" {',
@@ -1301,7 +1301,7 @@
     description: "Configure the VLAN-4 subinterface that faces a spine: encapsulation, VRF, /30 address, MTU 9150+, OSPF point-to-point and PIM sparse-mode.",
     cliFilename: "62-ipn-vlan4-subif.cfg",
     cliKind: "Generated NX-OS CLI",
-    fields: [{"name": "ipn_vrf", "label": "IPN VRF Name", "type": "text", "default": "ACI-IPN"}, {"name": "if_name", "label": "Physical Interface", "type": "text", "default": "Ethernet1/1"}, {"name": "subif_ip", "label": "Subinterface IP/Mask", "type": "text", "default": "10.254.1.2/30"}, {"name": "vlan_id", "label": "Dot1q VLAN (spine-IPN)", "type": "number", "default": "4"}, {"name": "if_mtu", "label": "Interface MTU", "type": "number", "default": "9216"}, {"name": "ospf_area", "label": "OSPF Area", "type": "text", "default": "0.0.0.0"}],
+    fields: [{"name": "ipn_vrf", "label": "IPN VRF Name", "type": "text", "default": "ACI-IPN"}, {"name": "if_name", "label": "Physical Interface", "type": "text", "default": "Ethernet1/1"}, {"name": "subif_ip", "label": "Subinterface IP/Mask", "type": "text", "default": "198.51.100.2/30"}, {"name": "vlan_id", "label": "Dot1q VLAN (spine-IPN)", "type": "number", "default": "4"}, {"name": "if_mtu", "label": "Interface MTU", "type": "number", "default": "9216"}, {"name": "ospf_area", "label": "OSPF Area", "type": "text", "default": "0.0.0.0"}],
     build: function (v) {
     return tfFile(["nxos"], [
     'resource "nxos_subinterface" "vlan4" {',
@@ -1367,7 +1367,7 @@
     description: "OSPF process in the IPN VRF, router-ID on Loopback0, area 0, and log-adjacency-changes. Spines peer as point-to-point OSPF neighbors on VLAN-4.",
     cliFilename: "63-ipn-ospf.cfg",
     cliKind: "Generated NX-OS CLI",
-    fields: [{"name": "ipn_vrf", "label": "IPN VRF Name", "type": "text", "default": "ACI-IPN"}, {"name": "ospf_proc", "label": "OSPF Process Tag", "type": "text", "default": "1"}, {"name": "lo0_ip", "label": "Router-ID (Loopback0 host)", "type": "text", "default": "10.254.0.1"}, {"name": "ospf_area", "label": "OSPF Area", "type": "text", "default": "0.0.0.0"}, {"name": "ref_bw", "label": "Reference Bandwidth (Gbps)", "type": "number", "default": "400"}],
+    fields: [{"name": "ipn_vrf", "label": "IPN VRF Name", "type": "text", "default": "ACI-IPN"}, {"name": "ospf_proc", "label": "OSPF Process Tag", "type": "text", "default": "1"}, {"name": "lo0_ip", "label": "Router-ID (Loopback0 host)", "type": "text", "default": "198.51.100.1"}, {"name": "ospf_area", "label": "OSPF Area", "type": "text", "default": "0.0.0.0"}, {"name": "ref_bw", "label": "Reference Bandwidth (Gbps)", "type": "number", "default": "400"}],
     build: function (v) {
     return tfFile(["nxos"], [
     'resource "nxos_ospf" "ipn" {',
@@ -1409,7 +1409,7 @@
     description: "Pod 2 (and later) spines send DHCPDISCOVER for TEP assignment. IPN relays those packets to the Pod 1 APIC TEP addresses. List one or more APIC infra TEP addresses.",
     cliFilename: "64-ipn-dhcp-relay.cfg",
     cliKind: "Generated NX-OS CLI",
-    fields: [{"name": "ipn_vrf", "label": "IPN VRF Name", "type": "text", "default": "ACI-IPN"}, {"name": "if_name", "label": "Relay Interface", "type": "text", "default": "Ethernet1/1.4"}, {"name": "dhcp_relay_tep", "label": "APIC TEP Relay Targets (comma-separated)", "type": "text", "default": "10.10.0.1,10.10.0.2,10.10.0.3", "hint": "Example Pod 1 APIC infra TEPs", "span2": true}],
+    fields: [{"name": "ipn_vrf", "label": "IPN VRF Name", "type": "text", "default": "ACI-IPN"}, {"name": "if_name", "label": "Relay Interface", "type": "text", "default": "Ethernet1/1.4"}, {"name": "dhcp_relay_tep", "label": "APIC TEP Relay Targets (comma-separated)", "type": "text", "default": "198.51.100.1,198.51.100.2,198.51.100.3", "hint": "Example Pod 1 APIC infra TEPs", "span2": true}],
     build: function (v) {
     return tfFile(["nxos"], [
     "# DHCP relay helpers are emitted as NX-OS CLI in this form. A dedicated nxos_dhcp_relay",
@@ -1444,7 +1444,7 @@
     description: "PIM bidir with a phantom RP is the usual Multi-Pod IPN multicast design so GIPo groups can cross the IPN. The two IPN switches advertise the same RP address with unequal masks.",
     cliFilename: "65-ipn-pim-bidir.cfg",
     cliKind: "Generated NX-OS CLI",
-    fields: [{"name": "ipn_vrf", "label": "IPN VRF Name", "type": "text", "default": "ACI-IPN"}, {"name": "phantom_rp_ip", "label": "Phantom RP Address", "type": "text", "default": "10.254.254.1"}, {"name": "phantom_mask", "label": "Local Phantom Mask (this switch)", "type": "text", "default": "10.254.254.1/30", "hint": "Use /30 on IPN-1 and /29 on IPN-2 as a typical pair"}, {"name": "gipo_acl", "label": "GIPo Group List ACL", "type": "text", "default": "225.0.0.0/15"}],
+    fields: [{"name": "ipn_vrf", "label": "IPN VRF Name", "type": "text", "default": "ACI-IPN"}, {"name": "phantom_rp_ip", "label": "Phantom RP Address", "type": "text", "default": "198.51.100.1"}, {"name": "phantom_mask", "label": "Local Phantom Mask (this switch)", "type": "text", "default": "198.51.100.1/30", "hint": "Use /30 on IPN-1 and /29 on IPN-2 as a typical pair"}, {"name": "gipo_acl", "label": "GIPo Group List ACL", "type": "text", "default": "225.0.0.0/15"}],
     build: function (v) {
     return tfFile(["nxos"], [
     "locals {",
@@ -1507,7 +1507,7 @@
     "show ip ospf neighbors vrf " + v.ipn_vrf,
     "show ip pim neighbor vrf " + v.ipn_vrf,
     "show ip dhcp relay statistics",
-    "show ip route vrf " + v.ipn_vrf + " " + "10.10.0.0/16"
+    "show ip route vrf " + v.ipn_vrf + " " + "198.51.100.0/16"
   ].join("\n") + "\n";
   },
     skipSamplePlan: true
@@ -1521,7 +1521,7 @@
     mitClasses: "fabric:SetupP",
     filename: "71-day1-fabric-pod-setup.tf",
     description: "Register Pod 2 (and confirm Pod 1) TEP pools on the APIC fabric setup policy. Complete IPN OSPF and DHCP relay before discovering Pod 2 spines.",
-    fields: [{"name": "pod2_id", "label": "New Pod ID", "type": "number", "default": "2"}, {"name": "pod2_tep", "label": "Pod 2 TEP Pool", "type": "text", "default": "10.20.0.0/16"}, {"name": "pod2_ext_tep", "label": "Pod 2 External Routable TEP", "type": "text", "default": "10.21.0.0/24"}],
+    fields: [{"name": "pod2_id", "label": "New Pod ID", "type": "number", "default": "2"}, {"name": "pod2_tep", "label": "Pod 2 TEP Pool", "type": "text", "default": "198.51.100.0/16"}, {"name": "pod2_ext_tep", "label": "Pod 2 External Routable TEP", "type": "text", "default": "198.51.100.0/24"}],
     build: function (v) {
     return tfFile(["aci"], [
     'resource "aci_rest_managed" "day1_pod_setup" {',
@@ -1614,7 +1614,7 @@
     mitClasses: "fabric:ExtRoutablePodSubnet",
     filename: "74-day1-spine-routable-tep.tf",
     description: "External routable TEP space used by spines for inter-pod control and, when required, for routable loopbacks. Pools must be unique per pod and reachable across the IPN.",
-    fields: [{"name": "pod_id", "label": "Pod ID", "type": "number", "default": "2"}, {"name": "ext_routable_pool", "label": "External Routable TEP Pool", "type": "text", "default": "10.21.0.0/24"}, {"name": "dataplane_tep", "label": "Data-Plane Anycast TEP", "type": "text", "default": "10.100.0.1/32"}],
+    fields: [{"name": "pod_id", "label": "Pod ID", "type": "number", "default": "2"}, {"name": "ext_routable_pool", "label": "External Routable TEP Pool", "type": "text", "default": "198.51.100.0/24"}, {"name": "dataplane_tep", "label": "Data-Plane Anycast TEP", "type": "text", "default": "198.51.100.1/32"}],
     build: function (v) {
     return tfFile(["aci"], [
     'resource "aci_rest_managed" "ext_routable" {',
@@ -1703,7 +1703,7 @@
     mitClasses: "fv:BD, fv:Subnet",
     filename: "82-day2-bd-subnet.tf",
     description: "Create a BD and subnet in the stretched VRF. Unicast routing and GIPo BUM apply across both pods.",
-    fields: [{"name": "tenant", "label": "Tenant Name", "type": "text", "default": "tn-example"}, {"name": "vrf", "label": "VRF Name", "type": "text", "default": "vrf-stretched"}, {"name": "bd", "label": "Bridge Domain", "type": "text", "default": "bd-stretched"}, {"name": "bd_subnet", "label": "BD Subnet (Gateway/Mask)", "type": "text", "default": "10.30.1.1/24"}, {"name": "unk_mac", "label": "L2 Unknown Unicast", "type": "select", "default": "proxy", "options": ["proxy", "flood"]}],
+    fields: [{"name": "tenant", "label": "Tenant Name", "type": "text", "default": "tn-example"}, {"name": "vrf", "label": "VRF Name", "type": "text", "default": "vrf-stretched"}, {"name": "bd", "label": "Bridge Domain", "type": "text", "default": "bd-stretched"}, {"name": "bd_subnet", "label": "BD Subnet (Gateway/Mask)", "type": "text", "default": "198.51.100.1/24"}, {"name": "unk_mac", "label": "L2 Unknown Unicast", "type": "select", "default": "proxy", "options": ["proxy", "flood"]}],
     build: function (v) {
     return tfFile(["aci"], [
     'resource "aci_bridge_domain" "d2" {',
@@ -1963,7 +1963,7 @@
     description: "When a new pod spine cannot obtain a TEP, check IPN DHCP relay targets, VRF, and that the APIC infra TEPs are reachable across VLAN-4.",
     cliFilename: "101-ts-dhcp-relay.txt",
     cliKind: "Read-only diagnostic CLI",
-    fields: [{"name": "ipn_vrf", "label": "IPN VRF", "type": "text", "default": "ACI-IPN"}, {"name": "dhcp_relay_tep", "label": "Expected APIC TEP Targets", "type": "text", "default": "10.10.0.1,10.10.0.2,10.10.0.3"}, {"name": "if_name", "label": "Relay Interface", "type": "text", "default": "Ethernet1/1.4"}],
+    fields: [{"name": "ipn_vrf", "label": "IPN VRF", "type": "text", "default": "ACI-IPN"}, {"name": "dhcp_relay_tep", "label": "Expected APIC TEP Targets", "type": "text", "default": "198.51.100.1,198.51.100.2,198.51.100.3"}, {"name": "if_name", "label": "Relay Interface", "type": "text", "default": "Ethernet1/1.4"}],
     build: function (v) {
     return tfFile(["aci"], [
     "output \"ts_dhcp\" {",
@@ -1976,7 +1976,7 @@
     "! --- IPN ---",
     "show ip dhcp relay statistics",
     "show ip dhcp relay interface " + v.if_name,
-    "show ip route vrf " + v.ipn_vrf + " 10.10.0.0/16",
+    "show ip route vrf " + v.ipn_vrf + " 198.51.100.0/16",
     "! --- APIC (moquery / icurl; read-only) ---",
     "moquery -c dhcpRelayIf",
     "moquery -c fabricSetupP"
@@ -1995,7 +1995,7 @@
     description: "Inter-pod VXLAN needs at least 9150 bytes end-to-end. Check IPN subinterface MTU, system jumbomtu, and a don't-fragment ping of appropriate size.",
     cliFilename: "102-ts-mtu.txt",
     cliKind: "Read-only diagnostic CLI",
-    fields: [{"name": "if_name", "label": "IPN Subinterface", "type": "text", "default": "Ethernet1/1.4"}, {"name": "expect_mtu", "label": "Expected MTU", "type": "number", "default": "9216"}, {"name": "ping_target", "label": "Ping Target (example TEP)", "type": "text", "default": "10.20.0.1"}],
+    fields: [{"name": "if_name", "label": "IPN Subinterface", "type": "text", "default": "Ethernet1/1.4"}, {"name": "expect_mtu", "label": "Expected MTU", "type": "number", "default": "9216"}, {"name": "ping_target", "label": "Ping Target (example TEP)", "type": "text", "default": "198.51.100.1"}],
     build: function (v) {
     return tfFile(["nxos"], [
     "output \"ts_mtu\" { value = { intf = " + q(v.if_name) + ", mtu = " + intVal(v.expect_mtu, 9216) + ", target = " + q(v.ping_target) + " } }",
@@ -2021,7 +2021,7 @@
     description: "OSPF neighbors should reach FULL on each VLAN-4 /30. MTU mismatch shows as EXSTART/EXCHANGE. Check area, network type (point-to-point) and VRF.",
     cliFilename: "103-ts-ospf-adj.txt",
     cliKind: "Read-only diagnostic CLI",
-    fields: [{"name": "ipn_vrf", "label": "IPN VRF", "type": "text", "default": "ACI-IPN"}, {"name": "ospf_proc", "label": "OSPF Process", "type": "text", "default": "1"}, {"name": "expect_nei", "label": "Expected Neighbor IP", "type": "text", "default": "10.254.1.1"}],
+    fields: [{"name": "ipn_vrf", "label": "IPN VRF", "type": "text", "default": "ACI-IPN"}, {"name": "ospf_proc", "label": "OSPF Process", "type": "text", "default": "1"}, {"name": "expect_nei", "label": "Expected Neighbor IP", "type": "text", "default": "198.51.100.1"}],
     build: function (v) {
     return tfFile(["nxos"], [
     "output \"ts_ospf\" { value = { vrf = " + q(v.ipn_vrf) + ", process = " + q(v.ospf_proc) + ", neighbor = " + q(v.expect_nei) + " } }",
@@ -2048,7 +2048,7 @@
     description: "Import or inspect Terraform state when objects were created outside Terraform, and check MP-BGP EVPN and COOP between pods. Do not invent import IDs \u2014 use the DN you collect from the APIC or NDO.",
     cliFilename: "104-ts-state-evpn.txt",
     cliKind: "State + fabric diagnostics",
-    fields: [{"name": "resource_addr", "label": "Terraform Address", "type": "text", "default": "aci_rest_managed.day1_pod_setup"}, {"name": "object_dn", "label": "Object DN to Import (example)", "type": "text", "default": "uni/controller/setuppol/setupp-2"}, {"name": "pod1_spine", "label": "Pod 1 Spine TEP (example)", "type": "text", "default": "10.10.0.101"}],
+    fields: [{"name": "resource_addr", "label": "Terraform Address", "type": "text", "default": "aci_rest_managed.day1_pod_setup"}, {"name": "object_dn", "label": "Object DN to Import (example)", "type": "text", "default": "uni/controller/setuppol/setupp-2"}, {"name": "pod1_spine", "label": "Pod 1 Spine TEP (example)", "type": "text", "default": "198.51.100.101"}],
     build: function (v) {
     return tfFile(["aci"], [
     "output \"import_hint\" {",
@@ -2072,7 +2072,7 @@
   }
   ];
   var PAGE = {"tag": "multipod", "samplePath": "/zfrontier/aci-multipod-terraform/data/sample.yml", "containers": {"planning": "forms-planning", "design": "forms-design", "ipn": "forms-ipn", "day1": "forms-day1", "day2": "forms-day2", "bau": "forms-bau", "ts": "forms-ts"}};
-  window.__TF_SAMPLE_DATA = {"meta": {"description": "Example ACI Multi-Pod fabric for the Terraform workbench. Documentation and lab prefixes only.", "addressing": "RFC 5737 (192.0.2.0/24, 198.51.100.0/24, 203.0.113.0/24) and RFC 1918 10.0.0.0/8 examples. Replace before apply.", "credentials": "Never stored here. Use var.apic_password, var.ndo_password, var.nxos_password or {{ apic_password }} / {{ ndo_password }} in CI."}, "fabric": {"fabric_name": "lab-mp-fabric", "ndo_site_name": "site-mp-lab", "tenant": "tn-example", "vrf": "vrf-stretched", "bd": "bd-stretched", "bd_subnet": "10.30.1.1/24"}, "planning": {"pod1_tep": "10.10.0.0/16", "pod2_tep": "10.20.0.0/16", "pod1_ext_tep": "10.11.0.0/24", "pod2_ext_tep": "10.21.0.0/24", "dataplane_tep": "10.100.0.1/32", "gipo_pool": "225.0.0.0/15", "ipn_vrf": "ACI-IPN", "infra_vlan": 3967, "pod1_p2p": "10.254.1.0/30", "pod2_p2p": "10.254.2.0/30", "phantom_rp_ip": "10.254.254.1", "ospf_area": "0.0.0.0", "fabric_mtu": 9216, "bgp_asn": 65001, "rtt_ms": 2, "coop_mode": "strict"}, "oob_example": {"nd_oob_ip": "203.0.113.10/24", "mgmt_prefix": "203.0.113.0/24", "doc_prefix_a": "192.0.2.0/24", "doc_prefix_b": "198.51.100.0/24"}, "forms": {"form-mp-tep-plan": {"pod1_tep": "10.10.0.0/16", "pod2_tep": "10.20.0.0/16", "pod1_ext_tep": "10.11.0.0/24", "pod2_ext_tep": "10.21.0.0/24", "dataplane_tep": "10.100.0.1/32", "gipo_pool": "225.0.0.0/15"}, "form-mp-ipn-addr": {"ipn_vrf": "ACI-IPN", "infra_vlan": "3967", "pod1_p2p": "10.254.1.0/30", "pod2_p2p": "10.254.2.0/30", "phantom_rp_ip": "10.254.254.1", "ospf_area": "0.0.0.0"}, "form-mp-mtu-prereq": {"fabric_mtu": "9216", "bgp_asn": "65001", "rtt_ms": "2", "coop_mode": "strict"}, "form-dp-dual-ipn": {"fabric_name": "lab-mp-fabric", "ipn1_hostname": "ipn-nxos-1", "ipn2_hostname": "ipn-nxos-2", "pod1_spines": "101,102", "pod2_spines": "201,202", "ndo_site_name": "site-mp-lab"}, "form-dp-stretch-vrf": {"tenant": "tn-example", "vrf": "vrf-stretched", "bd_enforce": "unenforced", "pc_enf_pref": "enforced"}, "form-dp-stretch-bd": {"tenant": "tn-example", "vrf": "vrf-stretched", "bd": "bd-stretched", "bd_subnet": "10.30.1.1/24", "unk_mac": "proxy", "multi_dest": "bd-flood"}, "form-dp-local-l3out": {"tenant": "tn-example", "vrf": "vrf-stretched", "l3out_pod1": "l3out-pod1-local", "l3out_pod2": "l3out-pod2-local", "pod1_border": "111,112", "pod2_border": "211,212"}, "form-dp-ndo-schema": {"ndo_site_name": "site-mp-lab", "tenant": "tn-example", "schema": "schema-mp-lab", "template": "tmpl-stretched", "vrf": "vrf-stretched"}, "form-ipn-vrf-features": {"ipn_hostname": "ipn-nxos-1", "ipn_vrf": "ACI-IPN", "jumbo_mtu": "9216", "lo0_ip": "10.254.0.1/32", "vrf_rd": "65001:4"}, "form-ipn-subif-vlan4": {"ipn_vrf": "ACI-IPN", "if_name": "Ethernet1/1", "subif_ip": "10.254.1.2/30", "vlan_id": "4", "if_mtu": "9216", "ospf_area": "0.0.0.0"}, "form-ipn-ospf": {"ipn_vrf": "ACI-IPN", "ospf_proc": "1", "lo0_ip": "10.254.0.1", "ospf_area": "0.0.0.0", "ref_bw": "400"}, "form-ipn-dhcp-relay": {"ipn_vrf": "ACI-IPN", "if_name": "Ethernet1/1.4", "dhcp_relay_tep": "10.10.0.1,10.10.0.2,10.10.0.3"}, "form-ipn-pim-bidir": {"ipn_vrf": "ACI-IPN", "phantom_rp_ip": "10.254.254.1", "phantom_mask": "10.254.254.1/30", "gipo_acl": "225.0.0.0/15"}, "form-ipn-qos-verify": {"ipn_vrf": "ACI-IPN", "if_name": "Ethernet1/1.4", "expect_mtu": "9216"}, "form-apic-fabric-setup": {"pod2_id": "2", "pod2_tep": "10.20.0.0/16", "pod2_ext_tep": "10.21.0.0/24"}, "form-apic-pod-profile": {"pod_id": "2", "pod_pg": "pod-pg-default", "ntp_pol": "dt-pol-default", "snmp_pol": "snmp-pol-default"}, "form-apic-infra-l3out": {"l3out": "multipod", "ospf_area": "0.0.0.0", "pod1_spines": "101,102", "pod2_spines": "201,202", "vlan_id": "4"}, "form-apic-spine-routable": {"pod_id": "2", "ext_routable_pool": "10.21.0.0/24", "dataplane_tep": "10.100.0.1/32"}, "form-day1-ndo-onboard": {"ndo_site_name": "site-mp-lab", "apic_site_id": "1", "nd_nodes": "nd-1,nd-2,nd-3", "nd_oob_ip": "203.0.113.10/24"}, "form-day2-tenant-vrf": {"tenant": "tn-example", "vrf": "vrf-stretched", "pc_enf_pref": "enforced"}, "form-day2-bd": {"tenant": "tn-example", "vrf": "vrf-stretched", "bd": "bd-stretched", "bd_subnet": "10.30.1.1/24", "unk_mac": "proxy"}, "form-day2-epg-contract": {"tenant": "tn-example", "anp": "anp-app", "epg": "epg-web", "bd": "bd-stretched", "contract": "c-web", "contract_scope": "context"}, "form-day2-ndo-deploy": {"schema": "schema-mp-lab", "template": "tmpl-stretched", "re_deploy": "false"}, "form-bau-drift": {"tf_dir": "terraform", "exitcode": "true", "var_file": "cicd/terraform.tfvars.example"}, "form-lcm-fw-groups": {"target_apic": "not collected", "target_switch": "not collected", "target_nd": "not collected", "first_pod": "2"}, "form-lcm-backup": {"export_name": "exp-mp-daily", "export_format": "json", "remote_path": "uni/fabric/path-example"}, "form-lcm-rma": {"node_id": "201", "pod_id": "2", "old_serial": "SALEXOLD01", "new_serial": "SALEXNEW02", "resource_addr": "aci_rest_managed.day1_pod_setup"}, "form-lcm-backend": {"backend_type": "http", "state_address": "https://state.example.invalid/states/aci-example", "lock_address": "https://state.example.invalid/states/aci-example/lock"}, "form-ts-dhcp-relay": {"ipn_vrf": "ACI-IPN", "dhcp_relay_tep": "10.10.0.1,10.10.0.2,10.10.0.3", "if_name": "Ethernet1/1.4"}, "form-ts-mtu": {"if_name": "Ethernet1/1.4", "expect_mtu": "9216", "ping_target": "10.20.0.1"}, "form-ts-ospf-adj": {"ipn_vrf": "ACI-IPN", "ospf_proc": "1", "expect_nei": "10.254.1.1"}, "form-ts-state-evpn": {"resource_addr": "aci_rest_managed.day1_pod_setup", "object_dn": "uni/controller/setuppol/setupp-2", "pod1_spine": "10.10.0.101"}}};
+  window.__TF_SAMPLE_DATA = {"meta": {"description": "Example ACI Multi-Pod fabric for the Terraform workbench. Documentation and lab prefixes only.", "addressing": "RFC 5737 (192.0.2.0/24, 198.51.100.0/24, 203.0.113.0/24) and RFC 1918 198.51.100.0/8 examples. Replace before apply.", "credentials": "Never stored here. Use var.apic_password, var.ndo_password, var.nxos_password or {{ apic_password }} / {{ ndo_password }} in CI."}, "fabric": {"fabric_name": "lab-mp-fabric", "ndo_site_name": "site-mp-lab", "tenant": "tn-example", "vrf": "vrf-stretched", "bd": "bd-stretched", "bd_subnet": "198.51.100.1/24"}, "planning": {"pod1_tep": "198.51.100.0/16", "pod2_tep": "198.51.100.0/16", "pod1_ext_tep": "198.51.100.0/24", "pod2_ext_tep": "198.51.100.0/24", "dataplane_tep": "198.51.100.1/32", "gipo_pool": "225.0.0.0/15", "ipn_vrf": "ACI-IPN", "infra_vlan": 3967, "pod1_p2p": "198.51.100.0/30", "pod2_p2p": "198.51.100.0/30", "phantom_rp_ip": "198.51.100.1", "ospf_area": "0.0.0.0", "fabric_mtu": 9216, "bgp_asn": 65001, "rtt_ms": 2, "coop_mode": "strict"}, "oob_example": {"nd_oob_ip": "203.0.113.10/24", "mgmt_prefix": "203.0.113.0/24", "doc_prefix_a": "192.0.2.0/24", "doc_prefix_b": "198.51.100.0/24"}, "forms": {"form-mp-tep-plan": {"pod1_tep": "198.51.100.0/16", "pod2_tep": "198.51.100.0/16", "pod1_ext_tep": "198.51.100.0/24", "pod2_ext_tep": "198.51.100.0/24", "dataplane_tep": "198.51.100.1/32", "gipo_pool": "225.0.0.0/15"}, "form-mp-ipn-addr": {"ipn_vrf": "ACI-IPN", "infra_vlan": "3967", "pod1_p2p": "198.51.100.0/30", "pod2_p2p": "198.51.100.0/30", "phantom_rp_ip": "198.51.100.1", "ospf_area": "0.0.0.0"}, "form-mp-mtu-prereq": {"fabric_mtu": "9216", "bgp_asn": "65001", "rtt_ms": "2", "coop_mode": "strict"}, "form-dp-dual-ipn": {"fabric_name": "lab-mp-fabric", "ipn1_hostname": "ipn-nxos-1", "ipn2_hostname": "ipn-nxos-2", "pod1_spines": "101,102", "pod2_spines": "201,202", "ndo_site_name": "site-mp-lab"}, "form-dp-stretch-vrf": {"tenant": "tn-example", "vrf": "vrf-stretched", "bd_enforce": "unenforced", "pc_enf_pref": "enforced"}, "form-dp-stretch-bd": {"tenant": "tn-example", "vrf": "vrf-stretched", "bd": "bd-stretched", "bd_subnet": "198.51.100.1/24", "unk_mac": "proxy", "multi_dest": "bd-flood"}, "form-dp-local-l3out": {"tenant": "tn-example", "vrf": "vrf-stretched", "l3out_pod1": "l3out-pod1-local", "l3out_pod2": "l3out-pod2-local", "pod1_border": "111,112", "pod2_border": "211,212"}, "form-dp-ndo-schema": {"ndo_site_name": "site-mp-lab", "tenant": "tn-example", "schema": "schema-mp-lab", "template": "tmpl-stretched", "vrf": "vrf-stretched"}, "form-ipn-vrf-features": {"ipn_hostname": "ipn-nxos-1", "ipn_vrf": "ACI-IPN", "jumbo_mtu": "9216", "lo0_ip": "198.51.100.1/32", "vrf_rd": "65001:4"}, "form-ipn-subif-vlan4": {"ipn_vrf": "ACI-IPN", "if_name": "Ethernet1/1", "subif_ip": "198.51.100.2/30", "vlan_id": "4", "if_mtu": "9216", "ospf_area": "0.0.0.0"}, "form-ipn-ospf": {"ipn_vrf": "ACI-IPN", "ospf_proc": "1", "lo0_ip": "198.51.100.1", "ospf_area": "0.0.0.0", "ref_bw": "400"}, "form-ipn-dhcp-relay": {"ipn_vrf": "ACI-IPN", "if_name": "Ethernet1/1.4", "dhcp_relay_tep": "198.51.100.1,198.51.100.2,198.51.100.3"}, "form-ipn-pim-bidir": {"ipn_vrf": "ACI-IPN", "phantom_rp_ip": "198.51.100.1", "phantom_mask": "198.51.100.1/30", "gipo_acl": "225.0.0.0/15"}, "form-ipn-qos-verify": {"ipn_vrf": "ACI-IPN", "if_name": "Ethernet1/1.4", "expect_mtu": "9216"}, "form-apic-fabric-setup": {"pod2_id": "2", "pod2_tep": "198.51.100.0/16", "pod2_ext_tep": "198.51.100.0/24"}, "form-apic-pod-profile": {"pod_id": "2", "pod_pg": "pod-pg-default", "ntp_pol": "dt-pol-default", "snmp_pol": "snmp-pol-default"}, "form-apic-infra-l3out": {"l3out": "multipod", "ospf_area": "0.0.0.0", "pod1_spines": "101,102", "pod2_spines": "201,202", "vlan_id": "4"}, "form-apic-spine-routable": {"pod_id": "2", "ext_routable_pool": "198.51.100.0/24", "dataplane_tep": "198.51.100.1/32"}, "form-day1-ndo-onboard": {"ndo_site_name": "site-mp-lab", "apic_site_id": "1", "nd_nodes": "nd-1,nd-2,nd-3", "nd_oob_ip": "203.0.113.10/24"}, "form-day2-tenant-vrf": {"tenant": "tn-example", "vrf": "vrf-stretched", "pc_enf_pref": "enforced"}, "form-day2-bd": {"tenant": "tn-example", "vrf": "vrf-stretched", "bd": "bd-stretched", "bd_subnet": "198.51.100.1/24", "unk_mac": "proxy"}, "form-day2-epg-contract": {"tenant": "tn-example", "anp": "anp-app", "epg": "epg-web", "bd": "bd-stretched", "contract": "c-web", "contract_scope": "context"}, "form-day2-ndo-deploy": {"schema": "schema-mp-lab", "template": "tmpl-stretched", "re_deploy": "false"}, "form-bau-drift": {"tf_dir": "terraform", "exitcode": "true", "var_file": "cicd/terraform.tfvars.example"}, "form-lcm-fw-groups": {"target_apic": "not collected", "target_switch": "not collected", "target_nd": "not collected", "first_pod": "2"}, "form-lcm-backup": {"export_name": "exp-mp-daily", "export_format": "json", "remote_path": "uni/fabric/path-example"}, "form-lcm-rma": {"node_id": "201", "pod_id": "2", "old_serial": "SALEXOLD01", "new_serial": "SALEXNEW02", "resource_addr": "aci_rest_managed.day1_pod_setup"}, "form-lcm-backend": {"backend_type": "http", "state_address": "https://state.example.invalid/states/aci-example", "lock_address": "https://state.example.invalid/states/aci-example/lock"}, "form-ts-dhcp-relay": {"ipn_vrf": "ACI-IPN", "dhcp_relay_tep": "198.51.100.1,198.51.100.2,198.51.100.3", "if_name": "Ethernet1/1.4"}, "form-ts-mtu": {"if_name": "Ethernet1/1.4", "expect_mtu": "9216", "ping_target": "198.51.100.1"}, "form-ts-ospf-adj": {"ipn_vrf": "ACI-IPN", "ospf_proc": "1", "expect_nei": "198.51.100.1"}, "form-ts-state-evpn": {"resource_addr": "aci_rest_managed.day1_pod_setup", "object_dn": "uni/controller/setuppol/setupp-2", "pod1_spine": "198.51.100.101"}}};
 
 
   if (document.readyState === "loading") {

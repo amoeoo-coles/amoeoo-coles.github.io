@@ -912,7 +912,7 @@ html[data-theme="dark"] .bd-plus{background:#0f172a;border-color:#64748b;color:#
 <span class="kicker" style="background:#0891b2">ACI GUI</span>
 <h1>Bridge Domain</h1>
 
-<p class="lede">Create two bridge domains in tenant <code>aci_p01_tenant</code>, VRF <code>aci_p01_vrf</code>: <code>aci_p01_bd_web</code> (subnet <code>10.0.144.1/29</code>, Advertised Externally, Associated L3 Out <code>aci_p01_L3out</code>) and <code>aci_p01_bd_app</code> (subnet <code>172.16.1.1/24</code>, Private to VRF, no L3Out).</p>
+<p class="lede">Create two bridge domains in tenant <code>aci_p01_tenant</code>, VRF <code>aci_p01_vrf</code>: <code>aci_p01_bd_web</code> (subnet <code>198.51.100.1/29</code>, Advertised Externally, Associated L3 Out <code>aci_p01_L3out</code>) and <code>aci_p01_bd_app</code> (subnet <code>203.0.113.1/24</code>, Private to VRF, no L3Out).</p>
 
 <div class="meta"><span>GUI: <span class="gui-path"><span class="gui-seg">Tenants</span><span class="gui-sep">›</span><span class="gui-seg">aci_p01_tenant</span><span class="gui-sep">›</span><span class="gui-seg">Networking</span><span class="gui-sep">›</span><span class="gui-seg">Bridge Domains</span><span class="gui-sep">›</span><span class="gui-seg">Create Bridge Domain</span></span></span><span>Class <div class="apic-chips"><span class="apic-chip"><a class="dn-chip" href="https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/fv:BD/overview" title="Cisco APIC MIM: fv:BD" target="_blank" rel="noopener">fvBD</a></span><span class="apic-chip"><a class="dn-chip" href="https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/fv:Subnet/overview" title="Cisco APIC MIM: fv:Subnet" target="_blank" rel="noopener">fvSubnet</a></span><span class="apic-chip"><a class="dn-chip" href="https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/fv:RsCtx/overview" title="Cisco APIC MIM: fv:RsCtx" target="_blank" rel="noopener">fvRsCtx</a></span><span class="apic-chip"><a class="dn-chip" href="https://pubhub.devnetcloud.com/media/model-doc-latest/docs/app/index.html#/objects/fv:RsBDToOut/overview" title="Cisco APIC MIM: fv:RsBDToOut" target="_blank" rel="noopener">fvRsBDToOut</a></span></div></span></div>
 
@@ -959,12 +959,12 @@ html[data-theme="dark"] .bd-plus{background:#0f172a;border-color:#64748b;color:#
 <p class="field-help">fvBD <span class="dn">name</span> <code>aci_p01_bd_web</code>. The VRF drop-down creates fvRsCtx with tnFvCtxName <code>aci_p01_vrf</code> (NaC <span class="dn">vrf</span>). Type <strong>regular</strong> and Forwarding <strong>Optimize</strong> are shown as in the GUI; this page does not map Forwarding Optimize to individual NaC keys, because that mapping was not given in the lab or the screenshots. Advertise Host Routes unchecked is NaC <span class="dn">advertise_host_routes: false</span>.</p>
 
 <h3 id="bd-web-subnet">Step 2 — Create Subnet (web)</h3>
-<p>On <strong>L3 Configurations</strong>, use the plus control on the Subnets table. The lab sets Gateway IP <code>10.0.144.1/29</code> and checks Advertised Externally so the prefix is advertised outside the fabric. The screenshot also shows Subnet Control <strong>ND RA Prefix</strong> checked and IP Data-plane Learning <strong>Enabled</strong>. Shared between VRFs, Treat as virtual IP address, Make this IP address primary, No Default SVI Gateway and Querier IP are all unchecked. L3 Out for Route Profile, ND RA Prefix Policy and Policy Tags were left at their placeholders.</p>
+<p>On <strong>L3 Configurations</strong>, use the plus control on the Subnets table. The lab sets Gateway IP <code>198.51.100.1/29</code> and checks Advertised Externally so the prefix is advertised outside the fabric. The screenshot also shows Subnet Control <strong>ND RA Prefix</strong> checked and IP Data-plane Learning <strong>Enabled</strong>. Shared between VRFs, Treat as virtual IP address, Make this IP address primary, No Default SVI Gateway and Querier IP are all unchecked. L3 Out for Route Profile, ND RA Prefix Policy and Policy Tags were left at their placeholders.</p>
 
 <div class="apic apic-nx bd-sub" aria-hidden="true">
   <div class="hd">Create Subnet <span class="x">×</span></div>
   <div class="bd">
-    <div class="row"><label><span class="req">*</span> Gateway IP</label><div class="fake-input val-red">10.0.144.1/29</div></div>
+    <div class="row"><label><span class="req">*</span> Gateway IP</label><div class="fake-input val-red">198.51.100.1/29</div></div>
     <p class="bd-hint">address/mask</p>
     <div class="row"><label>Treat as virtual IP address</label><span class="chk"><i></i></span></div>
     <div class="row"><label>Make this IP address primary</label><span class="chk"><i></i></span></div>
@@ -985,10 +985,10 @@ html[data-theme="dark"] .bd-plus{background:#0f172a;border-color:#64748b;color:#
   </div>
   <div class="ft"><span class="btn cancel">Cancel</span><span class="btn">OK</span></div>
 </div>
-<p class="field-help">fvSubnet <span class="dn">ip</span> <code>10.0.144.1/29</code>, <span class="dn">scope</span> <code>public</code> (Advertised Externally), <span class="dn">ctrl</span> <code>nd</code> (ND RA Prefix), <span class="dn">ipDPLearning</span> enabled. NaC: <span class="dn">public: true</span>, <span class="dn">shared: false</span>, <span class="dn">nd_ra_prefix: true</span>, <span class="dn">ip_dataplane_learning: true</span>, <span class="dn">virtual</span> / <span class="dn">primary_ip</span> / <span class="dn">no_default_gateway</span> / <span class="dn">igmp_querier</span> all false.</p>
+<p class="field-help">fvSubnet <span class="dn">ip</span> <code>198.51.100.1/29</code>, <span class="dn">scope</span> <code>public</code> (Advertised Externally), <span class="dn">ctrl</span> <code>nd</code> (ND RA Prefix), <span class="dn">ipDPLearning</span> enabled. NaC: <span class="dn">public: true</span>, <span class="dn">shared: false</span>, <span class="dn">nd_ra_prefix: true</span>, <span class="dn">ip_dataplane_learning: true</span>, <span class="dn">virtual</span> / <span class="dn">primary_ip</span> / <span class="dn">no_default_gateway</span> / <span class="dn">igmp_querier</span> all false.</p>
 
 <h3 id="bd-web-l3a">Step 2 — L3 Configurations (subnet added, before L3Out)</h3>
-<p>After OK, the Subnets table shows <code>10.0.144.1/29</code>, Scope Advertised Externally, Primary IP Address False. Unicast Routing and ARP Flooding are Enabled. Config BD MAC Address is checked, with MAC Address <code>00:22:BD:F8:19:FF</code>. Associated L3 Outs is still empty — the lab then uses the plus control to associate <code>aci_p01_L3out</code>.</p>
+<p>After OK, the Subnets table shows <code>198.51.100.1/29</code>, Scope Advertised Externally, Primary IP Address False. Unicast Routing and ARP Flooding are Enabled. Config BD MAC Address is checked, with MAC Address <code>00:22:BD:F8:19:FF</code>. Associated L3 Outs is still empty — the lab then uses the plus control to associate <code>aci_p01_L3out</code>.</p>
 
 <div class="apic apic-nx bd-wiz" aria-hidden="true">
   <div class="hd">Create Bridge Domain
@@ -1004,7 +1004,7 @@ html[data-theme="dark"] .bd-plus{background:#0f172a;border-color:#64748b;color:#
     <div class="row top"><label>Subnets</label><div class="bd-tbl-wrap">
       <div class="bd-tbl-bar"><span>🗑</span><span class="bd-plus">+</span></div>
       <table class="bd-tbl"><thead><tr><th>Gateway Address</th><th>Scope</th><th>Primary IP Address</th><th>Subnet Control</th></tr></thead>
-      <tbody><tr class="on"><td class="val-red">10.0.144.1/29</td><td>Advertised Externally</td><td>False</td><td></td></tr></tbody></table>
+      <tbody><tr class="on"><td class="val-red">198.51.100.1/29</td><td>Advertised Externally</td><td>False</td><td></td></tr></tbody></table>
     </div></div>
     <div class="row bd-grey"><label>Limit Local IP Learning To BD/EPG Subnet(s)</label><span class="chk"><i class="on"></i></span></div>
     <div class="bd-info"><span class="bd-info-i">i</span><div>Info: This option is not available when "Enforce Subnet Check" is enabled from "System Settings" -&gt; "Fabric-Wide Settings Policy".</div></div>
@@ -1041,7 +1041,7 @@ html[data-theme="dark"] .bd-plus{background:#0f172a;border-color:#64748b;color:#
     <div class="row top"><label>Subnets</label><div class="bd-tbl-wrap">
       <div class="bd-tbl-bar"><span>🗑</span><span class="bd-plus">+</span></div>
       <table class="bd-tbl"><thead><tr><th>Gateway Address</th><th>Scope</th><th>Primary IP Address</th><th>Subnet Control</th></tr></thead>
-      <tbody><tr class="on"><td class="val-red">10.0.144.1/29</td><td>Advertised Externally</td><td>False</td><td></td></tr></tbody></table>
+      <tbody><tr class="on"><td class="val-red">198.51.100.1/29</td><td>Advertised Externally</td><td>False</td><td></td></tr></tbody></table>
     </div></div>
     <div class="row bd-grey"><label>Limit Local IP Learning To BD/EPG Subnet(s)</label><span class="chk"><i class="on"></i></span></div>
     <div class="bd-info"><span class="bd-info-i">i</span><div>Info: This option is not available when "Enforce Subnet Check" is enabled from "System Settings" -&gt; "Fabric-Wide Settings Policy".</div></div>
@@ -1159,12 +1159,12 @@ html[data-theme="dark"] .bd-plus{background:#0f172a;border-color:#64748b;color:#
 </div>
 
 <h3 id="bd-app-subnet">Step 2 — Create Subnet (app)</h3>
-<p>Gateway IP <code>172.16.1.1/24</code>. Advertised Externally and Shared between VRFs are both unchecked, so the subnet is Private to VRF. ND RA Prefix is checked and IP Data-plane Learning is Enabled, the same as the web subnet. Then OK.</p>
+<p>Gateway IP <code>203.0.113.1/24</code>. Advertised Externally and Shared between VRFs are both unchecked, so the subnet is Private to VRF. ND RA Prefix is checked and IP Data-plane Learning is Enabled, the same as the web subnet. Then OK.</p>
 
 <div class="apic apic-nx bd-sub" aria-hidden="true">
   <div class="hd">Create Subnet <span class="x">×</span></div>
   <div class="bd">
-    <div class="row"><label><span class="req">*</span> Gateway IP</label><div class="fake-input val-red">172.16.1.1/24</div></div>
+    <div class="row"><label><span class="req">*</span> Gateway IP</label><div class="fake-input val-red">203.0.113.1/24</div></div>
     <p class="bd-hint">address/mask</p>
     <div class="row"><label>Treat as virtual IP address</label><span class="chk"><i></i></span></div>
     <div class="row"><label>Make this IP address primary</label><span class="chk"><i></i></span></div>
@@ -1185,10 +1185,10 @@ html[data-theme="dark"] .bd-plus{background:#0f172a;border-color:#64748b;color:#
   </div>
   <div class="ft"><span class="btn cancel">Cancel</span><span class="btn">OK</span></div>
 </div>
-<p class="field-help">fvSubnet <span class="dn">ip</span> <code>172.16.1.1/24</code>, <span class="dn">scope</span> <code>private</code>, <span class="dn">ctrl</span> <code>nd</code>, <span class="dn">ipDPLearning</span> enabled. NaC: <span class="dn">public: false</span>, <span class="dn">shared: false</span> (Private to VRF), plus the same subnet-control and learning keys as the web subnet.</p>
+<p class="field-help">fvSubnet <span class="dn">ip</span> <code>203.0.113.1/24</code>, <span class="dn">scope</span> <code>private</code>, <span class="dn">ctrl</span> <code>nd</code>, <span class="dn">ipDPLearning</span> enabled. NaC: <span class="dn">public: false</span>, <span class="dn">shared: false</span> (Private to VRF), plus the same subnet-control and learning keys as the web subnet.</p>
 
 <h3 id="bd-app-l3">Step 2 — L3 Configurations (app subnet added)</h3>
-<p>The Subnets table now shows <code>172.16.1.1/24</code>, Scope Private to VRF, Primary IP Address False. Associated L3 Outs remains empty. Then Next.</p>
+<p>The Subnets table now shows <code>203.0.113.1/24</code>, Scope Private to VRF, Primary IP Address False. Associated L3 Outs remains empty. Then Next.</p>
 
 <div class="apic apic-nx bd-wiz" aria-hidden="true">
   <div class="hd">Create Bridge Domain
@@ -1204,7 +1204,7 @@ html[data-theme="dark"] .bd-plus{background:#0f172a;border-color:#64748b;color:#
     <div class="row top"><label>Subnets</label><div class="bd-tbl-wrap">
       <div class="bd-tbl-bar"><span>🗑</span><span class="bd-plus">+</span></div>
       <table class="bd-tbl"><thead><tr><th>Gateway Address</th><th>Scope</th><th>Primary IP Address</th><th>Subnet Control</th></tr></thead>
-      <tbody><tr class="on"><td class="val-red">172.16.1.1/24</td><td>Private to VRF</td><td>False</td><td></td></tr></tbody></table>
+      <tbody><tr class="on"><td class="val-red">203.0.113.1/24</td><td>Private to VRF</td><td>False</td><td></td></tr></tbody></table>
     </div></div>
     <div class="row bd-grey"><label>Limit Local IP Learning To BD/EPG Subnet(s)</label><span class="chk"><i class="on"></i></span></div>
     <div class="bd-info"><span class="bd-info-i">i</span><div>Info: This option is not available when "Enforce Subnet Check" is enabled from "System Settings" -&gt; "Fabric-Wide Settings Policy".</div></div>
@@ -1257,7 +1257,7 @@ html[data-theme="dark"] .bd-plus{background:#0f172a;border-color:#64748b;color:#
 <table class="tree"><thead><tr><th>Class</th><th>Role</th><th>DN / attribute</th></tr></thead><tbody>
 <tr><td><span class="dn">fvBD</span></td><td>The bridge domain</td><td><span class="dn">uni/tn-aci_p01_tenant/BD-aci_p01_bd_web</span> and <span class="dn">uni/tn-aci_p01_tenant/BD-aci_p01_bd_app</span>. unicastRoute <code>yes</code>, arpFlood <code>yes</code>, mac <code>00:22:BD:F8:19:FF</code></td></tr>
 <tr><td><span class="dn">fvRsCtx</span></td><td>VRF attachment</td><td>tnFvCtxName <code>aci_p01_vrf</code> on both BDs</td></tr>
-<tr><td><span class="dn">fvSubnet</span></td><td>BD subnet / anycast gateway</td><td>web: ip <code>10.0.144.1/29</code> scope <code>public</code> ctrl <code>nd</code> ipDPLearning <code>enabled</code>. app: ip <code>172.16.1.1/24</code> scope <code>private</code> ctrl <code>nd</code> ipDPLearning <code>enabled</code></td></tr>
+<tr><td><span class="dn">fvSubnet</span></td><td>BD subnet / anycast gateway</td><td>web: ip <code>198.51.100.1/29</code> scope <code>public</code> ctrl <code>nd</code> ipDPLearning <code>enabled</code>. app: ip <code>203.0.113.1/24</code> scope <code>private</code> ctrl <code>nd</code> ipDPLearning <code>enabled</code></td></tr>
 <tr><td><span class="dn">fvRsBDToOut</span></td><td>Associated L3 Out</td><td>tnL3extOutName <code>aci_p01_L3out</code> on <code>aci_p01_bd_web</code> only. The app BD left Associated L3 Outs empty</td></tr>
 </tbody></table>
 
@@ -1276,7 +1276,7 @@ html[data-theme="dark"] .bd-plus{background:#0f172a;border-color:#64748b;color:#
           ep_move_detection: false       # GARP based detection unchecked
           multicast_arp_drop: true       # Drop ARP with Multicast SMAC (Advanced)
           subnets:
-            - ip: 10.0.144.1/29
+            - ip: 198.51.100.1/29
               public: true               # Scope: Advertised Externally
               shared: false              # Scope: Shared between VRFs unchecked
               virtual: false
@@ -1296,7 +1296,7 @@ html[data-theme="dark"] .bd-plus{background:#0f172a;border-color:#64748b;color:#
           ep_move_detection: false
           multicast_arp_drop: true
           subnets:
-            - ip: 172.16.1.1/24
+            - ip: 203.0.113.1/24
               public: false              # both scope boxes unchecked = Private to VRF
               shared: false
               virtual: false
@@ -1324,7 +1324,7 @@ html[data-theme="dark"] .bd-plus{background:#0f172a;border-color:#64748b;color:#
       "children": [
         {"fvRsCtx": {"attributes": {"tnFvCtxName": "aci_p01_vrf"}}},
         {"fvSubnet": {"attributes": {
-          "ip": "10.0.144.1/29",
+          "ip": "198.51.100.1/29",
           "scope": "public",
           "ctrl": "nd",
           "preferred": "no",
@@ -1346,7 +1346,7 @@ html[data-theme="dark"] .bd-plus{background:#0f172a;border-color:#64748b;color:#
       "children": [
         {"fvRsCtx": {"attributes": {"tnFvCtxName": "aci_p01_vrf"}}},
         {"fvSubnet": {"attributes": {
-          "ip": "172.16.1.1/24",
+          "ip": "203.0.113.1/24",
           "scope": "private",
           "ctrl": "nd",
           "preferred": "no",

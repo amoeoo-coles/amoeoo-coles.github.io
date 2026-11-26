@@ -200,7 +200,7 @@ def main_body() -> str:
 
 <h2 id="five-tenant">Five-tenant shared topology</h2>
 <p>The next drawing keeps that style and extends the bottom sketch from two tenants to five. Tenant1 to Tenant5 all sit under <code>root/uni</code> and all use <code>uni/tn-common/ctx-default</code>.</p>
-<p>Each user tenant has a local BD (BD1 to BD5) with an example subnet (10.1.x.0/24, labelled example) and two local EPGs (EPG1, EPG2). Each tenant also has two EPGs (EPG3, EPG4) on the shared <code>uni/tn-common/BD-default</code>, which holds example Subnet B (10.0.2.0/24) and Subnet C (10.0.3.0/24). A shared L3Out in tenant common is associated with ctx-default.</p>
+<p>Each user tenant has a local BD (BD1 to BD5) with an example subnet (10.1.x.0/24, labelled example) and two local EPGs (EPG1, EPG2). Each tenant also has two EPGs (EPG3, EPG4) on the shared <code>uni/tn-common/BD-default</code>, which holds example Subnet B (198.51.100.0/24) and Subnet C (198.51.100.0/24). A shared L3Out in tenant common is associated with ctx-default.</p>
 <p>Unlike the two-tenant source sketch, which swapped which EPGs were local in Tenant B, this five-tenant drawing is regular: every tenant has the same local-plus-shared layout. The prefixes are examples only; they were not taken from a live APIC.</p>
 <figure class="diagram">
 {topo}
@@ -214,12 +214,12 @@ def main_body() -> str:
 <li><code>uni/tn-common</code> — tenant common</li>
 <li><code>uni/tn-common/ctx-default</code> — shared VRF</li>
 <li><code>uni/tn-common/BD-default</code> — shared BD</li>
-<li><code>uni/tn-common/BD-default/subnet-[10.0.2.1/24]</code> — example Subnet B (gateway owned by common)</li>
-<li><code>uni/tn-common/BD-default/subnet-[10.0.3.1/24]</code> — example Subnet C (gateway owned by common)</li>
+<li><code>uni/tn-common/BD-default/subnet-[198.51.100.1/24]</code> — example Subnet B (gateway owned by common)</li>
+<li><code>uni/tn-common/BD-default/subnet-[198.51.100.1/24]</code> — example Subnet C (gateway owned by common)</li>
 <li><code>uni/tn-common/out-Shared-L3Out</code> — shared L3Out on ctx-default</li>
 <li><code>uni/tn-common/brc-Shared-BD-Ct</code> — example contract in common, used because shared-BD EPGs still need contracts</li>
 <li><code>uni/tn-Tenant1</code> … <code>uni/tn-Tenant5</code> — user tenants</li>
-<li><code>uni/tn-Tenant1/BD-BD1</code> — local BD, associated with ctx-default, example subnet 10.1.1.1/24 (and BD2…BD5 in the other tenants)</li>
+<li><code>uni/tn-Tenant1/BD-BD1</code> — local BD, associated with ctx-default, example subnet 198.51.100.1/24 (and BD2…BD5 in the other tenants)</li>
 <li><code>uni/tn-Tenant1/ap-AP1/epg-EPG1</code> and <code>epg-EPG2</code> — local EPGs on that tenant’s BD</li>
 <li><code>uni/tn-Tenant1/ap-AP1/epg-EPG3</code> and <code>epg-EPG4</code> — EPGs in the user tenant, associated with <code>uni/tn-common/BD-default</code></li>
 </ul>

@@ -832,7 +832,7 @@ html[data-theme="dark"] .lab-sec > header a:active{color:#fff!important;text-dec
 <div class="nxos"><pre>router bgp 65002
  vrf Tenant-1
      address-family ipv4 unicast
-      aggregate-address 10.1.0.0/16 summary-only</pre></div>
+      aggregate-address 198.51.100.0/16 summary-only</pre></div>
 <p>The data center hosts many applications for different groups of users. Some users may be on the intranet and others on the extranet. If extranet users must not access specific applications, the prefixes for those restricted applications are filtered toward the edge router at the border leaf.</p>
 <p>In a multi-tier application with web, application, and database tiers, users only need to interface with the web front end. The web tier is often proxied by a load balancer with a VIP address. Only that VIP may need to be advertised out the border leaf. A common requirement is to filter all host routes and advertise only internal subnet routes:</p>
 <div class="nxos"><pre>#Prefix List to Filter host routes for v4
@@ -844,14 +844,14 @@ route-map denyhost-filter permit 20
 
 router bgp 65002
 vrf Tenant-1
- neighbor 10.10.1.2
+ neighbor 198.51.100.2
    remote-as 65003
    address-family ipv4 unicast
    route-map denyhost-filter out</pre></div>
 <p>The border leaf can be a single exit point to the external network, removing the requirement to advertise all external networks inside the fabric. It can act as the default-gateway device for the fabric by injecting a default route into the BGP EVPN table and advertising it to the spine for distribution to all VTEPs. A default route must first exist in the routing table. If one is not learned via a dynamic routing protocol from the edge router, a static default route can be configured for each tenant VRF extended to the external network.</p>
 <p>To avoid routing loops, filter the default route sourced from the border leaf so it is not advertised out to the edge router. Match the default route with a prefix list and apply it outbound to the edge router:</p>
 <div class="nxos"><pre>vrf context Tenant-1
- ip route 0.0.0.0/0 10.10.1.2 //next hop IP on the edge router.
+ ip route 0.0.0.0/0 198.51.100.2 //next hop IP on the edge router.
 
 #Prefix List to Filter default routes for v4
 ip prefix-list default-route seq 5 permit 0.0.0.0/0
@@ -864,7 +864,7 @@ router bgp 65002
  vrf Tenant-1
      address-family ipv4 unicast
      network 0.0.0.0/0
-     neighbor 10.10.1.2
+     neighbor 198.51.100.2
         remote-as 65003
         address-family ipv4 unicast
           route-map denydefaultroute-filter out</pre></div>
@@ -883,7 +883,7 @@ match ip address prefix-list host-route
 route-map extcon-rmap-filter permit 1000
 
 vrf context Tenant-1
-ip route 0.0.0.0/0 10.10.1.2</pre></div>
+ip route 0.0.0.0/0 198.51.100.2</pre></div>
 <h3>Step 2. Routed 802.1Q sub-interfaces toward the WAN router</h3>
 <div class="nxos"><pre>//BorderLeaf-1
 interface eth1/4
@@ -893,7 +893,7 @@ no shutdown
 interface eth1/4.10
 encapsulation dot1q 10
 vrf member Tenant-1
-ip address 10.10.1.1/30
+ip address 198.51.100.1/30
 
 //BorderLeaf-2
 interface eth1/4
@@ -903,7 +903,7 @@ no shutdown
 interface eth1/4.10
 encapsulation dot1q 10
 vrf member Tenant-1
-ip address 10.10.2.1/30</pre></div>
+ip address 198.51.100.1/30</pre></div>
 <h3>Step 3. BGP peering from each border leaf to the WAN router</h3>
 <div class="nxos"><pre>//BorderLeaf-1
 router bgp 65002
@@ -913,7 +913,7 @@ router bgp 65002
        advertise l2vpn evpn
        maximum-paths 2
        network 0.0.0.0/0
-   neighbor 10.10.1.2 remote-as 65003
+   neighbor 198.51.100.2 remote-as 65003
        address-family ipv4 unicast
    route-map extcon-rmap-filter out
 
@@ -925,7 +925,7 @@ router bgp 65002
        advertise l2vpn evpn
        maximum-paths 2
        network 0.0.0.0/0
-   neighbor 10.10.2.2 remote-as 65003
+   neighbor 198.51.100.2 remote-as 65003
        address-family ipv4 unicast
    route-map extcon-rmap-filter out</pre></div>
 <p>On the WAN router, configure the routed interfaces to the border leafs, then enable BGP peering:</p>
@@ -938,7 +938,7 @@ router bgp 65002
 interface eth1/1.10
    encapsulation dot1q 10
    vrf member Tenant-1
-   ip address 10.10.1.2/30
+   ip address 198.51.100.2/30
    no shutdown
 
 interface eth1/2
@@ -950,23 +950,23 @@ interface eth1/2
 interface eth1/2.10
    encapsulation dot1q 10
    vrf member Tenant-1
-   ip address 10.10.2.2/30
+   ip address 198.51.100.2/30
    no shutdow</pre></div>
 <div class="nxos"><pre>feature bgp
 router bgp 65003
    vrf Tenant-1
    address-family ipv4 unicast
-   network 172.16.100.0/24
+   network 203.0.113.0/24
    maximum-paths 2
-   neighbor 10.10.1.1 remote-as 65002
+   neighbor 198.51.100.1 remote-as 65002
      address-family ipv4 unicast
-   neighbor 10.10.2.1 remote-as 65002
+   neighbor 198.51.100.1 remote-as 65002
      address-family ipv4 unicast</pre></div>
 
 <h2>vPC border leaf</h2>
 <p>Border-leaf nodes can be multi-homed to a WAN edge router in a vPC domain. The links from the vPC border leafs will not be Layer 2 port-channels, but point-to-point routed interfaces. The edge router advertises networks to the border leaf using a dynamic routing protocol such as OSPF or BGP. eBGP is preferred: it removes the requirement to redistribute another protocol into the BGP EVPN control plane and avoids routing loops that may happen when using a different peering protocol.</p>
 <figure class="shot-wide"><a class="shot" href="/demo-ai-pod/vxlan-evpn/img/fig23-vpc-border-leaf.jpg" onclick="aciZoom(this.href);return false;"><img alt="Figure 23. vPC border leaf" class="tt-keep" src="/demo-ai-pod/vxlan-evpn/img/fig23-vpc-border-leaf.jpg"/></a><figcaption class="chain-caption">Figure 23. vPC border leaf. Click to enlarge.</figcaption></figure>
-<p>In the diagram, external network 192.168.10.0/24 is reachable via both border-leaf nodes. On leaf 3, the next hop to that external network is the vPC VIP of the border leafs. The packet from leaf 3 hashes to either border leaf through the ECMP path. The border leafs can then forward it to the edge router.</p>
+<p>In the diagram, external network 192.0.2.0/24 is reachable via both border-leaf nodes. On leaf 3, the next hop to that external network is the vPC VIP of the border leafs. The packet from leaf 3 hashes to either border leaf through the ECMP path. The border leafs can then forward it to the edge router.</p>
 <p>vPC member switches synchronize forwarding-state information such as ARP and MAC for host routes learned on vPC interfaces. Routes learned from the edge router are Type 5 prefix routes, which are not synchronized between vPC members. The members are therefore unaware that the peer is attached to the same external network. If an edge-router interface fails on one border leaf, there is no path to redirect traffic to the peer, and the packet is dropped.</p>
 <p>To illustrate: leaf 3 sends the packet using the vPC VIP as the next hop. The packet arrives at border leaf 1, which advertised the external network with the vPC VIP as next hop. If Ethernet 1/1 between border leaf 1 and the edge router goes down, border leaf 1 drops the packet because it has no alternative path. Leaf 3 sees both border leafs as a single IP identity — the vPC VIP — and the transient spine underlay installs both border leafs as next hops to reach that VIP.</p>
 <figure class="shot-wide"><a class="shot" href="/demo-ai-pod/vxlan-evpn/img/fig24-vpc-border-multihoming.jpg" onclick="aciZoom(this.href);return false;"><img alt="Figure 24. vPC border-leaf edge-router multihoming packet drop" class="tt-keep" src="/demo-ai-pod/vxlan-evpn/img/fig24-vpc-border-multihoming.jpg"/></a><figcaption class="chain-caption">Figure 24. vPC border-leaf edge-router multihoming packet drop. Click to enlarge.</figcaption></figure>

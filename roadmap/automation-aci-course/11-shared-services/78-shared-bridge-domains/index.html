@@ -1268,7 +1268,7 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
 <details class="topic" id="object-hierarchy">
 <summary>Object hierarchy</summary>
 <div class="topic-body">
-<ul><li><code>uni/tn-common/BD-Shared-BD</code> — example BD in tenant common</li><li><code>uni/tn-common/BD-Shared-BD/subnet-[10.2.2.1/24]</code> — BD subnet (scope flags as required)</li><li><code>uni/tn-Example-Provider/ap-Prov-AP/epg-Prov-EPG/subnet-[10.2.2.1/24]</code> — the same prefix placed under the EPG when leaking across VRFs, if you follow the fundamentals guide</li></ul>
+<ul><li><code>uni/tn-common/BD-Shared-BD</code> — example BD in tenant common</li><li><code>uni/tn-common/BD-Shared-BD/subnet-[198.51.100.1/24]</code> — BD subnet (scope flags as required)</li><li><code>uni/tn-Example-Provider/ap-Prov-AP/epg-Prov-EPG/subnet-[198.51.100.1/24]</code> — the same prefix placed under the EPG when leaking across VRFs, if you follow the fundamentals guide</li></ul>
 </div>
 </details>
 <details class="topic" id="apic-gui-path">
@@ -1319,7 +1319,7 @@ moquery -c fvSubnet</pre>
         &lt;&lt;: *aci_login
         tenant: common
         bd: Shared-BD
-        gateway: 10.2.2.1
+        gateway: 198.51.100.1
         mask: 24
         scope:
           - public
@@ -1331,14 +1331,14 @@ moquery -c fvSubnet</pre>
         tenant: Example-Provider
         ap: Prov-AP
         epg: Prov-EPG
-        gateway: 10.2.2.1
+        gateway: 198.51.100.1
         mask: 24
         scope:
           - public
           - shared
         state: present
 </textarea>
-  <div class="codebox-body"><ol class="lines"><li># Lesson 78 — bridge-domain and EPG subnet shared-between-VRFs flags (lab only)</li><li># Lab only. Do not run this playbook against a production APIC.</li><li># Credentials are placeholders. Never put a real password, token, or APIC address in this file.</li><li>---</li><li>- name: Lesson 78 — bridge-domain and EPG subnet shared-between-VRFs flags (lab only)</li><li>  hosts: localhost</li><li>  connection: local</li><li>  gather_facts: false</li><li>  vars:</li><li>    aci_login: &amp;aci_login</li><li>      host: &quot;{{ apic_host }}&quot;</li><li>      username: &quot;{{ apic_username }}&quot;</li><li>      password: &quot;{{ apic_password }}&quot;</li><li>      validate_certs: false  # lab only; do not disable certificate verification in production</li><li>  tasks:</li><li>    - name: Set Shared between VRFs on a BD subnet in tenant common (example)</li><li>      cisco.aci.aci_bd_subnet:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: common</li><li>        bd: Shared-BD</li><li>        gateway: 10.2.2.1</li><li>        mask: 24</li><li>        scope:</li><li>          - public</li><li>          - shared</li><li>        state: present</li><li>    - name: For inter-VRF shared services, also place the provider subnet under the EPG</li><li>      cisco.aci.aci_epg_subnet:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: Example-Provider</li><li>        ap: Prov-AP</li><li>        epg: Prov-EPG</li><li>        gateway: 10.2.2.1</li><li>        mask: 24</li><li>        scope:</li><li>          - public</li><li>          - shared</li><li>        state: present</li></ol></div>
+  <div class="codebox-body"><ol class="lines"><li># Lesson 78 — bridge-domain and EPG subnet shared-between-VRFs flags (lab only)</li><li># Lab only. Do not run this playbook against a production APIC.</li><li># Credentials are placeholders. Never put a real password, token, or APIC address in this file.</li><li>---</li><li>- name: Lesson 78 — bridge-domain and EPG subnet shared-between-VRFs flags (lab only)</li><li>  hosts: localhost</li><li>  connection: local</li><li>  gather_facts: false</li><li>  vars:</li><li>    aci_login: &amp;aci_login</li><li>      host: &quot;{{ apic_host }}&quot;</li><li>      username: &quot;{{ apic_username }}&quot;</li><li>      password: &quot;{{ apic_password }}&quot;</li><li>      validate_certs: false  # lab only; do not disable certificate verification in production</li><li>  tasks:</li><li>    - name: Set Shared between VRFs on a BD subnet in tenant common (example)</li><li>      cisco.aci.aci_bd_subnet:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: common</li><li>        bd: Shared-BD</li><li>        gateway: 198.51.100.1</li><li>        mask: 24</li><li>        scope:</li><li>          - public</li><li>          - shared</li><li>        state: present</li><li>    - name: For inter-VRF shared services, also place the provider subnet under the EPG</li><li>      cisco.aci.aci_epg_subnet:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: Example-Provider</li><li>        ap: Prov-AP</li><li>        epg: Prov-EPG</li><li>        gateway: 198.51.100.1</li><li>        mask: 24</li><li>        scope:</li><li>          - public</li><li>          - shared</li><li>        state: present</li></ol></div>
 </figure>
 <h2 id="inventory">Inventory and vars</h2>
 <p>Example files that stay next to the playbook. Fill in a private copy; never commit a real password.</p>

@@ -736,9 +736,9 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
 <div class="band" style="--c:#0d9488">
 <div class="lab">IP Space(s)</div>
 <div class="rowboxes">
-<div class="col"><a class="tbox" href="/aci-policy/subnet/" style="--c:#0d9488">Subnet A<small>10.1.10.1/24</small></a><a class="tbox" href="/aci-policy/subnet/" style="--c:#0d9488">Subnet B<small>10.1.20.1/24 · Context-1</small></a></div>
-<div class="col"><a class="tbox" href="/aci-policy/subnet/" style="--c:#0d9488">Subnet D<small>10.1.30.1/24</small></a></div>
-<div class="col"><a class="tbox" href="/aci-policy/subnet/" style="--c:#0d9488">Subnet B<small>10.1.20.1/24 · Context-2</small></a><a class="tbox" href="/aci-policy/subnet/" style="--c:#0d9488">Subnet F<small>10.2.10.1/24</small></a></div>
+<div class="col"><a class="tbox" href="/aci-policy/subnet/" style="--c:#0d9488">Subnet A<small>198.51.100.1/24</small></a><a class="tbox" href="/aci-policy/subnet/" style="--c:#0d9488">Subnet B<small>198.51.100.1/24 · Context-1</small></a></div>
+<div class="col"><a class="tbox" href="/aci-policy/subnet/" style="--c:#0d9488">Subnet D<small>198.51.100.1/24</small></a></div>
+<div class="col"><a class="tbox" href="/aci-policy/subnet/" style="--c:#0d9488">Subnet B<small>198.51.100.1/24 · Context-2</small></a><a class="tbox" href="/aci-policy/subnet/" style="--c:#0d9488">Subnet F<small>198.51.100.1/24</small></a></div>
 </div>
 </div>
 <div class="band" style="--c:#16a34a">
@@ -770,7 +770,7 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
 <li><strong>Tenant</strong> — the administrative container (Customer / BU / Group). Everything below lives under <span class="dn">uni/tn-PolicyTenant</span>. See <a href="/aci-policy/tenants/">Tenants</a>.</li>
 <li><strong>Contexts (VRFs)</strong> — two routing tables, Context-1 and Context-2. They do not leak routes to each other unless you build a contract and shared-service leak on purpose. See <a href="/aci-policy/vrf/">VRF</a>.</li>
 <li><strong>Bridge Domains (L2 boundary)</strong> — BD1 and BD2 sit under Context-1; BD3 sits under Context-2. Broadcast, unknown unicast and multicast flood inside a BD, not across BDs. See <a href="/aci-policy/bridge-domain/">Bridge Domain</a>.</li>
-<li><strong>IP space(s)</strong> — subnets are configured on the BD, not on the EPG. BD1 has Subnet A (10.1.10.1/24) and Subnet B (10.1.20.1/24); BD2 has Subnet D (10.1.30.1/24); BD3 has Subnet B (10.1.20.1/24) and Subnet F (10.2.10.1/24). See <a href="/aci-policy/subnet/">Subnet</a>.</li>
+<li><strong>IP space(s)</strong> — subnets are configured on the BD, not on the EPG. BD1 has Subnet A (198.51.100.1/24) and Subnet B (198.51.100.1/24); BD2 has Subnet D (198.51.100.1/24); BD3 has Subnet B (198.51.100.1/24) and Subnet F (198.51.100.1/24). See <a href="/aci-policy/subnet/">Subnet</a>.</li>
 <li><strong>Why Subnet B can appear in two BDs</strong> — BD1 is in Context-1 and BD3 is in Context-2. Overlapping IP space is allowed across VRFs because each context has its own routing table. The same prefix in one VRF would be a conflict.</li>
 <li><strong>EPGs</strong> — groups of endpoints and the policies that define their connection. BD1 holds EPG A and EPG B; BD2 holds EPG C; BD3 holds EPG A, B and C. An EPG is not the flood domain — the BD is. See <a href="/aci-policy/endpoint-group/">Endpoint Group</a>.</li>
 <li><strong>EPGs talk through contracts</strong> — the line from EPG B to EPG C crosses BDs (still in the same VRF, so the contract plus routing in Context-1 can connect them). On BD3 the lines are A–B and C–B. See <a href="/aci-policy/contract/">Contract</a>.</li>
@@ -790,23 +790,23 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
           unknown_unicast: proxy
           arp_flooding: true
           subnets:
-            - ip: 10.1.10.1/24    # Subnet A
+            - ip: 198.51.100.1/24    # Subnet A
               private: true
-            - ip: 10.1.20.1/24    # Subnet B in Context-1
+            - ip: 198.51.100.1/24    # Subnet B in Context-1
               private: true
         - name: BD2
           vrf: Context-1
           unicast_routing: true
           subnets:
-            - ip: 10.1.30.1/24    # Subnet D
+            - ip: 198.51.100.1/24    # Subnet D
               private: true
         - name: BD3
           vrf: Context-2
           unicast_routing: true
           subnets:
-            - ip: 10.1.20.1/24    # Subnet B again — OK, different VRF
+            - ip: 198.51.100.1/24    # Subnet B again — OK, different VRF
               private: true
-            - ip: 10.2.10.1/24    # Subnet F
+            - ip: 198.51.100.1/24    # Subnet F
               private: true
       application_profiles:
         - name: PolicyTenant_AP
@@ -851,7 +851,7 @@ It is a 2-VRF tenant (closer in shape to the sample than most demo tenants). No 
 <thead><tr><th>Class</th><th>Count in Test100</th><th>Policy page</th></tr></thead>
 <tbody><tr><td>VRF (fvCtx)</td><td>2</td><td><a href="/aci-policy/vrf/">open</a></td></tr><tr><td>Bridge Domain (fvBD)</td><td>4</td><td><a href="/aci-policy/bridge-domain/">open</a></td></tr><tr><td>Subnet (fvSubnet)</td><td>4</td><td><a href="/aci-policy/subnet/">open</a></td></tr><tr><td>Application Profile (fvAp)</td><td>2</td><td><a href="/aci-policy/application-profile/">open</a></td></tr><tr><td>Endpoint Group (fvAEPg)</td><td>4</td><td><a href="/aci-policy/endpoint-group/">open</a></td></tr><tr><td>Contract (vzBrCP)</td><td>3</td><td><a href="/aci-policy/contract/">open</a></td></tr></tbody>
 </table>
-<h3>Tree Index — Test100 (from local NaC model)</h3><table class="tree"><thead><tr><th>Object</th><th>Layer</th><th>Class</th></tr></thead><tbody><tr><td><span class="dn">uni/tn-Test100</span></td><td>Tenant</td><td>fvTenant</td></tr><tr><td>  VRF PROD</td><td>Context</td><td>fvCtx</td></tr><tr><td>  VRF DEV</td><td>Context</td><td>fvCtx</td></tr><tr><td>  BD PROD-DB <span class="dn">vrf:PROD</span></td><td>Bridge Domain</td><td>fvBD</td></tr><tr><td>    Subnet 192.168.1.1/24</td><td>IP space</td><td>fvSubnet</td></tr><tr><td>  BD PROD-APP <span class="dn">vrf:PROD</span></td><td>Bridge Domain</td><td>fvBD</td></tr><tr><td>    Subnet 192.168.2.1/24</td><td>IP space</td><td>fvSubnet</td></tr><tr><td>  BD DEV-APP <span class="dn">vrf:DEV</span></td><td>Bridge Domain</td><td>fvBD</td></tr><tr><td>    Subnet 192.168.3.1/24</td><td>IP space</td><td>fvSubnet</td></tr><tr><td>  BD DEV-DB <span class="dn">vrf:DEV</span></td><td>Bridge Domain</td><td>fvBD</td></tr><tr><td>    Subnet 192.168.4.1/24</td><td>IP space</td><td>fvSubnet</td></tr><tr><td>  AP PROD</td><td>Application Profile</td><td>fvAp</td></tr><tr><td>    EPG P-DB <span class="dn">bd:PROD-DB</span></td><td>Endpoint Group</td><td>fvAEPg</td></tr><tr><td>    EPG P-APP <span class="dn">bd:PROD-APP</span></td><td>Endpoint Group</td><td>fvAEPg</td></tr><tr><td>  AP DEV</td><td>Application Profile</td><td>fvAp</td></tr><tr><td>    EPG D-DB <span class="dn">bd:DEV-DB</span></td><td>Endpoint Group</td><td>fvAEPg</td></tr><tr><td>    EPG D-APP <span class="dn">bd:DEV-APP</span></td><td>Endpoint Group</td><td>fvAEPg</td></tr></tbody></table>
+<h3>Tree Index — Test100 (from local NaC model)</h3><table class="tree"><thead><tr><th>Object</th><th>Layer</th><th>Class</th></tr></thead><tbody><tr><td><span class="dn">uni/tn-Test100</span></td><td>Tenant</td><td>fvTenant</td></tr><tr><td>  VRF PROD</td><td>Context</td><td>fvCtx</td></tr><tr><td>  VRF DEV</td><td>Context</td><td>fvCtx</td></tr><tr><td>  BD PROD-DB <span class="dn">vrf:PROD</span></td><td>Bridge Domain</td><td>fvBD</td></tr><tr><td>    Subnet 192.0.2.1/24</td><td>IP space</td><td>fvSubnet</td></tr><tr><td>  BD PROD-APP <span class="dn">vrf:PROD</span></td><td>Bridge Domain</td><td>fvBD</td></tr><tr><td>    Subnet 192.0.2.1/24</td><td>IP space</td><td>fvSubnet</td></tr><tr><td>  BD DEV-APP <span class="dn">vrf:DEV</span></td><td>Bridge Domain</td><td>fvBD</td></tr><tr><td>    Subnet 192.0.2.1/24</td><td>IP space</td><td>fvSubnet</td></tr><tr><td>  BD DEV-DB <span class="dn">vrf:DEV</span></td><td>Bridge Domain</td><td>fvBD</td></tr><tr><td>    Subnet 192.0.2.1/24</td><td>IP space</td><td>fvSubnet</td></tr><tr><td>  AP PROD</td><td>Application Profile</td><td>fvAp</td></tr><tr><td>    EPG P-DB <span class="dn">bd:PROD-DB</span></td><td>Endpoint Group</td><td>fvAEPg</td></tr><tr><td>    EPG P-APP <span class="dn">bd:PROD-APP</span></td><td>Endpoint Group</td><td>fvAEPg</td></tr><tr><td>  AP DEV</td><td>Application Profile</td><td>fvAp</td></tr><tr><td>    EPG D-DB <span class="dn">bd:DEV-DB</span></td><td>Endpoint Group</td><td>fvAEPg</td></tr><tr><td>    EPG D-APP <span class="dn">bd:DEV-APP</span></td><td>Endpoint Group</td><td>fvAEPg</td></tr></tbody></table>
 <h2>Related</h2>
 <div class="related"><a href="/aci-policy/tenants/"><i style="--c:#2563eb"></i>Tenants</a><a href="/aci-policy/vrf/"><i style="--c:#7c3aed"></i>VRF</a><a href="/aci-policy/bridge-domain/"><i style="--c:#0891b2"></i>Bridge Domain</a><a href="/aci-policy/subnet/"><i style="--c:#0d9488"></i>Subnet</a><a href="/aci-policy/application-profile/"><i style="--c:#65a30d"></i>Application Profile</a><a href="/aci-policy/endpoint-group/"><i style="--c:#16a34a"></i>Endpoint Group</a><a href="/aci-policy/contract/"><i style="--c:#ca8a04"></i>Contract</a><a href="/aci-policy/filter/"><i style="--c:#ea580c"></i>Filter</a><a href="/aci-policy/l3out/"><i style="--c:#dc2626"></i>L3Out</a></div>
 </main>

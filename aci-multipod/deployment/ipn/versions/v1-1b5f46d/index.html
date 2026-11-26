@@ -710,9 +710,9 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
 <li>Enable LLDP and confirm the spine-facing ports. The paper’s <code>show lldp neighbors</code> on dp2-p1-ipn1 lists dp2-p1-s1 on Eth1/7 (port Eth8/32), dp2-p1-s2 on Eth1/8 (port Eth8/32), and the remote IPN on Eth1/9 and Eth1/10.</li>
 <li>Create VRF <span class="dn">IPN-1</span> (best practice; the global table is also supported).</li>
 <li>Enable OSPF process <span class="dn">IPN</span> in that VRF. Router IDs in the paper: 1.1.1.1 and 2.2.2.1.</li>
-<li>Configure multicast: phantom-RP loopbacks 192.168.100.1/30 (active) and 192.168.100.1/29 (standby), static RP 192.168.100.2, groups 225.0.0.0/15 and 239.255.255.240/28, both <code>bidir</code>. The IPN device must support a Bidir range of at least /15.</li>
-<li>Configure spine-facing and IPN-to-IPN interfaces as 802.1Q VLAN 4 subinterfaces, MTU 9150, point-to-point OSPF in area 0.0.0.0, PIM sparse-mode. The paper’s /31s are 192.168.1.0/31 and 192.168.1.4/31 toward Pod 1, 192.168.2.0/31 and 192.168.2.4/31 toward Pod 2, and 192.168.3.0/31 plus 192.168.3.2/31 between the IPN devices.</li>
-<li>Enable DHCP relay and, on every spine-facing subinterface, relay to 10.111.0.1 through 10.111.0.5 (all five APIC TEPs, because “it is not possible to know beforehand in which pod the specific APIC nodes may get connected”).</li>
+<li>Configure multicast: phantom-RP loopbacks 192.0.2.1/30 (active) and 192.0.2.1/29 (standby), static RP 192.0.2.2, groups 225.0.0.0/15 and 239.255.255.240/28, both <code>bidir</code>. The IPN device must support a Bidir range of at least /15.</li>
+<li>Configure spine-facing and IPN-to-IPN interfaces as 802.1Q VLAN 4 subinterfaces, MTU 9150, point-to-point OSPF in area 0.0.0.0, PIM sparse-mode. The paper’s /31s are 192.0.2.0/31 and 192.0.2.4/31 toward Pod 1, 192.0.2.0/31 and 192.0.2.4/31 toward Pod 2, and 192.0.2.0/31 plus 192.0.2.2/31 between the IPN devices.</li>
+<li>Enable DHCP relay and, on every spine-facing subinterface, relay to 198.51.100.1 through 198.51.100.5 (all five APIC TEPs, because “it is not possible to know beforehand in which pod the specific APIC nodes may get connected”).</li>
 </ol>
 <p class="field-help"><cite class="src">Source: <a href="https://www.cisco.com/c/en/us/solutions/collateral/data-center-virtualization/application-centric-infrastructure/white-paper-c11-739714.html">Cisco Multi-Pod Configuration White Paper (c11-739714), Configuring the IPN through Configuring IPN interfaces for DHCP relay</a></cite></p>
 <div class="codebox"><span class="tag">NX-OS (converted from the paper's tables)</span><button class="copy" onclick="aciCopy(this)" type="button">Copy</button><pre>! Example from white paper c11-739714, Nexus 7000 style.
@@ -725,8 +725,8 @@ feature dhcp
 service dhcp
 ip dhcp relay
 vrf context IPN-1
-  ip pim rp-address 192.168.100.2 group-list 225.0.0.0/15 bidir
-  ip pim rp-address 192.168.100.2 group-list 239.255.255.240/28 bidir
+  ip pim rp-address 192.0.2.2 group-list 225.0.0.0/15 bidir
+  ip pim rp-address 192.0.2.2 group-list 239.255.255.240/28 bidir
 router ospf IPN
   vrf IPN-1
     router-id 1.1.1.1
@@ -734,7 +734,7 @@ router ospf IPN
 interface loopback1
   description BIDIR Phantom RP
   vrf member IPN-1
-  ip address 192.168.100.1/30
+  ip address 192.0.2.1/30
   ip ospf network point-to-point
   ip router ospf IPN area 0.0.0.0
   ip pim sparse-mode
@@ -746,15 +746,15 @@ interface Ethernet1/7.4
   mtu 9150
   encapsulation dot1q 4
   vrf member IPN-1
-  ip address 192.168.1.1/31
+  ip address 192.0.2.1/31
   ip ospf network point-to-point
   ip router ospf IPN area 0.0.0.0
   ip pim sparse-mode
-  ip dhcp relay address 10.111.0.1
-  ip dhcp relay address 10.111.0.2
-  ip dhcp relay address 10.111.0.3
-  ip dhcp relay address 10.111.0.4
-  ip dhcp relay address 10.111.0.5
+  ip dhcp relay address 198.51.100.1
+  ip dhcp relay address 198.51.100.2
+  ip dhcp relay address 198.51.100.3
+  ip dhcp relay address 198.51.100.4
+  ip dhcp relay address 198.51.100.5
   no shutdown
 interface Ethernet1/8
   mtu 9150
@@ -764,22 +764,22 @@ interface Ethernet1/8.4
   mtu 9150
   encapsulation dot1q 4
   vrf member IPN-1
-  ip address 192.168.1.5/31
+  ip address 192.0.2.5/31
   ip ospf network point-to-point
   ip router ospf IPN area 0.0.0.0
   ip pim sparse-mode
-  ip dhcp relay address 10.111.0.1
-  ip dhcp relay address 10.111.0.2
-  ip dhcp relay address 10.111.0.3
-  ip dhcp relay address 10.111.0.4
-  ip dhcp relay address 10.111.0.5
+  ip dhcp relay address 198.51.100.1
+  ip dhcp relay address 198.51.100.2
+  ip dhcp relay address 198.51.100.3
+  ip dhcp relay address 198.51.100.4
+  ip dhcp relay address 198.51.100.5
   no shutdown
 interface Ethernet1/9.4
   description dp2-p2-ipn1 link 1
   mtu 9150
   encapsulation dot1q 4
   vrf member IPN-1
-  ip address 192.168.3.0/31
+  ip address 192.0.2.0/31
   ip ospf network point-to-point
   ip router ospf IPN area 0.0.0.0
   ip pim sparse-mode
@@ -789,7 +789,7 @@ interface Ethernet1/10.4
   mtu 9150
   encapsulation dot1q 4
   vrf member IPN-1
-  ip address 192.168.3.2/31
+  ip address 192.0.2.2/31
   ip ospf network point-to-point
   ip router ospf IPN area 0.0.0.0
   ip pim sparse-mode
@@ -797,11 +797,11 @@ interface Ethernet1/10.4
 
 ! --- dp2-p2-ipn-1 (differences only) ---
 ! OSPF router-id 2.2.2.1
-! loopback1 ip address 192.168.100.1/29
-! Ethernet2/7.4 192.168.2.1/31 description dp2-p2-s3
-! Ethernet2/8.4 192.168.2.5/31 description dp2-p2-s4
-! Ethernet2/9.4  192.168.3.1/31
-! Ethernet2/10.4 192.168.3.3/31
+! loopback1 ip address 192.0.2.1/29
+! Ethernet2/7.4 192.0.2.1/31 description dp2-p2-s3
+! Ethernet2/8.4 192.0.2.5/31 description dp2-p2-s4
+! Ethernet2/9.4  192.0.2.1/31
+! Ethernet2/10.4 192.0.2.3/31
 ! DHCP relay statements on Ethernet2/7.4 and Ethernet2/8.4 are the same five APIC TEPs.
 </pre></div>
 <p>BRKDCN-2949 slide 58 adds <code>ip ospf cost 100</code> on the spine-facing subinterface so the PIM RP is not reached via a spine. That command is not in the paper’s tables; include it if you follow the 2025 deck’s multicast design.</p>

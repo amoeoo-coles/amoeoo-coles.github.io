@@ -83,7 +83,7 @@ TASKS_80 = """
         <<: *aci_login
         tenant: common
         bd: default
-        gateway: 10.0.2.1
+        gateway: 198.51.100.1
         mask: 24
         scope:
           - private
@@ -94,7 +94,7 @@ TASKS_80 = """
         <<: *aci_login
         tenant: common
         bd: default
-        gateway: 10.0.3.1
+        gateway: 198.51.100.1
         mask: 24
         scope:
           - private
@@ -149,11 +149,11 @@ TASKS_80 = """
           - private
         state: present
       loop:
-        - {tenant: Tenant1, bd: BD1, gateway: 10.1.1.1}
-        - {tenant: Tenant2, bd: BD2, gateway: 10.1.2.1}
-        - {tenant: Tenant3, bd: BD3, gateway: 10.1.3.1}
-        - {tenant: Tenant4, bd: BD4, gateway: 10.1.4.1}
-        - {tenant: Tenant5, bd: BD5, gateway: 10.1.5.1}
+        - {tenant: Tenant1, bd: BD1, gateway: 198.51.100.1}
+        - {tenant: Tenant2, bd: BD2, gateway: 198.51.100.1}
+        - {tenant: Tenant3, bd: BD3, gateway: 198.51.100.1}
+        - {tenant: Tenant4, bd: BD4, gateway: 198.51.100.1}
+        - {tenant: Tenant5, bd: BD5, gateway: 198.51.100.1}
 
     - name: Create an application profile in each user tenant
       cisco.aci.aci_ap:
@@ -581,7 +581,7 @@ def build_all():
         _task("Add a private gateway subnet to the BD", "aci_bd_subnet", [
             "tenant: Example-Tenant",
             "bd: Example-BD",
-            "gateway: 10.0.0.1",
+            "gateway: 198.51.100.1",
             "mask: 24",
             "scope:",
             "  - private",
@@ -591,7 +591,7 @@ def build_all():
         + _task("Remove the example subnet (cleanup)", "aci_bd_subnet", [
             "tenant: Example-Tenant",
             "bd: Example-BD",
-            "gateway: 10.0.0.1",
+            "gateway: 198.51.100.1",
             "mask: 24",
             "state: absent",
         ]))
@@ -715,7 +715,7 @@ def build_all():
     P[38] = lab("Lesson 38 — L2/L3 fabric lab, subnet + AP + EPG (lab only)", "lesson-38-aci-as-l2-and-l3-fabric-lab-demo-part-2.yml",
         _task("Add the example subnet", "aci_bd_subnet", [
             "tenant: Example-Tenant", "bd: Example-BD",
-            "gateway: 10.0.0.1", "mask: 24",
+            "gateway: 198.51.100.1", "mask: 24",
             "scope:", "  - private",
             "state: present",
         ])
@@ -967,7 +967,7 @@ def build_all():
             "node_profile: Example-NP",
             "pod_id: 1",
             "node_id: 101",
-            "router_id: 10.0.255.101",
+            "router_id: 198.51.100.101",
             "state: present",
         ])
         + _task("Create an external EPG", "aci_l3out_extepg", [
@@ -980,7 +980,7 @@ def build_all():
             "tenant: Example-Tenant",
             "l3out: Example-L3Out",
             "extepg: Example-ExtEPG",
-            "network: 10.100.0.0/24",
+            "network: 198.51.100.0/24",
             "scope:",
             "  - import-security",
             "state: present",
@@ -1009,7 +1009,7 @@ def build_all():
             "logical_node: Example-NP",
             "node_id: 101",
             "pod_id: 1",
-            "prefix: 10.200.0.0/16",
+            "prefix: 198.51.100.0/16",
             "state: present",
         ])
         + _task("Add a next-hop for the static route", "aci_l3out_static_routes_nexthop", [
@@ -1018,8 +1018,8 @@ def build_all():
             "node_profile: Example-NP",
             "node_id: 101",
             "pod_id: 1",
-            "prefix: 10.200.0.0/16",
-            "nexthop: 10.0.1.2",
+            "prefix: 198.51.100.0/16",
+            "nexthop: 198.51.100.2",
             "state: present",
         ])
         + _task("Remove the example static route (cleanup)", "aci_l3out_static_routes", [
@@ -1028,7 +1028,7 @@ def build_all():
             "logical_node: Example-NP",
             "node_id: 101",
             "pod_id: 1",
-            "prefix: 10.200.0.0/16",
+            "prefix: 198.51.100.0/16",
             "state: absent",
         ]))
 
@@ -1069,7 +1069,7 @@ def build_all():
             "tenant: Example-Tenant",
             "l3out: Example-L3Out",
             "extepg: Example-ExtEPG",
-            "network: 10.0.0.0/24",
+            "network: 198.51.100.0/24",
             "scope:",
             "  - export-rtctrl",
             "  - import-security",
@@ -1092,7 +1092,7 @@ def build_all():
             "tenant: Example-Tenant",
             "l3out: Example-L3Out",
             "extepg: Example-ExtEPG",
-            "network: 10.100.0.0/16",
+            "network: 198.51.100.0/16",
             "scope:",
             "  - import-security",
             "  - shared-rtctrl",
@@ -1132,7 +1132,7 @@ def build_all():
             "tenant: common",
             "l3out: Shared-L3Out",
             "extepg: Shared-ExtEPG",
-            "network: 10.100.0.0/16",
+            "network: 198.51.100.0/16",
             "scope:",
             "  - import-security",
             "  - shared-rtctrl",
@@ -1152,7 +1152,7 @@ def build_all():
             "tenant: Example-Provider",
             "ap: Prov-AP",
             "epg: Prov-EPG",
-            "gateway: 10.1.1.1",
+            "gateway: 198.51.100.1",
             "mask: 24",
             "scope:",
             "  - public",
@@ -1192,7 +1192,7 @@ def build_all():
         _task("Set Shared between VRFs on a BD subnet in tenant common (example)", "aci_bd_subnet", [
             "tenant: common",
             "bd: Shared-BD",
-            "gateway: 10.2.2.1",
+            "gateway: 198.51.100.1",
             "mask: 24",
             "scope:",
             "  - public",
@@ -1203,7 +1203,7 @@ def build_all():
             "tenant: Example-Provider",
             "ap: Prov-AP",
             "epg: Prov-EPG",
-            "gateway: 10.2.2.1",
+            "gateway: 198.51.100.1",
             "mask: 24",
             "scope:",
             "  - public",

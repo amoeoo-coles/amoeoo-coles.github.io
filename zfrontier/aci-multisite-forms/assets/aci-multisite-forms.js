@@ -154,8 +154,8 @@
       fields: [
         { name: "site1_name", label: "Site 1 Name", type: "text", default: "site1" },
         { name: "site2_name", label: "Site 2 Name", type: "text", default: "site2" },
-        { name: "site1_tep", label: "Site 1 Internal TEP Pool (Example)", type: "text", default: "10.1.0.0/16", hint: "Must not overlap Site 2 TEP or tenant subnets" },
-        { name: "site2_tep", label: "Site 2 Internal TEP Pool (Example)", type: "text", default: "10.2.0.0/16" },
+        { name: "site1_tep", label: "Site 1 Internal TEP Pool (Example)", type: "text", default: "198.51.100.0/16", hint: "Must not overlap Site 2 TEP or tenant subnets" },
+        { name: "site2_tep", label: "Site 2 Internal TEP Pool (Example)", type: "text", default: "198.51.100.0/16" },
         { name: "site1_outtep", label: "Site 1 O-UTEP", type: "text", default: "192.0.2.11/32", hint: "Overlay Unicast TEP (TEST-NET-1 example)" },
         { name: "site2_outtep", label: "Site 2 O-UTEP", type: "text", default: "198.51.100.11/32", hint: "TEST-NET-2 example" },
         { name: "site1_omtep", label: "Site 1 O-MTEP", type: "text", default: "192.0.2.12/32", hint: "Overlay Multicast TEP" },
@@ -206,9 +206,9 @@
       fields: [
         { name: "isn_vrf", label: "ISN VRF Name", type: "text", default: "ACI-ISN" },
         { name: "isn_vlan", label: "ISN Dot1q VLAN", type: "number", default: "4", hint: "VLAN 4 is the ACI infra VLAN used toward spines" },
-        { name: "site1_p2p", label: "Site 1 Spine-ISN VLAN-4 Subnet", type: "text", default: "10.254.1.0/30" },
-        { name: "site2_p2p", label: "Site 2 Spine-ISN VLAN-4 Subnet", type: "text", default: "10.254.2.0/30" },
-        { name: "isn_core_p2p", label: "ISN-1 to ISN-2 Core Subnet", type: "text", default: "10.254.3.0/30" },
+        { name: "site1_p2p", label: "Site 1 Spine-ISN VLAN-4 Subnet", type: "text", default: "198.51.100.0/30" },
+        { name: "site2_p2p", label: "Site 2 Spine-ISN VLAN-4 Subnet", type: "text", default: "198.51.100.0/30" },
+        { name: "isn_core_p2p", label: "ISN-1 to ISN-2 Core Subnet", type: "text", default: "198.51.100.0/30" },
         { name: "fabric_mtu", label: "Target ISN MTU (Bytes)", type: "number", default: "9216", hint: "Minimum 9150 required end-to-end across ISN" },
         { name: "rtt_ms", label: "Measured Site1-Site2 RTT (ms)", type: "number", default: "12", hint: "Example planning value; confirm against current Multi-Site CVD" },
         { name: "ospf_area", label: "OSPF Area ID", type: "text", default: "0.0.0.0" }
@@ -310,7 +310,7 @@
         { name: "template", label: "Stretched Template", type: "text", default: "stretched-core" },
         { name: "vrf", label: "VRF Name", type: "text", default: "vrf-core" },
         { name: "bd", label: "Bridge Domain", type: "text", default: "bd-app" },
-        { name: "bd_subnet", label: "BD Gateway Subnet", type: "text", default: "10.30.10.1/24" },
+        { name: "bd_subnet", label: "BD Gateway Subnet", type: "text", default: "198.51.100.1/24" },
         { name: "l2_stretch", label: "L2 Stretch", type: "select", default: "true", options: ["true", "false"] },
         { name: "intersite_bum", label: "Inter-Site BUM Flooding", type: "select", default: "true", options: ["true", "false"] }
       ],
@@ -348,7 +348,7 @@
         { name: "template", label: "Stretched Template", type: "text", default: "stretched-core" },
         { name: "vrf", label: "VRF Name", type: "text", default: "vrf-core" },
         { name: "bd", label: "Bridge Domain", type: "text", default: "bd-app-wan" },
-        { name: "bd_subnet", label: "BD Gateway Subnet", type: "text", default: "10.30.20.1/24" },
+        { name: "bd_subnet", label: "BD Gateway Subnet", type: "text", default: "198.51.100.1/24" },
         { name: "l2_stretch", label: "L2 Stretch", type: "select", default: "true", options: ["true", "false"] },
         { name: "intersite_bum", label: "Inter-Site BUM Flooding", type: "select", default: "false", options: ["true", "false"] },
         { name: "optimize_wan", label: "Optimise WAN Bandwidth", type: "select", default: "true", options: ["true", "false"] }
@@ -388,7 +388,7 @@
         { name: "site_name", label: "Site Name", type: "text", default: "site1" },
         { name: "vrf", label: "Site-Local VRF", type: "text", default: "vrf-site1-local" },
         { name: "bd", label: "Site-Local Bridge Domain", type: "text", default: "bd-site1-local" },
-        { name: "bd_subnet", label: "BD Gateway Subnet", type: "text", default: "10.31.10.1/24" }
+        { name: "bd_subnet", label: "BD Gateway Subnet", type: "text", default: "198.51.100.1/24" }
       ],
       build: function (v) {
         var t1 = msoTask("Ensure site-local template " + v.template, "cisco.mso.mso_schema_template");
@@ -553,8 +553,8 @@
       fields: [
         { name: "site_name", label: "NDO Site Name (Multi-Pod Fabric)", type: "text", default: "site1" },
         { name: "site_type", label: "Site Fabric Type", type: "select", default: "multipod", options: ["multipod", "single-pod"] },
-        { name: "pod1_tep", label: "Pod 1 Internal TEP Pool", type: "text", default: "10.1.0.0/16" },
-        { name: "pod2_tep", label: "Pod 2 Internal TEP Pool", type: "text", default: "10.11.0.0/16" },
+        { name: "pod1_tep", label: "Pod 1 Internal TEP Pool", type: "text", default: "198.51.100.0/16" },
+        { name: "pod2_tep", label: "Pod 2 Internal TEP Pool", type: "text", default: "198.51.100.0/16" },
         { name: "ipn_vrf", label: "IPN VRF (Inter-Pod)", type: "text", default: "ACI-IPN" },
         { name: "isn_vrf", label: "ISN VRF (Inter-Site)", type: "text", default: "ACI-ISN" },
         { name: "ndo_schema", label: "NDO Schema for this Site", type: "text", default: "prod-schema" }
@@ -602,7 +602,7 @@
         { name: "isn_hostname", label: "ISN Switch Hostname", type: "text", default: "isn-nxos-1" },
         { name: "isn_vrf", label: "ISN VRF Name", type: "text", default: "ACI-ISN" },
         { name: "jumbo_mtu", label: "System Jumbo MTU", type: "number", default: "9216" },
-        { name: "lo0_ip", label: "Loopback0 IP/Mask", type: "text", default: "10.254.0.1/32" },
+        { name: "lo0_ip", label: "Loopback0 IP/Mask", type: "text", default: "198.51.100.1/32" },
         { name: "vrf_rd", label: "VRF Route Distinguisher", type: "text", default: "65000:4" }
       ],
       buildCli: function (v) {
@@ -664,7 +664,7 @@
         { name: "isn_vrf", label: "ISN VRF Name", type: "text", default: "ACI-ISN" },
         { name: "parent_if", label: "ISN Parent Interface", type: "text", default: "Ethernet1/1" },
         { name: "subif_vlan", label: "Dot1q Subinterface VLAN", type: "number", default: "4", hint: "ACI infra VLAN toward spines" },
-        { name: "subif_ip", label: "ISN Subinterface IP/Mask", type: "text", default: "10.254.1.2/30" },
+        { name: "subif_ip", label: "ISN Subinterface IP/Mask", type: "text", default: "198.51.100.2/30" },
         { name: "subif_mtu", label: "Subinterface MTU", type: "number", default: "9150" },
         { name: "description", label: "Interface Description", type: "text", default: "site1-spine-101", span2: true }
       ],
@@ -738,9 +738,9 @@
         { name: "isn_vrf", label: "ISN VRF Name", type: "text", default: "ACI-ISN" },
         { name: "ospf_process", label: "OSPF Process ID", type: "number", default: "1" },
         { name: "ospf_area", label: "OSPF Area ID", type: "text", default: "0.0.0.0" },
-        { name: "lo0_ip", label: "Loopback0 IP/Mask", type: "text", default: "10.254.0.1/32" },
+        { name: "lo0_ip", label: "Loopback0 IP/Mask", type: "text", default: "198.51.100.1/32" },
         { name: "subif", label: "OSPF Interface", type: "text", default: "Ethernet1/1.4" },
-        { name: "router_id", label: "OSPF Router-ID", type: "text", default: "10.254.0.1" }
+        { name: "router_id", label: "OSPF Router-ID", type: "text", default: "198.51.100.1" }
       ],
       buildCli: function (v) {
         var proc = intVal(v.ospf_process, 1);
@@ -895,13 +895,13 @@
       description: "Document a three-node Nexus Dashboard cluster (example management addresses) and, once the official ISO/CIMC bootstrap is complete, verify the cluster with cisco.nd.nd_version. This page cannot bootstrap the appliance itself; the playbook only asserts variables and checks a running cluster. Passwords stay as {{ nd_password }}.",
       fields: [
         { name: "cluster_name", label: "ND Cluster Name", type: "text", default: "nd-cluster-1" },
-        { name: "nd_node1", label: "Node 1 Management IP", type: "text", default: "10.10.10.11" },
-        { name: "nd_node2", label: "Node 2 Management IP", type: "text", default: "10.10.10.12" },
-        { name: "nd_node3", label: "Node 3 Management IP", type: "text", default: "10.10.10.13" },
-        { name: "nd_vip", label: "Cluster Management VIP", type: "text", default: "10.10.10.10" },
-        { name: "dns_server", label: "DNS Server (Example)", type: "text", default: "10.10.10.53" },
-        { name: "ntp_server", label: "NTP Server (Example)", type: "text", default: "10.10.10.123" },
-        { name: "data_network", label: "Data Network CIDR (Example)", type: "text", default: "10.10.20.0/24" }
+        { name: "nd_node1", label: "Node 1 Management IP", type: "text", default: "198.51.100.11" },
+        { name: "nd_node2", label: "Node 2 Management IP", type: "text", default: "198.51.100.12" },
+        { name: "nd_node3", label: "Node 3 Management IP", type: "text", default: "198.51.100.13" },
+        { name: "nd_vip", label: "Cluster Management VIP", type: "text", default: "198.51.100.10" },
+        { name: "dns_server", label: "DNS Server (Example)", type: "text", default: "198.51.100.53" },
+        { name: "ntp_server", label: "NTP Server (Example)", type: "text", default: "198.51.100.123" },
+        { name: "data_network", label: "Data Network CIDR (Example)", type: "text", default: "198.51.100.0/24" }
       ],
       build: function (v) {
         var t1 = ndTask("Assert ND cluster addressing is documented and distinct", "ansible.builtin.assert");
@@ -941,8 +941,8 @@
       fields: [
         { name: "site1_name", label: "Site 1 Name", type: "text", default: "site1" },
         { name: "site2_name", label: "Site 2 Name", type: "text", default: "site2" },
-        { name: "site1_apic", label: "Site 1 APIC Address (Example)", type: "text", default: "10.10.1.11" },
-        { name: "site2_apic", label: "Site 2 APIC Address (Example)", type: "text", default: "10.10.2.11" },
+        { name: "site1_apic", label: "Site 1 APIC Address (Example)", type: "text", default: "198.51.100.11" },
+        { name: "site2_apic", label: "Site 2 APIC Address (Example)", type: "text", default: "198.51.100.11" },
         { name: "site1_apic_id", label: "Site 1 APIC Site ID", type: "number", default: "1" },
         { name: "site2_apic_id", label: "Site 2 APIC Site ID", type: "number", default: "2" },
         { name: "site1_lat", label: "Site 1 Latitude (Example)", type: "text", default: "-37.8136" },
@@ -1195,7 +1195,7 @@
         { name: "template", label: "Template Name", type: "text", default: "stretched-core" },
         { name: "bd", label: "Bridge Domain", type: "text", default: "bd-app" },
         { name: "vrf", label: "VRF Name", type: "text", default: "vrf-core" },
-        { name: "bd_subnet", label: "BD Gateway Subnet", type: "text", default: "10.30.10.1/24" },
+        { name: "bd_subnet", label: "BD Gateway Subnet", type: "text", default: "198.51.100.1/24" },
         { name: "l2_stretch", label: "L2 Stretch", type: "select", default: "true", options: ["true", "false"] },
         { name: "intersite_bum", label: "Inter-Site BUM", type: "select", default: "false", options: ["true", "false"] },
         { name: "l2unk_unicast", label: "Unknown Unicast", type: "select", default: "proxy", options: ["proxy", "flood"] }
@@ -1441,7 +1441,7 @@
       fields: [
         { name: "backup_name", label: "Backup Name", type: "text", default: "ndo-daily" },
         { name: "backup_location", label: "Backup Location Name", type: "text", default: "remote-scp" },
-        { name: "remote_host", label: "Remote Host (Example)", type: "text", default: "10.10.10.50" },
+        { name: "remote_host", label: "Remote Host (Example)", type: "text", default: "198.51.100.50" },
         { name: "remote_path", label: "Remote Path", type: "text", default: "/backups/ndo" },
         { name: "schedule", label: "Schedule Label", type: "text", default: "daily-02:00" }
       ],
@@ -1515,8 +1515,8 @@
       targetHost: "ndo1",
       description: "Record TEP pool CIDRs and an alert threshold for capacity reviews. Hardware end-of-life and end-of-sale dates are marked not collected unless you paste a sourced value; this page does not query Cisco EoL feeds.",
       fields: [
-        { name: "site1_tep", label: "Site 1 TEP Pool", type: "text", default: "10.1.0.0/16" },
-        { name: "site2_tep", label: "Site 2 TEP Pool", type: "text", default: "10.2.0.0/16" },
+        { name: "site1_tep", label: "Site 1 TEP Pool", type: "text", default: "198.51.100.0/16" },
+        { name: "site2_tep", label: "Site 2 TEP Pool", type: "text", default: "198.51.100.0/16" },
         { name: "tep_alert_pct", label: "TEP Alert Percent", type: "number", default: "75" },
         { name: "eol_status", label: "Hardware EoL / EoS Status", type: "text", default: "not collected", hint: "Do not invent dates" }
       ],
@@ -1616,8 +1616,8 @@
       targetHost: "isn-nxos-1",
       description: "Read-only jumbo ping with Don't-Fragment set, sized to prove the 9150-byte path (example payload 9122). Adjust size to match your validated test.",
       fields: [
-        { name: "src_isn_ip", label: "Source ISN Address", type: "text", default: "10.254.1.2" },
-        { name: "dst_isn_ip", label: "Destination ISN Address", type: "text", default: "10.254.2.2" },
+        { name: "src_isn_ip", label: "Source ISN Address", type: "text", default: "198.51.100.2" },
+        { name: "dst_isn_ip", label: "Destination ISN Address", type: "text", default: "198.51.100.2" },
         { name: "ping_size", label: "Ping Payload Size", type: "number", default: "9122", hint: "Example size used to exercise a 9150+ path" }
       ],
       buildCli: function (v) {

@@ -1194,11 +1194,11 @@
       "options": [
         {
           "id": "a",
-          "text": "The module uses a single CIDR field named prefix: 10.0.0.1/24. Scope private means the subnet will be advertised out of every L3Out."
+          "text": "The module uses a single CIDR field named prefix: 198.51.100.1/24. Scope private means the subnet will be advertised out of every L3Out."
         },
         {
           "id": "b",
-          "text": "aci_bd_subnet uses separate gateway and mask fields (here 10.0.0.1 and 24), not a combined CIDR field. Scope private does not, by itself, advertise the subnet externally; a public scope is used when the subnet should be advertised, subject to L3Out route control."
+          "text": "aci_bd_subnet uses separate gateway and mask fields (here 198.51.100.1 and 24), not a combined CIDR field. Scope private does not, by itself, advertise the subnet externally; a public scope is used when the subnet should be advertised, subject to L3Out route control."
         },
         {
           "id": "c",
@@ -1210,12 +1210,12 @@
         }
       ],
       "answer": "b",
-      "explanation": "Ansible aci_bd_subnet uses gateway (for example 10.0.0.1) and mask (for example 24), not a combined CIDR field. Scope choices include private, public and shared. A common pitfall is expecting a private subnet to be advertised out of an L3Out without also setting the appropriate scope and route-control policy. Shared is used when the subnet is shared across VRFs according to a shared-service design.",
+      "explanation": "Ansible aci_bd_subnet uses gateway (for example 198.51.100.1) and mask (for example 24), not a combined CIDR field. Scope choices include private, public and shared. A common pitfall is expecting a private subnet to be advertised out of an L3Out without also setting the appropriate scope and route-control policy. Shared is used when the subnet is shared across VRFs according to a shared-service design.",
       "source": {
         "label": "Ansible cisco.aci.aci_bd_subnet module",
         "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_bd_subnet_module.html"
       },
-      "snippet": "- name: Add a private gateway subnet to the BD\n  cisco.aci.aci_bd_subnet:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    tenant: Example-Tenant\n    bd: Example-BD\n    gateway: 10.0.0.1\n    mask: 24\n    scope:\n      - private\n    preferred: true\n    state: present",
+      "snippet": "- name: Add a private gateway subnet to the BD\n  cisco.aci.aci_bd_subnet:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    tenant: Example-Tenant\n    bd: Example-BD\n    gateway: 198.51.100.1\n    mask: 24\n    scope:\n      - private\n    preferred: true\n    state: present",
       "id": "5-5"
     },
     {
@@ -2282,7 +2282,7 @@
         },
         {
           "id": "c",
-          "text": "A practical order is: access-policy L3 domain / VLAN pool / AEP, fabric MP-BGP RR if needed, L3Out tied to the VRF and domain, logical node profile and node (router-id), logical interface profile and interface, protocol or static routes, external EPG and subnets, then contracts with internal EPGs. This fragment creates the L3Out, a node profile, leaf 101 with router-id 10.0.255.101, an external EPG and an import-security subnet. It stops short of a live IGP adjacency."
+          "text": "A practical order is: access-policy L3 domain / VLAN pool / AEP, fabric MP-BGP RR if needed, L3Out tied to the VRF and domain, logical node profile and node (router-id), logical interface profile and interface, protocol or static routes, external EPG and subnets, then contracts with internal EPGs. This fragment creates the L3Out, a node profile, leaf 101 with router-id 198.51.100.101, an external EPG and an import-security subnet. It stops short of a live IGP adjacency."
         },
         {
           "id": "d",
@@ -2290,12 +2290,12 @@
         }
       ],
       "answer": "c",
-      "explanation": "That step order is the one taught in the configuration-steps lesson. The lab playbook stops short of a live IGP adjacency so it can run as a syntax-checked example. Pitfalls include advertising or accepting routes before import-security (and, when needed, export-rtctrl) is set, and re-using a router-id such as 10.0.255.101 in two L3Outs or two VRFs without a plan.",
+      "explanation": "That step order is the one taught in the configuration-steps lesson. The lab playbook stops short of a live IGP adjacency so it can run as a syntax-checked example. Pitfalls include advertising or accepting routes before import-security (and, when needed, export-rtctrl) is set, and re-using a router-id such as 198.51.100.101 in two L3Outs or two VRFs without a plan.",
       "source": {
         "label": "Ansible cisco.aci.aci_l3out module",
         "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_l3out_module.html"
       },
-      "snippet": "- name: Create the L3Out\n  cisco.aci.aci_l3out:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    tenant: Example-Tenant\n    l3out: Example-L3Out\n    vrf: Example-VRF\n    domain: Example-L3Dom\n    l3protocol:\n      - static\n    state: present\n- name: Add an import-security subnet\n  cisco.aci.aci_l3out_extsubnet:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    tenant: Example-Tenant\n    l3out: Example-L3Out\n    extepg: Example-ExtEPG\n    network: 10.100.0.0/24\n    scope:\n      - import-security\n    state: present",
+      "snippet": "- name: Create the L3Out\n  cisco.aci.aci_l3out:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    tenant: Example-Tenant\n    l3out: Example-L3Out\n    vrf: Example-VRF\n    domain: Example-L3Dom\n    l3protocol:\n      - static\n    state: present\n- name: Add an import-security subnet\n  cisco.aci.aci_l3out_extsubnet:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    tenant: Example-Tenant\n    l3out: Example-L3Out\n    extepg: Example-ExtEPG\n    network: 198.51.100.0/24\n    scope:\n      - import-security\n    state: present",
       "id": "9-6"
     },
     {
@@ -2319,7 +2319,7 @@
         }
       ],
       "answer": "d",
-      "explanation": "The static routing lab uses those two modules, with example prefix 10.200.0.0/16 and next-hop 10.0.1.2 as placeholders. Pitfalls include pointing the next-hop at an address that is not reachable on that L3Out interface, and forgetting to export or advertise the internal subnet, or to import-security the external prefix, depending on the design.",
+      "explanation": "The static routing lab uses those two modules, with example prefix 198.51.100.0/16 and next-hop 198.51.100.2 as placeholders. Pitfalls include pointing the next-hop at an address that is not reachable on that L3Out interface, and forgetting to export or advertise the internal subnet, or to import-security the external prefix, depending on the design.",
       "source": {
         "label": "Ansible cisco.aci.aci_l3out_static_routes module",
         "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_l3out_static_routes_module.html"
@@ -2380,7 +2380,7 @@
         "label": "Ansible cisco.aci.aci_l3out_extsubnet module",
         "url": "https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/aci_l3out_extsubnet_module.html"
       },
-      "snippet": "- name: Add an export-rtctrl subnet for route control\n  cisco.aci.aci_l3out_extsubnet:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    tenant: Example-Tenant\n    l3out: Example-L3Out\n    extepg: Example-ExtEPG\n    network: 10.0.0.0/24\n    scope:\n      - export-rtctrl\n      - import-security\n    state: present",
+      "snippet": "- name: Add an export-rtctrl subnet for route control\n  cisco.aci.aci_l3out_extsubnet:\n    host: \"{{ apic_host }}\"\n    username: \"{{ apic_username }}\"\n    password: \"{{ apic_password }}\"\n    tenant: Example-Tenant\n    l3out: Example-L3Out\n    extepg: Example-ExtEPG\n    network: 198.51.100.0/24\n    scope:\n      - export-rtctrl\n      - import-security\n    state: present",
       "id": "9-9"
     },
     {

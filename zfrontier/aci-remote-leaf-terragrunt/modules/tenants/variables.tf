@@ -26,5 +26,5 @@ variable "bd_name" {
 
 variable "bd_subnet" {
   type    = string
-  default = "10.30.1.1/24"
+  default = "198.51.100.1/24"
 }

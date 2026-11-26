@@ -12,7 +12,7 @@ variable "location" {
 variable "tep_pool" {
   type        = string
   description = "Example TEP pool (documentation/lab prefix)"
-  default     = "10.10.0.0/16"
+  default     = "198.51.100.0/16"
 }
 
 variable "pod_id" {

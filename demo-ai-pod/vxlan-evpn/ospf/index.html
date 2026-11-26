@@ -850,19 +850,19 @@ feature lacp
 feature vpc
 
 router ospf UNDERLAY
-router-id 192.168.3.3/32
+router-id 192.0.2.3/32
 
 interface loopback0
        no shutdown
        description Router-ID Interface
-       ip address 192.168.3.3/32
+       ip address 192.0.2.3/32
        ip router ospf UNDERLAY area 0.0.0.0
 
 interface loopback 1
        no shutdown
        description VTEP NVE interface
-       ip address 192.168.3.4/32
-       ip address 192.168.34.34/32 secondary
+       ip address 192.0.2.4/32
+       ip address 192.0.2.34/32 secondary
        ip router ospf UNDERLAY area 0.0.0.0
 
 interface ethernet 1/1
@@ -899,7 +899,7 @@ interface ethernet 1/3
 vpc domain 1
        peer-switch
        peer-gateway
-       peer-keepalive destination 10.0.4.15 source 10.0.4.14
+       peer-keepalive destination 198.51.100.15 source 198.51.100.14
        delay restore 150
        auto-recovery reload-delay 360
        ipv6 nd synchronize
@@ -919,7 +919,7 @@ interface vlan 3600
        no shutdown
        description SVI for the vPC Peer link
        mtu 9216
-       ip address 172.16.34.3 255.255.255.0
+       ip address 203.0.113.3 255.255.255.0
        no ip redirects
        no ipv6 redirects
        ip router ospf UNDERLAY area 0.0.0.0
@@ -928,12 +928,12 @@ interface vlan 3600
 <p>On the spine: enable the OSPF feature and process UNDERLAY, configure loopback 0 for the OSPF router ID, and configure unnumbered fabric interfaces toward the leafs.</p>
 <div class="nxos"><pre>feature ospf
 router ospf UNDERLAY
-router-id 192.168.1.1
+router-id 192.0.2.1
 
 interface loopback0
 no shutdown
 Description Routing-ID Interface
-       ip address 192.168.1.1/32
+       ip address 192.0.2.1/32
        ip router ospf UNDERLAY area 0.0.0.0
 
 interface ethernet 1/1
@@ -989,9 +989,9 @@ interface ethernet 1/2
           OSPF Process ID UNDERLAY VRF default
           Total number of neighbors: 3
           Neighbor ID                 Pri State                  Up Time   Address       Interface
-          192.168.1.1                    1 FULL/ -               02:33:06 192.168.1.1    Eth1/1
-          192.168.2.2                    1 FULL/ -               02:33:13 192.168.2.2    Eth1/2
-          192.168.4.4                    1 FULL/BDR              01:23:56 172.16.34.4    Vlan3600</pre></div>
+          192.0.2.1                    1 FULL/ -               02:33:06 192.0.2.1    Eth1/1
+          192.0.2.2                    1 FULL/ -               02:33:13 192.0.2.2    Eth1/2
+          192.0.2.4                    1 FULL/BDR              01:23:56 203.0.113.4    Vlan3600</pre></div>
 <p>Leaf-1 is OSPF neighbors with Spine-1 and Spine-2. The last OSPF peer is Leaf-2, which peers through the backup SVI VLAN 3600.</p>
 
 <nav class="pn"><a href="/demo-ai-pod/vxlan-evpn/underlay-unicast/"><span class="dir">Previous</span>Underlay Unicast Routing</a><a href="/demo-ai-pod/vxlan-evpn/isis/"><span class="dir">Next</span>IS-IS Underlay</a></nav><!--vh--><section aria-label="Version history" id="version-history"><h2>Version history</h2><p>1 version: 0 committed versions from git history of <code>demo-ai-pod/vxlan-evpn/ospf/index.html</code> plus the current one. Each entry is a real commit of this page (summary = commit message, with the page size at that commit). Archived snapshots are recovered from git and are not live.</p><ul><li><b>v1 (current)</b> · 12 Nov 2026 02:05 AEDT (Melbourne time) · Add VXLAN BGP EVPN Design Guide subpages from the 2024 Cisco Nexus 9000 fundamental design and implementation guide, with lab renamed to demo · <a href="./">this page</a></li></ul></section><!--/vh--></main>

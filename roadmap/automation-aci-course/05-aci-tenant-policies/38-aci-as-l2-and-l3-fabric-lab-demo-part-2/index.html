@@ -1249,7 +1249,7 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
 <details class="topic" id="lab-part-2-subnet-ap-and-epg">
 <summary>Lab part 2 — subnet, AP and EPG</summary>
 <div class="topic-body">
-<p>This second part adds gateway 10.0.0.1/24 as a private subnet on Example-BD, then Example-AP and EPG WEB bound to that BD. Bind the EPG to a domain and a leaf port (lesson 34) before you expect a host with 10.0.0.10/24 to come online.</p>
+<p>This second part adds gateway 198.51.100.1/24 as a private subnet on Example-BD, then Example-AP and EPG WEB bound to that BD. Bind the EPG to a domain and a leaf port (lesson 34) before you expect a host with 198.51.100.10/24 to come online.</p>
 </div>
 </details>
 <details class="topic" id="suggested-verification">
@@ -1262,7 +1262,7 @@ moquery -c fvAEPg -f 'fv.AEPg.name=="WEB"'</pre>
 <details class="topic" id="common-pitfalls">
 <summary>Common pitfalls</summary>
 <div class="topic-body">
-<ul><li>Giving the host 10.0.0.1 as its own address — that is the anycast gateway on the BD.</li><li>Forgetting the access-policy chain, so the EPG exists but the port is not a member.</li></ul>
+<ul><li>Giving the host 198.51.100.1 as its own address — that is the anycast gateway on the BD.</li><li>Forgetting the access-policy chain, so the EPG exists but the port is not a member.</li></ul>
 </div>
 </details>
 <h2 id="ansible">Ansible playbook</h2>
@@ -1294,7 +1294,7 @@ moquery -c fvAEPg -f 'fv.AEPg.name=="WEB"'</pre>
         &lt;&lt;: *aci_login
         tenant: Example-Tenant
         bd: Example-BD
-        gateway: 10.0.0.1
+        gateway: 198.51.100.1
         mask: 24
         scope:
           - private
@@ -1314,7 +1314,7 @@ moquery -c fvAEPg -f 'fv.AEPg.name=="WEB"'</pre>
         bd: Example-BD
         state: present
 </textarea>
-  <div class="codebox-body"><ol class="lines"><li># Lesson 38 — L2/L3 fabric lab, subnet + AP + EPG (lab only)</li><li># Lab only. Do not run this playbook against a production APIC.</li><li># Credentials are placeholders. Never put a real password, token, or APIC address in this file.</li><li>---</li><li>- name: Lesson 38 — L2/L3 fabric lab, subnet + AP + EPG (lab only)</li><li>  hosts: localhost</li><li>  connection: local</li><li>  gather_facts: false</li><li>  vars:</li><li>    aci_login: &amp;aci_login</li><li>      host: &quot;{{ apic_host }}&quot;</li><li>      username: &quot;{{ apic_username }}&quot;</li><li>      password: &quot;{{ apic_password }}&quot;</li><li>      validate_certs: false  # lab only; do not disable certificate verification in production</li><li>  tasks:</li><li>    - name: Add the example subnet</li><li>      cisco.aci.aci_bd_subnet:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: Example-Tenant</li><li>        bd: Example-BD</li><li>        gateway: 10.0.0.1</li><li>        mask: 24</li><li>        scope:</li><li>          - private</li><li>        state: present</li><li>    - name: Create the application profile and WEB EPG</li><li>      cisco.aci.aci_ap:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: Example-Tenant</li><li>        ap: Example-AP</li><li>        state: present</li><li>    - name: Create EPG WEB</li><li>      cisco.aci.aci_epg:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: Example-Tenant</li><li>        ap: Example-AP</li><li>        epg: WEB</li><li>        bd: Example-BD</li><li>        state: present</li></ol></div>
+  <div class="codebox-body"><ol class="lines"><li># Lesson 38 — L2/L3 fabric lab, subnet + AP + EPG (lab only)</li><li># Lab only. Do not run this playbook against a production APIC.</li><li># Credentials are placeholders. Never put a real password, token, or APIC address in this file.</li><li>---</li><li>- name: Lesson 38 — L2/L3 fabric lab, subnet + AP + EPG (lab only)</li><li>  hosts: localhost</li><li>  connection: local</li><li>  gather_facts: false</li><li>  vars:</li><li>    aci_login: &amp;aci_login</li><li>      host: &quot;{{ apic_host }}&quot;</li><li>      username: &quot;{{ apic_username }}&quot;</li><li>      password: &quot;{{ apic_password }}&quot;</li><li>      validate_certs: false  # lab only; do not disable certificate verification in production</li><li>  tasks:</li><li>    - name: Add the example subnet</li><li>      cisco.aci.aci_bd_subnet:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: Example-Tenant</li><li>        bd: Example-BD</li><li>        gateway: 198.51.100.1</li><li>        mask: 24</li><li>        scope:</li><li>          - private</li><li>        state: present</li><li>    - name: Create the application profile and WEB EPG</li><li>      cisco.aci.aci_ap:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: Example-Tenant</li><li>        ap: Example-AP</li><li>        state: present</li><li>    - name: Create EPG WEB</li><li>      cisco.aci.aci_epg:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: Example-Tenant</li><li>        ap: Example-AP</li><li>        epg: WEB</li><li>        bd: Example-BD</li><li>        state: present</li></ol></div>
 </figure>
 <h2 id="inventory">Inventory and vars</h2>
 <p>Example files that stay next to the playbook. Fill in a private copy; never commit a real password.</p>

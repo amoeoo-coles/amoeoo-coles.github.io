@@ -1,11 +1,11 @@
 # Network-as-Code (nac-aci data model, apic: root)
-# Environment: ARR-FABRIC — ACI Rack Rental (live APIC at https://192.168.10.1)
+# Environment: ARR-FABRIC — ACI Rack Rental (live APIC at https://192.0.2.1)
 # Source: Live read-only collection from ARR-APIC-01
 # Collected: 14 Nov 2026, 5:52 PM AEDT (Australia/Melbourne, UTC+11)
 # Method: GET only after aaaLogin; aaaLogout after. Pulled from DESKTOP-3GETEV9.
 # PLAN ONLY — not present on the live APIC. Awaits NetBox provisioning + email APPROVE.
-# Chosen L3Out: VLAN 3051, transit 10.250.250.0/30, leaf 10.250.250.1/30, peer 10.250.250.2,
-# router-id 10.255.255.101 (loopback on LEAF-101), port LEAF-101 eth1/3.
+# Chosen L3Out: VLAN 3051, transit 198.51.100.0/30, leaf 198.51.100.1/30, peer 198.51.100.2,
+# router-id 198.51.100.101 (loopback on LEAF-101), port LEAF-101 eth1/3.
 # Cursor_tenant5 must be recreated (tenant, VRF, BDs, subnets, AP, EPGs) before the L3Out.
 ---
 apic:
@@ -72,7 +72,7 @@ apic:
       unknown_unicast: proxy
       limit_ip_learn_to_subnets: true
       subnets:
-      - ip: 10.250.51.1/24
+      - ip: 198.51.100.1/24
         description: Web tier (advertised to DMZ via L3Out)
         public: true
         private: false
@@ -85,7 +85,7 @@ apic:
       unknown_unicast: proxy
       limit_ip_learn_to_subnets: true
       subnets:
-      - ip: 10.250.52.1/24
+      - ip: 198.51.100.1/24
         description: App tier
         public: false
         private: true
@@ -98,7 +98,7 @@ apic:
       unknown_unicast: proxy
       limit_ip_learn_to_subnets: true
       subnets:
-      - ip: 10.250.53.1/24
+      - ip: 198.51.100.1/24
         description: DB tier
         public: false
         private: true
@@ -111,7 +111,7 @@ apic:
       unknown_unicast: flood
       limit_ip_learn_to_subnets: true
       subnets:
-      - ip: 10.250.59.1/28
+      - ip: 198.51.100.1/28
         description: FW service leg DMZ side (PBR dest .2 active .3 standby)
         public: false
         private: true
@@ -124,7 +124,7 @@ apic:
       unknown_unicast: flood
       limit_ip_learn_to_subnets: true
       subnets:
-      - ip: 10.250.59.17/28
+      - ip: 198.51.100.17/28
         description: FW service leg Web (PBR dest .18 active .19 standby)
         public: false
         private: true
@@ -137,7 +137,7 @@ apic:
       unknown_unicast: flood
       limit_ip_learn_to_subnets: true
       subnets:
-      - ip: 10.250.59.33/28
+      - ip: 198.51.100.33/28
         description: FW service leg App (PBR dest .34 active .35 standby)
         public: false
         private: true
@@ -150,7 +150,7 @@ apic:
       unknown_unicast: flood
       limit_ip_learn_to_subnets: true
       subnets:
-      - ip: 10.250.59.49/28
+      - ip: 198.51.100.49/28
         description: FW service leg DB (PBR dest .50 active .51 standby)
         public: false
         private: true
@@ -258,12 +258,12 @@ apic:
       - name: DMZ_L3Out_nodeProfile
         nodes:
         - node_id: 101
-          router_id: 10.255.255.101
+          router_id: 198.51.100.101
           router_id_as_loopback: true
         interface_profiles:
         - name: DMZ_L3Out_interfaceProfile
           interfaces:
-          - ip: 10.250.250.1/30
+          - ip: 198.51.100.1/30
             vlan: 3051
             pod_id: 1
             node_id: 101

@@ -3,7 +3,7 @@
   "doNotApply": true,
   "status": "Plan \u2014 awaiting NetBox provisioning + email APPROVE",
   "warning": "PLAN ONLY. Cursor_tenant5 is no longer on the live ARR-FABRIC APIC. The plan includes recreating the tenant base from the 13 Nov 2026 payload, then the access-policy parents and DMZ L3Out. Nothing is to be pushed until the design is written into NetBox and an [APPROVAL REQUIRED] email is approved.",
-  "referenceApic": "https://192.168.10.1",
+  "referenceApic": "https://192.0.2.1",
   "fabric": "ARR-FABRIC",
   "apic_version": "6.0(2h)",
   "sourcePull": {
@@ -21,43 +21,43 @@
     "bridge_domains": [
       {
         "name": "cursor5_web_bd",
-        "subnet": "10.250.51.1/24",
+        "subnet": "198.51.100.1/24",
         "scope": "public",
         "unknown_unicast": "proxy"
       },
       {
         "name": "cursor5_app_bd",
-        "subnet": "10.250.52.1/24",
+        "subnet": "198.51.100.1/24",
         "scope": "private",
         "unknown_unicast": "proxy"
       },
       {
         "name": "cursor5_db_bd",
-        "subnet": "10.250.53.1/24",
+        "subnet": "198.51.100.1/24",
         "scope": "private",
         "unknown_unicast": "proxy"
       },
       {
         "name": "cursor5_fw_dmz_bd",
-        "subnet": "10.250.59.1/28",
+        "subnet": "198.51.100.1/28",
         "scope": "private",
         "unknown_unicast": "flood"
       },
       {
         "name": "cursor5_fw_web_bd",
-        "subnet": "10.250.59.17/28",
+        "subnet": "198.51.100.17/28",
         "scope": "private",
         "unknown_unicast": "flood"
       },
       {
         "name": "cursor5_fw_app_bd",
-        "subnet": "10.250.59.33/28",
+        "subnet": "198.51.100.33/28",
         "scope": "private",
         "unknown_unicast": "flood"
       },
       {
         "name": "cursor5_fw_db_bd",
-        "subnet": "10.250.59.49/28",
+        "subnet": "198.51.100.49/28",
         "scope": "private",
         "unknown_unicast": "flood"
       }
@@ -84,16 +84,16 @@
       "reason": "No VLAN pools exist on the live APIC. The only encaps seen were native vlan-1 and encap 3 on the APIC link (LEAF-101 eth1/49). VLAN 3051 is unused and sits well above reserved/system ranges."
     },
     "transit_subnet": {
-      "value": "10.250.250.0/30",
-      "leaf_ip": "10.250.250.1/30",
-      "peer_ip": "10.250.250.2",
-      "reason": "A /30 that does not overlap the TEP pool 10.0.0.0/16, the OOB 192.168.10.0/24, or any live APIC subnet (fvSubnet was empty) or NetBox prefix. NetBox 10.250 prefixes are 10.250.2.0/24, .3.0/24, .4.0/24, .51\u2013.53/24 and 10.250.59.0\u2013.48/28. Leaf is .1, peer is .2."
+      "value": "198.51.100.0/30",
+      "leaf_ip": "198.51.100.1/30",
+      "peer_ip": "198.51.100.2",
+      "reason": "A /30 that does not overlap the TEP pool 198.51.100.0/16, the OOB 192.0.2.0/24, or any live APIC subnet (fvSubnet was empty) or NetBox prefix. NetBox 10.250 prefixes are 198.51.100.0/24, .3.0/24, .4.0/24, .51\u2013.53/24 and 198.51.100.0\u2013.48/28. Leaf is .1, peer is .2."
     },
     "router_id": {
-      "value": "10.255.255.101",
+      "value": "198.51.100.101",
       "node": "LEAF-101",
       "as_loopback": true,
-      "reason": "Loopback on LEAF-101 that does not clash with the TEP pool 10.0.0.0/16, the 10.250.x tenant subnets, or 192.168.10.0/24."
+      "reason": "Loopback on LEAF-101 that does not clash with the TEP pool 198.51.100.0/16, the 10.250.x tenant subnets, or 192.0.2.0/24."
     },
     "leaf_port": {
       "value": "LEAF-101 eth1/3",
@@ -115,12 +115,12 @@
     "vlan": 3051,
     "node": 101,
     "port": "eth1/3",
-    "ip": "10.250.250.1/30",
-    "peer_ip": "10.250.250.2",
-    "router_id": "10.255.255.101",
+    "ip": "198.51.100.1/30",
+    "peer_ip": "198.51.100.2",
+    "router_id": "198.51.100.101",
     "external_epg": "DMZ_ExtEPG",
     "external_subnet": "0.0.0.0/0",
-    "routing_note": "Starting point is a static default toward 10.250.250.2; protocol can be changed before the NetBox write."
+    "routing_note": "Starting point is a static default toward 198.51.100.2; protocol can be changed before the NetBox write."
   },
   "contracts": {
     "filters": [
@@ -178,7 +178,7 @@
     "Create access-policy parents: VLAN pool, L3 domain, AAEP, interface policy group, interface profile, switch profile.",
     "Recreate Cursor_tenant5 base: tenant, cursor5_vrf, seven BDs and subnets, cursor5_ap, EPGs web/app/db.",
     "Create filters, contracts and EPG bindings.",
-    "Create DMZ_L3Out on LEAF-101 eth1/3 (VLAN 3051, 10.250.250.1/30, router-id 10.255.255.101) and DMZ_ExtEPG.",
+    "Create DMZ_L3Out on LEAF-101 eth1/3 (VLAN 3051, 198.51.100.1/30, router-id 198.51.100.101) and DMZ_ExtEPG.",
     "Post-checks, monitor page update, and post-deploy email."
   ],
   "nacYaml": "tenants/Cursor_tenant5.nac.yaml"

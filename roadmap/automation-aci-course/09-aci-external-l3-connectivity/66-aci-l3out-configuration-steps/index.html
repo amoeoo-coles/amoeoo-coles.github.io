@@ -1250,7 +1250,7 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
 <summary>Configuration steps</summary>
 <div class="topic-body">
 <p>A practical order is: (1) L3 domain, VLAN pool and AEP in access policies, (2) fabric MP-BGP RR policy if you will need fabric-wide external routes, (3) L3Out tied to the VRF and domain, (4) logical node profile and node (router-id), (5) logical interface profile and interface, (6) protocol or static routes, (7) external EPG and subnets, (8) contracts between the external EPG and internal EPGs.</p>
-<p>The lab playbook creates the L3Out, a node profile, leaf 101 with router-id 10.0.255.101, an external EPG, and an import-security subnet 10.100.0.0/24. It stops short of a live IGP adjacency so it can run as a syntax-checked example.</p>
+<p>The lab playbook creates the L3Out, a node profile, leaf 101 with router-id 198.51.100.101, an external EPG, and an import-security subnet 198.51.100.0/24. It stops short of a live IGP adjacency so it can run as a syntax-checked example.</p>
 </div>
 </details>
 <details class="topic" id="apic-gui-path">
@@ -1262,7 +1262,7 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
 <details class="topic" id="common-pitfalls">
 <summary>Common pitfalls</summary>
 <div class="topic-body">
-<ul><li>Advertising or accepting routes before <code>import-security</code> (and, when needed, <code>export-rtctrl</code>) is set on the external EPG subnet.</li><li>Re-using 10.0.255.101 as a router-id in two L3Outs or two VRFs without a plan.</li></ul>
+<ul><li>Advertising or accepting routes before <code>import-security</code> (and, when needed, <code>export-rtctrl</code>) is set on the external EPG subnet.</li><li>Re-using 198.51.100.101 as a router-id in two L3Outs or two VRFs without a plan.</li></ul>
 </div>
 </details>
 <h2 id="ansible">Ansible playbook</h2>
@@ -1314,7 +1314,7 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
         node_profile: Example-NP
         pod_id: 1
         node_id: 101
-        router_id: 10.0.255.101
+        router_id: 198.51.100.101
         state: present
     - name: Create an external EPG
       cisco.aci.aci_l3out_extepg:
@@ -1329,12 +1329,12 @@ place();if(document.readyState==='loading')document.addEventListener('DOMContent
         tenant: Example-Tenant
         l3out: Example-L3Out
         extepg: Example-ExtEPG
-        network: 10.100.0.0/24
+        network: 198.51.100.0/24
         scope:
           - import-security
         state: present
 </textarea>
-  <div class="codebox-body"><ol class="lines"><li># Lesson 66 — L3Out configuration steps, core objects (lab only)</li><li># Lab only. Do not run this playbook against a production APIC.</li><li># Credentials are placeholders. Never put a real password, token, or APIC address in this file.</li><li>---</li><li>- name: Lesson 66 — L3Out configuration steps, core objects (lab only)</li><li>  hosts: localhost</li><li>  connection: local</li><li>  gather_facts: false</li><li>  vars:</li><li>    aci_login: &amp;aci_login</li><li>      host: &quot;{{ apic_host }}&quot;</li><li>      username: &quot;{{ apic_username }}&quot;</li><li>      password: &quot;{{ apic_password }}&quot;</li><li>      validate_certs: false  # lab only; do not disable certificate verification in production</li><li>  tasks:</li><li>    - name: Create the L3Out</li><li>      cisco.aci.aci_l3out:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: Example-Tenant</li><li>        l3out: Example-L3Out</li><li>        vrf: Example-VRF</li><li>        domain: Example-L3Dom</li><li>        l3protocol:</li><li>          - static</li><li>        state: present</li><li>    - name: Create a logical node profile</li><li>      cisco.aci.aci_l3out_logical_node_profile:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: Example-Tenant</li><li>        l3out: Example-L3Out</li><li>        node_profile: Example-NP</li><li>        state: present</li><li>    - name: Add leaf 101 with a router-id</li><li>      cisco.aci.aci_l3out_logical_node:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: Example-Tenant</li><li>        l3out: Example-L3Out</li><li>        node_profile: Example-NP</li><li>        pod_id: 1</li><li>        node_id: 101</li><li>        router_id: 10.0.255.101</li><li>        state: present</li><li>    - name: Create an external EPG</li><li>      cisco.aci.aci_l3out_extepg:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: Example-Tenant</li><li>        l3out: Example-L3Out</li><li>        extepg: Example-ExtEPG</li><li>        state: present</li><li>    - name: Add an import-security subnet</li><li>      cisco.aci.aci_l3out_extsubnet:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: Example-Tenant</li><li>        l3out: Example-L3Out</li><li>        extepg: Example-ExtEPG</li><li>        network: 10.100.0.0/24</li><li>        scope:</li><li>          - import-security</li><li>        state: present</li></ol></div>
+  <div class="codebox-body"><ol class="lines"><li># Lesson 66 — L3Out configuration steps, core objects (lab only)</li><li># Lab only. Do not run this playbook against a production APIC.</li><li># Credentials are placeholders. Never put a real password, token, or APIC address in this file.</li><li>---</li><li>- name: Lesson 66 — L3Out configuration steps, core objects (lab only)</li><li>  hosts: localhost</li><li>  connection: local</li><li>  gather_facts: false</li><li>  vars:</li><li>    aci_login: &amp;aci_login</li><li>      host: &quot;{{ apic_host }}&quot;</li><li>      username: &quot;{{ apic_username }}&quot;</li><li>      password: &quot;{{ apic_password }}&quot;</li><li>      validate_certs: false  # lab only; do not disable certificate verification in production</li><li>  tasks:</li><li>    - name: Create the L3Out</li><li>      cisco.aci.aci_l3out:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: Example-Tenant</li><li>        l3out: Example-L3Out</li><li>        vrf: Example-VRF</li><li>        domain: Example-L3Dom</li><li>        l3protocol:</li><li>          - static</li><li>        state: present</li><li>    - name: Create a logical node profile</li><li>      cisco.aci.aci_l3out_logical_node_profile:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: Example-Tenant</li><li>        l3out: Example-L3Out</li><li>        node_profile: Example-NP</li><li>        state: present</li><li>    - name: Add leaf 101 with a router-id</li><li>      cisco.aci.aci_l3out_logical_node:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: Example-Tenant</li><li>        l3out: Example-L3Out</li><li>        node_profile: Example-NP</li><li>        pod_id: 1</li><li>        node_id: 101</li><li>        router_id: 198.51.100.101</li><li>        state: present</li><li>    - name: Create an external EPG</li><li>      cisco.aci.aci_l3out_extepg:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: Example-Tenant</li><li>        l3out: Example-L3Out</li><li>        extepg: Example-ExtEPG</li><li>        state: present</li><li>    - name: Add an import-security subnet</li><li>      cisco.aci.aci_l3out_extsubnet:</li><li>        &lt;&lt;: *aci_login</li><li>        tenant: Example-Tenant</li><li>        l3out: Example-L3Out</li><li>        extepg: Example-ExtEPG</li><li>        network: 198.51.100.0/24</li><li>        scope:</li><li>          - import-security</li><li>        state: present</li></ol></div>
 </figure>
 <h2 id="inventory">Inventory and vars</h2>
 <p>Example files that stay next to the playbook. Fill in a private copy; never commit a real password.</p>

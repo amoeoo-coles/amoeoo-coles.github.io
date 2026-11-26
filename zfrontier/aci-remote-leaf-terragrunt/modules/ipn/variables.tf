@@ -6,7 +6,7 @@ variable "location" {
 
 variable "tep_pool" {
   type    = string
-  default = "10.10.0.0/16"
+  default = "198.51.100.0/16"
 }
 
 variable "fabric_ready" {
