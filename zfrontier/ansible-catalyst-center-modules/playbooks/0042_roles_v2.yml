@@ -1,0 +1,33 @@
+---
+# Sample playbook for cisco.catalystcenter.roles_v2 (cisco.catalystcenter 2.15.0)
+# Build order: 42
+# Resource module for Roles V2
+# Reads ../models/roles_v2.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/roles_v2_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags roles_v2.
+
+- name: "0042 roles_v2"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/roles_v2.yml
+  tasks:
+    - name: Run roles_v2 from its model
+      cisco.catalystcenter.roles_v2:
+        catalystcenter_debug: "{{ roles_v2.catalystcenter_debug if roles_v2.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ roles_v2.catalystcenter_host if roles_v2.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ roles_v2.catalystcenter_password if roles_v2.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ roles_v2.catalystcenter_port if roles_v2.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ roles_v2.catalystcenter_username if roles_v2.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ roles_v2.catalystcenter_verify if roles_v2.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ roles_v2.catalystcenter_version if roles_v2.catalystcenter_version is not none else omit }}"
+        description: "{{ roles_v2.description if roles_v2.description is not none else omit }}"
+        id: "{{ roles_v2.id if roles_v2.id is not none else omit }}"
+        name: "{{ roles_v2.name if roles_v2.name is not none else omit }}"
+        permissions: "{{ (roles_v2.permissions | cat_strip_nulls) if (roles_v2.permissions | cat_strip_nulls) is not none else omit }}"
+        validate_response_schema: "{{ roles_v2.validate_response_schema if roles_v2.validate_response_schema is not none else omit }}"
+      register: roles_v2_result
+      tags:
+        - never
+        - roles_v2

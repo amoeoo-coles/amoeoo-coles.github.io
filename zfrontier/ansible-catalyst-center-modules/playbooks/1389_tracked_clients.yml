@@ -1,0 +1,36 @@
+---
+# Sample playbook for cisco.catalystcenter.tracked_clients (cisco.catalystcenter 2.15.0)
+# Build order: 1389
+# Resource module for Tracked Clients
+# Reads ../models/tracked_clients.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/tracked_clients_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags tracked_clients.
+
+- name: "1389 tracked_clients"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/tracked_clients.yml
+  tasks:
+    - name: Run tracked_clients from its model
+      cisco.catalystcenter.tracked_clients:
+        catalystcenter_debug: "{{ tracked_clients.catalystcenter_debug if tracked_clients.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ tracked_clients.catalystcenter_host if tracked_clients.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ tracked_clients.catalystcenter_password if tracked_clients.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ tracked_clients.catalystcenter_port if tracked_clients.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ tracked_clients.catalystcenter_username if tracked_clients.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ tracked_clients.catalystcenter_verify if tracked_clients.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ tracked_clients.catalystcenter_version if tracked_clients.catalystcenter_version is not none else omit }}"
+        clientMacAddress: "{{ tracked_clients.clientMacAddress if tracked_clients.clientMacAddress is not none else omit }}"
+        description: "{{ tracked_clients.description if tracked_clients.description is not none else omit }}"
+        headers: "{{ tracked_clients.headers if tracked_clients.headers is not none else omit }}"
+        id: "{{ tracked_clients.id if tracked_clients.id is not none else omit }}"
+        notificationModes: "{{ (tracked_clients.notificationModes | cat_strip_nulls) if (tracked_clients.notificationModes | cat_strip_nulls) is not none else omit }}"
+        trackingEndTime: "{{ tracked_clients.trackingEndTime if tracked_clients.trackingEndTime is not none else omit }}"
+        trackingStartTime: "{{ tracked_clients.trackingStartTime if tracked_clients.trackingStartTime is not none else omit }}"
+        validate_response_schema: "{{ tracked_clients.validate_response_schema if tracked_clients.validate_response_schema is not none else omit }}"
+      register: tracked_clients_result
+      tags:
+        - never
+        - tracked_clients

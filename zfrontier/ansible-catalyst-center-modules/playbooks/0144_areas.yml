@@ -1,0 +1,35 @@
+---
+# Sample playbook for cisco.catalystcenter.areas (cisco.catalystcenter 2.15.0)
+# Build order: 144
+# Resource module for Areas
+# Reads ../models/areas.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/areas_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags areas.
+
+- name: "0144 areas"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/areas.yml
+  tasks:
+    - name: Run areas from its model
+      cisco.catalystcenter.areas:
+        catalystcenter_debug: "{{ areas.catalystcenter_debug if areas.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ areas.catalystcenter_host if areas.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ areas.catalystcenter_password if areas.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ areas.catalystcenter_port if areas.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ areas.catalystcenter_username if areas.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ areas.catalystcenter_verify if areas.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ areas.catalystcenter_version if areas.catalystcenter_version is not none else omit }}"
+        id: "{{ areas.id if areas.id is not none else omit }}"
+        name: "{{ areas.name if areas.name is not none else omit }}"
+        nameHierarchy: "{{ areas.nameHierarchy if areas.nameHierarchy is not none else omit }}"
+        parentId: "{{ areas.parentId if areas.parentId is not none else omit }}"
+        siteHierarchyId: "{{ areas.siteHierarchyId if areas.siteHierarchyId is not none else omit }}"
+        type: "{{ areas.type if areas.type is not none else omit }}"
+        validate_response_schema: "{{ areas.validate_response_schema if areas.validate_response_schema is not none else omit }}"
+      register: areas_result
+      tags:
+        - never
+        - areas

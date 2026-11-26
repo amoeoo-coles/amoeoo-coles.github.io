@@ -1,0 +1,33 @@
+---
+# Sample playbook for cisco.catalystcenter.transit_peer_network (cisco.catalystcenter 2.15.0)
+# Build order: 764
+# Resource module for Transit Peer Network
+# Reads ../models/transit_peer_network.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/transit_peer_network_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags transit_peer_network.
+
+- name: "0764 transit_peer_network"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/transit_peer_network.yml
+  tasks:
+    - name: Run transit_peer_network from its model
+      cisco.catalystcenter.transit_peer_network:
+        catalystcenter_debug: "{{ transit_peer_network.catalystcenter_debug if transit_peer_network.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ transit_peer_network.catalystcenter_host if transit_peer_network.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ transit_peer_network.catalystcenter_password if transit_peer_network.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ transit_peer_network.catalystcenter_port if transit_peer_network.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ transit_peer_network.catalystcenter_username if transit_peer_network.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ transit_peer_network.catalystcenter_verify if transit_peer_network.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ transit_peer_network.catalystcenter_version if transit_peer_network.catalystcenter_version is not none else omit }}"
+        ipTransitSettings: "{{ (transit_peer_network.ipTransitSettings | cat_strip_nulls) if (transit_peer_network.ipTransitSettings | cat_strip_nulls) is not none else omit }}"
+        sdaTransitSettings: "{{ (transit_peer_network.sdaTransitSettings | cat_strip_nulls) if (transit_peer_network.sdaTransitSettings | cat_strip_nulls) is not none else omit }}"
+        transitPeerNetworkName: "{{ transit_peer_network.transitPeerNetworkName if transit_peer_network.transitPeerNetworkName is not none else omit }}"
+        transitPeerNetworkType: "{{ transit_peer_network.transitPeerNetworkType if transit_peer_network.transitPeerNetworkType is not none else omit }}"
+        validate_response_schema: "{{ transit_peer_network.validate_response_schema if transit_peer_network.validate_response_schema is not none else omit }}"
+      register: transit_peer_network_result
+      tags:
+        - never
+        - transit_peer_network

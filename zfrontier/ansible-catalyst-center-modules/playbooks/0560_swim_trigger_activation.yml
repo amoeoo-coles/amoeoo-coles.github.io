@@ -1,0 +1,32 @@
+---
+# Sample playbook for cisco.catalystcenter.swim_trigger_activation (cisco.catalystcenter 2.15.0)
+# Build order: 560
+# Resource module for Swim Trigger Activation
+# Reads ../models/swim_trigger_activation.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/swim_trigger_activation_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags swim_trigger_activation.
+
+- name: "0560 swim_trigger_activation"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/swim_trigger_activation.yml
+  tasks:
+    - name: Run swim_trigger_activation from its model
+      cisco.catalystcenter.swim_trigger_activation:
+        catalystcenter_debug: "{{ swim_trigger_activation.catalystcenter_debug if swim_trigger_activation.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ swim_trigger_activation.catalystcenter_host if swim_trigger_activation.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ swim_trigger_activation.catalystcenter_password if swim_trigger_activation.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ swim_trigger_activation.catalystcenter_port if swim_trigger_activation.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ swim_trigger_activation.catalystcenter_username if swim_trigger_activation.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ swim_trigger_activation.catalystcenter_verify if swim_trigger_activation.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ swim_trigger_activation.catalystcenter_version if swim_trigger_activation.catalystcenter_version is not none else omit }}"
+        headers: "{{ swim_trigger_activation.headers if swim_trigger_activation.headers is not none else omit }}"
+        payload: "{{ (swim_trigger_activation.payload | cat_strip_nulls) if (swim_trigger_activation.payload | cat_strip_nulls) is not none else omit }}"
+        scheduleValidate: "{{ swim_trigger_activation.scheduleValidate if swim_trigger_activation.scheduleValidate is not none else omit }}"
+        validate_response_schema: "{{ swim_trigger_activation.validate_response_schema if swim_trigger_activation.validate_response_schema is not none else omit }}"
+      register: swim_trigger_activation_result
+      tags:
+        - never
+        - swim_trigger_activation

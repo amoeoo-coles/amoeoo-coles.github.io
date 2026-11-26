@@ -1,0 +1,38 @@
+---
+# Sample playbook for cisco.catalystcenter.reports (cisco.catalystcenter 2.15.0)
+# Build order: 1469
+# Resource module for Reports
+# Reads ../models/reports.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/reports_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags reports.
+
+- name: "1469 reports"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/reports.yml
+  tasks:
+    - name: Run reports from its model
+      cisco.catalystcenter.reports:
+        catalystcenter_debug: "{{ reports.catalystcenter_debug if reports.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ reports.catalystcenter_host if reports.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ reports.catalystcenter_password if reports.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ reports.catalystcenter_port if reports.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ reports.catalystcenter_username if reports.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ reports.catalystcenter_verify if reports.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ reports.catalystcenter_version if reports.catalystcenter_version is not none else omit }}"
+        dataCategory: "{{ reports.dataCategory if reports.dataCategory is not none else omit }}"
+        deliveries: "{{ (reports.deliveries | cat_strip_nulls) if (reports.deliveries | cat_strip_nulls) is not none else omit }}"
+        name: "{{ reports.name if reports.name is not none else omit }}"
+        reportId: "{{ reports.reportId if reports.reportId is not none else omit }}"
+        schedule: "{{ (reports.schedule | cat_strip_nulls) if (reports.schedule | cat_strip_nulls) is not none else omit }}"
+        tags: "{{ (reports.tags | cat_strip_nulls) if (reports.tags | cat_strip_nulls) is not none else omit }}"
+        validate_response_schema: "{{ reports.validate_response_schema if reports.validate_response_schema is not none else omit }}"
+        view: "{{ (reports.view | cat_strip_nulls) if (reports.view | cat_strip_nulls) is not none else omit }}"
+        viewGroupId: "{{ reports.viewGroupId if reports.viewGroupId is not none else omit }}"
+        viewGroupVersion: "{{ reports.viewGroupVersion if reports.viewGroupVersion is not none else omit }}"
+      register: reports_result
+      tags:
+        - never
+        - reports

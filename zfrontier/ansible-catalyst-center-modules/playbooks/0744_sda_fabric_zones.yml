@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.catalystcenter.sda_fabric_zones (cisco.catalystcenter 2.15.0)
+# Build order: 744
+# Resource module for Sda Fabric Zones
+# Reads ../models/sda_fabric_zones.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/sda_fabric_zones_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags sda_fabric_zones.
+
+- name: "0744 sda_fabric_zones"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/sda_fabric_zones.yml
+  tasks:
+    - name: Run sda_fabric_zones from its model
+      cisco.catalystcenter.sda_fabric_zones:
+        catalystcenter_debug: "{{ sda_fabric_zones.catalystcenter_debug if sda_fabric_zones.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ sda_fabric_zones.catalystcenter_host if sda_fabric_zones.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ sda_fabric_zones.catalystcenter_password if sda_fabric_zones.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ sda_fabric_zones.catalystcenter_port if sda_fabric_zones.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ sda_fabric_zones.catalystcenter_username if sda_fabric_zones.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ sda_fabric_zones.catalystcenter_verify if sda_fabric_zones.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ sda_fabric_zones.catalystcenter_version if sda_fabric_zones.catalystcenter_version is not none else omit }}"
+        id: "{{ sda_fabric_zones.id if sda_fabric_zones.id is not none else omit }}"
+        payload: "{{ (sda_fabric_zones.payload | cat_strip_nulls) if (sda_fabric_zones.payload | cat_strip_nulls) is not none else omit }}"
+        validate_response_schema: "{{ sda_fabric_zones.validate_response_schema if sda_fabric_zones.validate_response_schema is not none else omit }}"
+      register: sda_fabric_zones_result
+      tags:
+        - never
+        - sda_fabric_zones

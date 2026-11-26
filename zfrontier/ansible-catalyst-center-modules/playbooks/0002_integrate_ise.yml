@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.catalystcenter.integrate_ise (cisco.catalystcenter 2.15.0)
+# Build order: 2
+# Resource module for Integrate Ise
+# Reads ../models/integrate_ise.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/integrate_ise_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags integrate_ise.
+
+- name: "0002 integrate_ise"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/integrate_ise.yml
+  tasks:
+    - name: Run integrate_ise from its model
+      cisco.catalystcenter.integrate_ise:
+        catalystcenter_debug: "{{ integrate_ise.catalystcenter_debug if integrate_ise.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ integrate_ise.catalystcenter_host if integrate_ise.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ integrate_ise.catalystcenter_password if integrate_ise.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ integrate_ise.catalystcenter_port if integrate_ise.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ integrate_ise.catalystcenter_username if integrate_ise.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ integrate_ise.catalystcenter_verify if integrate_ise.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ integrate_ise.catalystcenter_version if integrate_ise.catalystcenter_version is not none else omit }}"
+        id: "{{ integrate_ise.id if integrate_ise.id is not none else omit }}"
+        isCertAcceptedByUser: "{{ integrate_ise.isCertAcceptedByUser if integrate_ise.isCertAcceptedByUser is not none else omit }}"
+        validate_response_schema: "{{ integrate_ise.validate_response_schema if integrate_ise.validate_response_schema is not none else omit }}"
+      register: integrate_ise_result
+      tags:
+        - never
+        - integrate_ise

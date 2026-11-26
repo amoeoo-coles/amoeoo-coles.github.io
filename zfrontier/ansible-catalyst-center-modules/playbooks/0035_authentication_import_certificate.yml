@@ -1,0 +1,33 @@
+---
+# Sample playbook for cisco.catalystcenter.authentication_import_certificate (cisco.catalystcenter 2.15.0)
+# Build order: 35
+# Resource module for Authentication Import Certificate
+# Reads ../models/authentication_import_certificate.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/authentication_import_certificate_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags authentication_import_certificate.
+
+- name: "0035 authentication_import_certificate"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/authentication_import_certificate.yml
+  tasks:
+    - name: Run authentication_import_certificate from its model
+      cisco.catalystcenter.authentication_import_certificate:
+        catalystcenter_debug: "{{ authentication_import_certificate.catalystcenter_debug if authentication_import_certificate.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ authentication_import_certificate.catalystcenter_host if authentication_import_certificate.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ authentication_import_certificate.catalystcenter_password if authentication_import_certificate.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ authentication_import_certificate.catalystcenter_port if authentication_import_certificate.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ authentication_import_certificate.catalystcenter_username if authentication_import_certificate.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ authentication_import_certificate.catalystcenter_verify if authentication_import_certificate.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ authentication_import_certificate.catalystcenter_version if authentication_import_certificate.catalystcenter_version is not none else omit }}"
+        certFilePath: "{{ authentication_import_certificate.certFilePath if authentication_import_certificate.certFilePath is not none else omit }}"
+        listOfUsers: "{{ (authentication_import_certificate.listOfUsers | cat_strip_nulls) if (authentication_import_certificate.listOfUsers | cat_strip_nulls) is not none else omit }}"
+        pkFilePath: "{{ authentication_import_certificate.pkFilePath if authentication_import_certificate.pkFilePath is not none else omit }}"
+        pkPassword: "{{ authentication_import_certificate.pkPassword if authentication_import_certificate.pkPassword is not none else omit }}"
+        validate_response_schema: "{{ authentication_import_certificate.validate_response_schema if authentication_import_certificate.validate_response_schema is not none else omit }}"
+      register: authentication_import_certificate_result
+      tags:
+        - never
+        - authentication_import_certificate

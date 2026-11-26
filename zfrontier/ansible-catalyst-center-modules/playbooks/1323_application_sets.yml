@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.catalystcenter.application_sets (cisco.catalystcenter 2.15.0)
+# Build order: 1323
+# Resource module for Application Sets
+# Reads ../models/application_sets.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/application_sets_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags application_sets.
+
+- name: "1323 application_sets"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/application_sets.yml
+  tasks:
+    - name: Run application_sets from its model
+      cisco.catalystcenter.application_sets:
+        catalystcenter_debug: "{{ application_sets.catalystcenter_debug if application_sets.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ application_sets.catalystcenter_host if application_sets.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ application_sets.catalystcenter_password if application_sets.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ application_sets.catalystcenter_port if application_sets.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ application_sets.catalystcenter_username if application_sets.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ application_sets.catalystcenter_verify if application_sets.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ application_sets.catalystcenter_version if application_sets.catalystcenter_version is not none else omit }}"
+        id: "{{ application_sets.id if application_sets.id is not none else omit }}"
+        payload: "{{ (application_sets.payload | cat_strip_nulls) if (application_sets.payload | cat_strip_nulls) is not none else omit }}"
+        validate_response_schema: "{{ application_sets.validate_response_schema if application_sets.validate_response_schema is not none else omit }}"
+      register: application_sets_result
+      tags:
+        - never
+        - application_sets

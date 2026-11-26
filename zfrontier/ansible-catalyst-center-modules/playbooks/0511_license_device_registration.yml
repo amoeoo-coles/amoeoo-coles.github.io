@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.catalystcenter.license_device_registration (cisco.catalystcenter 2.15.0)
+# Build order: 511
+# Resource module for License Device Registration
+# Reads ../models/license_device_registration.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/license_device_registration_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags license_device_registration.
+
+- name: "0511 license_device_registration"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/license_device_registration.yml
+  tasks:
+    - name: Run license_device_registration from its model
+      cisco.catalystcenter.license_device_registration:
+        catalystcenter_debug: "{{ license_device_registration.catalystcenter_debug if license_device_registration.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ license_device_registration.catalystcenter_host if license_device_registration.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ license_device_registration.catalystcenter_password if license_device_registration.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ license_device_registration.catalystcenter_port if license_device_registration.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ license_device_registration.catalystcenter_username if license_device_registration.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ license_device_registration.catalystcenter_verify if license_device_registration.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ license_device_registration.catalystcenter_version if license_device_registration.catalystcenter_version is not none else omit }}"
+        device_uuids: "{{ (license_device_registration.device_uuids | cat_strip_nulls) if (license_device_registration.device_uuids | cat_strip_nulls) is not none else omit }}"
+        validate_response_schema: "{{ license_device_registration.validate_response_schema if license_device_registration.validate_response_schema is not none else omit }}"
+        virtual_account_name: "{{ license_device_registration.virtual_account_name if license_device_registration.virtual_account_name is not none else omit }}"
+      register: license_device_registration_result
+      tags:
+        - never
+        - license_device_registration

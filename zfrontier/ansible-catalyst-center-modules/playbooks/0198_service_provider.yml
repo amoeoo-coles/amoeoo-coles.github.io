@@ -1,0 +1,30 @@
+---
+# Sample playbook for cisco.catalystcenter.service_provider (cisco.catalystcenter 2.15.0)
+# Build order: 198
+# Resource module for Service Provider
+# Reads ../models/service_provider.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/service_provider_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags service_provider.
+
+- name: "0198 service_provider"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/service_provider.yml
+  tasks:
+    - name: Run service_provider from its model
+      cisco.catalystcenter.service_provider:
+        catalystcenter_debug: "{{ service_provider.catalystcenter_debug if service_provider.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ service_provider.catalystcenter_host if service_provider.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ service_provider.catalystcenter_password if service_provider.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ service_provider.catalystcenter_port if service_provider.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ service_provider.catalystcenter_username if service_provider.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ service_provider.catalystcenter_verify if service_provider.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ service_provider.catalystcenter_version if service_provider.catalystcenter_version is not none else omit }}"
+        settings: "{{ (service_provider.settings | cat_strip_nulls) if (service_provider.settings | cat_strip_nulls) is not none else omit }}"
+        validate_response_schema: "{{ service_provider.validate_response_schema if service_provider.validate_response_schema is not none else omit }}"
+      register: service_provider_result
+      tags:
+        - never
+        - service_provider

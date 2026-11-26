@@ -1,0 +1,37 @@
+---
+# Sample playbook for cisco.catalystcenter.rma_playbook_config_generator (cisco.catalystcenter 2.15.0)
+# Build order: 538
+# Generate YAML playbooks for RMA device replacement workflows from existing configurations.
+# Reads ../models/rma_playbook_config_generator.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/rma_playbook_config_generator_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags rma_playbook_config_generator.
+
+- name: "0538 rma_playbook_config_generator"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/rma_playbook_config_generator.yml
+  tasks:
+    - name: Run rma_playbook_config_generator from its model
+      cisco.catalystcenter.rma_playbook_config_generator:
+        catalystcenter_api_task_timeout: "{{ rma_playbook_config_generator.catalystcenter_api_task_timeout if rma_playbook_config_generator.catalystcenter_api_task_timeout is not none else omit }}"
+        catalystcenter_debug: "{{ rma_playbook_config_generator.catalystcenter_debug if rma_playbook_config_generator.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ rma_playbook_config_generator.catalystcenter_host if rma_playbook_config_generator.catalystcenter_host is not none else omit }}"
+        catalystcenter_log: "{{ rma_playbook_config_generator.catalystcenter_log if rma_playbook_config_generator.catalystcenter_log is not none else omit }}"
+        catalystcenter_log_append: "{{ rma_playbook_config_generator.catalystcenter_log_append if rma_playbook_config_generator.catalystcenter_log_append is not none else omit }}"
+        catalystcenter_log_file_path: "{{ rma_playbook_config_generator.catalystcenter_log_file_path if rma_playbook_config_generator.catalystcenter_log_file_path is not none else omit }}"
+        catalystcenter_log_level: "{{ rma_playbook_config_generator.catalystcenter_log_level if rma_playbook_config_generator.catalystcenter_log_level is not none else omit }}"
+        catalystcenter_password: "{{ rma_playbook_config_generator.catalystcenter_password if rma_playbook_config_generator.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ rma_playbook_config_generator.catalystcenter_port if rma_playbook_config_generator.catalystcenter_port is not none else omit }}"
+        catalystcenter_task_poll_interval: "{{ rma_playbook_config_generator.catalystcenter_task_poll_interval if rma_playbook_config_generator.catalystcenter_task_poll_interval is not none else omit }}"
+        catalystcenter_username: "{{ rma_playbook_config_generator.catalystcenter_username if rma_playbook_config_generator.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ rma_playbook_config_generator.catalystcenter_verify if rma_playbook_config_generator.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ rma_playbook_config_generator.catalystcenter_version if rma_playbook_config_generator.catalystcenter_version is not none else omit }}"
+        config: "{{ (rma_playbook_config_generator.config | cat_strip_nulls) if (rma_playbook_config_generator.config | cat_strip_nulls) is not none else omit }}"
+        state: "{{ rma_playbook_config_generator.state if rma_playbook_config_generator.state is not none else omit }}"
+        validate_response_schema: "{{ rma_playbook_config_generator.validate_response_schema if rma_playbook_config_generator.validate_response_schema is not none else omit }}"
+      register: rma_playbook_config_generator_result
+      tags:
+        - never
+        - rma_playbook_config_generator

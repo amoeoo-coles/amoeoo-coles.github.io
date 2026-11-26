@@ -1,0 +1,34 @@
+---
+# Sample playbook for cisco.catalystcenter.sda_fabric_devices (cisco.catalystcenter 2.15.0)
+# Build order: 737
+# Resource module for Sda Fabric Devices
+# Reads ../models/sda_fabric_devices.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/sda_fabric_devices_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags sda_fabric_devices.
+
+- name: "0737 sda_fabric_devices"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/sda_fabric_devices.yml
+  tasks:
+    - name: Run sda_fabric_devices from its model
+      cisco.catalystcenter.sda_fabric_devices:
+        catalystcenter_debug: "{{ sda_fabric_devices.catalystcenter_debug if sda_fabric_devices.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ sda_fabric_devices.catalystcenter_host if sda_fabric_devices.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ sda_fabric_devices.catalystcenter_password if sda_fabric_devices.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ sda_fabric_devices.catalystcenter_port if sda_fabric_devices.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ sda_fabric_devices.catalystcenter_username if sda_fabric_devices.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ sda_fabric_devices.catalystcenter_verify if sda_fabric_devices.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ sda_fabric_devices.catalystcenter_version if sda_fabric_devices.catalystcenter_version is not none else omit }}"
+        deviceRoles: "{{ sda_fabric_devices.deviceRoles if sda_fabric_devices.deviceRoles is not none else omit }}"
+        fabricId: "{{ sda_fabric_devices.fabricId if sda_fabric_devices.fabricId is not none else omit }}"
+        id: "{{ sda_fabric_devices.id if sda_fabric_devices.id is not none else omit }}"
+        networkDeviceId: "{{ sda_fabric_devices.networkDeviceId if sda_fabric_devices.networkDeviceId is not none else omit }}"
+        payload: "{{ (sda_fabric_devices.payload | cat_strip_nulls) if (sda_fabric_devices.payload | cat_strip_nulls) is not none else omit }}"
+        validate_response_schema: "{{ sda_fabric_devices.validate_response_schema if sda_fabric_devices.validate_response_schema is not none else omit }}"
+      register: sda_fabric_devices_result
+      tags:
+        - never
+        - sda_fabric_devices

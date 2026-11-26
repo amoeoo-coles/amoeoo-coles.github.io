@@ -1,0 +1,30 @@
+---
+# Sample playbook for cisco.catalystcenter.sda_multicast_v1 (cisco.catalystcenter 2.15.0)
+# Build order: 749
+# Resource module for Sda Multicast V1
+# Reads ../models/sda_multicast_v1.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/sda_multicast_v1_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags sda_multicast_v1.
+
+- name: "0749 sda_multicast_v1"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/sda_multicast_v1.yml
+  tasks:
+    - name: Run sda_multicast_v1 from its model
+      cisco.catalystcenter.sda_multicast_v1:
+        catalystcenter_debug: "{{ sda_multicast_v1.catalystcenter_debug if sda_multicast_v1.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ sda_multicast_v1.catalystcenter_host if sda_multicast_v1.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ sda_multicast_v1.catalystcenter_password if sda_multicast_v1.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ sda_multicast_v1.catalystcenter_port if sda_multicast_v1.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ sda_multicast_v1.catalystcenter_username if sda_multicast_v1.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ sda_multicast_v1.catalystcenter_verify if sda_multicast_v1.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ sda_multicast_v1.catalystcenter_version if sda_multicast_v1.catalystcenter_version is not none else omit }}"
+        payload: "{{ (sda_multicast_v1.payload | cat_strip_nulls) if (sda_multicast_v1.payload | cat_strip_nulls) is not none else omit }}"
+        validate_response_schema: "{{ sda_multicast_v1.validate_response_schema if sda_multicast_v1.validate_response_schema is not none else omit }}"
+      register: sda_multicast_v1_result
+      tags:
+        - never
+        - sda_multicast_v1

@@ -1,0 +1,37 @@
+---
+# Sample playbook for cisco.catalystcenter.assurance_events_query (cisco.catalystcenter 2.15.0)
+# Build order: 301
+# Resource module for Assurance Events Query
+# Reads ../models/assurance_events_query.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/assurance_events_query_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags assurance_events_query.
+
+- name: "0301 assurance_events_query"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/assurance_events_query.yml
+  tasks:
+    - name: Run assurance_events_query from its model
+      cisco.catalystcenter.assurance_events_query:
+        attributes: "{{ (assurance_events_query.attributes | cat_strip_nulls) if (assurance_events_query.attributes | cat_strip_nulls) is not none else omit }}"
+        catalystcenter_debug: "{{ assurance_events_query.catalystcenter_debug if assurance_events_query.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ assurance_events_query.catalystcenter_host if assurance_events_query.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ assurance_events_query.catalystcenter_password if assurance_events_query.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ assurance_events_query.catalystcenter_port if assurance_events_query.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ assurance_events_query.catalystcenter_username if assurance_events_query.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ assurance_events_query.catalystcenter_verify if assurance_events_query.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ assurance_events_query.catalystcenter_version if assurance_events_query.catalystcenter_version is not none else omit }}"
+        deviceFamily: "{{ (assurance_events_query.deviceFamily | cat_strip_nulls) if (assurance_events_query.deviceFamily | cat_strip_nulls) is not none else omit }}"
+        endTime: "{{ assurance_events_query.endTime if assurance_events_query.endTime is not none else omit }}"
+        filters: "{{ (assurance_events_query.filters | cat_strip_nulls) if (assurance_events_query.filters | cat_strip_nulls) is not none else omit }}"
+        headers: "{{ assurance_events_query.headers if assurance_events_query.headers is not none else omit }}"
+        page: "{{ (assurance_events_query.page | cat_strip_nulls) if (assurance_events_query.page | cat_strip_nulls) is not none else omit }}"
+        startTime: "{{ assurance_events_query.startTime if assurance_events_query.startTime is not none else omit }}"
+        validate_response_schema: "{{ assurance_events_query.validate_response_schema if assurance_events_query.validate_response_schema is not none else omit }}"
+        views: "{{ (assurance_events_query.views | cat_strip_nulls) if (assurance_events_query.views | cat_strip_nulls) is not none else omit }}"
+      register: assurance_events_query_result
+      tags:
+        - never
+        - assurance_events_query

@@ -1,0 +1,30 @@
+---
+# Sample playbook for cisco.catalystcenter.maps_import (cisco.catalystcenter 2.15.0)
+# Build order: 109
+# Resource module for Maps Import
+# Reads ../models/maps_import.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/maps_import_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags maps_import.
+
+- name: "0109 maps_import"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/maps_import.yml
+  tasks:
+    - name: Run maps_import from its model
+      cisco.catalystcenter.maps_import:
+        catalystcenter_debug: "{{ maps_import.catalystcenter_debug if maps_import.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ maps_import.catalystcenter_host if maps_import.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ maps_import.catalystcenter_password if maps_import.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ maps_import.catalystcenter_port if maps_import.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ maps_import.catalystcenter_username if maps_import.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ maps_import.catalystcenter_verify if maps_import.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ maps_import.catalystcenter_version if maps_import.catalystcenter_version is not none else omit }}"
+        importContextUuid: "{{ maps_import.importContextUuid if maps_import.importContextUuid is not none else omit }}"
+        validate_response_schema: "{{ maps_import.validate_response_schema if maps_import.validate_response_schema is not none else omit }}"
+      register: maps_import_result
+      tags:
+        - never
+        - maps_import

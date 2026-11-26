@@ -1,0 +1,32 @@
+---
+# Sample playbook for cisco.catalystcenter.global_pool (cisco.catalystcenter 2.15.0)
+# Build order: 191
+# Resource module for Global Pool
+# Reads ../models/global_pool.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/global_pool_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags global_pool.
+
+- name: "0191 global_pool"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/global_pool.yml
+  tasks:
+    - name: Run global_pool from its model
+      cisco.catalystcenter.global_pool:
+        catalystcenter_debug: "{{ global_pool.catalystcenter_debug if global_pool.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ global_pool.catalystcenter_host if global_pool.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ global_pool.catalystcenter_password if global_pool.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ global_pool.catalystcenter_port if global_pool.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ global_pool.catalystcenter_username if global_pool.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ global_pool.catalystcenter_verify if global_pool.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ global_pool.catalystcenter_version if global_pool.catalystcenter_version is not none else omit }}"
+        headers: "{{ global_pool.headers if global_pool.headers is not none else omit }}"
+        id: "{{ global_pool.id if global_pool.id is not none else omit }}"
+        settings: "{{ (global_pool.settings | cat_strip_nulls) if (global_pool.settings | cat_strip_nulls) is not none else omit }}"
+        validate_response_schema: "{{ global_pool.validate_response_schema if global_pool.validate_response_schema is not none else omit }}"
+      register: global_pool_result
+      tags:
+        - never
+        - global_pool

@@ -1,0 +1,39 @@
+---
+# Sample playbook for cisco.catalystcenter.pnp_playbook_config_generator (cisco.catalystcenter 2.15.0)
+# Build order: 537
+# Generate YAML playbook for PnP workflow with device information
+# Reads ../models/pnp_playbook_config_generator.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/pnp_playbook_config_generator_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags pnp_playbook_config_generator.
+
+- name: "0537 pnp_playbook_config_generator"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/pnp_playbook_config_generator.yml
+  tasks:
+    - name: Run pnp_playbook_config_generator from its model
+      cisco.catalystcenter.pnp_playbook_config_generator:
+        catalystcenter_api_task_timeout: "{{ pnp_playbook_config_generator.catalystcenter_api_task_timeout if pnp_playbook_config_generator.catalystcenter_api_task_timeout is not none else omit }}"
+        catalystcenter_debug: "{{ pnp_playbook_config_generator.catalystcenter_debug if pnp_playbook_config_generator.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ pnp_playbook_config_generator.catalystcenter_host if pnp_playbook_config_generator.catalystcenter_host is not none else omit }}"
+        catalystcenter_log: "{{ pnp_playbook_config_generator.catalystcenter_log if pnp_playbook_config_generator.catalystcenter_log is not none else omit }}"
+        catalystcenter_log_append: "{{ pnp_playbook_config_generator.catalystcenter_log_append if pnp_playbook_config_generator.catalystcenter_log_append is not none else omit }}"
+        catalystcenter_log_file_path: "{{ pnp_playbook_config_generator.catalystcenter_log_file_path if pnp_playbook_config_generator.catalystcenter_log_file_path is not none else omit }}"
+        catalystcenter_log_level: "{{ pnp_playbook_config_generator.catalystcenter_log_level if pnp_playbook_config_generator.catalystcenter_log_level is not none else omit }}"
+        catalystcenter_password: "{{ pnp_playbook_config_generator.catalystcenter_password if pnp_playbook_config_generator.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ pnp_playbook_config_generator.catalystcenter_port if pnp_playbook_config_generator.catalystcenter_port is not none else omit }}"
+        catalystcenter_task_poll_interval: "{{ pnp_playbook_config_generator.catalystcenter_task_poll_interval if pnp_playbook_config_generator.catalystcenter_task_poll_interval is not none else omit }}"
+        catalystcenter_username: "{{ pnp_playbook_config_generator.catalystcenter_username if pnp_playbook_config_generator.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ pnp_playbook_config_generator.catalystcenter_verify if pnp_playbook_config_generator.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ pnp_playbook_config_generator.catalystcenter_version if pnp_playbook_config_generator.catalystcenter_version is not none else omit }}"
+        config: "{{ (pnp_playbook_config_generator.config | cat_strip_nulls) if (pnp_playbook_config_generator.config | cat_strip_nulls) is not none else omit }}"
+        file_mode: "{{ pnp_playbook_config_generator.file_mode if pnp_playbook_config_generator.file_mode is not none else omit }}"
+        file_path: "{{ pnp_playbook_config_generator.file_path if pnp_playbook_config_generator.file_path is not none else omit }}"
+        state: "{{ pnp_playbook_config_generator.state if pnp_playbook_config_generator.state is not none else omit }}"
+        validate_response_schema: "{{ pnp_playbook_config_generator.validate_response_schema if pnp_playbook_config_generator.validate_response_schema is not none else omit }}"
+      register: pnp_playbook_config_generator_result
+      tags:
+        - never
+        - pnp_playbook_config_generator

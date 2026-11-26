@@ -1,0 +1,29 @@
+---
+# Sample playbook for cisco.catalystcenter.license_renew (cisco.catalystcenter 2.15.0)
+# Build order: 513
+# Resource module for License Renew
+# Reads ../models/license_renew.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/license_renew_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags license_renew.
+
+- name: "0513 license_renew"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/license_renew.yml
+  tasks:
+    - name: Run license_renew from its model
+      cisco.catalystcenter.license_renew:
+        catalystcenter_debug: "{{ license_renew.catalystcenter_debug if license_renew.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ license_renew.catalystcenter_host if license_renew.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ license_renew.catalystcenter_password if license_renew.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ license_renew.catalystcenter_port if license_renew.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ license_renew.catalystcenter_username if license_renew.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ license_renew.catalystcenter_verify if license_renew.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ license_renew.catalystcenter_version if license_renew.catalystcenter_version is not none else omit }}"
+        validate_response_schema: "{{ license_renew.validate_response_schema if license_renew.validate_response_schema is not none else omit }}"
+      register: license_renew_result
+      tags:
+        - never
+        - license_renew

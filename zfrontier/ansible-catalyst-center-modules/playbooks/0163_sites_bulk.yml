@@ -1,0 +1,30 @@
+---
+# Sample playbook for cisco.catalystcenter.sites_bulk (cisco.catalystcenter 2.15.0)
+# Build order: 163
+# Resource module for Sites Bulk
+# Reads ../models/sites_bulk.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/sites_bulk_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags sites_bulk.
+
+- name: "0163 sites_bulk"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/sites_bulk.yml
+  tasks:
+    - name: Run sites_bulk from its model
+      cisco.catalystcenter.sites_bulk:
+        catalystcenter_debug: "{{ sites_bulk.catalystcenter_debug if sites_bulk.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ sites_bulk.catalystcenter_host if sites_bulk.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ sites_bulk.catalystcenter_password if sites_bulk.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ sites_bulk.catalystcenter_port if sites_bulk.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ sites_bulk.catalystcenter_username if sites_bulk.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ sites_bulk.catalystcenter_verify if sites_bulk.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ sites_bulk.catalystcenter_version if sites_bulk.catalystcenter_version is not none else omit }}"
+        payload: "{{ (sites_bulk.payload | cat_strip_nulls) if (sites_bulk.payload | cat_strip_nulls) is not none else omit }}"
+        validate_response_schema: "{{ sites_bulk.validate_response_schema if sites_bulk.validate_response_schema is not none else omit }}"
+      register: sites_bulk_result
+      tags:
+        - never
+        - sites_bulk

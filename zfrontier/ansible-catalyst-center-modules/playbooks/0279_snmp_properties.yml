@@ -1,0 +1,30 @@
+---
+# Sample playbook for cisco.catalystcenter.snmp_properties (cisco.catalystcenter 2.15.0)
+# Build order: 279
+# Resource module for Snmp Properties
+# Reads ../models/snmp_properties.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/snmp_properties_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags snmp_properties.
+
+- name: "0279 snmp_properties"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/snmp_properties.yml
+  tasks:
+    - name: Run snmp_properties from its model
+      cisco.catalystcenter.snmp_properties:
+        catalystcenter_debug: "{{ snmp_properties.catalystcenter_debug if snmp_properties.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ snmp_properties.catalystcenter_host if snmp_properties.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ snmp_properties.catalystcenter_password if snmp_properties.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ snmp_properties.catalystcenter_port if snmp_properties.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ snmp_properties.catalystcenter_username if snmp_properties.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ snmp_properties.catalystcenter_verify if snmp_properties.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ snmp_properties.catalystcenter_version if snmp_properties.catalystcenter_version is not none else omit }}"
+        payload: "{{ (snmp_properties.payload | cat_strip_nulls) if (snmp_properties.payload | cat_strip_nulls) is not none else omit }}"
+        validate_response_schema: "{{ snmp_properties.validate_response_schema if snmp_properties.validate_response_schema is not none else omit }}"
+      register: snmp_properties_result
+      tags:
+        - never
+        - snmp_properties

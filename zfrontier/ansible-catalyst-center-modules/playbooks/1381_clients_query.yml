@@ -1,0 +1,37 @@
+---
+# Sample playbook for cisco.catalystcenter.clients_query (cisco.catalystcenter 2.15.0)
+# Build order: 1381
+# Resource module for Clients Query
+# Reads ../models/clients_query.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/clients_query_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags clients_query.
+
+- name: "1381 clients_query"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/clients_query.yml
+  tasks:
+    - name: Run clients_query from its model
+      cisco.catalystcenter.clients_query:
+        aggregateAttributes: "{{ (clients_query.aggregateAttributes | cat_strip_nulls) if (clients_query.aggregateAttributes | cat_strip_nulls) is not none else omit }}"
+        attributes: "{{ (clients_query.attributes | cat_strip_nulls) if (clients_query.attributes | cat_strip_nulls) is not none else omit }}"
+        catalystcenter_debug: "{{ clients_query.catalystcenter_debug if clients_query.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ clients_query.catalystcenter_host if clients_query.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ clients_query.catalystcenter_password if clients_query.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ clients_query.catalystcenter_port if clients_query.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ clients_query.catalystcenter_username if clients_query.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ clients_query.catalystcenter_verify if clients_query.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ clients_query.catalystcenter_version if clients_query.catalystcenter_version is not none else omit }}"
+        endTime: "{{ clients_query.endTime if clients_query.endTime is not none else omit }}"
+        filters: "{{ (clients_query.filters | cat_strip_nulls) if (clients_query.filters | cat_strip_nulls) is not none else omit }}"
+        headers: "{{ clients_query.headers if clients_query.headers is not none else omit }}"
+        page: "{{ (clients_query.page | cat_strip_nulls) if (clients_query.page | cat_strip_nulls) is not none else omit }}"
+        startTime: "{{ clients_query.startTime if clients_query.startTime is not none else omit }}"
+        validate_response_schema: "{{ clients_query.validate_response_schema if clients_query.validate_response_schema is not none else omit }}"
+        views: "{{ (clients_query.views | cat_strip_nulls) if (clients_query.views | cat_strip_nulls) is not none else omit }}"
+      register: clients_query_result
+      tags:
+        - never
+        - clients_query

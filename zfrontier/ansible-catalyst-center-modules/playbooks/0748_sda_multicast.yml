@@ -1,0 +1,33 @@
+---
+# Sample playbook for cisco.catalystcenter.sda_multicast (cisco.catalystcenter 2.15.0)
+# Build order: 748
+# Resource module for Sda Multicast
+# Reads ../models/sda_multicast.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/sda_multicast_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags sda_multicast.
+
+- name: "0748 sda_multicast"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/sda_multicast.yml
+  tasks:
+    - name: Run sda_multicast from its model
+      cisco.catalystcenter.sda_multicast:
+        catalystcenter_debug: "{{ sda_multicast.catalystcenter_debug if sda_multicast.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ sda_multicast.catalystcenter_host if sda_multicast.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ sda_multicast.catalystcenter_password if sda_multicast.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ sda_multicast.catalystcenter_port if sda_multicast.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ sda_multicast.catalystcenter_username if sda_multicast.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ sda_multicast.catalystcenter_verify if sda_multicast.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ sda_multicast.catalystcenter_version if sda_multicast.catalystcenter_version is not none else omit }}"
+        multicastMethod: "{{ sda_multicast.multicastMethod if sda_multicast.multicastMethod is not none else omit }}"
+        multicastType: "{{ sda_multicast.multicastType if sda_multicast.multicastType is not none else omit }}"
+        multicastVnInfo: "{{ (sda_multicast.multicastVnInfo | cat_strip_nulls) if (sda_multicast.multicastVnInfo | cat_strip_nulls) is not none else omit }}"
+        siteNameHierarchy: "{{ sda_multicast.siteNameHierarchy if sda_multicast.siteNameHierarchy is not none else omit }}"
+        validate_response_schema: "{{ sda_multicast.validate_response_schema if sda_multicast.validate_response_schema is not none else omit }}"
+      register: sda_multicast_result
+      tags:
+        - never
+        - sda_multicast

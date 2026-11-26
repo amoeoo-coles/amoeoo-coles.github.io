@@ -1,0 +1,33 @@
+---
+# Sample playbook for cisco.catalystcenter.golden_image_create (cisco.catalystcenter 2.15.0)
+# Build order: 543
+# Resource module for Golden Image Create
+# Reads ../models/golden_image_create.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/golden_image_create_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags golden_image_create.
+
+- name: "0543 golden_image_create"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/golden_image_create.yml
+  tasks:
+    - name: Run golden_image_create from its model
+      cisco.catalystcenter.golden_image_create:
+        catalystcenter_debug: "{{ golden_image_create.catalystcenter_debug if golden_image_create.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ golden_image_create.catalystcenter_host if golden_image_create.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ golden_image_create.catalystcenter_password if golden_image_create.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ golden_image_create.catalystcenter_port if golden_image_create.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ golden_image_create.catalystcenter_username if golden_image_create.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ golden_image_create.catalystcenter_verify if golden_image_create.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ golden_image_create.catalystcenter_version if golden_image_create.catalystcenter_version is not none else omit }}"
+        deviceFamilyIdentifier: "{{ golden_image_create.deviceFamilyIdentifier if golden_image_create.deviceFamilyIdentifier is not none else omit }}"
+        deviceRole: "{{ golden_image_create.deviceRole if golden_image_create.deviceRole is not none else omit }}"
+        imageId: "{{ golden_image_create.imageId if golden_image_create.imageId is not none else omit }}"
+        siteId: "{{ golden_image_create.siteId if golden_image_create.siteId is not none else omit }}"
+        validate_response_schema: "{{ golden_image_create.validate_response_schema if golden_image_create.validate_response_schema is not none else omit }}"
+      register: golden_image_create_result
+      tags:
+        - never
+        - golden_image_create

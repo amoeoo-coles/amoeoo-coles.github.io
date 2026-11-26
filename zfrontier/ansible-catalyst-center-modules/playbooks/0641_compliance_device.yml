@@ -1,0 +1,32 @@
+---
+# Sample playbook for cisco.catalystcenter.compliance_device (cisco.catalystcenter 2.15.0)
+# Build order: 641
+# Resource module for Compliance Device
+# Reads ../models/compliance_device.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/compliance_device_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags compliance_device.
+
+- name: "0641 compliance_device"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/compliance_device.yml
+  tasks:
+    - name: Run compliance_device from its model
+      cisco.catalystcenter.compliance_device:
+        catalystcenter_debug: "{{ compliance_device.catalystcenter_debug if compliance_device.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ compliance_device.catalystcenter_host if compliance_device.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ compliance_device.catalystcenter_password if compliance_device.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ compliance_device.catalystcenter_port if compliance_device.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ compliance_device.catalystcenter_username if compliance_device.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ compliance_device.catalystcenter_verify if compliance_device.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ compliance_device.catalystcenter_version if compliance_device.catalystcenter_version is not none else omit }}"
+        categories: "{{ (compliance_device.categories | cat_strip_nulls) if (compliance_device.categories | cat_strip_nulls) is not none else omit }}"
+        deviceUuids: "{{ (compliance_device.deviceUuids | cat_strip_nulls) if (compliance_device.deviceUuids | cat_strip_nulls) is not none else omit }}"
+        triggerFull: "{{ compliance_device.triggerFull if compliance_device.triggerFull is not none else omit }}"
+        validate_response_schema: "{{ compliance_device.validate_response_schema if compliance_device.validate_response_schema is not none else omit }}"
+      register: compliance_device_result
+      tags:
+        - never
+        - compliance_device

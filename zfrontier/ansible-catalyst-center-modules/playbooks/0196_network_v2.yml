@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.catalystcenter.network_v2 (cisco.catalystcenter 2.15.0)
+# Build order: 196
+# Resource module for Network V2
+# Reads ../models/network_v2.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/network_v2_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags network_v2.
+
+- name: "0196 network_v2"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/network_v2.yml
+  tasks:
+    - name: Run network_v2 from its model
+      cisco.catalystcenter.network_v2:
+        catalystcenter_debug: "{{ network_v2.catalystcenter_debug if network_v2.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ network_v2.catalystcenter_host if network_v2.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ network_v2.catalystcenter_password if network_v2.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ network_v2.catalystcenter_port if network_v2.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ network_v2.catalystcenter_username if network_v2.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ network_v2.catalystcenter_verify if network_v2.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ network_v2.catalystcenter_version if network_v2.catalystcenter_version is not none else omit }}"
+        settings: "{{ (network_v2.settings | cat_strip_nulls) if (network_v2.settings | cat_strip_nulls) is not none else omit }}"
+        siteId: "{{ network_v2.siteId if network_v2.siteId is not none else omit }}"
+        validate_response_schema: "{{ network_v2.validate_response_schema if network_v2.validate_response_schema is not none else omit }}"
+      register: network_v2_result
+      tags:
+        - never
+        - network_v2

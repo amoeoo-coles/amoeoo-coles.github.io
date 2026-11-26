@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.catalystcenter.pnp_network_devices (cisco.catalystcenter 2.15.0)
+# Build order: 484
+# Resource module for Pnp Network Devices
+# Reads ../models/pnp_network_devices.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/pnp_network_devices_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags pnp_network_devices.
+
+- name: "0484 pnp_network_devices"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/pnp_network_devices.yml
+  tasks:
+    - name: Run pnp_network_devices from its model
+      cisco.catalystcenter.pnp_network_devices:
+        catalystcenter_debug: "{{ pnp_network_devices.catalystcenter_debug if pnp_network_devices.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ pnp_network_devices.catalystcenter_host if pnp_network_devices.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ pnp_network_devices.catalystcenter_password if pnp_network_devices.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ pnp_network_devices.catalystcenter_port if pnp_network_devices.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ pnp_network_devices.catalystcenter_username if pnp_network_devices.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ pnp_network_devices.catalystcenter_verify if pnp_network_devices.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ pnp_network_devices.catalystcenter_version if pnp_network_devices.catalystcenter_version is not none else omit }}"
+        id: "{{ pnp_network_devices.id if pnp_network_devices.id is not none else omit }}"
+        removePnpProfile: "{{ pnp_network_devices.removePnpProfile if pnp_network_devices.removePnpProfile is not none else omit }}"
+        validate_response_schema: "{{ pnp_network_devices.validate_response_schema if pnp_network_devices.validate_response_schema is not none else omit }}"
+      register: pnp_network_devices_result
+      tags:
+        - never
+        - pnp_network_devices

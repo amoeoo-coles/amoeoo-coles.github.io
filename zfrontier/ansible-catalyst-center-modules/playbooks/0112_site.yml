@@ -1,0 +1,32 @@
+---
+# Sample playbook for cisco.catalystcenter.site (cisco.catalystcenter 2.15.0)
+# Build order: 112
+# Resource module for Site
+# Reads ../models/site.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/site_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags site.
+
+- name: "0112 site"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/site.yml
+  tasks:
+    - name: Run site from its model
+      cisco.catalystcenter.site:
+        catalystcenter_debug: "{{ site.catalystcenter_debug if site.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ site.catalystcenter_host if site.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ site.catalystcenter_password if site.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ site.catalystcenter_port if site.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ site.catalystcenter_username if site.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ site.catalystcenter_verify if site.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ site.catalystcenter_version if site.catalystcenter_version is not none else omit }}"
+        headers: "{{ site.headers if site.headers is not none else omit }}"
+        site: "{{ (site.site | cat_strip_nulls) if (site.site | cat_strip_nulls) is not none else omit }}"
+        type: "{{ site.type if site.type is not none else omit }}"
+        validate_response_schema: "{{ site.validate_response_schema if site.validate_response_schema is not none else omit }}"
+      register: site_result
+      tags:
+        - never
+        - site

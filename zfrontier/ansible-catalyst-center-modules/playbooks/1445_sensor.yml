@@ -1,0 +1,41 @@
+---
+# Sample playbook for cisco.catalystcenter.sensor (cisco.catalystcenter 2.15.0)
+# Build order: 1445
+# Resource module for Sensor
+# Reads ../models/sensor.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/sensor_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags sensor.
+
+- name: "1445 sensor"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/sensor.yml
+  tasks:
+    - name: Run sensor from its model
+      cisco.catalystcenter.sensor:
+        apCoverage: "{{ (sensor.apCoverage | cat_strip_nulls) if (sensor.apCoverage | cat_strip_nulls) is not none else omit }}"
+        catalystcenter_debug: "{{ sensor.catalystcenter_debug if sensor.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ sensor.catalystcenter_host if sensor.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ sensor.catalystcenter_password if sensor.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ sensor.catalystcenter_port if sensor.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ sensor.catalystcenter_username if sensor.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ sensor.catalystcenter_verify if sensor.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ sensor.catalystcenter_version if sensor.catalystcenter_version is not none else omit }}"
+        connection: "{{ sensor.connection if sensor.connection is not none else omit }}"
+        encryptionMode: "{{ sensor.encryptionMode if sensor.encryptionMode is not none else omit }}"
+        locationInfoList: "{{ (sensor.locationInfoList | cat_strip_nulls) if (sensor.locationInfoList | cat_strip_nulls) is not none else omit }}"
+        modelVersion: "{{ sensor.modelVersion if sensor.modelVersion is not none else omit }}"
+        name: "{{ sensor.name if sensor.name is not none else omit }}"
+        profiles: "{{ (sensor.profiles | cat_strip_nulls) if (sensor.profiles | cat_strip_nulls) is not none else omit }}"
+        runNow: "{{ sensor.runNow if sensor.runNow is not none else omit }}"
+        sensors: "{{ (sensor.sensors | cat_strip_nulls) if (sensor.sensors | cat_strip_nulls) is not none else omit }}"
+        ssids: "{{ (sensor.ssids | cat_strip_nulls) if (sensor.ssids | cat_strip_nulls) is not none else omit }}"
+        templateName: "{{ sensor.templateName if sensor.templateName is not none else omit }}"
+        validate_response_schema: "{{ sensor.validate_response_schema if sensor.validate_response_schema is not none else omit }}"
+        version: "{{ sensor.version if sensor.version is not none else omit }}"
+      register: sensor_result
+      tags:
+        - never
+        - sensor

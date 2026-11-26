@@ -1,0 +1,35 @@
+---
+# Sample playbook for cisco.catalystcenter.tag (cisco.catalystcenter 2.15.0)
+# Build order: 245
+# Resource module for Tag
+# Reads ../models/tag.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/tag_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags tag.
+
+- name: "0245 tag"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/tag.yml
+  tasks:
+    - name: Run tag from its model
+      cisco.catalystcenter.tag:
+        catalystcenter_debug: "{{ tag.catalystcenter_debug if tag.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ tag.catalystcenter_host if tag.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ tag.catalystcenter_password if tag.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ tag.catalystcenter_port if tag.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ tag.catalystcenter_username if tag.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ tag.catalystcenter_verify if tag.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ tag.catalystcenter_version if tag.catalystcenter_version is not none else omit }}"
+        description: "{{ tag.description if tag.description is not none else omit }}"
+        dynamicRules: "{{ (tag.dynamicRules | cat_strip_nulls) if (tag.dynamicRules | cat_strip_nulls) is not none else omit }}"
+        id: "{{ tag.id if tag.id is not none else omit }}"
+        instanceTenantId: "{{ tag.instanceTenantId if tag.instanceTenantId is not none else omit }}"
+        name: "{{ tag.name if tag.name is not none else omit }}"
+        systemTag: "{{ tag.systemTag if tag.systemTag is not none else omit }}"
+        validate_response_schema: "{{ tag.validate_response_schema if tag.validate_response_schema is not none else omit }}"
+      register: tag_result
+      tags:
+        - never
+        - tag

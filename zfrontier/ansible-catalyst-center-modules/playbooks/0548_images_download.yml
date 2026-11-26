@@ -1,0 +1,30 @@
+---
+# Sample playbook for cisco.catalystcenter.images_download (cisco.catalystcenter 2.15.0)
+# Build order: 548
+# Resource module for Images Download
+# Reads ../models/images_download.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/images_download_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags images_download.
+
+- name: "0548 images_download"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/images_download.yml
+  tasks:
+    - name: Run images_download from its model
+      cisco.catalystcenter.images_download:
+        catalystcenter_debug: "{{ images_download.catalystcenter_debug if images_download.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ images_download.catalystcenter_host if images_download.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ images_download.catalystcenter_password if images_download.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ images_download.catalystcenter_port if images_download.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ images_download.catalystcenter_username if images_download.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ images_download.catalystcenter_verify if images_download.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ images_download.catalystcenter_version if images_download.catalystcenter_version is not none else omit }}"
+        id: "{{ images_download.id if images_download.id is not none else omit }}"
+        validate_response_schema: "{{ images_download.validate_response_schema if images_download.validate_response_schema is not none else omit }}"
+      register: images_download_result
+      tags:
+        - never
+        - images_download

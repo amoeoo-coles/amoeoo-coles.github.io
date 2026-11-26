@@ -1,0 +1,36 @@
+---
+# Sample playbook for cisco.catalystcenter.interfaces_query (cisco.catalystcenter 2.15.0)
+# Build order: 337
+# Resource module for Interfaces Query
+# Reads ../models/interfaces_query.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/interfaces_query_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags interfaces_query.
+
+- name: "0337 interfaces_query"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/interfaces_query.yml
+  tasks:
+    - name: Run interfaces_query from its model
+      cisco.catalystcenter.interfaces_query:
+        aggregateAttributes: "{{ (interfaces_query.aggregateAttributes | cat_strip_nulls) if (interfaces_query.aggregateAttributes | cat_strip_nulls) is not none else omit }}"
+        attributes: "{{ (interfaces_query.attributes | cat_strip_nulls) if (interfaces_query.attributes | cat_strip_nulls) is not none else omit }}"
+        catalystcenter_debug: "{{ interfaces_query.catalystcenter_debug if interfaces_query.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ interfaces_query.catalystcenter_host if interfaces_query.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ interfaces_query.catalystcenter_password if interfaces_query.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ interfaces_query.catalystcenter_port if interfaces_query.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ interfaces_query.catalystcenter_username if interfaces_query.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ interfaces_query.catalystcenter_verify if interfaces_query.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ interfaces_query.catalystcenter_version if interfaces_query.catalystcenter_version is not none else omit }}"
+        endTime: "{{ interfaces_query.endTime if interfaces_query.endTime is not none else omit }}"
+        filters: "{{ (interfaces_query.filters | cat_strip_nulls) if (interfaces_query.filters | cat_strip_nulls) is not none else omit }}"
+        page: "{{ (interfaces_query.page | cat_strip_nulls) if (interfaces_query.page | cat_strip_nulls) is not none else omit }}"
+        startTime: "{{ interfaces_query.startTime if interfaces_query.startTime is not none else omit }}"
+        validate_response_schema: "{{ interfaces_query.validate_response_schema if interfaces_query.validate_response_schema is not none else omit }}"
+        views: "{{ (interfaces_query.views | cat_strip_nulls) if (interfaces_query.views | cat_strip_nulls) is not none else omit }}"
+      register: interfaces_query_result
+      tags:
+        - never
+        - interfaces_query

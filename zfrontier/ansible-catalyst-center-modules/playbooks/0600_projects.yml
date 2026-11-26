@@ -1,0 +1,32 @@
+---
+# Sample playbook for cisco.catalystcenter.projects (cisco.catalystcenter 2.15.0)
+# Build order: 600
+# Resource module for Projects
+# Reads ../models/projects.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/projects_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags projects.
+
+- name: "0600 projects"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/projects.yml
+  tasks:
+    - name: Run projects from its model
+      cisco.catalystcenter.projects:
+        catalystcenter_debug: "{{ projects.catalystcenter_debug if projects.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ projects.catalystcenter_host if projects.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ projects.catalystcenter_password if projects.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ projects.catalystcenter_port if projects.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ projects.catalystcenter_username if projects.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ projects.catalystcenter_verify if projects.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ projects.catalystcenter_version if projects.catalystcenter_version is not none else omit }}"
+        description: "{{ projects.description if projects.description is not none else omit }}"
+        name: "{{ projects.name if projects.name is not none else omit }}"
+        projectId: "{{ projects.projectId if projects.projectId is not none else omit }}"
+        validate_response_schema: "{{ projects.validate_response_schema if projects.validate_response_schema is not none else omit }}"
+      register: projects_result
+      tags:
+        - never
+        - projects

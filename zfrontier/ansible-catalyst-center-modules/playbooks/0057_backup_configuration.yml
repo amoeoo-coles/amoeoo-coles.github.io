@@ -1,0 +1,33 @@
+---
+# Sample playbook for cisco.catalystcenter.backup_configuration (cisco.catalystcenter 2.15.0)
+# Build order: 57
+# Resource module for Backup Configuration
+# Reads ../models/backup_configuration.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/backup_configuration_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags backup_configuration.
+
+- name: "0057 backup_configuration"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/backup_configuration.yml
+  tasks:
+    - name: Run backup_configuration from its model
+      cisco.catalystcenter.backup_configuration:
+        catalystcenter_debug: "{{ backup_configuration.catalystcenter_debug if backup_configuration.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ backup_configuration.catalystcenter_host if backup_configuration.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ backup_configuration.catalystcenter_password if backup_configuration.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ backup_configuration.catalystcenter_port if backup_configuration.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ backup_configuration.catalystcenter_username if backup_configuration.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ backup_configuration.catalystcenter_verify if backup_configuration.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ backup_configuration.catalystcenter_version if backup_configuration.catalystcenter_version is not none else omit }}"
+        dataRetention: "{{ backup_configuration.dataRetention if backup_configuration.dataRetention is not none else omit }}"
+        encryptionPassphrase: "{{ backup_configuration.encryptionPassphrase if backup_configuration.encryptionPassphrase is not none else omit }}"
+        mountPath: "{{ backup_configuration.mountPath if backup_configuration.mountPath is not none else omit }}"
+        type: "{{ backup_configuration.type if backup_configuration.type is not none else omit }}"
+        validate_response_schema: "{{ backup_configuration.validate_response_schema if backup_configuration.validate_response_schema is not none else omit }}"
+      register: backup_configuration_result
+      tags:
+        - never
+        - backup_configuration

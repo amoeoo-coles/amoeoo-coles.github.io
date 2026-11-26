@@ -1,0 +1,33 @@
+---
+# Sample playbook for cisco.catalystcenter.excluded_wireless_clients (cisco.catalystcenter 2.15.0)
+# Build order: 961
+# Resource module for Excluded Wireless Clients
+# Reads ../models/excluded_wireless_clients.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/excluded_wireless_clients_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags excluded_wireless_clients.
+
+- name: "0961 excluded_wireless_clients"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/excluded_wireless_clients.yml
+  tasks:
+    - name: Run excluded_wireless_clients from its model
+      cisco.catalystcenter.excluded_wireless_clients:
+        catalystcenter_debug: "{{ excluded_wireless_clients.catalystcenter_debug if excluded_wireless_clients.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ excluded_wireless_clients.catalystcenter_host if excluded_wireless_clients.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ excluded_wireless_clients.catalystcenter_password if excluded_wireless_clients.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ excluded_wireless_clients.catalystcenter_port if excluded_wireless_clients.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ excluded_wireless_clients.catalystcenter_username if excluded_wireless_clients.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ excluded_wireless_clients.catalystcenter_verify if excluded_wireless_clients.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ excluded_wireless_clients.catalystcenter_version if excluded_wireless_clients.catalystcenter_version is not none else omit }}"
+        description: "{{ excluded_wireless_clients.description if excluded_wireless_clients.description is not none else omit }}"
+        id: "{{ excluded_wireless_clients.id if excluded_wireless_clients.id is not none else omit }}"
+        impactedWlcs: "{{ (excluded_wireless_clients.impactedWlcs | cat_strip_nulls) if (excluded_wireless_clients.impactedWlcs | cat_strip_nulls) is not none else omit }}"
+        macAddress: "{{ excluded_wireless_clients.macAddress if excluded_wireless_clients.macAddress is not none else omit }}"
+        validate_response_schema: "{{ excluded_wireless_clients.validate_response_schema if excluded_wireless_clients.validate_response_schema is not none else omit }}"
+      register: excluded_wireless_clients_result
+      tags:
+        - never
+        - excluded_wireless_clients

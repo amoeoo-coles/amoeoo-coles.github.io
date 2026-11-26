@@ -1,0 +1,30 @@
+---
+# Sample playbook for cisco.catalystcenter.device_reboot_apreboot (cisco.catalystcenter 2.15.0)
+# Build order: 960
+# Resource module for Device Reboot Apreboot
+# Reads ../models/device_reboot_apreboot.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/device_reboot_apreboot_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags device_reboot_apreboot.
+
+- name: "0960 device_reboot_apreboot"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/device_reboot_apreboot.yml
+  tasks:
+    - name: Run device_reboot_apreboot from its model
+      cisco.catalystcenter.device_reboot_apreboot:
+        apMacAddresses: "{{ (device_reboot_apreboot.apMacAddresses | cat_strip_nulls) if (device_reboot_apreboot.apMacAddresses | cat_strip_nulls) is not none else omit }}"
+        catalystcenter_debug: "{{ device_reboot_apreboot.catalystcenter_debug if device_reboot_apreboot.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ device_reboot_apreboot.catalystcenter_host if device_reboot_apreboot.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ device_reboot_apreboot.catalystcenter_password if device_reboot_apreboot.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ device_reboot_apreboot.catalystcenter_port if device_reboot_apreboot.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ device_reboot_apreboot.catalystcenter_username if device_reboot_apreboot.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ device_reboot_apreboot.catalystcenter_verify if device_reboot_apreboot.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ device_reboot_apreboot.catalystcenter_version if device_reboot_apreboot.catalystcenter_version is not none else omit }}"
+        validate_response_schema: "{{ device_reboot_apreboot.validate_response_schema if device_reboot_apreboot.validate_response_schema is not none else omit }}"
+      register: device_reboot_apreboot_result
+      tags:
+        - never
+        - device_reboot_apreboot

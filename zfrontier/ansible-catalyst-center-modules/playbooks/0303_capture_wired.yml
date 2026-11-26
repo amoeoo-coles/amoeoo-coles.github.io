@@ -1,0 +1,30 @@
+---
+# Sample playbook for cisco.catalystcenter.capture_wired (cisco.catalystcenter 2.15.0)
+# Build order: 303
+# Resource module for Capture Wired
+# Reads ../models/capture_wired.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/capture_wired_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags capture_wired.
+
+- name: "0303 capture_wired"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/capture_wired.yml
+  tasks:
+    - name: Run capture_wired from its model
+      cisco.catalystcenter.capture_wired:
+        catalystcenter_debug: "{{ capture_wired.catalystcenter_debug if capture_wired.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ capture_wired.catalystcenter_host if capture_wired.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ capture_wired.catalystcenter_password if capture_wired.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ capture_wired.catalystcenter_port if capture_wired.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ capture_wired.catalystcenter_username if capture_wired.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ capture_wired.catalystcenter_verify if capture_wired.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ capture_wired.catalystcenter_version if capture_wired.catalystcenter_version is not none else omit }}"
+        id: "{{ capture_wired.id if capture_wired.id is not none else omit }}"
+        validate_response_schema: "{{ capture_wired.validate_response_schema if capture_wired.validate_response_schema is not none else omit }}"
+      register: capture_wired_result
+      tags:
+        - never
+        - capture_wired

@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.catalystcenter.connection_mode_setting (cisco.catalystcenter 2.15.0)
+# Build order: 508
+# Resource module for Connection Mode Setting
+# Reads ../models/connection_mode_setting.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/connection_mode_setting_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags connection_mode_setting.
+
+- name: "0508 connection_mode_setting"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/connection_mode_setting.yml
+  tasks:
+    - name: Run connection_mode_setting from its model
+      cisco.catalystcenter.connection_mode_setting:
+        catalystcenter_debug: "{{ connection_mode_setting.catalystcenter_debug if connection_mode_setting.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ connection_mode_setting.catalystcenter_host if connection_mode_setting.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ connection_mode_setting.catalystcenter_password if connection_mode_setting.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ connection_mode_setting.catalystcenter_port if connection_mode_setting.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ connection_mode_setting.catalystcenter_username if connection_mode_setting.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ connection_mode_setting.catalystcenter_verify if connection_mode_setting.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ connection_mode_setting.catalystcenter_version if connection_mode_setting.catalystcenter_version is not none else omit }}"
+        connectionMode: "{{ connection_mode_setting.connectionMode if connection_mode_setting.connectionMode is not none else omit }}"
+        parameters: "{{ (connection_mode_setting.parameters | cat_strip_nulls) if (connection_mode_setting.parameters | cat_strip_nulls) is not none else omit }}"
+        validate_response_schema: "{{ connection_mode_setting.validate_response_schema if connection_mode_setting.validate_response_schema is not none else omit }}"
+      register: connection_mode_setting_result
+      tags:
+        - never
+        - connection_mode_setting

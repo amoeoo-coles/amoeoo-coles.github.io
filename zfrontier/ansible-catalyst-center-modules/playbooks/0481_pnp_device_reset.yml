@@ -1,0 +1,32 @@
+---
+# Sample playbook for cisco.catalystcenter.pnp_device_reset (cisco.catalystcenter 2.15.0)
+# Build order: 481
+# Resource module for Pnp Device Reset
+# Reads ../models/pnp_device_reset.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/pnp_device_reset_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags pnp_device_reset.
+
+- name: "0481 pnp_device_reset"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/pnp_device_reset.yml
+  tasks:
+    - name: Run pnp_device_reset from its model
+      cisco.catalystcenter.pnp_device_reset:
+        catalystcenter_debug: "{{ pnp_device_reset.catalystcenter_debug if pnp_device_reset.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ pnp_device_reset.catalystcenter_host if pnp_device_reset.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ pnp_device_reset.catalystcenter_password if pnp_device_reset.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ pnp_device_reset.catalystcenter_port if pnp_device_reset.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ pnp_device_reset.catalystcenter_username if pnp_device_reset.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ pnp_device_reset.catalystcenter_verify if pnp_device_reset.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ pnp_device_reset.catalystcenter_version if pnp_device_reset.catalystcenter_version is not none else omit }}"
+        deviceResetList: "{{ (pnp_device_reset.deviceResetList | cat_strip_nulls) if (pnp_device_reset.deviceResetList | cat_strip_nulls) is not none else omit }}"
+        projectId: "{{ pnp_device_reset.projectId if pnp_device_reset.projectId is not none else omit }}"
+        validate_response_schema: "{{ pnp_device_reset.validate_response_schema if pnp_device_reset.validate_response_schema is not none else omit }}"
+        workflowId: "{{ pnp_device_reset.workflowId if pnp_device_reset.workflowId is not none else omit }}"
+      register: pnp_device_reset_result
+      tags:
+        - never
+        - pnp_device_reset

@@ -1,0 +1,37 @@
+---
+# Sample playbook for cisco.catalystcenter.planned_access_points (cisco.catalystcenter 2.15.0)
+# Build order: 370
+# Resource module for Planned Access Points
+# Reads ../models/planned_access_points.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/planned_access_points_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags planned_access_points.
+
+- name: "0370 planned_access_points"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/planned_access_points.yml
+  tasks:
+    - name: Run planned_access_points from its model
+      cisco.catalystcenter.planned_access_points:
+        attributes: "{{ (planned_access_points.attributes | cat_strip_nulls) if (planned_access_points.attributes | cat_strip_nulls) is not none else omit }}"
+        catalystcenter_debug: "{{ planned_access_points.catalystcenter_debug if planned_access_points.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ planned_access_points.catalystcenter_host if planned_access_points.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ planned_access_points.catalystcenter_password if planned_access_points.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ planned_access_points.catalystcenter_port if planned_access_points.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ planned_access_points.catalystcenter_username if planned_access_points.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ planned_access_points.catalystcenter_verify if planned_access_points.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ planned_access_points.catalystcenter_version if planned_access_points.catalystcenter_version is not none else omit }}"
+        floorId: "{{ planned_access_points.floorId if planned_access_points.floorId is not none else omit }}"
+        isSensor: "{{ planned_access_points.isSensor if planned_access_points.isSensor is not none else omit }}"
+        location: "{{ (planned_access_points.location | cat_strip_nulls) if (planned_access_points.location | cat_strip_nulls) is not none else omit }}"
+        plannedAccessPointUuid: "{{ planned_access_points.plannedAccessPointUuid if planned_access_points.plannedAccessPointUuid is not none else omit }}"
+        position: "{{ (planned_access_points.position | cat_strip_nulls) if (planned_access_points.position | cat_strip_nulls) is not none else omit }}"
+        radioCount: "{{ planned_access_points.radioCount if planned_access_points.radioCount is not none else omit }}"
+        radios: "{{ (planned_access_points.radios | cat_strip_nulls) if (planned_access_points.radios | cat_strip_nulls) is not none else omit }}"
+        validate_response_schema: "{{ planned_access_points.validate_response_schema if planned_access_points.validate_response_schema is not none else omit }}"
+      register: planned_access_points_result
+      tags:
+        - never
+        - planned_access_points

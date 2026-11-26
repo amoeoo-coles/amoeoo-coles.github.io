@@ -1,0 +1,42 @@
+---
+# Sample playbook for cisco.catalystcenter.rma_workflow_manager (cisco.catalystcenter 2.15.0)
+# Build order: 542
+# Manage device replacement workflows in Cisco Catalyst Center.
+# Reads ../models/rma_workflow_manager.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/rma_workflow_manager_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags rma_workflow_manager.
+
+- name: "0542 rma_workflow_manager"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/rma_workflow_manager.yml
+  tasks:
+    - name: Run rma_workflow_manager from its model
+      cisco.catalystcenter.rma_workflow_manager:
+        catalystcenter_api_task_timeout: "{{ rma_workflow_manager.catalystcenter_api_task_timeout if rma_workflow_manager.catalystcenter_api_task_timeout is not none else omit }}"
+        catalystcenter_debug: "{{ rma_workflow_manager.catalystcenter_debug if rma_workflow_manager.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ rma_workflow_manager.catalystcenter_host if rma_workflow_manager.catalystcenter_host is not none else omit }}"
+        catalystcenter_log: "{{ rma_workflow_manager.catalystcenter_log if rma_workflow_manager.catalystcenter_log is not none else omit }}"
+        catalystcenter_log_append: "{{ rma_workflow_manager.catalystcenter_log_append if rma_workflow_manager.catalystcenter_log_append is not none else omit }}"
+        catalystcenter_log_file_path: "{{ rma_workflow_manager.catalystcenter_log_file_path if rma_workflow_manager.catalystcenter_log_file_path is not none else omit }}"
+        catalystcenter_log_level: "{{ rma_workflow_manager.catalystcenter_log_level if rma_workflow_manager.catalystcenter_log_level is not none else omit }}"
+        catalystcenter_password: "{{ rma_workflow_manager.catalystcenter_password if rma_workflow_manager.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ rma_workflow_manager.catalystcenter_port if rma_workflow_manager.catalystcenter_port is not none else omit }}"
+        catalystcenter_task_poll_interval: "{{ rma_workflow_manager.catalystcenter_task_poll_interval if rma_workflow_manager.catalystcenter_task_poll_interval is not none else omit }}"
+        catalystcenter_username: "{{ rma_workflow_manager.catalystcenter_username if rma_workflow_manager.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ rma_workflow_manager.catalystcenter_verify if rma_workflow_manager.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ rma_workflow_manager.catalystcenter_version if rma_workflow_manager.catalystcenter_version is not none else omit }}"
+        ccc_poll_interval: "{{ rma_workflow_manager.ccc_poll_interval if rma_workflow_manager.ccc_poll_interval is not none else omit }}"
+        config: "{{ (rma_workflow_manager.config | cat_strip_nulls) if (rma_workflow_manager.config | cat_strip_nulls) is not none else omit }}"
+        config_verify: "{{ rma_workflow_manager.config_verify if rma_workflow_manager.config_verify is not none else omit }}"
+        resync_retry_count: "{{ rma_workflow_manager.resync_retry_count if rma_workflow_manager.resync_retry_count is not none else omit }}"
+        resync_retry_interval: "{{ rma_workflow_manager.resync_retry_interval if rma_workflow_manager.resync_retry_interval is not none else omit }}"
+        state: "{{ rma_workflow_manager.state if rma_workflow_manager.state is not none else omit }}"
+        timeout_interval: "{{ rma_workflow_manager.timeout_interval if rma_workflow_manager.timeout_interval is not none else omit }}"
+        validate_response_schema: "{{ rma_workflow_manager.validate_response_schema if rma_workflow_manager.validate_response_schema is not none else omit }}"
+      register: rma_workflow_manager_result
+      tags:
+        - never
+        - rma_workflow_manager

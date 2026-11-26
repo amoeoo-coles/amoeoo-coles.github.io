@@ -1,0 +1,40 @@
+---
+# Sample playbook for cisco.catalystcenter.path_traces (cisco.catalystcenter 2.15.0)
+# Build order: 1462
+# Resource module for Path Traces
+# Reads ../models/path_traces.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/path_traces_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags path_traces.
+
+- name: "1462 path_traces"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/path_traces.yml
+  tasks:
+    - name: Run path_traces from its model
+      cisco.catalystcenter.path_traces:
+        catalystcenter_debug: "{{ path_traces.catalystcenter_debug if path_traces.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ path_traces.catalystcenter_host if path_traces.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ path_traces.catalystcenter_password if path_traces.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ path_traces.catalystcenter_port if path_traces.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ path_traces.catalystcenter_username if path_traces.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ path_traces.catalystcenter_verify if path_traces.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ path_traces.catalystcenter_version if path_traces.catalystcenter_version is not none else omit }}"
+        controlPath: "{{ path_traces.controlPath if path_traces.controlPath is not none else omit }}"
+        destinationIpAddress: "{{ path_traces.destinationIpAddress if path_traces.destinationIpAddress is not none else omit }}"
+        destinationMacAddress: "{{ path_traces.destinationMacAddress if path_traces.destinationMacAddress is not none else omit }}"
+        destinationPort: "{{ path_traces.destinationPort if path_traces.destinationPort is not none else omit }}"
+        id: "{{ path_traces.id if path_traces.id is not none else omit }}"
+        inclusions: "{{ (path_traces.inclusions | cat_strip_nulls) if (path_traces.inclusions | cat_strip_nulls) is not none else omit }}"
+        periodicRefresh: "{{ path_traces.periodicRefresh if path_traces.periodicRefresh is not none else omit }}"
+        protocol: "{{ path_traces.protocol if path_traces.protocol is not none else omit }}"
+        sourceIpAddress: "{{ path_traces.sourceIpAddress if path_traces.sourceIpAddress is not none else omit }}"
+        sourceMacAddress: "{{ path_traces.sourceMacAddress if path_traces.sourceMacAddress is not none else omit }}"
+        sourcePort: "{{ path_traces.sourcePort if path_traces.sourcePort is not none else omit }}"
+        validate_response_schema: "{{ path_traces.validate_response_schema if path_traces.validate_response_schema is not none else omit }}"
+      register: path_traces_result
+      tags:
+        - never
+        - path_traces

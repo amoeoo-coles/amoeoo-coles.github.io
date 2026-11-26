@@ -1,0 +1,33 @@
+---
+# Sample playbook for cisco.catalystcenter.file_import (cisco.catalystcenter 2.15.0)
+# Build order: 69
+# Resource module for File Import
+# Reads ../models/file_import.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/file_import_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags file_import.
+
+- name: "0069 file_import"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/file_import.yml
+  tasks:
+    - name: Run file_import from its model
+      cisco.catalystcenter.file_import:
+        catalystcenter_debug: "{{ file_import.catalystcenter_debug if file_import.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ file_import.catalystcenter_host if file_import.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ file_import.catalystcenter_password if file_import.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ file_import.catalystcenter_port if file_import.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ file_import.catalystcenter_username if file_import.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ file_import.catalystcenter_verify if file_import.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ file_import.catalystcenter_version if file_import.catalystcenter_version is not none else omit }}"
+        filePath: "{{ file_import.filePath if file_import.filePath is not none else omit }}"
+        nameSpace: "{{ file_import.nameSpace if file_import.nameSpace is not none else omit }}"
+        restrictedAccess: "{{ file_import.restrictedAccess if file_import.restrictedAccess is not none else omit }}"
+        toEncrypt: "{{ file_import.toEncrypt if file_import.toEncrypt is not none else omit }}"
+        validate_response_schema: "{{ file_import.validate_response_schema if file_import.validate_response_schema is not none else omit }}"
+      register: file_import_result
+      tags:
+        - never
+        - file_import

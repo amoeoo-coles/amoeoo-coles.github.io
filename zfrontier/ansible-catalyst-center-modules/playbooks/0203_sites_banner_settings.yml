@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.catalystcenter.sites_banner_settings (cisco.catalystcenter 2.15.0)
+# Build order: 203
+# Resource module for Sites Banner Settings
+# Reads ../models/sites_banner_settings.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/sites_banner_settings_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags sites_banner_settings.
+
+- name: "0203 sites_banner_settings"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/sites_banner_settings.yml
+  tasks:
+    - name: Run sites_banner_settings from its model
+      cisco.catalystcenter.sites_banner_settings:
+        banner: "{{ (sites_banner_settings.banner | cat_strip_nulls) if (sites_banner_settings.banner | cat_strip_nulls) is not none else omit }}"
+        catalystcenter_debug: "{{ sites_banner_settings.catalystcenter_debug if sites_banner_settings.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ sites_banner_settings.catalystcenter_host if sites_banner_settings.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ sites_banner_settings.catalystcenter_password if sites_banner_settings.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ sites_banner_settings.catalystcenter_port if sites_banner_settings.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ sites_banner_settings.catalystcenter_username if sites_banner_settings.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ sites_banner_settings.catalystcenter_verify if sites_banner_settings.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ sites_banner_settings.catalystcenter_version if sites_banner_settings.catalystcenter_version is not none else omit }}"
+        id: "{{ sites_banner_settings.id if sites_banner_settings.id is not none else omit }}"
+        validate_response_schema: "{{ sites_banner_settings.validate_response_schema if sites_banner_settings.validate_response_schema is not none else omit }}"
+      register: sites_banner_settings_result
+      tags:
+        - never
+        - sites_banner_settings

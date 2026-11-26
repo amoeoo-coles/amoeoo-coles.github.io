@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.catalystcenter.applications (cisco.catalystcenter 2.15.0)
+# Build order: 1328
+# Resource module for Applications
+# Reads ../models/applications.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/applications_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags applications.
+
+- name: "1328 applications"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/applications.yml
+  tasks:
+    - name: Run applications from its model
+      cisco.catalystcenter.applications:
+        catalystcenter_debug: "{{ applications.catalystcenter_debug if applications.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ applications.catalystcenter_host if applications.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ applications.catalystcenter_password if applications.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ applications.catalystcenter_port if applications.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ applications.catalystcenter_username if applications.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ applications.catalystcenter_verify if applications.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ applications.catalystcenter_version if applications.catalystcenter_version is not none else omit }}"
+        id: "{{ applications.id if applications.id is not none else omit }}"
+        payload: "{{ (applications.payload | cat_strip_nulls) if (applications.payload | cat_strip_nulls) is not none else omit }}"
+        validate_response_schema: "{{ applications.validate_response_schema if applications.validate_response_schema is not none else omit }}"
+      register: applications_result
+      tags:
+        - never
+        - applications

@@ -1,0 +1,41 @@
+---
+# Sample playbook for cisco.catalystcenter.floors (cisco.catalystcenter 2.15.0)
+# Build order: 149
+# Resource module for Floors
+# Reads ../models/floors.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/floors_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags floors.
+
+- name: "0149 floors"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/floors.yml
+  tasks:
+    - name: Run floors from its model
+      cisco.catalystcenter.floors:
+        catalystcenter_debug: "{{ floors.catalystcenter_debug if floors.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ floors.catalystcenter_host if floors.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ floors.catalystcenter_password if floors.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ floors.catalystcenter_port if floors.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ floors.catalystcenter_username if floors.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ floors.catalystcenter_verify if floors.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ floors.catalystcenter_version if floors.catalystcenter_version is not none else omit }}"
+        floorNumber: "{{ floors.floorNumber if floors.floorNumber is not none else omit }}"
+        height: "{{ floors.height if floors.height is not none else omit }}"
+        id: "{{ floors.id if floors.id is not none else omit }}"
+        length: "{{ floors.length if floors.length is not none else omit }}"
+        name: "{{ floors.name if floors.name is not none else omit }}"
+        nameHierarchy: "{{ floors.nameHierarchy if floors.nameHierarchy is not none else omit }}"
+        parentId: "{{ floors.parentId if floors.parentId is not none else omit }}"
+        rfModel: "{{ floors.rfModel if floors.rfModel is not none else omit }}"
+        siteHierarchyId: "{{ floors.siteHierarchyId if floors.siteHierarchyId is not none else omit }}"
+        type: "{{ floors.type if floors.type is not none else omit }}"
+        unitsOfMeasure: "{{ floors.unitsOfMeasure if floors.unitsOfMeasure is not none else omit }}"
+        validate_response_schema: "{{ floors.validate_response_schema if floors.validate_response_schema is not none else omit }}"
+        width: "{{ floors.width if floors.width is not none else omit }}"
+      register: floors_result
+      tags:
+        - never
+        - floors

@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.catalystcenter.license_register (cisco.catalystcenter 2.15.0)
+# Build order: 512
+# Resource module for License Register
+# Reads ../models/license_register.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/license_register_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags license_register.
+
+- name: "0512 license_register"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/license_register.yml
+  tasks:
+    - name: Run license_register from its model
+      cisco.catalystcenter.license_register:
+        catalystcenter_debug: "{{ license_register.catalystcenter_debug if license_register.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ license_register.catalystcenter_host if license_register.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ license_register.catalystcenter_password if license_register.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ license_register.catalystcenter_port if license_register.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ license_register.catalystcenter_username if license_register.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ license_register.catalystcenter_verify if license_register.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ license_register.catalystcenter_version if license_register.catalystcenter_version is not none else omit }}"
+        smartAccountId: "{{ license_register.smartAccountId if license_register.smartAccountId is not none else omit }}"
+        validate_response_schema: "{{ license_register.validate_response_schema if license_register.validate_response_schema is not none else omit }}"
+        virtualAccountId: "{{ license_register.virtualAccountId if license_register.virtualAccountId is not none else omit }}"
+      register: license_register_result
+      tags:
+        - never
+        - license_register

@@ -1,0 +1,30 @@
+---
+# Sample playbook for cisco.catalystcenter.telemetry_settings_apply (cisco.catalystcenter 2.15.0)
+# Build order: 214
+# Resource module for Telemetry Settings Apply
+# Reads ../models/telemetry_settings_apply.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/telemetry_settings_apply_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags telemetry_settings_apply.
+
+- name: "0214 telemetry_settings_apply"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/telemetry_settings_apply.yml
+  tasks:
+    - name: Run telemetry_settings_apply from its model
+      cisco.catalystcenter.telemetry_settings_apply:
+        catalystcenter_debug: "{{ telemetry_settings_apply.catalystcenter_debug if telemetry_settings_apply.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ telemetry_settings_apply.catalystcenter_host if telemetry_settings_apply.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ telemetry_settings_apply.catalystcenter_password if telemetry_settings_apply.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ telemetry_settings_apply.catalystcenter_port if telemetry_settings_apply.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ telemetry_settings_apply.catalystcenter_username if telemetry_settings_apply.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ telemetry_settings_apply.catalystcenter_verify if telemetry_settings_apply.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ telemetry_settings_apply.catalystcenter_version if telemetry_settings_apply.catalystcenter_version is not none else omit }}"
+        deviceIds: "{{ (telemetry_settings_apply.deviceIds | cat_strip_nulls) if (telemetry_settings_apply.deviceIds | cat_strip_nulls) is not none else omit }}"
+        validate_response_schema: "{{ telemetry_settings_apply.validate_response_schema if telemetry_settings_apply.validate_response_schema is not none else omit }}"
+      register: telemetry_settings_apply_result
+      tags:
+        - never
+        - telemetry_settings_apply

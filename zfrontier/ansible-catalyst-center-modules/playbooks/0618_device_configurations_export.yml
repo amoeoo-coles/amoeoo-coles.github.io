@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.catalystcenter.device_configurations_export (cisco.catalystcenter 2.15.0)
+# Build order: 618
+# Resource module for Device Configurations Export
+# Reads ../models/device_configurations_export.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/device_configurations_export_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags device_configurations_export.
+
+- name: "0618 device_configurations_export"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/device_configurations_export.yml
+  tasks:
+    - name: Run device_configurations_export from its model
+      cisco.catalystcenter.device_configurations_export:
+        catalystcenter_debug: "{{ device_configurations_export.catalystcenter_debug if device_configurations_export.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ device_configurations_export.catalystcenter_host if device_configurations_export.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ device_configurations_export.catalystcenter_password if device_configurations_export.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ device_configurations_export.catalystcenter_port if device_configurations_export.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ device_configurations_export.catalystcenter_username if device_configurations_export.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ device_configurations_export.catalystcenter_verify if device_configurations_export.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ device_configurations_export.catalystcenter_version if device_configurations_export.catalystcenter_version is not none else omit }}"
+        deviceId: "{{ (device_configurations_export.deviceId | cat_strip_nulls) if (device_configurations_export.deviceId | cat_strip_nulls) is not none else omit }}"
+        password: "{{ device_configurations_export.password if device_configurations_export.password is not none else omit }}"
+        validate_response_schema: "{{ device_configurations_export.validate_response_schema if device_configurations_export.validate_response_schema is not none else omit }}"
+      register: device_configurations_export_result
+      tags:
+        - never
+        - device_configurations_export

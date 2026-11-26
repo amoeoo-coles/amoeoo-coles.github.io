@@ -1,0 +1,39 @@
+---
+# Sample playbook for cisco.catalystcenter.buildings (cisco.catalystcenter 2.15.0)
+# Build order: 147
+# Resource module for Buildings
+# Reads ../models/buildings.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/buildings_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags buildings.
+
+- name: "0147 buildings"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/buildings.yml
+  tasks:
+    - name: Run buildings from its model
+      cisco.catalystcenter.buildings:
+        address: "{{ buildings.address if buildings.address is not none else omit }}"
+        catalystcenter_debug: "{{ buildings.catalystcenter_debug if buildings.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ buildings.catalystcenter_host if buildings.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ buildings.catalystcenter_password if buildings.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ buildings.catalystcenter_port if buildings.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ buildings.catalystcenter_username if buildings.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ buildings.catalystcenter_verify if buildings.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ buildings.catalystcenter_version if buildings.catalystcenter_version is not none else omit }}"
+        country: "{{ buildings.country if buildings.country is not none else omit }}"
+        id: "{{ buildings.id if buildings.id is not none else omit }}"
+        latitude: "{{ buildings.latitude if buildings.latitude is not none else omit }}"
+        longitude: "{{ buildings.longitude if buildings.longitude is not none else omit }}"
+        name: "{{ buildings.name if buildings.name is not none else omit }}"
+        nameHierarchy: "{{ buildings.nameHierarchy if buildings.nameHierarchy is not none else omit }}"
+        parentId: "{{ buildings.parentId if buildings.parentId is not none else omit }}"
+        siteHierarchyId: "{{ buildings.siteHierarchyId if buildings.siteHierarchyId is not none else omit }}"
+        type: "{{ buildings.type if buildings.type is not none else omit }}"
+        validate_response_schema: "{{ buildings.validate_response_schema if buildings.validate_response_schema is not none else omit }}"
+      register: buildings_result
+      tags:
+        - never
+        - buildings

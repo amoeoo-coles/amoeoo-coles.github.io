@@ -1,0 +1,27 @@
+---
+# Sample playbook for cisco.catalystcenter.interface_info (cisco.catalystcenter 2.15.0)
+# Build order: 420
+# Information module for Interface
+# Reads ../models/interface_info.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/interface_info_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+
+- name: "0420 interface_info"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/interface_info.yml
+  tasks:
+    - name: Run interface_info from its model
+      cisco.catalystcenter.interface_info:
+        catalystcenter_debug: "{{ interface_info.catalystcenter_debug if interface_info.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ interface_info.catalystcenter_host if interface_info.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ interface_info.catalystcenter_password if interface_info.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ interface_info.catalystcenter_port if interface_info.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ interface_info.catalystcenter_username if interface_info.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ interface_info.catalystcenter_verify if interface_info.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ interface_info.catalystcenter_version if interface_info.catalystcenter_version is not none else omit }}"
+        headers: "{{ interface_info.headers if interface_info.headers is not none else omit }}"
+        interfaceUuid: "{{ interface_info.interfaceUuid if interface_info.interfaceUuid is not none else omit }}"
+        validate_response_schema: "{{ interface_info.validate_response_schema if interface_info.validate_response_schema is not none else omit }}"
+      register: interface_info_result

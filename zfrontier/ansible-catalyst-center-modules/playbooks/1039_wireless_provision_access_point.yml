@@ -1,0 +1,34 @@
+---
+# Sample playbook for cisco.catalystcenter.wireless_provision_access_point (cisco.catalystcenter 2.15.0)
+# Build order: 1039
+# Resource module for Wireless Provision Access Point
+# Reads ../models/wireless_provision_access_point.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/wireless_provision_access_point_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags wireless_provision_access_point.
+
+- name: "1039 wireless_provision_access_point"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/wireless_provision_access_point.yml
+  tasks:
+    - name: Run wireless_provision_access_point from its model
+      cisco.catalystcenter.wireless_provision_access_point:
+        apZoneName: "{{ wireless_provision_access_point.apZoneName if wireless_provision_access_point.apZoneName is not none else omit }}"
+        catalystcenter_debug: "{{ wireless_provision_access_point.catalystcenter_debug if wireless_provision_access_point.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ wireless_provision_access_point.catalystcenter_host if wireless_provision_access_point.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ wireless_provision_access_point.catalystcenter_password if wireless_provision_access_point.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ wireless_provision_access_point.catalystcenter_port if wireless_provision_access_point.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ wireless_provision_access_point.catalystcenter_username if wireless_provision_access_point.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ wireless_provision_access_point.catalystcenter_verify if wireless_provision_access_point.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ wireless_provision_access_point.catalystcenter_version if wireless_provision_access_point.catalystcenter_version is not none else omit }}"
+        headers: "{{ wireless_provision_access_point.headers if wireless_provision_access_point.headers is not none else omit }}"
+        networkDevices: "{{ (wireless_provision_access_point.networkDevices | cat_strip_nulls) if (wireless_provision_access_point.networkDevices | cat_strip_nulls) is not none else omit }}"
+        rfProfileName: "{{ wireless_provision_access_point.rfProfileName if wireless_provision_access_point.rfProfileName is not none else omit }}"
+        siteId: "{{ wireless_provision_access_point.siteId if wireless_provision_access_point.siteId is not none else omit }}"
+        validate_response_schema: "{{ wireless_provision_access_point.validate_response_schema if wireless_provision_access_point.validate_response_schema is not none else omit }}"
+      register: wireless_provision_access_point_result
+      tags:
+        - never
+        - wireless_provision_access_point

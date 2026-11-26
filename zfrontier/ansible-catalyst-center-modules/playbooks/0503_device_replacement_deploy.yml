@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.catalystcenter.device_replacement_deploy (cisco.catalystcenter 2.15.0)
+# Build order: 503
+# Resource module for Device Replacement Deploy
+# Reads ../models/device_replacement_deploy.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/device_replacement_deploy_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags device_replacement_deploy.
+
+- name: "0503 device_replacement_deploy"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/device_replacement_deploy.yml
+  tasks:
+    - name: Run device_replacement_deploy from its model
+      cisco.catalystcenter.device_replacement_deploy:
+        catalystcenter_debug: "{{ device_replacement_deploy.catalystcenter_debug if device_replacement_deploy.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ device_replacement_deploy.catalystcenter_host if device_replacement_deploy.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ device_replacement_deploy.catalystcenter_password if device_replacement_deploy.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ device_replacement_deploy.catalystcenter_port if device_replacement_deploy.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ device_replacement_deploy.catalystcenter_username if device_replacement_deploy.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ device_replacement_deploy.catalystcenter_verify if device_replacement_deploy.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ device_replacement_deploy.catalystcenter_version if device_replacement_deploy.catalystcenter_version is not none else omit }}"
+        faultyDeviceSerialNumber: "{{ device_replacement_deploy.faultyDeviceSerialNumber if device_replacement_deploy.faultyDeviceSerialNumber is not none else omit }}"
+        replacementDeviceSerialNumber: "{{ device_replacement_deploy.replacementDeviceSerialNumber if device_replacement_deploy.replacementDeviceSerialNumber is not none else omit }}"
+        validate_response_schema: "{{ device_replacement_deploy.validate_response_schema if device_replacement_deploy.validate_response_schema is not none else omit }}"
+      register: device_replacement_deploy_result
+      tags:
+        - never
+        - device_replacement_deploy

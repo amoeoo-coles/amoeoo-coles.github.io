@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.catalystcenter.license_setting (cisco.catalystcenter 2.15.0)
+# Build order: 514
+# Resource module for License Setting
+# Reads ../models/license_setting.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/license_setting_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags license_setting.
+
+- name: "0514 license_setting"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/license_setting.yml
+  tasks:
+    - name: Run license_setting from its model
+      cisco.catalystcenter.license_setting:
+        autoRegistrationVirtualAccountId: "{{ license_setting.autoRegistrationVirtualAccountId if license_setting.autoRegistrationVirtualAccountId is not none else omit }}"
+        catalystcenter_debug: "{{ license_setting.catalystcenter_debug if license_setting.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ license_setting.catalystcenter_host if license_setting.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ license_setting.catalystcenter_password if license_setting.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ license_setting.catalystcenter_port if license_setting.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ license_setting.catalystcenter_username if license_setting.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ license_setting.catalystcenter_verify if license_setting.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ license_setting.catalystcenter_version if license_setting.catalystcenter_version is not none else omit }}"
+        defaultSmartAccountId: "{{ license_setting.defaultSmartAccountId if license_setting.defaultSmartAccountId is not none else omit }}"
+        validate_response_schema: "{{ license_setting.validate_response_schema if license_setting.validate_response_schema is not none else omit }}"
+      register: license_setting_result
+      tags:
+        - never
+        - license_setting

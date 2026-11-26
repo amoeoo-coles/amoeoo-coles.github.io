@@ -1,0 +1,38 @@
+---
+# Sample playbook for cisco.catalystcenter.inventory_workflow_manager (cisco.catalystcenter 2.15.0)
+# Build order: 379
+# Comprehensive network device inventory management for Cisco Catalyst Center
+# Reads ../models/inventory_workflow_manager.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/inventory_workflow_manager_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags inventory_workflow_manager.
+
+- name: "0379 inventory_workflow_manager"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/inventory_workflow_manager.yml
+  tasks:
+    - name: Run inventory_workflow_manager from its model
+      cisco.catalystcenter.inventory_workflow_manager:
+        catalystcenter_api_task_timeout: "{{ inventory_workflow_manager.catalystcenter_api_task_timeout if inventory_workflow_manager.catalystcenter_api_task_timeout is not none else omit }}"
+        catalystcenter_debug: "{{ inventory_workflow_manager.catalystcenter_debug if inventory_workflow_manager.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ inventory_workflow_manager.catalystcenter_host if inventory_workflow_manager.catalystcenter_host is not none else omit }}"
+        catalystcenter_log: "{{ inventory_workflow_manager.catalystcenter_log if inventory_workflow_manager.catalystcenter_log is not none else omit }}"
+        catalystcenter_log_append: "{{ inventory_workflow_manager.catalystcenter_log_append if inventory_workflow_manager.catalystcenter_log_append is not none else omit }}"
+        catalystcenter_log_file_path: "{{ inventory_workflow_manager.catalystcenter_log_file_path if inventory_workflow_manager.catalystcenter_log_file_path is not none else omit }}"
+        catalystcenter_log_level: "{{ inventory_workflow_manager.catalystcenter_log_level if inventory_workflow_manager.catalystcenter_log_level is not none else omit }}"
+        catalystcenter_password: "{{ inventory_workflow_manager.catalystcenter_password if inventory_workflow_manager.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ inventory_workflow_manager.catalystcenter_port if inventory_workflow_manager.catalystcenter_port is not none else omit }}"
+        catalystcenter_task_poll_interval: "{{ inventory_workflow_manager.catalystcenter_task_poll_interval if inventory_workflow_manager.catalystcenter_task_poll_interval is not none else omit }}"
+        catalystcenter_username: "{{ inventory_workflow_manager.catalystcenter_username if inventory_workflow_manager.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ inventory_workflow_manager.catalystcenter_verify if inventory_workflow_manager.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ inventory_workflow_manager.catalystcenter_version if inventory_workflow_manager.catalystcenter_version is not none else omit }}"
+        config: "{{ (inventory_workflow_manager.config | cat_strip_nulls) if (inventory_workflow_manager.config | cat_strip_nulls) is not none else omit }}"
+        config_verify: "{{ inventory_workflow_manager.config_verify if inventory_workflow_manager.config_verify is not none else omit }}"
+        state: "{{ inventory_workflow_manager.state if inventory_workflow_manager.state is not none else omit }}"
+        validate_response_schema: "{{ inventory_workflow_manager.validate_response_schema if inventory_workflow_manager.validate_response_schema is not none else omit }}"
+      register: inventory_workflow_manager_result
+      tags:
+        - never
+        - inventory_workflow_manager

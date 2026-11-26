@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.catalystcenter.assign_to_site_apply (cisco.catalystcenter 2.15.0)
+# Build order: 145
+# Resource module for Assign To Site Apply
+# Reads ../models/assign_to_site_apply.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/assign_to_site_apply_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags assign_to_site_apply.
+
+- name: "0145 assign_to_site_apply"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/assign_to_site_apply.yml
+  tasks:
+    - name: Run assign_to_site_apply from its model
+      cisco.catalystcenter.assign_to_site_apply:
+        catalystcenter_debug: "{{ assign_to_site_apply.catalystcenter_debug if assign_to_site_apply.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ assign_to_site_apply.catalystcenter_host if assign_to_site_apply.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ assign_to_site_apply.catalystcenter_password if assign_to_site_apply.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ assign_to_site_apply.catalystcenter_port if assign_to_site_apply.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ assign_to_site_apply.catalystcenter_username if assign_to_site_apply.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ assign_to_site_apply.catalystcenter_verify if assign_to_site_apply.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ assign_to_site_apply.catalystcenter_version if assign_to_site_apply.catalystcenter_version is not none else omit }}"
+        deviceIds: "{{ (assign_to_site_apply.deviceIds | cat_strip_nulls) if (assign_to_site_apply.deviceIds | cat_strip_nulls) is not none else omit }}"
+        siteId: "{{ assign_to_site_apply.siteId if assign_to_site_apply.siteId is not none else omit }}"
+        validate_response_schema: "{{ assign_to_site_apply.validate_response_schema if assign_to_site_apply.validate_response_schema is not none else omit }}"
+      register: assign_to_site_apply_result
+      tags:
+        - never
+        - assign_to_site_apply

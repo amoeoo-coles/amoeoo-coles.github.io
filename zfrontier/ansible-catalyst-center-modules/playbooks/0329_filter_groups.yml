@@ -1,0 +1,34 @@
+---
+# Sample playbook for cisco.catalystcenter.filter_groups (cisco.catalystcenter 2.15.0)
+# Build order: 329
+# Resource module for Filter Groups
+# Reads ../models/filter_groups.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/filter_groups_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags filter_groups.
+
+- name: "0329 filter_groups"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/filter_groups.yml
+  tasks:
+    - name: Run filter_groups from its model
+      cisco.catalystcenter.filter_groups:
+        catalystcenter_debug: "{{ filter_groups.catalystcenter_debug if filter_groups.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ filter_groups.catalystcenter_host if filter_groups.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ filter_groups.catalystcenter_password if filter_groups.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ filter_groups.catalystcenter_port if filter_groups.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ filter_groups.catalystcenter_username if filter_groups.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ filter_groups.catalystcenter_verify if filter_groups.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ filter_groups.catalystcenter_version if filter_groups.catalystcenter_version is not none else omit }}"
+        filters: "{{ (filter_groups.filters | cat_strip_nulls) if (filter_groups.filters | cat_strip_nulls) is not none else omit }}"
+        headers: "{{ filter_groups.headers if filter_groups.headers is not none else omit }}"
+        id: "{{ filter_groups.id if filter_groups.id is not none else omit }}"
+        name: "{{ filter_groups.name if filter_groups.name is not none else omit }}"
+        type: "{{ filter_groups.type if filter_groups.type is not none else omit }}"
+        validate_response_schema: "{{ filter_groups.validate_response_schema if filter_groups.validate_response_schema is not none else omit }}"
+      register: filter_groups_result
+      tags:
+        - never
+        - filter_groups

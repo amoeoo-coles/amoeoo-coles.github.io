@@ -1,0 +1,33 @@
+---
+# Sample playbook for cisco.catalystcenter.site_update (cisco.catalystcenter 2.15.0)
+# Build order: 120
+# Resource module for Site Update
+# Reads ../models/site_update.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/site_update_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags site_update.
+
+- name: "0120 site_update"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/site_update.yml
+  tasks:
+    - name: Run site_update from its model
+      cisco.catalystcenter.site_update:
+        catalystcenter_debug: "{{ site_update.catalystcenter_debug if site_update.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ site_update.catalystcenter_host if site_update.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ site_update.catalystcenter_password if site_update.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ site_update.catalystcenter_port if site_update.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ site_update.catalystcenter_username if site_update.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ site_update.catalystcenter_verify if site_update.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ site_update.catalystcenter_version if site_update.catalystcenter_version is not none else omit }}"
+        headers: "{{ site_update.headers if site_update.headers is not none else omit }}"
+        site: "{{ (site_update.site | cat_strip_nulls) if (site_update.site | cat_strip_nulls) is not none else omit }}"
+        siteId: "{{ site_update.siteId if site_update.siteId is not none else omit }}"
+        type: "{{ site_update.type if site_update.type is not none else omit }}"
+        validate_response_schema: "{{ site_update.validate_response_schema if site_update.validate_response_schema is not none else omit }}"
+      register: site_update_result
+      tags:
+        - never
+        - site_update

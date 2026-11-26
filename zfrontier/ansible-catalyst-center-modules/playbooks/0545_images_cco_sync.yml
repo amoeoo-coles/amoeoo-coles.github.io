@@ -1,0 +1,29 @@
+---
+# Sample playbook for cisco.catalystcenter.images_cco_sync (cisco.catalystcenter 2.15.0)
+# Build order: 545
+# Resource module for Images Cco Sync
+# Reads ../models/images_cco_sync.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/images_cco_sync_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags images_cco_sync.
+
+- name: "0545 images_cco_sync"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/images_cco_sync.yml
+  tasks:
+    - name: Run images_cco_sync from its model
+      cisco.catalystcenter.images_cco_sync:
+        catalystcenter_debug: "{{ images_cco_sync.catalystcenter_debug if images_cco_sync.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ images_cco_sync.catalystcenter_host if images_cco_sync.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ images_cco_sync.catalystcenter_password if images_cco_sync.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ images_cco_sync.catalystcenter_port if images_cco_sync.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ images_cco_sync.catalystcenter_username if images_cco_sync.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ images_cco_sync.catalystcenter_verify if images_cco_sync.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ images_cco_sync.catalystcenter_version if images_cco_sync.catalystcenter_version is not none else omit }}"
+        validate_response_schema: "{{ images_cco_sync.validate_response_schema if images_cco_sync.validate_response_schema is not none else omit }}"
+      register: images_cco_sync_result
+      tags:
+        - never
+        - images_cco_sync

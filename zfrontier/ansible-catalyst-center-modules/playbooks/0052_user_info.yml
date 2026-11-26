@@ -1,0 +1,27 @@
+---
+# Sample playbook for cisco.catalystcenter.user_info (cisco.catalystcenter 2.15.0)
+# Build order: 52
+# Information module for User
+# Reads ../models/user_info.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/user_info_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+
+- name: "0052 user_info"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/user_info.yml
+  tasks:
+    - name: Run user_info from its model
+      cisco.catalystcenter.user_info:
+        authSource: "{{ user_info.authSource if user_info.authSource is not none else omit }}"
+        catalystcenter_debug: "{{ user_info.catalystcenter_debug if user_info.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ user_info.catalystcenter_host if user_info.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ user_info.catalystcenter_password if user_info.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ user_info.catalystcenter_port if user_info.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ user_info.catalystcenter_username if user_info.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ user_info.catalystcenter_verify if user_info.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ user_info.catalystcenter_version if user_info.catalystcenter_version is not none else omit }}"
+        headers: "{{ user_info.headers if user_info.headers is not none else omit }}"
+        validate_response_schema: "{{ user_info.validate_response_schema if user_info.validate_response_schema is not none else omit }}"
+      register: user_info_result

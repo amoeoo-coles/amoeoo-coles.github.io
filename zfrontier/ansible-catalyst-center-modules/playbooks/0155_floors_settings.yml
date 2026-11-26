@@ -1,0 +1,30 @@
+---
+# Sample playbook for cisco.catalystcenter.floors_settings (cisco.catalystcenter 2.15.0)
+# Build order: 155
+# Resource module for Floors Settings
+# Reads ../models/floors_settings.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/floors_settings_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags floors_settings.
+
+- name: "0155 floors_settings"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/floors_settings.yml
+  tasks:
+    - name: Run floors_settings from its model
+      cisco.catalystcenter.floors_settings:
+        catalystcenter_debug: "{{ floors_settings.catalystcenter_debug if floors_settings.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ floors_settings.catalystcenter_host if floors_settings.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ floors_settings.catalystcenter_password if floors_settings.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ floors_settings.catalystcenter_port if floors_settings.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ floors_settings.catalystcenter_username if floors_settings.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ floors_settings.catalystcenter_verify if floors_settings.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ floors_settings.catalystcenter_version if floors_settings.catalystcenter_version is not none else omit }}"
+        unitsOfMeasure: "{{ floors_settings.unitsOfMeasure if floors_settings.unitsOfMeasure is not none else omit }}"
+        validate_response_schema: "{{ floors_settings.validate_response_schema if floors_settings.validate_response_schema is not none else omit }}"
+      register: floors_settings_result
+      tags:
+        - never
+        - floors_settings

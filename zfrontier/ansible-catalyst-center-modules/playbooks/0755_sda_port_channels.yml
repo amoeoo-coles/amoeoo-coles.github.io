@@ -1,0 +1,36 @@
+---
+# Sample playbook for cisco.catalystcenter.sda_port_channels (cisco.catalystcenter 2.15.0)
+# Build order: 755
+# Resource module for Sda Port Channels
+# Reads ../models/sda_port_channels.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/sda_port_channels_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags sda_port_channels.
+
+- name: "0755 sda_port_channels"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/sda_port_channels.yml
+  tasks:
+    - name: Run sda_port_channels from its model
+      cisco.catalystcenter.sda_port_channels:
+        catalystcenter_debug: "{{ sda_port_channels.catalystcenter_debug if sda_port_channels.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ sda_port_channels.catalystcenter_host if sda_port_channels.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ sda_port_channels.catalystcenter_password if sda_port_channels.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ sda_port_channels.catalystcenter_port if sda_port_channels.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ sda_port_channels.catalystcenter_username if sda_port_channels.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ sda_port_channels.catalystcenter_verify if sda_port_channels.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ sda_port_channels.catalystcenter_version if sda_port_channels.catalystcenter_version is not none else omit }}"
+        connectedDeviceType: "{{ sda_port_channels.connectedDeviceType if sda_port_channels.connectedDeviceType is not none else omit }}"
+        fabricId: "{{ sda_port_channels.fabricId if sda_port_channels.fabricId is not none else omit }}"
+        id: "{{ sda_port_channels.id if sda_port_channels.id is not none else omit }}"
+        networkDeviceId: "{{ sda_port_channels.networkDeviceId if sda_port_channels.networkDeviceId is not none else omit }}"
+        payload: "{{ (sda_port_channels.payload | cat_strip_nulls) if (sda_port_channels.payload | cat_strip_nulls) is not none else omit }}"
+        portChannelIds: "{{ sda_port_channels.portChannelIds if sda_port_channels.portChannelIds is not none else omit }}"
+        portChannelName: "{{ sda_port_channels.portChannelName if sda_port_channels.portChannelName is not none else omit }}"
+        validate_response_schema: "{{ sda_port_channels.validate_response_schema if sda_port_channels.validate_response_schema is not none else omit }}"
+      register: sda_port_channels_result
+      tags:
+        - never
+        - sda_port_channels

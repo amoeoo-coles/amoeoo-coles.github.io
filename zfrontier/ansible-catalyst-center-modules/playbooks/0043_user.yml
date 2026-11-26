@@ -1,0 +1,37 @@
+---
+# Sample playbook for cisco.catalystcenter.user (cisco.catalystcenter 2.15.0)
+# Build order: 43
+# Resource module for User
+# Reads ../models/user.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/user_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags user.
+
+- name: "0043 user"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/user.yml
+  tasks:
+    - name: Run user from its model
+      cisco.catalystcenter.user:
+        accessGroups: "{{ (user.accessGroups | cat_strip_nulls) if (user.accessGroups | cat_strip_nulls) is not none else omit }}"
+        catalystcenter_debug: "{{ user.catalystcenter_debug if user.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ user.catalystcenter_host if user.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ user.catalystcenter_password if user.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ user.catalystcenter_port if user.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ user.catalystcenter_username if user.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ user.catalystcenter_verify if user.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ user.catalystcenter_version if user.catalystcenter_version is not none else omit }}"
+        email: "{{ user.email if user.email is not none else omit }}"
+        firstName: "{{ user.firstName if user.firstName is not none else omit }}"
+        lastName: "{{ user.lastName if user.lastName is not none else omit }}"
+        password: "{{ user.password if user.password is not none else omit }}"
+        roleList: "{{ (user.roleList | cat_strip_nulls) if (user.roleList | cat_strip_nulls) is not none else omit }}"
+        userId: "{{ user.userId if user.userId is not none else omit }}"
+        username: "{{ user.username if user.username is not none else omit }}"
+        validate_response_schema: "{{ user.validate_response_schema if user.validate_response_schema is not none else omit }}"
+      register: user_result
+      tags:
+        - never
+        - user

@@ -1,0 +1,38 @@
+---
+# Sample playbook for cisco.catalystcenter.template_workflow_manager (cisco.catalystcenter 2.15.0)
+# Build order: 730
+# Resource module for Template functions
+# Reads ../models/template_workflow_manager.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/template_workflow_manager_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags template_workflow_manager.
+
+- name: "0730 template_workflow_manager"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/template_workflow_manager.yml
+  tasks:
+    - name: Run template_workflow_manager from its model
+      cisco.catalystcenter.template_workflow_manager:
+        catalystcenter_api_task_timeout: "{{ template_workflow_manager.catalystcenter_api_task_timeout if template_workflow_manager.catalystcenter_api_task_timeout is not none else omit }}"
+        catalystcenter_debug: "{{ template_workflow_manager.catalystcenter_debug if template_workflow_manager.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ template_workflow_manager.catalystcenter_host if template_workflow_manager.catalystcenter_host is not none else omit }}"
+        catalystcenter_log: "{{ template_workflow_manager.catalystcenter_log if template_workflow_manager.catalystcenter_log is not none else omit }}"
+        catalystcenter_log_append: "{{ template_workflow_manager.catalystcenter_log_append if template_workflow_manager.catalystcenter_log_append is not none else omit }}"
+        catalystcenter_log_file_path: "{{ template_workflow_manager.catalystcenter_log_file_path if template_workflow_manager.catalystcenter_log_file_path is not none else omit }}"
+        catalystcenter_log_level: "{{ template_workflow_manager.catalystcenter_log_level if template_workflow_manager.catalystcenter_log_level is not none else omit }}"
+        catalystcenter_password: "{{ template_workflow_manager.catalystcenter_password if template_workflow_manager.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ template_workflow_manager.catalystcenter_port if template_workflow_manager.catalystcenter_port is not none else omit }}"
+        catalystcenter_task_poll_interval: "{{ template_workflow_manager.catalystcenter_task_poll_interval if template_workflow_manager.catalystcenter_task_poll_interval is not none else omit }}"
+        catalystcenter_username: "{{ template_workflow_manager.catalystcenter_username if template_workflow_manager.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ template_workflow_manager.catalystcenter_verify if template_workflow_manager.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ template_workflow_manager.catalystcenter_version if template_workflow_manager.catalystcenter_version is not none else omit }}"
+        config: "{{ (template_workflow_manager.config | cat_strip_nulls) if (template_workflow_manager.config | cat_strip_nulls) is not none else omit }}"
+        config_verify: "{{ template_workflow_manager.config_verify if template_workflow_manager.config_verify is not none else omit }}"
+        state: "{{ template_workflow_manager.state if template_workflow_manager.state is not none else omit }}"
+        validate_response_schema: "{{ template_workflow_manager.validate_response_schema if template_workflow_manager.validate_response_schema is not none else omit }}"
+      register: template_workflow_manager_result
+      tags:
+        - never
+        - template_workflow_manager

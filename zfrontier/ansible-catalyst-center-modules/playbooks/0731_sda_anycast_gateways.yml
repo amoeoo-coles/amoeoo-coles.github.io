@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.catalystcenter.sda_anycast_gateways (cisco.catalystcenter 2.15.0)
+# Build order: 731
+# Resource module for Sda Anycast Gateways
+# Reads ../models/sda_anycast_gateways.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/sda_anycast_gateways_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags sda_anycast_gateways.
+
+- name: "0731 sda_anycast_gateways"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/sda_anycast_gateways.yml
+  tasks:
+    - name: Run sda_anycast_gateways from its model
+      cisco.catalystcenter.sda_anycast_gateways:
+        catalystcenter_debug: "{{ sda_anycast_gateways.catalystcenter_debug if sda_anycast_gateways.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ sda_anycast_gateways.catalystcenter_host if sda_anycast_gateways.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ sda_anycast_gateways.catalystcenter_password if sda_anycast_gateways.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ sda_anycast_gateways.catalystcenter_port if sda_anycast_gateways.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ sda_anycast_gateways.catalystcenter_username if sda_anycast_gateways.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ sda_anycast_gateways.catalystcenter_verify if sda_anycast_gateways.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ sda_anycast_gateways.catalystcenter_version if sda_anycast_gateways.catalystcenter_version is not none else omit }}"
+        id: "{{ sda_anycast_gateways.id if sda_anycast_gateways.id is not none else omit }}"
+        payload: "{{ (sda_anycast_gateways.payload | cat_strip_nulls) if (sda_anycast_gateways.payload | cat_strip_nulls) is not none else omit }}"
+        validate_response_schema: "{{ sda_anycast_gateways.validate_response_schema if sda_anycast_gateways.validate_response_schema is not none else omit }}"
+      register: sda_anycast_gateways_result
+      tags:
+        - never
+        - sda_anycast_gateways

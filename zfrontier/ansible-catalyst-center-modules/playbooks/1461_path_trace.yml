@@ -1,0 +1,38 @@
+---
+# Sample playbook for cisco.catalystcenter.path_trace (cisco.catalystcenter 2.15.0)
+# Build order: 1461
+# Resource module for Path Trace
+# Reads ../models/path_trace.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/path_trace_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags path_trace.
+
+- name: "1461 path_trace"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/path_trace.yml
+  tasks:
+    - name: Run path_trace from its model
+      cisco.catalystcenter.path_trace:
+        catalystcenter_debug: "{{ path_trace.catalystcenter_debug if path_trace.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ path_trace.catalystcenter_host if path_trace.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ path_trace.catalystcenter_password if path_trace.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ path_trace.catalystcenter_port if path_trace.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ path_trace.catalystcenter_username if path_trace.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ path_trace.catalystcenter_verify if path_trace.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ path_trace.catalystcenter_version if path_trace.catalystcenter_version is not none else omit }}"
+        controlPath: "{{ path_trace.controlPath if path_trace.controlPath is not none else omit }}"
+        destIP: "{{ path_trace.destIP if path_trace.destIP is not none else omit }}"
+        destPort: "{{ path_trace.destPort if path_trace.destPort is not none else omit }}"
+        flowAnalysisId: "{{ path_trace.flowAnalysisId if path_trace.flowAnalysisId is not none else omit }}"
+        inclusions: "{{ (path_trace.inclusions | cat_strip_nulls) if (path_trace.inclusions | cat_strip_nulls) is not none else omit }}"
+        periodicRefresh: "{{ path_trace.periodicRefresh if path_trace.periodicRefresh is not none else omit }}"
+        protocol: "{{ path_trace.protocol if path_trace.protocol is not none else omit }}"
+        sourceIP: "{{ path_trace.sourceIP if path_trace.sourceIP is not none else omit }}"
+        sourcePort: "{{ path_trace.sourcePort if path_trace.sourcePort is not none else omit }}"
+        validate_response_schema: "{{ path_trace.validate_response_schema if path_trace.validate_response_schema is not none else omit }}"
+      register: path_trace_result
+      tags:
+        - never
+        - path_trace

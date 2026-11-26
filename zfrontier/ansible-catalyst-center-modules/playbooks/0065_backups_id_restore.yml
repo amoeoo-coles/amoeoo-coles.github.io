@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.catalystcenter.backups_id_restore (cisco.catalystcenter 2.15.0)
+# Build order: 65
+# Resource module for Backups Id Restore
+# Reads ../models/backups_id_restore.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/backups_id_restore_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags backups_id_restore.
+
+- name: "0065 backups_id_restore"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/backups_id_restore.yml
+  tasks:
+    - name: Run backups_id_restore from its model
+      cisco.catalystcenter.backups_id_restore:
+        catalystcenter_debug: "{{ backups_id_restore.catalystcenter_debug if backups_id_restore.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ backups_id_restore.catalystcenter_host if backups_id_restore.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ backups_id_restore.catalystcenter_password if backups_id_restore.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ backups_id_restore.catalystcenter_port if backups_id_restore.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ backups_id_restore.catalystcenter_username if backups_id_restore.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ backups_id_restore.catalystcenter_verify if backups_id_restore.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ backups_id_restore.catalystcenter_version if backups_id_restore.catalystcenter_version is not none else omit }}"
+        encryptionPassphrase: "{{ backups_id_restore.encryptionPassphrase if backups_id_restore.encryptionPassphrase is not none else omit }}"
+        id: "{{ backups_id_restore.id if backups_id_restore.id is not none else omit }}"
+        validate_response_schema: "{{ backups_id_restore.validate_response_schema if backups_id_restore.validate_response_schema is not none else omit }}"
+      register: backups_id_restore_result
+      tags:
+        - never
+        - backups_id_restore

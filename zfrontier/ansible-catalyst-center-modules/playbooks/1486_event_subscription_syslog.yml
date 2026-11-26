@@ -1,0 +1,30 @@
+---
+# Sample playbook for cisco.catalystcenter.event_subscription_syslog (cisco.catalystcenter 2.15.0)
+# Build order: 1486
+# Resource module for Event Subscription Syslog
+# Reads ../models/event_subscription_syslog.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/event_subscription_syslog_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags event_subscription_syslog.
+
+- name: "1486 event_subscription_syslog"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/event_subscription_syslog.yml
+  tasks:
+    - name: Run event_subscription_syslog from its model
+      cisco.catalystcenter.event_subscription_syslog:
+        catalystcenter_debug: "{{ event_subscription_syslog.catalystcenter_debug if event_subscription_syslog.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ event_subscription_syslog.catalystcenter_host if event_subscription_syslog.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ event_subscription_syslog.catalystcenter_password if event_subscription_syslog.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ event_subscription_syslog.catalystcenter_port if event_subscription_syslog.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ event_subscription_syslog.catalystcenter_username if event_subscription_syslog.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ event_subscription_syslog.catalystcenter_verify if event_subscription_syslog.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ event_subscription_syslog.catalystcenter_version if event_subscription_syslog.catalystcenter_version is not none else omit }}"
+        payload: "{{ (event_subscription_syslog.payload | cat_strip_nulls) if (event_subscription_syslog.payload | cat_strip_nulls) is not none else omit }}"
+        validate_response_schema: "{{ event_subscription_syslog.validate_response_schema if event_subscription_syslog.validate_response_schema is not none else omit }}"
+      register: event_subscription_syslog_result
+      tags:
+        - never
+        - event_subscription_syslog

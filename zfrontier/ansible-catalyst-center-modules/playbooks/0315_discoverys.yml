@@ -1,0 +1,37 @@
+---
+# Sample playbook for cisco.catalystcenter.discoverys (cisco.catalystcenter 2.15.0)
+# Build order: 315
+# Resource module for Discoverys
+# Reads ../models/discoverys.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/discoverys_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags discoverys.
+
+- name: "0315 discoverys"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/discoverys.yml
+  tasks:
+    - name: Run discoverys from its model
+      cisco.catalystcenter.discoverys:
+        catalystcenter_debug: "{{ discoverys.catalystcenter_debug if discoverys.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ discoverys.catalystcenter_host if discoverys.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ discoverys.catalystcenter_password if discoverys.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ discoverys.catalystcenter_port if discoverys.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ discoverys.catalystcenter_username if discoverys.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ discoverys.catalystcenter_verify if discoverys.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ discoverys.catalystcenter_version if discoverys.catalystcenter_version is not none else omit }}"
+        credentials: "{{ (discoverys.credentials | cat_strip_nulls) if (discoverys.credentials | cat_strip_nulls) is not none else omit }}"
+        discoveryTypeDetails: "{{ (discoverys.discoveryTypeDetails | cat_strip_nulls) if (discoverys.discoveryTypeDetails | cat_strip_nulls) is not none else omit }}"
+        id: "{{ discoverys.id if discoverys.id is not none else omit }}"
+        managementIpSelectionMethod: "{{ discoverys.managementIpSelectionMethod if discoverys.managementIpSelectionMethod is not none else omit }}"
+        name: "{{ discoverys.name if discoverys.name is not none else omit }}"
+        onlyNewDevice: "{{ discoverys.onlyNewDevice if discoverys.onlyNewDevice is not none else omit }}"
+        siteId: "{{ discoverys.siteId if discoverys.siteId is not none else omit }}"
+        updateManagementIp: "{{ discoverys.updateManagementIp if discoverys.updateManagementIp is not none else omit }}"
+        validate_response_schema: "{{ discoverys.validate_response_schema if discoverys.validate_response_schema is not none else omit }}"
+      register: discoverys_result
+      tags:
+        - never
+        - discoverys

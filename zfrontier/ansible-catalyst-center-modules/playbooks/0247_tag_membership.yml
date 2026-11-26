@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.catalystcenter.tag_membership (cisco.catalystcenter 2.15.0)
+# Build order: 247
+# Resource module for Tag Membership
+# Reads ../models/tag_membership.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/tag_membership_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags tag_membership.
+
+- name: "0247 tag_membership"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/tag_membership.yml
+  tasks:
+    - name: Run tag_membership from its model
+      cisco.catalystcenter.tag_membership:
+        catalystcenter_debug: "{{ tag_membership.catalystcenter_debug if tag_membership.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ tag_membership.catalystcenter_host if tag_membership.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ tag_membership.catalystcenter_password if tag_membership.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ tag_membership.catalystcenter_port if tag_membership.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ tag_membership.catalystcenter_username if tag_membership.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ tag_membership.catalystcenter_verify if tag_membership.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ tag_membership.catalystcenter_version if tag_membership.catalystcenter_version is not none else omit }}"
+        memberToTags: "{{ (tag_membership.memberToTags | cat_strip_nulls) if (tag_membership.memberToTags | cat_strip_nulls) is not none else omit }}"
+        memberType: "{{ tag_membership.memberType if tag_membership.memberType is not none else omit }}"
+        validate_response_schema: "{{ tag_membership.validate_response_schema if tag_membership.validate_response_schema is not none else omit }}"
+      register: tag_membership_result
+      tags:
+        - never
+        - tag_membership

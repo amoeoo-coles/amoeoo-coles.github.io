@@ -1,0 +1,35 @@
+---
+# Sample playbook for cisco.catalystcenter.interface_update (cisco.catalystcenter 2.15.0)
+# Build order: 335
+# Resource module for Interface Update
+# Reads ../models/interface_update.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/interface_update_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags interface_update.
+
+- name: "0335 interface_update"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/interface_update.yml
+  tasks:
+    - name: Run interface_update from its model
+      cisco.catalystcenter.interface_update:
+        adminStatus: "{{ interface_update.adminStatus if interface_update.adminStatus is not none else omit }}"
+        catalystcenter_debug: "{{ interface_update.catalystcenter_debug if interface_update.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ interface_update.catalystcenter_host if interface_update.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ interface_update.catalystcenter_password if interface_update.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ interface_update.catalystcenter_port if interface_update.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ interface_update.catalystcenter_username if interface_update.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ interface_update.catalystcenter_verify if interface_update.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ interface_update.catalystcenter_version if interface_update.catalystcenter_version is not none else omit }}"
+        deploymentMode: "{{ interface_update.deploymentMode if interface_update.deploymentMode is not none else omit }}"
+        description: "{{ interface_update.description if interface_update.description is not none else omit }}"
+        interfaceUuid: "{{ interface_update.interfaceUuid if interface_update.interfaceUuid is not none else omit }}"
+        validate_response_schema: "{{ interface_update.validate_response_schema if interface_update.validate_response_schema is not none else omit }}"
+        vlanId: "{{ interface_update.vlanId if interface_update.vlanId is not none else omit }}"
+        voiceVlanId: "{{ interface_update.voiceVlanId if interface_update.voiceVlanId is not none else omit }}"
+      register: interface_update_result
+      tags:
+        - never
+        - interface_update

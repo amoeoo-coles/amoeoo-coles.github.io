@@ -1,0 +1,33 @@
+---
+# Sample playbook for cisco.catalystcenter.pnp_server_profile_update (cisco.catalystcenter 2.15.0)
+# Build order: 486
+# Resource module for Pnp Server Profile Update
+# Reads ../models/pnp_server_profile_update.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/pnp_server_profile_update_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags pnp_server_profile_update.
+
+- name: "0486 pnp_server_profile_update"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/pnp_server_profile_update.yml
+  tasks:
+    - name: Run pnp_server_profile_update from its model
+      cisco.catalystcenter.pnp_server_profile_update:
+        catalystcenter_debug: "{{ pnp_server_profile_update.catalystcenter_debug if pnp_server_profile_update.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ pnp_server_profile_update.catalystcenter_host if pnp_server_profile_update.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ pnp_server_profile_update.catalystcenter_password if pnp_server_profile_update.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ pnp_server_profile_update.catalystcenter_port if pnp_server_profile_update.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ pnp_server_profile_update.catalystcenter_username if pnp_server_profile_update.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ pnp_server_profile_update.catalystcenter_verify if pnp_server_profile_update.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ pnp_server_profile_update.catalystcenter_version if pnp_server_profile_update.catalystcenter_version is not none else omit }}"
+        ccoUser: "{{ pnp_server_profile_update.ccoUser if pnp_server_profile_update.ccoUser is not none else omit }}"
+        profile: "{{ (pnp_server_profile_update.profile | cat_strip_nulls) if (pnp_server_profile_update.profile | cat_strip_nulls) is not none else omit }}"
+        smartAccountId: "{{ pnp_server_profile_update.smartAccountId if pnp_server_profile_update.smartAccountId is not none else omit }}"
+        validate_response_schema: "{{ pnp_server_profile_update.validate_response_schema if pnp_server_profile_update.validate_response_schema is not none else omit }}"
+        virtualAccountId: "{{ pnp_server_profile_update.virtualAccountId if pnp_server_profile_update.virtualAccountId is not none else omit }}"
+      register: pnp_server_profile_update_result
+      tags:
+        - never
+        - pnp_server_profile_update

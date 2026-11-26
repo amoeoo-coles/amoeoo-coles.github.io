@@ -1,0 +1,32 @@
+---
+# Sample playbook for cisco.catalystcenter.backups (cisco.catalystcenter 2.15.0)
+# Build order: 59
+# Resource module for Backups
+# Reads ../models/backups.yml (vars_files). Docs: https://cisco-en-programmability.github.io/catalystcenter-ansible/v2.15.0/plugins/backups_module.html
+# Connection placeholders come from inventory.yml: {{ catalystcenter_host }} {{ catalystcenter_username }} {{ catalystcenter_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags backups.
+
+- name: "0059 backups"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/backups.yml
+  tasks:
+    - name: Run backups from its model
+      cisco.catalystcenter.backups:
+        catalystcenter_debug: "{{ backups.catalystcenter_debug if backups.catalystcenter_debug is not none else omit }}"
+        catalystcenter_host: "{{ backups.catalystcenter_host if backups.catalystcenter_host is not none else omit }}"
+        catalystcenter_password: "{{ backups.catalystcenter_password if backups.catalystcenter_password is not none else omit }}"
+        catalystcenter_port: "{{ backups.catalystcenter_port if backups.catalystcenter_port is not none else omit }}"
+        catalystcenter_username: "{{ backups.catalystcenter_username if backups.catalystcenter_username is not none else omit }}"
+        catalystcenter_verify: "{{ backups.catalystcenter_verify if backups.catalystcenter_verify is not none else omit }}"
+        catalystcenter_version: "{{ backups.catalystcenter_version if backups.catalystcenter_version is not none else omit }}"
+        id: "{{ backups.id if backups.id is not none else omit }}"
+        name: "{{ backups.name if backups.name is not none else omit }}"
+        scope: "{{ backups.scope if backups.scope is not none else omit }}"
+        validate_response_schema: "{{ backups.validate_response_schema if backups.validate_response_schema is not none else omit }}"
+      register: backups_result
+      tags:
+        - never
+        - backups
