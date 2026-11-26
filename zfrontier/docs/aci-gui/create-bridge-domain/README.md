@@ -1,0 +1,98 @@
+---
+title: "Create Bridge Domain — bilingual guide"
+page: /aci-gui/create-bridge-domain/
+lang: [en, my]
+---
+
+# Create Bridge Domain
+
+Step-by-step guide · အဆင့်ဆင့် လမ်းညွှန် (English · မြန်မာ)
+
+- Page / စာမျက်နှာ: [/aci-gui/create-bridge-domain/](/aci-gui/create-bridge-domain/)
+- Version label on page / ဗားရှင်း: v4 · 14 Nov 2026 00:40 AEDT
+- Visibility / မြင်နိုင်မှု: Public / အများမြင်
+
+## English
+
+### Purpose
+
+Create aci_p01_bd_web (subnet 10.x.x.x/29 Advertised Externally, Associated L3 Out aci_p01_L3out) and aci_p01_bd_app (subnet 172.x.x.x/24 Private to VRF) in tenant aci_p01_tenant, VRF aci_p01_vrf. Values are taken only from Aung's unique screenshots; three duplicate files are not shown twice. Step 3 Advanced/Troubleshooting appears only in the app BD sequence.
+
+### Step by step
+
+1. Open the page at [/aci-gui/create-bridge-domain/](/aci-gui/create-bridge-domain/). The version label shown at the top is: v4 · 14 Nov 2026 00:40 AEDT.
+2. Read the introduction at the top to understand what the page covers (see Purpose above).
+3. Scroll down through its 16 sections, in this order:
+   - Open Create Bridge Domain
+   - Form replica
+   - Step 1 Main — aci_p01_bd_web
+   - Create Subnet — 10.x.x.x/29
+   - Step 2 L3 Configurations — web, subnet added
+   - Associated L3 Out aci_p01_L3out
+   - Step 1 Main — aci_p01_bd_app
+   - Step 2 — no subnets yet
+   - Create Subnet — 172.x.x.x/24
+   - Step 2 — app subnet added, no L3 Out
+   - Step 3 Advanced/Troubleshooting
+   - APIC classes
+   - NaC YAML
+   - REST JSON
+   - Related
+   - Version history
+4. Fill in the form fields: the page has 39 input field(s), 0 drop-down(s) and 0 text area(s). Use example or lab values only; keep any credential as a placeholder such as `{{ apic_password }}`.
+5. Use the page's buttons (25 in total). Button labels found:
+   - Previous
+   - Cancel
+   - Next
+   - OK
+   - Finish
+6. Review the 2 code / output block(s) (for example YAML, CLI or HCL text). Copy them into your own lab repo and review before running anything.
+7. Read the 16 table(s) on the page.
+8. Look at the diagrams and images: 0 inline SVG diagram(s) and 10 image(s).
+9. The visitor badge at the top right shows this page's unique-visitor count (GoatCounter).
+
+## မြန်မာ
+
+### ရည်ရွယ်ချက်
+
+ဤစာမျက်နှာသည် «/aci-gui/» အပိုင်းတွင် ပါဝင်သည် — Cisco ACI APIC GUI ပုံစံ စာမျက်နှာများ ဖြစ်ပြီး GUI ဖောင်ပုံတူ၊ လုပ်ဆောင်ရန် အဆင့်များ၊ NaC YAML နှင့် REST နမူနာများကို ဖော်ပြသည်။
+
+စာမျက်နှာပေါ်ရှိ မူရင်းဖော်ပြချက် (အင်္ဂလိပ်)— Create aci_p01_bd_web (subnet 10.x.x.x/29 Advertised Externally, Associated L3 Out aci_p01_L3out) and aci_p01_bd_app (subnet 172.x.x.x/24 Private to VRF) in tenant aci_p01_tenant, VRF aci_p01_vrf. Values are taken only from Aung's unique screenshots; three duplicate files are not shown twice. Step 3 Advanced/Troubleshooting appears only in the app BD sequence.
+
+### အဆင့်ဆင့် အသုံးပြုပုံ
+
+1. [/aci-gui/create-bridge-domain/](/aci-gui/create-bridge-domain/) ကို ဖွင့်ပါ။ ထိပ်တွင် ပြထားသော ဗားရှင်း အမှတ်အသားမှာ — v4 · 14 Nov 2026 00:40 AEDT ဖြစ်သည်။
+2. စာမျက်နှာက ဘာအကြောင်း ဖော်ပြသည်ကို နားလည်ရန် ထိပ်ပိုင်းရှိ နိဒါန်းကို ဖတ်ပါ (အထက်ပါ ရည်ရွယ်ချက် ကို ကြည့်ပါ)။
+3. အောက်သို့ ဆွဲချ၍ ဖတ်ပါ။ အပိုင်း 16 ခုကို အောက်ပါ အစီအစဉ်အတိုင်း ဖော်ပြထားသည်—
+   - Open Create Bridge Domain
+   - Form replica
+   - Step 1 Main — aci_p01_bd_web
+   - Create Subnet — 10.x.x.x/29
+   - Step 2 L3 Configurations — web, subnet added
+   - Associated L3 Out aci_p01_L3out
+   - Step 1 Main — aci_p01_bd_app
+   - Step 2 — no subnets yet
+   - Create Subnet — 172.x.x.x/24
+   - Step 2 — app subnet added, no L3 Out
+   - Step 3 Advanced/Troubleshooting
+   - APIC classes
+   - NaC YAML
+   - REST JSON
+   - Related
+   - Version history
+4. ဖောင်ကွက်လပ်များကို ဖြည့်ပါ — ထည့်သွင်းရန်ကွက်လပ် 39 ခု၊ ရွေးချယ်စရာစာရင်း (drop-down) 0 ခုနှင့် စာသားရေးကွက် 0 ခု ပါဝင်သည်။ နမူနာ သို့မဟုတ် lab တန်ဖိုးများကိုသာ သုံးပါ၊ စကားဝှက်ကို `{{ apic_password }}` ကဲ့သို့ placeholder အဖြစ်သာ ထားပါ။
+5. စာမျက်နှာရှိ ခလုတ်များကို အသုံးပြုပါ (စုစုပေါင်း 25 ခု)။ တွေ့ရှိသော ခလုတ်အမည်များ—
+   - Previous
+   - Cancel
+   - Next
+   - OK
+   - Finish
+6. ကုဒ် / ရလဒ် ဘလောက် 2 ခု (ဥပမာ YAML၊ CLI သို့မဟုတ် HCL) ကို ပြန်လည်စစ်ဆေးပါ။ မိမိ lab repo ထဲသို့ ကူးယူပြီး မလည်ပတ်မီ သေချာစစ်ဆေးပါ။
+7. စာမျက်နှာရှိ ဇယား 16 ခုကို ဖတ်ပါ။
+8. ပုံကြမ်းနှင့် ပုံများကို ကြည့်ပါ — SVG ပုံကြမ်း 0 ခုနှင့် ပုံ 10 ပုံ ပါဝင်သည်။
+9. ညာဘက်ထိပ်ရှိ visitor badge သည် ဤစာမျက်နှာ၏ ထူးခြားသော ဧည့်သည်အရေအတွက်ကို ပြသည် (GoatCounter)။
+
+---
+
+Generated 26 Nov 2026, 5:06 PM AEDT from the page's own HTML (headings, forms, tables, diagrams). Values that are not on the page are marked “not collected”. Credentials appear only as placeholders such as `{{ apic_password }}`.  
+စာမျက်နှာ၏ HTML (ခေါင်းစဉ်၊ ဖောင်၊ ဇယား၊ ပုံကြမ်း) မှ 26 Nov 2026, 5:06 PM AEDT တွင် ထုတ်လုပ်ထားသည်။ စာမျက်နှာပေါ်တွင် မပါသော တန်ဖိုးများကို “not collected” ဟု မှတ်ထားသည်။
