@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_cli_config_feature" "n305" {
-  cli_configuration = local.m_305["cli_configuration"]
-  description = local.m_305["description"]
+  cli_configuration  = local.m_305["cli_configuration"]
+  description        = local.m_305["description"]
   feature_profile_id = local.m_305["feature_profile_id"]
-  name = local.m_305["name"]
+  name               = local.m_305["name"]
 }

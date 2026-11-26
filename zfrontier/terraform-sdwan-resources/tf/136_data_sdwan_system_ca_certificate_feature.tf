@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_system_ca_certificate_feature" "n136" {
   feature_profile_id = local.m_136["feature_profile_id"]
-  id = local.m_136["id"]
-  name = local.m_136["name"]
+  id                 = local.m_136["id"]
+  name               = local.m_136["name"]
 }
 
 output "n136_data_sdwan_system_ca_certificate_feature_id" {

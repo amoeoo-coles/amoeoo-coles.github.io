@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_vpn_interface_dsl_pppoe_feature_template" "n481" {
-  id = local.m_481["id"]
+  id   = local.m_481["id"]
   name = local.m_481["name"]
 }
 

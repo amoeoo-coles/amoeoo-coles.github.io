@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_vpn_interface_cellular_feature_template" "n475" {
-  id = local.m_475["id"]
+  id   = local.m_475["id"]
   name = local.m_475["name"]
 }
 

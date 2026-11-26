@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_policy_object_preferred_color_group" "n045" {
-  description = local.m_045["description"]
-  entries = local.m_045["entries"]
+  description        = local.m_045["description"]
+  entries            = local.m_045["entries"]
   feature_profile_id = local.m_045["feature_profile_id"]
-  name = local.m_045["name"]
+  name               = local.m_045["name"]
 }

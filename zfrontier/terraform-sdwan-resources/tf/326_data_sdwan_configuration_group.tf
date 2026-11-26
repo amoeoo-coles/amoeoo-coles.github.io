@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_configuration_group" "n326" {
-  id = local.m_326["id"]
+  id   = local.m_326["id"]
   name = local.m_326["name"]
 }
 

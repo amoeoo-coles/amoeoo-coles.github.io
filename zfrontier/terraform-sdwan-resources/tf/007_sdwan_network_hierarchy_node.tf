@@ -8,14 +8,14 @@ locals {
 }
 
 resource "sdwan_network_hierarchy_node" "n007" {
-  address = local.m_007["address"]
-  description = local.m_007["description"]
+  address      = local.m_007["address"]
+  description  = local.m_007["description"]
   is_secondary = local.m_007["is_secondary"]
-  latitude = local.m_007["latitude"]
-  location = local.m_007["location"]
-  longitude = local.m_007["longitude"]
-  name = local.m_007["name"]
+  latitude     = local.m_007["latitude"]
+  location     = local.m_007["location"]
+  longitude    = local.m_007["longitude"]
+  name         = local.m_007["name"]
   parent_group = local.m_007["parent_group"]
-  site_id = local.m_007["site_id"]
-  type = local.m_007["type"]
+  site_id      = local.m_007["site_id"]
+  type         = local.m_007["type"]
 }

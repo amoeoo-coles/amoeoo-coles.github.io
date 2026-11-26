@@ -8,16 +8,16 @@ locals {
 }
 
 resource "sdwan_cisco_logging_feature_template" "n430" {
-  description = local.m_430["description"]
-  device_types = local.m_430["device_types"]
-  disk_logging = local.m_430["disk_logging"]
-  disk_logging_variable = local.m_430["disk_logging_variable"]
-  ipv4_servers = local.m_430["ipv4_servers"]
-  ipv6_servers = local.m_430["ipv6_servers"]
-  log_rotations = local.m_430["log_rotations"]
+  description            = local.m_430["description"]
+  device_types           = local.m_430["device_types"]
+  disk_logging           = local.m_430["disk_logging"]
+  disk_logging_variable  = local.m_430["disk_logging_variable"]
+  ipv4_servers           = local.m_430["ipv4_servers"]
+  ipv6_servers           = local.m_430["ipv6_servers"]
+  log_rotations          = local.m_430["log_rotations"]
   log_rotations_variable = local.m_430["log_rotations_variable"]
-  max_size = local.m_430["max_size"]
-  max_size_variable = local.m_430["max_size_variable"]
-  name = local.m_430["name"]
-  tls_profiles = local.m_430["tls_profiles"]
+  max_size               = local.m_430["max_size"]
+  max_size_variable      = local.m_430["max_size_variable"]
+  name                   = local.m_430["name"]
+  tls_profiles           = local.m_430["tls_profiles"]
 }

@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_system_ca_certificate_feature" "n135" {
-  certificates = local.m_135["certificates"]
-  description = local.m_135["description"]
+  certificates       = local.m_135["certificates"]
+  description        = local.m_135["description"]
   feature_profile_id = local.m_135["feature_profile_id"]
-  name = local.m_135["name"]
+  name               = local.m_135["name"]
 }

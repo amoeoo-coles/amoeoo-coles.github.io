@@ -8,12 +8,12 @@ locals {
 }
 
 resource "sdwan_service_object_tracker_group_feature" "n283" {
-  description = local.m_283["description"]
-  feature_profile_id = local.m_283["feature_profile_id"]
-  name = local.m_283["name"]
-  object_tracker_id = local.m_283["object_tracker_id"]
+  description                = local.m_283["description"]
+  feature_profile_id         = local.m_283["feature_profile_id"]
+  name                       = local.m_283["name"]
+  object_tracker_id          = local.m_283["object_tracker_id"]
   object_tracker_id_variable = local.m_283["object_tracker_id_variable"]
-  reachable = local.m_283["reachable"]
-  reachable_variable = local.m_283["reachable_variable"]
-  tracker_elements = local.m_283["tracker_elements"]
+  reachable                  = local.m_283["reachable"]
+  reachable_variable         = local.m_283["reachable_variable"]
+  tracker_elements           = local.m_283["tracker_elements"]
 }

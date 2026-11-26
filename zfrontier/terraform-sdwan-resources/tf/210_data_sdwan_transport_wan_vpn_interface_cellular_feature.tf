@@ -8,9 +8,9 @@ locals {
 }
 
 data "sdwan_transport_wan_vpn_interface_cellular_feature" "n210" {
-  feature_profile_id = local.m_210["feature_profile_id"]
-  id = local.m_210["id"]
-  name = local.m_210["name"]
+  feature_profile_id           = local.m_210["feature_profile_id"]
+  id                           = local.m_210["id"]
+  name                         = local.m_210["name"]
   transport_wan_vpn_feature_id = local.m_210["transport_wan_vpn_feature_id"]
 }
 

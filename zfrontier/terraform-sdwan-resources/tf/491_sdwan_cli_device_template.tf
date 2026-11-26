@@ -9,8 +9,8 @@ locals {
 
 resource "sdwan_cli_device_template" "n491" {
   cli_configuration = local.m_491["cli_configuration"]
-  cli_type = local.m_491["cli_type"]
-  description = local.m_491["description"]
-  device_type = local.m_491["device_type"]
-  name = local.m_491["name"]
+  cli_type          = local.m_491["cli_type"]
+  description       = local.m_491["description"]
+  device_type       = local.m_491["device_type"]
+  name              = local.m_491["name"]
 }

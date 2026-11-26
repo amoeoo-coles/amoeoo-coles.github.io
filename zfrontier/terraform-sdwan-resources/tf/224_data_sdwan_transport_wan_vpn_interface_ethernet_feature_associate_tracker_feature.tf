@@ -8,9 +8,9 @@ locals {
 }
 
 data "sdwan_transport_wan_vpn_interface_ethernet_feature_associate_tracker_feature" "n224" {
-  feature_profile_id = local.m_224["feature_profile_id"]
-  id = local.m_224["id"]
-  transport_wan_vpn_feature_id = local.m_224["transport_wan_vpn_feature_id"]
+  feature_profile_id                              = local.m_224["feature_profile_id"]
+  id                                              = local.m_224["id"]
+  transport_wan_vpn_feature_id                    = local.m_224["transport_wan_vpn_feature_id"]
   transport_wan_vpn_interface_ethernet_feature_id = local.m_224["transport_wan_vpn_interface_ethernet_feature_id"]
 }
 

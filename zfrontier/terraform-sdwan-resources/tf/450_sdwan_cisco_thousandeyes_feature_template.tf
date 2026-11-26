@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_cisco_thousandeyes_feature_template" "n450" {
-  description = local.m_450["description"]
-  device_types = local.m_450["device_types"]
-  name = local.m_450["name"]
+  description          = local.m_450["description"]
+  device_types         = local.m_450["device_types"]
+  name                 = local.m_450["name"]
   virtual_applications = local.m_450["virtual_applications"]
 }

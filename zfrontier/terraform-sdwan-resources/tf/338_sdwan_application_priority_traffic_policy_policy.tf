@@ -8,11 +8,11 @@ locals {
 }
 
 resource "sdwan_application_priority_traffic_policy_policy" "n338" {
-  default_action = local.m_338["default_action"]
-  description = local.m_338["description"]
-  direction = local.m_338["direction"]
+  default_action     = local.m_338["default_action"]
+  description        = local.m_338["description"]
+  direction          = local.m_338["direction"]
   feature_profile_id = local.m_338["feature_profile_id"]
-  name = local.m_338["name"]
-  sequences = local.m_338["sequences"]
-  vpns = local.m_338["vpns"]
+  name               = local.m_338["name"]
+  sequences          = local.m_338["sequences"]
+  vpns               = local.m_338["vpns"]
 }

@@ -8,16 +8,16 @@ locals {
 }
 
 resource "sdwan_sse_cisco_feature" "n315" {
-  context_sharing_for_sgt = local.m_315["context_sharing_for_sgt"]
-  context_sharing_for_vpn = local.m_315["context_sharing_for_vpn"]
-  description = local.m_315["description"]
-  feature_profile_id = local.m_315["feature_profile_id"]
-  interface_pairs = local.m_315["interface_pairs"]
-  interfaces = local.m_315["interfaces"]
-  name = local.m_315["name"]
-  region = local.m_315["region"]
-  region_variable = local.m_315["region_variable"]
-  tracker_source_ip = local.m_315["tracker_source_ip"]
+  context_sharing_for_sgt    = local.m_315["context_sharing_for_sgt"]
+  context_sharing_for_vpn    = local.m_315["context_sharing_for_vpn"]
+  description                = local.m_315["description"]
+  feature_profile_id         = local.m_315["feature_profile_id"]
+  interface_pairs            = local.m_315["interface_pairs"]
+  interfaces                 = local.m_315["interfaces"]
+  name                       = local.m_315["name"]
+  region                     = local.m_315["region"]
+  region_variable            = local.m_315["region_variable"]
+  tracker_source_ip          = local.m_315["tracker_source_ip"]
   tracker_source_ip_variable = local.m_315["tracker_source_ip_variable"]
-  trackers = local.m_315["trackers"]
+  trackers                   = local.m_315["trackers"]
 }

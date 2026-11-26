@@ -9,5 +9,5 @@ locals {
 
 resource "sdwan_activate_topology_group" "n331" {
   feature_versions = local.m_331["feature_versions"]
-  id = local.m_331["id"]
+  id               = local.m_331["id"]
 }

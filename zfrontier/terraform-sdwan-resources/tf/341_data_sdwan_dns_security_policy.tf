@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_dns_security_policy" "n341" {
   feature_profile_id = local.m_341["feature_profile_id"]
-  id = local.m_341["id"]
-  name = local.m_341["name"]
+  id                 = local.m_341["id"]
+  name               = local.m_341["name"]
 }
 
 output "n341_data_sdwan_dns_security_policy_id" {

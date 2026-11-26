@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_policy_object_security_scalable_group_tag_list" "n073" {
-  description = local.m_073["description"]
-  entries = local.m_073["entries"]
+  description        = local.m_073["description"]
+  entries            = local.m_073["entries"]
   feature_profile_id = local.m_073["feature_profile_id"]
-  name = local.m_073["name"]
+  name               = local.m_073["name"]
 }

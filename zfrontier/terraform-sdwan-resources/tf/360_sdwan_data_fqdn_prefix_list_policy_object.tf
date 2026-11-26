@@ -9,5 +9,5 @@ locals {
 
 resource "sdwan_data_fqdn_prefix_list_policy_object" "n360" {
   entries = local.m_360["entries"]
-  name = local.m_360["name"]
+  name    = local.m_360["name"]
 }

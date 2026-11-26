@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_vpn_interface_ethernet_pppoe_feature_template" "n483" {
-  id = local.m_483["id"]
+  id   = local.m_483["id"]
   name = local.m_483["name"]
 }
 

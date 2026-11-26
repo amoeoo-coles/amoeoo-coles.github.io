@@ -8,7 +8,7 @@ locals {
 }
 
 resource "sdwan_transport_wan_vpn_feature_associate_routing_bgp_feature" "n201" {
-  feature_profile_id = local.m_201["feature_profile_id"]
+  feature_profile_id               = local.m_201["feature_profile_id"]
   transport_routing_bgp_feature_id = local.m_201["transport_routing_bgp_feature_id"]
-  transport_wan_vpn_feature_id = local.m_201["transport_wan_vpn_feature_id"]
+  transport_wan_vpn_feature_id     = local.m_201["transport_wan_vpn_feature_id"]
 }

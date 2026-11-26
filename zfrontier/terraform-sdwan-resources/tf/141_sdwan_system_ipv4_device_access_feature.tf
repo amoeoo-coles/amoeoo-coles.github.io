@@ -8,9 +8,9 @@ locals {
 }
 
 resource "sdwan_system_ipv4_device_access_feature" "n141" {
-  default_action = local.m_141["default_action"]
-  description = local.m_141["description"]
+  default_action     = local.m_141["default_action"]
+  description        = local.m_141["description"]
   feature_profile_id = local.m_141["feature_profile_id"]
-  name = local.m_141["name"]
-  sequences = local.m_141["sequences"]
+  name               = local.m_141["name"]
+  sequences          = local.m_141["sequences"]
 }

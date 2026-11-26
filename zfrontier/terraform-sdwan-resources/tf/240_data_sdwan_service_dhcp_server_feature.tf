@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_service_dhcp_server_feature" "n240" {
   feature_profile_id = local.m_240["feature_profile_id"]
-  id = local.m_240["id"]
-  name = local.m_240["name"]
+  id                 = local.m_240["id"]
+  name               = local.m_240["name"]
 }
 
 output "n240_data_sdwan_service_dhcp_server_feature_id" {

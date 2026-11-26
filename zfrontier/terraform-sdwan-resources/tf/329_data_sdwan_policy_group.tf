@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_policy_group" "n329" {
-  id = local.m_329["id"]
+  id   = local.m_329["id"]
   name = local.m_329["name"]
 }
 

@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_service_multicast_feature" "n280" {
   feature_profile_id = local.m_280["feature_profile_id"]
-  id = local.m_280["id"]
-  name = local.m_280["name"]
+  id                 = local.m_280["id"]
+  name               = local.m_280["name"]
 }
 
 output "n280_data_sdwan_service_multicast_feature_id" {

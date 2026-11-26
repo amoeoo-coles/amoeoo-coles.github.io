@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_service_wireless_lan_feature" "n304" {
   feature_profile_id = local.m_304["feature_profile_id"]
-  id = local.m_304["id"]
-  name = local.m_304["name"]
+  id                 = local.m_304["id"]
+  name               = local.m_304["name"]
 }
 
 output "n304_data_sdwan_service_wireless_lan_feature_id" {

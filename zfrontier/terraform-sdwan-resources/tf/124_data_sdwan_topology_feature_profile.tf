@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_topology_feature_profile" "n124" {
-  id = local.m_124["id"]
+  id   = local.m_124["id"]
   name = local.m_124["name"]
 }
 

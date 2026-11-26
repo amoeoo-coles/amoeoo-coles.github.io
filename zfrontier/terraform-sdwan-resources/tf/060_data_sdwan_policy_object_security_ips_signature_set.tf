@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_policy_object_security_ips_signature_set" "n060" {
   feature_profile_id = local.m_060["feature_profile_id"]
-  id = local.m_060["id"]
-  name = local.m_060["name"]
+  id                 = local.m_060["id"]
+  name               = local.m_060["name"]
 }
 
 output "n060_data_sdwan_policy_object_security_ips_signature_set_id" {

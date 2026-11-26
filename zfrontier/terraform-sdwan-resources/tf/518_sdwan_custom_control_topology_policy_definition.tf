@@ -9,7 +9,7 @@ locals {
 
 resource "sdwan_custom_control_topology_policy_definition" "n518" {
   default_action = local.m_518["default_action"]
-  description = local.m_518["description"]
-  name = local.m_518["name"]
-  sequences = local.m_518["sequences"]
+  description    = local.m_518["description"]
+  name           = local.m_518["name"]
+  sequences      = local.m_518["sequences"]
 }

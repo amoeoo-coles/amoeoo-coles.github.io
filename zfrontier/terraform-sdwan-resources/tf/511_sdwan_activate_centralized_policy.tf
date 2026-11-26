@@ -8,6 +8,6 @@ locals {
 }
 
 resource "sdwan_activate_centralized_policy" "n511" {
-  id = local.m_511["id"]
+  id      = local.m_511["id"]
   version = local.m_511["version"]
 }

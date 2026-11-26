@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_system_snmp_feature" "n160" {
   feature_profile_id = local.m_160["feature_profile_id"]
-  id = local.m_160["id"]
-  name = local.m_160["name"]
+  id                 = local.m_160["id"]
+  name               = local.m_160["name"]
 }
 
 output "n160_data_sdwan_system_snmp_feature_id" {

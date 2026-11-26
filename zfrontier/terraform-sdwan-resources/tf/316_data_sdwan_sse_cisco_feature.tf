@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_sse_cisco_feature" "n316" {
   feature_profile_id = local.m_316["feature_profile_id"]
-  id = local.m_316["id"]
-  name = local.m_316["name"]
+  id                 = local.m_316["id"]
+  name               = local.m_316["name"]
 }
 
 output "n316_data_sdwan_sse_cisco_feature_id" {

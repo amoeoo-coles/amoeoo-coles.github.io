@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_transport_gps_feature" "n170" {
   feature_profile_id = local.m_170["feature_profile_id"]
-  id = local.m_170["id"]
-  name = local.m_170["name"]
+  id                 = local.m_170["id"]
+  name               = local.m_170["name"]
 }
 
 output "n170_data_sdwan_transport_gps_feature_id" {

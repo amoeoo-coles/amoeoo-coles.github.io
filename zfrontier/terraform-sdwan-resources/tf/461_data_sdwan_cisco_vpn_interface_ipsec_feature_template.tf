@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cisco_vpn_interface_ipsec_feature_template" "n461" {
-  id = local.m_461["id"]
+  id   = local.m_461["id"]
   name = local.m_461["name"]
 }
 

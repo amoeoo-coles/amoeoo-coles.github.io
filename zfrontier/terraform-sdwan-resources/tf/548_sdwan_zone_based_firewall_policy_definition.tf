@@ -9,9 +9,9 @@ locals {
 
 resource "sdwan_zone_based_firewall_policy_definition" "n548" {
   apply_zone_pairs = local.m_548["apply_zone_pairs"]
-  default_action = local.m_548["default_action"]
-  description = local.m_548["description"]
-  mode = local.m_548["mode"]
-  name = local.m_548["name"]
-  rules = local.m_548["rules"]
+  default_action   = local.m_548["default_action"]
+  description      = local.m_548["description"]
+  mode             = local.m_548["mode"]
+  name             = local.m_548["name"]
+  rules            = local.m_548["rules"]
 }

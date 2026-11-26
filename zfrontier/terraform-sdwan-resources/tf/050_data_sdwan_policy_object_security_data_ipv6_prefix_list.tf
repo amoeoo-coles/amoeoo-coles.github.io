@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_policy_object_security_data_ipv6_prefix_list" "n050" {
   feature_profile_id = local.m_050["feature_profile_id"]
-  id = local.m_050["id"]
-  name = local.m_050["name"]
+  id                 = local.m_050["id"]
+  name               = local.m_050["name"]
 }
 
 output "n050_data_sdwan_policy_object_security_data_ipv6_prefix_list_id" {

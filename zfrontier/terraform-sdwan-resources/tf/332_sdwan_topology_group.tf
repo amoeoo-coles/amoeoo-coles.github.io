@@ -8,9 +8,9 @@ locals {
 }
 
 resource "sdwan_topology_group" "n332" {
-  description = local.m_332["description"]
+  description         = local.m_332["description"]
   feature_profile_ids = local.m_332["feature_profile_ids"]
-  feature_versions = local.m_332["feature_versions"]
-  name = local.m_332["name"]
-  solution = local.m_332["solution"]
+  feature_versions    = local.m_332["feature_versions"]
+  name                = local.m_332["name"]
+  solution            = local.m_332["solution"]
 }

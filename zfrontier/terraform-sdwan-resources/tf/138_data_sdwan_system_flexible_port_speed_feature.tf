@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_system_flexible_port_speed_feature" "n138" {
   feature_profile_id = local.m_138["feature_profile_id"]
-  id = local.m_138["id"]
-  name = local.m_138["name"]
+  id                 = local.m_138["id"]
+  name               = local.m_138["name"]
 }
 
 output "n138_data_sdwan_system_flexible_port_speed_feature_id" {

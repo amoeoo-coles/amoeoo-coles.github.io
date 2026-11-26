@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_policy_object_security_rule_set" "n071" {
-  description = local.m_071["description"]
+  description        = local.m_071["description"]
   feature_profile_id = local.m_071["feature_profile_id"]
-  name = local.m_071["name"]
-  sequences = local.m_071["sequences"]
+  name               = local.m_071["name"]
+  sequences          = local.m_071["sequences"]
 }

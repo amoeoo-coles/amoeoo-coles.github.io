@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cisco_logging_feature_template" "n431" {
-  id = local.m_431["id"]
+  id   = local.m_431["id"]
   name = local.m_431["name"]
 }
 

@@ -9,5 +9,5 @@ locals {
 
 resource "sdwan_application_priority_feature_profile" "n103" {
   description = local.m_103["description"]
-  name = local.m_103["name"]
+  name        = local.m_103["name"]
 }

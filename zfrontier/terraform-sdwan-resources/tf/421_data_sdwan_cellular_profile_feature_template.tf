@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cellular_profile_feature_template" "n421" {
-  id = local.m_421["id"]
+  id   = local.m_421["id"]
   name = local.m_421["name"]
 }
 

@@ -8,8 +8,8 @@ locals {
 }
 
 data "sdwan_service_lan_vpn_feature_associate_routing_eigrp_feature" "n254" {
-  feature_profile_id = local.m_254["feature_profile_id"]
-  id = local.m_254["id"]
+  feature_profile_id         = local.m_254["feature_profile_id"]
+  id                         = local.m_254["id"]
   service_lan_vpn_feature_id = local.m_254["service_lan_vpn_feature_id"]
 }
 

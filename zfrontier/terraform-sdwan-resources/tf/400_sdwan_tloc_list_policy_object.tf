@@ -9,5 +9,5 @@ locals {
 
 resource "sdwan_tloc_list_policy_object" "n400" {
   entries = local.m_400["entries"]
-  name = local.m_400["name"]
+  name    = local.m_400["name"]
 }

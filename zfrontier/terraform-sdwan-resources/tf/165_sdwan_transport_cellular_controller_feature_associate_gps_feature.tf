@@ -8,7 +8,7 @@ locals {
 }
 
 resource "sdwan_transport_cellular_controller_feature_associate_gps_feature" "n165" {
-  feature_profile_id = local.m_165["feature_profile_id"]
+  feature_profile_id                       = local.m_165["feature_profile_id"]
   transport_cellular_controller_feature_id = local.m_165["transport_cellular_controller_feature_id"]
-  transport_gps_feature_id = local.m_165["transport_gps_feature_id"]
+  transport_gps_feature_id                 = local.m_165["transport_gps_feature_id"]
 }

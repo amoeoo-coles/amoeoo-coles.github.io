@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cedge_pim_feature_template" "n415" {
-  id = local.m_415["id"]
+  id   = local.m_415["id"]
   name = local.m_415["name"]
 }
 

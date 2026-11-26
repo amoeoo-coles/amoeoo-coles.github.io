@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_policy_object_standard_community_list" "n083" {
-  description = local.m_083["description"]
-  entries = local.m_083["entries"]
+  description        = local.m_083["description"]
+  entries            = local.m_083["entries"]
   feature_profile_id = local.m_083["feature_profile_id"]
-  name = local.m_083["name"]
+  name               = local.m_083["name"]
 }

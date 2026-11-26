@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_policy_object_tloc_list" "n086" {
   feature_profile_id = local.m_086["feature_profile_id"]
-  id = local.m_086["id"]
-  name = local.m_086["name"]
+  id                 = local.m_086["id"]
+  name               = local.m_086["name"]
 }
 
 output "n086_data_sdwan_policy_object_tloc_list_id" {

@@ -8,9 +8,9 @@ locals {
 }
 
 data "sdwan_transport_wan_vpn_interface_ipsec_feature_associate_tracker_feature" "n234" {
-  feature_profile_id = local.m_234["feature_profile_id"]
-  id = local.m_234["id"]
-  transport_wan_vpn_feature_id = local.m_234["transport_wan_vpn_feature_id"]
+  feature_profile_id                           = local.m_234["feature_profile_id"]
+  id                                           = local.m_234["id"]
+  transport_wan_vpn_feature_id                 = local.m_234["transport_wan_vpn_feature_id"]
   transport_wan_vpn_interface_ipsec_feature_id = local.m_234["transport_wan_vpn_interface_ipsec_feature_id"]
 }
 

@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_other_thousandeyes_feature" "n319" {
-  description = local.m_319["description"]
-  feature_profile_id = local.m_319["feature_profile_id"]
-  name = local.m_319["name"]
+  description         = local.m_319["description"]
+  feature_profile_id  = local.m_319["feature_profile_id"]
+  name                = local.m_319["name"]
   virtual_application = local.m_319["virtual_application"]
 }

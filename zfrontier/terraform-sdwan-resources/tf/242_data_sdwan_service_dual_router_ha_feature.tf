@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_service_dual_router_ha_feature" "n242" {
   feature_profile_id = local.m_242["feature_profile_id"]
-  id = local.m_242["id"]
-  name = local.m_242["name"]
+  id                 = local.m_242["id"]
+  name               = local.m_242["name"]
 }
 
 output "n242_data_sdwan_service_dual_router_ha_feature_id" {

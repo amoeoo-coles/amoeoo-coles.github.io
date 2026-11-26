@@ -8,10 +8,10 @@ locals {
 }
 
 resource "sdwan_application_priority_qos_policy" "n336" {
-  description = local.m_336["description"]
-  feature_profile_id = local.m_336["feature_profile_id"]
-  name = local.m_336["name"]
-  qos_schedulers = local.m_336["qos_schedulers"]
-  target_interfaces = local.m_336["target_interfaces"]
+  description                = local.m_336["description"]
+  feature_profile_id         = local.m_336["feature_profile_id"]
+  name                       = local.m_336["name"]
+  qos_schedulers             = local.m_336["qos_schedulers"]
+  target_interfaces          = local.m_336["target_interfaces"]
   target_interfaces_variable = local.m_336["target_interfaces_variable"]
 }

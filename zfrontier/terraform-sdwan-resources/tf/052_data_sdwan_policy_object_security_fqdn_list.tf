@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_policy_object_security_fqdn_list" "n052" {
   feature_profile_id = local.m_052["feature_profile_id"]
-  id = local.m_052["id"]
-  name = local.m_052["name"]
+  id                 = local.m_052["id"]
+  name               = local.m_052["name"]
 }
 
 output "n052_data_sdwan_policy_object_security_fqdn_list_id" {

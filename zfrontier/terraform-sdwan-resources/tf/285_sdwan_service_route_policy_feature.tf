@@ -8,9 +8,9 @@ locals {
 }
 
 resource "sdwan_service_route_policy_feature" "n285" {
-  default_action = local.m_285["default_action"]
-  description = local.m_285["description"]
+  default_action     = local.m_285["default_action"]
+  description        = local.m_285["description"]
   feature_profile_id = local.m_285["feature_profile_id"]
-  name = local.m_285["name"]
-  sequences = local.m_285["sequences"]
+  name               = local.m_285["name"]
+  sequences          = local.m_285["sequences"]
 }

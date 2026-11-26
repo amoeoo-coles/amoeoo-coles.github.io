@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_policy_object_sla_class_list" "n082" {
   feature_profile_id = local.m_082["feature_profile_id"]
-  id = local.m_082["id"]
-  name = local.m_082["name"]
+  id                 = local.m_082["id"]
+  name               = local.m_082["name"]
 }
 
 output "n082_data_sdwan_policy_object_sla_class_list_id" {

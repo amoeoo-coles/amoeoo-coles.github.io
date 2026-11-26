@@ -9,5 +9,5 @@ locals {
 
 resource "sdwan_block_url_list_policy_object" "n354" {
   entries = local.m_354["entries"]
-  name = local.m_354["name"]
+  name    = local.m_354["name"]
 }

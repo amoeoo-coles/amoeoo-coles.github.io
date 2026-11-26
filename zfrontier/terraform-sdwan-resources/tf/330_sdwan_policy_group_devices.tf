@@ -8,9 +8,9 @@ locals {
 }
 
 resource "sdwan_policy_group_devices" "n330" {
-  devices = local.m_330["devices"]
-  policy_group_id = local.m_330["policy_group_id"]
+  devices              = local.m_330["devices"]
+  policy_group_id      = local.m_330["policy_group_id"]
   policy_group_version = local.m_330["policy_group_version"]
-  retain_devices = local.m_330["retain_devices"]
-  solution = local.m_330["solution"]
+  retain_devices       = local.m_330["retain_devices"]
+  solution             = local.m_330["solution"]
 }

@@ -8,10 +8,10 @@ locals {
 }
 
 resource "sdwan_service_tracker_group_feature" "n301" {
-  description = local.m_301["description"]
-  feature_profile_id = local.m_301["feature_profile_id"]
-  name = local.m_301["name"]
-  tracker_boolean = local.m_301["tracker_boolean"]
+  description              = local.m_301["description"]
+  feature_profile_id       = local.m_301["feature_profile_id"]
+  name                     = local.m_301["name"]
+  tracker_boolean          = local.m_301["tracker_boolean"]
   tracker_boolean_variable = local.m_301["tracker_boolean_variable"]
-  tracker_elements = local.m_301["tracker_elements"]
+  tracker_elements         = local.m_301["tracker_elements"]
 }

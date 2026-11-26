@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_policy_object_security_port_list" "n067" {
-  description = local.m_067["description"]
-  entries = local.m_067["entries"]
+  description        = local.m_067["description"]
+  entries            = local.m_067["entries"]
   feature_profile_id = local.m_067["feature_profile_id"]
-  name = local.m_067["name"]
+  name               = local.m_067["name"]
 }

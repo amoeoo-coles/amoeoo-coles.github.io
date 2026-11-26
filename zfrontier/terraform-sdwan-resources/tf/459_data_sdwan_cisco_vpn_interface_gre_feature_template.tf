@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cisco_vpn_interface_gre_feature_template" "n459" {
-  id = local.m_459["id"]
+  id   = local.m_459["id"]
   name = local.m_459["name"]
 }
 

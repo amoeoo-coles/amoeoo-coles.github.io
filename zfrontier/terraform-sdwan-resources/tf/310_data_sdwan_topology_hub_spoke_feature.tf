@@ -9,7 +9,7 @@ locals {
 
 data "sdwan_topology_hub_spoke_feature" "n310" {
   feature_profile_id = local.m_310["feature_profile_id"]
-  id = local.m_310["id"]
+  id                 = local.m_310["id"]
 }
 
 output "n310_data_sdwan_topology_hub_spoke_feature_id" {

@@ -8,11 +8,11 @@ locals {
 }
 
 resource "sdwan_system_banner_feature" "n129" {
-  description = local.m_129["description"]
+  description        = local.m_129["description"]
   feature_profile_id = local.m_129["feature_profile_id"]
-  login = local.m_129["login"]
-  login_variable = local.m_129["login_variable"]
-  motd = local.m_129["motd"]
-  motd_variable = local.m_129["motd_variable"]
-  name = local.m_129["name"]
+  login              = local.m_129["login"]
+  login_variable     = local.m_129["login_variable"]
+  motd               = local.m_129["motd"]
+  motd_variable      = local.m_129["motd_variable"]
+  name               = local.m_129["name"]
 }

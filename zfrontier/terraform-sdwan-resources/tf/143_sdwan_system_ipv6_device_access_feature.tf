@@ -8,9 +8,9 @@ locals {
 }
 
 resource "sdwan_system_ipv6_device_access_feature" "n143" {
-  default_action = local.m_143["default_action"]
-  description = local.m_143["description"]
+  default_action     = local.m_143["default_action"]
+  description        = local.m_143["description"]
   feature_profile_id = local.m_143["feature_profile_id"]
-  name = local.m_143["name"]
-  sequences = local.m_143["sequences"]
+  name               = local.m_143["name"]
+  sequences          = local.m_143["sequences"]
 }

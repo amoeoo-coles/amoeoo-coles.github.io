@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_service_tracker_feature" "n300" {
   feature_profile_id = local.m_300["feature_profile_id"]
-  id = local.m_300["id"]
-  name = local.m_300["name"]
+  id                 = local.m_300["id"]
+  name               = local.m_300["name"]
 }
 
 output "n300_data_sdwan_service_tracker_feature_id" {

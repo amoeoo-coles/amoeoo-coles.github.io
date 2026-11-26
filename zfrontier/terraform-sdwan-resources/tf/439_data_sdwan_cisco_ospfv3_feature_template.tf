@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cisco_ospfv3_feature_template" "n439" {
-  id = local.m_439["id"]
+  id   = local.m_439["id"]
   name = local.m_439["name"]
 }
 

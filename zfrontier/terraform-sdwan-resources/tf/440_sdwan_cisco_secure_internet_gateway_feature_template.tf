@@ -8,13 +8,13 @@ locals {
 }
 
 resource "sdwan_cisco_secure_internet_gateway_feature_template" "n440" {
-  description = local.m_440["description"]
-  device_types = local.m_440["device_types"]
-  interfaces = local.m_440["interfaces"]
-  name = local.m_440["name"]
-  services = local.m_440["services"]
-  tracker_source_ip = local.m_440["tracker_source_ip"]
+  description                = local.m_440["description"]
+  device_types               = local.m_440["device_types"]
+  interfaces                 = local.m_440["interfaces"]
+  name                       = local.m_440["name"]
+  services                   = local.m_440["services"]
+  tracker_source_ip          = local.m_440["tracker_source_ip"]
   tracker_source_ip_variable = local.m_440["tracker_source_ip_variable"]
-  trackers = local.m_440["trackers"]
-  vpn_id = local.m_440["vpn_id"]
+  trackers                   = local.m_440["trackers"]
+  vpn_id                     = local.m_440["vpn_id"]
 }

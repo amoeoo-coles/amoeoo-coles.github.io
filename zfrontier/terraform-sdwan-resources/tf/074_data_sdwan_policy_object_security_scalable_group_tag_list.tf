@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_policy_object_security_scalable_group_tag_list" "n074" {
   feature_profile_id = local.m_074["feature_profile_id"]
-  id = local.m_074["id"]
-  name = local.m_074["name"]
+  id                 = local.m_074["id"]
+  name               = local.m_074["name"]
 }
 
 output "n074_data_sdwan_policy_object_security_scalable_group_tag_list_id" {

@@ -8,14 +8,14 @@ locals {
 }
 
 resource "sdwan_switchport_feature_template" "n472" {
-  age_out_time = local.m_472["age_out_time"]
+  age_out_time          = local.m_472["age_out_time"]
   age_out_time_variable = local.m_472["age_out_time_variable"]
-  description = local.m_472["description"]
-  device_types = local.m_472["device_types"]
-  interfaces = local.m_472["interfaces"]
-  module_type = local.m_472["module_type"]
-  name = local.m_472["name"]
-  slot = local.m_472["slot"]
-  static_mac_addresses = local.m_472["static_mac_addresses"]
-  sub_slot = local.m_472["sub_slot"]
+  description           = local.m_472["description"]
+  device_types          = local.m_472["device_types"]
+  interfaces            = local.m_472["interfaces"]
+  module_type           = local.m_472["module_type"]
+  name                  = local.m_472["name"]
+  slot                  = local.m_472["slot"]
+  static_mac_addresses  = local.m_472["static_mac_addresses"]
+  sub_slot              = local.m_472["sub_slot"]
 }

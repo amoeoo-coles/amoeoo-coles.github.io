@@ -8,10 +8,10 @@ locals {
 }
 
 resource "sdwan_application_aware_routing_policy_definition" "n512" {
-  default_action = local.m_512["default_action"]
-  default_action_sla_class_list_id = local.m_512["default_action_sla_class_list_id"]
+  default_action                        = local.m_512["default_action"]
+  default_action_sla_class_list_id      = local.m_512["default_action_sla_class_list_id"]
   default_action_sla_class_list_version = local.m_512["default_action_sla_class_list_version"]
-  description = local.m_512["description"]
-  name = local.m_512["name"]
-  sequences = local.m_512["sequences"]
+  description                           = local.m_512["description"]
+  name                                  = local.m_512["name"]
+  sequences                             = local.m_512["sequences"]
 }

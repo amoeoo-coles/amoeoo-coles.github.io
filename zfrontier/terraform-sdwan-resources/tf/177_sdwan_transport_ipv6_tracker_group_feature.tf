@@ -8,12 +8,12 @@ locals {
 }
 
 resource "sdwan_transport_ipv6_tracker_group_feature" "n177" {
-  description = local.m_177["description"]
-  feature_profile_id = local.m_177["feature_profile_id"]
-  name = local.m_177["name"]
-  tracker_boolean = local.m_177["tracker_boolean"]
+  description              = local.m_177["description"]
+  feature_profile_id       = local.m_177["feature_profile_id"]
+  name                     = local.m_177["name"]
+  tracker_boolean          = local.m_177["tracker_boolean"]
   tracker_boolean_variable = local.m_177["tracker_boolean_variable"]
-  tracker_elements = local.m_177["tracker_elements"]
-  tracker_name = local.m_177["tracker_name"]
-  tracker_name_variable = local.m_177["tracker_name_variable"]
+  tracker_elements         = local.m_177["tracker_elements"]
+  tracker_name             = local.m_177["tracker_name"]
+  tracker_name_variable    = local.m_177["tracker_name_variable"]
 }

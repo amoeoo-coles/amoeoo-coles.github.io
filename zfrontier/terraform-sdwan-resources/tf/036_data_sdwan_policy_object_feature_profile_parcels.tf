@@ -8,10 +8,10 @@ locals {
 }
 
 data "sdwan_policy_object_feature_profile_parcels" "n036" {
-  created_by = local.m_036["created_by"]
+  created_by         = local.m_036["created_by"]
   feature_profile_id = local.m_036["feature_profile_id"]
-  parcel_names = local.m_036["parcel_names"]
-  parcel_type = local.m_036["parcel_type"]
+  parcel_names       = local.m_036["parcel_names"]
+  parcel_type        = local.m_036["parcel_type"]
 }
 
 output "n036_data_sdwan_policy_object_feature_profile_parcels_id" {

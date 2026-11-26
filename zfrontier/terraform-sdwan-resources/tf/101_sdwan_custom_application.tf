@@ -8,13 +8,13 @@ locals {
 }
 
 resource "sdwan_custom_application" "n101" {
-  app_name = local.m_101["app_name"]
+  app_name           = local.m_101["app_name"]
   application_family = local.m_101["application_family"]
-  application_group = local.m_101["application_group"]
+  application_group  = local.m_101["application_group"]
   business_relevance = local.m_101["business_relevance"]
-  endpoint_type = local.m_101["endpoint_type"]
-  endpoint_value = local.m_101["endpoint_value"]
-  l3l4 = local.m_101["l3l4"]
-  server_names = local.m_101["server_names"]
-  traffic_class = local.m_101["traffic_class"]
+  endpoint_type      = local.m_101["endpoint_type"]
+  endpoint_value     = local.m_101["endpoint_value"]
+  l3l4               = local.m_101["l3l4"]
+  server_names       = local.m_101["server_names"]
+  traffic_class      = local.m_101["traffic_class"]
 }

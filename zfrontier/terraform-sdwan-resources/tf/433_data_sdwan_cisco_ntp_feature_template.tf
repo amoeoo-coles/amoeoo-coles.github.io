@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cisco_ntp_feature_template" "n433" {
-  id = local.m_433["id"]
+  id   = local.m_433["id"]
   name = local.m_433["name"]
 }
 

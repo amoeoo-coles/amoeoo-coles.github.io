@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cisco_thousandeyes_feature_template" "n451" {
-  id = local.m_451["id"]
+  id   = local.m_451["id"]
   name = local.m_451["name"]
 }
 

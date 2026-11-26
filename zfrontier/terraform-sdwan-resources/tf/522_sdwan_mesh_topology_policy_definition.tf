@@ -8,9 +8,9 @@ locals {
 }
 
 resource "sdwan_mesh_topology_policy_definition" "n522" {
-  description = local.m_522["description"]
-  name = local.m_522["name"]
-  regions = local.m_522["regions"]
-  vpn_list_id = local.m_522["vpn_list_id"]
+  description      = local.m_522["description"]
+  name             = local.m_522["name"]
+  regions          = local.m_522["regions"]
+  vpn_list_id      = local.m_522["vpn_list_id"]
   vpn_list_version = local.m_522["vpn_list_version"]
 }

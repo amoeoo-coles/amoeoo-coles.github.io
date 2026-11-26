@@ -8,17 +8,17 @@ locals {
 }
 
 resource "sdwan_transport_cellular_controller_feature" "n161" {
-  cellular_id = local.m_161["cellular_id"]
-  cellular_id_variable = local.m_161["cellular_id_variable"]
-  description = local.m_161["description"]
-  feature_profile_id = local.m_161["feature_profile_id"]
-  firmware_auto_sim = local.m_161["firmware_auto_sim"]
-  firmware_auto_sim_variable = local.m_161["firmware_auto_sim_variable"]
-  name = local.m_161["name"]
-  primary_sim_slot = local.m_161["primary_sim_slot"]
-  primary_sim_slot_variable = local.m_161["primary_sim_slot_variable"]
-  sim_failover_retries = local.m_161["sim_failover_retries"]
+  cellular_id                   = local.m_161["cellular_id"]
+  cellular_id_variable          = local.m_161["cellular_id_variable"]
+  description                   = local.m_161["description"]
+  feature_profile_id            = local.m_161["feature_profile_id"]
+  firmware_auto_sim             = local.m_161["firmware_auto_sim"]
+  firmware_auto_sim_variable    = local.m_161["firmware_auto_sim_variable"]
+  name                          = local.m_161["name"]
+  primary_sim_slot              = local.m_161["primary_sim_slot"]
+  primary_sim_slot_variable     = local.m_161["primary_sim_slot_variable"]
+  sim_failover_retries          = local.m_161["sim_failover_retries"]
   sim_failover_retries_variable = local.m_161["sim_failover_retries_variable"]
-  sim_failover_timeout = local.m_161["sim_failover_timeout"]
+  sim_failover_timeout          = local.m_161["sim_failover_timeout"]
   sim_failover_timeout_variable = local.m_161["sim_failover_timeout_variable"]
 }

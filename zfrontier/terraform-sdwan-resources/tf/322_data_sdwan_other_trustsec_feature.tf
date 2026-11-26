@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_other_trustsec_feature" "n322" {
   feature_profile_id = local.m_322["feature_profile_id"]
-  id = local.m_322["id"]
-  name = local.m_322["name"]
+  id                 = local.m_322["id"]
+  name               = local.m_322["name"]
 }
 
 output "n322_data_sdwan_other_trustsec_feature_id" {

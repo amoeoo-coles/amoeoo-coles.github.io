@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_policy_object_mirror" "n042" {
   feature_profile_id = local.m_042["feature_profile_id"]
-  id = local.m_042["id"]
-  name = local.m_042["name"]
+  id                 = local.m_042["id"]
+  name               = local.m_042["name"]
 }
 
 output "n042_data_sdwan_policy_object_mirror_id" {

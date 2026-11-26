@@ -9,5 +9,5 @@ locals {
 
 resource "sdwan_allow_url_list_policy_object" "n346" {
   entries = local.m_346["entries"]
-  name = local.m_346["name"]
+  name    = local.m_346["name"]
 }

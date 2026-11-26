@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_service_switchport_feature" "n298" {
   feature_profile_id = local.m_298["feature_profile_id"]
-  id = local.m_298["id"]
-  name = local.m_298["name"]
+  id                 = local.m_298["id"]
+  name               = local.m_298["name"]
 }
 
 output "n298_data_sdwan_service_switchport_feature_id" {

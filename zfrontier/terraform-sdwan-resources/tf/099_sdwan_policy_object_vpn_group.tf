@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_policy_object_vpn_group" "n099" {
-  description = local.m_099["description"]
-  entries = local.m_099["entries"]
+  description        = local.m_099["description"]
+  entries            = local.m_099["entries"]
   feature_profile_id = local.m_099["feature_profile_id"]
-  name = local.m_099["name"]
+  name               = local.m_099["name"]
 }

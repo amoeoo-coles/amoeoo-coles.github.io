@@ -8,9 +8,9 @@ locals {
 }
 
 resource "sdwan_policy_group" "n328" {
-  description = local.m_328["description"]
+  description         = local.m_328["description"]
   feature_profile_ids = local.m_328["feature_profile_ids"]
-  name = local.m_328["name"]
-  policy_versions = local.m_328["policy_versions"]
-  solution = local.m_328["solution"]
+  name                = local.m_328["name"]
+  policy_versions     = local.m_328["policy_versions"]
+  solution            = local.m_328["solution"]
 }

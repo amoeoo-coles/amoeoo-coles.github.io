@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cisco_banner_feature_template" "n423" {
-  id = local.m_423["id"]
+  id   = local.m_423["id"]
   name = local.m_423["name"]
 }
 

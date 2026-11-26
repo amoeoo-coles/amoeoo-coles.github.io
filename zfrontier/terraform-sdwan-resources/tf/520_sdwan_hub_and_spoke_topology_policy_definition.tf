@@ -8,9 +8,9 @@ locals {
 }
 
 resource "sdwan_hub_and_spoke_topology_policy_definition" "n520" {
-  description = local.m_520["description"]
-  name = local.m_520["name"]
-  topologies = local.m_520["topologies"]
-  vpn_list_id = local.m_520["vpn_list_id"]
+  description      = local.m_520["description"]
+  name             = local.m_520["name"]
+  topologies       = local.m_520["topologies"]
+  vpn_list_id      = local.m_520["vpn_list_id"]
   vpn_list_version = local.m_520["vpn_list_version"]
 }

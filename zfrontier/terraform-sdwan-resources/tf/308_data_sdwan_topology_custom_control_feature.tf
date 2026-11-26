@@ -9,7 +9,7 @@ locals {
 
 data "sdwan_topology_custom_control_feature" "n308" {
   feature_profile_id = local.m_308["feature_profile_id"]
-  id = local.m_308["id"]
+  id                 = local.m_308["id"]
 }
 
 output "n308_data_sdwan_topology_custom_control_feature_id" {

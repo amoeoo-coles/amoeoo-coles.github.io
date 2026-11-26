@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cedge_multicast_feature_template" "n413" {
-  id = local.m_413["id"]
+  id   = local.m_413["id"]
   name = local.m_413["name"]
 }
 

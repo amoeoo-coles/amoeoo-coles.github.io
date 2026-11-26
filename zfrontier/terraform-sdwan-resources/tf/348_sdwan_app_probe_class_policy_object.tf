@@ -9,6 +9,6 @@ locals {
 
 resource "sdwan_app_probe_class_policy_object" "n348" {
   forwarding_class = local.m_348["forwarding_class"]
-  mappings = local.m_348["mappings"]
-  name = local.m_348["name"]
+  mappings         = local.m_348["mappings"]
+  name             = local.m_348["name"]
 }

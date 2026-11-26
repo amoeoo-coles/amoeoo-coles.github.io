@@ -8,7 +8,7 @@ locals {
 }
 
 resource "sdwan_service_lan_vpn_feature_associate_routing_eigrp_feature" "n253" {
-  feature_profile_id = local.m_253["feature_profile_id"]
-  service_lan_vpn_feature_id = local.m_253["service_lan_vpn_feature_id"]
+  feature_profile_id               = local.m_253["feature_profile_id"]
+  service_lan_vpn_feature_id       = local.m_253["service_lan_vpn_feature_id"]
   service_routing_eigrp_feature_id = local.m_253["service_routing_eigrp_feature_id"]
 }

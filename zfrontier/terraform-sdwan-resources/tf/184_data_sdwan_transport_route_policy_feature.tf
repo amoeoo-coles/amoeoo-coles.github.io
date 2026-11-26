@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_transport_route_policy_feature" "n184" {
   feature_profile_id = local.m_184["feature_profile_id"]
-  id = local.m_184["id"]
-  name = local.m_184["name"]
+  id                 = local.m_184["id"]
+  name               = local.m_184["name"]
 }
 
 output "n184_data_sdwan_transport_route_policy_feature_id" {

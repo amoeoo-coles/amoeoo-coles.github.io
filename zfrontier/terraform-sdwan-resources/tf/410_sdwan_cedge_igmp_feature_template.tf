@@ -8,8 +8,8 @@ locals {
 }
 
 resource "sdwan_cedge_igmp_feature_template" "n410" {
-  description = local.m_410["description"]
+  description  = local.m_410["description"]
   device_types = local.m_410["device_types"]
-  interfaces = local.m_410["interfaces"]
-  name = local.m_410["name"]
+  interfaces   = local.m_410["interfaces"]
+  name         = local.m_410["name"]
 }

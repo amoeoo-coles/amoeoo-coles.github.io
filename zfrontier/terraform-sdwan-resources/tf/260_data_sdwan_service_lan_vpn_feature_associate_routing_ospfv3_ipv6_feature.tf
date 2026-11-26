@@ -8,8 +8,8 @@ locals {
 }
 
 data "sdwan_service_lan_vpn_feature_associate_routing_ospfv3_ipv6_feature" "n260" {
-  feature_profile_id = local.m_260["feature_profile_id"]
-  id = local.m_260["id"]
+  feature_profile_id         = local.m_260["feature_profile_id"]
+  id                         = local.m_260["id"]
   service_lan_vpn_feature_id = local.m_260["service_lan_vpn_feature_id"]
 }
 

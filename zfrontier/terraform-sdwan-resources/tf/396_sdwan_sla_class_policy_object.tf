@@ -8,14 +8,14 @@ locals {
 }
 
 resource "sdwan_sla_class_policy_object" "n396" {
-  app_probe_class_id = local.m_396["app_probe_class_id"]
-  app_probe_class_version = local.m_396["app_probe_class_version"]
+  app_probe_class_id            = local.m_396["app_probe_class_id"]
+  app_probe_class_version       = local.m_396["app_probe_class_version"]
   fallback_best_tunnel_criteria = local.m_396["fallback_best_tunnel_criteria"]
-  fallback_best_tunnel_jitter = local.m_396["fallback_best_tunnel_jitter"]
-  fallback_best_tunnel_latency = local.m_396["fallback_best_tunnel_latency"]
-  fallback_best_tunnel_loss = local.m_396["fallback_best_tunnel_loss"]
-  jitter = local.m_396["jitter"]
-  latency = local.m_396["latency"]
-  loss = local.m_396["loss"]
-  name = local.m_396["name"]
+  fallback_best_tunnel_jitter   = local.m_396["fallback_best_tunnel_jitter"]
+  fallback_best_tunnel_latency  = local.m_396["fallback_best_tunnel_latency"]
+  fallback_best_tunnel_loss     = local.m_396["fallback_best_tunnel_loss"]
+  jitter                        = local.m_396["jitter"]
+  latency                       = local.m_396["latency"]
+  loss                          = local.m_396["loss"]
+  name                          = local.m_396["name"]
 }

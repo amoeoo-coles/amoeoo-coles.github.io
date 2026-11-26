@@ -9,5 +9,5 @@ locals {
 
 resource "sdwan_dns_security_feature_profile" "n107" {
   description = local.m_107["description"]
-  name = local.m_107["name"]
+  name        = local.m_107["name"]
 }

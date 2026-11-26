@@ -8,9 +8,9 @@ locals {
 }
 
 data "sdwan_transport_wan_vpn_interface_dsl_ipoe_feature" "n216" {
-  feature_profile_id = local.m_216["feature_profile_id"]
-  id = local.m_216["id"]
-  name = local.m_216["name"]
+  feature_profile_id           = local.m_216["feature_profile_id"]
+  id                           = local.m_216["id"]
+  name                         = local.m_216["name"]
   transport_wan_vpn_feature_id = local.m_216["transport_wan_vpn_feature_id"]
 }
 

@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_service_route_policy_feature" "n286" {
   feature_profile_id = local.m_286["feature_profile_id"]
-  id = local.m_286["id"]
-  name = local.m_286["name"]
+  id                 = local.m_286["id"]
+  name               = local.m_286["name"]
 }
 
 output "n286_data_sdwan_service_route_policy_feature_id" {

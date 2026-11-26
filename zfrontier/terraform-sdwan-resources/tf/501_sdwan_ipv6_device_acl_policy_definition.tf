@@ -9,7 +9,7 @@ locals {
 
 resource "sdwan_ipv6_device_acl_policy_definition" "n501" {
   default_action = local.m_501["default_action"]
-  description = local.m_501["description"]
-  name = local.m_501["name"]
-  sequences = local.m_501["sequences"]
+  description    = local.m_501["description"]
+  name           = local.m_501["name"]
+  sequences      = local.m_501["sequences"]
 }

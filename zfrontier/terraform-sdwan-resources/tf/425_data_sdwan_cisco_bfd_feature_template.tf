@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cisco_bfd_feature_template" "n425" {
-  id = local.m_425["id"]
+  id   = local.m_425["id"]
   name = local.m_425["name"]
 }
 

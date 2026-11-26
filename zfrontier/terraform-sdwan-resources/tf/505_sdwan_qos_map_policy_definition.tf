@@ -8,7 +8,7 @@ locals {
 }
 
 resource "sdwan_qos_map_policy_definition" "n505" {
-  description = local.m_505["description"]
-  name = local.m_505["name"]
+  description    = local.m_505["description"]
+  name           = local.m_505["name"]
   qos_schedulers = local.m_505["qos_schedulers"]
 }

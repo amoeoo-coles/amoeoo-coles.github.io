@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_service_appqoe_feature" "n238" {
   feature_profile_id = local.m_238["feature_profile_id"]
-  id = local.m_238["id"]
-  name = local.m_238["name"]
+  id                 = local.m_238["id"]
+  name               = local.m_238["name"]
 }
 
 output "n238_data_sdwan_service_appqoe_feature_id" {

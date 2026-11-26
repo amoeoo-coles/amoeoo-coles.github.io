@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_gps_feature_template" "n469" {
-  id = local.m_469["id"]
+  id   = local.m_469["id"]
   name = local.m_469["name"]
 }
 

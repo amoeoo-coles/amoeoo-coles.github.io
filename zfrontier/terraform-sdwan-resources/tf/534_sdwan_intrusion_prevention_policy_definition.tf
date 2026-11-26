@@ -8,15 +8,15 @@ locals {
 }
 
 resource "sdwan_intrusion_prevention_policy_definition" "n534" {
-  custom_signature = local.m_534["custom_signature"]
-  description = local.m_534["description"]
-  inspection_mode = local.m_534["inspection_mode"]
-  ips_signature_list_id = local.m_534["ips_signature_list_id"]
+  custom_signature           = local.m_534["custom_signature"]
+  description                = local.m_534["description"]
+  inspection_mode            = local.m_534["inspection_mode"]
+  ips_signature_list_id      = local.m_534["ips_signature_list_id"]
   ips_signature_list_version = local.m_534["ips_signature_list_version"]
-  log_level = local.m_534["log_level"]
-  logging = local.m_534["logging"]
-  mode = local.m_534["mode"]
-  name = local.m_534["name"]
-  signature_set = local.m_534["signature_set"]
-  target_vpns = local.m_534["target_vpns"]
+  log_level                  = local.m_534["log_level"]
+  logging                    = local.m_534["logging"]
+  mode                       = local.m_534["mode"]
+  name                       = local.m_534["name"]
+  signature_set              = local.m_534["signature_set"]
+  target_vpns                = local.m_534["target_vpns"]
 }

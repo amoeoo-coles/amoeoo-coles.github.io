@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cisco_omp_feature_template" "n435" {
-  id = local.m_435["id"]
+  id   = local.m_435["id"]
   name = local.m_435["name"]
 }
 

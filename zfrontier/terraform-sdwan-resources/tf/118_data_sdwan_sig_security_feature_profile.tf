@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_sig_security_feature_profile" "n118" {
-  id = local.m_118["id"]
+  id   = local.m_118["id"]
   name = local.m_118["name"]
 }
 

@@ -8,9 +8,9 @@ locals {
 }
 
 data "sdwan_service_lan_vpn_interface_ethernet_feature" "n262" {
-  feature_profile_id = local.m_262["feature_profile_id"]
-  id = local.m_262["id"]
-  name = local.m_262["name"]
+  feature_profile_id         = local.m_262["feature_profile_id"]
+  id                         = local.m_262["id"]
+  name                       = local.m_262["name"]
   service_lan_vpn_feature_id = local.m_262["service_lan_vpn_feature_id"]
 }
 

@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cisco_security_feature_template" "n443" {
-  id = local.m_443["id"]
+  id   = local.m_443["id"]
   name = local.m_443["name"]
 }
 

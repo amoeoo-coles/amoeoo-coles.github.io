@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_policy_object_security_zone" "n080" {
   feature_profile_id = local.m_080["feature_profile_id"]
-  id = local.m_080["id"]
-  name = local.m_080["name"]
+  id                 = local.m_080["id"]
+  name               = local.m_080["name"]
 }
 
 output "n080_data_sdwan_policy_object_security_zone_id" {

@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_policy_object_vpn_group" "n100" {
   feature_profile_id = local.m_100["feature_profile_id"]
-  id = local.m_100["id"]
-  name = local.m_100["name"]
+  id                 = local.m_100["id"]
+  name               = local.m_100["name"]
 }
 
 output "n100_data_sdwan_policy_object_vpn_group_id" {

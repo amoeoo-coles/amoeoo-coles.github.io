@@ -9,8 +9,8 @@ locals {
 
 data "sdwan_policy_object_unified_intrusion_prevention" "n092" {
   feature_profile_id = local.m_092["feature_profile_id"]
-  id = local.m_092["id"]
-  name = local.m_092["name"]
+  id                 = local.m_092["id"]
+  name               = local.m_092["name"]
 }
 
 output "n092_data_sdwan_policy_object_unified_intrusion_prevention_id" {

@@ -8,7 +8,7 @@ locals {
 }
 
 resource "sdwan_mirror_policy_object" "n382" {
-  name = local.m_382["name"]
+  name                  = local.m_382["name"]
   remote_destination_ip = local.m_382["remote_destination_ip"]
-  source_ip = local.m_382["source_ip"]
+  source_ip             = local.m_382["source_ip"]
 }

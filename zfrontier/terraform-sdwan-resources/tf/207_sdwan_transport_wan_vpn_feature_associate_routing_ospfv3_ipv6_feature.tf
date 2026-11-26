@@ -8,7 +8,7 @@ locals {
 }
 
 resource "sdwan_transport_wan_vpn_feature_associate_routing_ospfv3_ipv6_feature" "n207" {
-  feature_profile_id = local.m_207["feature_profile_id"]
+  feature_profile_id                       = local.m_207["feature_profile_id"]
   transport_routing_ospfv3_ipv6_feature_id = local.m_207["transport_routing_ospfv3_ipv6_feature_id"]
-  transport_wan_vpn_feature_id = local.m_207["transport_wan_vpn_feature_id"]
+  transport_wan_vpn_feature_id             = local.m_207["transport_wan_vpn_feature_id"]
 }

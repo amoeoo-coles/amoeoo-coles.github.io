@@ -8,7 +8,7 @@ locals {
 }
 
 data "sdwan_cisco_trustsec_feature_template" "n453" {
-  id = local.m_453["id"]
+  id   = local.m_453["id"]
   name = local.m_453["name"]
 }
 

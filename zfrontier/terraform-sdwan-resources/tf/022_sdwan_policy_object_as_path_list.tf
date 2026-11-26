@@ -8,9 +8,9 @@ locals {
 }
 
 resource "sdwan_policy_object_as_path_list" "n022" {
-  as_path_list_id = local.m_022["as_path_list_id"]
-  description = local.m_022["description"]
-  entries = local.m_022["entries"]
+  as_path_list_id    = local.m_022["as_path_list_id"]
+  description        = local.m_022["description"]
+  entries            = local.m_022["entries"]
   feature_profile_id = local.m_022["feature_profile_id"]
-  name = local.m_022["name"]
+  name               = local.m_022["name"]
 }

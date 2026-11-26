@@ -9,6 +9,6 @@ locals {
 
 resource "sdwan_rewrite_rule_policy_definition" "n507" {
   description = local.m_507["description"]
-  name = local.m_507["name"]
-  rules = local.m_507["rules"]
+  name        = local.m_507["name"]
+  rules       = local.m_507["rules"]
 }
