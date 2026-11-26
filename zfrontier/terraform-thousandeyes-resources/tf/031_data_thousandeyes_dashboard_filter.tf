@@ -8,7 +8,7 @@ locals {
 }
 
 data "thousandeyes_dashboard_filter" "n031" {
-  id   = local.m_031["id"]
+  id = local.m_031["id"]
   name = local.m_031["name"]
 }
 

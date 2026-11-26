@@ -9,8 +9,8 @@ locals {
 
 resource "thousandeyes_endpoint_agent" "n007" {
   deletion_protection = local.m_007["deletion_protection"]
-  id                  = local.m_007["id"]
-  license_type        = local.m_007["license_type"]
-  name                = local.m_007["name"]
-  status              = local.m_007["status"]
+  id = local.m_007["id"]
+  license_type = local.m_007["license_type"]
+  name = local.m_007["name"]
+  status = local.m_007["status"]
 }

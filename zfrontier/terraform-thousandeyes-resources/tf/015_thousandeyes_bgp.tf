@@ -8,15 +8,15 @@ locals {
 }
 
 resource "thousandeyes_bgp" "n015" {
-  alert_rules              = local.m_015["alert_rules"]
-  alerts_enabled           = local.m_015["alerts_enabled"]
-  description              = local.m_015["description"]
-  enabled                  = local.m_015["enabled"]
-  id                       = local.m_015["id"]
+  alert_rules = local.m_015["alert_rules"]
+  alerts_enabled = local.m_015["alerts_enabled"]
+  description = local.m_015["description"]
+  enabled = local.m_015["enabled"]
+  id = local.m_015["id"]
   include_covered_prefixes = local.m_015["include_covered_prefixes"]
-  monitors                 = local.m_015["monitors"]
-  prefix                   = local.m_015["prefix"]
-  shared_with_accounts     = local.m_015["shared_with_accounts"]
-  test_name                = local.m_015["test_name"]
-  use_public_bgp           = local.m_015["use_public_bgp"]
+  monitors = local.m_015["monitors"]
+  prefix = local.m_015["prefix"]
+  shared_with_accounts = local.m_015["shared_with_accounts"]
+  test_name = local.m_015["test_name"]
+  use_public_bgp = local.m_015["use_public_bgp"]
 }

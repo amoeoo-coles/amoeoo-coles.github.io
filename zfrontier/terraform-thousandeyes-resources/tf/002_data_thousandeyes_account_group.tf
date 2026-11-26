@@ -8,7 +8,7 @@ locals {
 }
 
 data "thousandeyes_account_group" "n002" {
-  id   = local.m_002["id"]
+  id = local.m_002["id"]
   name = local.m_002["name"]
 }
 

@@ -9,6 +9,6 @@ locals {
 
 resource "thousandeyes_account_group" "n001" {
   account_group_name = local.m_001["account_group_name"]
-  agents             = local.m_001["agents"]
-  id                 = local.m_001["id"]
+  agents = local.m_001["agents"]
+  id = local.m_001["id"]
 }
