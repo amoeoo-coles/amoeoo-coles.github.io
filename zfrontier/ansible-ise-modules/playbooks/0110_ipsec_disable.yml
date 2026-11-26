@@ -1,0 +1,35 @@
+---
+# Sample playbook for cisco.ise.ipsec_disable (cisco.ise 3.3.0)
+# Build order: 110
+# Resource module for Ipsec Disable
+# Reads ../models/ipsec_disable.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/ipsec_disable_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags ipsec_disable.
+
+- name: "0110 ipsec_disable"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/ipsec_disable.yml
+  tasks:
+    - name: Run ipsec_disable from its model
+      cisco.ise.ipsec_disable:
+        hostName: "{{ ipsec_disable.hostName if ipsec_disable.hostName is not none else omit }}"
+        ise_client_cert: "{{ ipsec_disable.ise_client_cert if ipsec_disable.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ ipsec_disable.ise_client_key if ipsec_disable.ise_client_key is not none else omit }}"
+        ise_debug: "{{ ipsec_disable.ise_debug if ipsec_disable.ise_debug is not none else omit }}"
+        ise_hostname: "{{ ipsec_disable.ise_hostname if ipsec_disable.ise_hostname is not none else omit }}"
+        ise_password: "{{ ipsec_disable.ise_password if ipsec_disable.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ ipsec_disable.ise_single_request_timeout if ipsec_disable.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ ipsec_disable.ise_username if ipsec_disable.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ ipsec_disable.ise_uses_api_gateway if ipsec_disable.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ ipsec_disable.ise_uses_csrf_token if ipsec_disable.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ ipsec_disable.ise_verify if ipsec_disable.ise_verify is not none else omit }}"
+        ise_version: "{{ ipsec_disable.ise_version if ipsec_disable.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ ipsec_disable.ise_wait_on_rate_limit if ipsec_disable.ise_wait_on_rate_limit is not none else omit }}"
+        nadIp: "{{ ipsec_disable.nadIp if ipsec_disable.nadIp is not none else omit }}"
+      register: ipsec_disable_result
+      tags:
+        - never
+        - ipsec_disable

@@ -1,0 +1,36 @@
+---
+# Sample playbook for cisco.ise.guest_ssid (cisco.ise 3.3.0)
+# Build order: 177
+# Resource module for Guestssid
+# Reads ../models/guest_ssid.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/guest_ssid_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags guest_ssid.
+
+- name: "0177 guest_ssid"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/guest_ssid.yml
+  tasks:
+    - name: Run guest_ssid from its model
+      cisco.ise.guest_ssid:
+        description: "{{ guest_ssid.description if guest_ssid.description is not none else omit }}"
+        id: "{{ guest_ssid.id if guest_ssid.id is not none else omit }}"
+        ise_client_cert: "{{ guest_ssid.ise_client_cert if guest_ssid.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ guest_ssid.ise_client_key if guest_ssid.ise_client_key is not none else omit }}"
+        ise_debug: "{{ guest_ssid.ise_debug if guest_ssid.ise_debug is not none else omit }}"
+        ise_hostname: "{{ guest_ssid.ise_hostname if guest_ssid.ise_hostname is not none else omit }}"
+        ise_password: "{{ guest_ssid.ise_password if guest_ssid.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ guest_ssid.ise_single_request_timeout if guest_ssid.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ guest_ssid.ise_username if guest_ssid.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ guest_ssid.ise_uses_api_gateway if guest_ssid.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ guest_ssid.ise_uses_csrf_token if guest_ssid.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ guest_ssid.ise_verify if guest_ssid.ise_verify is not none else omit }}"
+        ise_version: "{{ guest_ssid.ise_version if guest_ssid.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ guest_ssid.ise_wait_on_rate_limit if guest_ssid.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ guest_ssid.name if guest_ssid.name is not none else omit }}"
+      register: guest_ssid_result
+      tags:
+        - never
+        - guest_ssid

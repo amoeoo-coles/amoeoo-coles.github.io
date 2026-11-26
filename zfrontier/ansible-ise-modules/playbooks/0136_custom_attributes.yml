@@ -1,0 +1,36 @@
+---
+# Sample playbook for cisco.ise.custom_attributes (cisco.ise 3.3.0)
+# Build order: 136
+# Resource module for Custom Attributes
+# Reads ../models/custom_attributes.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/custom_attributes_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags custom_attributes.
+
+- name: "0136 custom_attributes"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/custom_attributes.yml
+  tasks:
+    - name: Run custom_attributes from its model
+      cisco.ise.custom_attributes:
+        attributeName: "{{ custom_attributes.attributeName if custom_attributes.attributeName is not none else omit }}"
+        attributeType: "{{ custom_attributes.attributeType if custom_attributes.attributeType is not none else omit }}"
+        ise_client_cert: "{{ custom_attributes.ise_client_cert if custom_attributes.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ custom_attributes.ise_client_key if custom_attributes.ise_client_key is not none else omit }}"
+        ise_debug: "{{ custom_attributes.ise_debug if custom_attributes.ise_debug is not none else omit }}"
+        ise_hostname: "{{ custom_attributes.ise_hostname if custom_attributes.ise_hostname is not none else omit }}"
+        ise_password: "{{ custom_attributes.ise_password if custom_attributes.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ custom_attributes.ise_single_request_timeout if custom_attributes.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ custom_attributes.ise_username if custom_attributes.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ custom_attributes.ise_uses_api_gateway if custom_attributes.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ custom_attributes.ise_uses_csrf_token if custom_attributes.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ custom_attributes.ise_verify if custom_attributes.ise_verify is not none else omit }}"
+        ise_version: "{{ custom_attributes.ise_version if custom_attributes.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ custom_attributes.ise_wait_on_rate_limit if custom_attributes.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ custom_attributes.name if custom_attributes.name is not none else omit }}"
+      register: custom_attributes_result
+      tags:
+        - never
+        - custom_attributes

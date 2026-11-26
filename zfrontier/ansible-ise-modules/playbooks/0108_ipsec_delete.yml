@@ -1,0 +1,35 @@
+---
+# Sample playbook for cisco.ise.ipsec_delete (cisco.ise 3.3.0)
+# Build order: 108
+# Resource module for Ipsec Delete
+# Reads ../models/ipsec_delete.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/ipsec_delete_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags ipsec_delete.
+
+- name: "0108 ipsec_delete"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/ipsec_delete.yml
+  tasks:
+    - name: Run ipsec_delete from its model
+      cisco.ise.ipsec_delete:
+        hostName: "{{ ipsec_delete.hostName if ipsec_delete.hostName is not none else omit }}"
+        ise_client_cert: "{{ ipsec_delete.ise_client_cert if ipsec_delete.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ ipsec_delete.ise_client_key if ipsec_delete.ise_client_key is not none else omit }}"
+        ise_debug: "{{ ipsec_delete.ise_debug if ipsec_delete.ise_debug is not none else omit }}"
+        ise_hostname: "{{ ipsec_delete.ise_hostname if ipsec_delete.ise_hostname is not none else omit }}"
+        ise_password: "{{ ipsec_delete.ise_password if ipsec_delete.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ ipsec_delete.ise_single_request_timeout if ipsec_delete.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ ipsec_delete.ise_username if ipsec_delete.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ ipsec_delete.ise_uses_api_gateway if ipsec_delete.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ ipsec_delete.ise_uses_csrf_token if ipsec_delete.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ ipsec_delete.ise_verify if ipsec_delete.ise_verify is not none else omit }}"
+        ise_version: "{{ ipsec_delete.ise_version if ipsec_delete.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ ipsec_delete.ise_wait_on_rate_limit if ipsec_delete.ise_wait_on_rate_limit is not none else omit }}"
+        nadIp: "{{ ipsec_delete.nadIp if ipsec_delete.nadIp is not none else omit }}"
+      register: ipsec_delete_result
+      tags:
+        - never
+        - ipsec_delete

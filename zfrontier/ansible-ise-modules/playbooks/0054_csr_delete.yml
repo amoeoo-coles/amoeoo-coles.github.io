@@ -1,0 +1,35 @@
+---
+# Sample playbook for cisco.ise.csr_delete (cisco.ise 3.3.0)
+# Build order: 54
+# Resource module for CSR Delete
+# Reads ../models/csr_delete.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/csr_delete_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags csr_delete.
+
+- name: "0054 csr_delete"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/csr_delete.yml
+  tasks:
+    - name: Run csr_delete from its model
+      cisco.ise.csr_delete:
+        hostName: "{{ csr_delete.hostName if csr_delete.hostName is not none else omit }}"
+        id: "{{ csr_delete.id if csr_delete.id is not none else omit }}"
+        ise_client_cert: "{{ csr_delete.ise_client_cert if csr_delete.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ csr_delete.ise_client_key if csr_delete.ise_client_key is not none else omit }}"
+        ise_debug: "{{ csr_delete.ise_debug if csr_delete.ise_debug is not none else omit }}"
+        ise_hostname: "{{ csr_delete.ise_hostname if csr_delete.ise_hostname is not none else omit }}"
+        ise_password: "{{ csr_delete.ise_password if csr_delete.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ csr_delete.ise_single_request_timeout if csr_delete.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ csr_delete.ise_username if csr_delete.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ csr_delete.ise_uses_api_gateway if csr_delete.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ csr_delete.ise_uses_csrf_token if csr_delete.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ csr_delete.ise_verify if csr_delete.ise_verify is not none else omit }}"
+        ise_version: "{{ csr_delete.ise_version if csr_delete.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ csr_delete.ise_wait_on_rate_limit if csr_delete.ise_wait_on_rate_limit is not none else omit }}"
+      register: csr_delete_result
+      tags:
+        - never
+        - csr_delete

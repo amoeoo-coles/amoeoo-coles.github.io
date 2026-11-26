@@ -1,0 +1,39 @@
+---
+# Sample playbook for cisco.ise.duo_identity_sync (cisco.ise 3.3.0)
+# Build order: 219
+# Resource module for Duo Identity Sync
+# Reads ../models/duo_identity_sync.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/duo_identity_sync_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags duo_identity_sync.
+
+- name: "0219 duo_identity_sync"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/duo_identity_sync.yml
+  tasks:
+    - name: Run duo_identity_sync from its model
+      cisco.ise.duo_identity_sync:
+        adGroups: "{{ (duo_identity_sync.adGroups | cat_strip_nulls) if (duo_identity_sync.adGroups | cat_strip_nulls) is not none else omit }}"
+        configurations: "{{ (duo_identity_sync.configurations | cat_strip_nulls) if (duo_identity_sync.configurations | cat_strip_nulls) is not none else omit }}"
+        ise_client_cert: "{{ duo_identity_sync.ise_client_cert if duo_identity_sync.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ duo_identity_sync.ise_client_key if duo_identity_sync.ise_client_key is not none else omit }}"
+        ise_debug: "{{ duo_identity_sync.ise_debug if duo_identity_sync.ise_debug is not none else omit }}"
+        ise_hostname: "{{ duo_identity_sync.ise_hostname if duo_identity_sync.ise_hostname is not none else omit }}"
+        ise_password: "{{ duo_identity_sync.ise_password if duo_identity_sync.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ duo_identity_sync.ise_single_request_timeout if duo_identity_sync.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ duo_identity_sync.ise_username if duo_identity_sync.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ duo_identity_sync.ise_uses_api_gateway if duo_identity_sync.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ duo_identity_sync.ise_uses_csrf_token if duo_identity_sync.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ duo_identity_sync.ise_verify if duo_identity_sync.ise_verify is not none else omit }}"
+        ise_version: "{{ duo_identity_sync.ise_version if duo_identity_sync.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ duo_identity_sync.ise_wait_on_rate_limit if duo_identity_sync.ise_wait_on_rate_limit is not none else omit }}"
+        lastSync: "{{ duo_identity_sync.lastSync if duo_identity_sync.lastSync is not none else omit }}"
+        syncName: "{{ duo_identity_sync.syncName if duo_identity_sync.syncName is not none else omit }}"
+        syncSchedule: "{{ (duo_identity_sync.syncSchedule | cat_strip_nulls) if (duo_identity_sync.syncSchedule | cat_strip_nulls) is not none else omit }}"
+        syncStatus: "{{ duo_identity_sync.syncStatus if duo_identity_sync.syncStatus is not none else omit }}"
+      register: duo_identity_sync_result
+      tags:
+        - never
+        - duo_identity_sync

@@ -1,0 +1,38 @@
+---
+# Sample playbook for cisco.ise.duo_mfa (cisco.ise 3.3.0)
+# Build order: 224
+# Resource module for Duo Mfa
+# Reads ../models/duo_mfa.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/duo_mfa_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags duo_mfa.
+
+- name: "0224 duo_mfa"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/duo_mfa.yml
+  tasks:
+    - name: Run duo_mfa from its model
+      cisco.ise.duo_mfa:
+        accountConfigurations: "{{ (duo_mfa.accountConfigurations | cat_strip_nulls) if (duo_mfa.accountConfigurations | cat_strip_nulls) is not none else omit }}"
+        connectionName: "{{ duo_mfa.connectionName if duo_mfa.connectionName is not none else omit }}"
+        description: "{{ duo_mfa.description if duo_mfa.description is not none else omit }}"
+        identitySync: "{{ duo_mfa.identitySync if duo_mfa.identitySync is not none else omit }}"
+        ise_client_cert: "{{ duo_mfa.ise_client_cert if duo_mfa.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ duo_mfa.ise_client_key if duo_mfa.ise_client_key is not none else omit }}"
+        ise_debug: "{{ duo_mfa.ise_debug if duo_mfa.ise_debug is not none else omit }}"
+        ise_hostname: "{{ duo_mfa.ise_hostname if duo_mfa.ise_hostname is not none else omit }}"
+        ise_password: "{{ duo_mfa.ise_password if duo_mfa.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ duo_mfa.ise_single_request_timeout if duo_mfa.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ duo_mfa.ise_username if duo_mfa.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ duo_mfa.ise_uses_api_gateway if duo_mfa.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ duo_mfa.ise_uses_csrf_token if duo_mfa.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ duo_mfa.ise_verify if duo_mfa.ise_verify is not none else omit }}"
+        ise_version: "{{ duo_mfa.ise_version if duo_mfa.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ duo_mfa.ise_wait_on_rate_limit if duo_mfa.ise_wait_on_rate_limit is not none else omit }}"
+        type: "{{ duo_mfa.type if duo_mfa.type is not none else omit }}"
+      register: duo_mfa_result
+      tags:
+        - never
+        - duo_mfa

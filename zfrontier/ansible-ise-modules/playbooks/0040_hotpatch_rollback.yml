@@ -1,0 +1,36 @@
+---
+# Sample playbook for cisco.ise.hotpatch_rollback (cisco.ise 3.3.0)
+# Build order: 40
+# Resource module for Hotpatch Rollback
+# Reads ../models/hotpatch_rollback.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/hotpatch_rollback_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags hotpatch_rollback.
+
+- name: "0040 hotpatch_rollback"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/hotpatch_rollback.yml
+  tasks:
+    - name: Run hotpatch_rollback from its model
+      cisco.ise.hotpatch_rollback:
+        hotpatchName: "{{ hotpatch_rollback.hotpatchName if hotpatch_rollback.hotpatchName is not none else omit }}"
+        isDirectoryListed: "{{ hotpatch_rollback.isDirectoryListed if hotpatch_rollback.isDirectoryListed is not none else omit }}"
+        ise_client_cert: "{{ hotpatch_rollback.ise_client_cert if hotpatch_rollback.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ hotpatch_rollback.ise_client_key if hotpatch_rollback.ise_client_key is not none else omit }}"
+        ise_debug: "{{ hotpatch_rollback.ise_debug if hotpatch_rollback.ise_debug is not none else omit }}"
+        ise_hostname: "{{ hotpatch_rollback.ise_hostname if hotpatch_rollback.ise_hostname is not none else omit }}"
+        ise_password: "{{ hotpatch_rollback.ise_password if hotpatch_rollback.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ hotpatch_rollback.ise_single_request_timeout if hotpatch_rollback.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ hotpatch_rollback.ise_username if hotpatch_rollback.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ hotpatch_rollback.ise_uses_api_gateway if hotpatch_rollback.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ hotpatch_rollback.ise_uses_csrf_token if hotpatch_rollback.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ hotpatch_rollback.ise_verify if hotpatch_rollback.ise_verify is not none else omit }}"
+        ise_version: "{{ hotpatch_rollback.ise_version if hotpatch_rollback.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ hotpatch_rollback.ise_wait_on_rate_limit if hotpatch_rollback.ise_wait_on_rate_limit is not none else omit }}"
+        repositoryName: "{{ hotpatch_rollback.repositoryName if hotpatch_rollback.repositoryName is not none else omit }}"
+      register: hotpatch_rollback_result
+      tags:
+        - never
+        - hotpatch_rollback

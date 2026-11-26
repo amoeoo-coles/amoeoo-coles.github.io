@@ -1,0 +1,36 @@
+---
+# Sample playbook for cisco.ise.patch_install (cisco.ise 3.3.0)
+# Build order: 36
+# Resource module for Patch Install
+# Reads ../models/patch_install.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/patch_install_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags patch_install.
+
+- name: "0036 patch_install"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/patch_install.yml
+  tasks:
+    - name: Run patch_install from its model
+      cisco.ise.patch_install:
+        isDirectoryListed: "{{ patch_install.isDirectoryListed if patch_install.isDirectoryListed is not none else omit }}"
+        ise_client_cert: "{{ patch_install.ise_client_cert if patch_install.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ patch_install.ise_client_key if patch_install.ise_client_key is not none else omit }}"
+        ise_debug: "{{ patch_install.ise_debug if patch_install.ise_debug is not none else omit }}"
+        ise_hostname: "{{ patch_install.ise_hostname if patch_install.ise_hostname is not none else omit }}"
+        ise_password: "{{ patch_install.ise_password if patch_install.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ patch_install.ise_single_request_timeout if patch_install.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ patch_install.ise_username if patch_install.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ patch_install.ise_uses_api_gateway if patch_install.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ patch_install.ise_uses_csrf_token if patch_install.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ patch_install.ise_verify if patch_install.ise_verify is not none else omit }}"
+        ise_version: "{{ patch_install.ise_version if patch_install.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ patch_install.ise_wait_on_rate_limit if patch_install.ise_wait_on_rate_limit is not none else omit }}"
+        patchName: "{{ patch_install.patchName if patch_install.patchName is not none else omit }}"
+        repositoryName: "{{ patch_install.repositoryName if patch_install.repositoryName is not none else omit }}"
+      register: patch_install_result
+      tags:
+        - never
+        - patch_install

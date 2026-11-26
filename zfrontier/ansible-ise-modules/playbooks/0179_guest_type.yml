@@ -1,0 +1,42 @@
+---
+# Sample playbook for cisco.ise.guest_type (cisco.ise 3.3.0)
+# Build order: 179
+# Resource module for Guesttype
+# Reads ../models/guest_type.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/guest_type_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags guest_type.
+
+- name: "0179 guest_type"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/guest_type.yml
+  tasks:
+    - name: Run guest_type from its model
+      cisco.ise.guest_type:
+        accessTime: "{{ (guest_type.accessTime | cat_strip_nulls) if (guest_type.accessTime | cat_strip_nulls) is not none else omit }}"
+        allowDynamicIdentityGroups: "{{ guest_type.allowDynamicIdentityGroups if guest_type.allowDynamicIdentityGroups is not none else omit }}"
+        description: "{{ guest_type.description if guest_type.description is not none else omit }}"
+        dynamicGroups: "{{ (guest_type.dynamicGroups | cat_strip_nulls) if (guest_type.dynamicGroups | cat_strip_nulls) is not none else omit }}"
+        expirationNotification: "{{ (guest_type.expirationNotification | cat_strip_nulls) if (guest_type.expirationNotification | cat_strip_nulls) is not none else omit }}"
+        id: "{{ guest_type.id if guest_type.id is not none else omit }}"
+        ise_client_cert: "{{ guest_type.ise_client_cert if guest_type.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ guest_type.ise_client_key if guest_type.ise_client_key is not none else omit }}"
+        ise_debug: "{{ guest_type.ise_debug if guest_type.ise_debug is not none else omit }}"
+        ise_hostname: "{{ guest_type.ise_hostname if guest_type.ise_hostname is not none else omit }}"
+        ise_password: "{{ guest_type.ise_password if guest_type.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ guest_type.ise_single_request_timeout if guest_type.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ guest_type.ise_username if guest_type.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ guest_type.ise_uses_api_gateway if guest_type.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ guest_type.ise_uses_csrf_token if guest_type.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ guest_type.ise_verify if guest_type.ise_verify is not none else omit }}"
+        ise_version: "{{ guest_type.ise_version if guest_type.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ guest_type.ise_wait_on_rate_limit if guest_type.ise_wait_on_rate_limit is not none else omit }}"
+        loginOptions: "{{ (guest_type.loginOptions | cat_strip_nulls) if (guest_type.loginOptions | cat_strip_nulls) is not none else omit }}"
+        name: "{{ guest_type.name if guest_type.name is not none else omit }}"
+        sponsorGroups: "{{ (guest_type.sponsorGroups | cat_strip_nulls) if (guest_type.sponsorGroups | cat_strip_nulls) is not none else omit }}"
+      register: guest_type_result
+      tags:
+        - never
+        - guest_type

@@ -1,0 +1,38 @@
+---
+# Sample playbook for cisco.ise.sgtvnvlan (cisco.ise 3.3.0)
+# Build order: 159
+# Resource module for SGtvnvlan
+# Reads ../models/sgtvnvlan.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/sgtvnvlan_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags sgtvnvlan.
+
+- name: "0159 sgtvnvlan"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/sgtvnvlan.yml
+  tasks:
+    - name: Run sgtvnvlan from its model
+      cisco.ise.sgtvnvlan:
+        description: "{{ sgtvnvlan.description if sgtvnvlan.description is not none else omit }}"
+        id: "{{ sgtvnvlan.id if sgtvnvlan.id is not none else omit }}"
+        ise_client_cert: "{{ sgtvnvlan.ise_client_cert if sgtvnvlan.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ sgtvnvlan.ise_client_key if sgtvnvlan.ise_client_key is not none else omit }}"
+        ise_debug: "{{ sgtvnvlan.ise_debug if sgtvnvlan.ise_debug is not none else omit }}"
+        ise_hostname: "{{ sgtvnvlan.ise_hostname if sgtvnvlan.ise_hostname is not none else omit }}"
+        ise_password: "{{ sgtvnvlan.ise_password if sgtvnvlan.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ sgtvnvlan.ise_single_request_timeout if sgtvnvlan.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ sgtvnvlan.ise_username if sgtvnvlan.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ sgtvnvlan.ise_uses_api_gateway if sgtvnvlan.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ sgtvnvlan.ise_uses_csrf_token if sgtvnvlan.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ sgtvnvlan.ise_verify if sgtvnvlan.ise_verify is not none else omit }}"
+        ise_version: "{{ sgtvnvlan.ise_version if sgtvnvlan.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ sgtvnvlan.ise_wait_on_rate_limit if sgtvnvlan.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ sgtvnvlan.name if sgtvnvlan.name is not none else omit }}"
+        sgtId: "{{ sgtvnvlan.sgtId if sgtvnvlan.sgtId is not none else omit }}"
+        virtualnetworklist: "{{ (sgtvnvlan.virtualnetworklist | cat_strip_nulls) if (sgtvnvlan.virtualnetworklist | cat_strip_nulls) is not none else omit }}"
+      register: sgtvnvlan_result
+      tags:
+        - never
+        - sgtvnvlan

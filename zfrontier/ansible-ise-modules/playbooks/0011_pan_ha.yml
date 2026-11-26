@@ -1,0 +1,38 @@
+---
+# Sample playbook for cisco.ise.pan_ha (cisco.ise 3.3.0)
+# Build order: 11
+# Resource module for Pan Ha
+# Reads ../models/pan_ha.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/pan_ha_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags pan_ha.
+
+- name: "0011 pan_ha"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/pan_ha.yml
+  tasks:
+    - name: Run pan_ha from its model
+      cisco.ise.pan_ha:
+        failedAttempts: "{{ pan_ha.failedAttempts if pan_ha.failedAttempts is not none else omit }}"
+        isEnabled: "{{ pan_ha.isEnabled if pan_ha.isEnabled is not none else omit }}"
+        ise_client_cert: "{{ pan_ha.ise_client_cert if pan_ha.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ pan_ha.ise_client_key if pan_ha.ise_client_key is not none else omit }}"
+        ise_debug: "{{ pan_ha.ise_debug if pan_ha.ise_debug is not none else omit }}"
+        ise_hostname: "{{ pan_ha.ise_hostname if pan_ha.ise_hostname is not none else omit }}"
+        ise_password: "{{ pan_ha.ise_password if pan_ha.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ pan_ha.ise_single_request_timeout if pan_ha.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ pan_ha.ise_username if pan_ha.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ pan_ha.ise_uses_api_gateway if pan_ha.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ pan_ha.ise_uses_csrf_token if pan_ha.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ pan_ha.ise_verify if pan_ha.ise_verify is not none else omit }}"
+        ise_version: "{{ pan_ha.ise_version if pan_ha.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ pan_ha.ise_wait_on_rate_limit if pan_ha.ise_wait_on_rate_limit is not none else omit }}"
+        pollingInterval: "{{ pan_ha.pollingInterval if pan_ha.pollingInterval is not none else omit }}"
+        primaryHealthCheckNode: "{{ pan_ha.primaryHealthCheckNode if pan_ha.primaryHealthCheckNode is not none else omit }}"
+        secondaryHealthCheckNode: "{{ pan_ha.secondaryHealthCheckNode if pan_ha.secondaryHealthCheckNode is not none else omit }}"
+      register: pan_ha_result
+      tags:
+        - never
+        - pan_ha

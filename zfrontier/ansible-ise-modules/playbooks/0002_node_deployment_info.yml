@@ -1,0 +1,32 @@
+---
+# Sample playbook for cisco.ise.node_deployment_info (cisco.ise 3.3.0)
+# Build order: 2
+# Information module for Node Deployment
+# Reads ../models/node_deployment_info.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/node_deployment_info_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+
+- name: "0002 node_deployment_info"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/node_deployment_info.yml
+  tasks:
+    - name: Run node_deployment_info from its model
+      cisco.ise.node_deployment_info:
+        filter: "{{ node_deployment_info.filter if node_deployment_info.filter is not none else omit }}"
+        filterType: "{{ node_deployment_info.filterType if node_deployment_info.filterType is not none else omit }}"
+        hostname: "{{ node_deployment_info.hostname if node_deployment_info.hostname is not none else omit }}"
+        ise_client_cert: "{{ node_deployment_info.ise_client_cert if node_deployment_info.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ node_deployment_info.ise_client_key if node_deployment_info.ise_client_key is not none else omit }}"
+        ise_debug: "{{ node_deployment_info.ise_debug if node_deployment_info.ise_debug is not none else omit }}"
+        ise_hostname: "{{ node_deployment_info.ise_hostname if node_deployment_info.ise_hostname is not none else omit }}"
+        ise_password: "{{ node_deployment_info.ise_password if node_deployment_info.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ node_deployment_info.ise_single_request_timeout if node_deployment_info.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ node_deployment_info.ise_username if node_deployment_info.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ node_deployment_info.ise_uses_api_gateway if node_deployment_info.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ node_deployment_info.ise_uses_csrf_token if node_deployment_info.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ node_deployment_info.ise_verify if node_deployment_info.ise_verify is not none else omit }}"
+        ise_version: "{{ node_deployment_info.ise_version if node_deployment_info.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ node_deployment_info.ise_wait_on_rate_limit if node_deployment_info.ise_wait_on_rate_limit is not none else omit }}"
+      register: node_deployment_info_result

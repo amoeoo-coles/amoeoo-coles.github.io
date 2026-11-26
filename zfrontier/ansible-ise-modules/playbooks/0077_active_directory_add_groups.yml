@@ -1,0 +1,43 @@
+---
+# Sample playbook for cisco.ise.active_directory_add_groups (cisco.ise 3.3.0)
+# Build order: 77
+# Resource module for Active Directory Add Groups
+# Reads ../models/active_directory_add_groups.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/active_directory_add_groups_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags active_directory_add_groups.
+
+- name: "0077 active_directory_add_groups"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/active_directory_add_groups.yml
+  tasks:
+    - name: Run active_directory_add_groups from its model
+      cisco.ise.active_directory_add_groups:
+        ERSActiveDirectoryDomains: "{{ active_directory_add_groups.ERSActiveDirectoryDomains if active_directory_add_groups.ERSActiveDirectoryDomains is not none else omit }}"
+        adAttributes: "{{ active_directory_add_groups.adAttributes if active_directory_add_groups.adAttributes is not none else omit }}"
+        adScopesNames: "{{ active_directory_add_groups.adScopesNames if active_directory_add_groups.adScopesNames is not none else omit }}"
+        adgroups: "{{ (active_directory_add_groups.adgroups | cat_strip_nulls) if (active_directory_add_groups.adgroups | cat_strip_nulls) is not none else omit }}"
+        advancedSettings: "{{ active_directory_add_groups.advancedSettings if active_directory_add_groups.advancedSettings is not none else omit }}"
+        description: "{{ active_directory_add_groups.description if active_directory_add_groups.description is not none else omit }}"
+        domain: "{{ active_directory_add_groups.domain if active_directory_add_groups.domain is not none else omit }}"
+        enableDomainAllowedList: "{{ active_directory_add_groups.enableDomainAllowedList if active_directory_add_groups.enableDomainAllowedList is not none else omit }}"
+        id: "{{ active_directory_add_groups.id if active_directory_add_groups.id is not none else omit }}"
+        ise_client_cert: "{{ active_directory_add_groups.ise_client_cert if active_directory_add_groups.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ active_directory_add_groups.ise_client_key if active_directory_add_groups.ise_client_key is not none else omit }}"
+        ise_debug: "{{ active_directory_add_groups.ise_debug if active_directory_add_groups.ise_debug is not none else omit }}"
+        ise_hostname: "{{ active_directory_add_groups.ise_hostname if active_directory_add_groups.ise_hostname is not none else omit }}"
+        ise_password: "{{ active_directory_add_groups.ise_password if active_directory_add_groups.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ active_directory_add_groups.ise_single_request_timeout if active_directory_add_groups.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ active_directory_add_groups.ise_username if active_directory_add_groups.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ active_directory_add_groups.ise_uses_api_gateway if active_directory_add_groups.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ active_directory_add_groups.ise_uses_csrf_token if active_directory_add_groups.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ active_directory_add_groups.ise_verify if active_directory_add_groups.ise_verify is not none else omit }}"
+        ise_version: "{{ active_directory_add_groups.ise_version if active_directory_add_groups.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ active_directory_add_groups.ise_wait_on_rate_limit if active_directory_add_groups.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ active_directory_add_groups.name if active_directory_add_groups.name is not none else omit }}"
+      register: active_directory_add_groups_result
+      tags:
+        - never
+        - active_directory_add_groups

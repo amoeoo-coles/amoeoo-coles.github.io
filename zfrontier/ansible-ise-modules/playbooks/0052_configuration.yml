@@ -1,0 +1,35 @@
+---
+# Sample playbook for cisco.ise.configuration (cisco.ise 3.3.0)
+# Build order: 52
+# Resource module for Configuration
+# Reads ../models/configuration.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/configuration_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags configuration.
+
+- name: "0052 configuration"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/configuration.yml
+  tasks:
+    - name: Run configuration from its model
+      cisco.ise.configuration:
+        enableEPO: "{{ configuration.enableEPO if configuration.enableEPO is not none else omit }}"
+        enableRCM: "{{ configuration.enableRCM if configuration.enableRCM is not none else omit }}"
+        ise_client_cert: "{{ configuration.ise_client_cert if configuration.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ configuration.ise_client_key if configuration.ise_client_key is not none else omit }}"
+        ise_debug: "{{ configuration.ise_debug if configuration.ise_debug is not none else omit }}"
+        ise_hostname: "{{ configuration.ise_hostname if configuration.ise_hostname is not none else omit }}"
+        ise_password: "{{ configuration.ise_password if configuration.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ configuration.ise_single_request_timeout if configuration.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ configuration.ise_username if configuration.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ configuration.ise_uses_api_gateway if configuration.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ configuration.ise_uses_csrf_token if configuration.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ configuration.ise_verify if configuration.ise_verify is not none else omit }}"
+        ise_version: "{{ configuration.ise_version if configuration.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ configuration.ise_wait_on_rate_limit if configuration.ise_wait_on_rate_limit is not none else omit }}"
+      register: configuration_result
+      tags:
+        - never
+        - configuration

@@ -1,0 +1,39 @@
+---
+# Sample playbook for cisco.ise.idstoresequence (cisco.ise 3.3.0)
+# Build order: 95
+# Resource module for Idstoresequence
+# Reads ../models/idstoresequence.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/idstoresequence_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags idstoresequence.
+
+- name: "0095 idstoresequence"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/idstoresequence.yml
+  tasks:
+    - name: Run idstoresequence from its model
+      cisco.ise.idstoresequence:
+        breakOnStoreFail: "{{ idstoresequence.breakOnStoreFail if idstoresequence.breakOnStoreFail is not none else omit }}"
+        certificateAuthenticationProfile: "{{ idstoresequence.certificateAuthenticationProfile if idstoresequence.certificateAuthenticationProfile is not none else omit }}"
+        description: "{{ idstoresequence.description if idstoresequence.description is not none else omit }}"
+        id: "{{ idstoresequence.id if idstoresequence.id is not none else omit }}"
+        idSeqItem: "{{ (idstoresequence.idSeqItem | cat_strip_nulls) if (idstoresequence.idSeqItem | cat_strip_nulls) is not none else omit }}"
+        ise_client_cert: "{{ idstoresequence.ise_client_cert if idstoresequence.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ idstoresequence.ise_client_key if idstoresequence.ise_client_key is not none else omit }}"
+        ise_debug: "{{ idstoresequence.ise_debug if idstoresequence.ise_debug is not none else omit }}"
+        ise_hostname: "{{ idstoresequence.ise_hostname if idstoresequence.ise_hostname is not none else omit }}"
+        ise_password: "{{ idstoresequence.ise_password if idstoresequence.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ idstoresequence.ise_single_request_timeout if idstoresequence.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ idstoresequence.ise_username if idstoresequence.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ idstoresequence.ise_uses_api_gateway if idstoresequence.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ idstoresequence.ise_uses_csrf_token if idstoresequence.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ idstoresequence.ise_verify if idstoresequence.ise_verify is not none else omit }}"
+        ise_version: "{{ idstoresequence.ise_version if idstoresequence.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ idstoresequence.ise_wait_on_rate_limit if idstoresequence.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ idstoresequence.name if idstoresequence.name is not none else omit }}"
+      register: idstoresequence_result
+      tags:
+        - never
+        - idstoresequence

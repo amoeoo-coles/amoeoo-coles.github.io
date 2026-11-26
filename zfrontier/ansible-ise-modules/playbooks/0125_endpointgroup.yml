@@ -1,0 +1,38 @@
+---
+# Sample playbook for cisco.ise.endpointgroup (cisco.ise 3.3.0)
+# Build order: 125
+# Resource module for Endpointgroup
+# Reads ../models/endpointgroup.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/endpointgroup_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags endpointgroup.
+
+- name: "0125 endpointgroup"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/endpointgroup.yml
+  tasks:
+    - name: Run endpointgroup from its model
+      cisco.ise.endpointgroup:
+        description: "{{ endpointgroup.description if endpointgroup.description is not none else omit }}"
+        id: "{{ endpointgroup.id if endpointgroup.id is not none else omit }}"
+        ise_client_cert: "{{ endpointgroup.ise_client_cert if endpointgroup.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ endpointgroup.ise_client_key if endpointgroup.ise_client_key is not none else omit }}"
+        ise_debug: "{{ endpointgroup.ise_debug if endpointgroup.ise_debug is not none else omit }}"
+        ise_hostname: "{{ endpointgroup.ise_hostname if endpointgroup.ise_hostname is not none else omit }}"
+        ise_password: "{{ endpointgroup.ise_password if endpointgroup.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ endpointgroup.ise_single_request_timeout if endpointgroup.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ endpointgroup.ise_username if endpointgroup.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ endpointgroup.ise_uses_api_gateway if endpointgroup.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ endpointgroup.ise_uses_csrf_token if endpointgroup.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ endpointgroup.ise_verify if endpointgroup.ise_verify is not none else omit }}"
+        ise_version: "{{ endpointgroup.ise_version if endpointgroup.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ endpointgroup.ise_wait_on_rate_limit if endpointgroup.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ endpointgroup.name if endpointgroup.name is not none else omit }}"
+        parentId: "{{ endpointgroup.parentId if endpointgroup.parentId is not none else omit }}"
+        systemDefined: "{{ endpointgroup.systemDefined if endpointgroup.systemDefined is not none else omit }}"
+      register: endpointgroup_result
+      tags:
+        - never
+        - endpointgroup

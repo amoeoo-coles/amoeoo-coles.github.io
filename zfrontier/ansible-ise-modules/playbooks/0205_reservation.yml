@@ -1,0 +1,38 @@
+---
+# Sample playbook for cisco.ise.reservation (cisco.ise 3.3.0)
+# Build order: 205
+# Resource module for Reservation
+# Reads ../models/reservation.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/reservation_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags reservation.
+
+- name: "0205 reservation"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/reservation.yml
+  tasks:
+    - name: Run reservation from its model
+      cisco.ise.reservation:
+        clientID: "{{ reservation.clientID if reservation.clientID is not none else omit }}"
+        clientName: "{{ reservation.clientName if reservation.clientName is not none else omit }}"
+        endIndex: "{{ reservation.endIndex if reservation.endIndex is not none else omit }}"
+        ise_client_cert: "{{ reservation.ise_client_cert if reservation.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ reservation.ise_client_key if reservation.ise_client_key is not none else omit }}"
+        ise_debug: "{{ reservation.ise_debug if reservation.ise_debug is not none else omit }}"
+        ise_hostname: "{{ reservation.ise_hostname if reservation.ise_hostname is not none else omit }}"
+        ise_password: "{{ reservation.ise_password if reservation.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ reservation.ise_single_request_timeout if reservation.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ reservation.ise_username if reservation.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ reservation.ise_uses_api_gateway if reservation.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ reservation.ise_uses_csrf_token if reservation.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ reservation.ise_verify if reservation.ise_verify is not none else omit }}"
+        ise_version: "{{ reservation.ise_version if reservation.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ reservation.ise_wait_on_rate_limit if reservation.ise_wait_on_rate_limit is not none else omit }}"
+        numberOfTags: "{{ reservation.numberOfTags if reservation.numberOfTags is not none else omit }}"
+        startIndex: "{{ reservation.startIndex if reservation.startIndex is not none else omit }}"
+      register: reservation_result
+      tags:
+        - never
+        - reservation

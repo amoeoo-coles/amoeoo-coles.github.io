@@ -1,0 +1,53 @@
+---
+# Sample playbook for cisco.ise.internal_user (cisco.ise 3.3.0)
+# Build order: 99
+# Resource module for Internaluser
+# Reads ../models/internal_user.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/internal_user_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags internal_user.
+
+- name: "0099 internal_user"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/internal_user.yml
+  tasks:
+    - name: Run internal_user from its model
+      cisco.ise.internal_user:
+        accountNameAlias: "{{ internal_user.accountNameAlias if internal_user.accountNameAlias is not none else omit }}"
+        changePassword: "{{ internal_user.changePassword if internal_user.changePassword is not none else omit }}"
+        customAttributes: "{{ (internal_user.customAttributes | cat_strip_nulls) if (internal_user.customAttributes | cat_strip_nulls) is not none else omit }}"
+        dateCreated: "{{ internal_user.dateCreated if internal_user.dateCreated is not none else omit }}"
+        dateModified: "{{ internal_user.dateModified if internal_user.dateModified is not none else omit }}"
+        daysForPasswordExpiration: "{{ internal_user.daysForPasswordExpiration if internal_user.daysForPasswordExpiration is not none else omit }}"
+        description: "{{ internal_user.description if internal_user.description is not none else omit }}"
+        email: "{{ internal_user.email if internal_user.email is not none else omit }}"
+        enablePassword: "{{ internal_user.enablePassword if internal_user.enablePassword is not none else omit }}"
+        enabled: "{{ internal_user.enabled if internal_user.enabled is not none else omit }}"
+        expiryDate: "{{ internal_user.expiryDate if internal_user.expiryDate is not none else omit }}"
+        expiryDateEnabled: "{{ internal_user.expiryDateEnabled if internal_user.expiryDateEnabled is not none else omit }}"
+        firstName: "{{ internal_user.firstName if internal_user.firstName is not none else omit }}"
+        id: "{{ internal_user.id if internal_user.id is not none else omit }}"
+        identityGroups: "{{ internal_user.identityGroups if internal_user.identityGroups is not none else omit }}"
+        ise_client_cert: "{{ internal_user.ise_client_cert if internal_user.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ internal_user.ise_client_key if internal_user.ise_client_key is not none else omit }}"
+        ise_debug: "{{ internal_user.ise_debug if internal_user.ise_debug is not none else omit }}"
+        ise_hostname: "{{ internal_user.ise_hostname if internal_user.ise_hostname is not none else omit }}"
+        ise_password: "{{ internal_user.ise_password if internal_user.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ internal_user.ise_single_request_timeout if internal_user.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ internal_user.ise_username if internal_user.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ internal_user.ise_uses_api_gateway if internal_user.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ internal_user.ise_uses_csrf_token if internal_user.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ internal_user.ise_verify if internal_user.ise_verify is not none else omit }}"
+        ise_version: "{{ internal_user.ise_version if internal_user.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ internal_user.ise_wait_on_rate_limit if internal_user.ise_wait_on_rate_limit is not none else omit }}"
+        lastName: "{{ internal_user.lastName if internal_user.lastName is not none else omit }}"
+        name: "{{ internal_user.name if internal_user.name is not none else omit }}"
+        password: "{{ internal_user.password if internal_user.password is not none else omit }}"
+        passwordIDStore: "{{ internal_user.passwordIDStore if internal_user.passwordIDStore is not none else omit }}"
+        passwordNeverExpires: "{{ internal_user.passwordNeverExpires if internal_user.passwordNeverExpires is not none else omit }}"
+      register: internal_user_result
+      tags:
+        - never
+        - internal_user

@@ -1,0 +1,37 @@
+---
+# Sample playbook for cisco.ise.tacacs_profile (cisco.ise 3.3.0)
+# Build order: 144
+# Resource module for TACACSprofile
+# Reads ../models/tacacs_profile.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/tacacs_profile_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags tacacs_profile.
+
+- name: "0144 tacacs_profile"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/tacacs_profile.yml
+  tasks:
+    - name: Run tacacs_profile from its model
+      cisco.ise.tacacs_profile:
+        description: "{{ tacacs_profile.description if tacacs_profile.description is not none else omit }}"
+        id: "{{ tacacs_profile.id if tacacs_profile.id is not none else omit }}"
+        ise_client_cert: "{{ tacacs_profile.ise_client_cert if tacacs_profile.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ tacacs_profile.ise_client_key if tacacs_profile.ise_client_key is not none else omit }}"
+        ise_debug: "{{ tacacs_profile.ise_debug if tacacs_profile.ise_debug is not none else omit }}"
+        ise_hostname: "{{ tacacs_profile.ise_hostname if tacacs_profile.ise_hostname is not none else omit }}"
+        ise_password: "{{ tacacs_profile.ise_password if tacacs_profile.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ tacacs_profile.ise_single_request_timeout if tacacs_profile.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ tacacs_profile.ise_username if tacacs_profile.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ tacacs_profile.ise_uses_api_gateway if tacacs_profile.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ tacacs_profile.ise_uses_csrf_token if tacacs_profile.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ tacacs_profile.ise_verify if tacacs_profile.ise_verify is not none else omit }}"
+        ise_version: "{{ tacacs_profile.ise_version if tacacs_profile.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ tacacs_profile.ise_wait_on_rate_limit if tacacs_profile.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ tacacs_profile.name if tacacs_profile.name is not none else omit }}"
+        sessionAttributes: "{{ (tacacs_profile.sessionAttributes | cat_strip_nulls) if (tacacs_profile.sessionAttributes | cat_strip_nulls) is not none else omit }}"
+      register: tacacs_profile_result
+      tags:
+        - never
+        - tacacs_profile

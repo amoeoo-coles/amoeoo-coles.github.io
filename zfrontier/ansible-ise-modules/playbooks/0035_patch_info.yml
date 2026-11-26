@@ -1,0 +1,29 @@
+---
+# Sample playbook for cisco.ise.patch_info (cisco.ise 3.3.0)
+# Build order: 35
+# Information module for Patch
+# Reads ../models/patch_info.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/patch_info_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+
+- name: "0035 patch_info"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/patch_info.yml
+  tasks:
+    - name: Run patch_info from its model
+      cisco.ise.patch_info:
+        ise_client_cert: "{{ patch_info.ise_client_cert if patch_info.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ patch_info.ise_client_key if patch_info.ise_client_key is not none else omit }}"
+        ise_debug: "{{ patch_info.ise_debug if patch_info.ise_debug is not none else omit }}"
+        ise_hostname: "{{ patch_info.ise_hostname if patch_info.ise_hostname is not none else omit }}"
+        ise_password: "{{ patch_info.ise_password if patch_info.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ patch_info.ise_single_request_timeout if patch_info.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ patch_info.ise_username if patch_info.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ patch_info.ise_uses_api_gateway if patch_info.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ patch_info.ise_uses_csrf_token if patch_info.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ patch_info.ise_verify if patch_info.ise_verify is not none else omit }}"
+        ise_version: "{{ patch_info.ise_version if patch_info.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ patch_info.ise_wait_on_rate_limit if patch_info.ise_wait_on_rate_limit is not none else omit }}"
+      register: patch_info_result

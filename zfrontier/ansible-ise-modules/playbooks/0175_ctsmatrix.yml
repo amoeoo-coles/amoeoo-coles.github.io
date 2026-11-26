@@ -1,0 +1,42 @@
+---
+# Sample playbook for cisco.ise.ctsmatrix (cisco.ise 3.3.0)
+# Build order: 175
+# Resource module for Ctsmatrix
+# Reads ../models/ctsmatrix.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/ctsmatrix_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags ctsmatrix.
+
+- name: "0175 ctsmatrix"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/ctsmatrix.yml
+  tasks:
+    - name: Run ctsmatrix from its model
+      cisco.ise.ctsmatrix:
+        cells: "{{ (ctsmatrix.cells | cat_strip_nulls) if (ctsmatrix.cells | cat_strip_nulls) is not none else omit }}"
+        dstSGtArr: "{{ ctsmatrix.dstSGtArr if ctsmatrix.dstSGtArr is not none else omit }}"
+        globalMonitorModeEnabled: "{{ ctsmatrix.globalMonitorModeEnabled if ctsmatrix.globalMonitorModeEnabled is not none else omit }}"
+        ise_client_cert: "{{ ctsmatrix.ise_client_cert if ctsmatrix.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ ctsmatrix.ise_client_key if ctsmatrix.ise_client_key is not none else omit }}"
+        ise_debug: "{{ ctsmatrix.ise_debug if ctsmatrix.ise_debug is not none else omit }}"
+        ise_hostname: "{{ ctsmatrix.ise_hostname if ctsmatrix.ise_hostname is not none else omit }}"
+        ise_password: "{{ ctsmatrix.ise_password if ctsmatrix.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ ctsmatrix.ise_single_request_timeout if ctsmatrix.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ ctsmatrix.ise_username if ctsmatrix.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ ctsmatrix.ise_uses_api_gateway if ctsmatrix.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ ctsmatrix.ise_uses_csrf_token if ctsmatrix.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ ctsmatrix.ise_verify if ctsmatrix.ise_verify is not none else omit }}"
+        ise_version: "{{ ctsmatrix.ise_version if ctsmatrix.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ ctsmatrix.ise_wait_on_rate_limit if ctsmatrix.ise_wait_on_rate_limit is not none else omit }}"
+        limit: "{{ ctsmatrix.limit if ctsmatrix.limit is not none else omit }}"
+        max: "{{ ctsmatrix.max if ctsmatrix.max is not none else omit }}"
+        offset: "{{ ctsmatrix.offset if ctsmatrix.offset is not none else omit }}"
+        policyVerId: "{{ ctsmatrix.policyVerId if ctsmatrix.policyVerId is not none else omit }}"
+        pushId: "{{ ctsmatrix.pushId if ctsmatrix.pushId is not none else omit }}"
+        srcSGtArr: "{{ ctsmatrix.srcSGtArr if ctsmatrix.srcSGtArr is not none else omit }}"
+      register: ctsmatrix_result
+      tags:
+        - never
+        - ctsmatrix

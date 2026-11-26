@@ -1,0 +1,37 @@
+---
+# Sample playbook for cisco.ise.trustsec_vn (cisco.ise 3.3.0)
+# Build order: 169
+# Resource module for Trustsec VN
+# Reads ../models/trustsec_vn.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/trustsec_vn_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags trustsec_vn.
+
+- name: "0169 trustsec_vn"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/trustsec_vn.yml
+  tasks:
+    - name: Run trustsec_vn from its model
+      cisco.ise.trustsec_vn:
+        additionalAttributes: "{{ trustsec_vn.additionalAttributes if trustsec_vn.additionalAttributes is not none else omit }}"
+        id: "{{ trustsec_vn.id if trustsec_vn.id is not none else omit }}"
+        ise_client_cert: "{{ trustsec_vn.ise_client_cert if trustsec_vn.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ trustsec_vn.ise_client_key if trustsec_vn.ise_client_key is not none else omit }}"
+        ise_debug: "{{ trustsec_vn.ise_debug if trustsec_vn.ise_debug is not none else omit }}"
+        ise_hostname: "{{ trustsec_vn.ise_hostname if trustsec_vn.ise_hostname is not none else omit }}"
+        ise_password: "{{ trustsec_vn.ise_password if trustsec_vn.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ trustsec_vn.ise_single_request_timeout if trustsec_vn.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ trustsec_vn.ise_username if trustsec_vn.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ trustsec_vn.ise_uses_api_gateway if trustsec_vn.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ trustsec_vn.ise_uses_csrf_token if trustsec_vn.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ trustsec_vn.ise_verify if trustsec_vn.ise_verify is not none else omit }}"
+        ise_version: "{{ trustsec_vn.ise_version if trustsec_vn.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ trustsec_vn.ise_wait_on_rate_limit if trustsec_vn.ise_wait_on_rate_limit is not none else omit }}"
+        lastUpdate: "{{ trustsec_vn.lastUpdate if trustsec_vn.lastUpdate is not none else omit }}"
+        name: "{{ trustsec_vn.name if trustsec_vn.name is not none else omit }}"
+      register: trustsec_vn_result
+      tags:
+        - never
+        - trustsec_vn

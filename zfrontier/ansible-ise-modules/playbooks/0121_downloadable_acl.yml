@@ -1,0 +1,38 @@
+---
+# Sample playbook for cisco.ise.downloadable_acl (cisco.ise 3.3.0)
+# Build order: 121
+# Resource module for Downloadableacl
+# Reads ../models/downloadable_acl.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/downloadable_acl_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags downloadable_acl.
+
+- name: "0121 downloadable_acl"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/downloadable_acl.yml
+  tasks:
+    - name: Run downloadable_acl from its model
+      cisco.ise.downloadable_acl:
+        dacl: "{{ downloadable_acl.dacl if downloadable_acl.dacl is not none else omit }}"
+        daclType: "{{ downloadable_acl.daclType if downloadable_acl.daclType is not none else omit }}"
+        description: "{{ downloadable_acl.description if downloadable_acl.description is not none else omit }}"
+        id: "{{ downloadable_acl.id if downloadable_acl.id is not none else omit }}"
+        ise_client_cert: "{{ downloadable_acl.ise_client_cert if downloadable_acl.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ downloadable_acl.ise_client_key if downloadable_acl.ise_client_key is not none else omit }}"
+        ise_debug: "{{ downloadable_acl.ise_debug if downloadable_acl.ise_debug is not none else omit }}"
+        ise_hostname: "{{ downloadable_acl.ise_hostname if downloadable_acl.ise_hostname is not none else omit }}"
+        ise_password: "{{ downloadable_acl.ise_password if downloadable_acl.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ downloadable_acl.ise_single_request_timeout if downloadable_acl.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ downloadable_acl.ise_username if downloadable_acl.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ downloadable_acl.ise_uses_api_gateway if downloadable_acl.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ downloadable_acl.ise_uses_csrf_token if downloadable_acl.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ downloadable_acl.ise_verify if downloadable_acl.ise_verify is not none else omit }}"
+        ise_version: "{{ downloadable_acl.ise_version if downloadable_acl.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ downloadable_acl.ise_wait_on_rate_limit if downloadable_acl.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ downloadable_acl.name if downloadable_acl.name is not none else omit }}"
+      register: downloadable_acl_result
+      tags:
+        - never
+        - downloadable_acl

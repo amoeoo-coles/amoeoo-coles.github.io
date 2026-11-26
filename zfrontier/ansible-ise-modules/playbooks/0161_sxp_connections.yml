@@ -1,0 +1,43 @@
+---
+# Sample playbook for cisco.ise.sxp_connections (cisco.ise 3.3.0)
+# Build order: 161
+# Resource module for SXPconnections
+# Reads ../models/sxp_connections.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/sxp_connections_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags sxp_connections.
+
+- name: "0161 sxp_connections"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/sxp_connections.yml
+  tasks:
+    - name: Run sxp_connections from its model
+      cisco.ise.sxp_connections:
+        description: "{{ sxp_connections.description if sxp_connections.description is not none else omit }}"
+        enabled: "{{ sxp_connections.enabled if sxp_connections.enabled is not none else omit }}"
+        id: "{{ sxp_connections.id if sxp_connections.id is not none else omit }}"
+        ipAddress: "{{ sxp_connections.ipAddress if sxp_connections.ipAddress is not none else omit }}"
+        ise_client_cert: "{{ sxp_connections.ise_client_cert if sxp_connections.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ sxp_connections.ise_client_key if sxp_connections.ise_client_key is not none else omit }}"
+        ise_debug: "{{ sxp_connections.ise_debug if sxp_connections.ise_debug is not none else omit }}"
+        ise_hostname: "{{ sxp_connections.ise_hostname if sxp_connections.ise_hostname is not none else omit }}"
+        ise_password: "{{ sxp_connections.ise_password if sxp_connections.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ sxp_connections.ise_single_request_timeout if sxp_connections.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ sxp_connections.ise_username if sxp_connections.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ sxp_connections.ise_uses_api_gateway if sxp_connections.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ sxp_connections.ise_uses_csrf_token if sxp_connections.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ sxp_connections.ise_verify if sxp_connections.ise_verify is not none else omit }}"
+        ise_version: "{{ sxp_connections.ise_version if sxp_connections.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ sxp_connections.ise_wait_on_rate_limit if sxp_connections.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ sxp_connections.name if sxp_connections.name is not none else omit }}"
+        sxpMode: "{{ sxp_connections.sxpMode if sxp_connections.sxpMode is not none else omit }}"
+        sxpNode: "{{ sxp_connections.sxpNode if sxp_connections.sxpNode is not none else omit }}"
+        sxpPeer: "{{ sxp_connections.sxpPeer if sxp_connections.sxpPeer is not none else omit }}"
+        sxpVersion: "{{ sxp_connections.sxpVersion if sxp_connections.sxpVersion is not none else omit }}"
+        sxpVpn: "{{ sxp_connections.sxpVpn if sxp_connections.sxpVpn is not none else omit }}"
+      register: sxp_connections_result
+      tags:
+        - never
+        - sxp_connections

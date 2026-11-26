@@ -1,0 +1,37 @@
+---
+# Sample playbook for cisco.ise.trustsec_nbar_app (cisco.ise 3.3.0)
+# Build order: 167
+# Resource module for Trustsec NBAR App
+# Reads ../models/trustsec_nbar_app.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/trustsec_nbar_app_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags trustsec_nbar_app.
+
+- name: "0167 trustsec_nbar_app"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/trustsec_nbar_app.yml
+  tasks:
+    - name: Run trustsec_nbar_app from its model
+      cisco.ise.trustsec_nbar_app:
+        description: "{{ trustsec_nbar_app.description if trustsec_nbar_app.description is not none else omit }}"
+        id: "{{ trustsec_nbar_app.id if trustsec_nbar_app.id is not none else omit }}"
+        ise_client_cert: "{{ trustsec_nbar_app.ise_client_cert if trustsec_nbar_app.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ trustsec_nbar_app.ise_client_key if trustsec_nbar_app.ise_client_key is not none else omit }}"
+        ise_debug: "{{ trustsec_nbar_app.ise_debug if trustsec_nbar_app.ise_debug is not none else omit }}"
+        ise_hostname: "{{ trustsec_nbar_app.ise_hostname if trustsec_nbar_app.ise_hostname is not none else omit }}"
+        ise_password: "{{ trustsec_nbar_app.ise_password if trustsec_nbar_app.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ trustsec_nbar_app.ise_single_request_timeout if trustsec_nbar_app.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ trustsec_nbar_app.ise_username if trustsec_nbar_app.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ trustsec_nbar_app.ise_uses_api_gateway if trustsec_nbar_app.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ trustsec_nbar_app.ise_uses_csrf_token if trustsec_nbar_app.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ trustsec_nbar_app.ise_verify if trustsec_nbar_app.ise_verify is not none else omit }}"
+        ise_version: "{{ trustsec_nbar_app.ise_version if trustsec_nbar_app.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ trustsec_nbar_app.ise_wait_on_rate_limit if trustsec_nbar_app.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ trustsec_nbar_app.name if trustsec_nbar_app.name is not none else omit }}"
+        networkIdentities: "{{ (trustsec_nbar_app.networkIdentities | cat_strip_nulls) if (trustsec_nbar_app.networkIdentities | cat_strip_nulls) is not none else omit }}"
+      register: trustsec_nbar_app_result
+      tags:
+        - never
+        - trustsec_nbar_app

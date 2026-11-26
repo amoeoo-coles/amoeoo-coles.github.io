@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.ise.personas_export_certs (cisco.ise 3.3.0)
+# Build order: 8
+# Export certificate into primary node
+# Reads ../models/personas_export_certs.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/personas_export_certs_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags personas_export_certs.
+
+- name: "0008 personas_export_certs"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/personas_export_certs.yml
+  tasks:
+    - name: Run personas_export_certs from its model
+      cisco.ise.personas_export_certs:
+        ip: "{{ personas_export_certs.ip if personas_export_certs.ip is not none else omit }}"
+        ise_verify: "{{ personas_export_certs.ise_verify if personas_export_certs.ise_verify is not none else omit }}"
+        ise_version: "{{ personas_export_certs.ise_version if personas_export_certs.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ personas_export_certs.ise_wait_on_rate_limit if personas_export_certs.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ personas_export_certs.name if personas_export_certs.name is not none else omit }}"
+        password: "{{ personas_export_certs.password if personas_export_certs.password is not none else omit }}"
+        primary_ip: "{{ personas_export_certs.primary_ip if personas_export_certs.primary_ip is not none else omit }}"
+        primary_password: "{{ personas_export_certs.primary_password if personas_export_certs.primary_password is not none else omit }}"
+        primary_username: "{{ personas_export_certs.primary_username if personas_export_certs.primary_username is not none else omit }}"
+        username: "{{ personas_export_certs.username if personas_export_certs.username is not none else omit }}"
+      register: personas_export_certs_result
+      tags:
+        - never
+        - personas_export_certs

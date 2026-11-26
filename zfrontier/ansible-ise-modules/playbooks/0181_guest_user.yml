@@ -1,0 +1,47 @@
+---
+# Sample playbook for cisco.ise.guest_user (cisco.ise 3.3.0)
+# Build order: 181
+# Resource module for Guestuser
+# Reads ../models/guest_user.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/guest_user_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags guest_user.
+
+- name: "0181 guest_user"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/guest_user.yml
+  tasks:
+    - name: Run guest_user from its model
+      cisco.ise.guest_user:
+        customFields: "{{ (guest_user.customFields | cat_strip_nulls) if (guest_user.customFields | cat_strip_nulls) is not none else omit }}"
+        description: "{{ guest_user.description if guest_user.description is not none else omit }}"
+        guestAccessInfo: "{{ (guest_user.guestAccessInfo | cat_strip_nulls) if (guest_user.guestAccessInfo | cat_strip_nulls) is not none else omit }}"
+        guestInfo: "{{ (guest_user.guestInfo | cat_strip_nulls) if (guest_user.guestInfo | cat_strip_nulls) is not none else omit }}"
+        guestType: "{{ guest_user.guestType if guest_user.guestType is not none else omit }}"
+        id: "{{ guest_user.id if guest_user.id is not none else omit }}"
+        ise_client_cert: "{{ guest_user.ise_client_cert if guest_user.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ guest_user.ise_client_key if guest_user.ise_client_key is not none else omit }}"
+        ise_debug: "{{ guest_user.ise_debug if guest_user.ise_debug is not none else omit }}"
+        ise_hostname: "{{ guest_user.ise_hostname if guest_user.ise_hostname is not none else omit }}"
+        ise_password: "{{ guest_user.ise_password if guest_user.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ guest_user.ise_single_request_timeout if guest_user.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ guest_user.ise_username if guest_user.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ guest_user.ise_uses_api_gateway if guest_user.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ guest_user.ise_uses_csrf_token if guest_user.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ guest_user.ise_verify if guest_user.ise_verify is not none else omit }}"
+        ise_version: "{{ guest_user.ise_version if guest_user.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ guest_user.ise_wait_on_rate_limit if guest_user.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ guest_user.name if guest_user.name is not none else omit }}"
+        personBeingVisited: "{{ guest_user.personBeingVisited if guest_user.personBeingVisited is not none else omit }}"
+        portalId: "{{ guest_user.portalId if guest_user.portalId is not none else omit }}"
+        reasonForVisit: "{{ guest_user.reasonForVisit if guest_user.reasonForVisit is not none else omit }}"
+        sponsorUserId: "{{ guest_user.sponsorUserId if guest_user.sponsorUserId is not none else omit }}"
+        sponsorUserName: "{{ guest_user.sponsorUserName if guest_user.sponsorUserName is not none else omit }}"
+        status: "{{ guest_user.status if guest_user.status is not none else omit }}"
+        statusReason: "{{ guest_user.statusReason if guest_user.statusReason is not none else omit }}"
+      register: guest_user_result
+      tags:
+        - never
+        - guest_user

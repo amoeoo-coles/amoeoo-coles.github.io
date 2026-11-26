@@ -1,0 +1,39 @@
+---
+# Sample playbook for cisco.ise.node_group (cisco.ise 3.3.0)
+# Build order: 12
+# Resource module for Node Group
+# Reads ../models/node_group.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/node_group_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags node_group.
+
+- name: "0012 node_group"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/node_group.yml
+  tasks:
+    - name: Run node_group from its model
+      cisco.ise.node_group:
+        description: "{{ node_group.description if node_group.description is not none else omit }}"
+        forceDelete: "{{ node_group.forceDelete if node_group.forceDelete is not none else omit }}"
+        ise_client_cert: "{{ node_group.ise_client_cert if node_group.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ node_group.ise_client_key if node_group.ise_client_key is not none else omit }}"
+        ise_debug: "{{ node_group.ise_debug if node_group.ise_debug is not none else omit }}"
+        ise_hostname: "{{ node_group.ise_hostname if node_group.ise_hostname is not none else omit }}"
+        ise_password: "{{ node_group.ise_password if node_group.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ node_group.ise_single_request_timeout if node_group.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ node_group.ise_username if node_group.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ node_group.ise_uses_api_gateway if node_group.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ node_group.ise_uses_csrf_token if node_group.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ node_group.ise_verify if node_group.ise_verify is not none else omit }}"
+        ise_version: "{{ node_group.ise_version if node_group.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ node_group.ise_wait_on_rate_limit if node_group.ise_wait_on_rate_limit is not none else omit }}"
+        marCache: "{{ (node_group.marCache | cat_strip_nulls) if (node_group.marCache | cat_strip_nulls) is not none else omit }}"
+        name: "{{ node_group.name if node_group.name is not none else omit }}"
+        nodeGroupName: "{{ node_group.nodeGroupName if node_group.nodeGroupName is not none else omit }}"
+        state: "{{ node_group.state if node_group.state is not none else omit }}"
+      register: node_group_result
+      tags:
+        - never
+        - node_group

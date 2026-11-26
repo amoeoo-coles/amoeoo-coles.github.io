@@ -1,0 +1,51 @@
+---
+# Sample playbook for cisco.ise.csr_generate (cisco.ise 3.3.0)
+# Build order: 56
+# Resource module for CSR Generate
+# Reads ../models/csr_generate.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/csr_generate_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags csr_generate.
+
+- name: "0056 csr_generate"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/csr_generate.yml
+  tasks:
+    - name: Run csr_generate from its model
+      cisco.ise.csr_generate:
+        allowWildCardCert: "{{ csr_generate.allowWildCardCert if csr_generate.allowWildCardCert is not none else omit }}"
+        certificatePolicies: "{{ csr_generate.certificatePolicies if csr_generate.certificatePolicies is not none else omit }}"
+        digestType: "{{ csr_generate.digestType if csr_generate.digestType is not none else omit }}"
+        hostnames: "{{ (csr_generate.hostnames | cat_strip_nulls) if (csr_generate.hostnames | cat_strip_nulls) is not none else omit }}"
+        ise_client_cert: "{{ csr_generate.ise_client_cert if csr_generate.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ csr_generate.ise_client_key if csr_generate.ise_client_key is not none else omit }}"
+        ise_debug: "{{ csr_generate.ise_debug if csr_generate.ise_debug is not none else omit }}"
+        ise_hostname: "{{ csr_generate.ise_hostname if csr_generate.ise_hostname is not none else omit }}"
+        ise_password: "{{ csr_generate.ise_password if csr_generate.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ csr_generate.ise_single_request_timeout if csr_generate.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ csr_generate.ise_username if csr_generate.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ csr_generate.ise_uses_api_gateway if csr_generate.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ csr_generate.ise_uses_csrf_token if csr_generate.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ csr_generate.ise_verify if csr_generate.ise_verify is not none else omit }}"
+        ise_version: "{{ csr_generate.ise_version if csr_generate.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ csr_generate.ise_wait_on_rate_limit if csr_generate.ise_wait_on_rate_limit is not none else omit }}"
+        keyLength: "{{ csr_generate.keyLength if csr_generate.keyLength is not none else omit }}"
+        keyType: "{{ csr_generate.keyType if csr_generate.keyType is not none else omit }}"
+        portalGroupTag: "{{ csr_generate.portalGroupTag if csr_generate.portalGroupTag is not none else omit }}"
+        sanDNS: "{{ (csr_generate.sanDNS | cat_strip_nulls) if (csr_generate.sanDNS | cat_strip_nulls) is not none else omit }}"
+        sanDir: "{{ (csr_generate.sanDir | cat_strip_nulls) if (csr_generate.sanDir | cat_strip_nulls) is not none else omit }}"
+        sanIP: "{{ (csr_generate.sanIP | cat_strip_nulls) if (csr_generate.sanIP | cat_strip_nulls) is not none else omit }}"
+        sanURI: "{{ (csr_generate.sanURI | cat_strip_nulls) if (csr_generate.sanURI | cat_strip_nulls) is not none else omit }}"
+        subjectCity: "{{ csr_generate.subjectCity if csr_generate.subjectCity is not none else omit }}"
+        subjectCommonName: "{{ csr_generate.subjectCommonName if csr_generate.subjectCommonName is not none else omit }}"
+        subjectCountry: "{{ csr_generate.subjectCountry if csr_generate.subjectCountry is not none else omit }}"
+        subjectOrg: "{{ csr_generate.subjectOrg if csr_generate.subjectOrg is not none else omit }}"
+        subjectOrgUnit: "{{ csr_generate.subjectOrgUnit if csr_generate.subjectOrgUnit is not none else omit }}"
+        subjectState: "{{ csr_generate.subjectState if csr_generate.subjectState is not none else omit }}"
+        usedFor: "{{ csr_generate.usedFor if csr_generate.usedFor is not none else omit }}"
+      register: csr_generate_result
+      tags:
+        - never
+        - csr_generate

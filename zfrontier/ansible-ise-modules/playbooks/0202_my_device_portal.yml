@@ -1,0 +1,40 @@
+---
+# Sample playbook for cisco.ise.my_device_portal (cisco.ise 3.3.0)
+# Build order: 202
+# Resource module for Mydeviceportal
+# Reads ../models/my_device_portal.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/my_device_portal_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags my_device_portal.
+
+- name: "0202 my_device_portal"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/my_device_portal.yml
+  tasks:
+    - name: Run my_device_portal from its model
+      cisco.ise.my_device_portal:
+        customizations: "{{ (my_device_portal.customizations | cat_strip_nulls) if (my_device_portal.customizations | cat_strip_nulls) is not none else omit }}"
+        description: "{{ my_device_portal.description if my_device_portal.description is not none else omit }}"
+        id: "{{ my_device_portal.id if my_device_portal.id is not none else omit }}"
+        ise_client_cert: "{{ my_device_portal.ise_client_cert if my_device_portal.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ my_device_portal.ise_client_key if my_device_portal.ise_client_key is not none else omit }}"
+        ise_debug: "{{ my_device_portal.ise_debug if my_device_portal.ise_debug is not none else omit }}"
+        ise_hostname: "{{ my_device_portal.ise_hostname if my_device_portal.ise_hostname is not none else omit }}"
+        ise_password: "{{ my_device_portal.ise_password if my_device_portal.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ my_device_portal.ise_single_request_timeout if my_device_portal.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ my_device_portal.ise_username if my_device_portal.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ my_device_portal.ise_uses_api_gateway if my_device_portal.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ my_device_portal.ise_uses_csrf_token if my_device_portal.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ my_device_portal.ise_verify if my_device_portal.ise_verify is not none else omit }}"
+        ise_version: "{{ my_device_portal.ise_version if my_device_portal.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ my_device_portal.ise_wait_on_rate_limit if my_device_portal.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ my_device_portal.name if my_device_portal.name is not none else omit }}"
+        portalTestUrl: "{{ my_device_portal.portalTestUrl if my_device_portal.portalTestUrl is not none else omit }}"
+        portalType: "{{ my_device_portal.portalType if my_device_portal.portalType is not none else omit }}"
+        settings: "{{ (my_device_portal.settings | cat_strip_nulls) if (my_device_portal.settings | cat_strip_nulls) is not none else omit }}"
+      register: my_device_portal_result
+      tags:
+        - never
+        - my_device_portal

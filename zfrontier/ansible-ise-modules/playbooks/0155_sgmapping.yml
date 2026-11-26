@@ -1,0 +1,43 @@
+---
+# Sample playbook for cisco.ise.sgmapping (cisco.ise 3.3.0)
+# Build order: 155
+# Resource module for SGmapping
+# Reads ../models/sgmapping.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/sgmapping_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags sgmapping.
+
+- name: "0155 sgmapping"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/sgmapping.yml
+  tasks:
+    - name: Run sgmapping from its model
+      cisco.ise.sgmapping:
+        deployTo: "{{ sgmapping.deployTo if sgmapping.deployTo is not none else omit }}"
+        deployType: "{{ sgmapping.deployType if sgmapping.deployType is not none else omit }}"
+        description: "{{ sgmapping.description if sgmapping.description is not none else omit }}"
+        hostIp: "{{ sgmapping.hostIp if sgmapping.hostIp is not none else omit }}"
+        hostName: "{{ sgmapping.hostName if sgmapping.hostName is not none else omit }}"
+        id: "{{ sgmapping.id if sgmapping.id is not none else omit }}"
+        ise_client_cert: "{{ sgmapping.ise_client_cert if sgmapping.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ sgmapping.ise_client_key if sgmapping.ise_client_key is not none else omit }}"
+        ise_debug: "{{ sgmapping.ise_debug if sgmapping.ise_debug is not none else omit }}"
+        ise_hostname: "{{ sgmapping.ise_hostname if sgmapping.ise_hostname is not none else omit }}"
+        ise_password: "{{ sgmapping.ise_password if sgmapping.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ sgmapping.ise_single_request_timeout if sgmapping.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ sgmapping.ise_username if sgmapping.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ sgmapping.ise_uses_api_gateway if sgmapping.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ sgmapping.ise_uses_csrf_token if sgmapping.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ sgmapping.ise_verify if sgmapping.ise_verify is not none else omit }}"
+        ise_version: "{{ sgmapping.ise_version if sgmapping.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ sgmapping.ise_wait_on_rate_limit if sgmapping.ise_wait_on_rate_limit is not none else omit }}"
+        mappingGroup: "{{ sgmapping.mappingGroup if sgmapping.mappingGroup is not none else omit }}"
+        name: "{{ sgmapping.name if sgmapping.name is not none else omit }}"
+        sgt: "{{ sgmapping.sgt if sgmapping.sgt is not none else omit }}"
+        sgtDomain: "{{ (sgmapping.sgtDomain | cat_strip_nulls) if (sgmapping.sgtDomain | cat_strip_nulls) is not none else omit }}"
+      register: sgmapping_result
+      tags:
+        - never
+        - sgmapping

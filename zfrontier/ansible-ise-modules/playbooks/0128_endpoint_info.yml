@@ -1,0 +1,37 @@
+---
+# Sample playbook for cisco.ise.endpoint_info (cisco.ise 3.3.0)
+# Build order: 128
+# Information module for Endpoint
+# Reads ../models/endpoint_info.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/endpoint_info_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+
+- name: "0128 endpoint_info"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/endpoint_info.yml
+  tasks:
+    - name: Run endpoint_info from its model
+      cisco.ise.endpoint_info:
+        filter: "{{ endpoint_info.filter if endpoint_info.filter is not none else omit }}"
+        filterType: "{{ endpoint_info.filterType if endpoint_info.filterType is not none else omit }}"
+        id: "{{ endpoint_info.id if endpoint_info.id is not none else omit }}"
+        ise_client_cert: "{{ endpoint_info.ise_client_cert if endpoint_info.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ endpoint_info.ise_client_key if endpoint_info.ise_client_key is not none else omit }}"
+        ise_debug: "{{ endpoint_info.ise_debug if endpoint_info.ise_debug is not none else omit }}"
+        ise_hostname: "{{ endpoint_info.ise_hostname if endpoint_info.ise_hostname is not none else omit }}"
+        ise_password: "{{ endpoint_info.ise_password if endpoint_info.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ endpoint_info.ise_single_request_timeout if endpoint_info.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ endpoint_info.ise_username if endpoint_info.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ endpoint_info.ise_uses_api_gateway if endpoint_info.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ endpoint_info.ise_uses_csrf_token if endpoint_info.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ endpoint_info.ise_verify if endpoint_info.ise_verify is not none else omit }}"
+        ise_version: "{{ endpoint_info.ise_version if endpoint_info.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ endpoint_info.ise_wait_on_rate_limit if endpoint_info.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ endpoint_info.name if endpoint_info.name is not none else omit }}"
+        page: "{{ endpoint_info.page if endpoint_info.page is not none else omit }}"
+        size: "{{ endpoint_info.size if endpoint_info.size is not none else omit }}"
+        sortasc: "{{ endpoint_info.sortasc if endpoint_info.sortasc is not none else omit }}"
+        sortdsc: "{{ endpoint_info.sortdsc if endpoint_info.sortdsc is not none else omit }}"
+      register: endpoint_info_result

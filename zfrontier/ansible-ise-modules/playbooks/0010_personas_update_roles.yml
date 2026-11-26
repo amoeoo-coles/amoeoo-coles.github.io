@@ -1,0 +1,33 @@
+---
+# Sample playbook for cisco.ise.personas_update_roles (cisco.ise 3.3.0)
+# Build order: 10
+# Update the roles of a node
+# Reads ../models/personas_update_roles.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/personas_update_roles_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags personas_update_roles.
+
+- name: "0010 personas_update_roles"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/personas_update_roles.yml
+  tasks:
+    - name: Run personas_update_roles from its model
+      cisco.ise.personas_update_roles:
+        domain: "{{ personas_update_roles.domain if personas_update_roles.domain is not none else omit }}"
+        ise_verify: "{{ personas_update_roles.ise_verify if personas_update_roles.ise_verify is not none else omit }}"
+        ise_version: "{{ personas_update_roles.ise_version if personas_update_roles.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ personas_update_roles.ise_wait_on_rate_limit if personas_update_roles.ise_wait_on_rate_limit is not none else omit }}"
+        local_ip: "{{ personas_update_roles.local_ip if personas_update_roles.local_ip is not none else omit }}"
+        name: "{{ personas_update_roles.name if personas_update_roles.name is not none else omit }}"
+        password: "{{ personas_update_roles.password if personas_update_roles.password is not none else omit }}"
+        primary_ip: "{{ personas_update_roles.primary_ip if personas_update_roles.primary_ip is not none else omit }}"
+        primary_password: "{{ personas_update_roles.primary_password if personas_update_roles.primary_password is not none else omit }}"
+        primary_username: "{{ personas_update_roles.primary_username if personas_update_roles.primary_username is not none else omit }}"
+        roles: "{{ personas_update_roles.roles if personas_update_roles.roles is not none else omit }}"
+        username: "{{ personas_update_roles.username if personas_update_roles.username is not none else omit }}"
+      register: personas_update_roles_result
+      tags:
+        - never
+        - personas_update_roles

@@ -1,0 +1,40 @@
+---
+# Sample playbook for cisco.ise.byod_portal (cisco.ise 3.3.0)
+# Build order: 196
+# Resource module for BYODportal
+# Reads ../models/byod_portal.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/byod_portal_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags byod_portal.
+
+- name: "0196 byod_portal"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/byod_portal.yml
+  tasks:
+    - name: Run byod_portal from its model
+      cisco.ise.byod_portal:
+        customizations: "{{ (byod_portal.customizations | cat_strip_nulls) if (byod_portal.customizations | cat_strip_nulls) is not none else omit }}"
+        description: "{{ byod_portal.description if byod_portal.description is not none else omit }}"
+        id: "{{ byod_portal.id if byod_portal.id is not none else omit }}"
+        ise_client_cert: "{{ byod_portal.ise_client_cert if byod_portal.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ byod_portal.ise_client_key if byod_portal.ise_client_key is not none else omit }}"
+        ise_debug: "{{ byod_portal.ise_debug if byod_portal.ise_debug is not none else omit }}"
+        ise_hostname: "{{ byod_portal.ise_hostname if byod_portal.ise_hostname is not none else omit }}"
+        ise_password: "{{ byod_portal.ise_password if byod_portal.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ byod_portal.ise_single_request_timeout if byod_portal.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ byod_portal.ise_username if byod_portal.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ byod_portal.ise_uses_api_gateway if byod_portal.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ byod_portal.ise_uses_csrf_token if byod_portal.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ byod_portal.ise_verify if byod_portal.ise_verify is not none else omit }}"
+        ise_version: "{{ byod_portal.ise_version if byod_portal.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ byod_portal.ise_wait_on_rate_limit if byod_portal.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ byod_portal.name if byod_portal.name is not none else omit }}"
+        portalTestUrl: "{{ byod_portal.portalTestUrl if byod_portal.portalTestUrl is not none else omit }}"
+        portalType: "{{ byod_portal.portalType if byod_portal.portalType is not none else omit }}"
+        settings: "{{ (byod_portal.settings | cat_strip_nulls) if (byod_portal.settings | cat_strip_nulls) is not none else omit }}"
+      register: byod_portal_result
+      tags:
+        - never
+        - byod_portal

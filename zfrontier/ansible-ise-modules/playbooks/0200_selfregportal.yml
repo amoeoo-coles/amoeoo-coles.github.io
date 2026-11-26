@@ -1,0 +1,40 @@
+---
+# Sample playbook for cisco.ise.selfregportal (cisco.ise 3.3.0)
+# Build order: 200
+# Resource module for Selfregportal
+# Reads ../models/selfregportal.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/selfregportal_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags selfregportal.
+
+- name: "0200 selfregportal"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/selfregportal.yml
+  tasks:
+    - name: Run selfregportal from its model
+      cisco.ise.selfregportal:
+        customizations: "{{ (selfregportal.customizations | cat_strip_nulls) if (selfregportal.customizations | cat_strip_nulls) is not none else omit }}"
+        description: "{{ selfregportal.description if selfregportal.description is not none else omit }}"
+        id: "{{ selfregportal.id if selfregportal.id is not none else omit }}"
+        ise_client_cert: "{{ selfregportal.ise_client_cert if selfregportal.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ selfregportal.ise_client_key if selfregportal.ise_client_key is not none else omit }}"
+        ise_debug: "{{ selfregportal.ise_debug if selfregportal.ise_debug is not none else omit }}"
+        ise_hostname: "{{ selfregportal.ise_hostname if selfregportal.ise_hostname is not none else omit }}"
+        ise_password: "{{ selfregportal.ise_password if selfregportal.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ selfregportal.ise_single_request_timeout if selfregportal.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ selfregportal.ise_username if selfregportal.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ selfregportal.ise_uses_api_gateway if selfregportal.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ selfregportal.ise_uses_csrf_token if selfregportal.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ selfregportal.ise_verify if selfregportal.ise_verify is not none else omit }}"
+        ise_version: "{{ selfregportal.ise_version if selfregportal.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ selfregportal.ise_wait_on_rate_limit if selfregportal.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ selfregportal.name if selfregportal.name is not none else omit }}"
+        portalTestUrl: "{{ selfregportal.portalTestUrl if selfregportal.portalTestUrl is not none else omit }}"
+        portalType: "{{ selfregportal.portalType if selfregportal.portalType is not none else omit }}"
+        settings: "{{ (selfregportal.settings | cat_strip_nulls) if (selfregportal.settings | cat_strip_nulls) is not none else omit }}"
+      register: selfregportal_result
+      tags:
+        - never
+        - selfregportal

@@ -1,0 +1,28 @@
+---
+# Sample playbook for cisco.ise.personas_check_standalone (cisco.ise 3.3.0)
+# Build order: 7
+# Ensure the node is in standalone mode
+# Reads ../models/personas_check_standalone.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/personas_check_standalone_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags personas_check_standalone.
+
+- name: "0007 personas_check_standalone"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/personas_check_standalone.yml
+  tasks:
+    - name: Run personas_check_standalone from its model
+      cisco.ise.personas_check_standalone:
+        ip: "{{ personas_check_standalone.ip if personas_check_standalone.ip is not none else omit }}"
+        ise_verify: "{{ personas_check_standalone.ise_verify if personas_check_standalone.ise_verify is not none else omit }}"
+        ise_version: "{{ personas_check_standalone.ise_version if personas_check_standalone.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ personas_check_standalone.ise_wait_on_rate_limit if personas_check_standalone.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ personas_check_standalone.name if personas_check_standalone.name is not none else omit }}"
+        password: "{{ personas_check_standalone.password if personas_check_standalone.password is not none else omit }}"
+        username: "{{ personas_check_standalone.username if personas_check_standalone.username is not none else omit }}"
+      register: personas_check_standalone_result
+      tags:
+        - never
+        - personas_check_standalone

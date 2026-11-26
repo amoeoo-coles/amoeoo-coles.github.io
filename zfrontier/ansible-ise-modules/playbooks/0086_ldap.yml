@@ -1,0 +1,42 @@
+---
+# Sample playbook for cisco.ise.ldap (cisco.ise 3.3.0)
+# Build order: 86
+# Resource module for Ldap
+# Reads ../models/ldap.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/ldap_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags ldap.
+
+- name: "0086 ldap"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/ldap.yml
+  tasks:
+    - name: Run ldap from its model
+      cisco.ise.ldap:
+        attributes: "{{ (ldap.attributes | cat_strip_nulls) if (ldap.attributes | cat_strip_nulls) is not none else omit }}"
+        connectionSettings: "{{ (ldap.connectionSettings | cat_strip_nulls) if (ldap.connectionSettings | cat_strip_nulls) is not none else omit }}"
+        description: "{{ ldap.description if ldap.description is not none else omit }}"
+        directoryOrganization: "{{ (ldap.directoryOrganization | cat_strip_nulls) if (ldap.directoryOrganization | cat_strip_nulls) is not none else omit }}"
+        enablePasswordChangeLDAP: "{{ ldap.enablePasswordChangeLDAP if ldap.enablePasswordChangeLDAP is not none else omit }}"
+        generalSettings: "{{ (ldap.generalSettings | cat_strip_nulls) if (ldap.generalSettings | cat_strip_nulls) is not none else omit }}"
+        groups: "{{ (ldap.groups | cat_strip_nulls) if (ldap.groups | cat_strip_nulls) is not none else omit }}"
+        id: "{{ ldap.id if ldap.id is not none else omit }}"
+        ise_client_cert: "{{ ldap.ise_client_cert if ldap.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ ldap.ise_client_key if ldap.ise_client_key is not none else omit }}"
+        ise_debug: "{{ ldap.ise_debug if ldap.ise_debug is not none else omit }}"
+        ise_hostname: "{{ ldap.ise_hostname if ldap.ise_hostname is not none else omit }}"
+        ise_password: "{{ ldap.ise_password if ldap.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ ldap.ise_single_request_timeout if ldap.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ ldap.ise_username if ldap.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ ldap.ise_uses_api_gateway if ldap.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ ldap.ise_uses_csrf_token if ldap.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ ldap.ise_verify if ldap.ise_verify is not none else omit }}"
+        ise_version: "{{ ldap.ise_version if ldap.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ ldap.ise_wait_on_rate_limit if ldap.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ ldap.name if ldap.name is not none else omit }}"
+      register: ldap_result
+      tags:
+        - never
+        - ldap

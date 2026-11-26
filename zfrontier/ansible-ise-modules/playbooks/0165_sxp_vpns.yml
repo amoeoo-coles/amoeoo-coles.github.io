@@ -1,0 +1,37 @@
+---
+# Sample playbook for cisco.ise.sxp_vpns (cisco.ise 3.3.0)
+# Build order: 165
+# Resource module for SXPvpns
+# Reads ../models/sxp_vpns.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/sxp_vpns_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags sxp_vpns.
+
+- name: "0165 sxp_vpns"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/sxp_vpns.yml
+  tasks:
+    - name: Run sxp_vpns from its model
+      cisco.ise.sxp_vpns:
+        description: "{{ sxp_vpns.description if sxp_vpns.description is not none else omit }}"
+        id: "{{ sxp_vpns.id if sxp_vpns.id is not none else omit }}"
+        ise_client_cert: "{{ sxp_vpns.ise_client_cert if sxp_vpns.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ sxp_vpns.ise_client_key if sxp_vpns.ise_client_key is not none else omit }}"
+        ise_debug: "{{ sxp_vpns.ise_debug if sxp_vpns.ise_debug is not none else omit }}"
+        ise_hostname: "{{ sxp_vpns.ise_hostname if sxp_vpns.ise_hostname is not none else omit }}"
+        ise_password: "{{ sxp_vpns.ise_password if sxp_vpns.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ sxp_vpns.ise_single_request_timeout if sxp_vpns.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ sxp_vpns.ise_username if sxp_vpns.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ sxp_vpns.ise_uses_api_gateway if sxp_vpns.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ sxp_vpns.ise_uses_csrf_token if sxp_vpns.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ sxp_vpns.ise_verify if sxp_vpns.ise_verify is not none else omit }}"
+        ise_version: "{{ sxp_vpns.ise_version if sxp_vpns.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ sxp_vpns.ise_wait_on_rate_limit if sxp_vpns.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ sxp_vpns.name if sxp_vpns.name is not none else omit }}"
+        sxpVpnName: "{{ sxp_vpns.sxpVpnName if sxp_vpns.sxpVpnName is not none else omit }}"
+      register: sxp_vpns_result
+      tags:
+        - never
+        - sxp_vpns

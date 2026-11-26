@@ -1,0 +1,36 @@
+---
+# Sample playbook for cisco.ise.backup_config (cisco.ise 3.3.0)
+# Build order: 42
+# Resource module for Backup Config
+# Reads ../models/backup_config.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/backup_config_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags backup_config.
+
+- name: "0042 backup_config"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/backup_config.yml
+  tasks:
+    - name: Run backup_config from its model
+      cisco.ise.backup_config:
+        backupEncryptionKey: "{{ backup_config.backupEncryptionKey if backup_config.backupEncryptionKey is not none else omit }}"
+        backupName: "{{ backup_config.backupName if backup_config.backupName is not none else omit }}"
+        ise_client_cert: "{{ backup_config.ise_client_cert if backup_config.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ backup_config.ise_client_key if backup_config.ise_client_key is not none else omit }}"
+        ise_debug: "{{ backup_config.ise_debug if backup_config.ise_debug is not none else omit }}"
+        ise_hostname: "{{ backup_config.ise_hostname if backup_config.ise_hostname is not none else omit }}"
+        ise_password: "{{ backup_config.ise_password if backup_config.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ backup_config.ise_single_request_timeout if backup_config.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ backup_config.ise_username if backup_config.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ backup_config.ise_uses_api_gateway if backup_config.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ backup_config.ise_uses_csrf_token if backup_config.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ backup_config.ise_verify if backup_config.ise_verify is not none else omit }}"
+        ise_version: "{{ backup_config.ise_version if backup_config.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ backup_config.ise_wait_on_rate_limit if backup_config.ise_wait_on_rate_limit is not none else omit }}"
+        repositoryName: "{{ backup_config.repositoryName if backup_config.repositoryName is not none else omit }}"
+      register: backup_config_result
+      tags:
+        - never
+        - backup_config

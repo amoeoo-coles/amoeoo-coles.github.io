@@ -1,0 +1,41 @@
+---
+# Sample playbook for cisco.ise.sgacls (cisco.ise 3.3.0)
+# Build order: 152
+# Resource module for SGacls
+# Reads ../models/sgacls.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/sgacls_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags sgacls.
+
+- name: "0152 sgacls"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/sgacls.yml
+  tasks:
+    - name: Run sgacls from its model
+      cisco.ise.sgacls:
+        ise_client_cert: "{{ sgacls.ise_client_cert if sgacls.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ sgacls.ise_client_key if sgacls.ise_client_key is not none else omit }}"
+        ise_debug: "{{ sgacls.ise_debug if sgacls.ise_debug is not none else omit }}"
+        ise_hostname: "{{ sgacls.ise_hostname if sgacls.ise_hostname is not none else omit }}"
+        ise_password: "{{ sgacls.ise_password if sgacls.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ sgacls.ise_single_request_timeout if sgacls.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ sgacls.ise_username if sgacls.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ sgacls.ise_uses_api_gateway if sgacls.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ sgacls.ise_uses_csrf_token if sgacls.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ sgacls.ise_verify if sgacls.ise_verify is not none else omit }}"
+        ise_version: "{{ sgacls.ise_version if sgacls.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ sgacls.ise_wait_on_rate_limit if sgacls.ise_wait_on_rate_limit is not none else omit }}"
+        limit: "{{ sgacls.limit if sgacls.limit is not none else omit }}"
+        max: "{{ sgacls.max if sgacls.max is not none else omit }}"
+        names: "{{ (sgacls.names | cat_strip_nulls) if (sgacls.names | cat_strip_nulls) is not none else omit }}"
+        offset: "{{ sgacls.offset if sgacls.offset is not none else omit }}"
+        policyVerId: "{{ sgacls.policyVerId if sgacls.policyVerId is not none else omit }}"
+        pullId: "{{ sgacls.pullId if sgacls.pullId is not none else omit }}"
+        pushId: "{{ sgacls.pushId if sgacls.pushId is not none else omit }}"
+        sgacls: "{{ (sgacls.sgacls | cat_strip_nulls) if (sgacls.sgacls | cat_strip_nulls) is not none else omit }}"
+      register: sgacls_result
+      tags:
+        - never
+        - sgacls

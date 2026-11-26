@@ -1,0 +1,33 @@
+---
+# Sample playbook for cisco.ise.node_standalone_to_primary (cisco.ise 3.3.0)
+# Build order: 4
+# Resource module for Node Standalone To Primary
+# Reads ../models/node_standalone_to_primary.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/node_standalone_to_primary_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags node_standalone_to_primary.
+
+- name: "0004 node_standalone_to_primary"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/node_standalone_to_primary.yml
+  tasks:
+    - name: Run node_standalone_to_primary from its model
+      cisco.ise.node_standalone_to_primary:
+        ise_client_cert: "{{ node_standalone_to_primary.ise_client_cert if node_standalone_to_primary.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ node_standalone_to_primary.ise_client_key if node_standalone_to_primary.ise_client_key is not none else omit }}"
+        ise_debug: "{{ node_standalone_to_primary.ise_debug if node_standalone_to_primary.ise_debug is not none else omit }}"
+        ise_hostname: "{{ node_standalone_to_primary.ise_hostname if node_standalone_to_primary.ise_hostname is not none else omit }}"
+        ise_password: "{{ node_standalone_to_primary.ise_password if node_standalone_to_primary.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ node_standalone_to_primary.ise_single_request_timeout if node_standalone_to_primary.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ node_standalone_to_primary.ise_username if node_standalone_to_primary.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ node_standalone_to_primary.ise_uses_api_gateway if node_standalone_to_primary.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ node_standalone_to_primary.ise_uses_csrf_token if node_standalone_to_primary.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ node_standalone_to_primary.ise_verify if node_standalone_to_primary.ise_verify is not none else omit }}"
+        ise_version: "{{ node_standalone_to_primary.ise_version if node_standalone_to_primary.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ node_standalone_to_primary.ise_wait_on_rate_limit if node_standalone_to_primary.ise_wait_on_rate_limit is not none else omit }}"
+      register: node_standalone_to_primary_result
+      tags:
+        - never
+        - node_standalone_to_primary

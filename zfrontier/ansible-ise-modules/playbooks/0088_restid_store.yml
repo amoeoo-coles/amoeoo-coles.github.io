@@ -1,0 +1,40 @@
+---
+# Sample playbook for cisco.ise.restid_store (cisco.ise 3.3.0)
+# Build order: 88
+# Resource module for RESTidstore
+# Reads ../models/restid_store.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/restid_store_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags restid_store.
+
+- name: "0088 restid_store"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/restid_store.yml
+  tasks:
+    - name: Run restid_store from its model
+      cisco.ise.restid_store:
+        description: "{{ restid_store.description if restid_store.description is not none else omit }}"
+        ersRESTIDStoreAdvanceSettings: "{{ (restid_store.ersRESTIDStoreAdvanceSettings | cat_strip_nulls) if (restid_store.ersRESTIDStoreAdvanceSettings | cat_strip_nulls) is not none else omit }}"
+        ersRESTIDStoreAttributes: "{{ (restid_store.ersRESTIDStoreAttributes | cat_strip_nulls) if (restid_store.ersRESTIDStoreAttributes | cat_strip_nulls) is not none else omit }}"
+        ersRESTIDStoreDeviceAttributes: "{{ (restid_store.ersRESTIDStoreDeviceAttributes | cat_strip_nulls) if (restid_store.ersRESTIDStoreDeviceAttributes | cat_strip_nulls) is not none else omit }}"
+        ersRESTIDStoreUserAttributes: "{{ (restid_store.ersRESTIDStoreUserAttributes | cat_strip_nulls) if (restid_store.ersRESTIDStoreUserAttributes | cat_strip_nulls) is not none else omit }}"
+        id: "{{ restid_store.id if restid_store.id is not none else omit }}"
+        ise_client_cert: "{{ restid_store.ise_client_cert if restid_store.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ restid_store.ise_client_key if restid_store.ise_client_key is not none else omit }}"
+        ise_debug: "{{ restid_store.ise_debug if restid_store.ise_debug is not none else omit }}"
+        ise_hostname: "{{ restid_store.ise_hostname if restid_store.ise_hostname is not none else omit }}"
+        ise_password: "{{ restid_store.ise_password if restid_store.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ restid_store.ise_single_request_timeout if restid_store.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ restid_store.ise_username if restid_store.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ restid_store.ise_uses_api_gateway if restid_store.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ restid_store.ise_uses_csrf_token if restid_store.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ restid_store.ise_verify if restid_store.ise_verify is not none else omit }}"
+        ise_version: "{{ restid_store.ise_version if restid_store.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ restid_store.ise_wait_on_rate_limit if restid_store.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ restid_store.name if restid_store.name is not none else omit }}"
+      register: restid_store_result
+      tags:
+        - never
+        - restid_store

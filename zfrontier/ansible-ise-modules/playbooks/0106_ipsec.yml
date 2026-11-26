@@ -1,0 +1,54 @@
+---
+# Sample playbook for cisco.ise.ipsec (cisco.ise 3.3.0)
+# Build order: 106
+# Resource module for Ipsec
+# Reads ../models/ipsec.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/ipsec_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags ipsec.
+
+- name: "0106 ipsec"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/ipsec.yml
+  tasks:
+    - name: Run ipsec from its model
+      cisco.ise.ipsec:
+        authType: "{{ ipsec.authType if ipsec.authType is not none else omit }}"
+        certId: "{{ ipsec.certId if ipsec.certId is not none else omit }}"
+        configureVti: "{{ ipsec.configureVti if ipsec.configureVti is not none else omit }}"
+        espAhProtocol: "{{ ipsec.espAhProtocol if ipsec.espAhProtocol is not none else omit }}"
+        hostName: "{{ ipsec.hostName if ipsec.hostName is not none else omit }}"
+        iface: "{{ ipsec.iface if ipsec.iface is not none else omit }}"
+        ikeReAuthTime: "{{ ipsec.ikeReAuthTime if ipsec.ikeReAuthTime is not none else omit }}"
+        ikeVersion: "{{ ipsec.ikeVersion if ipsec.ikeVersion is not none else omit }}"
+        ise_client_cert: "{{ ipsec.ise_client_cert if ipsec.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ ipsec.ise_client_key if ipsec.ise_client_key is not none else omit }}"
+        ise_debug: "{{ ipsec.ise_debug if ipsec.ise_debug is not none else omit }}"
+        ise_hostname: "{{ ipsec.ise_hostname if ipsec.ise_hostname is not none else omit }}"
+        ise_password: "{{ ipsec.ise_password if ipsec.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ ipsec.ise_single_request_timeout if ipsec.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ ipsec.ise_username if ipsec.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ ipsec.ise_uses_api_gateway if ipsec.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ ipsec.ise_uses_csrf_token if ipsec.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ ipsec.ise_verify if ipsec.ise_verify is not none else omit }}"
+        ise_version: "{{ ipsec.ise_version if ipsec.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ ipsec.ise_wait_on_rate_limit if ipsec.ise_wait_on_rate_limit is not none else omit }}"
+        localInternalIp: "{{ ipsec.localInternalIp if ipsec.localInternalIp is not none else omit }}"
+        modeOption: "{{ ipsec.modeOption if ipsec.modeOption is not none else omit }}"
+        nadIp: "{{ ipsec.nadIp if ipsec.nadIp is not none else omit }}"
+        phaseOneDHGroup: "{{ ipsec.phaseOneDHGroup if ipsec.phaseOneDHGroup is not none else omit }}"
+        phaseOneEncryptionAlgo: "{{ ipsec.phaseOneEncryptionAlgo if ipsec.phaseOneEncryptionAlgo is not none else omit }}"
+        phaseOneHashAlgo: "{{ ipsec.phaseOneHashAlgo if ipsec.phaseOneHashAlgo is not none else omit }}"
+        phaseOneLifeTime: "{{ ipsec.phaseOneLifeTime if ipsec.phaseOneLifeTime is not none else omit }}"
+        phaseTwoDHGroup: "{{ ipsec.phaseTwoDHGroup if ipsec.phaseTwoDHGroup is not none else omit }}"
+        phaseTwoEncryptionAlgo: "{{ ipsec.phaseTwoEncryptionAlgo if ipsec.phaseTwoEncryptionAlgo is not none else omit }}"
+        phaseTwoHashAlgo: "{{ ipsec.phaseTwoHashAlgo if ipsec.phaseTwoHashAlgo is not none else omit }}"
+        phaseTwoLifeTime: "{{ ipsec.phaseTwoLifeTime if ipsec.phaseTwoLifeTime is not none else omit }}"
+        psk: "{{ ipsec.psk if ipsec.psk is not none else omit }}"
+        remotePeerInternalIp: "{{ ipsec.remotePeerInternalIp if ipsec.remotePeerInternalIp is not none else omit }}"
+      register: ipsec_result
+      tags:
+        - never
+        - ipsec

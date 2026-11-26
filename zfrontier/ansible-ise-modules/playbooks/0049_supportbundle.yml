@@ -1,0 +1,38 @@
+---
+# Sample playbook for cisco.ise.supportbundle (cisco.ise 3.3.0)
+# Build order: 49
+# Resource module for Supportbundle
+# Reads ../models/supportbundle.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/supportbundle_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags supportbundle.
+
+- name: "0049 supportbundle"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/supportbundle.yml
+  tasks:
+    - name: Run supportbundle from its model
+      cisco.ise.supportbundle:
+        description: "{{ supportbundle.description if supportbundle.description is not none else omit }}"
+        hostName: "{{ supportbundle.hostName if supportbundle.hostName is not none else omit }}"
+        id: "{{ supportbundle.id if supportbundle.id is not none else omit }}"
+        ise_client_cert: "{{ supportbundle.ise_client_cert if supportbundle.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ supportbundle.ise_client_key if supportbundle.ise_client_key is not none else omit }}"
+        ise_debug: "{{ supportbundle.ise_debug if supportbundle.ise_debug is not none else omit }}"
+        ise_hostname: "{{ supportbundle.ise_hostname if supportbundle.ise_hostname is not none else omit }}"
+        ise_password: "{{ supportbundle.ise_password if supportbundle.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ supportbundle.ise_single_request_timeout if supportbundle.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ supportbundle.ise_username if supportbundle.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ supportbundle.ise_uses_api_gateway if supportbundle.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ supportbundle.ise_uses_csrf_token if supportbundle.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ supportbundle.ise_verify if supportbundle.ise_verify is not none else omit }}"
+        ise_version: "{{ supportbundle.ise_version if supportbundle.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ supportbundle.ise_wait_on_rate_limit if supportbundle.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ supportbundle.name if supportbundle.name is not none else omit }}"
+        supportBundleIncludeOptions: "{{ (supportbundle.supportBundleIncludeOptions | cat_strip_nulls) if (supportbundle.supportBundleIncludeOptions | cat_strip_nulls) is not none else omit }}"
+      register: supportbundle_result
+      tags:
+        - never
+        - supportbundle

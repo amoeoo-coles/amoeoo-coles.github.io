@@ -1,0 +1,41 @@
+---
+# Sample playbook for cisco.ise.node_deployment (cisco.ise 3.3.0)
+# Build order: 1
+# Resource module for Node Deployment
+# Reads ../models/node_deployment.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/node_deployment_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags node_deployment.
+
+- name: "0001 node_deployment"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/node_deployment.yml
+  tasks:
+    - name: Run node_deployment from its model
+      cisco.ise.node_deployment:
+        allowCertImport: "{{ node_deployment.allowCertImport if node_deployment.allowCertImport is not none else omit }}"
+        fqdn: "{{ node_deployment.fqdn if node_deployment.fqdn is not none else omit }}"
+        hostname: "{{ node_deployment.hostname if node_deployment.hostname is not none else omit }}"
+        ise_client_cert: "{{ node_deployment.ise_client_cert if node_deployment.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ node_deployment.ise_client_key if node_deployment.ise_client_key is not none else omit }}"
+        ise_debug: "{{ node_deployment.ise_debug if node_deployment.ise_debug is not none else omit }}"
+        ise_hostname: "{{ node_deployment.ise_hostname if node_deployment.ise_hostname is not none else omit }}"
+        ise_password: "{{ node_deployment.ise_password if node_deployment.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ node_deployment.ise_single_request_timeout if node_deployment.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ node_deployment.ise_username if node_deployment.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ node_deployment.ise_uses_api_gateway if node_deployment.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ node_deployment.ise_uses_csrf_token if node_deployment.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ node_deployment.ise_verify if node_deployment.ise_verify is not none else omit }}"
+        ise_version: "{{ node_deployment.ise_version if node_deployment.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ node_deployment.ise_wait_on_rate_limit if node_deployment.ise_wait_on_rate_limit is not none else omit }}"
+        password: "{{ node_deployment.password if node_deployment.password is not none else omit }}"
+        roles: "{{ (node_deployment.roles | cat_strip_nulls) if (node_deployment.roles | cat_strip_nulls) is not none else omit }}"
+        services: "{{ (node_deployment.services | cat_strip_nulls) if (node_deployment.services | cat_strip_nulls) is not none else omit }}"
+        state: "{{ node_deployment.state if node_deployment.state is not none else omit }}"
+        userName: "{{ node_deployment.userName if node_deployment.userName is not none else omit }}"
+      register: node_deployment_result
+      tags:
+        - never
+        - node_deployment

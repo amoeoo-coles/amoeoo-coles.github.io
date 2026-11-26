@@ -1,0 +1,37 @@
+---
+# Sample playbook for cisco.ise.network_device_group (cisco.ise 3.3.0)
+# Build order: 102
+# Resource module for Networkdevicegroup
+# Reads ../models/network_device_group.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/network_device_group_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags network_device_group.
+
+- name: "0102 network_device_group"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/network_device_group.yml
+  tasks:
+    - name: Run network_device_group from its model
+      cisco.ise.network_device_group:
+        description: "{{ network_device_group.description if network_device_group.description is not none else omit }}"
+        id: "{{ network_device_group.id if network_device_group.id is not none else omit }}"
+        ise_client_cert: "{{ network_device_group.ise_client_cert if network_device_group.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ network_device_group.ise_client_key if network_device_group.ise_client_key is not none else omit }}"
+        ise_debug: "{{ network_device_group.ise_debug if network_device_group.ise_debug is not none else omit }}"
+        ise_hostname: "{{ network_device_group.ise_hostname if network_device_group.ise_hostname is not none else omit }}"
+        ise_password: "{{ network_device_group.ise_password if network_device_group.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ network_device_group.ise_single_request_timeout if network_device_group.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ network_device_group.ise_username if network_device_group.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ network_device_group.ise_uses_api_gateway if network_device_group.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ network_device_group.ise_uses_csrf_token if network_device_group.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ network_device_group.ise_verify if network_device_group.ise_verify is not none else omit }}"
+        ise_version: "{{ network_device_group.ise_version if network_device_group.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ network_device_group.ise_wait_on_rate_limit if network_device_group.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ network_device_group.name if network_device_group.name is not none else omit }}"
+        othername: "{{ network_device_group.othername if network_device_group.othername is not none else omit }}"
+      register: network_device_group_result
+      tags:
+        - never
+        - network_device_group

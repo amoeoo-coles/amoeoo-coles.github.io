@@ -1,0 +1,48 @@
+---
+# Sample playbook for cisco.ise.radius_server_sequence (cisco.ise 3.3.0)
+# Build order: 115
+# Resource module for RADIUSserversequence
+# Reads ../models/radius_server_sequence.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/radius_server_sequence_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags radius_server_sequence.
+
+- name: "0115 radius_server_sequence"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/radius_server_sequence.yml
+  tasks:
+    - name: Run radius_server_sequence from its model
+      cisco.ise.radius_server_sequence:
+        BeforeAcceptAttrManipulatorsList: "{{ (radius_server_sequence.BeforeAcceptAttrManipulatorsList | cat_strip_nulls) if (radius_server_sequence.BeforeAcceptAttrManipulatorsList | cat_strip_nulls) is not none else omit }}"
+        OnRequestAttrManipulatorList: "{{ (radius_server_sequence.OnRequestAttrManipulatorList | cat_strip_nulls) if (radius_server_sequence.OnRequestAttrManipulatorList | cat_strip_nulls) is not none else omit }}"
+        RADIUSServerList: "{{ radius_server_sequence.RADIUSServerList if radius_server_sequence.RADIUSServerList is not none else omit }}"
+        continueAuthorzPolicy: "{{ radius_server_sequence.continueAuthorzPolicy if radius_server_sequence.continueAuthorzPolicy is not none else omit }}"
+        description: "{{ radius_server_sequence.description if radius_server_sequence.description is not none else omit }}"
+        id: "{{ radius_server_sequence.id if radius_server_sequence.id is not none else omit }}"
+        ise_client_cert: "{{ radius_server_sequence.ise_client_cert if radius_server_sequence.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ radius_server_sequence.ise_client_key if radius_server_sequence.ise_client_key is not none else omit }}"
+        ise_debug: "{{ radius_server_sequence.ise_debug if radius_server_sequence.ise_debug is not none else omit }}"
+        ise_hostname: "{{ radius_server_sequence.ise_hostname if radius_server_sequence.ise_hostname is not none else omit }}"
+        ise_password: "{{ radius_server_sequence.ise_password if radius_server_sequence.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ radius_server_sequence.ise_single_request_timeout if radius_server_sequence.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ radius_server_sequence.ise_username if radius_server_sequence.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ radius_server_sequence.ise_uses_api_gateway if radius_server_sequence.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ radius_server_sequence.ise_uses_csrf_token if radius_server_sequence.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ radius_server_sequence.ise_verify if radius_server_sequence.ise_verify is not none else omit }}"
+        ise_version: "{{ radius_server_sequence.ise_version if radius_server_sequence.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ radius_server_sequence.ise_wait_on_rate_limit if radius_server_sequence.ise_wait_on_rate_limit is not none else omit }}"
+        localAccounting: "{{ radius_server_sequence.localAccounting if radius_server_sequence.localAccounting is not none else omit }}"
+        name: "{{ radius_server_sequence.name if radius_server_sequence.name is not none else omit }}"
+        prefixSeparator: "{{ radius_server_sequence.prefixSeparator if radius_server_sequence.prefixSeparator is not none else omit }}"
+        remoteAccounting: "{{ radius_server_sequence.remoteAccounting if radius_server_sequence.remoteAccounting is not none else omit }}"
+        stripPrefix: "{{ radius_server_sequence.stripPrefix if radius_server_sequence.stripPrefix is not none else omit }}"
+        stripSuffix: "{{ radius_server_sequence.stripSuffix if radius_server_sequence.stripSuffix is not none else omit }}"
+        suffixSeparator: "{{ radius_server_sequence.suffixSeparator if radius_server_sequence.suffixSeparator is not none else omit }}"
+        useAttrSetBeforeAcc: "{{ radius_server_sequence.useAttrSetBeforeAcc if radius_server_sequence.useAttrSetBeforeAcc is not none else omit }}"
+        useAttrSetOnRequest: "{{ radius_server_sequence.useAttrSetOnRequest if radius_server_sequence.useAttrSetOnRequest is not none else omit }}"
+      register: radius_server_sequence_result
+      tags:
+        - never
+        - radius_server_sequence

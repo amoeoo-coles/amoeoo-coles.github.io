@@ -1,0 +1,42 @@
+---
+# Sample playbook for cisco.ise.sgacl (cisco.ise 3.3.0)
+# Build order: 150
+# Resource module for SGacl
+# Reads ../models/sgacl.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/sgacl_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags sgacl.
+
+- name: "0150 sgacl"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/sgacl.yml
+  tasks:
+    - name: Run sgacl from its model
+      cisco.ise.sgacl:
+        aclcontent: "{{ sgacl.aclcontent if sgacl.aclcontent is not none else omit }}"
+        description: "{{ sgacl.description if sgacl.description is not none else omit }}"
+        generationId: "{{ sgacl.generationId if sgacl.generationId is not none else omit }}"
+        id: "{{ sgacl.id if sgacl.id is not none else omit }}"
+        ipVersion: "{{ sgacl.ipVersion if sgacl.ipVersion is not none else omit }}"
+        ise_client_cert: "{{ sgacl.ise_client_cert if sgacl.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ sgacl.ise_client_key if sgacl.ise_client_key is not none else omit }}"
+        ise_debug: "{{ sgacl.ise_debug if sgacl.ise_debug is not none else omit }}"
+        ise_hostname: "{{ sgacl.ise_hostname if sgacl.ise_hostname is not none else omit }}"
+        ise_password: "{{ sgacl.ise_password if sgacl.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ sgacl.ise_single_request_timeout if sgacl.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ sgacl.ise_username if sgacl.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ sgacl.ise_uses_api_gateway if sgacl.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ sgacl.ise_uses_csrf_token if sgacl.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ sgacl.ise_verify if sgacl.ise_verify is not none else omit }}"
+        ise_version: "{{ sgacl.ise_version if sgacl.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ sgacl.ise_wait_on_rate_limit if sgacl.ise_wait_on_rate_limit is not none else omit }}"
+        modelledContent: "{{ sgacl.modelledContent if sgacl.modelledContent is not none else omit }}"
+        name: "{{ sgacl.name if sgacl.name is not none else omit }}"
+        readOnly: "{{ sgacl.readOnly if sgacl.readOnly is not none else omit }}"
+        sgACLType: "{{ sgacl.sgACLType if sgacl.sgACLType is not none else omit }}"
+      register: sgacl_result
+      tags:
+        - never
+        - sgacl

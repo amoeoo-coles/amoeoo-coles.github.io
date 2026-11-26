@@ -1,0 +1,39 @@
+---
+# Sample playbook for cisco.ise.proxy_connection_settings (cisco.ise 3.3.0)
+# Build order: 234
+# Resource module for Proxy Connection Settings
+# Reads ../models/proxy_connection_settings.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/proxy_connection_settings_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags proxy_connection_settings.
+
+- name: "0234 proxy_connection_settings"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/proxy_connection_settings.yml
+  tasks:
+    - name: Run proxy_connection_settings from its model
+      cisco.ise.proxy_connection_settings:
+        bypassHosts: "{{ proxy_connection_settings.bypassHosts if proxy_connection_settings.bypassHosts is not none else omit }}"
+        fqdn: "{{ proxy_connection_settings.fqdn if proxy_connection_settings.fqdn is not none else omit }}"
+        ise_client_cert: "{{ proxy_connection_settings.ise_client_cert if proxy_connection_settings.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ proxy_connection_settings.ise_client_key if proxy_connection_settings.ise_client_key is not none else omit }}"
+        ise_debug: "{{ proxy_connection_settings.ise_debug if proxy_connection_settings.ise_debug is not none else omit }}"
+        ise_hostname: "{{ proxy_connection_settings.ise_hostname if proxy_connection_settings.ise_hostname is not none else omit }}"
+        ise_password: "{{ proxy_connection_settings.ise_password if proxy_connection_settings.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ proxy_connection_settings.ise_single_request_timeout if proxy_connection_settings.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ proxy_connection_settings.ise_username if proxy_connection_settings.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ proxy_connection_settings.ise_uses_api_gateway if proxy_connection_settings.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ proxy_connection_settings.ise_uses_csrf_token if proxy_connection_settings.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ proxy_connection_settings.ise_verify if proxy_connection_settings.ise_verify is not none else omit }}"
+        ise_version: "{{ proxy_connection_settings.ise_version if proxy_connection_settings.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ proxy_connection_settings.ise_wait_on_rate_limit if proxy_connection_settings.ise_wait_on_rate_limit is not none else omit }}"
+        password: "{{ proxy_connection_settings.password if proxy_connection_settings.password is not none else omit }}"
+        passwordRequired: "{{ proxy_connection_settings.passwordRequired if proxy_connection_settings.passwordRequired is not none else omit }}"
+        port: "{{ proxy_connection_settings.port if proxy_connection_settings.port is not none else omit }}"
+        userName: "{{ proxy_connection_settings.userName if proxy_connection_settings.userName is not none else omit }}"
+      register: proxy_connection_settings_result
+      tags:
+        - never
+        - proxy_connection_settings

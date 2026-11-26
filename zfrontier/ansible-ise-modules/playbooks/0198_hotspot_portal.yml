@@ -1,0 +1,40 @@
+---
+# Sample playbook for cisco.ise.hotspot_portal (cisco.ise 3.3.0)
+# Build order: 198
+# Resource module for Hotspotportal
+# Reads ../models/hotspot_portal.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/hotspot_portal_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags hotspot_portal.
+
+- name: "0198 hotspot_portal"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/hotspot_portal.yml
+  tasks:
+    - name: Run hotspot_portal from its model
+      cisco.ise.hotspot_portal:
+        customizations: "{{ (hotspot_portal.customizations | cat_strip_nulls) if (hotspot_portal.customizations | cat_strip_nulls) is not none else omit }}"
+        description: "{{ hotspot_portal.description if hotspot_portal.description is not none else omit }}"
+        id: "{{ hotspot_portal.id if hotspot_portal.id is not none else omit }}"
+        ise_client_cert: "{{ hotspot_portal.ise_client_cert if hotspot_portal.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ hotspot_portal.ise_client_key if hotspot_portal.ise_client_key is not none else omit }}"
+        ise_debug: "{{ hotspot_portal.ise_debug if hotspot_portal.ise_debug is not none else omit }}"
+        ise_hostname: "{{ hotspot_portal.ise_hostname if hotspot_portal.ise_hostname is not none else omit }}"
+        ise_password: "{{ hotspot_portal.ise_password if hotspot_portal.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ hotspot_portal.ise_single_request_timeout if hotspot_portal.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ hotspot_portal.ise_username if hotspot_portal.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ hotspot_portal.ise_uses_api_gateway if hotspot_portal.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ hotspot_portal.ise_uses_csrf_token if hotspot_portal.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ hotspot_portal.ise_verify if hotspot_portal.ise_verify is not none else omit }}"
+        ise_version: "{{ hotspot_portal.ise_version if hotspot_portal.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ hotspot_portal.ise_wait_on_rate_limit if hotspot_portal.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ hotspot_portal.name if hotspot_portal.name is not none else omit }}"
+        portalTestUrl: "{{ hotspot_portal.portalTestUrl if hotspot_portal.portalTestUrl is not none else omit }}"
+        portalType: "{{ hotspot_portal.portalType if hotspot_portal.portalType is not none else omit }}"
+        settings: "{{ (hotspot_portal.settings | cat_strip_nulls) if (hotspot_portal.settings | cat_strip_nulls) is not none else omit }}"
+      register: hotspot_portal_result
+      tags:
+        - never
+        - hotspot_portal

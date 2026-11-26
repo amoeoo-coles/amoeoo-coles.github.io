@@ -1,0 +1,34 @@
+---
+# Sample playbook for cisco.ise.node_deployment_sync (cisco.ise 3.3.0)
+# Build order: 3
+# Resource module for Node Deployment Sync
+# Reads ../models/node_deployment_sync.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/node_deployment_sync_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags node_deployment_sync.
+
+- name: "0003 node_deployment_sync"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/node_deployment_sync.yml
+  tasks:
+    - name: Run node_deployment_sync from its model
+      cisco.ise.node_deployment_sync:
+        hostname: "{{ node_deployment_sync.hostname if node_deployment_sync.hostname is not none else omit }}"
+        ise_client_cert: "{{ node_deployment_sync.ise_client_cert if node_deployment_sync.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ node_deployment_sync.ise_client_key if node_deployment_sync.ise_client_key is not none else omit }}"
+        ise_debug: "{{ node_deployment_sync.ise_debug if node_deployment_sync.ise_debug is not none else omit }}"
+        ise_hostname: "{{ node_deployment_sync.ise_hostname if node_deployment_sync.ise_hostname is not none else omit }}"
+        ise_password: "{{ node_deployment_sync.ise_password if node_deployment_sync.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ node_deployment_sync.ise_single_request_timeout if node_deployment_sync.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ node_deployment_sync.ise_username if node_deployment_sync.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ node_deployment_sync.ise_uses_api_gateway if node_deployment_sync.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ node_deployment_sync.ise_uses_csrf_token if node_deployment_sync.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ node_deployment_sync.ise_verify if node_deployment_sync.ise_verify is not none else omit }}"
+        ise_version: "{{ node_deployment_sync.ise_version if node_deployment_sync.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ node_deployment_sync.ise_wait_on_rate_limit if node_deployment_sync.ise_wait_on_rate_limit is not none else omit }}"
+      register: node_deployment_sync_result
+      tags:
+        - never
+        - node_deployment_sync

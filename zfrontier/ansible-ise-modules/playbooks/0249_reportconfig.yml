@@ -1,0 +1,41 @@
+---
+# Sample playbook for cisco.ise.reportconfig (cisco.ise 3.3.0)
+# Build order: 249
+# Resource module for Reportconfig
+# Reads ../models/reportconfig.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/reportconfig_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags reportconfig.
+
+- name: "0249 reportconfig"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/reportconfig.yml
+  tasks:
+    - name: Run reportconfig from its model
+      cisco.ise.reportconfig:
+        containsManualDefs: "{{ reportconfig.containsManualDefs if reportconfig.containsManualDefs is not none else omit }}"
+        containsValues: "{{ reportconfig.containsValues if reportconfig.containsValues is not none else omit }}"
+        ise_client_cert: "{{ reportconfig.ise_client_cert if reportconfig.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ reportconfig.ise_client_key if reportconfig.ise_client_key is not none else omit }}"
+        ise_debug: "{{ reportconfig.ise_debug if reportconfig.ise_debug is not none else omit }}"
+        ise_hostname: "{{ reportconfig.ise_hostname if reportconfig.ise_hostname is not none else omit }}"
+        ise_password: "{{ reportconfig.ise_password if reportconfig.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ reportconfig.ise_single_request_timeout if reportconfig.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ reportconfig.ise_username if reportconfig.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ reportconfig.ise_uses_api_gateway if reportconfig.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ reportconfig.ise_uses_csrf_token if reportconfig.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ reportconfig.ise_verify if reportconfig.ise_verify is not none else omit }}"
+        ise_version: "{{ reportconfig.ise_version if reportconfig.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ reportconfig.ise_wait_on_rate_limit if reportconfig.ise_wait_on_rate_limit is not none else omit }}"
+        policyVerId: "{{ reportconfig.policyVerId if reportconfig.policyVerId is not none else omit }}"
+        policyVerIdOnISE: "{{ reportconfig.policyVerIdOnISE if reportconfig.policyVerIdOnISE is not none else omit }}"
+        pullId: "{{ reportconfig.pullId if reportconfig.pullId is not none else omit }}"
+        reportData: "{{ (reportconfig.reportData | cat_strip_nulls) if (reportconfig.reportData | cat_strip_nulls) is not none else omit }}"
+        reportType: "{{ reportconfig.reportType if reportconfig.reportType is not none else omit }}"
+        validationResult: "{{ reportconfig.validationResult if reportconfig.validationResult is not none else omit }}"
+      register: reportconfig_result
+      tags:
+        - never
+        - reportconfig

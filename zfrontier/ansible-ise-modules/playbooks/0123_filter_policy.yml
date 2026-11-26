@@ -1,0 +1,40 @@
+---
+# Sample playbook for cisco.ise.filter_policy (cisco.ise 3.3.0)
+# Build order: 123
+# Resource module for Filterpolicy
+# Reads ../models/filter_policy.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/filter_policy_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags filter_policy.
+
+- name: "0123 filter_policy"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/filter_policy.yml
+  tasks:
+    - name: Run filter_policy from its model
+      cisco.ise.filter_policy:
+        description: "{{ filter_policy.description if filter_policy.description is not none else omit }}"
+        domains: "{{ filter_policy.domains if filter_policy.domains is not none else omit }}"
+        id: "{{ filter_policy.id if filter_policy.id is not none else omit }}"
+        ise_client_cert: "{{ filter_policy.ise_client_cert if filter_policy.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ filter_policy.ise_client_key if filter_policy.ise_client_key is not none else omit }}"
+        ise_debug: "{{ filter_policy.ise_debug if filter_policy.ise_debug is not none else omit }}"
+        ise_hostname: "{{ filter_policy.ise_hostname if filter_policy.ise_hostname is not none else omit }}"
+        ise_password: "{{ filter_policy.ise_password if filter_policy.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ filter_policy.ise_single_request_timeout if filter_policy.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ filter_policy.ise_username if filter_policy.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ filter_policy.ise_uses_api_gateway if filter_policy.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ filter_policy.ise_uses_csrf_token if filter_policy.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ filter_policy.ise_verify if filter_policy.ise_verify is not none else omit }}"
+        ise_version: "{{ filter_policy.ise_version if filter_policy.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ filter_policy.ise_wait_on_rate_limit if filter_policy.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ filter_policy.name if filter_policy.name is not none else omit }}"
+        sgt: "{{ filter_policy.sgt if filter_policy.sgt is not none else omit }}"
+        subnet: "{{ filter_policy.subnet if filter_policy.subnet is not none else omit }}"
+        vn: "{{ filter_policy.vn if filter_policy.vn is not none else omit }}"
+      register: filter_policy_result
+      tags:
+        - never
+        - filter_policy

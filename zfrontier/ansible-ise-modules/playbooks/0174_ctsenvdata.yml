@@ -1,0 +1,40 @@
+---
+# Sample playbook for cisco.ise.ctsenvdata (cisco.ise 3.3.0)
+# Build order: 174
+# Resource module for Ctsenvdata
+# Reads ../models/ctsenvdata.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/ctsenvdata_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags ctsenvdata.
+
+- name: "0174 ctsenvdata"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/ctsenvdata.yml
+  tasks:
+    - name: Run ctsenvdata from its model
+      cisco.ise.ctsenvdata:
+        capability: "{{ (ctsenvdata.capability | cat_strip_nulls) if (ctsenvdata.capability | cat_strip_nulls) is not none else omit }}"
+        deviceName: "{{ ctsenvdata.deviceName if ctsenvdata.deviceName is not none else omit }}"
+        deviceSGt: "{{ ctsenvdata.deviceSGt if ctsenvdata.deviceSGt is not none else omit }}"
+        ise_client_cert: "{{ ctsenvdata.ise_client_cert if ctsenvdata.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ ctsenvdata.ise_client_key if ctsenvdata.ise_client_key is not none else omit }}"
+        ise_debug: "{{ ctsenvdata.ise_debug if ctsenvdata.ise_debug is not none else omit }}"
+        ise_hostname: "{{ ctsenvdata.ise_hostname if ctsenvdata.ise_hostname is not none else omit }}"
+        ise_password: "{{ ctsenvdata.ise_password if ctsenvdata.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ ctsenvdata.ise_single_request_timeout if ctsenvdata.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ ctsenvdata.ise_username if ctsenvdata.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ ctsenvdata.ise_uses_api_gateway if ctsenvdata.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ ctsenvdata.ise_uses_csrf_token if ctsenvdata.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ ctsenvdata.ise_verify if ctsenvdata.ise_verify is not none else omit }}"
+        ise_version: "{{ ctsenvdata.ise_version if ctsenvdata.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ ctsenvdata.ise_wait_on_rate_limit if ctsenvdata.ise_wait_on_rate_limit is not none else omit }}"
+        policyVerId: "{{ ctsenvdata.policyVerId if ctsenvdata.policyVerId is not none else omit }}"
+        refreshTimer: "{{ ctsenvdata.refreshTimer if ctsenvdata.refreshTimer is not none else omit }}"
+        servers: "{{ (ctsenvdata.servers | cat_strip_nulls) if (ctsenvdata.servers | cat_strip_nulls) is not none else omit }}"
+        sgts: "{{ (ctsenvdata.sgts | cat_strip_nulls) if (ctsenvdata.sgts | cat_strip_nulls) is not none else omit }}"
+      register: ctsenvdata_result
+      tags:
+        - never
+        - ctsenvdata

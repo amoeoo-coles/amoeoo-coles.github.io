@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.ise.service_info (cisco.ise 3.3.0)
+# Build order: 252
+# Information module for Service
+# Reads ../models/service_info.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/service_info_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+
+- name: "0252 service_info"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/service_info.yml
+  tasks:
+    - name: Run service_info from its model
+      cisco.ise.service_info:
+        ise_client_cert: "{{ service_info.ise_client_cert if service_info.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ service_info.ise_client_key if service_info.ise_client_key is not none else omit }}"
+        ise_debug: "{{ service_info.ise_debug if service_info.ise_debug is not none else omit }}"
+        ise_hostname: "{{ service_info.ise_hostname if service_info.ise_hostname is not none else omit }}"
+        ise_password: "{{ service_info.ise_password if service_info.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ service_info.ise_single_request_timeout if service_info.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ service_info.ise_username if service_info.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ service_info.ise_uses_api_gateway if service_info.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ service_info.ise_uses_csrf_token if service_info.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ service_info.ise_verify if service_info.ise_verify is not none else omit }}"
+        ise_version: "{{ service_info.ise_version if service_info.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ service_info.ise_wait_on_rate_limit if service_info.ise_wait_on_rate_limit is not none else omit }}"
+        page: "{{ service_info.page if service_info.page is not none else omit }}"
+        size: "{{ service_info.size if service_info.size is not none else omit }}"
+      register: service_info_result

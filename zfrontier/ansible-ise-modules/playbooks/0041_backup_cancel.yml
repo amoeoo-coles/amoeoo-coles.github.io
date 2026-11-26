@@ -1,0 +1,33 @@
+---
+# Sample playbook for cisco.ise.backup_cancel (cisco.ise 3.3.0)
+# Build order: 41
+# Resource module for Backup Cancel
+# Reads ../models/backup_cancel.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/backup_cancel_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags backup_cancel.
+
+- name: "0041 backup_cancel"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/backup_cancel.yml
+  tasks:
+    - name: Run backup_cancel from its model
+      cisco.ise.backup_cancel:
+        ise_client_cert: "{{ backup_cancel.ise_client_cert if backup_cancel.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ backup_cancel.ise_client_key if backup_cancel.ise_client_key is not none else omit }}"
+        ise_debug: "{{ backup_cancel.ise_debug if backup_cancel.ise_debug is not none else omit }}"
+        ise_hostname: "{{ backup_cancel.ise_hostname if backup_cancel.ise_hostname is not none else omit }}"
+        ise_password: "{{ backup_cancel.ise_password if backup_cancel.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ backup_cancel.ise_single_request_timeout if backup_cancel.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ backup_cancel.ise_username if backup_cancel.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ backup_cancel.ise_uses_api_gateway if backup_cancel.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ backup_cancel.ise_uses_csrf_token if backup_cancel.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ backup_cancel.ise_verify if backup_cancel.ise_verify is not none else omit }}"
+        ise_version: "{{ backup_cancel.ise_version if backup_cancel.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ backup_cancel.ise_wait_on_rate_limit if backup_cancel.ise_wait_on_rate_limit is not none else omit }}"
+      register: backup_cancel_result
+      tags:
+        - never
+        - backup_cancel

@@ -1,0 +1,48 @@
+---
+# Sample playbook for cisco.ise.endpoint (cisco.ise 3.3.0)
+# Build order: 127
+# Resource module for Endpoint
+# Reads ../models/endpoint.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/endpoint_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags endpoint.
+
+- name: "0127 endpoint"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/endpoint.yml
+  tasks:
+    - name: Run endpoint from its model
+      cisco.ise.endpoint:
+        customAttributes: "{{ (endpoint.customAttributes | cat_strip_nulls) if (endpoint.customAttributes | cat_strip_nulls) is not none else omit }}"
+        description: "{{ endpoint.description if endpoint.description is not none else omit }}"
+        groupId: "{{ endpoint.groupId if endpoint.groupId is not none else omit }}"
+        id: "{{ endpoint.id if endpoint.id is not none else omit }}"
+        identityStore: "{{ endpoint.identityStore if endpoint.identityStore is not none else omit }}"
+        identityStoreId: "{{ endpoint.identityStoreId if endpoint.identityStoreId is not none else omit }}"
+        ise_client_cert: "{{ endpoint.ise_client_cert if endpoint.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ endpoint.ise_client_key if endpoint.ise_client_key is not none else omit }}"
+        ise_debug: "{{ endpoint.ise_debug if endpoint.ise_debug is not none else omit }}"
+        ise_hostname: "{{ endpoint.ise_hostname if endpoint.ise_hostname is not none else omit }}"
+        ise_password: "{{ endpoint.ise_password if endpoint.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ endpoint.ise_single_request_timeout if endpoint.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ endpoint.ise_username if endpoint.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ endpoint.ise_uses_api_gateway if endpoint.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ endpoint.ise_uses_csrf_token if endpoint.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ endpoint.ise_verify if endpoint.ise_verify is not none else omit }}"
+        ise_version: "{{ endpoint.ise_version if endpoint.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ endpoint.ise_wait_on_rate_limit if endpoint.ise_wait_on_rate_limit is not none else omit }}"
+        mac: "{{ endpoint.mac if endpoint.mac is not none else omit }}"
+        mdmAttributes: "{{ (endpoint.mdmAttributes | cat_strip_nulls) if (endpoint.mdmAttributes | cat_strip_nulls) is not none else omit }}"
+        name: "{{ endpoint.name if endpoint.name is not none else omit }}"
+        portalUser: "{{ endpoint.portalUser if endpoint.portalUser is not none else omit }}"
+        profileId: "{{ endpoint.profileId if endpoint.profileId is not none else omit }}"
+        staticGroupAssignment: "{{ endpoint.staticGroupAssignment if endpoint.staticGroupAssignment is not none else omit }}"
+        staticGroupAssignmentDefined: "{{ endpoint.staticGroupAssignmentDefined if endpoint.staticGroupAssignmentDefined is not none else omit }}"
+        staticProfileAssignment: "{{ endpoint.staticProfileAssignment if endpoint.staticProfileAssignment is not none else omit }}"
+        staticProfileAssignmentDefined: "{{ endpoint.staticProfileAssignmentDefined if endpoint.staticProfileAssignmentDefined is not none else omit }}"
+      register: endpoint_result
+      tags:
+        - never
+        - endpoint

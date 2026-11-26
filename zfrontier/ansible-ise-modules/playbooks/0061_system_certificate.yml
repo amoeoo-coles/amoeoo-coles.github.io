@@ -1,0 +1,38 @@
+---
+# Sample playbook for cisco.ise.system_certificate (cisco.ise 3.3.0)
+# Build order: 61
+# Resource module for Systemcertificate
+# Reads ../models/system_certificate.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/system_certificate_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags system_certificate.
+
+- name: "0061 system_certificate"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/system_certificate.yml
+  tasks:
+    - name: Run system_certificate from its model
+      cisco.ise.system_certificate:
+        description: "{{ system_certificate.description if system_certificate.description is not none else omit }}"
+        ersLocalCertStub: "{{ (system_certificate.ersLocalCertStub | cat_strip_nulls) if (system_certificate.ersLocalCertStub | cat_strip_nulls) is not none else omit }}"
+        id: "{{ system_certificate.id if system_certificate.id is not none else omit }}"
+        ise_client_cert: "{{ system_certificate.ise_client_cert if system_certificate.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ system_certificate.ise_client_key if system_certificate.ise_client_key is not none else omit }}"
+        ise_debug: "{{ system_certificate.ise_debug if system_certificate.ise_debug is not none else omit }}"
+        ise_hostname: "{{ system_certificate.ise_hostname if system_certificate.ise_hostname is not none else omit }}"
+        ise_password: "{{ system_certificate.ise_password if system_certificate.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ system_certificate.ise_single_request_timeout if system_certificate.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ system_certificate.ise_username if system_certificate.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ system_certificate.ise_uses_api_gateway if system_certificate.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ system_certificate.ise_uses_csrf_token if system_certificate.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ system_certificate.ise_verify if system_certificate.ise_verify is not none else omit }}"
+        ise_version: "{{ system_certificate.ise_version if system_certificate.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ system_certificate.ise_wait_on_rate_limit if system_certificate.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ system_certificate.name if system_certificate.name is not none else omit }}"
+        nodeId: "{{ system_certificate.nodeId if system_certificate.nodeId is not none else omit }}"
+      register: system_certificate_result
+      tags:
+        - never
+        - system_certificate

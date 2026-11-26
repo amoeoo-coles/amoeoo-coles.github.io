@@ -1,0 +1,33 @@
+---
+# Sample playbook for cisco.ise.csr_generate_intermediate_ca (cisco.ise 3.3.0)
+# Build order: 57
+# Resource module for CSR Generate Intermediate CA
+# Reads ../models/csr_generate_intermediate_ca.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/csr_generate_intermediate_ca_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags csr_generate_intermediate_ca.
+
+- name: "0057 csr_generate_intermediate_ca"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/csr_generate_intermediate_ca.yml
+  tasks:
+    - name: Run csr_generate_intermediate_ca from its model
+      cisco.ise.csr_generate_intermediate_ca:
+        ise_client_cert: "{{ csr_generate_intermediate_ca.ise_client_cert if csr_generate_intermediate_ca.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ csr_generate_intermediate_ca.ise_client_key if csr_generate_intermediate_ca.ise_client_key is not none else omit }}"
+        ise_debug: "{{ csr_generate_intermediate_ca.ise_debug if csr_generate_intermediate_ca.ise_debug is not none else omit }}"
+        ise_hostname: "{{ csr_generate_intermediate_ca.ise_hostname if csr_generate_intermediate_ca.ise_hostname is not none else omit }}"
+        ise_password: "{{ csr_generate_intermediate_ca.ise_password if csr_generate_intermediate_ca.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ csr_generate_intermediate_ca.ise_single_request_timeout if csr_generate_intermediate_ca.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ csr_generate_intermediate_ca.ise_username if csr_generate_intermediate_ca.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ csr_generate_intermediate_ca.ise_uses_api_gateway if csr_generate_intermediate_ca.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ csr_generate_intermediate_ca.ise_uses_csrf_token if csr_generate_intermediate_ca.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ csr_generate_intermediate_ca.ise_verify if csr_generate_intermediate_ca.ise_verify is not none else omit }}"
+        ise_version: "{{ csr_generate_intermediate_ca.ise_version if csr_generate_intermediate_ca.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ csr_generate_intermediate_ca.ise_wait_on_rate_limit if csr_generate_intermediate_ca.ise_wait_on_rate_limit is not none else omit }}"
+      register: csr_generate_intermediate_ca_result
+      tags:
+        - never
+        - csr_generate_intermediate_ca

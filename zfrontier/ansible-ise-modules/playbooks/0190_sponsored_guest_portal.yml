@@ -1,0 +1,40 @@
+---
+# Sample playbook for cisco.ise.sponsored_guest_portal (cisco.ise 3.3.0)
+# Build order: 190
+# Resource module for Sponsoredguestportal
+# Reads ../models/sponsored_guest_portal.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/sponsored_guest_portal_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags sponsored_guest_portal.
+
+- name: "0190 sponsored_guest_portal"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/sponsored_guest_portal.yml
+  tasks:
+    - name: Run sponsored_guest_portal from its model
+      cisco.ise.sponsored_guest_portal:
+        customizations: "{{ (sponsored_guest_portal.customizations | cat_strip_nulls) if (sponsored_guest_portal.customizations | cat_strip_nulls) is not none else omit }}"
+        description: "{{ sponsored_guest_portal.description if sponsored_guest_portal.description is not none else omit }}"
+        id: "{{ sponsored_guest_portal.id if sponsored_guest_portal.id is not none else omit }}"
+        ise_client_cert: "{{ sponsored_guest_portal.ise_client_cert if sponsored_guest_portal.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ sponsored_guest_portal.ise_client_key if sponsored_guest_portal.ise_client_key is not none else omit }}"
+        ise_debug: "{{ sponsored_guest_portal.ise_debug if sponsored_guest_portal.ise_debug is not none else omit }}"
+        ise_hostname: "{{ sponsored_guest_portal.ise_hostname if sponsored_guest_portal.ise_hostname is not none else omit }}"
+        ise_password: "{{ sponsored_guest_portal.ise_password if sponsored_guest_portal.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ sponsored_guest_portal.ise_single_request_timeout if sponsored_guest_portal.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ sponsored_guest_portal.ise_username if sponsored_guest_portal.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ sponsored_guest_portal.ise_uses_api_gateway if sponsored_guest_portal.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ sponsored_guest_portal.ise_uses_csrf_token if sponsored_guest_portal.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ sponsored_guest_portal.ise_verify if sponsored_guest_portal.ise_verify is not none else omit }}"
+        ise_version: "{{ sponsored_guest_portal.ise_version if sponsored_guest_portal.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ sponsored_guest_portal.ise_wait_on_rate_limit if sponsored_guest_portal.ise_wait_on_rate_limit is not none else omit }}"
+        name: "{{ sponsored_guest_portal.name if sponsored_guest_portal.name is not none else omit }}"
+        portalTestUrl: "{{ sponsored_guest_portal.portalTestUrl if sponsored_guest_portal.portalTestUrl is not none else omit }}"
+        portalType: "{{ sponsored_guest_portal.portalType if sponsored_guest_portal.portalType is not none else omit }}"
+        settings: "{{ (sponsored_guest_portal.settings | cat_strip_nulls) if (sponsored_guest_portal.settings | cat_strip_nulls) is not none else omit }}"
+      register: sponsored_guest_portal_result
+      tags:
+        - never
+        - sponsored_guest_portal

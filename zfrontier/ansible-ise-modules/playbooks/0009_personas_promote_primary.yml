@@ -1,0 +1,29 @@
+---
+# Sample playbook for cisco.ise.personas_promote_primary (cisco.ise 3.3.0)
+# Build order: 9
+# Promote a node as the primary node
+# Reads ../models/personas_promote_primary.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/personas_promote_primary_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags personas_promote_primary.
+
+- name: "0009 personas_promote_primary"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/personas_promote_primary.yml
+  tasks:
+    - name: Run personas_promote_primary from its model
+      cisco.ise.personas_promote_primary:
+        hostname: "{{ personas_promote_primary.hostname if personas_promote_primary.hostname is not none else omit }}"
+        ip: "{{ personas_promote_primary.ip if personas_promote_primary.ip is not none else omit }}"
+        ise_verify: "{{ personas_promote_primary.ise_verify if personas_promote_primary.ise_verify is not none else omit }}"
+        ise_version: "{{ personas_promote_primary.ise_version if personas_promote_primary.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ personas_promote_primary.ise_wait_on_rate_limit if personas_promote_primary.ise_wait_on_rate_limit is not none else omit }}"
+        password: "{{ personas_promote_primary.password if personas_promote_primary.password is not none else omit }}"
+        roles: "{{ (personas_promote_primary.roles | cat_strip_nulls) if (personas_promote_primary.roles | cat_strip_nulls) is not none else omit }}"
+        username: "{{ personas_promote_primary.username if personas_promote_primary.username is not none else omit }}"
+      register: personas_promote_primary_result
+      tags:
+        - never
+        - personas_promote_primary

@@ -1,0 +1,37 @@
+---
+# Sample playbook for cisco.ise.duo_mfa_testconnection (cisco.ise 3.3.0)
+# Build order: 226
+# Resource module for Duo Mfa Testconnection
+# Reads ../models/duo_mfa_testconnection.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/duo_mfa_testconnection_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags duo_mfa_testconnection.
+
+- name: "0226 duo_mfa_testconnection"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/duo_mfa_testconnection.yml
+  tasks:
+    - name: Run duo_mfa_testconnection from its model
+      cisco.ise.duo_mfa_testconnection:
+        adminApi: "{{ (duo_mfa_testconnection.adminApi | cat_strip_nulls) if (duo_mfa_testconnection.adminApi | cat_strip_nulls) is not none else omit }}"
+        apiHostName: "{{ duo_mfa_testconnection.apiHostName if duo_mfa_testconnection.apiHostName is not none else omit }}"
+        authenticationApi: "{{ (duo_mfa_testconnection.authenticationApi | cat_strip_nulls) if (duo_mfa_testconnection.authenticationApi | cat_strip_nulls) is not none else omit }}"
+        connectionName: "{{ duo_mfa_testconnection.connectionName if duo_mfa_testconnection.connectionName is not none else omit }}"
+        ise_client_cert: "{{ duo_mfa_testconnection.ise_client_cert if duo_mfa_testconnection.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ duo_mfa_testconnection.ise_client_key if duo_mfa_testconnection.ise_client_key is not none else omit }}"
+        ise_debug: "{{ duo_mfa_testconnection.ise_debug if duo_mfa_testconnection.ise_debug is not none else omit }}"
+        ise_hostname: "{{ duo_mfa_testconnection.ise_hostname if duo_mfa_testconnection.ise_hostname is not none else omit }}"
+        ise_password: "{{ duo_mfa_testconnection.ise_password if duo_mfa_testconnection.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ duo_mfa_testconnection.ise_single_request_timeout if duo_mfa_testconnection.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ duo_mfa_testconnection.ise_username if duo_mfa_testconnection.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ duo_mfa_testconnection.ise_uses_api_gateway if duo_mfa_testconnection.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ duo_mfa_testconnection.ise_uses_csrf_token if duo_mfa_testconnection.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ duo_mfa_testconnection.ise_verify if duo_mfa_testconnection.ise_verify is not none else omit }}"
+        ise_version: "{{ duo_mfa_testconnection.ise_version if duo_mfa_testconnection.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ duo_mfa_testconnection.ise_wait_on_rate_limit if duo_mfa_testconnection.ise_wait_on_rate_limit is not none else omit }}"
+      register: duo_mfa_testconnection_result
+      tags:
+        - never
+        - duo_mfa_testconnection

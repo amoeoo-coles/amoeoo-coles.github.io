@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sample playbooks — Ansible Cisco ISE Module Catalogue</title>
+<meta name="description" content="Sample playbooks for the Ansible Cisco ISE Module Catalogue.">
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+html{overflow-x:hidden;}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+  background:var(--bg) !important;
+  color:var(--ink) !important;
+}
+main{max-width:none !important;width:100%;margin:0 !important;padding:0 !important;box-sizing:border-box;min-width:0;}
+a:not(#mm-link):not(.kicker){color:var(--link);}
+#tt-wrap{
+  position:static!important;
+  display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;
+  box-sizing:border-box;width:100%;height:36px;padding:8px 0 0;flex:none;
+}
+#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;align-items:center;justify-content:center;
+  height:36px;padding:0 12px;border-radius:18px;
+  border:1px solid var(--btn-bd);background:var(--btn-bg);color:var(--btn-fg);
+  cursor:pointer;opacity:.92;text-decoration:none;white-space:nowrap;flex:none;
+}
+#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:36px;padding:0}
+#mm-link svg{display:block;flex:none}
+.uv,.uvc{color:#fff!important}
+</style>
+<link rel="stylesheet" href="/zfrontier/ansible-ise-modules/assets/page.css">
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'☀️ Light':'🌙 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+})();</script>
+<main class="wrap">
+<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:var(--muted,#888)"><a href="/visitors/" style="color:inherit;text-decoration:none"><span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></a><span class="uvt" style="font-size:11px;color:var(--muted,#888)"></span></div><!--/arr-uv-tr17-->
+<p class="kicker">zFrontier</p>
+<h1>Sample playbooks</h1>
+<p class="lede">253 files. This folder is part of the <a href="/zfrontier/ansible-ise-modules/">Ansible Cisco ISE Module Catalogue</a>.</p>
+<ul class="page-menu" style="list-style:none;padding:14px 18px">
+<li><a href="0001_node_deployment.yml"><code>0001_node_deployment.yml</code></a></li>
+<li><a href="0002_node_deployment_info.yml"><code>0002_node_deployment_info.yml</code></a></li>
+<li><a href="0003_node_deployment_sync.yml"><code>0003_node_deployment_sync.yml</code></a></li>
+<li><a href="0004_node_standalone_to_primary.yml"><code>0004_node_standalone_to_primary.yml</code></a></li>
+<li><a href="0005_node_secondary_to_primary.yml"><code>0005_node_secondary_to_primary.yml</code></a></li>
+<li><a href="0006_node_promotion.yml"><code>0006_node_promotion.yml</code></a></li>
+<li><a href="0007_personas_check_standalone.yml"><code>0007_personas_check_standalone.yml</code></a></li>
+<li><a href="0008_personas_export_certs.yml"><code>0008_personas_export_certs.yml</code></a></li>
+<li><a href="0009_personas_promote_primary.yml"><code>0009_personas_promote_primary.yml</code></a></li>
+<li><a href="0010_personas_update_roles.yml"><code>0010_personas_update_roles.yml</code></a></li>
+<li><a href="0011_pan_ha.yml"><code>0011_pan_ha.yml</code></a></li>
+<li><a href="0012_node_group.yml"><code>0012_node_group.yml</code></a></li>
+<li><a href="0013_node_group_info.yml"><code>0013_node_group_info.yml</code></a></li>
+<li><a href="0014_node_group_node_create.yml"><code>0014_node_group_node_create.yml</code></a></li>
+<li><a href="0015_node_group_node_delete.yml"><code>0015_node_group_node_delete.yml</code></a></li>
+<li><a href="0016_node_group_node_info.yml"><code>0016_node_group_node_info.yml</code></a></li>
+<li><a href="0017_node_info.yml"><code>0017_node_info.yml</code></a></li>
+<li><a href="0018_node_replication_status_info.yml"><code>0018_node_replication_status_info.yml</code></a></li>
+<li><a href="0019_node_services_profiler_probe_config.yml"><code>0019_node_services_profiler_probe_config.yml</code></a></li>
+<li><a href="0020_node_services_profiler_probe_config_info.yml"><code>0020_node_services_profiler_probe_config_info.yml</code></a></li>
+<li><a href="0021_node_sync.yml"><code>0021_node_sync.yml</code></a></li>
+<li><a href="0022_sessionservicenode_info.yml"><code>0022_sessionservicenode_info.yml</code></a></li>
+<li><a href="0023_licensing_connection_type_info.yml"><code>0023_licensing_connection_type_info.yml</code></a></li>
+<li><a href="0024_licensing_eval_license_info.yml"><code>0024_licensing_eval_license_info.yml</code></a></li>
+<li><a href="0025_licensing_feature_to_tier_mapping_info.yml"><code>0025_licensing_feature_to_tier_mapping_info.yml</code></a></li>
+<li><a href="0026_licensing_registration_create.yml"><code>0026_licensing_registration_create.yml</code></a></li>
+<li><a href="0027_licensing_registration_info.yml"><code>0027_licensing_registration_info.yml</code></a></li>
+<li><a href="0028_licensing_smart_state_create.yml"><code>0028_licensing_smart_state_create.yml</code></a></li>
+<li><a href="0029_licensing_smart_state_info.yml"><code>0029_licensing_smart_state_info.yml</code></a></li>
+<li><a href="0030_licensing_tier_state_create.yml"><code>0030_licensing_tier_state_create.yml</code></a></li>
+<li><a href="0031_licensing_tier_state_info.yml"><code>0031_licensing_tier_state_info.yml</code></a></li>
+<li><a href="0032_repository.yml"><code>0032_repository.yml</code></a></li>
+<li><a href="0033_repository_files_info.yml"><code>0033_repository_files_info.yml</code></a></li>
+<li><a href="0034_repository_info.yml"><code>0034_repository_info.yml</code></a></li>
+<li><a href="0035_patch_info.yml"><code>0035_patch_info.yml</code></a></li>
+<li><a href="0036_patch_install.yml"><code>0036_patch_install.yml</code></a></li>
+<li><a href="0037_patch_rollback.yml"><code>0037_patch_rollback.yml</code></a></li>
+<li><a href="0038_hotpatch_info.yml"><code>0038_hotpatch_info.yml</code></a></li>
+<li><a href="0039_hotpatch_install.yml"><code>0039_hotpatch_install.yml</code></a></li>
+<li><a href="0040_hotpatch_rollback.yml"><code>0040_hotpatch_rollback.yml</code></a></li>
+<li><a href="0041_backup_cancel.yml"><code>0041_backup_cancel.yml</code></a></li>
+<li><a href="0042_backup_config.yml"><code>0042_backup_config.yml</code></a></li>
+<li><a href="0043_backup_last_status_info.yml"><code>0043_backup_last_status_info.yml</code></a></li>
+<li><a href="0044_backup_restore.yml"><code>0044_backup_restore.yml</code></a></li>
+<li><a href="0045_backup_schedule_config.yml"><code>0045_backup_schedule_config.yml</code></a></li>
+<li><a href="0046_backup_schedule_config_update.yml"><code>0046_backup_schedule_config_update.yml</code></a></li>
+<li><a href="0047_support_bundle_download.yml"><code>0047_support_bundle_download.yml</code></a></li>
+<li><a href="0048_support_bundle_status_info.yml"><code>0048_support_bundle_status_info.yml</code></a></li>
+<li><a href="0049_supportbundle.yml"><code>0049_supportbundle.yml</code></a></li>
+<li><a href="0050_stop_replication.yml"><code>0050_stop_replication.yml</code></a></li>
+<li><a href="0051_stop_replication_info.yml"><code>0051_stop_replication_info.yml</code></a></li>
+<li><a href="0052_configuration.yml"><code>0052_configuration.yml</code></a></li>
+<li><a href="0053_configuration_info.yml"><code>0053_configuration_info.yml</code></a></li>
+<li><a href="0054_csr_delete.yml"><code>0054_csr_delete.yml</code></a></li>
+<li><a href="0055_csr_export_info.yml"><code>0055_csr_export_info.yml</code></a></li>
+<li><a href="0056_csr_generate.yml"><code>0056_csr_generate.yml</code></a></li>
+<li><a href="0057_csr_generate_intermediate_ca.yml"><code>0057_csr_generate_intermediate_ca.yml</code></a></li>
+<li><a href="0058_csr_info.yml"><code>0058_csr_info.yml</code></a></li>
+<li><a href="0059_bind_signed_certificate.yml"><code>0059_bind_signed_certificate.yml</code></a></li>
+<li><a href="0060_selfsigned_certificate_generate.yml"><code>0060_selfsigned_certificate_generate.yml</code></a></li>
+<li><a href="0061_system_certificate.yml"><code>0061_system_certificate.yml</code></a></li>
+<li><a href="0062_system_certificate_export_info.yml"><code>0062_system_certificate_export_info.yml</code></a></li>
+<li><a href="0063_system_certificate_import.yml"><code>0063_system_certificate_import.yml</code></a></li>
+<li><a href="0064_system_certificate_info.yml"><code>0064_system_certificate_info.yml</code></a></li>
+<li><a href="0065_trusted_certificate.yml"><code>0065_trusted_certificate.yml</code></a></li>
+<li><a href="0066_trusted_certificate_export_info.yml"><code>0066_trusted_certificate_export_info.yml</code></a></li>
+<li><a href="0067_trusted_certificate_import.yml"><code>0067_trusted_certificate_import.yml</code></a></li>
+<li><a href="0068_trusted_certificate_info.yml"><code>0068_trusted_certificate_info.yml</code></a></li>
+<li><a href="0069_certificate_profile.yml"><code>0069_certificate_profile.yml</code></a></li>
+<li><a href="0070_certificate_profile_info.yml"><code>0070_certificate_profile_info.yml</code></a></li>
+<li><a href="0071_certificate_template_info.yml"><code>0071_certificate_template_info.yml</code></a></li>
+<li><a href="0072_renew_certificate.yml"><code>0072_renew_certificate.yml</code></a></li>
+<li><a href="0073_ise_root_ca_regenerate.yml"><code>0073_ise_root_ca_regenerate.yml</code></a></li>
+<li><a href="0074_ipsec_certificates_info.yml"><code>0074_ipsec_certificates_info.yml</code></a></li>
+<li><a href="0075_active_directories_info.yml"><code>0075_active_directories_info.yml</code></a></li>
+<li><a href="0076_active_directory.yml"><code>0076_active_directory.yml</code></a></li>
+<li><a href="0077_active_directory_add_groups.yml"><code>0077_active_directory_add_groups.yml</code></a></li>
+<li><a href="0078_active_directory_groups_by_domain_info.yml"><code>0078_active_directory_groups_by_domain_info.yml</code></a></li>
+<li><a href="0079_active_directory_info.yml"><code>0079_active_directory_info.yml</code></a></li>
+<li><a href="0080_active_directory_join_domain.yml"><code>0080_active_directory_join_domain.yml</code></a></li>
+<li><a href="0081_active_directory_leave_domain.yml"><code>0081_active_directory_leave_domain.yml</code></a></li>
+<li><a href="0082_ad_groups_info.yml"><code>0082_ad_groups_info.yml</code></a></li>
+<li><a href="0083_adresourcereservation_.yml"><code>0083_adresourcereservation_.yml</code></a></li>
+<li><a href="0084_adresourcereservation_info.yml"><code>0084_adresourcereservation_info.yml</code></a></li>
+<li><a href="0085_adresourcereservation_name_info.yml"><code>0085_adresourcereservation_name_info.yml</code></a></li>
+<li><a href="0086_ldap.yml"><code>0086_ldap.yml</code></a></li>
+<li><a href="0087_ldap_info.yml"><code>0087_ldap_info.yml</code></a></li>
+<li><a href="0088_restid_store.yml"><code>0088_restid_store.yml</code></a></li>
+<li><a href="0089_restid_store_info.yml"><code>0089_restid_store_info.yml</code></a></li>
+<li><a href="0090_restidstorepredefinedregex_fetch_san_predefinedregexs_info.yml"><code>0090_restidstorepredefinedregex_fetch_san_predefinedregexs_info.yml</code></a></li>
+<li><a href="0091_restidstorepredefinedregex_fetch_snf_predefinedregexs_info.yml"><code>0091_restidstorepredefinedregex_fetch_snf_predefinedregexs_info.yml</code></a></li>
+<li><a href="0092_restidstoresettings_info.yml"><code>0092_restidstoresettings_info.yml</code></a></li>
+<li><a href="0093_external_radius_server.yml"><code>0093_external_radius_server.yml</code></a></li>
+<li><a href="0094_external_radius_server_info.yml"><code>0094_external_radius_server_info.yml</code></a></li>
+<li><a href="0095_idstoresequence.yml"><code>0095_idstoresequence.yml</code></a></li>
+<li><a href="0096_idstoresequence_info.yml"><code>0096_idstoresequence_info.yml</code></a></li>
+<li><a href="0097_identitygroup.yml"><code>0097_identitygroup.yml</code></a></li>
+<li><a href="0098_identitygroup_info.yml"><code>0098_identitygroup_info.yml</code></a></li>
+<li><a href="0099_internal_user.yml"><code>0099_internal_user.yml</code></a></li>
+<li><a href="0100_internal_user_info.yml"><code>0100_internal_user_info.yml</code></a></li>
+<li><a href="0101_admin_user_info.yml"><code>0101_admin_user_info.yml</code></a></li>
+<li><a href="0102_network_device_group.yml"><code>0102_network_device_group.yml</code></a></li>
+<li><a href="0103_network_device_group_info.yml"><code>0103_network_device_group_info.yml</code></a></li>
+<li><a href="0104_network_device.yml"><code>0104_network_device.yml</code></a></li>
+<li><a href="0105_network_device_info.yml"><code>0105_network_device_info.yml</code></a></li>
+<li><a href="0106_ipsec.yml"><code>0106_ipsec.yml</code></a></li>
+<li><a href="0107_ipsec_bulk.yml"><code>0107_ipsec_bulk.yml</code></a></li>
+<li><a href="0108_ipsec_delete.yml"><code>0108_ipsec_delete.yml</code></a></li>
+<li><a href="0109_ipsec_delete_info.yml"><code>0109_ipsec_delete_info.yml</code></a></li>
+<li><a href="0110_ipsec_disable.yml"><code>0110_ipsec_disable.yml</code></a></li>
+<li><a href="0111_ipsec_disable_info.yml"><code>0111_ipsec_disable_info.yml</code></a></li>
+<li><a href="0112_ipsec_enable.yml"><code>0112_ipsec_enable.yml</code></a></li>
+<li><a href="0113_ipsec_enable_info.yml"><code>0113_ipsec_enable_info.yml</code></a></li>
+<li><a href="0114_ipsec_info.yml"><code>0114_ipsec_info.yml</code></a></li>
+<li><a href="0115_radius_server_sequence.yml"><code>0115_radius_server_sequence.yml</code></a></li>
+<li><a href="0116_radius_server_sequence_info.yml"><code>0116_radius_server_sequence_info.yml</code></a></li>
+<li><a href="0117_allowed_protocols.yml"><code>0117_allowed_protocols.yml</code></a></li>
+<li><a href="0118_allowed_protocols_info.yml"><code>0118_allowed_protocols_info.yml</code></a></li>
+<li><a href="0119_authorization_profile.yml"><code>0119_authorization_profile.yml</code></a></li>
+<li><a href="0120_authorization_profile_info.yml"><code>0120_authorization_profile_info.yml</code></a></li>
+<li><a href="0121_downloadable_acl.yml"><code>0121_downloadable_acl.yml</code></a></li>
+<li><a href="0122_downloadable_acl_info.yml"><code>0122_downloadable_acl_info.yml</code></a></li>
+<li><a href="0123_filter_policy.yml"><code>0123_filter_policy.yml</code></a></li>
+<li><a href="0124_filter_policy_info.yml"><code>0124_filter_policy_info.yml</code></a></li>
+<li><a href="0125_endpointgroup.yml"><code>0125_endpointgroup.yml</code></a></li>
+<li><a href="0126_endpointgroup_info.yml"><code>0126_endpointgroup_info.yml</code></a></li>
+<li><a href="0127_endpoint.yml"><code>0127_endpoint.yml</code></a></li>
+<li><a href="0128_endpoint_info.yml"><code>0128_endpoint_info.yml</code></a></li>
+<li><a href="0129_endpoints.yml"><code>0129_endpoints.yml</code></a></li>
+<li><a href="0130_endpoints_bulk.yml"><code>0130_endpoints_bulk.yml</code></a></li>
+<li><a href="0131_endpoints_bulk_info.yml"><code>0131_endpoints_bulk_info.yml</code></a></li>
+<li><a href="0132_endpoints_device_type_info.yml"><code>0132_endpoints_device_type_info.yml</code></a></li>
+<li><a href="0133_endpoints_info.yml"><code>0133_endpoints_info.yml</code></a></li>
+<li><a href="0134_endpoints_task.yml"><code>0134_endpoints_task.yml</code></a></li>
+<li><a href="0135_profiler_profile_info.yml"><code>0135_profiler_profile_info.yml</code></a></li>
+<li><a href="0136_custom_attributes.yml"><code>0136_custom_attributes.yml</code></a></li>
+<li><a href="0137_custom_attributes_info.yml"><code>0137_custom_attributes_info.yml</code></a></li>
+<li><a href="0138_custom_attributes_rename.yml"><code>0138_custom_attributes_rename.yml</code></a></li>
+<li><a href="0139_nspprofile_info.yml"><code>0139_nspprofile_info.yml</code></a></li>
+<li><a href="0140_tacacs_command_sets.yml"><code>0140_tacacs_command_sets.yml</code></a></li>
+<li><a href="0141_tacacs_command_sets_info.yml"><code>0141_tacacs_command_sets_info.yml</code></a></li>
+<li><a href="0142_tacacs_external_servers.yml"><code>0142_tacacs_external_servers.yml</code></a></li>
+<li><a href="0143_tacacs_external_servers_info.yml"><code>0143_tacacs_external_servers_info.yml</code></a></li>
+<li><a href="0144_tacacs_profile.yml"><code>0144_tacacs_profile.yml</code></a></li>
+<li><a href="0145_tacacs_profile_info.yml"><code>0145_tacacs_profile_info.yml</code></a></li>
+<li><a href="0146_tacacs_server_sequence.yml"><code>0146_tacacs_server_sequence.yml</code></a></li>
+<li><a href="0147_tacacs_server_sequence_info.yml"><code>0147_tacacs_server_sequence_info.yml</code></a></li>
+<li><a href="0148_sgt.yml"><code>0148_sgt.yml</code></a></li>
+<li><a href="0149_sgt_info.yml"><code>0149_sgt_info.yml</code></a></li>
+<li><a href="0150_sgacl.yml"><code>0150_sgacl.yml</code></a></li>
+<li><a href="0151_sgacl_info.yml"><code>0151_sgacl_info.yml</code></a></li>
+<li><a href="0152_sgacls.yml"><code>0152_sgacls.yml</code></a></li>
+<li><a href="0153_egress_matrix_cell.yml"><code>0153_egress_matrix_cell.yml</code></a></li>
+<li><a href="0154_egress_matrix_cell_info.yml"><code>0154_egress_matrix_cell_info.yml</code></a></li>
+<li><a href="0155_sgmapping.yml"><code>0155_sgmapping.yml</code></a></li>
+<li><a href="0156_sgmapping_info.yml"><code>0156_sgmapping_info.yml</code></a></li>
+<li><a href="0157_sgmappinggroup.yml"><code>0157_sgmappinggroup.yml</code></a></li>
+<li><a href="0158_sgmappinggroup_info.yml"><code>0158_sgmappinggroup_info.yml</code></a></li>
+<li><a href="0159_sgtvnvlan.yml"><code>0159_sgtvnvlan.yml</code></a></li>
+<li><a href="0160_sgtvnvlan_info.yml"><code>0160_sgtvnvlan_info.yml</code></a></li>
+<li><a href="0161_sxp_connections.yml"><code>0161_sxp_connections.yml</code></a></li>
+<li><a href="0162_sxp_connections_info.yml"><code>0162_sxp_connections_info.yml</code></a></li>
+<li><a href="0163_sxp_local_bindings.yml"><code>0163_sxp_local_bindings.yml</code></a></li>
+<li><a href="0164_sxp_local_bindings_info.yml"><code>0164_sxp_local_bindings_info.yml</code></a></li>
+<li><a href="0165_sxp_vpns.yml"><code>0165_sxp_vpns.yml</code></a></li>
+<li><a href="0166_sxp_vpns_info.yml"><code>0166_sxp_vpns_info.yml</code></a></li>
+<li><a href="0167_trustsec_nbar_app.yml"><code>0167_trustsec_nbar_app.yml</code></a></li>
+<li><a href="0168_trustsec_nbar_app_info.yml"><code>0168_trustsec_nbar_app_info.yml</code></a></li>
+<li><a href="0169_trustsec_vn.yml"><code>0169_trustsec_vn.yml</code></a></li>
+<li><a href="0170_trustsec_vn_bulk_create.yml"><code>0170_trustsec_vn_bulk_create.yml</code></a></li>
+<li><a href="0171_trustsec_vn_bulk_delete.yml"><code>0171_trustsec_vn_bulk_delete.yml</code></a></li>
+<li><a href="0172_trustsec_vn_bulk_update.yml"><code>0172_trustsec_vn_bulk_update.yml</code></a></li>
+<li><a href="0173_trustsec_vn_info.yml"><code>0173_trustsec_vn_info.yml</code></a></li>
+<li><a href="0174_ctsenvdata.yml"><code>0174_ctsenvdata.yml</code></a></li>
+<li><a href="0175_ctsmatrix.yml"><code>0175_ctsmatrix.yml</code></a></li>
+<li><a href="0176_guest_location_info.yml"><code>0176_guest_location_info.yml</code></a></li>
+<li><a href="0177_guest_ssid.yml"><code>0177_guest_ssid.yml</code></a></li>
+<li><a href="0178_guest_ssid_info.yml"><code>0178_guest_ssid_info.yml</code></a></li>
+<li><a href="0179_guest_type.yml"><code>0179_guest_type.yml</code></a></li>
+<li><a href="0180_guest_type_info.yml"><code>0180_guest_type_info.yml</code></a></li>
+<li><a href="0181_guest_user.yml"><code>0181_guest_user.yml</code></a></li>
+<li><a href="0182_guest_user_info.yml"><code>0182_guest_user_info.yml</code></a></li>
+<li><a href="0183_guestsmtpnotificationsettings.yml"><code>0183_guestsmtpnotificationsettings.yml</code></a></li>
+<li><a href="0184_guestsmtpnotificationsettings_info.yml"><code>0184_guestsmtpnotificationsettings_info.yml</code></a></li>
+<li><a href="0185_sponsor_group.yml"><code>0185_sponsor_group.yml</code></a></li>
+<li><a href="0186_sponsor_group_info.yml"><code>0186_sponsor_group_info.yml</code></a></li>
+<li><a href="0187_sponsor_group_member_info.yml"><code>0187_sponsor_group_member_info.yml</code></a></li>
+<li><a href="0188_sponsor_portal.yml"><code>0188_sponsor_portal.yml</code></a></li>
+<li><a href="0189_sponsor_portal_info.yml"><code>0189_sponsor_portal_info.yml</code></a></li>
+<li><a href="0190_sponsored_guest_portal.yml"><code>0190_sponsored_guest_portal.yml</code></a></li>
+<li><a href="0191_sponsored_guest_portal_info.yml"><code>0191_sponsored_guest_portal_info.yml</code></a></li>
+<li><a href="0192_portal_global_setting_info.yml"><code>0192_portal_global_setting_info.yml</code></a></li>
+<li><a href="0193_portal_info.yml"><code>0193_portal_info.yml</code></a></li>
+<li><a href="0194_portal_theme.yml"><code>0194_portal_theme.yml</code></a></li>
+<li><a href="0195_portal_theme_info.yml"><code>0195_portal_theme_info.yml</code></a></li>
+<li><a href="0196_byod_portal.yml"><code>0196_byod_portal.yml</code></a></li>
+<li><a href="0197_byod_portal_info.yml"><code>0197_byod_portal_info.yml</code></a></li>
+<li><a href="0198_hotspot_portal.yml"><code>0198_hotspot_portal.yml</code></a></li>
+<li><a href="0199_hotspot_portal_info.yml"><code>0199_hotspot_portal_info.yml</code></a></li>
+<li><a href="0200_selfregportal.yml"><code>0200_selfregportal.yml</code></a></li>
+<li><a href="0201_selfregportal_info.yml"><code>0201_selfregportal_info.yml</code></a></li>
+<li><a href="0202_my_device_portal.yml"><code>0202_my_device_portal.yml</code></a></li>
+<li><a href="0203_my_device_portal_info.yml"><code>0203_my_device_portal_info.yml</code></a></li>
+<li><a href="0204_sms_provider_info.yml"><code>0204_sms_provider_info.yml</code></a></li>
+<li><a href="0205_reservation.yml"><code>0205_reservation.yml</code></a></li>
+<li><a href="0206_reservation_info.yml"><code>0206_reservation_info.yml</code></a></li>
+<li><a href="0207_anc_endpoint_apply.yml"><code>0207_anc_endpoint_apply.yml</code></a></li>
+<li><a href="0208_anc_endpoint_clear.yml"><code>0208_anc_endpoint_clear.yml</code></a></li>
+<li><a href="0209_anc_endpoint_info.yml"><code>0209_anc_endpoint_info.yml</code></a></li>
+<li><a href="0210_anc_policy.yml"><code>0210_anc_policy.yml</code></a></li>
+<li><a href="0211_anc_policy_info.yml"><code>0211_anc_policy_info.yml</code></a></li>
+<li><a href="0212_px_grid_direct.yml"><code>0212_px_grid_direct.yml</code></a></li>
+<li><a href="0213_px_grid_direct_dictionary_info.yml"><code>0213_px_grid_direct_dictionary_info.yml</code></a></li>
+<li><a href="0214_px_grid_direct_info.yml"><code>0214_px_grid_direct_info.yml</code></a></li>
+<li><a href="0215_px_grid_direct_sync.yml"><code>0215_px_grid_direct_sync.yml</code></a></li>
+<li><a href="0216_px_grid_direct_sync_info.yml"><code>0216_px_grid_direct_sync_info.yml</code></a></li>
+<li><a href="0217_px_grid_direct_test_connector.yml"><code>0217_px_grid_direct_test_connector.yml</code></a></li>
+<li><a href="0218_px_grid_node_info.yml"><code>0218_px_grid_node_info.yml</code></a></li>
+<li><a href="0219_duo_identity_sync.yml"><code>0219_duo_identity_sync.yml</code></a></li>
+<li><a href="0220_duo_identity_sync_cancel_info.yml"><code>0220_duo_identity_sync_cancel_info.yml</code></a></li>
+<li><a href="0221_duo_identity_sync_info.yml"><code>0221_duo_identity_sync_info.yml</code></a></li>
+<li><a href="0222_duo_identity_sync_status.yml"><code>0222_duo_identity_sync_status.yml</code></a></li>
+<li><a href="0223_duo_identitysync_sync_info.yml"><code>0223_duo_identitysync_sync_info.yml</code></a></li>
+<li><a href="0224_duo_mfa.yml"><code>0224_duo_mfa.yml</code></a></li>
+<li><a href="0225_duo_mfa_info.yml"><code>0225_duo_mfa_info.yml</code></a></li>
+<li><a href="0226_duo_mfa_testconnection.yml"><code>0226_duo_mfa_testconnection.yml</code></a></li>
+<li><a href="0227_duo_mfainfo_info.yml"><code>0227_duo_mfainfo_info.yml</code></a></li>
+<li><a href="0228_aci_settings_info.yml"><code>0228_aci_settings_info.yml</code></a></li>
+<li><a href="0229_dataconnect_info.yml"><code>0229_dataconnect_info.yml</code></a></li>
+<li><a href="0230_dataconnect_settings_info.yml"><code>0230_dataconnect_settings_info.yml</code></a></li>
+<li><a href="0231_dataconnect_settings_password.yml"><code>0231_dataconnect_settings_password.yml</code></a></li>
+<li><a href="0232_dataconnect_settings_password_expiry.yml"><code>0232_dataconnect_settings_password_expiry.yml</code></a></li>
+<li><a href="0233_dataconnect_settings_status.yml"><code>0233_dataconnect_settings_status.yml</code></a></li>
+<li><a href="0234_proxy_connection_settings.yml"><code>0234_proxy_connection_settings.yml</code></a></li>
+<li><a href="0235_proxy_connection_settings_info.yml"><code>0235_proxy_connection_settings_info.yml</code></a></li>
+<li><a href="0236_transport_gateway_settings.yml"><code>0236_transport_gateway_settings.yml</code></a></li>
+<li><a href="0237_transport_gateway_settings_info.yml"><code>0237_transport_gateway_settings_info.yml</code></a></li>
+<li><a href="0238_mnt_account_status_info.yml"><code>0238_mnt_account_status_info.yml</code></a></li>
+<li><a href="0239_mnt_athentication_status_info.yml"><code>0239_mnt_athentication_status_info.yml</code></a></li>
+<li><a href="0240_mnt_failure_reasons_info.yml"><code>0240_mnt_failure_reasons_info.yml</code></a></li>
+<li><a href="0241_mnt_session_active_count_info.yml"><code>0241_mnt_session_active_count_info.yml</code></a></li>
+<li><a href="0242_mnt_session_active_list_info.yml"><code>0242_mnt_session_active_list_info.yml</code></a></li>
+<li><a href="0243_mnt_session_by_mac_info.yml"><code>0243_mnt_session_by_mac_info.yml</code></a></li>
+<li><a href="0244_mnt_session_by_username_info.yml"><code>0244_mnt_session_by_username_info.yml</code></a></li>
+<li><a href="0245_mnt_session_delete_all.yml"><code>0245_mnt_session_delete_all.yml</code></a></li>
+<li><a href="0246_mnt_session_posture_count_info.yml"><code>0246_mnt_session_posture_count_info.yml</code></a></li>
+<li><a href="0247_mnt_session_profiler_count_info.yml"><code>0247_mnt_session_profiler_count_info.yml</code></a></li>
+<li><a href="0248_mnt_version_info.yml"><code>0248_mnt_version_info.yml</code></a></li>
+<li><a href="0249_reportconfig.yml"><code>0249_reportconfig.yml</code></a></li>
+<li><a href="0250_tasks_info.yml"><code>0250_tasks_info.yml</code></a></li>
+<li><a href="0251_telemetryinfo_info.yml"><code>0251_telemetryinfo_info.yml</code></a></li>
+<li><a href="0252_service_info.yml"><code>0252_service_info.yml</code></a></li>
+<li><a href="filter_plugins/"><code>filter_plugins/</code></a></li>
+</ul>
+</main>
+<footer class="wrap">
+  <p class="meta">Page: <strong>Ansible Cisco ISE Module Catalogue</strong> · Folder: <code>playbooks</code></p>
+  <p class="meta">Folder links end with <code>/</code>.</p>
+</footer>
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/"}}</script>
+<script>(function(){var b=String.fromCharCode(99,111,108,101,115);var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';s.setAttribute('data-goatcounter','https://amoeoo-'+b+'.goatcounter.com/count');document.head.appendChild(s);}());</script>
+
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+
+<!-- uv-badge v2 -->
+<style id="uv-badge-style">
+.uv-pop{position:relative;display:inline-block;vertical-align:middle}
+.uv-pop .uv-card{display:none;position:absolute;right:0;top:calc(100% + 6px);z-index:80;min-width:228px;padding:10px 12px;border-radius:10px;background:var(--card,#0f172a);color:var(--ink,#e2e8f0);border:1px solid var(--line,#334155);box-shadow:0 10px 28px rgba(0,0,0,.28);font:12px/1.4 system-ui,Arial,sans-serif;text-align:left;white-space:normal}
+.uv-pop.open .uv-card{display:block}
+.uv-card svg{display:block;width:204px;height:44px;margin:6px 0 8px}
+.uv-card .uv-k{font-weight:700;margin:0 0 2px}
+.uv-card .uv-m{color:var(--muted,#94a3b8);font-size:11px}
+.uv-card a{color:var(--link,#8ecbff)}
+</style>
+<script id="uv-badge">(function(){
+function norm(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function tzParts(iso){
+  var pt=new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'2-digit',minute:'2-digit',hour12:false,hourCycle:'h23',timeZoneName:'short',day:'2-digit',month:'short'}).formatToParts(new Date(iso));
+  var g=function(t){return (pt.find(function(x){return x.type===t})||{}).value||''};
+  var tz=(g('timeZoneName')||'AEDT').replace('GMT+11','AEDT').replace('GMT+10','AEST');
+  return {hh:g('hour'),mm:g('minute'),tz:tz,day:g('day'),mon:g('month')};
+}
+function last30(daysMap){
+  var out=[], now=new Date();
+  var fmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'});
+  for(var i=29;i>=0;i--){
+    var d=new Date(now.getTime()-i*86400000);
+    var key=fmt.format(d);
+    out.push({day:key,count:+((daysMap||{})[key]||0)});
+  }
+  return out;
+}
+function spark(series){
+  var w=204,h=44,p=2;
+  var max=Math.max.apply(null,series.map(function(x){return x.count}).concat([1]));
+  var n=series.length||1;
+  var pts=series.map(function(x,i){
+    var X=p+(i*(w-2*p)/Math.max(1,n-1));
+    var Y=h-p-((x.count/max)*(h-2*p));
+    return X.toFixed(1)+','+Y.toFixed(1);
+  }).join(' ');
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true"><polyline fill="none" stroke="#22c55e" stroke-width="2" points="'+pts+'"/></svg>';
+}
+function fillStats(d){
+  var total=(d.total&& (d.total.total||d.total.total_utc))||0;
+  var cc=(d.countries||[]).length;
+  var asof=d.as_of_aedt||'';
+  document.querySelectorAll('.im-stat-vis').forEach(function(e){e.textContent=total||'0'});
+  document.querySelectorAll('.im-stat-cc').forEach(function(e){e.textContent=cc||'0'});
+  document.querySelectorAll('.im-stat-asof').forEach(function(e){e.textContent=asof||'n/a'});
+}
+function attachPopover(d, count, series){
+  document.querySelectorAll('.uv').forEach(function(uv){
+    if(uv.closest('.uv-pop')) return;
+    var wrap=document.createElement('span');wrap.className='uv-pop';
+    uv.parentNode.insertBefore(wrap,uv);wrap.appendChild(uv);
+    var card=document.createElement('div');card.className='uv-card';card.setAttribute('role','dialog');
+    var last=series.length?series[series.length-1].count:0;
+    card.innerHTML='<p class="uv-k">This page: '+count+' unique visitors</p>'+spark(series)+'<p class="uv-m">Last 30 days (this page). Today so far: '+last+'.</p><p><a href="/visitors/">Full visitor stats ›</a></p>';
+    wrap.appendChild(card);
+    function tog(ev){ev.preventDefault();ev.stopPropagation();document.querySelectorAll('.uv-pop.open').forEach(function(x){if(x!==wrap)x.classList.remove('open')});wrap.classList.toggle('open')}
+    uv.addEventListener('click',tog);
+    uv.style.cursor='pointer';
+    uv.title='Click for a 30-day sparkline';
+  });
+  document.addEventListener('click',function(){document.querySelectorAll('.uv-pop.open').forEach(function(x){x.classList.remove('open')})});
+}
+function apply(d){
+  var p=norm(location.pathname);
+  var page=(d.pages||[]).filter(function(x){return norm(x.path)===p});
+  var c=page.reduce(function(a,x){return a+(+x.count||0)},0);
+  var days={};
+  page.forEach(function(x){var m=x.days||{};Object.keys(m).forEach(function(k){days[k]=(days[k]||0)+(+m[k]||0)})});
+  document.querySelectorAll('.uvc').forEach(function(e){e.textContent=c});
+  document.querySelectorAll('.uvt').forEach(function(e){
+    if(d.updated_utc){var t=tzParts(d.updated_utc);e.textContent=' (data as of '+t.hh+':'+t.mm+' '+t.tz+')'}
+  });
+  fillStats(d);
+  attachPopover(d,c,last30(days));
+}
+function fail(){
+  document.querySelectorAll('.uvc').forEach(function(e){if(e.textContent==='…'||e.textContent==='...') e.textContent='n/a'});
+  document.querySelectorAll('.im-stat-vis,.im-stat-cc,.im-stat-asof').forEach(function(e){if(e.textContent==='…') e.textContent='n/a'});
+}
+if(!window.__visitorsData){
+  var ac=typeof AbortController==='function'?new AbortController():null;
+  var timer=setTimeout(function(){try{ac&&ac.abort()}catch(e){}},8000);
+  window.__visitorsData=fetch('/data/visitors.json?'+Date.now(),ac?{signal:ac.signal}:undefined).then(function(r){
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('visitors.json '+r.status);
+    return r.json();
+  });
+}
+window.__visitorsData.then(apply).catch(function(){fail()});
+})();</script>
+</body>
+</html>

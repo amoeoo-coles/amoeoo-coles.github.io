@@ -1,0 +1,37 @@
+---
+# Sample playbook for cisco.ise.backup_restore (cisco.ise 3.3.0)
+# Build order: 44
+# Resource module for Backup RESTore
+# Reads ../models/backup_restore.yml (vars_files). Docs: https://ciscoise.github.io/ansible-ise/v3.3.0/plugins/backup_restore_module.html
+# Connection placeholders come from inventory.yml: {{ ise_hostname }} {{ ise_username }} {{ ise_password }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags backup_restore.
+
+- name: "0044 backup_restore"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/backup_restore.yml
+  tasks:
+    - name: Run backup_restore from its model
+      cisco.ise.backup_restore:
+        backupEncryptionKey: "{{ backup_restore.backupEncryptionKey if backup_restore.backupEncryptionKey is not none else omit }}"
+        ise_client_cert: "{{ backup_restore.ise_client_cert if backup_restore.ise_client_cert is not none else omit }}"
+        ise_client_key: "{{ backup_restore.ise_client_key if backup_restore.ise_client_key is not none else omit }}"
+        ise_debug: "{{ backup_restore.ise_debug if backup_restore.ise_debug is not none else omit }}"
+        ise_hostname: "{{ backup_restore.ise_hostname if backup_restore.ise_hostname is not none else omit }}"
+        ise_password: "{{ backup_restore.ise_password if backup_restore.ise_password is not none else omit }}"
+        ise_single_request_timeout: "{{ backup_restore.ise_single_request_timeout if backup_restore.ise_single_request_timeout is not none else omit }}"
+        ise_username: "{{ backup_restore.ise_username if backup_restore.ise_username is not none else omit }}"
+        ise_uses_api_gateway: "{{ backup_restore.ise_uses_api_gateway if backup_restore.ise_uses_api_gateway is not none else omit }}"
+        ise_uses_csrf_token: "{{ backup_restore.ise_uses_csrf_token if backup_restore.ise_uses_csrf_token is not none else omit }}"
+        ise_verify: "{{ backup_restore.ise_verify if backup_restore.ise_verify is not none else omit }}"
+        ise_version: "{{ backup_restore.ise_version if backup_restore.ise_version is not none else omit }}"
+        ise_wait_on_rate_limit: "{{ backup_restore.ise_wait_on_rate_limit if backup_restore.ise_wait_on_rate_limit is not none else omit }}"
+        repositoryName: "{{ backup_restore.repositoryName if backup_restore.repositoryName is not none else omit }}"
+        restoreFile: "{{ backup_restore.restoreFile if backup_restore.restoreFile is not none else omit }}"
+        restoreIncludeAdeos: "{{ backup_restore.restoreIncludeAdeos if backup_restore.restoreIncludeAdeos is not none else omit }}"
+      register: backup_restore_result
+      tags:
+        - never
+        - backup_restore
