@@ -14,6 +14,5 @@ Groups (build order):
 - 5. Network access: 34
 - 6. Device administration: 30
 - 7. TrustSec: 24
-- 8. Other: 0
 
 Credentials are placeholders only. Do not commit real passwords or tokens.
