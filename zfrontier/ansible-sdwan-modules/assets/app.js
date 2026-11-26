@@ -91,6 +91,7 @@
     rendered[gid] = true;
     var mount = qs("#group-mount-" + gid); if (!mount) return;
     mount.innerHTML = "";
+    mount.style.minHeight = "";
     var mods = DATA.items.filter(function (m) { return m.group === gid; });
     if (!mods.length) { mount.innerHTML = '<p class="mod-empty">No item belongs to this group.</p>'; return; }
     var frag = document.createDocumentFragment();
@@ -151,7 +152,11 @@
       });
       applySearch(input.value);
     }
-    if (location.hash && location.hash.length > 1 && !/^#(group-|tree|files|index|comments|versions|stats)/.test(location.hash)) openItem(decodeURIComponent(location.hash.slice(1)));
+    function fromHash() {
+      if (location.hash && location.hash.length > 1 && !/^#(group-|tree|files|index|comments|versions|stats)/.test(location.hash)) openItem(decodeURIComponent(location.hash.slice(1)));
+    }
+    fromHash();
+    window.addEventListener("hashchange", fromHash);
     var r = qs("#catalogue-ready");
     if (r) { r.setAttribute("data-module-count", String(d.count)); r.setAttribute("data-collection-version", d.version); }
   }
