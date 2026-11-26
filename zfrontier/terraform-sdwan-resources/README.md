@@ -21,6 +21,5 @@ Groups (build order):
 - 12. (Classic) device templates: 5
 - 13. (Classic) localized, centralized and security policies: 55
 - 14. Network-as-Code module (terraform-sdwan-nac-sdwan): 18
-- 15. Other: 0
 
 Credentials are placeholders only. Do not commit real passwords or tokens.
