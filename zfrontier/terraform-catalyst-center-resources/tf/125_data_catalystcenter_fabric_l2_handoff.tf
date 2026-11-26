@@ -8,8 +8,8 @@ locals {
 }
 
 data "catalystcenter_fabric_l2_handoff" "n125" {
-  fabric_id         = local.m_125["fabric_id"]
-  id                = local.m_125["id"]
+  fabric_id = local.m_125["fabric_id"]
+  id = local.m_125["id"]
   network_device_id = local.m_125["network_device_id"]
 }
 

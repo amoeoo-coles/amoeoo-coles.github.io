@@ -8,11 +8,11 @@ locals {
 }
 
 resource "catalystcenter_fabric_l3_handoff_sda_transit" "n132" {
-  affinity_id_decider               = local.m_132["affinity_id_decider"]
-  affinity_id_prime                 = local.m_132["affinity_id_prime"]
-  connected_to_internet             = local.m_132["connected_to_internet"]
-  fabric_id                         = local.m_132["fabric_id"]
+  affinity_id_decider = local.m_132["affinity_id_decider"]
+  affinity_id_prime = local.m_132["affinity_id_prime"]
+  connected_to_internet = local.m_132["connected_to_internet"]
+  fabric_id = local.m_132["fabric_id"]
   is_multicast_over_transit_enabled = local.m_132["is_multicast_over_transit_enabled"]
-  network_device_id                 = local.m_132["network_device_id"]
-  transit_network_id                = local.m_132["transit_network_id"]
+  network_device_id = local.m_132["network_device_id"]
+  transit_network_id = local.m_132["transit_network_id"]
 }

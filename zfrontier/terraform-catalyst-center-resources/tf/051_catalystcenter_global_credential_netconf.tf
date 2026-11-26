@@ -8,8 +8,8 @@ locals {
 }
 
 resource "catalystcenter_global_credential_netconf" "n051" {
-  comments        = local.m_051["comments"]
+  comments = local.m_051["comments"]
   credential_type = local.m_051["credential_type"]
-  description     = local.m_051["description"]
-  netconf_port    = local.m_051["netconf_port"]
+  description = local.m_051["description"]
+  netconf_port = local.m_051["netconf_port"]
 }

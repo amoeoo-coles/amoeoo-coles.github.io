@@ -10,5 +10,5 @@ locals {
 resource "catalystcenter_banner_settings" "n033" {
   message = local.m_033["message"]
   site_id = local.m_033["site_id"]
-  type    = local.m_033["type"]
+  type = local.m_033["type"]
 }

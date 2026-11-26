@@ -8,8 +8,8 @@ locals {
 }
 
 data "catalystcenter_fabric_port_assignments" "n143" {
-  fabric_id         = local.m_143["fabric_id"]
-  id                = local.m_143["id"]
+  fabric_id = local.m_143["fabric_id"]
+  id = local.m_143["id"]
   network_device_id = local.m_143["network_device_id"]
 }
 

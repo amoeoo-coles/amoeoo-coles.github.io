@@ -8,7 +8,7 @@ locals {
 }
 
 resource "catalystcenter_virtual_network_to_fabric_site" "n155" {
-  fabric_site_id       = local.m_155["fabric_site_id"]
-  virtual_network_id   = local.m_155["virtual_network_id"]
+  fabric_site_id = local.m_155["fabric_site_id"]
+  virtual_network_id = local.m_155["virtual_network_id"]
   virtual_network_name = local.m_155["virtual_network_name"]
 }

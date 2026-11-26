@@ -9,7 +9,7 @@ locals {
 
 data "catalystcenter_credentials_cli" "n036" {
   description = local.m_036["description"]
-  id          = local.m_036["id"]
+  id = local.m_036["id"]
 }
 
 output "n036_data_catalystcenter_credentials_cli_id" {

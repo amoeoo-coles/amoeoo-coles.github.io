@@ -8,8 +8,8 @@ locals {
 }
 
 data "catalystcenter_anycast_gateway" "n113" {
-  fabric_id            = local.m_113["fabric_id"]
-  ip_pool_name         = local.m_113["ip_pool_name"]
+  fabric_id = local.m_113["fabric_id"]
+  ip_pool_name = local.m_113["ip_pool_name"]
   virtual_network_name = local.m_113["virtual_network_name"]
 }
 

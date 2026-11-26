@@ -8,10 +8,10 @@ locals {
 }
 
 resource "catalystcenter_building" "n017" {
-  address   = local.m_017["address"]
-  country   = local.m_017["country"]
-  latitude  = local.m_017["latitude"]
+  address = local.m_017["address"]
+  country = local.m_017["country"]
+  latitude = local.m_017["latitude"]
   longitude = local.m_017["longitude"]
-  name      = local.m_017["name"]
+  name = local.m_017["name"]
   parent_id = local.m_017["parent_id"]
 }

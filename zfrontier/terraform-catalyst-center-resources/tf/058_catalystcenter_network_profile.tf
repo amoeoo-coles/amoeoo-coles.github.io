@@ -8,7 +8,7 @@ locals {
 }
 
 resource "catalystcenter_network_profile" "n058" {
-  name      = local.m_058["name"]
+  name = local.m_058["name"]
   templates = local.m_058["templates"]
-  type      = local.m_058["type"]
+  type = local.m_058["type"]
 }

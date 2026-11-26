@@ -9,5 +9,5 @@ locals {
 
 resource "catalystcenter_buildings" "n019" {
   buildings = local.m_019["buildings"]
-  scope     = local.m_019["scope"]
+  scope = local.m_019["scope"]
 }

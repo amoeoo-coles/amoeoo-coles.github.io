@@ -8,8 +8,8 @@ locals {
 }
 
 resource "catalystcenter_tag" "n073" {
-  description   = local.m_073["description"]
+  description = local.m_073["description"]
   dynamic_rules = local.m_073["dynamic_rules"]
-  name          = local.m_073["name"]
-  system_tag    = local.m_073["system_tag"]
+  name = local.m_073["name"]
+  system_tag = local.m_073["system_tag"]
 }

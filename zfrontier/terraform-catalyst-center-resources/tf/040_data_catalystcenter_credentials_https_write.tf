@@ -9,7 +9,7 @@ locals {
 
 data "catalystcenter_credentials_https_write" "n040" {
   description = local.m_040["description"]
-  id          = local.m_040["id"]
+  id = local.m_040["id"]
 }
 
 output "n040_data_catalystcenter_credentials_https_write_id" {

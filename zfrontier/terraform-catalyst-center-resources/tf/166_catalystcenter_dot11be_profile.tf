@@ -9,9 +9,9 @@ locals {
 
 resource "catalystcenter_dot11be_profile" "n166" {
   mu_mimo_down_link = local.m_166["mu_mimo_down_link"]
-  mu_mimo_up_link   = local.m_166["mu_mimo_up_link"]
-  ofdma_down_link   = local.m_166["ofdma_down_link"]
-  ofdma_multi_ru    = local.m_166["ofdma_multi_ru"]
-  ofdma_up_link     = local.m_166["ofdma_up_link"]
-  profile_name      = local.m_166["profile_name"]
+  mu_mimo_up_link = local.m_166["mu_mimo_up_link"]
+  ofdma_down_link = local.m_166["ofdma_down_link"]
+  ofdma_multi_ru = local.m_166["ofdma_multi_ru"]
+  ofdma_up_link = local.m_166["ofdma_up_link"]
+  profile_name = local.m_166["profile_name"]
 }

@@ -8,8 +8,8 @@ locals {
 }
 
 resource "catalystcenter_provision_device" "n085" {
-  clean_up_config   = local.m_085["clean_up_config"]
+  clean_up_config = local.m_085["clean_up_config"]
   network_device_id = local.m_085["network_device_id"]
-  reprovision       = local.m_085["reprovision"]
-  site_id           = local.m_085["site_id"]
+  reprovision = local.m_085["reprovision"]
+  site_id = local.m_085["site_id"]
 }

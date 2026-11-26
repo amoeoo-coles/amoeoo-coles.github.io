@@ -8,7 +8,7 @@ locals {
 }
 
 resource "catalystcenter_device_role" "n082" {
-  device_id   = local.m_082["device_id"]
-  role        = local.m_082["role"]
+  device_id = local.m_082["device_id"]
+  role = local.m_082["role"]
   role_source = local.m_082["role_source"]
 }

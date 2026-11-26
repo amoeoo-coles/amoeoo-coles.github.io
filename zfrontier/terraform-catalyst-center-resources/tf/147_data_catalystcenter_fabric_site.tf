@@ -8,7 +8,7 @@ locals {
 }
 
 data "catalystcenter_fabric_site" "n147" {
-  id      = local.m_147["id"]
+  id = local.m_147["id"]
   site_id = local.m_147["site_id"]
 }
 

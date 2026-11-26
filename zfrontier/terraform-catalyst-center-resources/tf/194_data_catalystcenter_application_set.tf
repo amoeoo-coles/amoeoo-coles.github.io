@@ -8,7 +8,7 @@ locals {
 }
 
 data "catalystcenter_application_set" "n194" {
-  id   = local.m_194["id"]
+  id = local.m_194["id"]
   name = local.m_194["name"]
 }
 

@@ -8,7 +8,7 @@ locals {
 }
 
 data "catalystcenter_network_profile" "n059" {
-  id   = local.m_059["id"]
+  id = local.m_059["id"]
   name = local.m_059["name"]
 }
 

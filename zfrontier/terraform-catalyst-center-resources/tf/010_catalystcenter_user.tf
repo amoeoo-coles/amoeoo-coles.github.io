@@ -8,12 +8,12 @@ locals {
 }
 
 resource "catalystcenter_user" "n010" {
-  email               = local.m_010["email"]
-  first_name          = local.m_010["first_name"]
-  last_name           = local.m_010["last_name"]
-  password            = local.m_010["password"]
-  password_wo         = try(var.secrets["catalystcenter_user.password_wo"], local.m_010["password_wo"])
+  email = local.m_010["email"]
+  first_name = local.m_010["first_name"]
+  last_name = local.m_010["last_name"]
+  password = local.m_010["password"]
+  password_wo = try(var.secrets["catalystcenter_user.password_wo"], local.m_010["password_wo"])
   password_wo_version = local.m_010["password_wo_version"]
-  role_ids            = local.m_010["role_ids"]
-  username            = local.m_010["username"]
+  role_ids = local.m_010["role_ids"]
+  username = local.m_010["username"]
 }

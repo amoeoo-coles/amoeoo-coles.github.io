@@ -8,12 +8,12 @@ locals {
 }
 
 resource "catalystcenter_floor" "n020" {
-  floor_number     = local.m_020["floor_number"]
-  height           = local.m_020["height"]
-  length           = local.m_020["length"]
-  name             = local.m_020["name"]
-  parent_id        = local.m_020["parent_id"]
-  rf_model         = local.m_020["rf_model"]
+  floor_number = local.m_020["floor_number"]
+  height = local.m_020["height"]
+  length = local.m_020["length"]
+  name = local.m_020["name"]
+  parent_id = local.m_020["parent_id"]
+  rf_model = local.m_020["rf_model"]
   units_of_measure = local.m_020["units_of_measure"]
-  width            = local.m_020["width"]
+  width = local.m_020["width"]
 }

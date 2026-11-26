@@ -9,5 +9,5 @@ locals {
 
 resource "catalystcenter_external_authentication" "n003" {
   enabled = local.m_003["enabled"]
-  name    = local.m_003["name"]
+  name = local.m_003["name"]
 }

@@ -8,6 +8,6 @@ locals {
 }
 
 resource "catalystcenter_assign_templates_to_tag" "n071" {
-  tag_id       = local.m_071["tag_id"]
+  tag_id = local.m_071["tag_id"]
   template_ids = local.m_071["template_ids"]
 }

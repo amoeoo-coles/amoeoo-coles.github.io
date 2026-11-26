@@ -8,6 +8,6 @@ locals {
 }
 
 resource "catalystcenter_template_version" "n105" {
-  comments    = local.m_105["comments"]
+  comments = local.m_105["comments"]
   template_id = local.m_105["template_id"]
 }

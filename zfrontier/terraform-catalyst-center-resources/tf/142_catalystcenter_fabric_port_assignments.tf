@@ -8,7 +8,7 @@ locals {
 }
 
 resource "catalystcenter_fabric_port_assignments" "n142" {
-  fabric_id         = local.m_142["fabric_id"]
+  fabric_id = local.m_142["fabric_id"]
   network_device_id = local.m_142["network_device_id"]
-  port_assignments  = local.m_142["port_assignments"]
+  port_assignments = local.m_142["port_assignments"]
 }

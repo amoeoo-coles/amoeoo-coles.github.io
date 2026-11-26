@@ -9,5 +9,5 @@ locals {
 
 resource "catalystcenter_fabric_zone" "n149" {
   authentication_profile_name = local.m_149["authentication_profile_name"]
-  site_id                     = local.m_149["site_id"]
+  site_id = local.m_149["site_id"]
 }

@@ -8,12 +8,12 @@ locals {
 }
 
 resource "catalystcenter_assign_credentials" "n031" {
-  cli_id             = local.m_031["cli_id"]
-  https_read_id      = local.m_031["https_read_id"]
-  https_write_id     = local.m_031["https_write_id"]
+  cli_id = local.m_031["cli_id"]
+  https_read_id = local.m_031["https_read_id"]
+  https_write_id = local.m_031["https_write_id"]
   preserve_unmanaged = local.m_031["preserve_unmanaged"]
-  site_id            = local.m_031["site_id"]
-  snmp_v2_read_id    = local.m_031["snmp_v2_read_id"]
-  snmp_v2_write_id   = local.m_031["snmp_v2_write_id"]
-  snmp_v3_id         = local.m_031["snmp_v3_id"]
+  site_id = local.m_031["site_id"]
+  snmp_v2_read_id = local.m_031["snmp_v2_read_id"]
+  snmp_v2_write_id = local.m_031["snmp_v2_write_id"]
+  snmp_v3_id = local.m_031["snmp_v3_id"]
 }

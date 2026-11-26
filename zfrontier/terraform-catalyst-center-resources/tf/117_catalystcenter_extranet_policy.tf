@@ -8,8 +8,8 @@ locals {
 }
 
 resource "catalystcenter_extranet_policy" "n117" {
-  extranet_policy_name             = local.m_117["extranet_policy_name"]
-  fabric_ids                       = local.m_117["fabric_ids"]
-  provider_virtual_network_name    = local.m_117["provider_virtual_network_name"]
+  extranet_policy_name = local.m_117["extranet_policy_name"]
+  fabric_ids = local.m_117["fabric_ids"]
+  provider_virtual_network_name = local.m_117["provider_virtual_network_name"]
   subscriber_virtual_network_names = local.m_117["subscriber_virtual_network_names"]
 }

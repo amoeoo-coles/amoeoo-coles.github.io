@@ -8,11 +8,11 @@ locals {
 }
 
 resource "catalystcenter_wireless_rrm_fra_configuration" "n187" {
-  design_name         = local.m_187["design_name"]
-  fra_freeze          = local.m_187["fra_freeze"]
-  fra_interval        = local.m_187["fra_interval"]
-  fra_sensitivity     = local.m_187["fra_sensitivity"]
-  fra_status          = local.m_187["fra_status"]
-  radio_band          = local.m_187["radio_band"]
+  design_name = local.m_187["design_name"]
+  fra_freeze = local.m_187["fra_freeze"]
+  fra_interval = local.m_187["fra_interval"]
+  fra_sensitivity = local.m_187["fra_sensitivity"]
+  fra_status = local.m_187["fra_status"]
+  radio_band = local.m_187["radio_band"]
   unlocked_attributes = local.m_187["unlocked_attributes"]
 }

@@ -9,5 +9,5 @@ locals {
 
 resource "catalystcenter_anchor_group" "n160" {
   anchor_group_name = local.m_160["anchor_group_name"]
-  mobility_anchors  = local.m_160["mobility_anchors"]
+  mobility_anchors = local.m_160["mobility_anchors"]
 }

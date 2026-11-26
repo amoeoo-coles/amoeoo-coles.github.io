@@ -9,7 +9,7 @@ locals {
 
 data "catalystcenter_anycast_gateways" "n115" {
   fabric_id = local.m_115["fabric_id"]
-  id        = local.m_115["id"]
+  id = local.m_115["id"]
 }
 
 output "n115_data_catalystcenter_anycast_gateways_id" {

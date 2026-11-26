@@ -8,6 +8,6 @@ locals {
 }
 
 resource "catalystcenter_fabric_multicast_virtual_networks" "n140" {
-  fabric_id        = local.m_140["fabric_id"]
+  fabric_id = local.m_140["fabric_id"]
   virtual_networks = local.m_140["virtual_networks"]
 }

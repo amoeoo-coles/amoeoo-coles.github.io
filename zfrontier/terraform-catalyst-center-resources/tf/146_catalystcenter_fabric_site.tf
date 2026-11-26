@@ -9,6 +9,6 @@ locals {
 
 resource "catalystcenter_fabric_site" "n146" {
   authentication_profile_name = local.m_146["authentication_profile_name"]
-  pub_sub_enabled             = local.m_146["pub_sub_enabled"]
-  site_id                     = local.m_146["site_id"]
+  pub_sub_enabled = local.m_146["pub_sub_enabled"]
+  site_id = local.m_146["site_id"]
 }

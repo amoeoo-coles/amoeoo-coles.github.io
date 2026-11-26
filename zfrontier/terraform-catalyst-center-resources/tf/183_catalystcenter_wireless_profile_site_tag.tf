@@ -8,10 +8,10 @@ locals {
 }
 
 resource "catalystcenter_wireless_profile_site_tag" "n183" {
-  ap_profile_name     = local.m_183["ap_profile_name"]
-  flex_profile_name   = local.m_183["flex_profile_name"]
-  site_ids            = local.m_183["site_ids"]
-  site_tag_id         = local.m_183["site_tag_id"]
-  site_tag_name       = local.m_183["site_tag_name"]
+  ap_profile_name = local.m_183["ap_profile_name"]
+  flex_profile_name = local.m_183["flex_profile_name"]
+  site_ids = local.m_183["site_ids"]
+  site_tag_id = local.m_183["site_tag_id"]
+  site_tag_name = local.m_183["site_tag_name"]
   wireless_profile_id = local.m_183["wireless_profile_id"]
 }

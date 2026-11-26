@@ -9,7 +9,7 @@ locals {
 
 data "catalystcenter_device_replacement" "n080" {
   faulty_device_id = local.m_080["faulty_device_id"]
-  id               = local.m_080["id"]
+  id = local.m_080["id"]
 }
 
 output "n080_data_catalystcenter_device_replacement_id" {

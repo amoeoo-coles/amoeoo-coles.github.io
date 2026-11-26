@@ -8,8 +8,8 @@ locals {
 }
 
 data "catalystcenter_fabric_l3_handoff_ip_transit" "n129" {
-  fabric_id         = local.m_129["fabric_id"]
-  id                = local.m_129["id"]
+  fabric_id = local.m_129["fabric_id"]
+  id = local.m_129["id"]
   network_device_id = local.m_129["network_device_id"]
 }
 

@@ -8,7 +8,7 @@ locals {
 }
 
 resource "catalystcenter_assign_managed_ap_locations" "n165" {
-  device_id                               = local.m_165["device_id"]
-  primary_managed_ap_locations_site_ids   = local.m_165["primary_managed_ap_locations_site_ids"]
+  device_id = local.m_165["device_id"]
+  primary_managed_ap_locations_site_ids = local.m_165["primary_managed_ap_locations_site_ids"]
   secondary_managed_ap_locations_site_ids = local.m_165["secondary_managed_ap_locations_site_ids"]
 }

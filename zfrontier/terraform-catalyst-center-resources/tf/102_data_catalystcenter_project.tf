@@ -8,7 +8,7 @@ locals {
 }
 
 data "catalystcenter_project" "n102" {
-  id   = local.m_102["id"]
+  id = local.m_102["id"]
   name = local.m_102["name"]
 }
 

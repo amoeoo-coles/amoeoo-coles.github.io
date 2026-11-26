@@ -8,8 +8,8 @@ locals {
 }
 
 resource "catalystcenter_map_archive_import" "n024" {
-  accept_data_loss    = local.m_024["accept_data_loss"]
-  archive_sha256      = local.m_024["archive_sha256"]
+  accept_data_loss = local.m_024["accept_data_loss"]
+  archive_sha256 = local.m_024["archive_sha256"]
   import_context_uuid = local.m_024["import_context_uuid"]
-  source_path         = local.m_024["source_path"]
+  source_path = local.m_024["source_path"]
 }

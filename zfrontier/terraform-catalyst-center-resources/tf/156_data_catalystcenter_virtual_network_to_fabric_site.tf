@@ -8,7 +8,7 @@ locals {
 }
 
 data "catalystcenter_virtual_network_to_fabric_site" "n156" {
-  fabric_site_id       = local.m_156["fabric_site_id"]
+  fabric_site_id = local.m_156["fabric_site_id"]
   virtual_network_name = local.m_156["virtual_network_name"]
 }
 

@@ -9,5 +9,5 @@ locals {
 
 resource "catalystcenter_timezone_settings" "n067" {
   identifier = local.m_067["identifier"]
-  site_id    = local.m_067["site_id"]
+  site_id = local.m_067["site_id"]
 }

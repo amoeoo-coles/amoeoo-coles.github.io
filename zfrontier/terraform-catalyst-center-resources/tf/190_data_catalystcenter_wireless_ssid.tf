@@ -8,7 +8,7 @@ locals {
 }
 
 data "catalystcenter_wireless_ssid" "n190" {
-  id      = local.m_190["id"]
+  id = local.m_190["id"]
   site_id = local.m_190["site_id"]
 }
 

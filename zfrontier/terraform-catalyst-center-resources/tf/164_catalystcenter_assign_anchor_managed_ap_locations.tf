@@ -9,5 +9,5 @@ locals {
 
 resource "catalystcenter_assign_anchor_managed_ap_locations" "n164" {
   anchor_managed_ap_locations_site_ids = local.m_164["anchor_managed_ap_locations_site_ids"]
-  device_id                            = local.m_164["device_id"]
+  device_id = local.m_164["device_id"]
 }

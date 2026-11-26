@@ -8,7 +8,7 @@ locals {
 }
 
 resource "catalystcenter_power_profile" "n170" {
-  description  = local.m_170["description"]
+  description = local.m_170["description"]
   profile_name = local.m_170["profile_name"]
-  rules        = local.m_170["rules"]
+  rules = local.m_170["rules"]
 }

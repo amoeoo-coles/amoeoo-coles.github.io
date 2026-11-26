@@ -9,5 +9,5 @@ locals {
 
 resource "catalystcenter_image_distribution" "n098" {
   device_uuid = local.m_098["device_uuid"]
-  image_uuid  = local.m_098["image_uuid"]
+  image_uuid = local.m_098["image_uuid"]
 }

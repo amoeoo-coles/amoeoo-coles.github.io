@@ -8,9 +8,9 @@ locals {
 }
 
 resource "catalystcenter_wireless_profile_policy_tag" "n181" {
-  ap_zones            = local.m_181["ap_zones"]
-  policy_tag_id       = local.m_181["policy_tag_id"]
-  policy_tag_name     = local.m_181["policy_tag_name"]
-  site_ids            = local.m_181["site_ids"]
+  ap_zones = local.m_181["ap_zones"]
+  policy_tag_id = local.m_181["policy_tag_id"]
+  policy_tag_name = local.m_181["policy_tag_name"]
+  site_ids = local.m_181["site_ids"]
   wireless_profile_id = local.m_181["wireless_profile_id"]
 }

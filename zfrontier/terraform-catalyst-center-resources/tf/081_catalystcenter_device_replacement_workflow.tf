@@ -8,6 +8,6 @@ locals {
 }
 
 resource "catalystcenter_device_replacement_workflow" "n081" {
-  faulty_device_serial_number      = local.m_081["faulty_device_serial_number"]
+  faulty_device_serial_number = local.m_081["faulty_device_serial_number"]
   replacement_device_serial_number = local.m_081["replacement_device_serial_number"]
 }

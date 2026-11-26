@@ -8,9 +8,9 @@ locals {
 }
 
 resource "catalystcenter_fabric_l2_handoff" "n124" {
-  external_vlan_id  = local.m_124["external_vlan_id"]
-  fabric_id         = local.m_124["fabric_id"]
-  interface_name    = local.m_124["interface_name"]
-  internal_vlan_id  = local.m_124["internal_vlan_id"]
+  external_vlan_id = local.m_124["external_vlan_id"]
+  fabric_id = local.m_124["fabric_id"]
+  interface_name = local.m_124["interface_name"]
+  internal_vlan_id = local.m_124["internal_vlan_id"]
   network_device_id = local.m_124["network_device_id"]
 }

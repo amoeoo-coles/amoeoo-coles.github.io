@@ -8,6 +8,6 @@ locals {
 }
 
 resource "catalystcenter_apply_pending_fabric_events" "n116" {
-  event_id  = local.m_116["event_id"]
+  event_id = local.m_116["event_id"]
   fabric_id = local.m_116["fabric_id"]
 }

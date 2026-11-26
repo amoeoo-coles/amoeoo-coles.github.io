@@ -9,5 +9,5 @@ locals {
 
 resource "catalystcenter_fabric_vlan_to_ssid" "n168" {
   fabric_id = local.m_168["fabric_id"]
-  mappings  = local.m_168["mappings"]
+  mappings = local.m_168["mappings"]
 }

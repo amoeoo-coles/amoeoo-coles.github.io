@@ -9,5 +9,5 @@ locals {
 
 resource "catalystcenter_fabric_devices" "n121" {
   fabric_devices = local.m_121["fabric_devices"]
-  fabric_id      = local.m_121["fabric_id"]
+  fabric_id = local.m_121["fabric_id"]
 }

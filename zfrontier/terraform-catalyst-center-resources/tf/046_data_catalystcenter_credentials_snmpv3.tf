@@ -9,7 +9,7 @@ locals {
 
 data "catalystcenter_credentials_snmpv3" "n046" {
   description = local.m_046["description"]
-  id          = local.m_046["id"]
+  id = local.m_046["id"]
 }
 
 output "n046_data_catalystcenter_credentials_snmpv3_id" {

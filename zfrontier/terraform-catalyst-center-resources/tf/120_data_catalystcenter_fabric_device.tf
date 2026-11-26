@@ -8,7 +8,7 @@ locals {
 }
 
 data "catalystcenter_fabric_device" "n120" {
-  fabric_id         = local.m_120["fabric_id"]
+  fabric_id = local.m_120["fabric_id"]
   network_device_id = local.m_120["network_device_id"]
 }
 
