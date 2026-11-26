@@ -1,0 +1,24 @@
+---
+# Sample playbook for cisco.catalystwan.software_repository (cisco.catalystwan 0.3.2)
+# Build order: 10
+# Manages software repositories and remote servers
+# Reads ../models/software_repository.yml (vars_files). Docs: https://galaxy.ansible.com/ui/repo/published/cisco/catalystwan/content/module/software_repository/?version=0.3.2
+# Connection placeholders come from inventory.yml: {{ manager_url }} {{ manager_username }} {{ manager_password }} {{ manager_port }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags software_repository.
+
+- name: "0010 software_repository"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/software_repository.yml
+  tasks:
+    - name: Run software_repository from its model
+      cisco.catalystwan.software_repository:
+        manager_credentials: "{{ (software_repository.manager_credentials | cat_strip_nulls) if (software_repository.manager_credentials | cat_strip_nulls) is not none else omit }}"
+        remote_server: "{{ (software_repository.remote_server | cat_strip_nulls) if (software_repository.remote_server | cat_strip_nulls) is not none else omit }}"
+        software: "{{ (software_repository.software | cat_strip_nulls) if (software_repository.software | cat_strip_nulls) is not none else omit }}"
+      register: software_repository_result
+      tags:
+        - never
+        - software_repository

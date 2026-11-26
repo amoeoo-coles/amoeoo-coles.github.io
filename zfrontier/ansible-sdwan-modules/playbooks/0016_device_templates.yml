@@ -1,0 +1,31 @@
+---
+# Sample playbook for cisco.catalystwan.device_templates (cisco.catalystwan 0.3.2)
+# Build order: 16
+# Manage Device Templates on vManage.
+# Reads ../models/device_templates.yml (vars_files). Docs: https://galaxy.ansible.com/ui/repo/published/cisco/catalystwan/content/module/device_templates/?version=0.3.2
+# Connection placeholders come from inventory.yml: {{ manager_url }} {{ manager_username }} {{ manager_password }} {{ manager_port }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags device_templates.
+
+- name: "0016 device_templates"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/device_templates.yml
+  tasks:
+    - name: Run device_templates from its model
+      cisco.catalystwan.device_templates:
+        device_role: "{{ device_templates.device_role if device_templates.device_role is not none else omit }}"
+        device_specific_vars: "{{ device_templates.device_specific_vars if device_templates.device_specific_vars is not none else omit }}"
+        device_type: "{{ device_templates.device_type if device_templates.device_type is not none else omit }}"
+        general_templates: "{{ (device_templates.general_templates | cat_strip_nulls) if (device_templates.general_templates | cat_strip_nulls) is not none else omit }}"
+        hostname: "{{ device_templates.hostname if device_templates.hostname is not none else omit }}"
+        manager_credentials: "{{ (device_templates.manager_credentials | cat_strip_nulls) if (device_templates.manager_credentials | cat_strip_nulls) is not none else omit }}"
+        state: "{{ device_templates.state if device_templates.state is not none else omit }}"
+        template_description: "{{ device_templates.template_description if device_templates.template_description is not none else omit }}"
+        template_name: "{{ device_templates.template_name if device_templates.template_name is not none else omit }}"
+        timeout_seconds: "{{ device_templates.timeout_seconds if device_templates.timeout_seconds is not none else omit }}"
+      register: device_templates_result
+      tags:
+        - never
+        - device_templates

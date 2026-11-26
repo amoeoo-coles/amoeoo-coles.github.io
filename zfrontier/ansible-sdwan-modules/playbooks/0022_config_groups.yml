@@ -1,0 +1,22 @@
+---
+# Sample playbook for cisco.catalystwan.config_groups (cisco.catalystwan 0.3.2)
+# Build order: 22
+# Description
+# Reads ../models/config_groups.yml (vars_files). Docs: https://galaxy.ansible.com/ui/repo/published/cisco/catalystwan/content/module/config_groups/?version=0.3.2
+# Connection placeholders come from inventory.yml: {{ manager_url }} {{ manager_username }} {{ manager_password }} {{ manager_port }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags config_groups.
+
+- name: "0022 config_groups"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/config_groups.yml
+  tasks:
+    - name: Run config_groups from its model
+      cisco.catalystwan.config_groups:
+        manager_credentials: "{{ (config_groups.manager_credentials | cat_strip_nulls) if (config_groups.manager_credentials | cat_strip_nulls) is not none else omit }}"
+      register: config_groups_result
+      tags:
+        - never
+        - config_groups

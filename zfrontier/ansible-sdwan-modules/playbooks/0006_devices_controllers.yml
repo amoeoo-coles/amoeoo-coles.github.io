@@ -1,0 +1,32 @@
+---
+# Sample playbook for cisco.catalystwan.devices_controllers (cisco.catalystwan 0.3.2)
+# Build order: 6
+# Manages devices within vManage
+# Reads ../models/devices_controllers.yml (vars_files). Docs: https://galaxy.ansible.com/ui/repo/published/cisco/catalystwan/content/module/devices_controllers/?version=0.3.2
+# Connection placeholders come from inventory.yml: {{ manager_url }} {{ manager_username }} {{ manager_password }} {{ manager_port }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags devices_controllers.
+
+- name: "0006 devices_controllers"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/devices_controllers.yml
+  tasks:
+    - name: Run devices_controllers from its model
+      cisco.catalystwan.devices_controllers:
+        device_ip: "{{ devices_controllers.device_ip if devices_controllers.device_ip is not none else omit }}"
+        generate_csr: "{{ devices_controllers.generate_csr if devices_controllers.generate_csr is not none else omit }}"
+        hostname: "{{ devices_controllers.hostname if devices_controllers.hostname is not none else omit }}"
+        manager_credentials: "{{ (devices_controllers.manager_credentials | cat_strip_nulls) if (devices_controllers.manager_credentials | cat_strip_nulls) is not none else omit }}"
+        password: "{{ devices_controllers.password if devices_controllers.password is not none else omit }}"
+        personality: "{{ devices_controllers.personality if devices_controllers.personality is not none else omit }}"
+        port: "{{ devices_controllers.port if devices_controllers.port is not none else omit }}"
+        protocol: "{{ devices_controllers.protocol if devices_controllers.protocol is not none else omit }}"
+        state: "{{ devices_controllers.state if devices_controllers.state is not none else omit }}"
+        username: "{{ devices_controllers.username if devices_controllers.username is not none else omit }}"
+        uuid: "{{ devices_controllers.uuid if devices_controllers.uuid is not none else omit }}"
+      register: devices_controllers_result
+      tags:
+        - never
+        - devices_controllers

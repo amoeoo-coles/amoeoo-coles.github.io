@@ -1,0 +1,23 @@
+---
+# Sample playbook for cisco.catalystwan.devices_info (cisco.catalystwan 0.3.2)
+# Build order: 9
+# Retrieves information about devices within vManage
+# Reads ../models/devices_info.yml (vars_files). Docs: https://galaxy.ansible.com/ui/repo/published/cisco/catalystwan/content/module/devices_info/?version=0.3.2
+# Connection placeholders come from inventory.yml: {{ manager_url }} {{ manager_username }} {{ manager_password }} {{ manager_port }}.
+
+- name: "0009 devices_info"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/devices_info.yml
+  tasks:
+    - name: Run devices_info from its model
+      cisco.catalystwan.devices_info:
+        backup: "{{ devices_info.backup if devices_info.backup is not none else omit }}"
+        backup_dir_path: "{{ devices_info.backup_dir_path if devices_info.backup_dir_path is not none else omit }}"
+        details: "{{ devices_info.details if devices_info.details is not none else omit }}"
+        device_category: "{{ devices_info.device_category if devices_info.device_category is not none else omit }}"
+        filters: "{{ devices_info.filters if devices_info.filters is not none else omit }}"
+        manager_credentials: "{{ (devices_info.manager_credentials | cat_strip_nulls) if (devices_info.manager_credentials | cat_strip_nulls) is not none else omit }}"
+      register: devices_info_result

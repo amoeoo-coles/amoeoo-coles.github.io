@@ -1,0 +1,35 @@
+---
+# Sample playbook for cisco.catalystwan.software_upgrade (cisco.catalystwan 0.3.2)
+# Build order: 12
+# Manages the software upgrade process on devices.
+# Reads ../models/software_upgrade.yml (vars_files). Docs: https://galaxy.ansible.com/ui/repo/published/cisco/catalystwan/content/module/software_upgrade/?version=0.3.2
+# Connection placeholders come from inventory.yml: {{ manager_url }} {{ manager_username }} {{ manager_password }} {{ manager_port }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags software_upgrade.
+
+- name: "0012 software_upgrade"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/software_upgrade.yml
+  tasks:
+    - name: Run software_upgrade from its model
+      cisco.catalystwan.software_upgrade:
+        devices: "{{ (software_upgrade.devices | cat_strip_nulls) if (software_upgrade.devices | cat_strip_nulls) is not none else omit }}"
+        downgrade_check: "{{ software_upgrade.downgrade_check if software_upgrade.downgrade_check is not none else omit }}"
+        filters: "{{ software_upgrade.filters if software_upgrade.filters is not none else omit }}"
+        force: "{{ software_upgrade.force if software_upgrade.force is not none else omit }}"
+        image_path: "{{ software_upgrade.image_path if software_upgrade.image_path is not none else omit }}"
+        image_version: "{{ software_upgrade.image_version if software_upgrade.image_version is not none else omit }}"
+        manager_credentials: "{{ (software_upgrade.manager_credentials | cat_strip_nulls) if (software_upgrade.manager_credentials | cat_strip_nulls) is not none else omit }}"
+        reboot: "{{ software_upgrade.reboot if software_upgrade.reboot is not none else omit }}"
+        remote_image_filename: "{{ software_upgrade.remote_image_filename if software_upgrade.remote_image_filename is not none else omit }}"
+        remote_server_name: "{{ software_upgrade.remote_server_name if software_upgrade.remote_server_name is not none else omit }}"
+        state: "{{ software_upgrade.state if software_upgrade.state is not none else omit }}"
+        sync: "{{ software_upgrade.sync if software_upgrade.sync is not none else omit }}"
+        wait_for_completed: "{{ software_upgrade.wait_for_completed if software_upgrade.wait_for_completed is not none else omit }}"
+        wait_timeout_seconds: "{{ software_upgrade.wait_timeout_seconds if software_upgrade.wait_timeout_seconds is not none else omit }}"
+      register: software_upgrade_result
+      tags:
+        - never
+        - software_upgrade

@@ -1,0 +1,29 @@
+---
+# Sample playbook for cisco.catalystwan.devices_certificates (cisco.catalystwan 0.3.2)
+# Build order: 8
+# Manages certificates for devices within vManage
+# Reads ../models/devices_certificates.yml (vars_files). Docs: https://galaxy.ansible.com/ui/repo/published/cisco/catalystwan/content/module/devices_certificates/?version=0.3.2
+# Connection placeholders come from inventory.yml: {{ manager_url }} {{ manager_username }} {{ manager_password }} {{ manager_port }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags devices_certificates.
+
+- name: "0008 devices_certificates"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/devices_certificates.yml
+  tasks:
+    - name: Run devices_certificates from its model
+      cisco.catalystwan.devices_certificates:
+        change_vedge_list_validity: "{{ (devices_certificates.change_vedge_list_validity | cat_strip_nulls) if (devices_certificates.change_vedge_list_validity | cat_strip_nulls) is not none else omit }}"
+        device_ip: "{{ devices_certificates.device_ip if devices_certificates.device_ip is not none else omit }}"
+        generate_csr: "{{ devices_certificates.generate_csr if devices_certificates.generate_csr is not none else omit }}"
+        invalidate: "{{ devices_certificates.invalidate if devices_certificates.invalidate is not none else omit }}"
+        manager_credentials: "{{ (devices_certificates.manager_credentials | cat_strip_nulls) if (devices_certificates.manager_credentials | cat_strip_nulls) is not none else omit }}"
+        send_to_controllers: "{{ devices_certificates.send_to_controllers if devices_certificates.send_to_controllers is not none else omit }}"
+        send_to_vbond: "{{ devices_certificates.send_to_vbond if devices_certificates.send_to_vbond is not none else omit }}"
+        uuid: "{{ devices_certificates.uuid if devices_certificates.uuid is not none else omit }}"
+      register: devices_certificates_result
+      tags:
+        - never
+        - devices_certificates

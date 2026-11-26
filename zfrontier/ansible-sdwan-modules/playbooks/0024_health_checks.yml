@@ -1,0 +1,20 @@
+---
+# Sample playbook for cisco.catalystwan.health_checks (cisco.catalystwan 0.3.2)
+# Build order: 24
+# Performs health checks on network devices managed by vManage
+# Reads ../models/health_checks.yml (vars_files). Docs: https://galaxy.ansible.com/ui/repo/published/cisco/catalystwan/content/module/health_checks/?version=0.3.2
+# Connection placeholders come from inventory.yml: {{ manager_url }} {{ manager_username }} {{ manager_password }} {{ manager_port }}.
+
+- name: "0024 health_checks"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/health_checks.yml
+  tasks:
+    - name: Run health_checks from its model
+      cisco.catalystwan.health_checks:
+        check_type: "{{ health_checks.check_type if health_checks.check_type is not none else omit }}"
+        filters: "{{ health_checks.filters if health_checks.filters is not none else omit }}"
+        manager_credentials: "{{ (health_checks.manager_credentials | cat_strip_nulls) if (health_checks.manager_credentials | cat_strip_nulls) is not none else omit }}"
+      register: health_checks_result

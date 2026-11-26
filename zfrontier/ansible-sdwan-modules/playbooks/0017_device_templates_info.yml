@@ -1,0 +1,21 @@
+---
+# Sample playbook for cisco.catalystwan.device_templates_info (cisco.catalystwan 0.3.2)
+# Build order: 17
+# Get information about Device Templates on vManage.
+# Reads ../models/device_templates_info.yml (vars_files). Docs: https://galaxy.ansible.com/ui/repo/published/cisco/catalystwan/content/module/device_templates_info/?version=0.3.2
+# Connection placeholders come from inventory.yml: {{ manager_url }} {{ manager_username }} {{ manager_password }} {{ manager_port }}.
+
+- name: "0017 device_templates_info"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/device_templates_info.yml
+  tasks:
+    - name: Run device_templates_info from its model
+      cisco.catalystwan.device_templates_info:
+        backup: "{{ device_templates_info.backup if device_templates_info.backup is not none else omit }}"
+        backup_dir_path: "{{ device_templates_info.backup_dir_path if device_templates_info.backup_dir_path is not none else omit }}"
+        filters: "{{ (device_templates_info.filters | cat_strip_nulls) if (device_templates_info.filters | cat_strip_nulls) is not none else omit }}"
+        manager_credentials: "{{ (device_templates_info.manager_credentials | cat_strip_nulls) if (device_templates_info.manager_credentials | cat_strip_nulls) is not none else omit }}"
+      register: device_templates_info_result

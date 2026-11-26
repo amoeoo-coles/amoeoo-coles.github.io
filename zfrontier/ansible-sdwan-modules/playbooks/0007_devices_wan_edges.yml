@@ -1,0 +1,29 @@
+---
+# Sample playbook for cisco.catalystwan.devices_wan_edges (cisco.catalystwan 0.3.2)
+# Build order: 7
+# Manages WAN Edge devices within vManage
+# Reads ../models/devices_wan_edges.yml (vars_files). Docs: https://galaxy.ansible.com/ui/repo/published/cisco/catalystwan/content/module/devices_wan_edges/?version=0.3.2
+# Connection placeholders come from inventory.yml: {{ manager_url }} {{ manager_username }} {{ manager_password }} {{ manager_port }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags devices_wan_edges.
+
+- name: "0007 devices_wan_edges"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/devices_wan_edges.yml
+  tasks:
+    - name: Run devices_wan_edges from its model
+      cisco.catalystwan.devices_wan_edges:
+        generate_bootstrap_configuration: "{{ devices_wan_edges.generate_bootstrap_configuration if devices_wan_edges.generate_bootstrap_configuration is not none else omit }}"
+        manager_credentials: "{{ (devices_wan_edges.manager_credentials | cat_strip_nulls) if (devices_wan_edges.manager_credentials | cat_strip_nulls) is not none else omit }}"
+        password: "{{ devices_wan_edges.password if devices_wan_edges.password is not none else omit }}"
+        state: "{{ devices_wan_edges.state if devices_wan_edges.state is not none else omit }}"
+        sync_devices_from_smart_account: "{{ devices_wan_edges.sync_devices_from_smart_account if devices_wan_edges.sync_devices_from_smart_account is not none else omit }}"
+        username: "{{ devices_wan_edges.username if devices_wan_edges.username is not none else omit }}"
+        uuid: "{{ devices_wan_edges.uuid if devices_wan_edges.uuid is not none else omit }}"
+        wan_edge_list: "{{ devices_wan_edges.wan_edge_list if devices_wan_edges.wan_edge_list is not none else omit }}"
+      register: devices_wan_edges_result
+      tags:
+        - never
+        - devices_wan_edges

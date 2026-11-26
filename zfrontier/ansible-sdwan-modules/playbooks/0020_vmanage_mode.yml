@@ -1,0 +1,24 @@
+---
+# Sample playbook for cisco.catalystwan.vmanage_mode (cisco.catalystwan 0.3.2)
+# Build order: 20
+# Manage vManage modes on Cisco devices.
+# Reads ../models/vmanage_mode.yml (vars_files). Docs: https://galaxy.ansible.com/ui/repo/published/cisco/catalystwan/content/module/vmanage_mode/?version=0.3.2
+# Connection placeholders come from inventory.yml: {{ manager_url }} {{ manager_username }} {{ manager_password }} {{ manager_port }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags vmanage_mode.
+
+- name: "0020 vmanage_mode"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/vmanage_mode.yml
+  tasks:
+    - name: Run vmanage_mode from its model
+      cisco.catalystwan.vmanage_mode:
+        hostnames: "{{ (vmanage_mode.hostnames | cat_strip_nulls) if (vmanage_mode.hostnames | cat_strip_nulls) is not none else omit }}"
+        manager_credentials: "{{ (vmanage_mode.manager_credentials | cat_strip_nulls) if (vmanage_mode.manager_credentials | cat_strip_nulls) is not none else omit }}"
+        state: "{{ vmanage_mode.state if vmanage_mode.state is not none else omit }}"
+      register: vmanage_mode_result
+      tags:
+        - never
+        - vmanage_mode

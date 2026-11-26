@@ -1,0 +1,22 @@
+---
+# Sample playbook for cisco.catalystwan.alarms (cisco.catalystwan 0.3.2)
+# Build order: 25
+# Information about alarms in vManage
+# Reads ../models/alarms.yml (vars_files). Docs: https://galaxy.ansible.com/ui/repo/published/cisco/catalystwan/content/module/alarms/?version=0.3.2
+# Connection placeholders come from inventory.yml: {{ manager_url }} {{ manager_username }} {{ manager_password }} {{ manager_port }}.
+
+- name: "0025 alarms"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/alarms.yml
+  tasks:
+    - name: Run alarms from its model
+      cisco.catalystwan.alarms:
+        from_time: "{{ alarms.from_time if alarms.from_time is not none else omit }}"
+        log_file: "{{ alarms.log_file if alarms.log_file is not none else omit }}"
+        manager_credentials: "{{ (alarms.manager_credentials | cat_strip_nulls) if (alarms.manager_credentials | cat_strip_nulls) is not none else omit }}"
+        mark_all_as_viewed: "{{ alarms.mark_all_as_viewed if alarms.mark_all_as_viewed is not none else omit }}"
+        only_critical: "{{ alarms.only_critical if alarms.only_critical is not none else omit }}"
+      register: alarms_result

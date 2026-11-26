@@ -1,0 +1,27 @@
+---
+# Sample playbook for cisco.catalystwan.cli_templates (cisco.catalystwan 0.3.2)
+# Build order: 18
+# Manage CLI templates in Cisco SDWAN
+# Reads ../models/cli_templates.yml (vars_files). Docs: https://galaxy.ansible.com/ui/repo/published/cisco/catalystwan/content/module/cli_templates/?version=0.3.2
+# Connection placeholders come from inventory.yml: {{ manager_url }} {{ manager_username }} {{ manager_password }} {{ manager_port }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags cli_templates.
+
+- name: "0018 cli_templates"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/cli_templates.yml
+  tasks:
+    - name: Run cli_templates from its model
+      cisco.catalystwan.cli_templates:
+        config_file: "{{ cli_templates.config_file if cli_templates.config_file is not none else omit }}"
+        device_type: "{{ cli_templates.device_type if cli_templates.device_type is not none else omit }}"
+        manager_credentials: "{{ (cli_templates.manager_credentials | cat_strip_nulls) if (cli_templates.manager_credentials | cat_strip_nulls) is not none else omit }}"
+        state: "{{ cli_templates.state if cli_templates.state is not none else omit }}"
+        template_description: "{{ cli_templates.template_description if cli_templates.template_description is not none else omit }}"
+        template_name: "{{ cli_templates.template_name if cli_templates.template_name is not none else omit }}"
+      register: cli_templates_result
+      tags:
+        - never
+        - cli_templates

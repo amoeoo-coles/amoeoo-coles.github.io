@@ -1,0 +1,28 @@
+---
+# Sample playbook for cisco.catalystwan.users (cisco.catalystwan 0.3.2)
+# Build order: 5
+# Manage users in vManage.
+# Reads ../models/users.yml (vars_files). Docs: https://galaxy.ansible.com/ui/repo/published/cisco/catalystwan/content/module/users/?version=0.3.2
+# Connection placeholders come from inventory.yml: {{ manager_url }} {{ manager_username }} {{ manager_password }} {{ manager_port }}.
+# DISRUPTIVE or state-changing on the controller: tagged 'never' - runs only with --tags users.
+
+- name: "0005 users"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/users.yml
+  tasks:
+    - name: Run users from its model
+      cisco.catalystwan.users:
+        description: "{{ users.description if users.description is not none else omit }}"
+        get_all: "{{ users.get_all if users.get_all is not none else omit }}"
+        group: "{{ users.group if users.group is not none else omit }}"
+        manager_credentials: "{{ (users.manager_credentials | cat_strip_nulls) if (users.manager_credentials | cat_strip_nulls) is not none else omit }}"
+        mode: "{{ users.mode if users.mode is not none else omit }}"
+        password: "{{ users.password if users.password is not none else omit }}"
+        username: "{{ users.username if users.username is not none else omit }}"
+      register: users_result
+      tags:
+        - never
+        - users

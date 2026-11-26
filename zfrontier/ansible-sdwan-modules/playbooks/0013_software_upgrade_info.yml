@@ -1,0 +1,20 @@
+---
+# Sample playbook for cisco.catalystwan.software_upgrade_info (cisco.catalystwan 0.3.2)
+# Build order: 13
+# Gathers information about software upgrades on devices managed by vManage
+# Reads ../models/software_upgrade_info.yml (vars_files). Docs: https://galaxy.ansible.com/ui/repo/published/cisco/catalystwan/content/module/software_upgrade_info/?version=0.3.2
+# Connection placeholders come from inventory.yml: {{ manager_url }} {{ manager_username }} {{ manager_password }} {{ manager_port }}.
+
+- name: "0013 software_upgrade_info"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ../models/software_upgrade_info.yml
+  tasks:
+    - name: Run software_upgrade_info from its model
+      cisco.catalystwan.software_upgrade_info:
+        device_type: "{{ software_upgrade_info.device_type if software_upgrade_info.device_type is not none else omit }}"
+        filters: "{{ software_upgrade_info.filters if software_upgrade_info.filters is not none else omit }}"
+        manager_credentials: "{{ (software_upgrade_info.manager_credentials | cat_strip_nulls) if (software_upgrade_info.manager_credentials | cat_strip_nulls) is not none else omit }}"
+      register: software_upgrade_info_result
