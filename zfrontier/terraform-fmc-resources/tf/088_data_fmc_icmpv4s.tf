@@ -9,7 +9,7 @@ locals {
 
 data "fmc_icmpv4s" "n088" {
   domain = local.m_088["domain"]
-  items  = local.m_088["items"]
+  items = local.m_088["items"]
 }
 
 output "n088_data_fmc_icmpv4s_id" {

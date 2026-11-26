@@ -9,6 +9,6 @@ locals {
 
 resource "fmc_trusted_certificate_authority" "n238" {
   certificate = local.m_238["certificate"]
-  domain      = local.m_238["domain"]
-  name        = local.m_238["name"]
+  domain = local.m_238["domain"]
+  name = local.m_238["name"]
 }

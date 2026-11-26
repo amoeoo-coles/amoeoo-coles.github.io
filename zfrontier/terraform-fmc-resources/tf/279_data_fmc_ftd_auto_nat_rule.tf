@@ -8,9 +8,9 @@ locals {
 }
 
 data "fmc_ftd_auto_nat_rule" "n279" {
-  domain            = local.m_279["domain"]
+  domain = local.m_279["domain"]
   ftd_nat_policy_id = local.m_279["ftd_nat_policy_id"]
-  id                = local.m_279["id"]
+  id = local.m_279["id"]
 }
 
 output "n279_data_fmc_ftd_auto_nat_rule_id" {

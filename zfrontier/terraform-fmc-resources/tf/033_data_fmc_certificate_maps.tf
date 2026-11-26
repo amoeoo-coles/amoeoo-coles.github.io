@@ -9,7 +9,7 @@ locals {
 
 data "fmc_certificate_maps" "n033" {
   domain = local.m_033["domain"]
-  items  = local.m_033["items"]
+  items = local.m_033["items"]
 }
 
 output "n033_data_fmc_certificate_maps_id" {

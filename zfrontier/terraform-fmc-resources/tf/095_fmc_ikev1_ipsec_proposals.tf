@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_ikev1_ipsec_proposals" "n095" {
   domain = local.m_095["domain"]
-  items  = local.m_095["items"]
+  items = local.m_095["items"]
 }

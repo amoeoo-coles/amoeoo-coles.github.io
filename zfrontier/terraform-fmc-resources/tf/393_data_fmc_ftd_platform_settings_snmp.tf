@@ -8,9 +8,9 @@ locals {
 }
 
 data "fmc_ftd_platform_settings_snmp" "n393" {
-  domain                   = local.m_393["domain"]
+  domain = local.m_393["domain"]
   ftd_platform_settings_id = local.m_393["ftd_platform_settings_id"]
-  id                       = local.m_393["id"]
+  id = local.m_393["id"]
 }
 
 output "n393_data_fmc_ftd_platform_settings_snmp_id" {

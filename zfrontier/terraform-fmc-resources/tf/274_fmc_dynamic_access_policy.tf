@@ -8,8 +8,8 @@ locals {
 }
 
 resource "fmc_dynamic_access_policy" "n274" {
-  description                      = local.m_274["description"]
-  domain                           = local.m_274["domain"]
-  name                             = local.m_274["name"]
+  description = local.m_274["description"]
+  domain = local.m_274["domain"]
+  name = local.m_274["name"]
   secure_client_posture_package_id = local.m_274["secure_client_posture_package_id"]
 }

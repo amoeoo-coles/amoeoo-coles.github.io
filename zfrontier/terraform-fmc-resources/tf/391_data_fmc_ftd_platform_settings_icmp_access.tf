@@ -8,9 +8,9 @@ locals {
 }
 
 data "fmc_ftd_platform_settings_icmp_access" "n391" {
-  domain                   = local.m_391["domain"]
+  domain = local.m_391["domain"]
   ftd_platform_settings_id = local.m_391["ftd_platform_settings_id"]
-  id                       = local.m_391["id"]
+  id = local.m_391["id"]
 }
 
 output "n391_data_fmc_ftd_platform_settings_icmp_access_id" {

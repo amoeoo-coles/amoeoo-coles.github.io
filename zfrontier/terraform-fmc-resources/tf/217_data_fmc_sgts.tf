@@ -9,7 +9,7 @@ locals {
 
 data "fmc_sgts" "n217" {
   domain = local.m_217["domain"]
-  items  = local.m_217["items"]
+  items = local.m_217["items"]
 }
 
 output "n217_data_fmc_sgts_id" {

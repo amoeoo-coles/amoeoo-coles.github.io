@@ -8,9 +8,9 @@ locals {
 }
 
 resource "fmc_security_intelligence_network_feed" "n196" {
-  checksum_url     = local.m_196["checksum_url"]
-  domain           = local.m_196["domain"]
-  feed_url         = local.m_196["feed_url"]
-  name             = local.m_196["name"]
+  checksum_url = local.m_196["checksum_url"]
+  domain = local.m_196["domain"]
+  feed_url = local.m_196["feed_url"]
+  name = local.m_196["name"]
   update_frequency = local.m_196["update_frequency"]
 }

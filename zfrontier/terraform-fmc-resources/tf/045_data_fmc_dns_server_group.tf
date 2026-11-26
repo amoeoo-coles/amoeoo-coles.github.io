@@ -9,8 +9,8 @@ locals {
 
 data "fmc_dns_server_group" "n045" {
   domain = local.m_045["domain"]
-  id     = local.m_045["id"]
-  name   = local.m_045["name"]
+  id = local.m_045["id"]
+  name = local.m_045["name"]
 }
 
 output "n045_data_fmc_dns_server_group_id" {

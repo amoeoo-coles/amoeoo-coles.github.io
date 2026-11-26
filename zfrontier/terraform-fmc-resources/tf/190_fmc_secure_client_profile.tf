@@ -9,8 +9,8 @@ locals {
 
 resource "fmc_secure_client_profile" "n190" {
   description = local.m_190["description"]
-  domain      = local.m_190["domain"]
-  file_type   = local.m_190["file_type"]
-  name        = local.m_190["name"]
-  path        = local.m_190["path"]
+  domain = local.m_190["domain"]
+  file_type = local.m_190["file_type"]
+  name = local.m_190["name"]
+  path = local.m_190["path"]
 }

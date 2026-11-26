@@ -9,9 +9,9 @@ locals {
 
 data "fmc_chassis_logical_device" "n314" {
   chassis_id = local.m_314["chassis_id"]
-  domain     = local.m_314["domain"]
-  id         = local.m_314["id"]
-  name       = local.m_314["name"]
+  domain = local.m_314["domain"]
+  id = local.m_314["id"]
+  name = local.m_314["name"]
 }
 
 output "n314_data_fmc_chassis_logical_device_id" {

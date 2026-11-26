@@ -10,9 +10,9 @@ locals {
 data "fmc_device_bgp" "n324" {
   as_number = local.m_324["as_number"]
   device_id = local.m_324["device_id"]
-  domain    = local.m_324["domain"]
-  id        = local.m_324["id"]
-  vrf_id    = local.m_324["vrf_id"]
+  domain = local.m_324["domain"]
+  id = local.m_324["id"]
+  vrf_id = local.m_324["vrf_id"]
 }
 
 output "n324_data_fmc_device_bgp_id" {

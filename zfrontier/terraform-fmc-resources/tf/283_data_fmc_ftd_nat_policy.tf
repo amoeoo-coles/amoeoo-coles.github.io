@@ -8,10 +8,10 @@ locals {
 }
 
 data "fmc_ftd_nat_policy" "n283" {
-  domain       = local.m_283["domain"]
-  id           = local.m_283["id"]
+  domain = local.m_283["domain"]
+  id = local.m_283["id"]
   manage_rules = local.m_283["manage_rules"]
-  name         = local.m_283["name"]
+  name = local.m_283["name"]
 }
 
 output "n283_data_fmc_ftd_nat_policy_id" {

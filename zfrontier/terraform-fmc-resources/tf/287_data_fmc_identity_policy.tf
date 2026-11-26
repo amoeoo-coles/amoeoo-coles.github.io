@@ -9,8 +9,8 @@ locals {
 
 data "fmc_identity_policy" "n287" {
   domain = local.m_287["domain"]
-  id     = local.m_287["id"]
-  name   = local.m_287["name"]
+  id = local.m_287["id"]
+  name = local.m_287["name"]
 }
 
 output "n287_data_fmc_identity_policy_id" {

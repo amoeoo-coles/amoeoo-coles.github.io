@@ -9,7 +9,7 @@ locals {
 
 data "fmc_snmp_alerts" "n306" {
   domain = local.m_306["domain"]
-  items  = local.m_306["items"]
+  items = local.m_306["items"]
 }
 
 output "n306_data_fmc_snmp_alerts_id" {

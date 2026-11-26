@@ -8,13 +8,13 @@ locals {
 }
 
 resource "fmc_chassis_physical_interface" "n315" {
-  admin_state      = local.m_315["admin_state"]
+  admin_state = local.m_315["admin_state"]
   auto_negotiation = local.m_315["auto_negotiation"]
-  chassis_id       = local.m_315["chassis_id"]
-  domain           = local.m_315["domain"]
-  duplex           = local.m_315["duplex"]
-  fec_mode         = local.m_315["fec_mode"]
-  name             = local.m_315["name"]
-  port_type        = local.m_315["port_type"]
-  speed            = local.m_315["speed"]
+  chassis_id = local.m_315["chassis_id"]
+  domain = local.m_315["domain"]
+  duplex = local.m_315["duplex"]
+  fec_mode = local.m_315["fec_mode"]
+  name = local.m_315["name"]
+  port_type = local.m_315["port_type"]
+  speed = local.m_315["speed"]
 }

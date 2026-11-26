@@ -9,7 +9,7 @@ locals {
 
 data "fmc_vlan_tags" "n262" {
   domain = local.m_262["domain"]
-  items  = local.m_262["items"]
+  items = local.m_262["items"]
 }
 
 output "n262_data_fmc_vlan_tags_id" {

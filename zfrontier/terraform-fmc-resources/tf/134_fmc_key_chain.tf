@@ -9,7 +9,7 @@ locals {
 
 resource "fmc_key_chain" "n134" {
   description = local.m_134["description"]
-  domain      = local.m_134["domain"]
-  keys        = local.m_134["keys"]
-  name        = local.m_134["name"]
+  domain = local.m_134["domain"]
+  keys = local.m_134["keys"]
+  name = local.m_134["name"]
 }

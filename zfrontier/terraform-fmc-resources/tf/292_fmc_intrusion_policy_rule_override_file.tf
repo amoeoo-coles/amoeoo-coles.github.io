@@ -8,9 +8,9 @@ locals {
 }
 
 resource "fmc_intrusion_policy_rule_override" "n292" {
-  domain               = local.m_292["domain"]
-  intrusion_policy_id  = local.m_292["intrusion_policy_id"]
-  intrusion_rule_id    = local.m_292["intrusion_rule_id"]
+  domain = local.m_292["domain"]
+  intrusion_policy_id = local.m_292["intrusion_policy_id"]
+  intrusion_rule_id = local.m_292["intrusion_rule_id"]
   override_rule_action = local.m_292["override_rule_action"]
-  rule_data            = local.m_292["rule_data"]
+  rule_data = local.m_292["rule_data"]
 }

@@ -9,7 +9,7 @@ locals {
 
 data "fmc_applications" "n019" {
   domain = local.m_019["domain"]
-  items  = local.m_019["items"]
+  items = local.m_019["items"]
 }
 
 output "n019_data_fmc_applications_id" {

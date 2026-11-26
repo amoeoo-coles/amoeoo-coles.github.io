@@ -8,9 +8,9 @@ locals {
 }
 
 data "fmc_ftd_platform_settings_banner" "n385" {
-  domain                   = local.m_385["domain"]
+  domain = local.m_385["domain"]
   ftd_platform_settings_id = local.m_385["ftd_platform_settings_id"]
-  id                       = local.m_385["id"]
+  id = local.m_385["id"]
 }
 
 output "n385_data_fmc_ftd_platform_settings_banner_id" {

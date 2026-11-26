@@ -8,9 +8,9 @@ locals {
 }
 
 data "fmc_ftd_platform_settings_dns" "n387" {
-  domain                   = local.m_387["domain"]
+  domain = local.m_387["domain"]
   ftd_platform_settings_id = local.m_387["ftd_platform_settings_id"]
-  id                       = local.m_387["id"]
+  id = local.m_387["id"]
 }
 
 output "n387_data_fmc_ftd_platform_settings_dns_id" {

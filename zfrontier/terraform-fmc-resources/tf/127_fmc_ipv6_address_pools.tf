@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_ipv6_address_pools" "n127" {
   domain = local.m_127["domain"]
-  items  = local.m_127["items"]
+  items = local.m_127["items"]
 }

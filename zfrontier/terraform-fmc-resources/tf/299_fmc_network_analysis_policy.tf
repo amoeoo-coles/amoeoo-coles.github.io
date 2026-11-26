@@ -8,9 +8,9 @@ locals {
 }
 
 resource "fmc_network_analysis_policy" "n299" {
-  base_policy_id  = local.m_299["base_policy_id"]
-  description     = local.m_299["description"]
-  domain          = local.m_299["domain"]
+  base_policy_id = local.m_299["base_policy_id"]
+  description = local.m_299["description"]
+  domain = local.m_299["domain"]
   inspection_mode = local.m_299["inspection_mode"]
-  name            = local.m_299["name"]
+  name = local.m_299["name"]
 }

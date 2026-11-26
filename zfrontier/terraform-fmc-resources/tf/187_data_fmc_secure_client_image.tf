@@ -9,8 +9,8 @@ locals {
 
 data "fmc_secure_client_image" "n187" {
   domain = local.m_187["domain"]
-  id     = local.m_187["id"]
-  name   = local.m_187["name"]
+  id = local.m_187["id"]
+  name = local.m_187["name"]
 }
 
 output "n187_data_fmc_secure_client_image_id" {

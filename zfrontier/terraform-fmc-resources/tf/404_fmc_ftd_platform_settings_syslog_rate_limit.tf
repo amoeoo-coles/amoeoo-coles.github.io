@@ -8,10 +8,10 @@ locals {
 }
 
 resource "fmc_ftd_platform_settings_syslog_rate_limit" "n404" {
-  domain                   = local.m_404["domain"]
+  domain = local.m_404["domain"]
   ftd_platform_settings_id = local.m_404["ftd_platform_settings_id"]
-  interval                 = local.m_404["interval"]
-  number_of_messages       = local.m_404["number_of_messages"]
-  rate_limit_type          = local.m_404["rate_limit_type"]
-  rate_limit_value         = local.m_404["rate_limit_value"]
+  interval = local.m_404["interval"]
+  number_of_messages = local.m_404["number_of_messages"]
+  rate_limit_type = local.m_404["rate_limit_type"]
+  rate_limit_value = local.m_404["rate_limit_value"]
 }

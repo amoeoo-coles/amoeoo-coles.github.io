@@ -9,8 +9,8 @@ locals {
 
 data "fmc_application_tag" "n015" {
   domain = local.m_015["domain"]
-  id     = local.m_015["id"]
-  name   = local.m_015["name"]
+  id = local.m_015["id"]
+  name = local.m_015["name"]
 }
 
 output "n015_data_fmc_application_tag_id" {

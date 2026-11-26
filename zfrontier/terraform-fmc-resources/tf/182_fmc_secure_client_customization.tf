@@ -9,11 +9,11 @@ locals {
 
 resource "fmc_secure_client_customization" "n182" {
   customization_type = local.m_182["customization_type"]
-  description        = local.m_182["description"]
-  domain             = local.m_182["domain"]
-  language           = local.m_182["language"]
-  name               = local.m_182["name"]
-  operating_system   = local.m_182["operating_system"]
-  path               = local.m_182["path"]
-  script_type        = local.m_182["script_type"]
+  description = local.m_182["description"]
+  domain = local.m_182["domain"]
+  language = local.m_182["language"]
+  name = local.m_182["name"]
+  operating_system = local.m_182["operating_system"]
+  path = local.m_182["path"]
+  script_type = local.m_182["script_type"]
 }

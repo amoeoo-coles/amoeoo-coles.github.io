@@ -8,9 +8,9 @@ locals {
 }
 
 resource "fmc_ftd_platform_settings_syslog_event_list" "n398" {
-  domain                   = local.m_398["domain"]
-  event_classes            = local.m_398["event_classes"]
+  domain = local.m_398["domain"]
+  event_classes = local.m_398["event_classes"]
   ftd_platform_settings_id = local.m_398["ftd_platform_settings_id"]
-  message_ids              = local.m_398["message_ids"]
-  name                     = local.m_398["name"]
+  message_ids = local.m_398["message_ids"]
+  name = local.m_398["name"]
 }

@@ -9,6 +9,6 @@ locals {
 
 resource "fmc_realm_local" "n446" {
   description = local.m_446["description"]
-  domain      = local.m_446["domain"]
-  name        = local.m_446["name"]
+  domain = local.m_446["domain"]
+  name = local.m_446["name"]
 }

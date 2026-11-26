@@ -8,8 +8,8 @@ locals {
 }
 
 resource "fmc_route_map" "n178" {
-  domain      = local.m_178["domain"]
-  entries     = local.m_178["entries"]
-  name        = local.m_178["name"]
+  domain = local.m_178["domain"]
+  entries = local.m_178["entries"]
+  name = local.m_178["name"]
   overridable = local.m_178["overridable"]
 }

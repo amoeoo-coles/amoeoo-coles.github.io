@@ -9,7 +9,7 @@ locals {
 
 data "fmc_dynamic_objects" "n049" {
   domain = local.m_049["domain"]
-  items  = local.m_049["items"]
+  items = local.m_049["items"]
 }
 
 output "n049_data_fmc_dynamic_objects_id" {

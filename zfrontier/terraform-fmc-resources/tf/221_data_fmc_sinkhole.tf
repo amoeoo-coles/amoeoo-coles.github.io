@@ -9,8 +9,8 @@ locals {
 
 data "fmc_sinkhole" "n221" {
   domain = local.m_221["domain"]
-  id     = local.m_221["id"]
-  name   = local.m_221["name"]
+  id = local.m_221["id"]
+  name = local.m_221["name"]
 }
 
 output "n221_data_fmc_sinkhole_id" {

@@ -8,14 +8,14 @@ locals {
 }
 
 resource "fmc_device_ipv6_static_route" "n358" {
-  destination_networks   = local.m_358["destination_networks"]
-  device_id              = local.m_358["device_id"]
-  domain                 = local.m_358["domain"]
-  gateway_host_literal   = local.m_358["gateway_host_literal"]
+  destination_networks = local.m_358["destination_networks"]
+  device_id = local.m_358["device_id"]
+  domain = local.m_358["domain"]
+  gateway_host_literal = local.m_358["gateway_host_literal"]
   gateway_host_object_id = local.m_358["gateway_host_object_id"]
-  interface_id           = local.m_358["interface_id"]
+  interface_id = local.m_358["interface_id"]
   interface_logical_name = local.m_358["interface_logical_name"]
-  is_tunneled            = local.m_358["is_tunneled"]
-  metric                 = local.m_358["metric"]
-  vrf_id                 = local.m_358["vrf_id"]
+  is_tunneled = local.m_358["is_tunneled"]
+  metric = local.m_358["metric"]
+  vrf_id = local.m_358["vrf_id"]
 }

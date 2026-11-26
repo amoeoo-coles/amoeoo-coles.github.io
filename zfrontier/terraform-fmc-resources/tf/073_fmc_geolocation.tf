@@ -9,7 +9,7 @@ locals {
 
 resource "fmc_geolocation" "n073" {
   continents = local.m_073["continents"]
-  countries  = local.m_073["countries"]
-  domain     = local.m_073["domain"]
-  name       = local.m_073["name"]
+  countries = local.m_073["countries"]
+  domain = local.m_073["domain"]
+  name = local.m_073["name"]
 }

@@ -9,9 +9,9 @@ locals {
 
 resource "fmc_port" "n158" {
   description = local.m_158["description"]
-  domain      = local.m_158["domain"]
-  name        = local.m_158["name"]
+  domain = local.m_158["domain"]
+  name = local.m_158["name"]
   overridable = local.m_158["overridable"]
-  port        = local.m_158["port"]
-  protocol    = local.m_158["protocol"]
+  port = local.m_158["port"]
+  protocol = local.m_158["protocol"]
 }

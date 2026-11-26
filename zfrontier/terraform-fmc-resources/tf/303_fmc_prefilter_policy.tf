@@ -8,14 +8,14 @@ locals {
 }
 
 resource "fmc_prefilter_policy" "n303" {
-  default_action                      = local.m_303["default_action"]
+  default_action = local.m_303["default_action"]
   default_action_log_connection_begin = local.m_303["default_action_log_connection_begin"]
-  default_action_log_connection_end   = local.m_303["default_action_log_connection_end"]
-  default_action_send_events_to_fmc   = local.m_303["default_action_send_events_to_fmc"]
-  default_action_snmp_alert_id        = local.m_303["default_action_snmp_alert_id"]
-  default_action_syslog_alert_id      = local.m_303["default_action_syslog_alert_id"]
-  description                         = local.m_303["description"]
-  domain                              = local.m_303["domain"]
-  name                                = local.m_303["name"]
-  rules                               = local.m_303["rules"]
+  default_action_log_connection_end = local.m_303["default_action_log_connection_end"]
+  default_action_send_events_to_fmc = local.m_303["default_action_send_events_to_fmc"]
+  default_action_snmp_alert_id = local.m_303["default_action_snmp_alert_id"]
+  default_action_syslog_alert_id = local.m_303["default_action_syslog_alert_id"]
+  description = local.m_303["description"]
+  domain = local.m_303["domain"]
+  name = local.m_303["name"]
+  rules = local.m_303["rules"]
 }

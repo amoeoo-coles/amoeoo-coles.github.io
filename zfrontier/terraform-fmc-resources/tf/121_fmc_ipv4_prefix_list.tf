@@ -8,7 +8,7 @@ locals {
 }
 
 resource "fmc_ipv4_prefix_list" "n121" {
-  domain  = local.m_121["domain"]
+  domain = local.m_121["domain"]
   entries = local.m_121["entries"]
-  name    = local.m_121["name"]
+  name = local.m_121["name"]
 }

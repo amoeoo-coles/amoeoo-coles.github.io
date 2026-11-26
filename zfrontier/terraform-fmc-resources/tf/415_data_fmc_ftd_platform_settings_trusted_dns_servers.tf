@@ -8,9 +8,9 @@ locals {
 }
 
 data "fmc_ftd_platform_settings_trusted_dns_servers" "n415" {
-  domain                   = local.m_415["domain"]
+  domain = local.m_415["domain"]
   ftd_platform_settings_id = local.m_415["ftd_platform_settings_id"]
-  id                       = local.m_415["id"]
+  id = local.m_415["id"]
 }
 
 output "n415_data_fmc_ftd_platform_settings_trusted_dns_servers_id" {

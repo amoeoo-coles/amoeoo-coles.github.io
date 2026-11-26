@@ -8,9 +8,9 @@ locals {
 }
 
 resource "fmc_ftd_platform_settings_ssh_access" "n394" {
-  domain                   = local.m_394["domain"]
+  domain = local.m_394["domain"]
   ftd_platform_settings_id = local.m_394["ftd_platform_settings_id"]
-  interface_literals       = local.m_394["interface_literals"]
-  interface_objects        = local.m_394["interface_objects"]
+  interface_literals = local.m_394["interface_literals"]
+  interface_objects = local.m_394["interface_objects"]
   source_network_object_id = local.m_394["source_network_object_id"]
 }

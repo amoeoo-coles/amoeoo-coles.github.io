@@ -9,6 +9,6 @@ locals {
 
 resource "fmc_distinguished_name" "n040" {
   distinguished_name = local.m_040["distinguished_name"]
-  domain             = local.m_040["domain"]
-  name               = local.m_040["name"]
+  domain = local.m_040["domain"]
+  name = local.m_040["name"]
 }

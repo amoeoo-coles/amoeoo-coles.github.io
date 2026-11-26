@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_certificate_maps" "n032" {
   domain = local.m_032["domain"]
-  items  = local.m_032["items"]
+  items = local.m_032["items"]
 }

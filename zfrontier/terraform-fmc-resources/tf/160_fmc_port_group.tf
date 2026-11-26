@@ -9,8 +9,8 @@ locals {
 
 resource "fmc_port_group" "n160" {
   description = local.m_160["description"]
-  domain      = local.m_160["domain"]
-  name        = local.m_160["name"]
-  objects     = local.m_160["objects"]
+  domain = local.m_160["domain"]
+  name = local.m_160["name"]
+  objects = local.m_160["objects"]
   overridable = local.m_160["overridable"]
 }

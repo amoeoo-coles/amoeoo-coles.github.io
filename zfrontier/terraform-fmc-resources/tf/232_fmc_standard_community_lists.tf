@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_standard_community_lists" "n232" {
   domain = local.m_232["domain"]
-  items  = local.m_232["items"]
+  items = local.m_232["items"]
 }

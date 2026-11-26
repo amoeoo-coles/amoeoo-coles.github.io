@@ -8,11 +8,11 @@ locals {
 }
 
 data "fmc_device_etherchannel_interface" "n347" {
-  device_id    = local.m_347["device_id"]
-  domain       = local.m_347["domain"]
-  id           = local.m_347["id"]
+  device_id = local.m_347["device_id"]
+  domain = local.m_347["domain"]
+  id = local.m_347["id"]
   logical_name = local.m_347["logical_name"]
-  name         = local.m_347["name"]
+  name = local.m_347["name"]
 }
 
 output "n347_data_fmc_device_etherchannel_interface_id" {

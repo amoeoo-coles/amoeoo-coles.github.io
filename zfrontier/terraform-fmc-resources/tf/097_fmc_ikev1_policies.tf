@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_ikev1_policies" "n097" {
   domain = local.m_097["domain"]
-  items  = local.m_097["items"]
+  items = local.m_097["items"]
 }

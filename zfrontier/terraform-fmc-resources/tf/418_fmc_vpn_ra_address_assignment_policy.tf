@@ -8,12 +8,12 @@ locals {
 }
 
 resource "fmc_vpn_ra_address_assignment_policy" "n418" {
-  domain                                    = local.m_418["domain"]
+  domain = local.m_418["domain"]
   ipv4_internal_address_pool_reuse_interval = local.m_418["ipv4_internal_address_pool_reuse_interval"]
-  ipv4_use_authorization_server             = local.m_418["ipv4_use_authorization_server"]
-  ipv4_use_dhcp                             = local.m_418["ipv4_use_dhcp"]
-  ipv4_use_internal_address_pool            = local.m_418["ipv4_use_internal_address_pool"]
-  ipv6_use_authorization_server             = local.m_418["ipv6_use_authorization_server"]
-  ipv6_use_internal_address_pool            = local.m_418["ipv6_use_internal_address_pool"]
-  vpn_ra_id                                 = local.m_418["vpn_ra_id"]
+  ipv4_use_authorization_server = local.m_418["ipv4_use_authorization_server"]
+  ipv4_use_dhcp = local.m_418["ipv4_use_dhcp"]
+  ipv4_use_internal_address_pool = local.m_418["ipv4_use_internal_address_pool"]
+  ipv6_use_authorization_server = local.m_418["ipv6_use_authorization_server"]
+  ipv6_use_internal_address_pool = local.m_418["ipv6_use_internal_address_pool"]
+  vpn_ra_id = local.m_418["vpn_ra_id"]
 }

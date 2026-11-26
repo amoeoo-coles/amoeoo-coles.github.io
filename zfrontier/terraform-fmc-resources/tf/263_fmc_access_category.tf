@@ -9,10 +9,10 @@ locals {
 
 resource "fmc_access_category" "n263" {
   access_control_policy_id = local.m_263["access_control_policy_id"]
-  domain                   = local.m_263["domain"]
-  insert_after_rule        = local.m_263["insert_after_rule"]
-  insert_before_category   = local.m_263["insert_before_category"]
-  insert_before_rule       = local.m_263["insert_before_rule"]
-  name                     = local.m_263["name"]
-  section                  = local.m_263["section"]
+  domain = local.m_263["domain"]
+  insert_after_rule = local.m_263["insert_after_rule"]
+  insert_before_category = local.m_263["insert_before_category"]
+  insert_before_rule = local.m_263["insert_before_rule"]
+  name = local.m_263["name"]
+  section = local.m_263["section"]
 }

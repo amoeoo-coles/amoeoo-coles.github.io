@@ -8,8 +8,8 @@ locals {
 }
 
 resource "fmc_resource_profile" "n174" {
-  description    = local.m_174["description"]
-  domain         = local.m_174["domain"]
-  name           = local.m_174["name"]
+  description = local.m_174["description"]
+  domain = local.m_174["domain"]
+  name = local.m_174["name"]
   number_of_cpus = local.m_174["number_of_cpus"]
 }

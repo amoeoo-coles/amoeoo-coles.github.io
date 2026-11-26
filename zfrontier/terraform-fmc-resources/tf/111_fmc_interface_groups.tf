@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_interface_groups" "n111" {
   domain = local.m_111["domain"]
-  items  = local.m_111["items"]
+  items = local.m_111["items"]
 }

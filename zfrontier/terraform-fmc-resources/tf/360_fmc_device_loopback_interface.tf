@@ -8,13 +8,13 @@ locals {
 }
 
 resource "fmc_device_loopback_interface" "n360" {
-  description         = local.m_360["description"]
-  device_id           = local.m_360["device_id"]
-  domain              = local.m_360["domain"]
-  enabled             = local.m_360["enabled"]
+  description = local.m_360["description"]
+  device_id = local.m_360["device_id"]
+  domain = local.m_360["domain"]
+  enabled = local.m_360["enabled"]
   ipv4_static_address = local.m_360["ipv4_static_address"]
   ipv4_static_netmask = local.m_360["ipv4_static_netmask"]
-  ipv6_addresses      = local.m_360["ipv6_addresses"]
-  logical_name        = local.m_360["logical_name"]
-  loopback_id         = local.m_360["loopback_id"]
+  ipv6_addresses = local.m_360["ipv6_addresses"]
+  logical_name = local.m_360["logical_name"]
+  loopback_id = local.m_360["loopback_id"]
 }

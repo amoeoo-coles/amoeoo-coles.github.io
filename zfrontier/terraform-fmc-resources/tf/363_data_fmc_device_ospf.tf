@@ -9,9 +9,9 @@ locals {
 
 data "fmc_device_ospf" "n363" {
   device_id = local.m_363["device_id"]
-  domain    = local.m_363["domain"]
-  id        = local.m_363["id"]
-  vrf_id    = local.m_363["vrf_id"]
+  domain = local.m_363["domain"]
+  id = local.m_363["id"]
+  vrf_id = local.m_363["vrf_id"]
 }
 
 output "n363_data_fmc_device_ospf_id" {

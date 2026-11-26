@@ -8,9 +8,9 @@ locals {
 }
 
 data "fmc_ftd_platform_settings_syslog_event_list" "n399" {
-  domain                   = local.m_399["domain"]
+  domain = local.m_399["domain"]
   ftd_platform_settings_id = local.m_399["ftd_platform_settings_id"]
-  id                       = local.m_399["id"]
+  id = local.m_399["id"]
 }
 
 output "n399_data_fmc_ftd_platform_settings_syslog_event_list_id" {

@@ -9,10 +9,10 @@ locals {
 
 data "fmc_device_ecmp_zone" "n343" {
   device_id = local.m_343["device_id"]
-  domain    = local.m_343["domain"]
-  id        = local.m_343["id"]
-  name      = local.m_343["name"]
-  vrf_id    = local.m_343["vrf_id"]
+  domain = local.m_343["domain"]
+  id = local.m_343["id"]
+  name = local.m_343["name"]
+  vrf_id = local.m_343["vrf_id"]
 }
 
 output "n343_data_fmc_device_ecmp_zone_id" {

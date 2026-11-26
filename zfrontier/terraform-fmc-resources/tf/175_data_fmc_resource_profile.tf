@@ -9,8 +9,8 @@ locals {
 
 data "fmc_resource_profile" "n175" {
   domain = local.m_175["domain"]
-  id     = local.m_175["id"]
-  name   = local.m_175["name"]
+  id = local.m_175["id"]
+  name = local.m_175["name"]
 }
 
 output "n175_data_fmc_resource_profile_id" {

@@ -8,8 +8,8 @@ locals {
 }
 
 data "fmc_vpn_ra_ipsec_ike_parameters" "n427" {
-  domain    = local.m_427["domain"]
-  id        = local.m_427["id"]
+  domain = local.m_427["domain"]
+  id = local.m_427["id"]
   vpn_ra_id = local.m_427["vpn_ra_id"]
 }
 

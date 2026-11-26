@@ -8,8 +8,8 @@ locals {
 }
 
 data "fmc_intrusion_policy_rule_override" "n293" {
-  domain              = local.m_293["domain"]
-  id                  = local.m_293["id"]
+  domain = local.m_293["domain"]
+  id = local.m_293["id"]
   intrusion_policy_id = local.m_293["intrusion_policy_id"]
 }
 

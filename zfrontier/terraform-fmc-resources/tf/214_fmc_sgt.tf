@@ -9,7 +9,7 @@ locals {
 
 resource "fmc_sgt" "n214" {
   description = local.m_214["description"]
-  domain      = local.m_214["domain"]
-  name        = local.m_214["name"]
-  tag         = local.m_214["tag"]
+  domain = local.m_214["domain"]
+  name = local.m_214["name"]
+  tag = local.m_214["tag"]
 }

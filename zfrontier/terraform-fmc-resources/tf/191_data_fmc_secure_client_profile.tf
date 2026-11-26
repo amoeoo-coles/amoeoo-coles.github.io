@@ -9,8 +9,8 @@ locals {
 
 data "fmc_secure_client_profile" "n191" {
   domain = local.m_191["domain"]
-  id     = local.m_191["id"]
-  name   = local.m_191["name"]
+  id = local.m_191["id"]
+  name = local.m_191["name"]
 }
 
 output "n191_data_fmc_secure_client_profile_id" {

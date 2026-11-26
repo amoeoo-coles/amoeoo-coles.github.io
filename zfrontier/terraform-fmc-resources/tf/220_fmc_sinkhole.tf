@@ -8,10 +8,10 @@ locals {
 }
 
 resource "fmc_sinkhole" "n220" {
-  action              = local.m_220["action"]
-  domain              = local.m_220["domain"]
-  ipv4_address        = local.m_220["ipv4_address"]
-  ipv6_address        = local.m_220["ipv6_address"]
+  action = local.m_220["action"]
+  domain = local.m_220["domain"]
+  ipv4_address = local.m_220["ipv4_address"]
+  ipv6_address = local.m_220["ipv6_address"]
   log_connection_type = local.m_220["log_connection_type"]
-  name                = local.m_220["name"]
+  name = local.m_220["name"]
 }

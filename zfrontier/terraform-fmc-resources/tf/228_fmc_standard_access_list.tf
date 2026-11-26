@@ -9,7 +9,7 @@ locals {
 
 resource "fmc_standard_access_list" "n228" {
   description = local.m_228["description"]
-  domain      = local.m_228["domain"]
-  entries     = local.m_228["entries"]
-  name        = local.m_228["name"]
+  domain = local.m_228["domain"]
+  entries = local.m_228["entries"]
+  name = local.m_228["name"]
 }

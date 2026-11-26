@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_security_zones" "n210" {
   domain = local.m_210["domain"]
-  items  = local.m_210["items"]
+  items = local.m_210["items"]
 }

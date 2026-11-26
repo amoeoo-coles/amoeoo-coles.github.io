@@ -8,7 +8,7 @@ locals {
 }
 
 resource "fmc_intrusion_rule" "n294" {
-  domain      = local.m_294["domain"]
-  rule_data   = local.m_294["rule_data"]
+  domain = local.m_294["domain"]
+  rule_data = local.m_294["rule_data"]
   rule_groups = local.m_294["rule_groups"]
 }

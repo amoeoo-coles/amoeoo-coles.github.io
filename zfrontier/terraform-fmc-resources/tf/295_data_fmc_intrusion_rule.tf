@@ -9,8 +9,8 @@ locals {
 
 data "fmc_intrusion_rule" "n295" {
   domain = local.m_295["domain"]
-  id     = local.m_295["id"]
-  name   = local.m_295["name"]
+  id = local.m_295["id"]
+  name = local.m_295["name"]
 }
 
 output "n295_data_fmc_intrusion_rule_id" {

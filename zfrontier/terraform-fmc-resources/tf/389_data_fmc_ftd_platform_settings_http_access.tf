@@ -8,9 +8,9 @@ locals {
 }
 
 data "fmc_ftd_platform_settings_http_access" "n389" {
-  domain                   = local.m_389["domain"]
+  domain = local.m_389["domain"]
   ftd_platform_settings_id = local.m_389["ftd_platform_settings_id"]
-  id                       = local.m_389["id"]
+  id = local.m_389["id"]
 }
 
 output "n389_data_fmc_ftd_platform_settings_http_access_id" {

@@ -9,8 +9,8 @@ locals {
 
 data "fmc_security_zone" "n209" {
   domain = local.m_209["domain"]
-  id     = local.m_209["id"]
-  name   = local.m_209["name"]
+  id = local.m_209["id"]
+  name = local.m_209["name"]
 }
 
 output "n209_data_fmc_security_zone_id" {

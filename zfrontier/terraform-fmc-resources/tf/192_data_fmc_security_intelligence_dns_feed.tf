@@ -9,8 +9,8 @@ locals {
 
 data "fmc_security_intelligence_dns_feed" "n192" {
   domain = local.m_192["domain"]
-  id     = local.m_192["id"]
-  name   = local.m_192["name"]
+  id = local.m_192["id"]
+  name = local.m_192["name"]
 }
 
 output "n192_data_fmc_security_intelligence_dns_feed_id" {

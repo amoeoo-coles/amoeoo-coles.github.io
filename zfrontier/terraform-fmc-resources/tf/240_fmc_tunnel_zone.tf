@@ -9,6 +9,6 @@ locals {
 
 resource "fmc_tunnel_zone" "n240" {
   description = local.m_240["description"]
-  domain      = local.m_240["domain"]
-  name        = local.m_240["name"]
+  domain = local.m_240["domain"]
+  name = local.m_240["name"]
 }

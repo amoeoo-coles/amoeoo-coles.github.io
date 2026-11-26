@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_policy_lists" "n156" {
   domain = local.m_156["domain"]
-  items  = local.m_156["items"]
+  items = local.m_156["items"]
 }

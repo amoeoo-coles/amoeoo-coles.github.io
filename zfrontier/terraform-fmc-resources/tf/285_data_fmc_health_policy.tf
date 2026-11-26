@@ -9,8 +9,8 @@ locals {
 
 data "fmc_health_policy" "n285" {
   domain = local.m_285["domain"]
-  id     = local.m_285["id"]
-  name   = local.m_285["name"]
+  id = local.m_285["id"]
+  name = local.m_285["name"]
 }
 
 output "n285_data_fmc_health_policy_id" {

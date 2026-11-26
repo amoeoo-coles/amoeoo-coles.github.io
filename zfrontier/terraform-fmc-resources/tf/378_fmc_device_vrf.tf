@@ -9,8 +9,8 @@ locals {
 
 resource "fmc_device_vrf" "n378" {
   description = local.m_378["description"]
-  device_id   = local.m_378["device_id"]
-  domain      = local.m_378["domain"]
-  interfaces  = local.m_378["interfaces"]
-  name        = local.m_378["name"]
+  device_id = local.m_378["device_id"]
+  domain = local.m_378["domain"]
+  interfaces = local.m_378["interfaces"]
+  name = local.m_378["name"]
 }

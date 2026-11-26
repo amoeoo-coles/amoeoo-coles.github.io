@@ -9,6 +9,6 @@ locals {
 
 resource "fmc_ftd_platform_settings" "n382" {
   description = local.m_382["description"]
-  domain      = local.m_382["domain"]
-  name        = local.m_382["name"]
+  domain = local.m_382["domain"]
+  name = local.m_382["name"]
 }

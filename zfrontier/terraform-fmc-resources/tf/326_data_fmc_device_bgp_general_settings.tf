@@ -10,8 +10,8 @@ locals {
 data "fmc_device_bgp_general_settings" "n326" {
   as_number = local.m_326["as_number"]
   device_id = local.m_326["device_id"]
-  domain    = local.m_326["domain"]
-  id        = local.m_326["id"]
+  domain = local.m_326["domain"]
+  id = local.m_326["id"]
 }
 
 output "n326_data_fmc_device_bgp_general_settings_id" {

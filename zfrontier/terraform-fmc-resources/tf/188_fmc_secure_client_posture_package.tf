@@ -9,7 +9,7 @@ locals {
 
 resource "fmc_secure_client_posture_package" "n188" {
   description = local.m_188["description"]
-  domain      = local.m_188["domain"]
-  name        = local.m_188["name"]
-  path        = local.m_188["path"]
+  domain = local.m_188["domain"]
+  name = local.m_188["name"]
+  path = local.m_188["path"]
 }

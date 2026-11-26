@@ -9,7 +9,7 @@ locals {
 
 resource "fmc_secure_client_external_browser_package" "n184" {
   description = local.m_184["description"]
-  domain      = local.m_184["domain"]
-  name        = local.m_184["name"]
-  path        = local.m_184["path"]
+  domain = local.m_184["domain"]
+  name = local.m_184["name"]
+  path = local.m_184["path"]
 }

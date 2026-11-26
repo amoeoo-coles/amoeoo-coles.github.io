@@ -8,8 +8,8 @@ locals {
 }
 
 resource "fmc_as_path" "n020" {
-  domain      = local.m_020["domain"]
-  entries     = local.m_020["entries"]
-  name        = local.m_020["name"]
+  domain = local.m_020["domain"]
+  entries = local.m_020["entries"]
+  name = local.m_020["name"]
   overridable = local.m_020["overridable"]
 }

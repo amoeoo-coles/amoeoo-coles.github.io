@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_fqdns" "n071" {
   domain = local.m_071["domain"]
-  items  = local.m_071["items"]
+  items = local.m_071["items"]
 }

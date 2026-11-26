@@ -8,11 +8,11 @@ locals {
 }
 
 resource "fmc_ftd_platform_settings_dns" "n386" {
-  dns_server_groups        = local.m_386["dns_server_groups"]
-  domain                   = local.m_386["domain"]
-  expire_entry_timer       = local.m_386["expire_entry_timer"]
+  dns_server_groups = local.m_386["dns_server_groups"]
+  domain = local.m_386["domain"]
+  expire_entry_timer = local.m_386["expire_entry_timer"]
   ftd_platform_settings_id = local.m_386["ftd_platform_settings_id"]
-  interface_objects        = local.m_386["interface_objects"]
-  poll_timer               = local.m_386["poll_timer"]
+  interface_objects = local.m_386["interface_objects"]
+  poll_timer = local.m_386["poll_timer"]
   use_management_interface = local.m_386["use_management_interface"]
 }

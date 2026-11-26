@@ -9,9 +9,9 @@ locals {
 
 resource "fmc_policy_assignment" "n301" {
   after_destroy_policy_domain = local.m_301["after_destroy_policy_domain"]
-  after_destroy_policy_id     = local.m_301["after_destroy_policy_id"]
-  domain                      = local.m_301["domain"]
-  policy_id                   = local.m_301["policy_id"]
-  policy_type                 = local.m_301["policy_type"]
-  targets                     = local.m_301["targets"]
+  after_destroy_policy_id = local.m_301["after_destroy_policy_id"]
+  domain = local.m_301["domain"]
+  policy_id = local.m_301["policy_id"]
+  policy_type = local.m_301["policy_type"]
+  targets = local.m_301["targets"]
 }

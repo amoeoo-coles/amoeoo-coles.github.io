@@ -9,7 +9,7 @@ locals {
 
 data "fmc_tunnel_zones" "n243" {
   domain = local.m_243["domain"]
-  items  = local.m_243["items"]
+  items = local.m_243["items"]
 }
 
 output "n243_data_fmc_tunnel_zones_id" {

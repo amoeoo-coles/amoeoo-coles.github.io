@@ -8,8 +8,8 @@ locals {
 }
 
 data "fmc_vpn_ra_load_balancing" "n431" {
-  domain    = local.m_431["domain"]
-  id        = local.m_431["id"]
+  domain = local.m_431["domain"]
+  id = local.m_431["id"]
   vpn_ra_id = local.m_431["vpn_ra_id"]
 }
 

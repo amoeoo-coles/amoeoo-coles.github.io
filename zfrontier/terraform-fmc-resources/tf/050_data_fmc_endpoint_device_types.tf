@@ -9,7 +9,7 @@ locals {
 
 data "fmc_endpoint_device_types" "n050" {
   domain = local.m_050["domain"]
-  items  = local.m_050["items"]
+  items = local.m_050["items"]
 }
 
 output "n050_data_fmc_endpoint_device_types_id" {

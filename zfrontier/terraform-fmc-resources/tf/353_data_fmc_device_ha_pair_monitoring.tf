@@ -8,9 +8,9 @@ locals {
 }
 
 data "fmc_device_ha_pair_monitoring" "n353" {
-  domain       = local.m_353["domain"]
-  ha_pair_id   = local.m_353["ha_pair_id"]
-  id           = local.m_353["id"]
+  domain = local.m_353["domain"]
+  ha_pair_id = local.m_353["ha_pair_id"]
+  id = local.m_353["id"]
   logical_name = local.m_353["logical_name"]
 }
 

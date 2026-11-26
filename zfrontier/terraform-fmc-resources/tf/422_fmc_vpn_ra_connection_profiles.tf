@@ -8,7 +8,7 @@ locals {
 }
 
 resource "fmc_vpn_ra_connection_profiles" "n422" {
-  domain    = local.m_422["domain"]
-  items     = local.m_422["items"]
+  domain = local.m_422["domain"]
+  items = local.m_422["items"]
   vpn_ra_id = local.m_422["vpn_ra_id"]
 }

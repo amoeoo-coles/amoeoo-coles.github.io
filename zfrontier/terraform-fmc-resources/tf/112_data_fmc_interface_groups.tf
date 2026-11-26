@@ -9,7 +9,7 @@ locals {
 
 data "fmc_interface_groups" "n112" {
   domain = local.m_112["domain"]
-  items  = local.m_112["items"]
+  items = local.m_112["items"]
 }
 
 output "n112_data_fmc_interface_groups_id" {

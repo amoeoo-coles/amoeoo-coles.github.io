@@ -9,6 +9,6 @@ locals {
 
 resource "fmc_cipher_suite_list" "n034" {
   cipher_suites = local.m_034["cipher_suites"]
-  domain        = local.m_034["domain"]
-  name          = local.m_034["name"]
+  domain = local.m_034["domain"]
+  name = local.m_034["name"]
 }

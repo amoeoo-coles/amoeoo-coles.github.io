@@ -8,9 +8,9 @@ locals {
 }
 
 data "fmc_ftd_platform_settings_time_synchronization" "n413" {
-  domain                   = local.m_413["domain"]
+  domain = local.m_413["domain"]
   ftd_platform_settings_id = local.m_413["ftd_platform_settings_id"]
-  id                       = local.m_413["id"]
+  id = local.m_413["id"]
 }
 
 output "n413_data_fmc_ftd_platform_settings_time_synchronization_id" {

@@ -9,8 +9,8 @@ locals {
 
 data "fmc_device_vtep_policy" "n381" {
   device_id = local.m_381["device_id"]
-  domain    = local.m_381["domain"]
-  id        = local.m_381["id"]
+  domain = local.m_381["domain"]
+  id = local.m_381["id"]
 }
 
 output "n381_data_fmc_device_vtep_policy_id" {

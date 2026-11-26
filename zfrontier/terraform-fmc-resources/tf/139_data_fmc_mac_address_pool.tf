@@ -9,8 +9,8 @@ locals {
 
 data "fmc_mac_address_pool" "n139" {
   domain = local.m_139["domain"]
-  id     = local.m_139["id"]
-  name   = local.m_139["name"]
+  id = local.m_139["id"]
+  name = local.m_139["name"]
 }
 
 output "n139_data_fmc_mac_address_pool_id" {

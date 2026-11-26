@@ -8,8 +8,8 @@ locals {
 }
 
 data "fmc_policy_assignment" "n302" {
-  domain      = local.m_302["domain"]
-  id          = local.m_302["id"]
+  domain = local.m_302["domain"]
+  id = local.m_302["id"]
   policy_name = local.m_302["policy_name"]
 }
 

@@ -8,8 +8,8 @@ locals {
 }
 
 resource "fmc_ftd_platform_settings_syslog_email_setup" "n396" {
-  destinations             = local.m_396["destinations"]
-  domain                   = local.m_396["domain"]
+  destinations = local.m_396["destinations"]
+  domain = local.m_396["domain"]
   ftd_platform_settings_id = local.m_396["ftd_platform_settings_id"]
-  source_email_address     = local.m_396["source_email_address"]
+  source_email_address = local.m_396["source_email_address"]
 }

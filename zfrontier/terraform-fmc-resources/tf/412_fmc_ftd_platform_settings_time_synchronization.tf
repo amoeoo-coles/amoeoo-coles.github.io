@@ -8,8 +8,8 @@ locals {
 }
 
 resource "fmc_ftd_platform_settings_time_synchronization" "n412" {
-  domain                   = local.m_412["domain"]
+  domain = local.m_412["domain"]
   ftd_platform_settings_id = local.m_412["ftd_platform_settings_id"]
-  ntp_servers              = local.m_412["ntp_servers"]
-  synchronization_mode     = local.m_412["synchronization_mode"]
+  ntp_servers = local.m_412["ntp_servers"]
+  synchronization_mode = local.m_412["synchronization_mode"]
 }

@@ -8,16 +8,16 @@ locals {
 }
 
 resource "fmc_file_policy" "n276" {
-  block_encrypted_archives     = local.m_276["block_encrypted_archives"]
+  block_encrypted_archives = local.m_276["block_encrypted_archives"]
   block_uninspectable_archives = local.m_276["block_uninspectable_archives"]
-  clean_list                   = local.m_276["clean_list"]
-  custom_detection_list        = local.m_276["custom_detection_list"]
-  description                  = local.m_276["description"]
-  domain                       = local.m_276["domain"]
-  file_rules                   = local.m_276["file_rules"]
-  first_time_file_analysis     = local.m_276["first_time_file_analysis"]
-  inspect_archives             = local.m_276["inspect_archives"]
-  max_archive_depth            = local.m_276["max_archive_depth"]
-  name                         = local.m_276["name"]
-  threat_score                 = local.m_276["threat_score"]
+  clean_list = local.m_276["clean_list"]
+  custom_detection_list = local.m_276["custom_detection_list"]
+  description = local.m_276["description"]
+  domain = local.m_276["domain"]
+  file_rules = local.m_276["file_rules"]
+  first_time_file_analysis = local.m_276["first_time_file_analysis"]
+  inspect_archives = local.m_276["inspect_archives"]
+  max_archive_depth = local.m_276["max_archive_depth"]
+  name = local.m_276["name"]
+  threat_score = local.m_276["threat_score"]
 }

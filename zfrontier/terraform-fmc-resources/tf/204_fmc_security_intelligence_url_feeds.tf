@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_security_intelligence_url_feeds" "n204" {
   domain = local.m_204["domain"]
-  items  = local.m_204["items"]
+  items = local.m_204["items"]
 }

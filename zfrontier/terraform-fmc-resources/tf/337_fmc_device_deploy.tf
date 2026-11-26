@@ -9,8 +9,8 @@ locals {
 
 resource "fmc_device_deploy" "n337" {
   deployment_note = local.m_337["deployment_note"]
-  device_id_list  = local.m_337["device_id_list"]
-  domain          = local.m_337["domain"]
-  ignore_warning  = local.m_337["ignore_warning"]
-  version         = local.m_337["version"]
+  device_id_list = local.m_337["device_id_list"]
+  domain = local.m_337["domain"]
+  ignore_warning = local.m_337["ignore_warning"]
+  version = local.m_337["version"]
 }

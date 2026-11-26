@@ -9,8 +9,8 @@ locals {
 
 data "fmc_device_cluster_health_monitor" "n334" {
   cluster_id = local.m_334["cluster_id"]
-  domain     = local.m_334["domain"]
-  id         = local.m_334["id"]
+  domain = local.m_334["domain"]
+  id = local.m_334["id"]
 }
 
 output "n334_data_fmc_device_cluster_health_monitor_id" {

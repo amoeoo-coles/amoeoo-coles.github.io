@@ -9,8 +9,8 @@ locals {
 
 data "fmc_device_dhcp_relay" "n339" {
   device_id = local.m_339["device_id"]
-  domain    = local.m_339["domain"]
-  id        = local.m_339["id"]
+  domain = local.m_339["domain"]
+  id = local.m_339["id"]
 }
 
 output "n339_data_fmc_device_dhcp_relay_id" {

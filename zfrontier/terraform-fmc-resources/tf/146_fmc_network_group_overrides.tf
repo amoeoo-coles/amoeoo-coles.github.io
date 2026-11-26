@@ -8,8 +8,8 @@ locals {
 }
 
 resource "fmc_network_group_overrides" "n146" {
-  domain      = local.m_146["domain"]
-  overrides   = local.m_146["overrides"]
-  parent_id   = local.m_146["parent_id"]
+  domain = local.m_146["domain"]
+  overrides = local.m_146["overrides"]
+  parent_id = local.m_146["parent_id"]
   parent_name = local.m_146["parent_name"]
 }

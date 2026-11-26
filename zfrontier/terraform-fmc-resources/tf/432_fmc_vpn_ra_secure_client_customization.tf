@@ -8,12 +8,12 @@ locals {
 }
 
 resource "fmc_vpn_ra_secure_client_customization" "n432" {
-  binaries                       = local.m_432["binaries"]
-  custom_installer_transforms    = local.m_432["custom_installer_transforms"]
-  domain                         = local.m_432["domain"]
-  gui_and_text_messages          = local.m_432["gui_and_text_messages"]
-  icons_and_images               = local.m_432["icons_and_images"]
+  binaries = local.m_432["binaries"]
+  custom_installer_transforms = local.m_432["custom_installer_transforms"]
+  domain = local.m_432["domain"]
+  gui_and_text_messages = local.m_432["gui_and_text_messages"]
+  icons_and_images = local.m_432["icons_and_images"]
   localized_installer_transforms = local.m_432["localized_installer_transforms"]
-  scripts                        = local.m_432["scripts"]
-  vpn_ra_id                      = local.m_432["vpn_ra_id"]
+  scripts = local.m_432["scripts"]
+  vpn_ra_id = local.m_432["vpn_ra_id"]
 }

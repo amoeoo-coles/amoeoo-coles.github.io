@@ -9,7 +9,7 @@ locals {
 
 resource "fmc_application_filter" "n009" {
   applications = local.m_009["applications"]
-  domain       = local.m_009["domain"]
-  filters      = local.m_009["filters"]
-  name         = local.m_009["name"]
+  domain = local.m_009["domain"]
+  filters = local.m_009["filters"]
+  name = local.m_009["name"]
 }

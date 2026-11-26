@@ -9,9 +9,9 @@ locals {
 
 data "fmc_chassis_subinterface" "n318" {
   chassis_id = local.m_318["chassis_id"]
-  domain     = local.m_318["domain"]
-  id         = local.m_318["id"]
-  name       = local.m_318["name"]
+  domain = local.m_318["domain"]
+  id = local.m_318["id"]
+  name = local.m_318["name"]
 }
 
 output "n318_data_fmc_chassis_subinterface_id" {

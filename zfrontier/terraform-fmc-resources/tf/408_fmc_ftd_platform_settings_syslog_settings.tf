@@ -8,13 +8,13 @@ locals {
 }
 
 resource "fmc_ftd_platform_settings_syslog_settings" "n408" {
-  all_syslog_messages_enabled       = local.m_408["all_syslog_messages_enabled"]
+  all_syslog_messages_enabled = local.m_408["all_syslog_messages_enabled"]
   all_syslog_messages_logging_level = local.m_408["all_syslog_messages_logging_level"]
-  device_id_interface_id            = local.m_408["device_id_interface_id"]
-  device_id_source                  = local.m_408["device_id_source"]
-  device_id_user_defined            = local.m_408["device_id_user_defined"]
-  domain                            = local.m_408["domain"]
-  facility                          = local.m_408["facility"]
-  ftd_platform_settings_id          = local.m_408["ftd_platform_settings_id"]
-  timestamp_format                  = local.m_408["timestamp_format"]
+  device_id_interface_id = local.m_408["device_id_interface_id"]
+  device_id_source = local.m_408["device_id_source"]
+  device_id_user_defined = local.m_408["device_id_user_defined"]
+  domain = local.m_408["domain"]
+  facility = local.m_408["facility"]
+  ftd_platform_settings_id = local.m_408["ftd_platform_settings_id"]
+  timestamp_format = local.m_408["timestamp_format"]
 }

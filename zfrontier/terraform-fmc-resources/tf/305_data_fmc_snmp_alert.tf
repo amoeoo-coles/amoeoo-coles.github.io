@@ -9,8 +9,8 @@ locals {
 
 data "fmc_snmp_alert" "n305" {
   domain = local.m_305["domain"]
-  id     = local.m_305["id"]
-  name   = local.m_305["name"]
+  id = local.m_305["id"]
+  name = local.m_305["name"]
 }
 
 output "n305_data_fmc_snmp_alert_id" {

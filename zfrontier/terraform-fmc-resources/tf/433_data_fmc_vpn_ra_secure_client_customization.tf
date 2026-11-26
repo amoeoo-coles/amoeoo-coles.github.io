@@ -8,8 +8,8 @@ locals {
 }
 
 data "fmc_vpn_ra_secure_client_customization" "n433" {
-  domain    = local.m_433["domain"]
-  id        = local.m_433["id"]
+  domain = local.m_433["domain"]
+  id = local.m_433["id"]
   vpn_ra_id = local.m_433["vpn_ra_id"]
 }
 

@@ -8,8 +8,8 @@ locals {
 }
 
 data "fmc_vpn_ra_certificate_map" "n421" {
-  domain    = local.m_421["domain"]
-  id        = local.m_421["id"]
+  domain = local.m_421["domain"]
+  id = local.m_421["id"]
   vpn_ra_id = local.m_421["vpn_ra_id"]
 }
 

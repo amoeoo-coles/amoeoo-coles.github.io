@@ -8,11 +8,11 @@ locals {
 }
 
 resource "fmc_device_dhcp_relay" "n338" {
-  device_id             = local.m_338["device_id"]
-  domain                = local.m_338["domain"]
-  ipv4_relay_timeout    = local.m_338["ipv4_relay_timeout"]
-  ipv6_relay_timeout    = local.m_338["ipv6_relay_timeout"]
-  relay_agents          = local.m_338["relay_agents"]
-  servers               = local.m_338["servers"]
+  device_id = local.m_338["device_id"]
+  domain = local.m_338["domain"]
+  ipv4_relay_timeout = local.m_338["ipv4_relay_timeout"]
+  ipv6_relay_timeout = local.m_338["ipv6_relay_timeout"]
+  relay_agents = local.m_338["relay_agents"]
+  servers = local.m_338["servers"]
   trust_all_information = local.m_338["trust_all_information"]
 }

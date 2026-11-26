@@ -8,10 +8,10 @@ locals {
 }
 
 data "fmc_vpn_ra_ipsec_crypto_map" "n425" {
-  domain       = local.m_425["domain"]
-  id           = local.m_425["id"]
+  domain = local.m_425["domain"]
+  id = local.m_425["id"]
   interface_id = local.m_425["interface_id"]
-  vpn_ra_id    = local.m_425["vpn_ra_id"]
+  vpn_ra_id = local.m_425["vpn_ra_id"]
 }
 
 output "n425_data_fmc_vpn_ra_ipsec_crypto_map_id" {

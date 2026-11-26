@@ -9,7 +9,7 @@ locals {
 
 data "fmc_as_paths" "n023" {
   domain = local.m_023["domain"]
-  items  = local.m_023["items"]
+  items = local.m_023["items"]
 }
 
 output "n023_data_fmc_as_paths_id" {

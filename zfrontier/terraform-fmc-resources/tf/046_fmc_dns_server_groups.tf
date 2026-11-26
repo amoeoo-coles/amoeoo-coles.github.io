@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_dns_server_groups" "n046" {
   domain = local.m_046["domain"]
-  items  = local.m_046["items"]
+  items = local.m_046["items"]
 }

@@ -9,6 +9,6 @@ locals {
 
 resource "fmc_external_certificate" "n061" {
   certificate = local.m_061["certificate"]
-  domain      = local.m_061["domain"]
-  name        = local.m_061["name"]
+  domain = local.m_061["domain"]
+  name = local.m_061["name"]
 }

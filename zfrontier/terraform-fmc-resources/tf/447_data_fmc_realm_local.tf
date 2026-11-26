@@ -9,8 +9,8 @@ locals {
 
 data "fmc_realm_local" "n447" {
   domain = local.m_447["domain"]
-  id     = local.m_447["id"]
-  name   = local.m_447["name"]
+  id = local.m_447["id"]
+  name = local.m_447["name"]
 }
 
 output "n447_data_fmc_realm_local_id" {

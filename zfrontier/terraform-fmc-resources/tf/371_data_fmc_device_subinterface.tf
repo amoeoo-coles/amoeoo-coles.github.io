@@ -8,11 +8,11 @@ locals {
 }
 
 data "fmc_device_subinterface" "n371" {
-  device_id    = local.m_371["device_id"]
-  domain       = local.m_371["domain"]
-  id           = local.m_371["id"]
+  device_id = local.m_371["device_id"]
+  domain = local.m_371["domain"]
+  id = local.m_371["id"]
   logical_name = local.m_371["logical_name"]
-  name         = local.m_371["name"]
+  name = local.m_371["name"]
 }
 
 output "n371_data_fmc_device_subinterface_id" {

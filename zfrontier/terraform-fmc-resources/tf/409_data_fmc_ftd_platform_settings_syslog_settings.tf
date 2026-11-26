@@ -8,9 +8,9 @@ locals {
 }
 
 data "fmc_ftd_platform_settings_syslog_settings" "n409" {
-  domain                   = local.m_409["domain"]
+  domain = local.m_409["domain"]
   ftd_platform_settings_id = local.m_409["ftd_platform_settings_id"]
-  id                       = local.m_409["id"]
+  id = local.m_409["id"]
 }
 
 output "n409_data_fmc_ftd_platform_settings_syslog_settings_id" {

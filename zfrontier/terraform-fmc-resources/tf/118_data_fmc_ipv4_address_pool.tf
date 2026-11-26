@@ -9,8 +9,8 @@ locals {
 
 data "fmc_ipv4_address_pool" "n118" {
   domain = local.m_118["domain"]
-  id     = local.m_118["id"]
-  name   = local.m_118["name"]
+  id = local.m_118["id"]
+  name = local.m_118["name"]
 }
 
 output "n118_data_fmc_ipv4_address_pool_id" {

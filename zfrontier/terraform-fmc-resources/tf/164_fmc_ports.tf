@@ -9,5 +9,5 @@ locals {
 
 resource "fmc_ports" "n164" {
   domain = local.m_164["domain"]
-  items  = local.m_164["items"]
+  items = local.m_164["items"]
 }

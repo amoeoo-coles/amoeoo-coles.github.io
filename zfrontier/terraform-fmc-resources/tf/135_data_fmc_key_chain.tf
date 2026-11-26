@@ -9,8 +9,8 @@ locals {
 
 data "fmc_key_chain" "n135" {
   domain = local.m_135["domain"]
-  id     = local.m_135["id"]
-  name   = local.m_135["name"]
+  id = local.m_135["id"]
+  name = local.m_135["name"]
 }
 
 output "n135_data_fmc_key_chain_id" {

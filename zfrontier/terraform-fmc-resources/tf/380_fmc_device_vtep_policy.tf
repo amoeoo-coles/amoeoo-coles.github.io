@@ -8,8 +8,8 @@ locals {
 }
 
 resource "fmc_device_vtep_policy" "n380" {
-  device_id   = local.m_380["device_id"]
-  domain      = local.m_380["domain"]
+  device_id = local.m_380["device_id"]
+  domain = local.m_380["domain"]
   nve_enabled = local.m_380["nve_enabled"]
-  vteps       = local.m_380["vteps"]
+  vteps = local.m_380["vteps"]
 }

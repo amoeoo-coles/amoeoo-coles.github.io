@@ -9,8 +9,8 @@ locals {
 
 data "fmc_trusted_certificate_authority" "n239" {
   domain = local.m_239["domain"]
-  id     = local.m_239["id"]
-  name   = local.m_239["name"]
+  id = local.m_239["id"]
+  name = local.m_239["name"]
 }
 
 output "n239_data_fmc_trusted_certificate_authority_id" {

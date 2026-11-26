@@ -8,10 +8,10 @@ locals {
 }
 
 resource "fmc_icmpv6" "n089" {
-  code        = local.m_089["code"]
+  code = local.m_089["code"]
   description = local.m_089["description"]
-  domain      = local.m_089["domain"]
-  icmp_type   = local.m_089["icmp_type"]
-  name        = local.m_089["name"]
+  domain = local.m_089["domain"]
+  icmp_type = local.m_089["icmp_type"]
+  name = local.m_089["name"]
   overridable = local.m_089["overridable"]
 }

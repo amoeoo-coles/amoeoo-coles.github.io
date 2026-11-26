@@ -9,8 +9,8 @@ locals {
 
 data "fmc_sla_monitor" "n225" {
   domain = local.m_225["domain"]
-  id     = local.m_225["id"]
-  name   = local.m_225["name"]
+  id = local.m_225["id"]
+  name = local.m_225["name"]
 }
 
 output "n225_data_fmc_sla_monitor_id" {
