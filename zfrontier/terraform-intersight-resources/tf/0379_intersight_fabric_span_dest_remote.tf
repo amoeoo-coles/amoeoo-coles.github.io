@@ -1,0 +1,30 @@
+# Sample resource intersight_fabric_span_dest_remote — reads ../models/intersight_fabric_span_dest_remote.yml
+locals { m379 = yamldecode(file("${path.module}/../models/intersight_fabric_span_dest_remote.yml"))["intersight_fabric_span_dest_remote"] }
+
+resource "intersight_fabric_span_dest_remote" "n379" {
+  account_moid = try(local.m379["account_moid"], null)
+  additional_properties = try(local.m379["additional_properties"], null)
+  ancestors = try(local.m379["ancestors"], null)
+  class_id = try(local.m379["class_id"], null)
+  create_time = try(local.m379["create_time"], null)
+  destination_ip = try(local.m379["destination_ip"], null)
+  domain_group_moid = try(local.m379["domain_group_moid"], null)
+  erspan_id = try(local.m379["erspan_id"], null)
+  id = try(local.m379["id"], null)
+  ip_dscp = try(local.m379["ip_dscp"], null)
+  ip_ttl = try(local.m379["ip_ttl"], null)
+  mod_time = try(local.m379["mod_time"], null)
+  moid = try(local.m379["moid"], null)
+  mtu = try(local.m379["mtu"], null)
+  object_type = try(local.m379["object_type"], null)
+  owners = try(local.m379["owners"], null)
+  packet_truncation = try(local.m379["packet_truncation"], null)
+  parent = try(local.m379["parent"], null)
+  permission_resources = try(local.m379["permission_resources"], null)
+  session_id = try(local.m379["session_id"], null)
+  shared_scope = try(local.m379["shared_scope"], null)
+  span_session = try(local.m379["span_session"], null)
+  switch_id = try(local.m379["switch_id"], null)
+  tags = try(local.m379["tags"], null)
+  version_context = try(local.m379["version_context"], null)
+}

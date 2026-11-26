@@ -1,0 +1,30 @@
+# Sample resource intersight_iam_end_point_user_role — reads ../models/intersight_iam_end_point_user_role.yml
+locals { m665 = yamldecode(file("${path.module}/../models/intersight_iam_end_point_user_role.yml"))["intersight_iam_end_point_user_role"] }
+
+resource "intersight_iam_end_point_user_role" "n665" {
+  account_moid = try(local.m665["account_moid"], null)
+  account_type_user_defined = try(local.m665["account_type_user_defined"], null)
+  account_types = try(local.m665["account_types"], null)
+  additional_properties = try(local.m665["additional_properties"], null)
+  ancestors = try(local.m665["ancestors"], null)
+  change_password = try(var.secrets["intersight_iam_end_point_user_role.change_password"], local.m665["change_password"])
+  class_id = try(local.m665["class_id"], null)
+  create_time = try(local.m665["create_time"], null)
+  domain_group_moid = try(local.m665["domain_group_moid"], null)
+  enabled = try(local.m665["enabled"], null)
+  end_point_role = try(local.m665["end_point_role"], null)
+  end_point_user = try(local.m665["end_point_user"], null)
+  end_point_user_policy = try(local.m665["end_point_user_policy"], null)
+  id = try(local.m665["id"], null)
+  is_password_set = try(var.secrets["intersight_iam_end_point_user_role.is_password_set"], local.m665["is_password_set"])
+  mod_time = try(local.m665["mod_time"], null)
+  moid = try(local.m665["moid"], null)
+  object_type = try(local.m665["object_type"], null)
+  owners = try(local.m665["owners"], null)
+  parent = try(local.m665["parent"], null)
+  password = try(var.secrets["intersight_iam_end_point_user_role.password"], local.m665["password"])
+  permission_resources = try(local.m665["permission_resources"], null)
+  shared_scope = try(local.m665["shared_scope"], null)
+  tags = try(local.m665["tags"], null)
+  version_context = try(local.m665["version_context"], null)
+}

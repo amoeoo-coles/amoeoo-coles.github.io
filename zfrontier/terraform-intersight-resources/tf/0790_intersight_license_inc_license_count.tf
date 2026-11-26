@@ -1,0 +1,31 @@
+# Sample resource intersight_license_inc_license_count — reads ../models/intersight_license_inc_license_count.yml
+locals { m790 = yamldecode(file("${path.module}/../models/intersight_license_inc_license_count.yml"))["intersight_license_inc_license_count"] }
+
+resource "intersight_license_inc_license_count" "n790" {
+  account_license_data = try(local.m790["account_license_data"], null)
+  account_moid = try(local.m790["account_moid"], null)
+  additional_properties = try(local.m790["additional_properties"], null)
+  ancestors = try(local.m790["ancestors"], null)
+  class_id = try(local.m790["class_id"], null)
+  create_time = try(local.m790["create_time"], null)
+  domain_group_moid = try(local.m790["domain_group_moid"], null)
+  id = try(local.m790["id"], null)
+  mod_time = try(local.m790["mod_time"], null)
+  moid = try(local.m790["moid"], null)
+  object_type = try(local.m790["object_type"], null)
+  owners = try(local.m790["owners"], null)
+  parent = try(local.m790["parent"], null)
+  permission_resources = try(local.m790["permission_resources"], null)
+  premier100_gfx_count = try(local.m790["premier100_gfx_count"], null)
+  premier10_gfx_count = try(local.m790["premier10_gfx_count"], null)
+  premier1_gfx_count = try(local.m790["premier1_gfx_count"], null)
+  premier_centralized_mod8_slot_count = try(local.m790["premier_centralized_mod8_slot_count"], null)
+  premier_d2_ops_fixed_count = try(local.m790["premier_d2_ops_fixed_count"], null)
+  premier_d2_ops_mod_count = try(local.m790["premier_d2_ops_mod_count"], null)
+  premier_distributed_mod8_slot_count = try(local.m790["premier_distributed_mod8_slot_count"], null)
+  premier_mod4_slot_count = try(local.m790["premier_mod4_slot_count"], null)
+  premier_mod8_slot_count = try(local.m790["premier_mod8_slot_count"], null)
+  shared_scope = try(local.m790["shared_scope"], null)
+  tags = try(local.m790["tags"], null)
+  version_context = try(local.m790["version_context"], null)
+}

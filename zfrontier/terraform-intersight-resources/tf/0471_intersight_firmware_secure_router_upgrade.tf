@@ -1,0 +1,33 @@
+# Sample resource intersight_firmware_secure_router_upgrade — reads ../models/intersight_firmware_secure_router_upgrade.yml
+locals { m471 = yamldecode(file("${path.module}/../models/intersight_firmware_secure_router_upgrade.yml"))["intersight_firmware_secure_router_upgrade"] }
+
+resource "intersight_firmware_secure_router_upgrade" "n471" {
+  account_moid = try(local.m471["account_moid"], null)
+  additional_properties = try(local.m471["additional_properties"], null)
+  ancestors = try(local.m471["ancestors"], null)
+  class_id = try(local.m471["class_id"], null)
+  create_time = try(local.m471["create_time"], null)
+  device = try(local.m471["device"], null)
+  direct_download = try(local.m471["direct_download"], null)
+  distributable = try(local.m471["distributable"], null)
+  domain_group_moid = try(local.m471["domain_group_moid"], null)
+  file_server = try(local.m471["file_server"], null)
+  id = try(local.m471["id"], null)
+  mod_time = try(local.m471["mod_time"], null)
+  moid = try(local.m471["moid"], null)
+  network_secure_router = try(local.m471["network_secure_router"], null)
+  network_share = try(local.m471["network_share"], null)
+  object_type = try(local.m471["object_type"], null)
+  owners = try(local.m471["owners"], null)
+  parent = try(local.m471["parent"], null)
+  permission_resources = try(local.m471["permission_resources"], null)
+  release = try(local.m471["release"], null)
+  shared_scope = try(local.m471["shared_scope"], null)
+  skip_estimate_impact = try(local.m471["skip_estimate_impact"], null)
+  status = try(local.m471["status"], null)
+  tags = try(local.m471["tags"], null)
+  upgrade_impact = try(local.m471["upgrade_impact"], null)
+  upgrade_status = try(local.m471["upgrade_status"], null)
+  upgrade_type = try(local.m471["upgrade_type"], null)
+  version_context = try(local.m471["version_context"], null)
+}

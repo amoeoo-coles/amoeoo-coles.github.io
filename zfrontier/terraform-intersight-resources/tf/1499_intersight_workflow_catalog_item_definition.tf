@@ -1,0 +1,31 @@
+# Sample resource intersight_workflow_catalog_item_definition — reads ../models/intersight_workflow_catalog_item_definition.yml
+locals { m1499 = yamldecode(file("${path.module}/../models/intersight_workflow_catalog_item_definition.yml"))["intersight_workflow_catalog_item_definition"] }
+
+resource "intersight_workflow_catalog_item_definition" "n1499" {
+  account_moid = try(local.m1499["account_moid"], null)
+  additional_properties = try(local.m1499["additional_properties"], null)
+  ancestors = try(local.m1499["ancestors"], null)
+  class_id = try(local.m1499["class_id"], null)
+  create_time = try(local.m1499["create_time"], null)
+  description = try(local.m1499["description"], null)
+  domain_group_moid = try(local.m1499["domain_group_moid"], null)
+  id = try(local.m1499["id"], null)
+  label = try(local.m1499["label"], null)
+  mod_time = try(local.m1499["mod_time"], null)
+  moid = try(local.m1499["moid"], null)
+  name = try(local.m1499["name"], null)
+  nr_version = try(local.m1499["nr_version"], null)
+  object_type = try(local.m1499["object_type"], null)
+  organization = try(local.m1499["organization"], null)
+  owners = try(local.m1499["owners"], null)
+  parent = try(local.m1499["parent"], null)
+  permission_resources = try(local.m1499["permission_resources"], null)
+  publish_status = try(local.m1499["publish_status"], null)
+  service_items = try(local.m1499["service_items"], null)
+  shared_scope = try(local.m1499["shared_scope"], null)
+  support_status = try(local.m1499["support_status"], null)
+  tags = try(local.m1499["tags"], null)
+  user_id_or_email = try(local.m1499["user_id_or_email"], null)
+  validation_information = try(local.m1499["validation_information"], null)
+  version_context = try(local.m1499["version_context"], null)
+}

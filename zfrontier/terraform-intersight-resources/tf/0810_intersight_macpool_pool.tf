@@ -1,0 +1,31 @@
+# Sample resource intersight_macpool_pool — reads ../models/intersight_macpool_pool.yml
+locals { m810 = yamldecode(file("${path.module}/../models/intersight_macpool_pool.yml"))["intersight_macpool_pool"] }
+
+resource "intersight_macpool_pool" "n810" {
+  account_moid = try(local.m810["account_moid"], null)
+  additional_properties = try(local.m810["additional_properties"], null)
+  ancestors = try(local.m810["ancestors"], null)
+  assigned = try(local.m810["assigned"], null)
+  assignment_order = try(local.m810["assignment_order"], null)
+  block_heads = try(local.m810["block_heads"], null)
+  class_id = try(local.m810["class_id"], null)
+  create_time = try(local.m810["create_time"], null)
+  description = try(local.m810["description"], null)
+  domain_group_moid = try(local.m810["domain_group_moid"], null)
+  id = try(local.m810["id"], null)
+  mac_blocks = try(local.m810["mac_blocks"], null)
+  mod_time = try(local.m810["mod_time"], null)
+  moid = try(local.m810["moid"], null)
+  name = try(local.m810["name"], null)
+  object_type = try(local.m810["object_type"], null)
+  organization = try(local.m810["organization"], null)
+  owners = try(local.m810["owners"], null)
+  parent = try(local.m810["parent"], null)
+  permission_resources = try(local.m810["permission_resources"], null)
+  reservations = try(local.m810["reservations"], null)
+  reserved = try(local.m810["reserved"], null)
+  shared_scope = try(local.m810["shared_scope"], null)
+  size = try(local.m810["size"], null)
+  tags = try(local.m810["tags"], null)
+  version_context = try(local.m810["version_context"], null)
+}

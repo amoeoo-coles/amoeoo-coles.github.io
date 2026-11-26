@@ -1,0 +1,30 @@
+# Sample resource intersight_fabric_server_role — reads ../models/intersight_fabric_server_role.yml
+locals { m377 = yamldecode(file("${path.module}/../models/intersight_fabric_server_role.yml"))["intersight_fabric_server_role"] }
+
+resource "intersight_fabric_server_role" "n377" {
+  account_moid = try(local.m377["account_moid"], null)
+  additional_properties = try(local.m377["additional_properties"], null)
+  aggregate_port_id = try(local.m377["aggregate_port_id"], null)
+  ancestors = try(local.m377["ancestors"], null)
+  auto_negotiation_disabled = try(local.m377["auto_negotiation_disabled"], null)
+  class_id = try(local.m377["class_id"], null)
+  create_time = try(local.m377["create_time"], null)
+  domain_group_moid = try(local.m377["domain_group_moid"], null)
+  fec = try(local.m377["fec"], null)
+  id = try(local.m377["id"], null)
+  mod_time = try(local.m377["mod_time"], null)
+  moid = try(local.m377["moid"], null)
+  object_type = try(local.m377["object_type"], null)
+  owners = try(local.m377["owners"], null)
+  parent = try(local.m377["parent"], null)
+  permission_resources = try(local.m377["permission_resources"], null)
+  port_id = try(local.m377["port_id"], null)
+  port_policy = try(local.m377["port_policy"], null)
+  preferred_device_id = try(local.m377["preferred_device_id"], null)
+  preferred_device_type = try(local.m377["preferred_device_type"], null)
+  shared_scope = try(local.m377["shared_scope"], null)
+  slot_id = try(local.m377["slot_id"], null)
+  tags = try(local.m377["tags"], null)
+  user_label = try(local.m377["user_label"], null)
+  version_context = try(local.m377["version_context"], null)
+}

@@ -1,0 +1,30 @@
+# Sample resource intersight_hyperflex_proxy_setting_policy — reads ../models/intersight_hyperflex_proxy_setting_policy.yml
+locals { m567 = yamldecode(file("${path.module}/../models/intersight_hyperflex_proxy_setting_policy.yml"))["intersight_hyperflex_proxy_setting_policy"] }
+
+resource "intersight_hyperflex_proxy_setting_policy" "n567" {
+  account_moid = try(local.m567["account_moid"], null)
+  additional_properties = try(local.m567["additional_properties"], null)
+  ancestors = try(local.m567["ancestors"], null)
+  class_id = try(local.m567["class_id"], null)
+  cluster_profiles = try(local.m567["cluster_profiles"], null)
+  create_time = try(local.m567["create_time"], null)
+  description = try(local.m567["description"], null)
+  domain_group_moid = try(local.m567["domain_group_moid"], null)
+  hostname = try(local.m567["hostname"], null)
+  id = try(local.m567["id"], null)
+  is_password_set = try(var.secrets["intersight_hyperflex_proxy_setting_policy.is_password_set"], local.m567["is_password_set"])
+  mod_time = try(local.m567["mod_time"], null)
+  moid = try(local.m567["moid"], null)
+  name = try(local.m567["name"], null)
+  object_type = try(local.m567["object_type"], null)
+  organization = try(local.m567["organization"], null)
+  owners = try(local.m567["owners"], null)
+  parent = try(local.m567["parent"], null)
+  password = try(var.secrets["intersight_hyperflex_proxy_setting_policy.password"], local.m567["password"])
+  permission_resources = try(local.m567["permission_resources"], null)
+  port = try(local.m567["port"], null)
+  shared_scope = try(local.m567["shared_scope"], null)
+  tags = try(local.m567["tags"], null)
+  username = try(local.m567["username"], null)
+  version_context = try(local.m567["version_context"], null)
+}

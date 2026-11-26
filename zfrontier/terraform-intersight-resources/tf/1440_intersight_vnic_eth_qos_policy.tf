@@ -1,0 +1,30 @@
+# Sample resource intersight_vnic_eth_qos_policy — reads ../models/intersight_vnic_eth_qos_policy.yml
+locals { m1440 = yamldecode(file("${path.module}/../models/intersight_vnic_eth_qos_policy.yml"))["intersight_vnic_eth_qos_policy"] }
+
+resource "intersight_vnic_eth_qos_policy" "n1440" {
+  account_moid = try(local.m1440["account_moid"], null)
+  additional_properties = try(local.m1440["additional_properties"], null)
+  ancestors = try(local.m1440["ancestors"], null)
+  burst = try(local.m1440["burst"], null)
+  class_id = try(local.m1440["class_id"], null)
+  cos = try(local.m1440["cos"], null)
+  create_time = try(local.m1440["create_time"], null)
+  description = try(local.m1440["description"], null)
+  domain_group_moid = try(local.m1440["domain_group_moid"], null)
+  id = try(local.m1440["id"], null)
+  mod_time = try(local.m1440["mod_time"], null)
+  moid = try(local.m1440["moid"], null)
+  mtu = try(local.m1440["mtu"], null)
+  name = try(local.m1440["name"], null)
+  object_type = try(local.m1440["object_type"], null)
+  organization = try(local.m1440["organization"], null)
+  owners = try(local.m1440["owners"], null)
+  parent = try(local.m1440["parent"], null)
+  permission_resources = try(local.m1440["permission_resources"], null)
+  priority = try(local.m1440["priority"], null)
+  rate_limit = try(local.m1440["rate_limit"], null)
+  shared_scope = try(local.m1440["shared_scope"], null)
+  tags = try(local.m1440["tags"], null)
+  trust_host_cos = try(local.m1440["trust_host_cos"], null)
+  version_context = try(local.m1440["version_context"], null)
+}

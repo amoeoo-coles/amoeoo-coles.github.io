@@ -1,0 +1,33 @@
+# Sample resource intersight_firmware_pci_node_upgrade — reads ../models/intersight_firmware_pci_node_upgrade.yml
+locals { m469 = yamldecode(file("${path.module}/../models/intersight_firmware_pci_node_upgrade.yml"))["intersight_firmware_pci_node_upgrade"] }
+
+resource "intersight_firmware_pci_node_upgrade" "n469" {
+  account_moid = try(local.m469["account_moid"], null)
+  additional_properties = try(local.m469["additional_properties"], null)
+  ancestors = try(local.m469["ancestors"], null)
+  class_id = try(local.m469["class_id"], null)
+  create_time = try(local.m469["create_time"], null)
+  device = try(local.m469["device"], null)
+  direct_download = try(local.m469["direct_download"], null)
+  distributable = try(local.m469["distributable"], null)
+  domain_group_moid = try(local.m469["domain_group_moid"], null)
+  file_server = try(local.m469["file_server"], null)
+  id = try(local.m469["id"], null)
+  mod_time = try(local.m469["mod_time"], null)
+  moid = try(local.m469["moid"], null)
+  network_share = try(local.m469["network_share"], null)
+  object_type = try(local.m469["object_type"], null)
+  owners = try(local.m469["owners"], null)
+  parent = try(local.m469["parent"], null)
+  pci_node = try(local.m469["pci_node"], null)
+  permission_resources = try(local.m469["permission_resources"], null)
+  release = try(local.m469["release"], null)
+  shared_scope = try(local.m469["shared_scope"], null)
+  skip_estimate_impact = try(local.m469["skip_estimate_impact"], null)
+  status = try(local.m469["status"], null)
+  tags = try(local.m469["tags"], null)
+  upgrade_impact = try(local.m469["upgrade_impact"], null)
+  upgrade_status = try(local.m469["upgrade_status"], null)
+  upgrade_type = try(local.m469["upgrade_type"], null)
+  version_context = try(local.m469["version_context"], null)
+}

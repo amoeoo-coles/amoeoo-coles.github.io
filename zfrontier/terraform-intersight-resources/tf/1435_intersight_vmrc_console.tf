@@ -1,0 +1,33 @@
+# Sample resource intersight_vmrc_console — reads ../models/intersight_vmrc_console.yml
+locals { m1435 = yamldecode(file("${path.module}/../models/intersight_vmrc_console.yml"))["intersight_vmrc_console"] }
+
+resource "intersight_vmrc_console" "n1435" {
+  account_moid = try(local.m1435["account_moid"], null)
+  additional_properties = try(local.m1435["additional_properties"], null)
+  ancestors = try(local.m1435["ancestors"], null)
+  class_id = try(local.m1435["class_id"], null)
+  client_ip_address = try(local.m1435["client_ip_address"], null)
+  client_url = try(local.m1435["client_url"], null)
+  create_time = try(local.m1435["create_time"], null)
+  domain_group_moid = try(local.m1435["domain_group_moid"], null)
+  end_time = try(local.m1435["end_time"], null)
+  id = try(local.m1435["id"], null)
+  mod_time = try(local.m1435["mod_time"], null)
+  moid = try(local.m1435["moid"], null)
+  object_type = try(local.m1435["object_type"], null)
+  owners = try(local.m1435["owners"], null)
+  parent = try(local.m1435["parent"], null)
+  permission_resources = try(local.m1435["permission_resources"], null)
+  role = try(local.m1435["role"], null)
+  session = try(local.m1435["session"], null)
+  shared_scope = try(local.m1435["shared_scope"], null)
+  status = try(local.m1435["status"], null)
+  tags = try(local.m1435["tags"], null)
+  target = try(local.m1435["target"], null)
+  target_name = try(local.m1435["target_name"], null)
+  user = try(local.m1435["user"], null)
+  user_id_or_email = try(local.m1435["user_id_or_email"], null)
+  vcenter = try(local.m1435["vcenter"], null)
+  version_context = try(local.m1435["version_context"], null)
+  virtual_machine = try(local.m1435["virtual_machine"], null)
+}

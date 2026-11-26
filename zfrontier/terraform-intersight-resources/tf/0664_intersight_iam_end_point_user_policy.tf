@@ -1,0 +1,30 @@
+# Sample resource intersight_iam_end_point_user_policy — reads ../models/intersight_iam_end_point_user_policy.yml
+locals { m664 = yamldecode(file("${path.module}/../models/intersight_iam_end_point_user_policy.yml"))["intersight_iam_end_point_user_policy"] }
+
+resource "intersight_iam_end_point_user_policy" "n664" {
+  account_lockout_duration = try(local.m664["account_lockout_duration"], null)
+  account_lockout_threshold = try(local.m664["account_lockout_threshold"], null)
+  account_moid = try(local.m664["account_moid"], null)
+  account_unlock_mode = try(local.m664["account_unlock_mode"], null)
+  additional_properties = try(local.m664["additional_properties"], null)
+  ancestors = try(local.m664["ancestors"], null)
+  class_id = try(local.m664["class_id"], null)
+  create_time = try(local.m664["create_time"], null)
+  description = try(local.m664["description"], null)
+  domain_group_moid = try(local.m664["domain_group_moid"], null)
+  end_point_user_roles = try(local.m664["end_point_user_roles"], null)
+  id = try(local.m664["id"], null)
+  mod_time = try(local.m664["mod_time"], null)
+  moid = try(local.m664["moid"], null)
+  name = try(local.m664["name"], null)
+  object_type = try(local.m664["object_type"], null)
+  organization = try(local.m664["organization"], null)
+  owners = try(local.m664["owners"], null)
+  parent = try(local.m664["parent"], null)
+  password_properties = try(var.secrets["intersight_iam_end_point_user_policy.password_properties"], local.m664["password_properties"])
+  permission_resources = try(local.m664["permission_resources"], null)
+  profiles = try(local.m664["profiles"], null)
+  shared_scope = try(local.m664["shared_scope"], null)
+  tags = try(local.m664["tags"], null)
+  version_context = try(local.m664["version_context"], null)
+}

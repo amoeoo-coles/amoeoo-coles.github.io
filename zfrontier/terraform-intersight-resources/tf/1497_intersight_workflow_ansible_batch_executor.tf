@@ -1,0 +1,32 @@
+# Sample resource intersight_workflow_ansible_batch_executor — reads ../models/intersight_workflow_ansible_batch_executor.yml
+locals { m1497 = yamldecode(file("${path.module}/../models/intersight_workflow_ansible_batch_executor.yml"))["intersight_workflow_ansible_batch_executor"] }
+
+resource "intersight_workflow_ansible_batch_executor" "n1497" {
+  account_moid = try(local.m1497["account_moid"], null)
+  additional_properties = try(local.m1497["additional_properties"], null)
+  ancestors = try(local.m1497["ancestors"], null)
+  batch = try(local.m1497["batch"], null)
+  cancel_action = try(local.m1497["cancel_action"], null)
+  class_id = try(local.m1497["class_id"], null)
+  constraints = try(local.m1497["constraints"], null)
+  create_time = try(local.m1497["create_time"], null)
+  description = try(local.m1497["description"], null)
+  domain_group_moid = try(local.m1497["domain_group_moid"], null)
+  id = try(local.m1497["id"], null)
+  mod_time = try(local.m1497["mod_time"], null)
+  moid = try(local.m1497["moid"], null)
+  name = try(local.m1497["name"], null)
+  object_type = try(local.m1497["object_type"], null)
+  outcomes = try(local.m1497["outcomes"], null)
+  output = try(local.m1497["output"], null)
+  owners = try(local.m1497["owners"], null)
+  parent = try(local.m1497["parent"], null)
+  permission_resources = try(local.m1497["permission_resources"], null)
+  retry_from_failed_api = try(local.m1497["retry_from_failed_api"], null)
+  shared_scope = try(local.m1497["shared_scope"], null)
+  skip_on_condition = try(local.m1497["skip_on_condition"], null)
+  tags = try(local.m1497["tags"], null)
+  task_definition = try(local.m1497["task_definition"], null)
+  ui_rendering_data = try(local.m1497["ui_rendering_data"], null)
+  version_context = try(local.m1497["version_context"], null)
+}

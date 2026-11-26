@@ -1,0 +1,30 @@
+# Sample resource intersight_appliance_remote_file_import — reads ../models/intersight_appliance_remote_file_import.yml
+locals { m030 = yamldecode(file("${path.module}/../models/intersight_appliance_remote_file_import.yml"))["intersight_appliance_remote_file_import"] }
+
+resource "intersight_appliance_remote_file_import" "n030" {
+  account = try(local.m030["account"], null)
+  account_moid = try(local.m030["account_moid"], null)
+  additional_properties = try(local.m030["additional_properties"], null)
+  ancestors = try(local.m030["ancestors"], null)
+  class_id = try(local.m030["class_id"], null)
+  create_time = try(local.m030["create_time"], null)
+  domain_group_moid = try(local.m030["domain_group_moid"], null)
+  filename = try(local.m030["filename"], null)
+  hostname = try(local.m030["hostname"], null)
+  id = try(local.m030["id"], null)
+  is_password_set = try(var.secrets["intersight_appliance_remote_file_import.is_password_set"], local.m030["is_password_set"])
+  mod_time = try(local.m030["mod_time"], null)
+  moid = try(local.m030["moid"], null)
+  object_type = try(local.m030["object_type"], null)
+  owners = try(local.m030["owners"], null)
+  parent = try(local.m030["parent"], null)
+  password = try(var.secrets["intersight_appliance_remote_file_import.password"], local.m030["password"])
+  path = try(local.m030["path"], null)
+  permission_resources = try(local.m030["permission_resources"], null)
+  port = try(local.m030["port"], null)
+  protocol = try(local.m030["protocol"], null)
+  shared_scope = try(local.m030["shared_scope"], null)
+  tags = try(local.m030["tags"], null)
+  username = try(local.m030["username"], null)
+  version_context = try(local.m030["version_context"], null)
+}

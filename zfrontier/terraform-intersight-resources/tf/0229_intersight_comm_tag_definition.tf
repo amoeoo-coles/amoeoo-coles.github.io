@@ -1,0 +1,30 @@
+# Sample resource intersight_comm_tag_definition — reads ../models/intersight_comm_tag_definition.yml
+locals { m229 = yamldecode(file("${path.module}/../models/intersight_comm_tag_definition.yml"))["intersight_comm_tag_definition"] }
+
+resource "intersight_comm_tag_definition" "n229" {
+  account = try(local.m229["account"], null)
+  account_moid = try(local.m229["account_moid"], null)
+  additional_properties = try(local.m229["additional_properties"], null)
+  allowed_values = try(local.m229["allowed_values"], null)
+  ancestors = try(local.m229["ancestors"], null)
+  class_id = try(local.m229["class_id"], null)
+  create_time = try(local.m229["create_time"], null)
+  domain_group_moid = try(local.m229["domain_group_moid"], null)
+  enable_propagation = try(local.m229["enable_propagation"], null)
+  id = try(local.m229["id"], null)
+  key = try(var.secrets["intersight_comm_tag_definition.key"], local.m229["key"])
+  mod_time = try(local.m229["mod_time"], null)
+  moid = try(local.m229["moid"], null)
+  object_type = try(local.m229["object_type"], null)
+  owners = try(local.m229["owners"], null)
+  parent = try(local.m229["parent"], null)
+  parent_tag = try(local.m229["parent_tag"], null)
+  permission_resources = try(local.m229["permission_resources"], null)
+  restrict_allowed_values = try(local.m229["restrict_allowed_values"], null)
+  shared_scope = try(local.m229["shared_scope"], null)
+  sys_tag = try(local.m229["sys_tag"], null)
+  tags = try(local.m229["tags"], null)
+  type = try(local.m229["type"], null)
+  usage = try(local.m229["usage"], null)
+  version_context = try(local.m229["version_context"], null)
+}

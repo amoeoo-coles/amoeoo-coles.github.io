@@ -1,0 +1,32 @@
+# Sample resource intersight_hyperflex_local_credential_policy — reads ../models/intersight_hyperflex_local_credential_policy.yml
+locals { m564 = yamldecode(file("${path.module}/../models/intersight_hyperflex_local_credential_policy.yml"))["intersight_hyperflex_local_credential_policy"] }
+
+resource "intersight_hyperflex_local_credential_policy" "n564" {
+  account_moid = try(local.m564["account_moid"], null)
+  additional_properties = try(local.m564["additional_properties"], null)
+  ancestors = try(local.m564["ancestors"], null)
+  class_id = try(local.m564["class_id"], null)
+  cluster_profiles = try(local.m564["cluster_profiles"], null)
+  create_time = try(local.m564["create_time"], null)
+  description = try(local.m564["description"], null)
+  domain_group_moid = try(local.m564["domain_group_moid"], null)
+  factory_hypervisor_password = try(var.secrets["intersight_hyperflex_local_credential_policy.factory_hypervisor_password"], local.m564["factory_hypervisor_password"])
+  hxdp_root_pwd = try(local.m564["hxdp_root_pwd"], null)
+  hypervisor_admin = try(local.m564["hypervisor_admin"], null)
+  hypervisor_admin_pwd = try(local.m564["hypervisor_admin_pwd"], null)
+  id = try(local.m564["id"], null)
+  is_deployment_private_key_set = try(var.secrets["intersight_hyperflex_local_credential_policy.is_deployment_private_key_set"], local.m564["is_deployment_private_key_set"])
+  is_hxdp_root_pwd_set = try(local.m564["is_hxdp_root_pwd_set"], null)
+  is_hypervisor_admin_pwd_set = try(local.m564["is_hypervisor_admin_pwd_set"], null)
+  mod_time = try(local.m564["mod_time"], null)
+  moid = try(local.m564["moid"], null)
+  name = try(local.m564["name"], null)
+  object_type = try(local.m564["object_type"], null)
+  organization = try(local.m564["organization"], null)
+  owners = try(local.m564["owners"], null)
+  parent = try(local.m564["parent"], null)
+  permission_resources = try(local.m564["permission_resources"], null)
+  shared_scope = try(local.m564["shared_scope"], null)
+  tags = try(local.m564["tags"], null)
+  version_context = try(local.m564["version_context"], null)
+}

@@ -1,0 +1,33 @@
+# Sample resource intersight_resource_reservation — reads ../models/intersight_resource_reservation.yml
+locals { m1109 = yamldecode(file("${path.module}/../models/intersight_resource_reservation.yml"))["intersight_resource_reservation"] }
+
+resource "intersight_resource_reservation" "n1109" {
+  account = try(local.m1109["account"], null)
+  account_moid = try(local.m1109["account_moid"], null)
+  additional_properties = try(local.m1109["additional_properties"], null)
+  ancestors = try(local.m1109["ancestors"], null)
+  class_id = try(local.m1109["class_id"], null)
+  create_time = try(local.m1109["create_time"], null)
+  custom_permission_resources = try(local.m1109["custom_permission_resources"], null)
+  description = try(local.m1109["description"], null)
+  domain_group_moid = try(local.m1109["domain_group_moid"], null)
+  expiration = try(local.m1109["expiration"], null)
+  groups = try(local.m1109["groups"], null)
+  id = try(local.m1109["id"], null)
+  identity = try(local.m1109["identity"], null)
+  mark_fail = try(local.m1109["mark_fail"], null)
+  mod_time = try(local.m1109["mod_time"], null)
+  moid = try(local.m1109["moid"], null)
+  object_type = try(local.m1109["object_type"], null)
+  owners = try(local.m1109["owners"], null)
+  parent = try(local.m1109["parent"], null)
+  permission_resources = try(local.m1109["permission_resources"], null)
+  reservation_selector = try(local.m1109["reservation_selector"], null)
+  resource_moids = try(local.m1109["resource_moids"], null)
+  resource_type = try(local.m1109["resource_type"], null)
+  shared_scope = try(local.m1109["shared_scope"], null)
+  status = try(local.m1109["status"], null)
+  tags = try(local.m1109["tags"], null)
+  user_moid = try(local.m1109["user_moid"], null)
+  version_context = try(local.m1109["version_context"], null)
+}

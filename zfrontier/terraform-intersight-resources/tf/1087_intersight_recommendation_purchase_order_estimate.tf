@@ -1,0 +1,31 @@
+# Sample resource intersight_recommendation_purchase_order_estimate — reads ../models/intersight_recommendation_purchase_order_estimate.yml
+locals { m1087 = yamldecode(file("${path.module}/../models/intersight_recommendation_purchase_order_estimate.yml"))["intersight_recommendation_purchase_order_estimate"] }
+
+resource "intersight_recommendation_purchase_order_estimate" "n1087" {
+  account_moid = try(local.m1087["account_moid"], null)
+  action = try(local.m1087["action"], null)
+  additional_properties = try(local.m1087["additional_properties"], null)
+  ancestors = try(local.m1087["ancestors"], null)
+  class_id = try(local.m1087["class_id"], null)
+  cluster_expansion = try(local.m1087["cluster_expansion"], null)
+  create_time = try(local.m1087["create_time"], null)
+  domain_group_moid = try(local.m1087["domain_group_moid"], null)
+  estimate_id = try(local.m1087["estimate_id"], null)
+  estimate_owner = try(local.m1087["estimate_owner"], null)
+  id = try(local.m1087["id"], null)
+  last_updated_time = try(local.m1087["last_updated_time"], null)
+  message = try(local.m1087["message"], null)
+  mod_time = try(local.m1087["mod_time"], null)
+  moid = try(local.m1087["moid"], null)
+  name = try(local.m1087["name"], null)
+  object_type = try(local.m1087["object_type"], null)
+  owners = try(local.m1087["owners"], null)
+  parent = try(local.m1087["parent"], null)
+  permission_resources = try(local.m1087["permission_resources"], null)
+  requirement_met = try(local.m1087["requirement_met"], null)
+  shared_scope = try(local.m1087["shared_scope"], null)
+  status = try(local.m1087["status"], null)
+  tags = try(local.m1087["tags"], null)
+  total_cost = try(local.m1087["total_cost"], null)
+  version_context = try(local.m1087["version_context"], null)
+}

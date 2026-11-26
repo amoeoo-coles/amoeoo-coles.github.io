@@ -1,0 +1,33 @@
+# Sample resource intersight_hyperflex_key_encryption_key — reads ../models/intersight_hyperflex_key_encryption_key.yml
+locals { m563 = yamldecode(file("${path.module}/../models/intersight_hyperflex_key_encryption_key.yml"))["intersight_hyperflex_key_encryption_key"] }
+
+resource "intersight_hyperflex_key_encryption_key" "n563" {
+  account_moid = try(local.m563["account_moid"], null)
+  additional_properties = try(local.m563["additional_properties"], null)
+  ancestors = try(local.m563["ancestors"], null)
+  class_id = try(local.m563["class_id"], null)
+  cluster_profile = try(local.m563["cluster_profile"], null)
+  create_time = try(local.m563["create_time"], null)
+  domain_group_moid = try(local.m563["domain_group_moid"], null)
+  id = try(local.m563["id"], null)
+  is_account_recovery = try(local.m563["is_account_recovery"], null)
+  is_kek_set = try(local.m563["is_kek_set"], null)
+  is_passphrase_set = try(var.secrets["intersight_hyperflex_key_encryption_key.is_passphrase_set"], local.m563["is_passphrase_set"])
+  iteration = try(local.m563["iteration"], null)
+  kek = try(local.m563["kek"], null)
+  key_id = try(local.m563["key_id"], null)
+  key_state = try(local.m563["key_state"], null)
+  mod_time = try(local.m563["mod_time"], null)
+  moid = try(local.m563["moid"], null)
+  object_type = try(local.m563["object_type"], null)
+  owners = try(local.m563["owners"], null)
+  parent = try(local.m563["parent"], null)
+  passphrase = try(var.secrets["intersight_hyperflex_key_encryption_key.passphrase"], local.m563["passphrase"])
+  permission_resources = try(local.m563["permission_resources"], null)
+  resource_mo = try(local.m563["resource_mo"], null)
+  resource_type = try(local.m563["resource_type"], null)
+  shared_scope = try(local.m563["shared_scope"], null)
+  tags = try(local.m563["tags"], null)
+  transit_kek = try(local.m563["transit_kek"], null)
+  version_context = try(local.m563["version_context"], null)
+}

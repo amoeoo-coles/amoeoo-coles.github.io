@@ -1,0 +1,32 @@
+# Sample resource intersight_access_policy — reads ../models/intersight_access_policy.yml
+locals { m005 = yamldecode(file("${path.module}/../models/intersight_access_policy.yml"))["intersight_access_policy"] }
+
+resource "intersight_access_policy" "n005" {
+  account_moid = try(local.m005["account_moid"], null)
+  additional_properties = try(local.m005["additional_properties"], null)
+  address_type = try(local.m005["address_type"], null)
+  ancestors = try(local.m005["ancestors"], null)
+  class_id = try(local.m005["class_id"], null)
+  configuration_type = try(local.m005["configuration_type"], null)
+  create_time = try(local.m005["create_time"], null)
+  description = try(local.m005["description"], null)
+  domain_group_moid = try(local.m005["domain_group_moid"], null)
+  id = try(local.m005["id"], null)
+  inband_ip_pool = try(local.m005["inband_ip_pool"], null)
+  inband_vlan = try(local.m005["inband_vlan"], null)
+  inband_vrf = try(local.m005["inband_vrf"], null)
+  mod_time = try(local.m005["mod_time"], null)
+  moid = try(local.m005["moid"], null)
+  name = try(local.m005["name"], null)
+  object_type = try(local.m005["object_type"], null)
+  organization = try(local.m005["organization"], null)
+  out_of_band_ip_pool = try(local.m005["out_of_band_ip_pool"], null)
+  out_of_band_vrf = try(local.m005["out_of_band_vrf"], null)
+  owners = try(local.m005["owners"], null)
+  parent = try(local.m005["parent"], null)
+  permission_resources = try(local.m005["permission_resources"], null)
+  profiles = try(local.m005["profiles"], null)
+  shared_scope = try(local.m005["shared_scope"], null)
+  tags = try(local.m005["tags"], null)
+  version_context = try(local.m005["version_context"], null)
+}

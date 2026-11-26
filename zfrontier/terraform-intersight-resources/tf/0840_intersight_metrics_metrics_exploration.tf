@@ -1,0 +1,30 @@
+# Sample resource intersight_metrics_metrics_exploration — reads ../models/intersight_metrics_metrics_exploration.yml
+locals { m840 = yamldecode(file("${path.module}/../models/intersight_metrics_metrics_exploration.yml"))["intersight_metrics_metrics_exploration"] }
+
+resource "intersight_metrics_metrics_exploration" "n840" {
+  account_moid = try(local.m840["account_moid"], null)
+  additional_properties = try(local.m840["additional_properties"], null)
+  ancestors = try(local.m840["ancestors"], null)
+  class_id = try(local.m840["class_id"], null)
+  create_time = try(local.m840["create_time"], null)
+  description = try(local.m840["description"], null)
+  domain_group_moid = try(local.m840["domain_group_moid"], null)
+  granularity = try(local.m840["granularity"], null)
+  id = try(local.m840["id"], null)
+  intervals = try(local.m840["intervals"], null)
+  is_widget = try(local.m840["is_widget"], null)
+  metric_criteria = try(local.m840["metric_criteria"], null)
+  mod_time = try(local.m840["mod_time"], null)
+  moid = try(local.m840["moid"], null)
+  name = try(local.m840["name"], null)
+  object_type = try(local.m840["object_type"], null)
+  organization = try(local.m840["organization"], null)
+  owners = try(local.m840["owners"], null)
+  parent = try(local.m840["parent"], null)
+  permission_resources = try(local.m840["permission_resources"], null)
+  raw_queries = try(local.m840["raw_queries"], null)
+  shared_scope = try(local.m840["shared_scope"], null)
+  tags = try(local.m840["tags"], null)
+  version_context = try(local.m840["version_context"], null)
+  visual_config = try(local.m840["visual_config"], null)
+}

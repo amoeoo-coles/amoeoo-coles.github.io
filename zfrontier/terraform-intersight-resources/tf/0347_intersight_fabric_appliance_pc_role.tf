@@ -1,0 +1,32 @@
+# Sample resource intersight_fabric_appliance_pc_role — reads ../models/intersight_fabric_appliance_pc_role.yml
+locals { m347 = yamldecode(file("${path.module}/../models/intersight_fabric_appliance_pc_role.yml"))["intersight_fabric_appliance_pc_role"] }
+
+resource "intersight_fabric_appliance_pc_role" "n347" {
+  account_moid = try(local.m347["account_moid"], null)
+  additional_properties = try(local.m347["additional_properties"], null)
+  admin_speed = try(local.m347["admin_speed"], null)
+  ancestors = try(local.m347["ancestors"], null)
+  class_id = try(local.m347["class_id"], null)
+  create_time = try(local.m347["create_time"], null)
+  domain_group_moid = try(local.m347["domain_group_moid"], null)
+  eth_network_control_policy = try(local.m347["eth_network_control_policy"], null)
+  eth_network_group_policy = try(local.m347["eth_network_group_policy"], null)
+  fec = try(local.m347["fec"], null)
+  id = try(local.m347["id"], null)
+  link_aggregation_policy = try(local.m347["link_aggregation_policy"], null)
+  mod_time = try(local.m347["mod_time"], null)
+  mode = try(local.m347["mode"], null)
+  moid = try(local.m347["moid"], null)
+  object_type = try(local.m347["object_type"], null)
+  owners = try(local.m347["owners"], null)
+  parent = try(local.m347["parent"], null)
+  pc_id = try(local.m347["pc_id"], null)
+  permission_resources = try(local.m347["permission_resources"], null)
+  port_policy = try(local.m347["port_policy"], null)
+  ports = try(local.m347["ports"], null)
+  priority = try(local.m347["priority"], null)
+  shared_scope = try(local.m347["shared_scope"], null)
+  tags = try(local.m347["tags"], null)
+  user_label = try(local.m347["user_label"], null)
+  version_context = try(local.m347["version_context"], null)
+}

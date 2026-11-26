@@ -1,0 +1,32 @@
+# Sample resource intersight_fabric_remote_span_exporter — reads ../models/intersight_fabric_remote_span_exporter.yml
+locals { m374 = yamldecode(file("${path.module}/../models/intersight_fabric_remote_span_exporter.yml"))["intersight_fabric_remote_span_exporter"] }
+
+resource "intersight_fabric_remote_span_exporter" "n374" {
+  account_moid = try(local.m374["account_moid"], null)
+  additional_properties = try(local.m374["additional_properties"], null)
+  ancestors = try(local.m374["ancestors"], null)
+  class_id = try(local.m374["class_id"], null)
+  config_state = try(local.m374["config_state"], null)
+  create_time = try(local.m374["create_time"], null)
+  domain_group_moid = try(local.m374["domain_group_moid"], null)
+  gateway = try(local.m374["gateway"], null)
+  id = try(local.m374["id"], null)
+  ip_address_source = try(local.m374["ip_address_source"], null)
+  mod_time = try(local.m374["mod_time"], null)
+  moid = try(local.m374["moid"], null)
+  network_element = try(local.m374["network_element"], null)
+  object_type = try(local.m374["object_type"], null)
+  oper_state = try(local.m374["oper_state"], null)
+  oper_state_reason = try(local.m374["oper_state_reason"], null)
+  operational_ip_address = try(local.m374["operational_ip_address"], null)
+  owners = try(local.m374["owners"], null)
+  parent = try(local.m374["parent"], null)
+  permission_resources = try(local.m374["permission_resources"], null)
+  shared_scope = try(local.m374["shared_scope"], null)
+  source_ip = try(local.m374["source_ip"], null)
+  source_netmask = try(local.m374["source_netmask"], null)
+  source_vlan_id = try(local.m374["source_vlan_id"], null)
+  switch_id = try(local.m374["switch_id"], null)
+  tags = try(local.m374["tags"], null)
+  version_context = try(local.m374["version_context"], null)
+}

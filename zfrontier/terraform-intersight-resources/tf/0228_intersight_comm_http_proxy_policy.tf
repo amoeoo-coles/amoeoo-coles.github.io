@@ -1,0 +1,30 @@
+# Sample resource intersight_comm_http_proxy_policy — reads ../models/intersight_comm_http_proxy_policy.yml
+locals { m228 = yamldecode(file("${path.module}/../models/intersight_comm_http_proxy_policy.yml"))["intersight_comm_http_proxy_policy"] }
+
+resource "intersight_comm_http_proxy_policy" "n228" {
+  account_moid = try(local.m228["account_moid"], null)
+  additional_properties = try(local.m228["additional_properties"], null)
+  ancestors = try(local.m228["ancestors"], null)
+  class_id = try(local.m228["class_id"], null)
+  cluster_profiles = try(local.m228["cluster_profiles"], null)
+  create_time = try(local.m228["create_time"], null)
+  description = try(local.m228["description"], null)
+  domain_group_moid = try(local.m228["domain_group_moid"], null)
+  hostname = try(local.m228["hostname"], null)
+  id = try(local.m228["id"], null)
+  is_password_set = try(var.secrets["intersight_comm_http_proxy_policy.is_password_set"], local.m228["is_password_set"])
+  mod_time = try(local.m228["mod_time"], null)
+  moid = try(local.m228["moid"], null)
+  name = try(local.m228["name"], null)
+  object_type = try(local.m228["object_type"], null)
+  organization = try(local.m228["organization"], null)
+  owners = try(local.m228["owners"], null)
+  parent = try(local.m228["parent"], null)
+  password = try(var.secrets["intersight_comm_http_proxy_policy.password"], local.m228["password"])
+  permission_resources = try(local.m228["permission_resources"], null)
+  port = try(local.m228["port"], null)
+  shared_scope = try(local.m228["shared_scope"], null)
+  tags = try(local.m228["tags"], null)
+  username = try(local.m228["username"], null)
+  version_context = try(local.m228["version_context"], null)
+}

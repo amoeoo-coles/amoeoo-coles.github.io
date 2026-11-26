@@ -1,0 +1,30 @@
+# Sample resource intersight_memory_persistent_memory_policy — reads ../models/intersight_memory_persistent_memory_policy.yml
+locals { m821 = yamldecode(file("${path.module}/../models/intersight_memory_persistent_memory_policy.yml"))["intersight_memory_persistent_memory_policy"] }
+
+resource "intersight_memory_persistent_memory_policy" "n821" {
+  account_moid = try(local.m821["account_moid"], null)
+  additional_properties = try(local.m821["additional_properties"], null)
+  ancestors = try(local.m821["ancestors"], null)
+  class_id = try(local.m821["class_id"], null)
+  create_time = try(local.m821["create_time"], null)
+  description = try(local.m821["description"], null)
+  domain_group_moid = try(local.m821["domain_group_moid"], null)
+  goals = try(local.m821["goals"], null)
+  id = try(local.m821["id"], null)
+  local_security = try(local.m821["local_security"], null)
+  logical_namespaces = try(local.m821["logical_namespaces"], null)
+  management_mode = try(local.m821["management_mode"], null)
+  mod_time = try(local.m821["mod_time"], null)
+  moid = try(local.m821["moid"], null)
+  name = try(local.m821["name"], null)
+  object_type = try(local.m821["object_type"], null)
+  organization = try(local.m821["organization"], null)
+  owners = try(local.m821["owners"], null)
+  parent = try(local.m821["parent"], null)
+  permission_resources = try(local.m821["permission_resources"], null)
+  profiles = try(local.m821["profiles"], null)
+  retain_namespaces = try(local.m821["retain_namespaces"], null)
+  shared_scope = try(local.m821["shared_scope"], null)
+  tags = try(local.m821["tags"], null)
+  version_context = try(local.m821["version_context"], null)
+}

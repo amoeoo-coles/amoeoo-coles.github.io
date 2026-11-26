@@ -1,0 +1,31 @@
+# Sample resource intersight_iam_local_user_password — reads ../models/intersight_iam_local_user_password.yml
+locals { m673 = yamldecode(file("${path.module}/../models/intersight_iam_local_user_password.yml"))["intersight_iam_local_user_password"] }
+
+resource "intersight_iam_local_user_password" "n673" {
+  account_moid = try(local.m673["account_moid"], null)
+  additional_properties = try(local.m673["additional_properties"], null)
+  ancestors = try(local.m673["ancestors"], null)
+  class_id = try(local.m673["class_id"], null)
+  create_time = try(local.m673["create_time"], null)
+  current_password = try(var.secrets["intersight_iam_local_user_password.current_password"], local.m673["current_password"])
+  domain_group_moid = try(local.m673["domain_group_moid"], null)
+  id = try(local.m673["id"], null)
+  initial_password = try(var.secrets["intersight_iam_local_user_password.initial_password"], local.m673["initial_password"])
+  is_current_password_set = try(var.secrets["intersight_iam_local_user_password.is_current_password_set"], local.m673["is_current_password_set"])
+  is_initial_password_set = try(var.secrets["intersight_iam_local_user_password.is_initial_password_set"], local.m673["is_initial_password_set"])
+  is_new_password_set = try(var.secrets["intersight_iam_local_user_password.is_new_password_set"], local.m673["is_new_password_set"])
+  mod_time = try(local.m673["mod_time"], null)
+  moid = try(local.m673["moid"], null)
+  need_password_reset = try(var.secrets["intersight_iam_local_user_password.need_password_reset"], local.m673["need_password_reset"])
+  new_password = try(var.secrets["intersight_iam_local_user_password.new_password"], local.m673["new_password"])
+  object_type = try(local.m673["object_type"], null)
+  owners = try(local.m673["owners"], null)
+  parent = try(local.m673["parent"], null)
+  password = try(var.secrets["intersight_iam_local_user_password.password"], local.m673["password"])
+  password_expires_in_days = try(var.secrets["intersight_iam_local_user_password.password_expires_in_days"], local.m673["password_expires_in_days"])
+  permission_resources = try(local.m673["permission_resources"], null)
+  shared_scope = try(local.m673["shared_scope"], null)
+  tags = try(local.m673["tags"], null)
+  user = try(local.m673["user"], null)
+  version_context = try(local.m673["version_context"], null)
+}

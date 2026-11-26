@@ -1,0 +1,33 @@
+# Sample resource intersight_hyperflex_cluster_network_policy — reads ../models/intersight_hyperflex_cluster_network_policy.yml
+locals { m556 = yamldecode(file("${path.module}/../models/intersight_hyperflex_cluster_network_policy.yml"))["intersight_hyperflex_cluster_network_policy"] }
+
+resource "intersight_hyperflex_cluster_network_policy" "n556" {
+  account_moid = try(local.m556["account_moid"], null)
+  additional_properties = try(local.m556["additional_properties"], null)
+  ancestors = try(local.m556["ancestors"], null)
+  cimc_management_mode = try(local.m556["cimc_management_mode"], null)
+  class_id = try(local.m556["class_id"], null)
+  cluster_profiles = try(local.m556["cluster_profiles"], null)
+  create_time = try(local.m556["create_time"], null)
+  description = try(local.m556["description"], null)
+  domain_group_moid = try(local.m556["domain_group_moid"], null)
+  id = try(local.m556["id"], null)
+  jumbo_frame = try(local.m556["jumbo_frame"], null)
+  kvm_ip_range = try(local.m556["kvm_ip_range"], null)
+  mac_prefix_range = try(local.m556["mac_prefix_range"], null)
+  mgmt_vlan = try(local.m556["mgmt_vlan"], null)
+  mod_time = try(local.m556["mod_time"], null)
+  moid = try(local.m556["moid"], null)
+  name = try(local.m556["name"], null)
+  object_type = try(local.m556["object_type"], null)
+  organization = try(local.m556["organization"], null)
+  owners = try(local.m556["owners"], null)
+  parent = try(local.m556["parent"], null)
+  permission_resources = try(local.m556["permission_resources"], null)
+  shared_scope = try(local.m556["shared_scope"], null)
+  tags = try(local.m556["tags"], null)
+  uplink_speed = try(local.m556["uplink_speed"], null)
+  version_context = try(local.m556["version_context"], null)
+  vm_migration_vlan = try(local.m556["vm_migration_vlan"], null)
+  vm_network_vlans = try(local.m556["vm_network_vlans"], null)
+}

@@ -1,0 +1,33 @@
+# Sample resource intersight_recovery_backup_config_policy — reads ../models/intersight_recovery_backup_config_policy.yml
+locals { m1096 = yamldecode(file("${path.module}/../models/intersight_recovery_backup_config_policy.yml"))["intersight_recovery_backup_config_policy"] }
+
+resource "intersight_recovery_backup_config_policy" "n1096" {
+  account_moid = try(local.m1096["account_moid"], null)
+  additional_properties = try(local.m1096["additional_properties"], null)
+  ancestors = try(local.m1096["ancestors"], null)
+  backup_profiles = try(local.m1096["backup_profiles"], null)
+  class_id = try(local.m1096["class_id"], null)
+  create_time = try(local.m1096["create_time"], null)
+  description = try(local.m1096["description"], null)
+  domain_group_moid = try(local.m1096["domain_group_moid"], null)
+  file_name_prefix = try(local.m1096["file_name_prefix"], null)
+  id = try(local.m1096["id"], null)
+  is_password_set = try(var.secrets["intersight_recovery_backup_config_policy.is_password_set"], local.m1096["is_password_set"])
+  location_type = try(local.m1096["location_type"], null)
+  mod_time = try(local.m1096["mod_time"], null)
+  moid = try(local.m1096["moid"], null)
+  name = try(local.m1096["name"], null)
+  object_type = try(local.m1096["object_type"], null)
+  organization = try(local.m1096["organization"], null)
+  owners = try(local.m1096["owners"], null)
+  parent = try(local.m1096["parent"], null)
+  password = try(var.secrets["intersight_recovery_backup_config_policy.password"], local.m1096["password"])
+  path = try(local.m1096["path"], null)
+  permission_resources = try(local.m1096["permission_resources"], null)
+  protocol = try(local.m1096["protocol"], null)
+  retention_count = try(local.m1096["retention_count"], null)
+  shared_scope = try(local.m1096["shared_scope"], null)
+  tags = try(local.m1096["tags"], null)
+  user_name = try(local.m1096["user_name"], null)
+  version_context = try(local.m1096["version_context"], null)
+}

@@ -1,0 +1,33 @@
+# Sample resource intersight_workflow_power_shell_batch_api_executor — reads ../models/intersight_workflow_power_shell_batch_api_executor.yml
+locals { m1503 = yamldecode(file("${path.module}/../models/intersight_workflow_power_shell_batch_api_executor.yml"))["intersight_workflow_power_shell_batch_api_executor"] }
+
+resource "intersight_workflow_power_shell_batch_api_executor" "n1503" {
+  account_moid = try(local.m1503["account_moid"], null)
+  additional_properties = try(local.m1503["additional_properties"], null)
+  ancestors = try(local.m1503["ancestors"], null)
+  batch = try(local.m1503["batch"], null)
+  cancel_action = try(local.m1503["cancel_action"], null)
+  class_id = try(local.m1503["class_id"], null)
+  constraints = try(local.m1503["constraints"], null)
+  create_time = try(local.m1503["create_time"], null)
+  description = try(local.m1503["description"], null)
+  domain_group_moid = try(local.m1503["domain_group_moid"], null)
+  error_response_handler = try(local.m1503["error_response_handler"], null)
+  id = try(local.m1503["id"], null)
+  mod_time = try(local.m1503["mod_time"], null)
+  moid = try(local.m1503["moid"], null)
+  name = try(local.m1503["name"], null)
+  object_type = try(local.m1503["object_type"], null)
+  outcomes = try(local.m1503["outcomes"], null)
+  output = try(local.m1503["output"], null)
+  owners = try(local.m1503["owners"], null)
+  parent = try(local.m1503["parent"], null)
+  permission_resources = try(local.m1503["permission_resources"], null)
+  retry_from_failed_api = try(local.m1503["retry_from_failed_api"], null)
+  shared_scope = try(local.m1503["shared_scope"], null)
+  skip_on_condition = try(local.m1503["skip_on_condition"], null)
+  tags = try(local.m1503["tags"], null)
+  task_definition = try(local.m1503["task_definition"], null)
+  ui_rendering_data = try(local.m1503["ui_rendering_data"], null)
+  version_context = try(local.m1503["version_context"], null)
+}

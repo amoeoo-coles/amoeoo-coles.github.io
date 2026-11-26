@@ -1,0 +1,32 @@
+# Sample resource intersight_uuidpool_pool — reads ../models/intersight_uuidpool_pool.yml
+locals { m1396 = yamldecode(file("${path.module}/../models/intersight_uuidpool_pool.yml"))["intersight_uuidpool_pool"] }
+
+resource "intersight_uuidpool_pool" "n1396" {
+  account_moid = try(local.m1396["account_moid"], null)
+  additional_properties = try(local.m1396["additional_properties"], null)
+  ancestors = try(local.m1396["ancestors"], null)
+  assigned = try(local.m1396["assigned"], null)
+  assignment_order = try(local.m1396["assignment_order"], null)
+  block_heads = try(local.m1396["block_heads"], null)
+  class_id = try(local.m1396["class_id"], null)
+  create_time = try(local.m1396["create_time"], null)
+  description = try(local.m1396["description"], null)
+  domain_group_moid = try(local.m1396["domain_group_moid"], null)
+  id = try(local.m1396["id"], null)
+  mod_time = try(local.m1396["mod_time"], null)
+  moid = try(local.m1396["moid"], null)
+  name = try(local.m1396["name"], null)
+  object_type = try(local.m1396["object_type"], null)
+  organization = try(local.m1396["organization"], null)
+  owners = try(local.m1396["owners"], null)
+  parent = try(local.m1396["parent"], null)
+  permission_resources = try(local.m1396["permission_resources"], null)
+  prefix = try(local.m1396["prefix"], null)
+  reservations = try(local.m1396["reservations"], null)
+  reserved = try(local.m1396["reserved"], null)
+  shared_scope = try(local.m1396["shared_scope"], null)
+  size = try(local.m1396["size"], null)
+  tags = try(local.m1396["tags"], null)
+  uuid_suffix_blocks = try(local.m1396["uuid_suffix_blocks"], null)
+  version_context = try(local.m1396["version_context"], null)
+}

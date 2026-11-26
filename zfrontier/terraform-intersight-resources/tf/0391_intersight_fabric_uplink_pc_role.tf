@@ -1,0 +1,32 @@
+# Sample resource intersight_fabric_uplink_pc_role — reads ../models/intersight_fabric_uplink_pc_role.yml
+locals { m391 = yamldecode(file("${path.module}/../models/intersight_fabric_uplink_pc_role.yml"))["intersight_fabric_uplink_pc_role"] }
+
+resource "intersight_fabric_uplink_pc_role" "n391" {
+  account_moid = try(local.m391["account_moid"], null)
+  additional_properties = try(local.m391["additional_properties"], null)
+  admin_speed = try(local.m391["admin_speed"], null)
+  ancestors = try(local.m391["ancestors"], null)
+  class_id = try(local.m391["class_id"], null)
+  create_time = try(local.m391["create_time"], null)
+  domain_group_moid = try(local.m391["domain_group_moid"], null)
+  eth_network_group_policy = try(local.m391["eth_network_group_policy"], null)
+  fec = try(local.m391["fec"], null)
+  flow_control_policy = try(local.m391["flow_control_policy"], null)
+  id = try(local.m391["id"], null)
+  link_aggregation_policy = try(local.m391["link_aggregation_policy"], null)
+  link_control_policy = try(local.m391["link_control_policy"], null)
+  mac_sec_policy = try(local.m391["mac_sec_policy"], null)
+  mod_time = try(local.m391["mod_time"], null)
+  moid = try(local.m391["moid"], null)
+  object_type = try(local.m391["object_type"], null)
+  owners = try(local.m391["owners"], null)
+  parent = try(local.m391["parent"], null)
+  pc_id = try(local.m391["pc_id"], null)
+  permission_resources = try(local.m391["permission_resources"], null)
+  port_policy = try(local.m391["port_policy"], null)
+  ports = try(local.m391["ports"], null)
+  shared_scope = try(local.m391["shared_scope"], null)
+  tags = try(local.m391["tags"], null)
+  user_label = try(local.m391["user_label"], null)
+  version_context = try(local.m391["version_context"], null)
+}

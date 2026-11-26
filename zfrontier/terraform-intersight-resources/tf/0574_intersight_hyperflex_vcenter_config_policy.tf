@@ -1,0 +1,31 @@
+# Sample resource intersight_hyperflex_vcenter_config_policy — reads ../models/intersight_hyperflex_vcenter_config_policy.yml
+locals { m574 = yamldecode(file("${path.module}/../models/intersight_hyperflex_vcenter_config_policy.yml"))["intersight_hyperflex_vcenter_config_policy"] }
+
+resource "intersight_hyperflex_vcenter_config_policy" "n574" {
+  account_moid = try(local.m574["account_moid"], null)
+  additional_properties = try(local.m574["additional_properties"], null)
+  ancestors = try(local.m574["ancestors"], null)
+  class_id = try(local.m574["class_id"], null)
+  cluster_profiles = try(local.m574["cluster_profiles"], null)
+  create_time = try(local.m574["create_time"], null)
+  data_center = try(local.m574["data_center"], null)
+  description = try(local.m574["description"], null)
+  domain_group_moid = try(local.m574["domain_group_moid"], null)
+  hostname = try(local.m574["hostname"], null)
+  id = try(local.m574["id"], null)
+  is_password_set = try(var.secrets["intersight_hyperflex_vcenter_config_policy.is_password_set"], local.m574["is_password_set"])
+  mod_time = try(local.m574["mod_time"], null)
+  moid = try(local.m574["moid"], null)
+  name = try(local.m574["name"], null)
+  object_type = try(local.m574["object_type"], null)
+  organization = try(local.m574["organization"], null)
+  owners = try(local.m574["owners"], null)
+  parent = try(local.m574["parent"], null)
+  password = try(var.secrets["intersight_hyperflex_vcenter_config_policy.password"], local.m574["password"])
+  permission_resources = try(local.m574["permission_resources"], null)
+  shared_scope = try(local.m574["shared_scope"], null)
+  sso_url = try(local.m574["sso_url"], null)
+  tags = try(local.m574["tags"], null)
+  username = try(local.m574["username"], null)
+  version_context = try(local.m574["version_context"], null)
+}

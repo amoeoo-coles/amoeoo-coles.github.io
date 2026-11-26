@@ -1,0 +1,33 @@
+# Sample resource intersight_virtualization_esxi_console — reads ../models/intersight_virtualization_esxi_console.yml
+locals { m1406 = yamldecode(file("${path.module}/../models/intersight_virtualization_esxi_console.yml"))["intersight_virtualization_esxi_console"] }
+
+resource "intersight_virtualization_esxi_console" "n1406" {
+  account_moid = try(local.m1406["account_moid"], null)
+  additional_properties = try(local.m1406["additional_properties"], null)
+  ancestors = try(local.m1406["ancestors"], null)
+  class_id = try(local.m1406["class_id"], null)
+  client_ip_address = try(local.m1406["client_ip_address"], null)
+  create_time = try(local.m1406["create_time"], null)
+  device_registration = try(local.m1406["device_registration"], null)
+  domain_group_moid = try(local.m1406["domain_group_moid"], null)
+  end_time = try(local.m1406["end_time"], null)
+  host = try(local.m1406["host"], null)
+  id = try(local.m1406["id"], null)
+  mod_time = try(local.m1406["mod_time"], null)
+  moid = try(local.m1406["moid"], null)
+  object_type = try(local.m1406["object_type"], null)
+  owners = try(local.m1406["owners"], null)
+  parent = try(local.m1406["parent"], null)
+  permission_resources = try(local.m1406["permission_resources"], null)
+  role = try(local.m1406["role"], null)
+  session = try(local.m1406["session"], null)
+  shared_scope = try(local.m1406["shared_scope"], null)
+  status = try(local.m1406["status"], null)
+  stream_id = try(local.m1406["stream_id"], null)
+  tags = try(local.m1406["tags"], null)
+  target = try(local.m1406["target"], null)
+  target_name = try(local.m1406["target_name"], null)
+  user = try(local.m1406["user"], null)
+  user_id_or_email = try(local.m1406["user_id_or_email"], null)
+  version_context = try(local.m1406["version_context"], null)
+}

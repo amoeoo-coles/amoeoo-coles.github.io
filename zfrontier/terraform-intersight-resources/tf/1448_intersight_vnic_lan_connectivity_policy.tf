@@ -1,0 +1,32 @@
+# Sample resource intersight_vnic_lan_connectivity_policy — reads ../models/intersight_vnic_lan_connectivity_policy.yml
+locals { m1448 = yamldecode(file("${path.module}/../models/intersight_vnic_lan_connectivity_policy.yml"))["intersight_vnic_lan_connectivity_policy"] }
+
+resource "intersight_vnic_lan_connectivity_policy" "n1448" {
+  account_moid = try(local.m1448["account_moid"], null)
+  additional_properties = try(local.m1448["additional_properties"], null)
+  ancestors = try(local.m1448["ancestors"], null)
+  azure_qos_enabled = try(local.m1448["azure_qos_enabled"], null)
+  class_id = try(local.m1448["class_id"], null)
+  create_time = try(local.m1448["create_time"], null)
+  description = try(local.m1448["description"], null)
+  domain_group_moid = try(local.m1448["domain_group_moid"], null)
+  eth_ifs = try(local.m1448["eth_ifs"], null)
+  id = try(local.m1448["id"], null)
+  iqn_allocation_type = try(local.m1448["iqn_allocation_type"], null)
+  iqn_pool = try(local.m1448["iqn_pool"], null)
+  mod_time = try(local.m1448["mod_time"], null)
+  moid = try(local.m1448["moid"], null)
+  name = try(local.m1448["name"], null)
+  object_type = try(local.m1448["object_type"], null)
+  organization = try(local.m1448["organization"], null)
+  owners = try(local.m1448["owners"], null)
+  parent = try(local.m1448["parent"], null)
+  permission_resources = try(local.m1448["permission_resources"], null)
+  placement_mode = try(local.m1448["placement_mode"], null)
+  profiles = try(local.m1448["profiles"], null)
+  shared_scope = try(local.m1448["shared_scope"], null)
+  static_iqn_name = try(local.m1448["static_iqn_name"], null)
+  tags = try(local.m1448["tags"], null)
+  target_platform = try(local.m1448["target_platform"], null)
+  version_context = try(local.m1448["version_context"], null)
+}

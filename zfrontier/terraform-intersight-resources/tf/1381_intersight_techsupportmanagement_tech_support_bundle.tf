@@ -1,0 +1,30 @@
+# Sample resource intersight_techsupportmanagement_tech_support_bundle — reads ../models/intersight_techsupportmanagement_tech_support_bundle.yml
+locals { m1381 = yamldecode(file("${path.module}/../models/intersight_techsupportmanagement_tech_support_bundle.yml"))["intersight_techsupportmanagement_tech_support_bundle"] }
+
+resource "intersight_techsupportmanagement_tech_support_bundle" "n1381" {
+  account_moid = try(local.m1381["account_moid"], null)
+  additional_properties = try(local.m1381["additional_properties"], null)
+  ancestors = try(local.m1381["ancestors"], null)
+  class_id = try(local.m1381["class_id"], null)
+  create_time = try(local.m1381["create_time"], null)
+  device_identifier = try(local.m1381["device_identifier"], null)
+  device_registration = try(local.m1381["device_registration"], null)
+  device_type = try(local.m1381["device_type"], null)
+  domain_group_moid = try(local.m1381["domain_group_moid"], null)
+  id = try(local.m1381["id"], null)
+  mod_time = try(local.m1381["mod_time"], null)
+  moid = try(local.m1381["moid"], null)
+  object_type = try(local.m1381["object_type"], null)
+  owners = try(local.m1381["owners"], null)
+  parent = try(local.m1381["parent"], null)
+  permission_resources = try(local.m1381["permission_resources"], null)
+  pid = try(local.m1381["pid"], null)
+  platform_param = try(local.m1381["platform_param"], null)
+  platform_type = try(local.m1381["platform_type"], null)
+  serial = try(local.m1381["serial"], null)
+  shared_scope = try(local.m1381["shared_scope"], null)
+  tags = try(local.m1381["tags"], null)
+  target_resource = try(local.m1381["target_resource"], null)
+  tech_support_status = try(local.m1381["tech_support_status"], null)
+  version_context = try(local.m1381["version_context"], null)
+}

@@ -1,0 +1,30 @@
+# Sample resource intersight_ntp_policy — reads ../models/intersight_ntp_policy.yml
+locals { m1007 = yamldecode(file("${path.module}/../models/intersight_ntp_policy.yml"))["intersight_ntp_policy"] }
+
+resource "intersight_ntp_policy" "n1007" {
+  account_moid = try(local.m1007["account_moid"], null)
+  additional_properties = try(local.m1007["additional_properties"], null)
+  ancestors = try(local.m1007["ancestors"], null)
+  appliance_account = try(local.m1007["appliance_account"], null)
+  authenticated_ntp_servers = try(local.m1007["authenticated_ntp_servers"], null)
+  class_id = try(local.m1007["class_id"], null)
+  create_time = try(local.m1007["create_time"], null)
+  description = try(local.m1007["description"], null)
+  domain_group_moid = try(local.m1007["domain_group_moid"], null)
+  enabled = try(local.m1007["enabled"], null)
+  id = try(local.m1007["id"], null)
+  mod_time = try(local.m1007["mod_time"], null)
+  moid = try(local.m1007["moid"], null)
+  name = try(local.m1007["name"], null)
+  ntp_servers = try(local.m1007["ntp_servers"], null)
+  object_type = try(local.m1007["object_type"], null)
+  organization = try(local.m1007["organization"], null)
+  owners = try(local.m1007["owners"], null)
+  parent = try(local.m1007["parent"], null)
+  permission_resources = try(local.m1007["permission_resources"], null)
+  profiles = try(local.m1007["profiles"], null)
+  shared_scope = try(local.m1007["shared_scope"], null)
+  tags = try(local.m1007["tags"], null)
+  timezone = try(local.m1007["timezone"], null)
+  version_context = try(local.m1007["version_context"], null)
+}

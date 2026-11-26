@@ -1,0 +1,33 @@
+# Sample resource intersight_power_power_group — reads ../models/intersight_power_power_group.yml
+locals { m1077 = yamldecode(file("${path.module}/../models/intersight_power_power_group.yml"))["intersight_power_power_group"] }
+
+resource "intersight_power_power_group" "n1077" {
+  account = try(local.m1077["account"], null)
+  account_moid = try(local.m1077["account_moid"], null)
+  additional_properties = try(local.m1077["additional_properties"], null)
+  admin_state = try(local.m1077["admin_state"], null)
+  ancestors = try(local.m1077["ancestors"], null)
+  buffer_power_required = try(local.m1077["buffer_power_required"], null)
+  class_id = try(local.m1077["class_id"], null)
+  config_state = try(local.m1077["config_state"], null)
+  create_time = try(local.m1077["create_time"], null)
+  description = try(local.m1077["description"], null)
+  domain_group_moid = try(local.m1077["domain_group_moid"], null)
+  id = try(local.m1077["id"], null)
+  inventory_device_member = try(local.m1077["inventory_device_member"], null)
+  mod_time = try(local.m1077["mod_time"], null)
+  moid = try(local.m1077["moid"], null)
+  name = try(local.m1077["name"], null)
+  object_type = try(local.m1077["object_type"], null)
+  oper_state = try(local.m1077["oper_state"], null)
+  owners = try(local.m1077["owners"], null)
+  parent = try(local.m1077["parent"], null)
+  permission_resources = try(local.m1077["permission_resources"], null)
+  power_budget = try(local.m1077["power_budget"], null)
+  power_group_member = try(local.m1077["power_group_member"], null)
+  shared_scope = try(local.m1077["shared_scope"], null)
+  tags = try(local.m1077["tags"], null)
+  total_maximum_power_required = try(local.m1077["total_maximum_power_required"], null)
+  total_minimum_power_required = try(local.m1077["total_minimum_power_required"], null)
+  version_context = try(local.m1077["version_context"], null)
+}

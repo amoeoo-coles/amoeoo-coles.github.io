@@ -1,0 +1,30 @@
+# Sample resource intersight_appliance_external_syslog_setting — reads ../models/intersight_appliance_external_syslog_setting.yml
+locals { m028 = yamldecode(file("${path.module}/../models/intersight_appliance_external_syslog_setting.yml"))["intersight_appliance_external_syslog_setting"] }
+
+resource "intersight_appliance_external_syslog_setting" "n028" {
+  account = try(local.m028["account"], null)
+  account_moid = try(local.m028["account_moid"], null)
+  additional_properties = try(local.m028["additional_properties"], null)
+  ancestors = try(local.m028["ancestors"], null)
+  class_id = try(local.m028["class_id"], null)
+  create_time = try(local.m028["create_time"], null)
+  domain_group_moid = try(local.m028["domain_group_moid"], null)
+  enabled = try(local.m028["enabled"], null)
+  export_alarms = try(local.m028["export_alarms"], null)
+  export_audit = try(local.m028["export_audit"], null)
+  export_nginx = try(local.m028["export_nginx"], null)
+  id = try(local.m028["id"], null)
+  mod_time = try(local.m028["mod_time"], null)
+  moid = try(local.m028["moid"], null)
+  object_type = try(local.m028["object_type"], null)
+  owners = try(local.m028["owners"], null)
+  parent = try(local.m028["parent"], null)
+  permission_resources = try(local.m028["permission_resources"], null)
+  port = try(local.m028["port"], null)
+  protocol = try(local.m028["protocol"], null)
+  server = try(local.m028["server"], null)
+  severity = try(local.m028["severity"], null)
+  shared_scope = try(local.m028["shared_scope"], null)
+  tags = try(local.m028["tags"], null)
+  version_context = try(local.m028["version_context"], null)
+}

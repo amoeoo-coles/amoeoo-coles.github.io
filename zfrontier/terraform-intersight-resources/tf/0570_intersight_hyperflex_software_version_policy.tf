@@ -1,0 +1,33 @@
+# Sample resource intersight_hyperflex_software_version_policy — reads ../models/intersight_hyperflex_software_version_policy.yml
+locals { m570 = yamldecode(file("${path.module}/../models/intersight_hyperflex_software_version_policy.yml"))["intersight_hyperflex_software_version_policy"] }
+
+resource "intersight_hyperflex_software_version_policy" "n570" {
+  account_moid = try(local.m570["account_moid"], null)
+  additional_properties = try(local.m570["additional_properties"], null)
+  ancestors = try(local.m570["ancestors"], null)
+  class_id = try(local.m570["class_id"], null)
+  cluster_profiles = try(local.m570["cluster_profiles"], null)
+  create_time = try(local.m570["create_time"], null)
+  description = try(local.m570["description"], null)
+  domain_group_moid = try(local.m570["domain_group_moid"], null)
+  hxdp_version = try(local.m570["hxdp_version"], null)
+  hxdp_version_info = try(local.m570["hxdp_version_info"], null)
+  hypervisor_version = try(local.m570["hypervisor_version"], null)
+  hypervisor_version_info = try(local.m570["hypervisor_version_info"], null)
+  id = try(local.m570["id"], null)
+  mod_time = try(local.m570["mod_time"], null)
+  moid = try(local.m570["moid"], null)
+  name = try(local.m570["name"], null)
+  object_type = try(local.m570["object_type"], null)
+  organization = try(local.m570["organization"], null)
+  owners = try(local.m570["owners"], null)
+  parent = try(local.m570["parent"], null)
+  permission_resources = try(local.m570["permission_resources"], null)
+  server_firmware_version = try(local.m570["server_firmware_version"], null)
+  server_firmware_version_info = try(local.m570["server_firmware_version_info"], null)
+  server_firmware_versions = try(local.m570["server_firmware_versions"], null)
+  shared_scope = try(local.m570["shared_scope"], null)
+  tags = try(local.m570["tags"], null)
+  upgrade_types = try(local.m570["upgrade_types"], null)
+  version_context = try(local.m570["version_context"], null)
+}

@@ -1,0 +1,30 @@
+# Sample resource intersight_fabric_eth_network_control_policy — reads ../models/intersight_fabric_eth_network_control_policy.yml
+locals { m350 = yamldecode(file("${path.module}/../models/intersight_fabric_eth_network_control_policy.yml"))["intersight_fabric_eth_network_control_policy"] }
+
+resource "intersight_fabric_eth_network_control_policy" "n350" {
+  account_moid = try(local.m350["account_moid"], null)
+  additional_properties = try(local.m350["additional_properties"], null)
+  ancestors = try(local.m350["ancestors"], null)
+  cdp_enabled = try(local.m350["cdp_enabled"], null)
+  class_id = try(local.m350["class_id"], null)
+  create_time = try(local.m350["create_time"], null)
+  description = try(local.m350["description"], null)
+  domain_group_moid = try(local.m350["domain_group_moid"], null)
+  forge_mac = try(local.m350["forge_mac"], null)
+  id = try(local.m350["id"], null)
+  lldp_settings = try(local.m350["lldp_settings"], null)
+  mac_registration_mode = try(local.m350["mac_registration_mode"], null)
+  mod_time = try(local.m350["mod_time"], null)
+  moid = try(local.m350["moid"], null)
+  name = try(local.m350["name"], null)
+  network_policy = try(local.m350["network_policy"], null)
+  object_type = try(local.m350["object_type"], null)
+  organization = try(local.m350["organization"], null)
+  owners = try(local.m350["owners"], null)
+  parent = try(local.m350["parent"], null)
+  permission_resources = try(local.m350["permission_resources"], null)
+  shared_scope = try(local.m350["shared_scope"], null)
+  tags = try(local.m350["tags"], null)
+  uplink_fail_action = try(local.m350["uplink_fail_action"], null)
+  version_context = try(local.m350["version_context"], null)
+}

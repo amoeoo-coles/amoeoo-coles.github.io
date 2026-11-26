@@ -1,0 +1,32 @@
+# Sample resource intersight_fcpool_pool — reads ../models/intersight_fcpool_pool.yml
+locals { m456 = yamldecode(file("${path.module}/../models/intersight_fcpool_pool.yml"))["intersight_fcpool_pool"] }
+
+resource "intersight_fcpool_pool" "n456" {
+  account_moid = try(local.m456["account_moid"], null)
+  additional_properties = try(local.m456["additional_properties"], null)
+  ancestors = try(local.m456["ancestors"], null)
+  assigned = try(local.m456["assigned"], null)
+  assignment_order = try(local.m456["assignment_order"], null)
+  block_heads = try(local.m456["block_heads"], null)
+  class_id = try(local.m456["class_id"], null)
+  create_time = try(local.m456["create_time"], null)
+  description = try(local.m456["description"], null)
+  domain_group_moid = try(local.m456["domain_group_moid"], null)
+  id = try(local.m456["id"], null)
+  id_blocks = try(local.m456["id_blocks"], null)
+  mod_time = try(local.m456["mod_time"], null)
+  moid = try(local.m456["moid"], null)
+  name = try(local.m456["name"], null)
+  object_type = try(local.m456["object_type"], null)
+  organization = try(local.m456["organization"], null)
+  owners = try(local.m456["owners"], null)
+  parent = try(local.m456["parent"], null)
+  permission_resources = try(local.m456["permission_resources"], null)
+  pool_purpose = try(local.m456["pool_purpose"], null)
+  reservations = try(local.m456["reservations"], null)
+  reserved = try(local.m456["reserved"], null)
+  shared_scope = try(local.m456["shared_scope"], null)
+  size = try(local.m456["size"], null)
+  tags = try(local.m456["tags"], null)
+  version_context = try(local.m456["version_context"], null)
+}

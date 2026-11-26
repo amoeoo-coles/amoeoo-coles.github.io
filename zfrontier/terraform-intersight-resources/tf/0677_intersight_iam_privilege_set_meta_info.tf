@@ -1,0 +1,30 @@
+# Sample resource intersight_iam_privilege_set_meta_info — reads ../models/intersight_iam_privilege_set_meta_info.yml
+locals { m677 = yamldecode(file("${path.module}/../models/intersight_iam_privilege_set_meta_info.yml"))["intersight_iam_privilege_set_meta_info"] }
+
+resource "intersight_iam_privilege_set_meta_info" "n677" {
+  account_moid = try(local.m677["account_moid"], null)
+  additional_properties = try(local.m677["additional_properties"], null)
+  all_dependency_info = try(local.m677["all_dependency_info"], null)
+  ancestors = try(local.m677["ancestors"], null)
+  associated_privilege_set_names = try(local.m677["associated_privilege_set_names"], null)
+  associated_privilege_sets = try(local.m677["associated_privilege_sets"], null)
+  class_id = try(local.m677["class_id"], null)
+  create_time = try(local.m677["create_time"], null)
+  domain_group_moid = try(local.m677["domain_group_moid"], null)
+  downstream_dependencies = try(local.m677["downstream_dependencies"], null)
+  id = try(local.m677["id"], null)
+  missing_dependency_info = try(local.m677["missing_dependency_info"], null)
+  missing_privilege_sets = try(local.m677["missing_privilege_sets"], null)
+  mod_time = try(local.m677["mod_time"], null)
+  moid = try(local.m677["moid"], null)
+  name = try(local.m677["name"], null)
+  object_type = try(local.m677["object_type"], null)
+  owners = try(local.m677["owners"], null)
+  parent = try(local.m677["parent"], null)
+  permission_resources = try(local.m677["permission_resources"], null)
+  shared_scope = try(local.m677["shared_scope"], null)
+  tags = try(local.m677["tags"], null)
+  upstream_dependencies = try(local.m677["upstream_dependencies"], null)
+  uuid = try(local.m677["uuid"], null)
+  version_context = try(local.m677["version_context"], null)
+}

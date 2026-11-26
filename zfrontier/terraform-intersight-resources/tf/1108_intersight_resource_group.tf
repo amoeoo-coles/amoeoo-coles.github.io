@@ -1,0 +1,31 @@
+# Sample resource intersight_resource_group — reads ../models/intersight_resource_group.yml
+locals { m1108 = yamldecode(file("${path.module}/../models/intersight_resource_group.yml"))["intersight_resource_group"] }
+
+resource "intersight_resource_group" "n1108" {
+  account = try(local.m1108["account"], null)
+  account_moid = try(local.m1108["account_moid"], null)
+  additional_properties = try(local.m1108["additional_properties"], null)
+  ancestors = try(local.m1108["ancestors"], null)
+  class_id = try(local.m1108["class_id"], null)
+  create_time = try(local.m1108["create_time"], null)
+  description = try(local.m1108["description"], null)
+  domain_group_moid = try(local.m1108["domain_group_moid"], null)
+  exported_selectors = try(local.m1108["exported_selectors"], null)
+  id = try(local.m1108["id"], null)
+  mod_time = try(local.m1108["mod_time"], null)
+  moid = try(local.m1108["moid"], null)
+  name = try(local.m1108["name"], null)
+  object_type = try(local.m1108["object_type"], null)
+  organizations = try(local.m1108["organizations"], null)
+  owners = try(local.m1108["owners"], null)
+  parent = try(local.m1108["parent"], null)
+  per_type_combined_selector = try(local.m1108["per_type_combined_selector"], null)
+  permission_resources = try(local.m1108["permission_resources"], null)
+  qualifier = try(local.m1108["qualifier"], null)
+  reevaluate = try(local.m1108["reevaluate"], null)
+  selectors = try(local.m1108["selectors"], null)
+  shared_scope = try(local.m1108["shared_scope"], null)
+  tags = try(local.m1108["tags"], null)
+  type = try(local.m1108["type"], null)
+  version_context = try(local.m1108["version_context"], null)
+}

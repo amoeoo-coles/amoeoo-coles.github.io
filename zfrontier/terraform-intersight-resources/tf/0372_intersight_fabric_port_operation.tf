@@ -1,0 +1,31 @@
+# Sample resource intersight_fabric_port_operation — reads ../models/intersight_fabric_port_operation.yml
+locals { m372 = yamldecode(file("${path.module}/../models/intersight_fabric_port_operation.yml"))["intersight_fabric_port_operation"] }
+
+resource "intersight_fabric_port_operation" "n372" {
+  account_moid = try(local.m372["account_moid"], null)
+  additional_properties = try(local.m372["additional_properties"], null)
+  admin_action = try(local.m372["admin_action"], null)
+  admin_state = try(local.m372["admin_state"], null)
+  aggregate_port_id = try(local.m372["aggregate_port_id"], null)
+  ancestors = try(local.m372["ancestors"], null)
+  class_id = try(local.m372["class_id"], null)
+  config_state = try(local.m372["config_state"], null)
+  create_time = try(local.m372["create_time"], null)
+  domain_group_moid = try(local.m372["domain_group_moid"], null)
+  fex_id = try(local.m372["fex_id"], null)
+  id = try(local.m372["id"], null)
+  mod_time = try(local.m372["mod_time"], null)
+  moid = try(local.m372["moid"], null)
+  network_element = try(local.m372["network_element"], null)
+  object_type = try(local.m372["object_type"], null)
+  owners = try(local.m372["owners"], null)
+  parent = try(local.m372["parent"], null)
+  permission_resources = try(local.m372["permission_resources"], null)
+  port_id = try(local.m372["port_id"], null)
+  shared_scope = try(local.m372["shared_scope"], null)
+  slot_id = try(local.m372["slot_id"], null)
+  switch_name = try(local.m372["switch_name"], null)
+  tags = try(local.m372["tags"], null)
+  user_label = try(local.m372["user_label"], null)
+  version_context = try(local.m372["version_context"], null)
+}

@@ -1,0 +1,31 @@
+# Sample resource intersight_kvm_policy — reads ../models/intersight_kvm_policy.yml
+locals { m779 = yamldecode(file("${path.module}/../models/intersight_kvm_policy.yml"))["intersight_kvm_policy"] }
+
+resource "intersight_kvm_policy" "n779" {
+  account_moid = try(local.m779["account_moid"], null)
+  additional_properties = try(local.m779["additional_properties"], null)
+  ancestors = try(local.m779["ancestors"], null)
+  class_id = try(local.m779["class_id"], null)
+  create_time = try(local.m779["create_time"], null)
+  description = try(local.m779["description"], null)
+  domain_group_moid = try(local.m779["domain_group_moid"], null)
+  enable_local_server_video = try(local.m779["enable_local_server_video"], null)
+  enable_video_encryption = try(local.m779["enable_video_encryption"], null)
+  enabled = try(local.m779["enabled"], null)
+  id = try(local.m779["id"], null)
+  maximum_sessions = try(local.m779["maximum_sessions"], null)
+  mod_time = try(local.m779["mod_time"], null)
+  moid = try(local.m779["moid"], null)
+  name = try(local.m779["name"], null)
+  object_type = try(local.m779["object_type"], null)
+  organization = try(local.m779["organization"], null)
+  owners = try(local.m779["owners"], null)
+  parent = try(local.m779["parent"], null)
+  permission_resources = try(local.m779["permission_resources"], null)
+  profiles = try(local.m779["profiles"], null)
+  remote_port = try(local.m779["remote_port"], null)
+  shared_scope = try(local.m779["shared_scope"], null)
+  tags = try(local.m779["tags"], null)
+  tunneled_kvm_enabled = try(local.m779["tunneled_kvm_enabled"], null)
+  version_context = try(local.m779["version_context"], null)
+}

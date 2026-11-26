@@ -1,0 +1,31 @@
+# Sample resource intersight_iqnpool_reservation — reads ../models/intersight_iqnpool_reservation.yml
+locals { m766 = yamldecode(file("${path.module}/../models/intersight_iqnpool_reservation.yml"))["intersight_iqnpool_reservation"] }
+
+resource "intersight_iqnpool_reservation" "n766" {
+  account_moid = try(local.m766["account_moid"], null)
+  additional_properties = try(local.m766["additional_properties"], null)
+  allocation_type = try(local.m766["allocation_type"], null)
+  ancestors = try(local.m766["ancestors"], null)
+  block = try(local.m766["block"], null)
+  class_id = try(local.m766["class_id"], null)
+  create_time = try(local.m766["create_time"], null)
+  domain_group_moid = try(local.m766["domain_group_moid"], null)
+  id = try(local.m766["id"], null)
+  identity = try(local.m766["identity"], null)
+  iqn_number = try(local.m766["iqn_number"], null)
+  iqn_prefix = try(local.m766["iqn_prefix"], null)
+  iqn_suffix = try(local.m766["iqn_suffix"], null)
+  mod_time = try(local.m766["mod_time"], null)
+  moid = try(local.m766["moid"], null)
+  object_type = try(local.m766["object_type"], null)
+  organization = try(local.m766["organization"], null)
+  owners = try(local.m766["owners"], null)
+  parent = try(local.m766["parent"], null)
+  permission_resources = try(local.m766["permission_resources"], null)
+  pool = try(local.m766["pool"], null)
+  pool_member = try(local.m766["pool_member"], null)
+  shared_scope = try(local.m766["shared_scope"], null)
+  tags = try(local.m766["tags"], null)
+  universe = try(local.m766["universe"], null)
+  version_context = try(local.m766["version_context"], null)
+}

@@ -1,0 +1,32 @@
+# Sample resource intersight_notification_account_subscription — reads ../models/intersight_notification_account_subscription.yml
+locals { m1005 = yamldecode(file("${path.module}/../models/intersight_notification_account_subscription.yml"))["intersight_notification_account_subscription"] }
+
+resource "intersight_notification_account_subscription" "n1005" {
+  account = try(local.m1005["account"], null)
+  account_moid = try(local.m1005["account_moid"], null)
+  actions = try(local.m1005["actions"], null)
+  additional_properties = try(local.m1005["additional_properties"], null)
+  ancestors = try(local.m1005["ancestors"], null)
+  certificate = try(local.m1005["certificate"], null)
+  class_id = try(local.m1005["class_id"], null)
+  condition_operator = try(local.m1005["condition_operator"], null)
+  conditions = try(local.m1005["conditions"], null)
+  create_time = try(local.m1005["create_time"], null)
+  description = try(local.m1005["description"], null)
+  domain_group_moid = try(local.m1005["domain_group_moid"], null)
+  enabled = try(local.m1005["enabled"], null)
+  filter_refs = try(local.m1005["filter_refs"], null)
+  id = try(local.m1005["id"], null)
+  mod_time = try(local.m1005["mod_time"], null)
+  moid = try(local.m1005["moid"], null)
+  name = try(local.m1005["name"], null)
+  object_type = try(local.m1005["object_type"], null)
+  owners = try(local.m1005["owners"], null)
+  parent = try(local.m1005["parent"], null)
+  permission_resources = try(local.m1005["permission_resources"], null)
+  shared_scope = try(local.m1005["shared_scope"], null)
+  tags = try(local.m1005["tags"], null)
+  type = try(local.m1005["type"], null)
+  verify = try(local.m1005["verify"], null)
+  version_context = try(local.m1005["version_context"], null)
+}

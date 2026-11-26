@@ -1,0 +1,30 @@
+# Sample resource intersight_topology_event_details — reads ../models/intersight_topology_event_details.yml
+locals { m1392 = yamldecode(file("${path.module}/../models/intersight_topology_event_details.yml"))["intersight_topology_event_details"] }
+
+resource "intersight_topology_event_details" "n1392" {
+  account_moid = try(local.m1392["account_moid"], null)
+  additional_properties = try(local.m1392["additional_properties"], null)
+  ancestors = try(local.m1392["ancestors"], null)
+  category = try(local.m1392["category"], null)
+  class_id = try(local.m1392["class_id"], null)
+  create_time = try(local.m1392["create_time"], null)
+  domain_group_moid = try(local.m1392["domain_group_moid"], null)
+  end_time = try(local.m1392["end_time"], null)
+  events = try(local.m1392["events"], null)
+  granularity = try(local.m1392["granularity"], null)
+  id = try(local.m1392["id"], null)
+  include_all = try(local.m1392["include_all"], null)
+  mod_time = try(local.m1392["mod_time"], null)
+  moid = try(local.m1392["moid"], null)
+  object_type = try(local.m1392["object_type"], null)
+  owners = try(local.m1392["owners"], null)
+  parent = try(local.m1392["parent"], null)
+  permission_resources = try(local.m1392["permission_resources"], null)
+  shared_scope = try(local.m1392["shared_scope"], null)
+  start_time = try(local.m1392["start_time"], null)
+  tags = try(local.m1392["tags"], null)
+  topology_moid = try(local.m1392["topology_moid"], null)
+  topology_object_type = try(local.m1392["topology_object_type"], null)
+  version_context = try(local.m1392["version_context"], null)
+  view_type = try(local.m1392["view_type"], null)
+}

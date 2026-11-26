@@ -1,0 +1,33 @@
+# Sample resource intersight_os_bulk_install_info — reads ../models/intersight_os_bulk_install_info.yml
+locals { m1032 = yamldecode(file("${path.module}/../models/intersight_os_bulk_install_info.yml"))["intersight_os_bulk_install_info"] }
+
+resource "intersight_os_bulk_install_info" "n1032" {
+  account_moid = try(local.m1032["account_moid"], null)
+  additional_properties = try(local.m1032["additional_properties"], null)
+  ancestors = try(local.m1032["ancestors"], null)
+  class_id = try(local.m1032["class_id"], null)
+  configuration_file = try(local.m1032["configuration_file"], null)
+  create_time = try(local.m1032["create_time"], null)
+  domain_group_moid = try(local.m1032["domain_group_moid"], null)
+  file_content = try(local.m1032["file_content"], null)
+  global_config = try(local.m1032["global_config"], null)
+  id = try(local.m1032["id"], null)
+  is_file_content_set = try(local.m1032["is_file_content_set"], null)
+  mod_time = try(local.m1032["mod_time"], null)
+  moid = try(local.m1032["moid"], null)
+  name = try(local.m1032["name"], null)
+  object_type = try(local.m1032["object_type"], null)
+  oper_state = try(local.m1032["oper_state"], null)
+  organization = try(local.m1032["organization"], null)
+  os_image = try(local.m1032["os_image"], null)
+  owners = try(local.m1032["owners"], null)
+  parent = try(local.m1032["parent"], null)
+  permission_resources = try(local.m1032["permission_resources"], null)
+  scu_image = try(local.m1032["scu_image"], null)
+  server_configs = try(local.m1032["server_configs"], null)
+  servers = try(local.m1032["servers"], null)
+  shared_scope = try(local.m1032["shared_scope"], null)
+  tags = try(local.m1032["tags"], null)
+  validation_infos = try(local.m1032["validation_infos"], null)
+  version_context = try(local.m1032["version_context"], null)
+}

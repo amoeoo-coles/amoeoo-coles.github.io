@@ -1,0 +1,30 @@
+# Sample resource intersight_partnerintegration_device_connector — reads ../models/intersight_partnerintegration_device_connector.yml
+locals { m1045 = yamldecode(file("${path.module}/../models/intersight_partnerintegration_device_connector.yml"))["intersight_partnerintegration_device_connector"] }
+
+resource "intersight_partnerintegration_device_connector" "n1045" {
+  account_moid = try(local.m1045["account_moid"], null)
+  action = try(local.m1045["action"], null)
+  additional_properties = try(local.m1045["additional_properties"], null)
+  ancestors = try(local.m1045["ancestors"], null)
+  build_start_time = try(local.m1045["build_start_time"], null)
+  build_status = try(local.m1045["build_status"], null)
+  class_id = try(local.m1045["class_id"], null)
+  create_time = try(local.m1045["create_time"], null)
+  domain_group_moid = try(local.m1045["domain_group_moid"], null)
+  id = try(local.m1045["id"], null)
+  image_name = try(local.m1045["image_name"], null)
+  logs = try(local.m1045["logs"], null)
+  mod_time = try(local.m1045["mod_time"], null)
+  moid = try(local.m1045["moid"], null)
+  name = try(local.m1045["name"], null)
+  object_type = try(local.m1045["object_type"], null)
+  organization = try(local.m1045["organization"], null)
+  owners = try(local.m1045["owners"], null)
+  parent = try(local.m1045["parent"], null)
+  permission_resources = try(local.m1045["permission_resources"], null)
+  shared_scope = try(local.m1045["shared_scope"], null)
+  src_bucket = try(local.m1045["src_bucket"], null)
+  src_file_name = try(local.m1045["src_file_name"], null)
+  tags = try(local.m1045["tags"], null)
+  version_context = try(local.m1045["version_context"], null)
+}

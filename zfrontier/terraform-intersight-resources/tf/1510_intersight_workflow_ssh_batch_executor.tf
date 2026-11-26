@@ -1,0 +1,32 @@
+# Sample resource intersight_workflow_ssh_batch_executor — reads ../models/intersight_workflow_ssh_batch_executor.yml
+locals { m1510 = yamldecode(file("${path.module}/../models/intersight_workflow_ssh_batch_executor.yml"))["intersight_workflow_ssh_batch_executor"] }
+
+resource "intersight_workflow_ssh_batch_executor" "n1510" {
+  account_moid = try(local.m1510["account_moid"], null)
+  additional_properties = try(local.m1510["additional_properties"], null)
+  ancestors = try(local.m1510["ancestors"], null)
+  batch = try(local.m1510["batch"], null)
+  cancel_action = try(local.m1510["cancel_action"], null)
+  class_id = try(local.m1510["class_id"], null)
+  constraints = try(local.m1510["constraints"], null)
+  create_time = try(local.m1510["create_time"], null)
+  description = try(local.m1510["description"], null)
+  domain_group_moid = try(local.m1510["domain_group_moid"], null)
+  id = try(local.m1510["id"], null)
+  mod_time = try(local.m1510["mod_time"], null)
+  moid = try(local.m1510["moid"], null)
+  name = try(local.m1510["name"], null)
+  object_type = try(local.m1510["object_type"], null)
+  outcomes = try(local.m1510["outcomes"], null)
+  output = try(local.m1510["output"], null)
+  owners = try(local.m1510["owners"], null)
+  parent = try(local.m1510["parent"], null)
+  permission_resources = try(local.m1510["permission_resources"], null)
+  retry_from_failed_api = try(local.m1510["retry_from_failed_api"], null)
+  shared_scope = try(local.m1510["shared_scope"], null)
+  skip_on_condition = try(local.m1510["skip_on_condition"], null)
+  tags = try(local.m1510["tags"], null)
+  task_definition = try(local.m1510["task_definition"], null)
+  ui_rendering_data = try(local.m1510["ui_rendering_data"], null)
+  version_context = try(local.m1510["version_context"], null)
+}

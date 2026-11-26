@@ -1,0 +1,31 @@
+# Sample resource intersight_vnic_san_connectivity_policy — reads ../models/intersight_vnic_san_connectivity_policy.yml
+locals { m1449 = yamldecode(file("${path.module}/../models/intersight_vnic_san_connectivity_policy.yml"))["intersight_vnic_san_connectivity_policy"] }
+
+resource "intersight_vnic_san_connectivity_policy" "n1449" {
+  account_moid = try(local.m1449["account_moid"], null)
+  additional_properties = try(local.m1449["additional_properties"], null)
+  ancestors = try(local.m1449["ancestors"], null)
+  class_id = try(local.m1449["class_id"], null)
+  create_time = try(local.m1449["create_time"], null)
+  description = try(local.m1449["description"], null)
+  domain_group_moid = try(local.m1449["domain_group_moid"], null)
+  fc_ifs = try(local.m1449["fc_ifs"], null)
+  id = try(local.m1449["id"], null)
+  mod_time = try(local.m1449["mod_time"], null)
+  moid = try(local.m1449["moid"], null)
+  name = try(local.m1449["name"], null)
+  object_type = try(local.m1449["object_type"], null)
+  organization = try(local.m1449["organization"], null)
+  owners = try(local.m1449["owners"], null)
+  parent = try(local.m1449["parent"], null)
+  permission_resources = try(local.m1449["permission_resources"], null)
+  placement_mode = try(local.m1449["placement_mode"], null)
+  profiles = try(local.m1449["profiles"], null)
+  shared_scope = try(local.m1449["shared_scope"], null)
+  static_wwnn_address = try(local.m1449["static_wwnn_address"], null)
+  tags = try(local.m1449["tags"], null)
+  target_platform = try(local.m1449["target_platform"], null)
+  version_context = try(local.m1449["version_context"], null)
+  wwnn_address_type = try(local.m1449["wwnn_address_type"], null)
+  wwnn_pool = try(local.m1449["wwnn_pool"], null)
+}

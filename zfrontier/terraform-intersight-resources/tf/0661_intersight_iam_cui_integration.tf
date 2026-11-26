@@ -1,0 +1,32 @@
+# Sample resource intersight_iam_cui_integration — reads ../models/intersight_iam_cui_integration.yml
+locals { m661 = yamldecode(file("${path.module}/../models/intersight_iam_cui_integration.yml"))["intersight_iam_cui_integration"] }
+
+resource "intersight_iam_cui_integration" "n661" {
+  account = try(local.m661["account"], null)
+  account_moid = try(local.m661["account_moid"], null)
+  additional_properties = try(local.m661["additional_properties"], null)
+  ancestors = try(local.m661["ancestors"], null)
+  cisco_cloud_control_inventory_sync = try(local.m661["cisco_cloud_control_inventory_sync"], null)
+  class_id = try(local.m661["class_id"], null)
+  create_time = try(local.m661["create_time"], null)
+  domain_group_moid = try(local.m661["domain_group_moid"], null)
+  id = try(local.m661["id"], null)
+  last_full_sync_time = try(local.m661["last_full_sync_time"], null)
+  last_notification_modified_time = try(local.m661["last_notification_modified_time"], null)
+  linked_tenants = try(local.m661["linked_tenants"], null)
+  mod_time = try(local.m661["mod_time"], null)
+  moid = try(local.m661["moid"], null)
+  object_type = try(local.m661["object_type"], null)
+  opt_in = try(local.m661["opt_in"], null)
+  opt_in_time = try(local.m661["opt_in_time"], null)
+  opt_in_user_identity = try(local.m661["opt_in_user_identity"], null)
+  owners = try(local.m661["owners"], null)
+  parent = try(local.m661["parent"], null)
+  permission_resources = try(local.m661["permission_resources"], null)
+  shared_scope = try(local.m661["shared_scope"], null)
+  sync_status = try(local.m661["sync_status"], null)
+  tags = try(local.m661["tags"], null)
+  tenant_id = try(local.m661["tenant_id"], null)
+  user = try(local.m661["user"], null)
+  version_context = try(local.m661["version_context"], null)
+}

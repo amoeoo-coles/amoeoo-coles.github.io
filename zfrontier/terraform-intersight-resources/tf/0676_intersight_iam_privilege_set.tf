@@ -1,0 +1,33 @@
+# Sample resource intersight_iam_privilege_set — reads ../models/intersight_iam_privilege_set.yml
+locals { m676 = yamldecode(file("${path.module}/../models/intersight_iam_privilege_set.yml"))["intersight_iam_privilege_set"] }
+
+resource "intersight_iam_privilege_set" "n676" {
+  account = try(local.m676["account"], null)
+  account_moid = try(local.m676["account_moid"], null)
+  additional_properties = try(local.m676["additional_properties"], null)
+  allow_future_updates = try(local.m676["allow_future_updates"], null)
+  ancestors = try(local.m676["ancestors"], null)
+  associated_privilege_sets = try(local.m676["associated_privilege_sets"], null)
+  class_id = try(local.m676["class_id"], null)
+  create_time = try(local.m676["create_time"], null)
+  description = try(local.m676["description"], null)
+  domain_group_moid = try(local.m676["domain_group_moid"], null)
+  id = try(local.m676["id"], null)
+  is_privilege_names_updated = try(local.m676["is_privilege_names_updated"], null)
+  mod_time = try(local.m676["mod_time"], null)
+  moid = try(local.m676["moid"], null)
+  name = try(local.m676["name"], null)
+  object_type = try(local.m676["object_type"], null)
+  owners = try(local.m676["owners"], null)
+  parent = try(local.m676["parent"], null)
+  permission_resources = try(local.m676["permission_resources"], null)
+  privilege_names = try(local.m676["privilege_names"], null)
+  privilege_set_type = try(local.m676["privilege_set_type"], null)
+  privileges = try(local.m676["privileges"], null)
+  scope = try(local.m676["scope"], null)
+  shared_scope = try(local.m676["shared_scope"], null)
+  system = try(local.m676["system"], null)
+  tags = try(local.m676["tags"], null)
+  uuid = try(local.m676["uuid"], null)
+  version_context = try(local.m676["version_context"], null)
+}

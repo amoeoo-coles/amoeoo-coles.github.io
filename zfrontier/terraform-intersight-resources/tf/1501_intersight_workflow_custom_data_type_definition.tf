@@ -1,0 +1,31 @@
+# Sample resource intersight_workflow_custom_data_type_definition — reads ../models/intersight_workflow_custom_data_type_definition.yml
+locals { m1501 = yamldecode(file("${path.module}/../models/intersight_workflow_custom_data_type_definition.yml"))["intersight_workflow_custom_data_type_definition"] }
+
+resource "intersight_workflow_custom_data_type_definition" "n1501" {
+  account_moid = try(local.m1501["account_moid"], null)
+  additional_properties = try(local.m1501["additional_properties"], null)
+  ancestors = try(local.m1501["ancestors"], null)
+  catalog = try(local.m1501["catalog"], null)
+  class_id = try(local.m1501["class_id"], null)
+  cloned_from = try(local.m1501["cloned_from"], null)
+  composite_type = try(local.m1501["composite_type"], null)
+  constraints = try(local.m1501["constraints"], null)
+  create_time = try(local.m1501["create_time"], null)
+  description = try(local.m1501["description"], null)
+  domain_group_moid = try(local.m1501["domain_group_moid"], null)
+  id = try(local.m1501["id"], null)
+  label = try(local.m1501["label"], null)
+  mod_time = try(local.m1501["mod_time"], null)
+  moid = try(local.m1501["moid"], null)
+  name = try(local.m1501["name"], null)
+  object_type = try(local.m1501["object_type"], null)
+  owners = try(local.m1501["owners"], null)
+  parameter_set = try(local.m1501["parameter_set"], null)
+  parent = try(local.m1501["parent"], null)
+  permission_resources = try(local.m1501["permission_resources"], null)
+  properties = try(local.m1501["properties"], null)
+  shared_scope = try(local.m1501["shared_scope"], null)
+  tags = try(local.m1501["tags"], null)
+  type_definition = try(local.m1501["type_definition"], null)
+  version_context = try(local.m1501["version_context"], null)
+}

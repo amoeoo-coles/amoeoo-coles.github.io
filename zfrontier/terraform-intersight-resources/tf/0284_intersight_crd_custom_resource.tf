@@ -1,0 +1,31 @@
+# Sample resource intersight_crd_custom_resource — reads ../models/intersight_crd_custom_resource.yml
+locals { m284 = yamldecode(file("${path.module}/../models/intersight_crd_custom_resource.yml"))["intersight_crd_custom_resource"] }
+
+resource "intersight_crd_custom_resource" "n284" {
+  account = try(local.m284["account"], null)
+  account_moid = try(local.m284["account_moid"], null)
+  additional_properties = try(local.m284["additional_properties"], null)
+  ancestors = try(local.m284["ancestors"], null)
+  class_id = try(local.m284["class_id"], null)
+  create_time = try(local.m284["create_time"], null)
+  dc_launcher = try(local.m284["dc_launcher"], null)
+  domain_group_moid = try(local.m284["domain_group_moid"], null)
+  id = try(local.m284["id"], null)
+  image = try(local.m284["image"], null)
+  mod_time = try(local.m284["mod_time"], null)
+  moid = try(local.m284["moid"], null)
+  name = try(local.m284["name"], null)
+  namespace = try(local.m284["namespace"], null)
+  object_type = try(local.m284["object_type"], null)
+  owners = try(local.m284["owners"], null)
+  parent = try(local.m284["parent"], null)
+  permission_resources = try(local.m284["permission_resources"], null)
+  port = try(local.m284["port"], null)
+  properties = try(local.m284["properties"], null)
+  shared_scope = try(local.m284["shared_scope"], null)
+  tags = try(local.m284["tags"], null)
+  target_id = try(local.m284["target_id"], null)
+  target_moid = try(local.m284["target_moid"], null)
+  target_type = try(local.m284["target_type"], null)
+  version_context = try(local.m284["version_context"], null)
+}

@@ -1,0 +1,33 @@
+# Sample resource intersight_workflow_batch_api_executor — reads ../models/intersight_workflow_batch_api_executor.yml
+locals { m1498 = yamldecode(file("${path.module}/../models/intersight_workflow_batch_api_executor.yml"))["intersight_workflow_batch_api_executor"] }
+
+resource "intersight_workflow_batch_api_executor" "n1498" {
+  account_moid = try(local.m1498["account_moid"], null)
+  additional_properties = try(local.m1498["additional_properties"], null)
+  ancestors = try(local.m1498["ancestors"], null)
+  batch = try(local.m1498["batch"], null)
+  cancel_action = try(local.m1498["cancel_action"], null)
+  class_id = try(local.m1498["class_id"], null)
+  constraints = try(local.m1498["constraints"], null)
+  create_time = try(local.m1498["create_time"], null)
+  description = try(local.m1498["description"], null)
+  domain_group_moid = try(local.m1498["domain_group_moid"], null)
+  error_response_handler = try(local.m1498["error_response_handler"], null)
+  id = try(local.m1498["id"], null)
+  mod_time = try(local.m1498["mod_time"], null)
+  moid = try(local.m1498["moid"], null)
+  name = try(local.m1498["name"], null)
+  object_type = try(local.m1498["object_type"], null)
+  outcomes = try(local.m1498["outcomes"], null)
+  output = try(local.m1498["output"], null)
+  owners = try(local.m1498["owners"], null)
+  parent = try(local.m1498["parent"], null)
+  permission_resources = try(local.m1498["permission_resources"], null)
+  retry_from_failed_api = try(local.m1498["retry_from_failed_api"], null)
+  shared_scope = try(local.m1498["shared_scope"], null)
+  skip_on_condition = try(local.m1498["skip_on_condition"], null)
+  tags = try(local.m1498["tags"], null)
+  task_definition = try(local.m1498["task_definition"], null)
+  ui_rendering_data = try(local.m1498["ui_rendering_data"], null)
+  version_context = try(local.m1498["version_context"], null)
+}

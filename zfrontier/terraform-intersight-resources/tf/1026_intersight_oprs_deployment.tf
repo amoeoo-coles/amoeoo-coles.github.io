@@ -1,0 +1,31 @@
+# Sample resource intersight_oprs_deployment — reads ../models/intersight_oprs_deployment.yml
+locals { m1026 = yamldecode(file("${path.module}/../models/intersight_oprs_deployment.yml"))["intersight_oprs_deployment"] }
+
+resource "intersight_oprs_deployment" "n1026" {
+  account_moid = try(local.m1026["account_moid"], null)
+  additional_properties = try(local.m1026["additional_properties"], null)
+  ancestors = try(local.m1026["ancestors"], null)
+  assist = try(local.m1026["assist"], null)
+  available_replicas = try(local.m1026["available_replicas"], null)
+  class_id = try(local.m1026["class_id"], null)
+  create_time = try(local.m1026["create_time"], null)
+  desired_replicas = try(local.m1026["desired_replicas"], null)
+  domain_group_moid = try(local.m1026["domain_group_moid"], null)
+  event = try(local.m1026["event"], null)
+  id = try(local.m1026["id"], null)
+  labels = try(local.m1026["labels"], null)
+  mod_time = try(local.m1026["mod_time"], null)
+  moid = try(local.m1026["moid"], null)
+  name = try(local.m1026["name"], null)
+  namespace = try(local.m1026["namespace"], null)
+  object_type = try(local.m1026["object_type"], null)
+  owners = try(local.m1026["owners"], null)
+  parent = try(local.m1026["parent"], null)
+  permission_resources = try(local.m1026["permission_resources"], null)
+  shared_scope = try(local.m1026["shared_scope"], null)
+  status = try(local.m1026["status"], null)
+  tags = try(local.m1026["tags"], null)
+  time_stamp = try(local.m1026["time_stamp"], null)
+  unavailable_replicas = try(local.m1026["unavailable_replicas"], null)
+  version_context = try(local.m1026["version_context"], null)
+}

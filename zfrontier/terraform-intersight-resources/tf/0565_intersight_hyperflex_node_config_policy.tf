@@ -1,0 +1,30 @@
+# Sample resource intersight_hyperflex_node_config_policy — reads ../models/intersight_hyperflex_node_config_policy.yml
+locals { m565 = yamldecode(file("${path.module}/../models/intersight_hyperflex_node_config_policy.yml"))["intersight_hyperflex_node_config_policy"] }
+
+resource "intersight_hyperflex_node_config_policy" "n565" {
+  account_moid = try(local.m565["account_moid"], null)
+  additional_properties = try(local.m565["additional_properties"], null)
+  ancestors = try(local.m565["ancestors"], null)
+  class_id = try(local.m565["class_id"], null)
+  cluster_profiles = try(local.m565["cluster_profiles"], null)
+  create_time = try(local.m565["create_time"], null)
+  data_ip_range = try(local.m565["data_ip_range"], null)
+  description = try(local.m565["description"], null)
+  domain_group_moid = try(local.m565["domain_group_moid"], null)
+  hxdp_ip_range = try(local.m565["hxdp_ip_range"], null)
+  hypervisor_control_ip_range = try(local.m565["hypervisor_control_ip_range"], null)
+  id = try(local.m565["id"], null)
+  mgmt_ip_range = try(local.m565["mgmt_ip_range"], null)
+  mod_time = try(local.m565["mod_time"], null)
+  moid = try(local.m565["moid"], null)
+  name = try(local.m565["name"], null)
+  node_name_prefix = try(local.m565["node_name_prefix"], null)
+  object_type = try(local.m565["object_type"], null)
+  organization = try(local.m565["organization"], null)
+  owners = try(local.m565["owners"], null)
+  parent = try(local.m565["parent"], null)
+  permission_resources = try(local.m565["permission_resources"], null)
+  shared_scope = try(local.m565["shared_scope"], null)
+  tags = try(local.m565["tags"], null)
+  version_context = try(local.m565["version_context"], null)
+}

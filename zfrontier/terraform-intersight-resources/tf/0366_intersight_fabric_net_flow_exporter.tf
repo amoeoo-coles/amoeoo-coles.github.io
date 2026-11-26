@@ -1,0 +1,33 @@
+# Sample resource intersight_fabric_net_flow_exporter — reads ../models/intersight_fabric_net_flow_exporter.yml
+locals { m366 = yamldecode(file("${path.module}/../models/intersight_fabric_net_flow_exporter.yml"))["intersight_fabric_net_flow_exporter"] }
+
+resource "intersight_fabric_net_flow_exporter" "n366" {
+  account_moid = try(local.m366["account_moid"], null)
+  additional_properties = try(local.m366["additional_properties"], null)
+  ancestors = try(local.m366["ancestors"], null)
+  class_id = try(local.m366["class_id"], null)
+  create_time = try(local.m366["create_time"], null)
+  destination = try(local.m366["destination"], null)
+  domain_group_moid = try(local.m366["domain_group_moid"], null)
+  dscp = try(local.m366["dscp"], null)
+  gateway_ip = try(local.m366["gateway_ip"], null)
+  id = try(local.m366["id"], null)
+  mod_time = try(local.m366["mod_time"], null)
+  moid = try(local.m366["moid"], null)
+  name = try(local.m366["name"], null)
+  net_flow_policy = try(local.m366["net_flow_policy"], null)
+  netflow_monitors = try(local.m366["netflow_monitors"], null)
+  nr_version = try(local.m366["nr_version"], null)
+  object_type = try(local.m366["object_type"], null)
+  option_exporter_stats_timeout = try(local.m366["option_exporter_stats_timeout"], null)
+  option_interface_table_timeout = try(local.m366["option_interface_table_timeout"], null)
+  owners = try(local.m366["owners"], null)
+  parent = try(local.m366["parent"], null)
+  permission_resources = try(local.m366["permission_resources"], null)
+  shared_scope = try(local.m366["shared_scope"], null)
+  source_interface = try(local.m366["source_interface"], null)
+  tags = try(local.m366["tags"], null)
+  template_data_timeout = try(local.m366["template_data_timeout"], null)
+  udp_port = try(local.m366["udp_port"], null)
+  version_context = try(local.m366["version_context"], null)
+}

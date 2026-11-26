@@ -1,0 +1,30 @@
+# Sample resource intersight_iam_certificate_request — reads ../models/intersight_iam_certificate_request.yml
+locals { m660 = yamldecode(file("${path.module}/../models/intersight_iam_certificate_request.yml"))["intersight_iam_certificate_request"] }
+
+resource "intersight_iam_certificate_request" "n660" {
+  account = try(local.m660["account"], null)
+  account_moid = try(local.m660["account_moid"], null)
+  additional_properties = try(local.m660["additional_properties"], null)
+  ancestors = try(local.m660["ancestors"], null)
+  certificate = try(local.m660["certificate"], null)
+  class_id = try(local.m660["class_id"], null)
+  create_time = try(local.m660["create_time"], null)
+  domain_group_moid = try(local.m660["domain_group_moid"], null)
+  email_address = try(local.m660["email_address"], null)
+  id = try(local.m660["id"], null)
+  mod_time = try(local.m660["mod_time"], null)
+  moid = try(local.m660["moid"], null)
+  name = try(local.m660["name"], null)
+  object_type = try(local.m660["object_type"], null)
+  owners = try(local.m660["owners"], null)
+  parent = try(local.m660["parent"], null)
+  permission_resources = try(local.m660["permission_resources"], null)
+  private_key_spec = try(var.secrets["intersight_iam_certificate_request.private_key_spec"], local.m660["private_key_spec"])
+  request = try(local.m660["request"], null)
+  self_signed = try(local.m660["self_signed"], null)
+  shared_scope = try(local.m660["shared_scope"], null)
+  subject = try(local.m660["subject"], null)
+  subject_alternate_name = try(local.m660["subject_alternate_name"], null)
+  tags = try(local.m660["tags"], null)
+  version_context = try(local.m660["version_context"], null)
+}

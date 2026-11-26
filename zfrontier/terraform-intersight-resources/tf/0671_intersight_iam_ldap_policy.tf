@@ -1,0 +1,33 @@
+# Sample resource intersight_iam_ldap_policy — reads ../models/intersight_iam_ldap_policy.yml
+locals { m671 = yamldecode(file("${path.module}/../models/intersight_iam_ldap_policy.yml"))["intersight_iam_ldap_policy"] }
+
+resource "intersight_iam_ldap_policy" "n671" {
+  account_moid = try(local.m671["account_moid"], null)
+  additional_properties = try(local.m671["additional_properties"], null)
+  ancestors = try(local.m671["ancestors"], null)
+  appliance_account = try(local.m671["appliance_account"], null)
+  base_properties = try(local.m671["base_properties"], null)
+  class_id = try(local.m671["class_id"], null)
+  create_time = try(local.m671["create_time"], null)
+  description = try(local.m671["description"], null)
+  dns_parameters = try(local.m671["dns_parameters"], null)
+  domain_group_moid = try(local.m671["domain_group_moid"], null)
+  enable_dns = try(local.m671["enable_dns"], null)
+  enabled = try(local.m671["enabled"], null)
+  groups = try(local.m671["groups"], null)
+  id = try(local.m671["id"], null)
+  mod_time = try(local.m671["mod_time"], null)
+  moid = try(local.m671["moid"], null)
+  name = try(local.m671["name"], null)
+  nr_providers = try(local.m671["nr_providers"], null)
+  object_type = try(local.m671["object_type"], null)
+  organization = try(local.m671["organization"], null)
+  owners = try(local.m671["owners"], null)
+  parent = try(local.m671["parent"], null)
+  permission_resources = try(local.m671["permission_resources"], null)
+  profiles = try(local.m671["profiles"], null)
+  shared_scope = try(local.m671["shared_scope"], null)
+  tags = try(local.m671["tags"], null)
+  user_search_precedence = try(local.m671["user_search_precedence"], null)
+  version_context = try(local.m671["version_context"], null)
+}

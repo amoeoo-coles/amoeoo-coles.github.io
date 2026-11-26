@@ -1,0 +1,33 @@
+# Sample resource intersight_fabric_vlan — reads ../models/intersight_fabric_vlan.yml
+locals { m393 = yamldecode(file("${path.module}/../models/intersight_fabric_vlan.yml"))["intersight_fabric_vlan"] }
+
+resource "intersight_fabric_vlan" "n393" {
+  account_moid = try(local.m393["account_moid"], null)
+  additional_properties = try(local.m393["additional_properties"], null)
+  ancestors = try(local.m393["ancestors"], null)
+  auto_allow_on_cluster_links = try(local.m393["auto_allow_on_cluster_links"], null)
+  auto_allow_on_inter_switch_ports = try(local.m393["auto_allow_on_inter_switch_ports"], null)
+  auto_allow_on_secure_router_roles = try(local.m393["auto_allow_on_secure_router_roles"], null)
+  auto_allow_on_uplinks = try(local.m393["auto_allow_on_uplinks"], null)
+  class_id = try(local.m393["class_id"], null)
+  create_time = try(local.m393["create_time"], null)
+  domain_group_moid = try(local.m393["domain_group_moid"], null)
+  eth_network_policy = try(local.m393["eth_network_policy"], null)
+  id = try(local.m393["id"], null)
+  is_native = try(local.m393["is_native"], null)
+  mod_time = try(local.m393["mod_time"], null)
+  moid = try(local.m393["moid"], null)
+  multicast_policy = try(local.m393["multicast_policy"], null)
+  name = try(local.m393["name"], null)
+  object_type = try(local.m393["object_type"], null)
+  owners = try(local.m393["owners"], null)
+  parent = try(local.m393["parent"], null)
+  permission_resources = try(local.m393["permission_resources"], null)
+  primary_vlan_id = try(local.m393["primary_vlan_id"], null)
+  shared_scope = try(local.m393["shared_scope"], null)
+  sharing_type = try(local.m393["sharing_type"], null)
+  tags = try(local.m393["tags"], null)
+  version_context = try(local.m393["version_context"], null)
+  vlan_id = try(local.m393["vlan_id"], null)
+  vlan_set = try(local.m393["vlan_set"], null)
+}

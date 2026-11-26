@@ -1,0 +1,31 @@
+# Sample resource intersight_iam_permission — reads ../models/intersight_iam_permission.yml
+locals { m674 = yamldecode(file("${path.module}/../models/intersight_iam_permission.yml"))["intersight_iam_permission"] }
+
+resource "intersight_iam_permission" "n674" {
+  account = try(local.m674["account"], null)
+  account_moid = try(local.m674["account_moid"], null)
+  additional_properties = try(local.m674["additional_properties"], null)
+  ancestors = try(local.m674["ancestors"], null)
+  class_id = try(local.m674["class_id"], null)
+  create_time = try(local.m674["create_time"], null)
+  description = try(local.m674["description"], null)
+  domain_group_moid = try(local.m674["domain_group_moid"], null)
+  end_point_roles = try(local.m674["end_point_roles"], null)
+  id = try(local.m674["id"], null)
+  mod_time = try(local.m674["mod_time"], null)
+  moid = try(local.m674["moid"], null)
+  name = try(local.m674["name"], null)
+  object_type = try(local.m674["object_type"], null)
+  owners = try(local.m674["owners"], null)
+  parent = try(local.m674["parent"], null)
+  permission_resources = try(local.m674["permission_resources"], null)
+  privilege_sets = try(local.m674["privilege_sets"], null)
+  resource_roles = try(local.m674["resource_roles"], null)
+  roles = try(local.m674["roles"], null)
+  session_limits = try(local.m674["session_limits"], null)
+  shared_scope = try(local.m674["shared_scope"], null)
+  tags = try(local.m674["tags"], null)
+  user_groups = try(local.m674["user_groups"], null)
+  users = try(local.m674["users"], null)
+  version_context = try(local.m674["version_context"], null)
+}
