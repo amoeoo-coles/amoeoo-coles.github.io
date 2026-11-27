@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Compact 28px pills, 6 columns on wide screens, 4 mid, 2 on mobile.
+   Per-section accent colour is set as --im-accent on each pill. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:6px 12px 8px;
+  gap:6px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:650 11.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:4px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im details.im-sub,
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:4px;
+  margin:0;
+  padding:6px 8px;
+  border-left:3px solid var(--im-accent,var(--menu-on,#2563eb))!important;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 10%,transparent)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl,
+nav.site.im summary.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+  list-style:none;
+}
+nav.site.im summary.sl::-webkit-details-marker{display:none}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:5px;
+  box-sizing:border-box;
+  width:100%;
+  height:28px;
+  min-height:28px;
+  max-height:28px;
+  min-width:0;
+  padding:0 8px;
+  border-radius:999px;
+  border:1px solid color-mix(in srgb,var(--im-accent,#2563eb) 40%,var(--menu-pill-bd,#3a4456))!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:color-mix(in srgb,var(--im-accent,#2563eb) 16%,var(--menu-hover))!important}
+nav.site.im a.mi.on{
+  background:var(--im-accent,var(--menu-on,#2563eb))!important;
+  border-color:var(--im-accent,var(--menu-on,#2563eb))!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:11px;height:28px;min-height:28px;max-height:28px}
+nav.site.im a.mi .ic{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 22%,transparent);
+  font-size:11px;
+  line-height:1;
+}
+nav.site.im a.mi.on .ic{background:rgba(255,255,255,.22)}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  line-height:1;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:14px;
+  height:14px;
+  padding:0 4px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:700;
+  line-height:1;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 35%,#93c5fd);
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:16px;
+  height:16px;
+  padding:0 4px;
+  border-radius:999px;
+  font-size:10px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:var(--im-accent,#1d4ed8)!important;
+}
+nav.site.im a.mi .im-dot{
+  width:7px;height:7px;border-radius:50%;background:#22c55e;flex:none;
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--im-accent,#2563eb) 18%,transparent);
+}
+nav.site.im .im-stats{
+  display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;
+  font:600 11px/1.3 system-ui,Arial,sans-serif;color:var(--menu-fg);padding:2px 2px 0;opacity:.9;
+}
+nav.site.im .im-stats a{color:var(--link);text-decoration:none}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:28px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:28px;
+  padding:0 12px;
+  border-radius:999px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:28px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:28px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:28px;padding:0 10px}
+  nav.site.im summary.sl .im-toggle{display:inline}
+}
+@media (min-width:721px){
+  nav.site.im summary.sl .im-toggle{display:none}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ACI bridge-domain flooding scenarios — zFrontier</title>
+<meta name="description" content="Cisco ACI bridge-domain forwarding knobs — Optimize versus Custom, Hardware Proxy, ARP flooding, Optimized Flood and Flood in Encapsulation — with packet walks, a scenario matrix, and Ansible, Terraform and Terragrunt models.">
+<style>
+
+
+
+
+:root {
+  color-scheme: light dark;
+  --bg: #f4f6f8;
+  --bg-accent: #e8eef4;
+  --card: #ffffff;
+  --ink: #15202b;
+  --muted: #5b6b7c;
+  --line: #d5dee7;
+  --accent: #0e7490;
+  --accent-soft: #e0f4f8;
+  --link: #0e7490;
+  --good: #047857;
+  --warn: #a16207;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --radius: 14px;
+  --mono: "IBM Plex Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+  --sans: "Source Sans 3", "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --map-land: #dfe8ef;
+  --map-stroke: #8aa0b3;
+  --map-water: #c5d6e6;
+  --leg1: #0e7490;
+  --leg2: #6d28d9;
+  --leg3: #b45309;
+  --leg4: #047857;
+  --sc-fill: #dc2626;
+  --sc-stroke: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+    --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+    --link: #5eead4; --good: #34d399; --warn: #fbbf24;
+    --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+    --map-land: #1b2a3d; --map-stroke: #4b6480; --map-water: #0f2740;
+    --leg1: #5eead4; --leg2: #c4b5fd; --leg3: #fdba74; --leg4: #34d399;
+    --sc-fill: #f87171; --sc-stroke: #0b1220;
+  }
+}
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f4f6f8; --bg-accent: #e8eef4; --card: #ffffff; --ink: #15202b;
+  --muted: #5b6b7c; --line: #d5dee7; --accent: #0e7490; --accent-soft: #e0f4f8;
+  --link: #0e7490; --good: #047857; --warn: #a16207;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --map-land: #dfe8ef; --map-stroke: #8aa0b3; --map-water: #c5d6e6;
+  --leg1: #0e7490; --leg2: #6d28d9; --leg3: #b45309; --leg4: #047857;
+  --sc-fill: #dc2626; --sc-stroke: #ffffff;
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+  --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+  --link: #5eead4; --good: #34d399; --warn: #fbbf24;
+  --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+  --map-land: #1b2a3d; --map-stroke: #4b6480; --map-water: #0f2740;
+  --leg1: #5eead4; --leg2: #c4b5fd; --leg3: #fdba74; --leg4: #34d399;
+  --sc-fill: #f87171; --sc-stroke: #0b1220;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--sans);
+  background: radial-gradient(1200px 500px at 10% -10%, var(--bg-accent), transparent 60%), var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  min-height: 100vh;
+}
+a { color: var(--link); }
+code, .mono { font-family: var(--mono); font-size: 0.92em; }
+main.wrap, footer.wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem; }
+main.wrap { padding-top: 0.4rem; padding-bottom: 2.2rem; }
+footer.wrap { padding-bottom: 3.5rem; }
+.tr17 { margin: 0 0 8px; }
+h1 { font-size: clamp(1.7rem, 3vw, 2.25rem); margin: 0 0 0.35rem; letter-spacing: -0.03em; font-weight: 700; }
+.ver { margin: 0 0 0.85rem; color: var(--muted); font-weight: 650; }
+.lede { font-size: 1.05rem; margin: 0 0 1rem; max-width: 78ch; }
+h2 { font-size: 1.25rem; margin: 2rem 0 0.7rem; letter-spacing: -0.02em; scroll-margin-top: 80px; }
+h3 { font-size: 1.05rem; margin: 1.2rem 0 0.45rem; }
+p, ul, ol { margin: 0 0 0.85rem; }
+ul, ol { padding-left: 1.25rem; }
+li { margin: 0.2rem 0; }
+.kicker {
+  display: inline-block; text-transform: uppercase; letter-spacing: 0.14em;
+  font-size: 0.72rem; color: var(--accent); font-weight: 700; margin: 0 0 0.35rem;
+}
+.note, .muted, .meta, .footer { color: var(--muted); }
+.meta { margin: 0 0 0.25rem; }
+.footer { margin: 0.4rem 0 0; font-size: 0.92rem; }
+.na { font-style: italic; color: var(--warn); }
+.callout, .card, .module, .leg, .comment-notes {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 1rem 1.15rem; margin: 0 0 1.1rem;
+  min-width: 0;
+}
+.module h3, .leg h2 { margin-top: 0; }
+.table-wrap { overflow-x: auto; margin: 0 0 1rem; max-width: 100%; }
+table {
+  width: 100%; border-collapse: collapse; background: var(--card);
+  border: 1px solid var(--line); border-radius: var(--radius);
+}
+th, td { text-align: left; padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--line); vertical-align: top; overflow-wrap: break-word; }
+.table-wrap table td:first-child { overflow-wrap: normal; word-break: normal; }
+th { font-size: 0.82rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); background: var(--bg-accent); }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.toc a { margin-right: 0.75rem; }
+.mapwrap { overflow-x: auto; max-width: 100%; margin: 0 0 1rem; }
+.mapwrap > svg { display: block; width: 100%; max-width: 100%; height: auto; }
+.map-legend { display: flex; flex-wrap: wrap; gap: 0.6rem 1.1rem; margin: 0 0 0.8rem; font-size: 0.92rem; }
+.map-legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+.map-swatch { width: 18px; height: 4px; border-radius: 2px; display: inline-block; }
+.map-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; background: var(--sc-fill); border: 2px solid var(--sc-stroke); box-sizing: content-box; }
+.gap { border-left: 4px solid var(--warn); padding-left: 0.8rem; margin: 0.8rem 0; }
+.sources li { overflow-wrap: anywhere; }
+.ad-card h2 { margin: 0 0 0.4rem; }
+
+.leg-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem;
+  margin: 0 0 1.1rem;
+  min-width: 0;
+}
+.leg-cards .card { margin: 0; min-width: 0; }
+.leg-cards h3 { margin: 0 0 0.35rem; font-size: 1.02rem; overflow-wrap: anywhere; }
+
+.hire-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem;
+  margin: 0 0 1.1rem;
+  min-width: 0;
+}
+.hire-cards .card { margin: 0; min-width: 0; }
+.hire-cards h3 { margin: 0 0 0.35rem; font-size: 1.02rem; overflow-wrap: anywhere; }
+.price { font-variant-numeric: tabular-nums; font-weight: 700; }
+@media (max-width: 390px) {
+  main.wrap, footer.wrap { padding-left: 0.85rem; padding-right: 0.85rem; }
+  th, td { padding: 0.45rem 0.5rem; }
+  .leg-cards { grid-template-columns: 1fr; }
+  .hire-cards { grid-template-columns: 1fr; }
+}
+
+
+
+.page-menu { margin: 0 0 1.2rem; padding-left: 1.3rem; }
+.page-menu li { margin: 0 0 0.25rem; }
+
+
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem 1rem;margin:0 0 1rem}
+.facts div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.6rem .8rem}
+.facts b{display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:.85rem;margin:0 0 1.2rem}
+.tcards a.card{display:block;text-decoration:none;color:var(--ink);margin:0}
+.tcards a.card h3{margin:0 0 .3rem;color:var(--link)}
+.tcards a.card p{margin:0;font-size:.92rem;color:var(--muted)}
+.tag{display:inline-block;font-size:.75rem;font-weight:700;letter-spacing:.03em;border-radius:999px;padding:.1rem .5rem;white-space:nowrap;border:1px solid var(--line)}
+.tag-builtin{background:#dcfce7;color:#166534;border-color:#86efac}
+.tag-user{background:#fef3c7;color:#92400e;border-color:#fcd34d}
+.tag-absent{background:var(--chip);color:var(--muted)}
+html[data-theme="dark"] .tag-builtin{background:#14532d;color:#bbf7d0;border-color:#166534}
+html[data-theme="dark"] .tag-user{background:#78350f;color:#fde68a;border-color:#b45309}
+.legend{display:flex;flex-wrap:wrap;gap:.6rem 1.1rem;margin:0 0 1rem;font-size:.92rem}
+.howto{font-size:.95rem;color:var(--muted);margin:.2rem 0 0.8rem}
+.bc{font-size:.9rem;color:var(--muted);margin:0 0 .4rem}
+code{font-size:.9em}
+
+
+
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem 1rem;margin:0 0 1rem}
+.facts div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.6rem .8rem}
+.facts b{display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.bc{font-size:.9rem;color:var(--muted);margin:0 0 .4rem}
+code{font-size:.9em}
+.callout,.note,.warn,.tip{border:1px solid var(--line);border-left-width:4px;border-radius:10px;padding:.7rem 1rem;margin:0 0 1rem;background:var(--card)}
+.note{border-left-color:#2563eb}
+.warn{border-left-color:#d97706}
+.tip{border-left-color:#15803d}
+.shot{margin:0 0 1.1rem;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.6rem}
+.shot img{display:block;width:100%;height:auto;border-radius:8px}
+.shot figcaption{font-size:.88rem;color:var(--muted);padding:.45rem .2rem 0}
+.downloads{display:flex;flex-wrap:wrap;gap:.6rem;margin:.4rem 0 1rem}
+.downloads a{display:inline-block;background:var(--btn-bg);color:var(--btn-fg);border:1px solid var(--btn-bd);border-radius:999px;padding:.35rem .85rem;text-decoration:none;font-weight:650;font-size:.92rem}
+.downloads a:hover{border-color:var(--link)}
+.downloads a.primary{background:var(--menu-on);color:var(--menu-on-fg);border-color:var(--menu-on)}
+.scen{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;margin:0 0 1rem}
+.scen h3{margin:.1rem 0 .35rem}
+.kv{display:flex;flex-wrap:wrap;gap:.35rem .5rem;margin:.2rem 0 .7rem}
+.kv span{background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:.12rem .55rem;font-size:.82rem}
+.kv b{font-weight:700}
+.mapwrap{margin:0 0 1rem;overflow-x:auto}
+svg.flow{width:100%;height:auto;display:block}
+.flow-box{fill:var(--bg);stroke:var(--line);stroke-width:1.4}
+.flow-host{fill:var(--card)}
+.flow-leaf{fill:var(--th-bg)}
+.flow-spine{fill:var(--menu-sub)}
+.flow-drop{fill:#fef2f2;stroke:#ef4444}
+html[data-theme="dark"] .flow-drop{fill:#3f1212;stroke:#f87171}
+.flow-t{fill:var(--ink);font:650 13px system-ui,Segoe UI,sans-serif}
+.flow-sub{fill:var(--muted);font:12px system-ui,Segoe UI,sans-serif}
+.flow-lab{fill:var(--muted);font:12px system-ui,Segoe UI,sans-serif}
+.flow-title{fill:var(--ink);font:700 13px system-ui,Segoe UI,sans-serif}
+.ov-note{fill:var(--muted);font:11px system-ui,Segoe UI,sans-serif}
+.ov-bg{fill:var(--card);stroke:var(--line)}
+.flow-edge{stroke:var(--link);stroke-width:2;fill:none}
+.flow-edge-ok{stroke:#15803d;stroke-width:2;fill:none}
+.flow-edge-bad{stroke:#b91c1c;stroke-width:2;fill:none}
+html[data-theme="dark"] .flow-edge-ok{stroke:#4ade80}
+html[data-theme="dark"] .flow-edge-bad{stroke:#f87171}
+.flow-ah{fill:var(--link)}
+.flow-ah-ok{fill:#15803d}
+.flow-ah-bad{fill:#b91c1c}
+html[data-theme="dark"] .flow-ah-ok{fill:#4ade80}
+html[data-theme="dark"] .flow-ah-bad{fill:#f87171}
+.filelist{font-size:.95rem}
+.sources li{margin:0 0 .35rem}
+
+</style>
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'☀️ Light':'🌙 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+})();</script>
+<!-- site-menu v1 -->
+<nav class="site"></nav>
+<main class="wrap">
+<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:#bbb"><a href="/visitors/" style="color:#fff;text-decoration:none"><span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></a><span class="uvt" style="font-size:11px;color:#888"></span></div><!--/arr-uv-tr17-->
+<p class="bc"><a href="/zfrontier/">zFrontier</a> · ACI-BD-Flooding</p>
+<p class="kicker">zFrontier · ACI</p>
+<h1>ACI bridge-domain flooding scenarios</h1>
+<p class="ver"><a href="/zfrontier/ACI-BD-Flooding/history/">v1 · 27 Nov 2026, 1:59 PM AEDT</a></p>
+<p class="lede">What the APIC Bridge Domain Forwarding knobs actually do, when to use Flood instead of Hardware Proxy, and downloadable Ansible, Terraform and Terragrunt models for eight realistic lab scenarios.</p>
+<div class="facts"><div><b>Scope</b>BD forwarding knobs only — no APIC access</div><div><b>GUI preset</b>Optimize vs Custom</div><div><b>Scenarios</b>8 lab BDs in tenant flood_lab</div><div><b>Models</b>Ansible · Terraform · Terragrunt</div><div><b>Preview built</b>27 Nov 2026, 1:59 PM AEDT (Melbourne time)</div><div><b>Version</b>v1</div></div>
+<ol class="page-menu" aria-label="On this page"><li><a href="#about">What this is</a></li><li><a href="#knobs">The knobs and packet walks</a></li><li><a href="#optimize">What Optimize sets</a></li><li><a href="#scenarios">Scenario matrix</a></li><li><a href="#mapping">APIC object mapping</a></li><li><a href="#models">Ansible, Terraform and Terragrunt</a></li><li><a href="#sources">Sources</a></li><li><a href="#not-collected">Not on this page</a></li><li><a href="#comments">Comments</a></li><li><a href="#versions">Versions</a></li></ol>
+<h2 id="about">What this is</h2>
+
+<p>This page is a lab reference for the bridge-domain <strong>Forwarding</strong> knobs in the APIC GUI — the Optimize versus Custom preset, and the four Custom settings in the screenshot below. It is written for someone who already works with ACI Network-as-Code. Nothing here was read from or written to an APIC; the models use the placeholder tenant <code>flood_lab</code> and VRF <code>flood_lab_vrf</code>, with credentials only from environment variables.</p>
+<figure class="shot">
+  <img src="assets/apic-forwarding-custom.jpg" alt="APIC GUI: Bridge Domain Forwarding set to Custom, showing L2 Unknown Unicast Hardware Proxy, L3 Unknown Multicast Flooding Flood, Multi Destination Flooding Flood in BD, and ARP Flooding enabled" width="1530" height="668">
+  <figcaption>APIC GUI, Bridge Domain policy. Forwarding is set to Custom, which reveals L2 Unknown Unicast, L3 Unknown Multicast Flooding, Multi Destination Flooding and the ARP Flooding checkbox. Source: Aung’s screenshot, 27 Nov 2026.</figcaption>
+</figure>
+<p class="note">A later job may publish this page to <a href="https://amoeoo-coles.github.io/zfrontier/ACI-BD-Flooding/">amoeoo-coles.github.io/zfrontier/ACI-BD-Flooding/</a>. This build is a local preview only and has not been pushed.</p>
+
+<h2 id="knobs">The knobs and packet walks</h2>
+
+<p>These four Custom knobs, plus Unicast Routing (a separate control on the same BD), decide what the leaf does with a frame that is not already a known local or remote endpoint. Optimize is a GUI preset over the first and last of them; it is not an <code>fvBD</code> attribute of its own.</p>
+
+<h3 id="knob-uu">L2 Unknown Unicast — Flood or Hardware Proxy</h3>
+<p>Applies when the destination MAC is a unicast address that the ingress leaf has not learned. It has no effect on routed traffic whose destination MAC is already the BD MAC (the pervasive gateway).</p>
+<p><strong>Hardware Proxy</strong> (<code>unkMacUcastAct=proxy</code>) sends the frame to the spine-proxy anycast VTEP. The spine looks the MAC up in COOP. If the MAC is known, the spine forwards to the egress leaf TEP. If it is not in COOP, the frame is dropped — it is not flooded on the BD GIPo tree.</p>
+<div class="mapwrap"><svg class="ov flow" viewBox="0 0 930 268" role="img" aria-label="Hardware Proxy unknown-unicast path" xmlns="http://www.w3.org/2000/svg">
+<title>Hardware Proxy unknown-unicast path</title>
+<defs>
+  <marker id="hw-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah"/>
+  </marker>
+  <marker id="hw-arr-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah-ok"/>
+  </marker>
+  <marker id="hw-arr-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah-bad"/>
+  </marker>
+</defs>
+<rect x="1" y="1" width="928" height="266" rx="14" class="ov-bg"/>
+<rect x="30" y="80" width="110" height="64" rx="10" class="flow-box flow-host"/><text x="85" y="108" text-anchor="middle" class="flow-t">Host H1</text><text x="85" y="124" text-anchor="middle" class="flow-sub">src known</text>
+<rect x="200" y="80" width="120" height="64" rx="10" class="flow-box flow-leaf"/><text x="260" y="108" text-anchor="middle" class="flow-t">Leaf L1</text><text x="260" y="124" text-anchor="middle" class="flow-sub">ingress</text>
+<rect x="390" y="80" width="140" height="64" rx="10" class="flow-box flow-spine"/><text x="460" y="108" text-anchor="middle" class="flow-t">Spine COOP</text><text x="460" y="124" text-anchor="middle" class="flow-sub">anycast proxy</text>
+<rect x="600" y="30" width="120" height="64" rx="10" class="flow-box flow-leaf"/><text x="660" y="58" text-anchor="middle" class="flow-t">Leaf L2</text><text x="660" y="74" text-anchor="middle" class="flow-sub">MAC in COOP</text>
+<rect x="600" y="150" width="120" height="64" rx="10" class="flow-box flow-leaf"/><text x="660" y="178" text-anchor="middle" class="flow-t">Leaf —</text><text x="660" y="194" text-anchor="middle" class="flow-sub">MAC unknown</text>
+<rect x="790" y="30" width="110" height="64" rx="10" class="flow-box flow-host"/><text x="845" y="58" text-anchor="middle" class="flow-t">Host H2</text><text x="845" y="74" text-anchor="middle" class="flow-sub">unicast OK</text>
+<rect x="790" y="150" width="110" height="64" rx="10" class="flow-box flow-drop"/><text x="845" y="178" text-anchor="middle" class="flow-t">Drop</text><text x="845" y="194" text-anchor="middle" class="flow-sub">not in COOP</text>
+<line x1="140" y1="112" x2="200" y2="112" class="flow-edge" marker-end="url(#hw-arr)"/>
+<line x1="320" y1="112" x2="390" y2="112" class="flow-edge" marker-end="url(#hw-arr)"/>
+<line x1="530" y1="100" x2="600" y2="62" class="flow-edge-ok" marker-end="url(#hw-arr-ok)"/>
+<line x1="530" y1="124" x2="600" y2="182" class="flow-edge-bad" marker-end="url(#hw-arr-bad)"/>
+<line x1="720" y1="62" x2="790" y2="62" class="flow-edge-ok" marker-end="url(#hw-arr-ok)"/>
+<line x1="720" y1="182" x2="790" y2="182" class="flow-edge-bad" marker-end="url(#hw-arr-bad)"/>
+<text x="480" y="36" text-anchor="middle" class="flow-lab">known MAC → egress TEP</text>
+<text x="480" y="224" text-anchor="middle" class="flow-lab">unknown MAC → drop (no GIPo flood)</text>
+<text x="480" y="20" text-anchor="middle" class="flow-title">L2 Unknown Unicast = Hardware Proxy</text>
+<text x="914" y="256" text-anchor="end" class="ov-note">Schematic, not to scale · original zFrontier diagram</text>
+</svg></div>
+<p><strong>Flood</strong> (<code>unkMacUcastAct=flood</code>) encapsulates the frame onto the BD multicast tree (GIPo) so every leaf where the BD is deployed can flood it out of local ports. This is the traditional L2 behaviour, and it is the setting Cisco recommends when unicast routing is disabled or when Layer 2 is extended through non-ACI switches (migration / brownfield).</p>
+<div class="mapwrap"><svg class="ov flow" viewBox="0 0 930 268" role="img" aria-label="Flood unknown-unicast path" xmlns="http://www.w3.org/2000/svg">
+<title>Flood unknown-unicast path</title>
+<defs>
+  <marker id="uu-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah"/>
+  </marker>
+  <marker id="uu-arr-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah-ok"/>
+  </marker>
+  <marker id="uu-arr-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah-bad"/>
+  </marker>
+</defs>
+<rect x="1" y="1" width="928" height="266" rx="14" class="ov-bg"/>
+<rect x="30" y="90" width="110" height="64" rx="10" class="flow-box flow-host"/><text x="85" y="118" text-anchor="middle" class="flow-t">Host H1</text><text x="85" y="134" text-anchor="middle" class="flow-sub">unknown dest MAC</text>
+<rect x="200" y="90" width="120" height="64" rx="10" class="flow-box flow-leaf"/><text x="260" y="118" text-anchor="middle" class="flow-t">Leaf L1</text><text x="260" y="134" text-anchor="middle" class="flow-sub">ingress</text>
+<rect x="400" y="90" width="140" height="64" rx="10" class="flow-box flow-spine"/><text x="470" y="118" text-anchor="middle" class="flow-t">BD GIPo tree</text><text x="470" y="134" text-anchor="middle" class="flow-sub">multicast tree</text>
+<rect x="620" y="30" width="120" height="64" rx="10" class="flow-box flow-leaf"/><text x="680" y="58" text-anchor="middle" class="flow-t">Leaf L2</text><text x="680" y="74" text-anchor="middle" class="flow-sub">BD deployed</text>
+<rect x="620" y="150" width="120" height="64" rx="10" class="flow-box flow-leaf"/><text x="680" y="178" text-anchor="middle" class="flow-t">Leaf L3</text><text x="680" y="194" text-anchor="middle" class="flow-sub">BD deployed</text>
+<rect x="800" y="30" width="100" height="64" rx="10" class="flow-box flow-host"/><text x="850" y="58" text-anchor="middle" class="flow-t">Ports</text><text x="850" y="74" text-anchor="middle" class="flow-sub">flood out</text>
+<rect x="800" y="150" width="100" height="64" rx="10" class="flow-box flow-host"/><text x="850" y="178" text-anchor="middle" class="flow-t">Ports</text><text x="850" y="194" text-anchor="middle" class="flow-sub">flood out</text>
+<line x1="140" y1="122" x2="200" y2="122" class="flow-edge" marker-end="url(#uu-arr)"/>
+<line x1="320" y1="122" x2="400" y2="122" class="flow-edge" marker-end="url(#uu-arr)"/>
+<line x1="540" y1="110" x2="620" y2="62" class="flow-edge-ok" marker-end="url(#uu-arr-ok)"/>
+<line x1="540" y1="134" x2="620" y2="182" class="flow-edge-ok" marker-end="url(#uu-arr-ok)"/>
+<line x1="740" y1="62" x2="800" y2="62" class="flow-edge-ok" marker-end="url(#uu-arr-ok)"/>
+<line x1="740" y1="182" x2="800" y2="182" class="flow-edge-ok" marker-end="url(#uu-arr-ok)"/>
+<text x="465" y="20" text-anchor="middle" class="flow-title">L2 Unknown Unicast = Flood</text>
+<text x="465" y="226" text-anchor="middle" class="flow-lab">Frame is flooded on the BD GIPo tree to every leaf where the BD is deployed</text>
+<text x="914" y="256" text-anchor="end" class="ov-note">Schematic, not to scale · original zFrontier diagram</text>
+</svg></div>
+<p class="warn">Modifying L2 Unknown Unicast causes traffic to bounce (go down and up) on interfaces of devices in EPGs associated with the BD. Treat a Flood ↔ Hardware Proxy change as disruptive. When the BD is in Flood mode, enable <strong>Clear Remote MAC Entries</strong> (<code>epClear</code>) so a deleted endpoint is also flushed on remote leaves, instead of waiting for the endpoint timer.</p>
+
+<h3 id="knob-arp">ARP Flooding</h3>
+<p>Applies to ARP (and GARP) with a broadcast destination MAC. It does not control other broadcasts — those are under Multi Destination Flooding.</p>
+<p>When <strong>enabled</strong>, ARP is flooded inside the BD (or inside the encapsulation if Flood in Encapsulation is on), as in a classical L2 network. This is required when a Gratuitous ARP must update the ARP caches of neighbouring hosts or routers, which is the usual firewall, load-balancer or clustered-server failover case if the MAC of a VIP changes.</p>
+<div class="mapwrap"><svg class="ov flow" viewBox="0 0 930 268" role="img" aria-label="ARP flooding path" xmlns="http://www.w3.org/2000/svg">
+<title>ARP flooding path</title>
+<defs>
+  <marker id="arpf-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah"/>
+  </marker>
+  <marker id="arpf-arr-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah-ok"/>
+  </marker>
+  <marker id="arpf-arr-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah-bad"/>
+  </marker>
+</defs>
+<rect x="1" y="1" width="928" height="266" rx="14" class="ov-bg"/>
+<rect x="40" y="90" width="110" height="64" rx="10" class="flow-box flow-host"/><text x="95" y="118" text-anchor="middle" class="flow-t">Host H1</text><text x="95" y="134" text-anchor="middle" class="flow-sub">ARP / GARP</text>
+<rect x="210" y="90" width="130" height="64" rx="10" class="flow-box flow-leaf"/><text x="275" y="118" text-anchor="middle" class="flow-t">Leaf L1</text><text x="275" y="134" text-anchor="middle" class="flow-sub">ingress</text>
+<rect x="410" y="90" width="150" height="64" rx="10" class="flow-box flow-spine"/><text x="485" y="118" text-anchor="middle" class="flow-t">Flood in BD</text><text x="485" y="134" text-anchor="middle" class="flow-sub">or flood in encap</text>
+<rect x="640" y="30" width="120" height="64" rx="10" class="flow-box flow-leaf"/><text x="700" y="58" text-anchor="middle" class="flow-t">Leaf L2</text><text x="700" y="74" text-anchor="middle" class="flow-sub">all BD ports</text>
+<rect x="640" y="150" width="120" height="64" rx="10" class="flow-box flow-leaf"/><text x="700" y="178" text-anchor="middle" class="flow-t">Leaf L3</text><text x="700" y="194" text-anchor="middle" class="flow-sub">all BD ports</text>
+<rect x="800" y="30" width="100" height="64" rx="10" class="flow-box flow-host"/><text x="850" y="58" text-anchor="middle" class="flow-t">Hosts</text><text x="850" y="74" text-anchor="middle" class="flow-sub">see GARP</text>
+<rect x="800" y="150" width="100" height="64" rx="10" class="flow-box flow-host"/><text x="850" y="178" text-anchor="middle" class="flow-t">Hosts</text><text x="850" y="194" text-anchor="middle" class="flow-sub">see request</text>
+<line x1="150" y1="122" x2="210" y2="122" class="flow-edge" marker-end="url(#arpf-arr)"/>
+<line x1="340" y1="122" x2="410" y2="122" class="flow-edge" marker-end="url(#arpf-arr)"/>
+<line x1="560" y1="110" x2="640" y2="62" class="flow-edge-ok" marker-end="url(#arpf-arr-ok)"/>
+<line x1="560" y1="134" x2="640" y2="182" class="flow-edge-ok" marker-end="url(#arpf-arr-ok)"/>
+<line x1="760" y1="62" x2="800" y2="62" class="flow-edge-ok" marker-end="url(#arpf-arr-ok)"/>
+<line x1="760" y1="182" x2="800" y2="182" class="flow-edge-ok" marker-end="url(#arpf-arr-ok)"/>
+<text x="465" y="20" text-anchor="middle" class="flow-title">ARP Flooding enabled</text>
+<text x="465" y="226" text-anchor="middle" class="flow-lab">Broadcast ARP and GARP follow the BD (or the encapsulation, if FiE is on)</text>
+<text x="914" y="256" text-anchor="end" class="ov-note">Schematic, not to scale · original zFrontier diagram</text>
+</svg></div>
+<p>When <strong>disabled</strong>, the ingress leaf treats the ARP request as unicast L3 traffic keyed by the target IP. If that IP is known, the request is unicasted to the endpoint (locally, or via the spine to the remote TEP). If the IP is unknown, the leaf sends the request to the spine proxy; if the IP is not in COOP, the original packet is dropped and the fabric can trigger <strong>ARP gleaning</strong> — an ARP from the BD SVI, sent out of the edge ports — so a later retry can succeed. Gleaning needs unicast routing and a BD subnet.</p>
+<div class="mapwrap"><svg class="ov flow" viewBox="0 0 930 280" role="img" aria-label="ARP unicast and glean path" xmlns="http://www.w3.org/2000/svg">
+<title>ARP unicast and glean path</title>
+<defs>
+  <marker id="arpu-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah"/>
+  </marker>
+  <marker id="arpu-arr-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah-ok"/>
+  </marker>
+  <marker id="arpu-arr-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah-bad"/>
+  </marker>
+</defs>
+<rect x="1" y="1" width="928" height="278" rx="14" class="ov-bg"/>
+<rect x="20" y="90" width="100" height="64" rx="10" class="flow-box flow-host"/><text x="70" y="118" text-anchor="middle" class="flow-t">Host H1</text><text x="70" y="134" text-anchor="middle" class="flow-sub">ARP who-has</text>
+<rect x="160" y="90" width="130" height="64" rx="10" class="flow-box flow-leaf"/><text x="225" y="118" text-anchor="middle" class="flow-t">Leaf L1</text><text x="225" y="134" text-anchor="middle" class="flow-sub">L3 lookup on target IP</text>
+<rect x="350" y="20" width="130" height="56" rx="10" class="flow-box flow-leaf"/><text x="415" y="44" text-anchor="middle" class="flow-t">Known local</text><text x="415" y="60" text-anchor="middle" class="flow-sub">unicast to EP</text>
+<rect x="350" y="94" width="130" height="56" rx="10" class="flow-box flow-spine"/><text x="415" y="118" text-anchor="middle" class="flow-t">Known remote</text><text x="415" y="134" text-anchor="middle" class="flow-sub">via spine to TEP</text>
+<rect x="350" y="168" width="130" height="56" rx="10" class="flow-box flow-spine"/><text x="415" y="192" text-anchor="middle" class="flow-t">Unknown IP</text><text x="415" y="208" text-anchor="middle" class="flow-sub">spine proxy</text>
+<rect x="540" y="20" width="150" height="56" rx="10" class="flow-box flow-host"/><text x="615" y="44" text-anchor="middle" class="flow-t">Target host</text><text x="615" y="60" text-anchor="middle" class="flow-sub">ARP delivered</text>
+<rect x="540" y="94" width="150" height="56" rx="10" class="flow-box flow-leaf"/><text x="615" y="118" text-anchor="middle" class="flow-t">Egress leaf</text><text x="615" y="134" text-anchor="middle" class="flow-sub">then to host</text>
+<rect x="540" y="168" width="150" height="56" rx="10" class="flow-box flow-drop"/><text x="615" y="192" text-anchor="middle" class="flow-t">Not in COOP</text><text x="615" y="208" text-anchor="middle" class="flow-sub">drop + ARP glean</text>
+<rect x="740" y="168" width="160" height="56" rx="10" class="flow-box flow-host"/><text x="820" y="192" text-anchor="middle" class="flow-t">BD SVI ARP</text><text x="820" y="208" text-anchor="middle" class="flow-sub">glean all edge ports</text>
+<line x1="120" y1="122" x2="160" y2="122" class="flow-edge" marker-end="url(#arpu-arr)"/>
+<line x1="290" y1="110" x2="350" y2="48" class="flow-edge-ok" marker-end="url(#arpu-arr-ok)"/>
+<line x1="290" y1="122" x2="350" y2="122" class="flow-edge-ok" marker-end="url(#arpu-arr-ok)"/>
+<line x1="290" y1="134" x2="350" y2="196" class="flow-edge" marker-end="url(#arpu-arr)"/>
+<line x1="480" y1="48" x2="540" y2="48" class="flow-edge-ok" marker-end="url(#arpu-arr-ok)"/>
+<line x1="480" y1="122" x2="540" y2="122" class="flow-edge-ok" marker-end="url(#arpu-arr-ok)"/>
+<line x1="480" y1="196" x2="540" y2="196" class="flow-edge-bad" marker-end="url(#arpu-arr-bad)"/>
+<line x1="690" y1="196" x2="740" y2="196" class="flow-edge" marker-end="url(#arpu-arr)"/>
+<text x="465" y="14" text-anchor="middle" class="flow-title">ARP Flooding disabled (unicast routing + Hardware Proxy required)</text>
+<text x="465" y="246" text-anchor="middle" class="flow-lab">Gleaning needs a BD subnet; GARP is not flooded to other hosts</text>
+<text x="914" y="268" text-anchor="end" class="ov-note">Schematic, not to scale · original zFrontier diagram</text>
+</svg></div>
+<p class="warn">You can only disable ARP flooding when Hardware Proxy is on <em>and</em> unicast routing is on. If either is off, ARP flooding is on and cannot be turned off. If unicast routing is disabled, ARP flooding is implicit even if the checkbox looks available. Silent IP hosts are not, by themselves, a reason to keep ARP flooding on: gleaning can discover them. Silent IP <em>moves</em> without GARP, and GARP to other hosts, are the reasons to leave it on.</p>
+
+<h3 id="knob-l3m">L3 Unknown Multicast Flooding — Flood or Optimized Flood</h3>
+<p>Applies to IPv4 (and, on a separate attribute, IPv6) multicast whose group is not already in the leaf’s IGMP/MLD snooping table. Link-local multicast is a different case.</p>
+<p><strong>Flood</strong> (<code>unkMcastAct=flood</code>, the creation default) floods unknown multicast on the ingress leaf and the border leaves. On EX and later platforms the frame is flooded on all leaves where the BD is deployed. <strong>Optimized Flood</strong> (<code>opt-flood</code>) limits that flood: traffic is sent toward mrouter ports and leaves with receivers. mrouter ports are learned from PIM hellos or IGMP/MLD queries, which is why a multicast application BD also enables PIM on the BD <em>and</em> L3 multicast on the VRF. If there is no snooping entry and no mrouter, Optimized Flood can drop the packet.</p>
+<div class="mapwrap"><svg class="ov flow" viewBox="0 0 930 268" role="img" aria-label="L3 unknown multicast Flood versus Optimized Flood" xmlns="http://www.w3.org/2000/svg">
+<title>L3 unknown multicast Flood versus Optimized Flood</title>
+<defs>
+  <marker id="mcast-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah"/>
+  </marker>
+  <marker id="mcast-arr-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah-ok"/>
+  </marker>
+  <marker id="mcast-arr-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah-bad"/>
+  </marker>
+</defs>
+<rect x="1" y="1" width="928" height="266" rx="14" class="ov-bg"/>
+<rect x="30" y="100" width="120" height="64" rx="10" class="flow-box flow-host"/><text x="90" y="128" text-anchor="middle" class="flow-t">Source</text><text x="90" y="144" text-anchor="middle" class="flow-sub">unknown group</text>
+<rect x="200" y="100" width="130" height="64" rx="10" class="flow-box flow-leaf"/><text x="265" y="128" text-anchor="middle" class="flow-t">Ingress leaf</text><text x="265" y="144" text-anchor="middle" class="flow-sub">no snooping hit</text>
+<rect x="400" y="40" width="170" height="54" rx="10" class="flow-box flow-spine"/><text x="485" y="63" text-anchor="middle" class="flow-t">Flood</text><text x="485" y="79" text-anchor="middle" class="flow-sub">ingress + border (platform-specific)</text>
+<rect x="400" y="160" width="170" height="54" rx="10" class="flow-box flow-spine"/><text x="485" y="183" text-anchor="middle" class="flow-t">Optimized Flood</text><text x="485" y="199" text-anchor="middle" class="flow-sub">mrouter / joined leaves</text>
+<rect x="650" y="40" width="120" height="54" rx="10" class="flow-box flow-leaf"/><text x="710" y="63" text-anchor="middle" class="flow-t">Many leaves</text><text x="710" y="79" text-anchor="middle" class="flow-sub">BD flood</text>
+<rect x="650" y="160" width="120" height="54" rx="10" class="flow-box flow-leaf"/><text x="710" y="183" text-anchor="middle" class="flow-t">Mrouter ports</text><text x="710" y="199" text-anchor="middle" class="flow-sub">or drop if none</text>
+<rect x="810" y="40" width="90" height="54" rx="10" class="flow-box flow-host"/><text x="855" y="72" text-anchor="middle" class="flow-t">Hosts</text>
+<rect x="810" y="160" width="90" height="54" rx="10" class="flow-box flow-host"/><text x="855" y="192" text-anchor="middle" class="flow-t">Receivers</text>
+<line x1="150" y1="132" x2="200" y2="132" class="flow-edge" marker-end="url(#mcast-arr)"/>
+<line x1="330" y1="120" x2="400" y2="67" class="flow-edge" marker-end="url(#mcast-arr)"/>
+<line x1="330" y1="144" x2="400" y2="187" class="flow-edge-ok" marker-end="url(#mcast-arr-ok)"/>
+<line x1="570" y1="67" x2="650" y2="67" class="flow-edge" marker-end="url(#mcast-arr)"/>
+<line x1="570" y1="187" x2="650" y2="187" class="flow-edge-ok" marker-end="url(#mcast-arr-ok)"/>
+<line x1="770" y1="67" x2="810" y2="67" class="flow-edge" marker-end="url(#mcast-arr)"/>
+<line x1="770" y1="187" x2="810" y2="187" class="flow-edge-ok" marker-end="url(#mcast-arr-ok)"/>
+<text x="465" y="20" text-anchor="middle" class="flow-title">L3 Unknown Multicast Flooding</text>
+<text x="465" y="226" text-anchor="middle" class="flow-lab">Optimized Flood needs PIM/mrouter or IGMP-MLD state; otherwise unknown groups can be dropped</text>
+<text x="914" y="256" text-anchor="end" class="ov-note">Schematic, not to scale · original zFrontier diagram</text>
+</svg></div>
+<p>On pre-EX leaves, Optimized Flood was limited to 50 bridge domains per leaf; that cap does not apply to N9K-93180YC-EX and later EX/FX/GX switches. Do not combine Optimized Flood / PIM with Flood in Encapsulation: IPv4 L3 multicast and IGMP snooping are not supported with FiE.</p>
+
+<h3 id="knob-md">Multi Destination Flooding — Flood in BD, Drop, or Flood in Encapsulation</h3>
+<p>Applies to L2 multicast, broadcast and link-layer traffic. It does <em>not</em> set ARP policy and it does <em>not</em> set unknown-unicast policy.</p>
+<ul>
+<li><strong>Flood in BD</strong> (<code>multiDstPktAct=bd-flood</code>, the default) floods those frames throughout the bridge domain.</li>
+<li><strong>Drop</strong> (<code>drop</code>) discards them. DHCP clients then need ACI DHCP relay; broadcast cluster heartbeats and PXE will fail.</li>
+<li><strong>Flood in Encapsulation</strong> (<code>encap-flood</code>) limits BUM, ARP and GARP to the ingress EPG’s VLAN or VXLAN. Endpoints in other EPGs of the same BD communicate with <strong>proxy ARP</strong>, so the BD must have a subnet and unicast routing. The BD must also be in unknown-unicast Flood mode with ARP flooding on — FiE does not work in Hardware Proxy or ARP unicast mode.</li>
+</ul>
+<div class="mapwrap"><svg class="ov flow" viewBox="0 0 800 304" role="img" aria-label="Multi-destination Flood in BD, Flood in Encapsulation, or Drop" xmlns="http://www.w3.org/2000/svg">
+<title>Multi-destination Flood in BD, Flood in Encapsulation, or Drop</title>
+<defs>
+  <marker id="md-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah"/>
+  </marker>
+  <marker id="md-arr-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah-ok"/>
+  </marker>
+  <marker id="md-arr-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah-bad"/>
+  </marker>
+</defs>
+<rect x="1" y="1" width="798" height="302" rx="14" class="ov-bg"/>
+<rect x="30" y="110" width="120" height="64" rx="10" class="flow-box flow-host"/><text x="90" y="138" text-anchor="middle" class="flow-t">BUM frame</text><text x="90" y="154" text-anchor="middle" class="flow-sub">L2 mcast / bcast</text>
+<rect x="200" y="110" width="120" height="64" rx="10" class="flow-box flow-leaf"/><text x="260" y="147" text-anchor="middle" class="flow-t">Ingress leaf</text>
+<rect x="390" y="30" width="150" height="58" rx="10" class="flow-box flow-spine"/><text x="465" y="55" text-anchor="middle" class="flow-t">Flood in BD</text><text x="465" y="71" text-anchor="middle" class="flow-sub">whole BD GIPo</text>
+<rect x="390" y="110" width="150" height="58" rx="10" class="flow-box flow-spine"/><text x="465" y="135" text-anchor="middle" class="flow-t">Flood in Encap</text><text x="465" y="151" text-anchor="middle" class="flow-sub">same VLAN/VXLAN only</text>
+<rect x="390" y="190" width="150" height="58" rx="10" class="flow-box flow-drop"/><text x="465" y="215" text-anchor="middle" class="flow-t">Drop</text><text x="465" y="231" text-anchor="middle" class="flow-sub">frame discarded</text>
+<rect x="610" y="30" width="140" height="58" rx="10" class="flow-box flow-leaf"/><text x="680" y="64" text-anchor="middle" class="flow-t">Every EPG in BD</text>
+<rect x="610" y="110" width="140" height="58" rx="10" class="flow-box flow-leaf"/><text x="680" y="135" text-anchor="middle" class="flow-t">Same encap only</text><text x="680" y="151" text-anchor="middle" class="flow-sub">proxy ARP across EPGs</text>
+<rect x="610" y="190" width="140" height="58" rx="10" class="flow-box flow-drop"/><text x="680" y="215" text-anchor="middle" class="flow-t">No delivery</text><text x="680" y="231" text-anchor="middle" class="flow-sub">ARP is a separate knob</text>
+<line x1="150" y1="142" x2="200" y2="142" class="flow-edge" marker-end="url(#md-arr)"/>
+<line x1="320" y1="130" x2="390" y2="59" class="flow-edge" marker-end="url(#md-arr)"/>
+<line x1="320" y1="142" x2="390" y2="139" class="flow-edge-ok" marker-end="url(#md-arr-ok)"/>
+<line x1="320" y1="154" x2="390" y2="219" class="flow-edge-bad" marker-end="url(#md-arr-bad)"/>
+<line x1="540" y1="59" x2="610" y2="59" class="flow-edge" marker-end="url(#md-arr)"/>
+<line x1="540" y1="139" x2="610" y2="139" class="flow-edge-ok" marker-end="url(#md-arr-ok)"/>
+<line x1="540" y1="219" x2="610" y2="219" class="flow-edge-bad" marker-end="url(#md-arr-bad)"/>
+<text x="400" y="18" text-anchor="middle" class="flow-title">Multi Destination Flooding</text>
+<text x="400" y="276" text-anchor="middle" class="flow-lab">Does not control ARP or L2 unknown unicast — those have their own knobs</text>
+<text x="784" y="292" text-anchor="end" class="ov-note">Schematic, not to scale · original zFrontier diagram</text>
+</svg></div>
+<p class="warn">Flood in Encapsulation needs APIC 3.1(1) or later and Nexus 9000 leaves whose names end in EX, FX or later. On an earlier APIC release or a first-generation (non-EX/FX) switch it does not function: no informational fault is raised, but APIC lowers the health score by 1. It is not supported with microsegmentation (intra-EPG isolation, “allow microsegmentation” on a VMM domain, uSeg EPGs, intra-EPG contracts), IGMP snooping, IPv4 L3 multicast, Common Pervasive Gateway, Multi-Site-stretched EPGs/BDs, or mixed first-generation ALE/ASE fabrics. IPv6 NS/ND proxy is not supported, so two IPv6 hosts in the same subnet but different encapsulations may not communicate. The L3 gateway must be in the ACI fabric. Prefer enabling FiE on the BD itself, not only on individual EPGs, so egress and transit leaves do not leak packets into the wrong encapsulation (CSCvx83364, addressed in later 4.2(6), 4.2(7) and 5.2(1) trains). From APIC 3.2(5), VXLAN encapsulations are also supported.</p>
+
+<h2 id="optimize">What Optimize sets</h2>
+
+<p>In the APIC GUI the <strong>Forwarding</strong> dropdown is a preset, not a field on <code>fvBD</code>:</p>
+<ul>
+<li><strong>Optimize</strong> hides the four Custom knobs, sets L2 Unknown Unicast to Hardware Proxy, and sets ARP Flooding to disabled. L3 Unknown Multicast Flooding and Multi Destination Flooding stay at their creation defaults — Flood and Flood in BD — unless you had already changed them under Custom. Unicast Routing remains a separate control (creation default: enabled).</li>
+<li><strong>Custom</strong> reveals the four knobs in the screenshot, so you can set each one yourself, still subject to the Hardware Proxy + unicast routing constraint on ARP flooding.</li>
+</ul>
+<div class="mapwrap"><svg class="ov flow" viewBox="0 0 910 252" role="img" aria-label="Optimize forwarding preset" xmlns="http://www.w3.org/2000/svg">
+<title>Optimize forwarding preset</title>
+<defs>
+  <marker id="opt-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah"/>
+  </marker>
+  <marker id="opt-arr-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah-ok"/>
+  </marker>
+  <marker id="opt-arr-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" class="flow-ah-bad"/>
+  </marker>
+</defs>
+<rect x="1" y="1" width="908" height="250" rx="14" class="ov-bg"/>
+<rect x="40" y="70" width="180" height="80" rx="10" class="flow-box flow-spine"/><text x="130" y="106" text-anchor="middle" class="flow-t">Forwarding</text><text x="130" y="122" text-anchor="middle" class="flow-sub">Optimize</text>
+<rect x="320" y="30" width="220" height="64" rx="10" class="flow-box flow-leaf"/><text x="430" y="58" text-anchor="middle" class="flow-t">L2 Unknown Unicast</text><text x="430" y="74" text-anchor="middle" class="flow-sub">Hardware Proxy</text>
+<rect x="320" y="120" width="220" height="64" rx="10" class="flow-box flow-leaf"/><text x="430" y="148" text-anchor="middle" class="flow-t">ARP Flooding</text><text x="430" y="164" text-anchor="middle" class="flow-sub">Disabled</text>
+<rect x="620" y="30" width="250" height="64" rx="10" class="flow-box flow-host"/><text x="745" y="58" text-anchor="middle" class="flow-t">Requires unicast routing</text><text x="745" y="74" text-anchor="middle" class="flow-sub">to actually disable ARP flood</text>
+<rect x="620" y="120" width="250" height="64" rx="10" class="flow-box flow-host"/><text x="745" y="148" text-anchor="middle" class="flow-t">Defaults still apply</text><text x="745" y="164" text-anchor="middle" class="flow-sub">L3 UM Flood · Multi Dest Flood in BD</text>
+<line x1="220" y1="90" x2="320" y2="62" class="flow-edge" marker-end="url(#opt-arr)"/>
+<line x1="220" y1="122" x2="320" y2="152" class="flow-edge" marker-end="url(#opt-arr)"/>
+<line x1="540" y1="62" x2="620" y2="62" class="flow-edge-ok" marker-end="url(#opt-arr-ok)"/>
+<line x1="540" y1="152" x2="620" y2="152" class="flow-edge" marker-end="url(#opt-arr)"/>
+<text x="455" y="20" text-anchor="middle" class="flow-title">What the GUI Optimize preset sets</text>
+<text x="455" y="224" text-anchor="middle" class="flow-lab">Optimize is a GUI preset, not an fvBD attribute. Custom reveals the four knobs.</text>
+<text x="894" y="240" text-anchor="end" class="ov-note">Schematic, not to scale · original zFrontier diagram</text>
+</svg></div>
+<p>Optimize only actually turns ARP flooding off when unicast routing is enabled. A BD subnet is not an fvBD flooding attribute, but you want one on an Optimize L3 BD so ARP gleaning can discover silent IP hosts. If you need Flood, ARP flooding, Drop or Flood in Encapsulation, switch to Custom and set the knobs explicitly — that is what the models on this page do, even for the Optimize-equivalent scenario, so the intended state is visible in Ansible, Terraform and Terragrunt.</p>
+
+<h2 id="scenarios">Scenario matrix</h2>
+<p>Eight lab scenarios in tenant <code>flood_lab</code>. Each row is one bridge domain. The recommended settings are the ones in the downloadable models. Click a name for the why and the gotchas.</p>
+<div class="table-wrap"><table class="sortable"><thead><tr><th>Scenario</th><th>Forwarding</th><th>Unicast routing</th><th>L2 unknown unicast</th><th>L3 unknown mcast</th><th>Multi destination</th><th>ARP flooding</th><th>Other</th></tr></thead><tbody><tr><td><a href="#l3-optimized"><strong>L3 BD, default Optimize</strong></a><br><code>bd_l3_optimized</code></td><td>Optimize</td><td>On</td><td>Hardware Proxy</td><td>Flood</td><td>Flood in BD</td><td>Disabled</td><td>subnet 10.10.10.1/24</td></tr><tr><td><a href="#l2-only"><strong>L2-only BD (unicast routing off)</strong></a><br><code>bd_l2_only</code></td><td>Custom</td><td>Off</td><td>Flood</td><td>Flood</td><td>Flood in BD</td><td>Enabled</td><td>no subnet; clear remote MAC</td></tr><tr><td><a href="#l2-migration"><strong>L2 stretched / legacy migration BD</strong></a><br><code>bd_l2_migration</code></td><td>Custom</td><td>On</td><td>Flood</td><td>Flood</td><td>Flood in BD</td><td>Enabled</td><td>subnet 10.10.20.1/24; clear remote MAC</td></tr><tr><td><a href="#silent-hosts"><strong>Silent-host BD (L2 reachability)</strong></a><br><code>bd_silent_hosts</code></td><td>Custom</td><td>On</td><td>Flood</td><td>Flood</td><td>Flood in BD</td><td>Enabled</td><td>subnet 10.10.30.1/24; clear remote MAC</td></tr><tr><td><a href="#flood-in-encap"><strong>Flood in Encapsulation (VLAN-per-EPG shared BD)</strong></a><br><code>bd_flood_in_encap</code></td><td>Custom</td><td>On</td><td>Flood</td><td>Flood</td><td>Flood in Encapsulation</td><td>Enabled</td><td>subnet 10.10.40.1/24; clear remote MAC</td></tr><tr><td><a href="#drop-bum"><strong>Drop multi-destination (security)</strong></a><br><code>bd_drop_bum</code></td><td>Custom</td><td>On</td><td>Hardware Proxy</td><td>Flood</td><td>Drop</td><td>Disabled</td><td>subnet 10.10.50.1/24</td></tr><tr><td><a href="#multicast-app"><strong>Multicast application BD</strong></a><br><code>bd_multicast_app</code></td><td>Custom</td><td>On</td><td>Hardware Proxy</td><td>Optimized Flood</td><td>Flood in BD</td><td>Disabled</td><td>subnet 10.10.60.1/24; PIM on</td></tr><tr><td><a href="#fw-cluster-garp"><strong>Firewall / load-balancer cluster (GARP)</strong></a><br><code>bd_fw_cluster</code></td><td>Custom</td><td>On</td><td>Hardware Proxy</td><td>Flood</td><td>Flood in BD</td><td>Enabled</td><td>subnet 10.10.70.1/24; GARP EP-move detect</td></tr></tbody></table></div>
+<h3 id="scenario-detail">Scenario notes</h3>
+<article class="scen" id="l3-optimized">
+<h3>L3 BD, default Optimize</h3>
+<p class="howto">Typical modern L3 subnet with ACI as the gateway. Model BD: <code>bd_l3_optimized</code>.</p>
+<div class="kv"><span><b>Fwd:</b> Optimize</span><span><b>Routing:</b> On</span><span><b>L2 UU:</b> Hardware Proxy</span><span><b>L3 UM:</b> Flood</span><span><b>Multi dest:</b> Flood in BD</span><span><b>ARP:</b> Disabled</span><span><b>Subnet:</b> 10.10.10.1/24</span></div>
+<p>This is the usual starting point when the fabric is the default gateway. Hardware Proxy sends unknown unicast to the spine COOP anycast proxy instead of flooding the BD GIPo tree, and with unicast routing on, ARP can be forwarded as unicast to a known target IP. Silent IP endpoints can still be discovered with ARP gleaning from the BD subnet.</p>
+<p><strong>Gotchas</strong></p><ul class=""><li>Changing L2 Unknown Unicast (Flood ↔ Hardware Proxy) is disruptive: traffic bounces on interfaces of EPGs in the BD.</li><li>If a firewall or load-balancer failover changes the MAC of a VIP, neighbours will not see the GARP unless ARP flooding is enabled.</li><li>Hardware Proxy drops unknown-MAC unicast when the MAC is not in COOP, so truly silent L2 (non-IP) endpoints can black-hole until they are learned.</li></ul>
+</article>
+<article class="scen" id="l2-only">
+<h3>L2-only BD (unicast routing off)</h3>
+<p class="howto">Pure Layer-2 bridge domain with no BD SVI. Model BD: <code>bd_l2_only</code>.</p>
+<div class="kv"><span><b>Fwd:</b> Custom</span><span><b>Routing:</b> Off</span><span><b>L2 UU:</b> Flood</span><span><b>L3 UM:</b> Flood</span><span><b>Multi dest:</b> Flood in BD</span><span><b>ARP:</b> Enabled</span><span><b>Subnet:</b> none</span><span><b>Clear remote MAC:</b> Yes</span></div>
+<p>With unicast routing disabled there is no BD gateway, no IP endpoint learning, and ARP flooding cannot be turned off. Unknown unicast must flood over the BD multicast tree so that silent or remotely attached MAC addresses can still be reached. Clear Remote MAC Entries is enabled so a deleted endpoint is also flushed on remote leaves, which matters in flood mode because remote leaves would otherwise keep the stale MAC until the timer expires.</p>
+<p><strong>Gotchas</strong></p><ul class=""><li>ARP Flooding is forced on when Hardware Proxy is off or when unicast routing is off; the GUI checkbox cannot actually disable it.</li><li>There is no ARP gleaning from a BD SVI, because there is no subnet.</li><li>This BD cannot route to other BDs or to an L3Out by itself. An L3Out contract on an L2-only BD does not give it a gateway.</li></ul>
+</article>
+<article class="scen" id="l2-migration">
+<h3>L2 stretched / legacy migration BD</h3>
+<p class="howto">Brownfield VLAN extension onto non-ACI switches, with or without an ACI gateway. Model BD: <code>bd_l2_migration</code>.</p>
+<div class="kv"><span><b>Fwd:</b> Custom</span><span><b>Routing:</b> On</span><span><b>L2 UU:</b> Flood</span><span><b>L3 UM:</b> Flood</span><span><b>Multi dest:</b> Flood in BD</span><span><b>ARP:</b> Enabled</span><span><b>Subnet:</b> 10.10.20.1/24</span><span><b>Clear remote MAC:</b> Yes</span></div>
+<p>Cisco’s best-practice summary is to set L2 Unknown Unicast to Flood when Layer 2 is extended through non-ACI switches, such as during migration. Endpoints (and silent hosts) behind a legacy access layer may never be learned in COOP the way a leaf-attached host is, so Hardware Proxy would drop unknown-MAC frames. ARP flooding keeps GARP and discovery working across the extended segment. Unicast routing can stay on if ACI is already the gateway.</p>
+<p><strong>Gotchas</strong></p><ul class=""><li>The flood domain now includes the legacy switches. Watch STP, TCN flushes, and the size of the L2 domain.</li><li>Do not switch to Hardware Proxy until every endpoint that must be reached by L2 unicast is attached in a way ACI can learn it.</li><li>Changing L2 Unknown Unicast later is disruptive.</li><li>If the same subnet is also a default gateway on a legacy router, you have two gateways unless you are doing a carefully planned migration (for example, using a common pervasive gateway or moving the SVI).</li></ul>
+</article>
+<article class="scen" id="silent-hosts">
+<h3>Silent-host BD (L2 reachability)</h3>
+<p class="howto">Hosts that do not speak first, including some appliances and non-IP devices. Model BD: <code>bd_silent_hosts</code>.</p>
+<div class="kv"><span><b>Fwd:</b> Custom</span><span><b>Routing:</b> On</span><span><b>L2 UU:</b> Flood</span><span><b>L3 UM:</b> Flood</span><span><b>Multi dest:</b> Flood in BD</span><span><b>ARP:</b> Enabled</span><span><b>Subnet:</b> 10.10.30.1/24</span><span><b>Clear remote MAC:</b> Yes</span></div>
+<p>Hardware Proxy drops unicast to a MAC that is not in COOP. If you need Layer-2 unicast to a silent MAC, Flood is the setting that delivers the frame. ARP flooding plus a BD subnet also helps when a silent IP moves without sending GARP: the request is flooded, the host can answer, and the leaf updates the endpoint table. ARP gleaning (which requires unicast routing and a BD subnet) can discover silent IP hosts for routed traffic even under Optimize, so do not enable Flood only because a host is quiet on ARP.</p>
+<p><strong>Gotchas</strong></p><ul class=""><li>If traffic is almost all routed (destination MAC is the BD MAC), Optimize plus gleaning is usually enough; Flood is for unknown MAC unicast and for GARP/move cases.</li><li>If ARP flooding is disabled and a silent IP moves, the leaf may keep unicasting ARP to the old location until the endpoint ages out.</li><li>Flooding increases fabric BUM load compared with Optimize.</li></ul>
+</article>
+<article class="scen" id="flood-in-encap">
+<h3>Flood in Encapsulation (VLAN-per-EPG shared BD)</h3>
+<p class="howto">Several EPGs, each with its own VLAN or VXLAN, sharing one BD. Model BD: <code>bd_flood_in_encap</code>.</p>
+<div class="kv"><span><b>Fwd:</b> Custom</span><span><b>Routing:</b> On</span><span><b>L2 UU:</b> Flood</span><span><b>L3 UM:</b> Flood</span><span><b>Multi dest:</b> Flood in Encapsulation</span><span><b>ARP:</b> Enabled</span><span><b>Subnet:</b> 10.10.40.1/24</span><span><b>Clear remote MAC:</b> Yes</span></div>
+<p>Flood in Encapsulation limits ARP, GARP and other BUM to the encapsulation of the ingress EPG instead of every EPG in the BD. Cross-EPG communication in the same BD then uses proxy ARP, which is why the BD must have a subnet and unicast routing. This is the usual pattern when you want VLAN-per-EPG (or VXLAN-per-EPG from APIC 3.2(5)) without creating one BD per VLAN.</p>
+<p><strong>Gotchas</strong></p><ul class=""><li>Flood in Encapsulation does not work with Hardware Proxy or with ARP unicast mode. The BD must be in flood mode for unknown unicast and ARP flooding must be on.</li><li>Requires APIC 3.1(1) or later and Nexus 9000 leaves whose model names end in EX, FX or later. On earlier APIC releases or first-generation (non-EX/FX) switches the feature does not function: no informational fault is raised, but APIC lowers the health score by 1.</li><li>Not supported with microsegmentation (intra-EPG isolation, “allow microsegmentation” on a VMM domain, uSeg EPGs, or intra-EPG contracts), IGMP snooping, IPv4 Layer-3 multicast, Common Pervasive Gateway, or EPGs/BDs stretched across Multi-Site (locally defined BDs in a Multi-Site fabric are still fine). Mixed first-generation ALE/ASE topologies are not supported.</li><li>IPv6 NS/ND proxy is not supported, so two IPv6 endpoints in the same subnet but different encapsulations may not communicate.</li><li>A Layer-3 gateway must be in the ACI fabric. If you enable FiE on all EPGs of a BD, also enable it on the BD. EPG-level FiE takes precedence when mixed. Prefer enabling it on the BD itself so egress/transit leaves do not leak packets into the wrong encapsulation (CSCvx83364, fixed in later 4.2(6)/4.2(7)/5.2(1) trains).</li></ul>
+</article>
+<article class="scen" id="drop-bum">
+<h3>Drop multi-destination (security)</h3>
+<p class="howto">Drop L2 multicast and broadcast in the BD, keep Optimize-style unicast/ARP. Model BD: <code>bd_drop_bum</code>.</p>
+<div class="kv"><span><b>Fwd:</b> Custom</span><span><b>Routing:</b> On</span><span><b>L2 UU:</b> Hardware Proxy</span><span><b>L3 UM:</b> Flood</span><span><b>Multi dest:</b> Drop</span><span><b>ARP:</b> Disabled</span><span><b>Subnet:</b> 10.10.50.1/24</span></div>
+<p>Multi Destination Flooding applies to L2 multicast, broadcast and link-layer traffic, not to ARP (which has its own knob) and not to L2 unknown unicast. Setting it to Drop is a tightening control when you do not want those frames flooded in the BD — for example a tightly managed subnet that uses DHCP relay and has no broadcast-based clustering.</p>
+<p><strong>Gotchas</strong></p><ul class=""><li>Client DHCP broadcasts will be dropped unless you use ACI DHCP relay (the leaf unicasts to the helper).</li><li>Broadcast or L2-multicast cluster heartbeats, PXE, and similar protocols will fail.</li><li>ARP still follows the ARP Flooding knob. Unknown unicast still follows L2 Unknown Unicast.</li><li>Confirm there is no hidden dependency on broadcast before you enable Drop in production.</li></ul>
+</article>
+<article class="scen" id="multicast-app">
+<h3>Multicast application BD</h3>
+<p class="howto">IPv4 PIM in the BD, with Optimized Flood for unknown multicast. Model BD: <code>bd_multicast_app</code>.</p>
+<div class="kv"><span><b>Fwd:</b> Custom</span><span><b>Routing:</b> On</span><span><b>L2 UU:</b> Hardware Proxy</span><span><b>L3 UM:</b> Optimized Flood</span><span><b>Multi dest:</b> Flood in BD</span><span><b>ARP:</b> Disabled</span><span><b>Subnet:</b> 10.10.60.1/24</span><span><b>PIM:</b> On</span></div>
+<p>When a BD carries real IP multicast, enable PIM on the BD (and on the VRF — that is a VRF-level setting, not included in these BD-only models). Optimized Flood limits unknown L3 multicast (no IGMP/MLD snooping hit) rather than flooding it across the BD. Receivers that have joined are served from snooping state; mrouter ports are learned from PIM hellos or IGMP/MLD queries. L2 multicast and broadcast still use Flood in BD.</p>
+<p><strong>Gotchas</strong></p><ul class=""><li>Optimized Flood is not a substitute for PIM. If there is no snooping entry and no mrouter port, unknown multicast can be dropped.</li><li>On pre-EX platforms, Optimized Flood was limited to 50 BDs per leaf; that limit does not apply to N9K-93180YC-EX and later EX/FX/GX leaves. Flood versus Optimized Flood also differs by platform on which leaves actually flood.</li><li>IPv4 Layer-3 multicast and IGMP snooping are not supported together with Flood in Encapsulation. Do not combine this scenario with encap-flood.</li><li>The VRF must also allow L3 multicast; enabling only the BD PIM flag is not enough.</li></ul>
+</article>
+<article class="scen" id="fw-cluster-garp">
+<h3>Firewall / load-balancer cluster (GARP)</h3>
+<p class="howto">Go-To HA pair whose VIP may move to a new MAC. Model BD: <code>bd_fw_cluster</code>.</p>
+<div class="kv"><span><b>Fwd:</b> Custom</span><span><b>Routing:</b> On</span><span><b>L2 UU:</b> Hardware Proxy</span><span><b>L3 UM:</b> Flood</span><span><b>Multi dest:</b> Flood in BD</span><span><b>ARP:</b> Enabled</span><span><b>Subnet:</b> 10.10.70.1/24</span><span><b>EP move detect:</b> GARP</span></div>
+<p>Disable-ARP-flooding optimisation stops GARP from being flooded, so neighbouring hosts and routers may keep the old IP-to-MAC mapping after a firewall or load-balancer failover. Cisco’s best practice is to leave ARP Flooding enabled for clustered servers, firewalls and load balancers so GARP can update those caches. Hardware Proxy can stay on for ordinary unknown unicast when the devices are in Go-To (routed) mode. GARP-based endpoint-move detection is also enabled so the fabric updates its own endpoint table when it sees the GARP.</p>
+<p><strong>Gotchas</strong></p><ul class=""><li>If both HA members can be configured with the same MAC address, neighbour ARP caches may not need a GARP flood; ARP flooding can then be disabled if you want the optimisation.</li><li>A Go-Through (transparent) service graph automatically sets the BD to unknown-unicast flood and ARP flood, because those devices often learn like a transparent bridge. You only get to choose Optimize-style settings in Go-To mode.</li><li>Hardware Proxy does not change routed traffic whose destination MAC is already the BD MAC.</li><li>ARP gleaning is not a substitute for flooding GARP to servers that are not the fabric.</li></ul>
+</article>
+<h2 id="mapping">APIC object mapping</h2>
+<p>Current Terraform names are from the CiscoDevNet/aci Plugin Framework rewrite (v2.16.0 onwards). The models on this page use only the current names. Legacy and current attributes must not be set together.</p>
+<div class="table-wrap"><table class="sortable"><thead><tr><th>GUI control</th><th>fvBD attribute</th><th>APIC values</th><th>Ansible <code>aci_bd</code></th><th>Terraform (current)</th><th>Legacy Terraform (deprecated)</th></tr></thead><tbody><tr><td>Forwarding: Optimize / Custom</td><td>— (GUI preset only)</td><td>Not stored as its own property</td><td>Emit the underlying attributes</td><td>Emit the underlying attributes</td><td>—</td></tr><tr><td>L2 Unknown Unicast</td><td><code>unkMacUcastAct</code></td><td><code>proxy</code> · <code>flood</code></td><td><code>l2_unknown_unicast</code></td><td><code>l2_unknown_unicast_flooding</code></td><td><code>unk_mac_ucast_act</code></td></tr><tr><td>L3 Unknown Multicast Flooding</td><td><code>unkMcastAct</code></td><td><code>flood</code> · <code>opt-flood</code></td><td><code>l3_unknown_multicast</code></td><td><code>l3_unknown_multicast_flooding</code></td><td><code>unk_mcast_act</code></td></tr><tr><td>IPv6 unknown multicast (not on this screenshot; Policy view)</td><td><code>v6unkMcastAct</code></td><td><code>flood</code> · <code>opt-flood</code></td><td><code>ipv6_l3_unknown_multicast</code></td><td><code>ipv6_l3_unknown_multicast_flooding</code></td><td>—</td></tr><tr><td>Multi Destination Flooding</td><td><code>multiDstPktAct</code></td><td><code>bd-flood</code> · <code>drop</code> · <code>encap-flood</code></td><td><code>multi_dest</code></td><td><code>multi_destination_flooding</code></td><td><code>multi_dst_pkt_act</code></td></tr><tr><td>ARP Flooding</td><td><code>arpFlood</code></td><td><code>yes</code> · <code>no</code></td><td><code>arp_flooding</code> (boolean)</td><td><code>arp_flooding</code> (<code>yes</code>/<code>no</code>)</td><td><code>arp_flood</code></td></tr><tr><td>Unicast Routing</td><td><code>unicastRoute</code></td><td><code>yes</code> · <code>no</code></td><td><code>enable_routing</code> (boolean)</td><td><code>unicast_routing</code></td><td><code>unicast_route</code></td></tr><tr><td>PIM (IPv4 L3 multicast)</td><td><code>mcastAllow</code></td><td><code>yes</code> · <code>no</code></td><td><code>enable_multicast</code></td><td><code>pim</code></td><td>—</td></tr><tr><td>Clear Remote MAC Entries</td><td><code>epClear</code></td><td><code>yes</code> · <code>no</code></td><td>Not modelled as a sticky flag: <code>endpoint_clear</code> is a one-shot flush of all endpoints and is omitted from the playbook</td><td><code>clear_remote_mac_entries</code></td><td>—</td></tr><tr><td>Endpoint move detection (GARP)</td><td><code>epMoveDetectMode</code></td><td>empty · <code>garp</code></td><td><code>endpoint_move_detect</code>: <code>default</code> or <code>garp</code></td><td><code>endpoint_move_detection_mode</code></td><td>—</td></tr><tr><td>BD subnet (for gleaning and FiE proxy ARP)</td><td>child <code>fvSubnet</code></td><td>gateway/mask</td><td><code>cisco.aci.aci_bd_subnet</code></td><td><code>aci_subnet</code> with <code>parent_dn</code> of the BD</td><td><code>bridge_domain_dn</code></td></tr><tr><td>VRF association</td><td>child <code>fvRsCtx</code></td><td>VRF name</td><td><code>vrf</code></td><td><code>relation_to_vrf.vrf_name</code></td><td><code>relation_fv_rs_ctx</code></td></tr></tbody></table></div>
+<h2 id="models">Ansible, Terraform and Terragrunt</h2>
+
+<p>One parametric set, not eight disconnected copies. The Ansible playbook loops <code>vars/scenarios.yml</code>. The Terraform module takes a <code>scenarios</code> map. Terragrunt has a <code>live/all</code> unit plus one unit per scenario, each wrapping that module. Placeholder names only: tenant <code>flood_lab</code>, VRF <code>flood_lab_vrf</code>. Credentials are read from <code>ACI_URL</code>, <code>ACI_USERNAME</code>, <code>ACI_PASSWORD</code> and, for Terraform/Terragrunt, <code>ACI_INSECURE</code>. There is no password, certificate or real APIC URL in the files. Do not point them at the shared Always-On APIC unless you have written approval to write to that fabric.</p>
+<div class="downloads">
+  <a class="primary" href="downloads/aci-bd-flooding-models.zip">Download all models (.zip)</a>
+  <a href="models/README.md">README</a>
+  <a href="models/ansible/playbook.yml">Ansible playbook</a>
+  <a href="models/ansible/vars/scenarios.yml">Ansible vars</a>
+  <a href="models/terraform/main.tf">Terraform module</a>
+  <a href="models/terraform/scenarios/all.tfvars">all.tfvars</a>
+  <a href="models/terragrunt/live/root.hcl">Terragrunt root.hcl</a>
+  <a href="models/terragrunt/live/all/terragrunt.hcl">Terragrunt all unit</a>
+</div>
+<h3>Ansible</h3>
+<p><code>cisco.aci.aci_tenant</code>, <code>aci_vrf</code>, <code>aci_bd</code> and <code>aci_bd_subnet</code>, with parameter names checked against the current <code>cisco.aci.aci_bd</code> documentation (<code>l2_unknown_unicast</code>, <code>l3_unknown_multicast</code>, <code>ipv6_l3_unknown_multicast</code>, <code>multi_dest</code>, <code>arp_flooding</code>, <code>enable_routing</code>, <code>enable_multicast</code>). Inventory is a local connection; the APIC is reached only through the environment variables.</p>
+<p>Individual Ansible files:</p>
+<ul class="filelist">
+  <li><a href="models/ansible/playbook.yml"><code>models/ansible/playbook.yml</code></a></li>
+  <li><a href="models/ansible/vars/scenarios.yml"><code>models/ansible/vars/scenarios.yml</code></a></li>
+  <li><a href="models/ansible/group_vars/all.yml"><code>models/ansible/group_vars/all.yml</code></a></li>
+  <li><a href="models/ansible/inventory.ini"><code>models/ansible/inventory.ini</code></a></li>
+  <li><a href="models/ansible/ansible.cfg"><code>models/ansible/ansible.cfg</code></a></li>
+</ul>
+<h3>Terraform</h3>
+<p>Provider <code>CiscoDevNet/aci</code> &gt;= 2.16.0. Current attributes only: <code>parent_dn</code>, <code>l2_unknown_unicast_flooding</code>, <code>l3_unknown_multicast_flooding</code>, <code>ipv6_l3_unknown_multicast_flooding</code>, <code>multi_destination_flooding</code>, <code>arp_flooding</code>, <code>unicast_routing</code>, <code>pim</code>, <code>clear_remote_mac_entries</code>, <code>relation_to_vrf.vrf_name</code>. Subnets use <code>aci_subnet</code>. Per-scenario <code>.tfvars</code> files live under <code>models/terraform/scenarios/</code>.</p>
+<ul class="filelist">
+  <li><a href="models/terraform/main.tf"><code>models/terraform/main.tf</code></a>, <a href="models/terraform/variables.tf">variables.tf</a>, <a href="models/terraform/providers.tf">providers.tf</a>, <a href="models/terraform/versions.tf">versions.tf</a>, <a href="models/terraform/outputs.tf">outputs.tf</a></li>
+  <li><a href="models/terraform/scenarios/all.tfvars"><code>scenarios/all.tfvars</code></a> plus one file per scenario:
+    <a href="models/terraform/scenarios/l3-optimized.tfvars">l3-optimized.tfvars</a> · <a href="models/terraform/scenarios/l2-only.tfvars">l2-only.tfvars</a> · <a href="models/terraform/scenarios/l2-migration.tfvars">l2-migration.tfvars</a> · <a href="models/terraform/scenarios/silent-hosts.tfvars">silent-hosts.tfvars</a> · <a href="models/terraform/scenarios/flood-in-encap.tfvars">flood-in-encap.tfvars</a> · <a href="models/terraform/scenarios/drop-bum.tfvars">drop-bum.tfvars</a> · <a href="models/terraform/scenarios/multicast-app.tfvars">multicast-app.tfvars</a> · <a href="models/terraform/scenarios/fw-cluster-garp.tfvars">fw-cluster-garp.tfvars</a></li>
+</ul>
+<h3>Terragrunt</h3>
+<p>A <code>live/root.hcl</code> points <code>terraform.source</code> at the module above and reads APIC settings from the environment. <code>live/all</code> creates every BD; <code>live/&lt;scenario&gt;</code> creates one BD. Each unit sets <code>manage_tenant = true</code> so it is self-contained; apply only one managing unit at a time against the same state, or use the <code>all</code> unit.</p>
+<ul class="filelist">
+  <li><a href="models/terragrunt/live/root.hcl"><code>models/terragrunt/live/root.hcl</code></a></li>
+  <li><a href="models/terragrunt/live/all/terragrunt.hcl"><code>live/all/terragrunt.hcl</code></a></li>
+  <li><a href="models/terragrunt/live/l3-optimized/terragrunt.hcl">l3-optimized</a> · <a href="models/terragrunt/live/l2-only/terragrunt.hcl">l2-only</a> · <a href="models/terragrunt/live/l2-migration/terragrunt.hcl">l2-migration</a> · <a href="models/terragrunt/live/silent-hosts/terragrunt.hcl">silent-hosts</a> · <a href="models/terragrunt/live/flood-in-encap/terragrunt.hcl">flood-in-encap</a> · <a href="models/terragrunt/live/drop-bum/terragrunt.hcl">drop-bum</a> · <a href="models/terragrunt/live/multicast-app/terragrunt.hcl">multicast-app</a> · <a href="models/terragrunt/live/fw-cluster-garp/terragrunt.hcl">fw-cluster-garp</a></li>
+</ul>
+<h3>Validation on this build</h3>
+
+<ul>
+<li><strong>Ansible</strong> — <code>ansible-playbook --syntax-check playbook.yml</code> with ansible-core 2.19.15 and the <code>cisco.aci</code> 3.0.0 collection: passed (exit 0). An earlier check failed because <code>module_defaults</code> group <code>cisco.aci.aci</code> could not be resolved in this ansible-core build; the playbook now uses a YAML anchor for the login parameters instead. The inventory host was also renamed so it no longer clashes with a group of the same name.</li>
+<li><strong>Terraform</strong> — <code>terraform fmt -recursive</code> applied (Terraform 1.13.3). <code>terraform init -backend=false</code> installed provider CiscoDevNet/aci <strong>v2.22.0</strong> (constraint <code>&gt;= 2.16.0</code>). <code>terraform validate</code>: “Success! The configuration is valid.” A first validate failed because <code>aci_subnet.scope</code> must be a list of strings in the current provider; it is now <code>["private"]</code>. No <code>terraform plan</code> or apply was run, so the provider never contacted an APIC. The provider lockfile is included; the <code>.terraform/</code> plugin cache is not.</li>
+<li><strong>Terragrunt</strong> — <code>terragrunt hcl format</code> (Terragrunt 1.2.3) applied. <code>terragrunt render</code> on the <code>l3-optimized</code> unit resolved <code>root.hcl</code> and the scenario inputs correctly, using the placeholder URL <code>https://apic.example.invalid</code>.</li>
+</ul>
+
+<p class="howto">Checked 27 Nov 2026, 1:59 PM AEDT (Melbourne time). Syntax-only: no <code>terraform plan</code> or Ansible run against an APIC, and no APIC access from this job.</p>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources"><li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-61x/bridging-61x.html">Cisco APIC Layer 2 Networking Configuration Guide, Release 6.1(x) — Bridging</a> — <code>https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-61x/bridging-61x.html</code></li><li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-62x/g_bridging/flood-in-encapsulation-for-all-protocols.html">Flood in encapsulation for all protocols and proxy ARP across encapsulations — APIC L2 Guide, Release 6.2(x)</a> — <code>https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/l2-configuration/cisco-apic-layer-2-networking-configuration-guide-62x/g_bridging/flood-in-encapsulation-for-all-protocols.html</code></li><li><a href="https://www.cisco.com/c/en/us/support/docs/technical-details/222179-understand-arp-flooding-and-arp-gleaning.html">Understand ARP Flooding and ARP Gleaning in ACI (Cisco technical note, document 222179)</a> — <code>https://www.cisco.com/c/en/us/support/docs/technical-details/222179-understand-arp-flooding-and-arp-gleaning.html</code></li><li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/whitepapers/cisco-aci-best-practices-quick-summary.html">Cisco ACI Best Practices Quick Summary — L2 Unknown Unicast and ARP Flooding</a> — <code>https://www.cisco.com/c/en/us/td/docs/dcn/whitepapers/cisco-aci-best-practices-quick-summary.html</code></li><li><a href="https://www.cisco.com/c/en/us/solutions/collateral/data-center-virtualization/application-centric-infrastructure/white-paper-c11-2491213.html">Service Graph Design with Cisco ACI (updated to APIC Release 5.2) — BD flooding and GARP</a> — <code>https://www.cisco.com/c/en/us/solutions/collateral/data-center-virtualization/application-centric-infrastructure/white-paper-c11-2491213.html</code></li><li><a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-62x/policy-model-62x.html">Cisco Application Centric Infrastructure Fundamentals, Release 6.2(x) — ACI Policy Model (bridge domain options)</a> — <code>https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-62x/policy-model-62x.html</code></li><li><a href="https://www.ciscolive.com/c/dam/r/ciscolive/emea/docs/2025/pdf/BRKDCN-3900.pdf">Cisco Live BRKDCN-3900, Blueprint for ACI Forwarding (2025)</a> — <code>https://www.ciscolive.com/c/dam/r/ciscolive/emea/docs/2025/pdf/BRKDCN-3900.pdf</code></li><li><a href="https://docs.ansible.com/ansible/latest/collections/cisco/aci/aci_bd_module.html">cisco.aci.aci_bd module — Ansible Community Documentation</a> — <code>https://docs.ansible.com/ansible/latest/collections/cisco/aci/aci_bd_module.html</code></li><li><a href="https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/bridge_domain">Terraform Registry — CiscoDevNet/aci aci_bridge_domain (current Plugin Framework attributes)</a> — <code>https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/bridge_domain</code></li></ul>
+<p>Documents were checked on 27 Nov 2026. Release-specific behaviour (Flood in Encapsulation hardware support, Optimized Flood scale, Multi-Site stretch) should be re-checked against the APIC version of the fabric you are changing.</p>
+<section id="not-collected">
+<h2>Not on this page</h2>
+<ul class=""><li>No APIC was queried or written to for this page. The screenshot is the GUI source; behaviour is taken from the Cisco documents in Sources.</li><li>VRF-level L3 multicast policy, IGMP snooping policy objects, DHCP relay policy, and L4–L7 service-graph objects are described where they matter but are not in the model files.</li><li>Flood in Encapsulation at EPG level (the EPG “Flood in Encapsulation” flag) is explained but not modelled; the models set it on the BD.</li><li>An index card on the zFrontier home page is planned for publish time and is not in this preview.</li><li>These models have not been applied, planned against a live APIC, or certified on a particular APIC release beyond the document versions cited.</li></ul></section>
+<section id="comments" aria-labelledby="comments-h">
+<h2 id="comments-h">Comments</h2>
+<p>Use this thread for questions or corrections about ACI bridge-domain flooding scenarios. Sign in with GitHub to comment. Comments are stored as GitHub Discussions in this site’s repository, one thread per page (mapped by pathname).</p>
+<div id="comments-mount"></div>
+<script>
+(function(){
+  var b=String.fromCharCode(99,111,108,101,115);
+  var repo='amoeoo-'+b+'/amoeoo-'+b+'.github.io';
+  var s=document.createElement('script');
+  s.src='https://giscus.app/client.js';
+  s.setAttribute('data-repo',repo);
+  s.setAttribute('data-repo-id','R_kgDOVM0-Fw');
+  s.setAttribute('data-category','Announcements');
+  s.setAttribute('data-category-id','DIC_kwDOVM0-F84DLoq4');
+  s.setAttribute('data-mapping','pathname');
+  s.setAttribute('data-strict','1');
+  s.setAttribute('data-reactions-enabled','1');
+  s.setAttribute('data-input-position','top');
+  s.setAttribute('data-theme','preferred_color_scheme');
+  s.setAttribute('data-lang','en');
+  s.setAttribute('data-loading','lazy');
+  s.crossOrigin='anonymous';
+  s.async=true;
+  var m=document.getElementById('comments-mount');
+  if(m) m.appendChild(s);
+})();
+</script>
+</section>
+<section id="versions">
+<h2>Versions</h2>
+<p>This is <strong>v1 · 27 Nov 2026, 1:59 PM AEDT</strong>. Snapshots are under <a href="/zfrontier/ACI-BD-Flooding/history/">history/</a>.</p>
+<ul><li><b>v1 (current)</b> · 27 Nov 2026, 1:59 PM AEDT (Melbourne time) · first publication: ACI bridge-domain flooding scenarios (Optimize vs Custom), packet walks, eight lab scenarios, and Ansible, Terraform and Terragrunt models. Preview only; not pushed. · <a href="/zfrontier/ACI-BD-Flooding/history/v1/">history/v1/</a></li></ul>
+</section>
+</main>
+<footer class="wrap">
+<p class="meta">Page: <strong>ACI bridge-domain flooding scenarios</strong> · Version: <strong>v1 · 27 Nov 2026, 1:59 PM AEDT</strong></p>
+<p class="meta">Lab reference for Cisco ACI bridge-domain flooding knobs, with illustrative Ansible, Terraform and Terragrunt models for a placeholder tenant. Nothing on this page was written to an APIC. Folder links end with <code>/</code>.</p>
+</footer>
+<script src="/zfrontier/travel/sort.js"></script>
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/"}}</script>
+<script>(function(){var b=String.fromCharCode(99,111,108,101,115);var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';s.setAttribute('data-goatcounter','https://amoeoo-'+b+'.goatcounter.com/count');document.head.appendChild(s);}());</script>
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:6px 0 8px;gap:6px;font:650 11.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:4px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im details.im-sub,nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:4px;margin:0;padding:6px 8px;border-left:3px solid var(--im-accent,var(--menu-on,#2563eb));background:color-mix(in srgb,var(--im-accent,#2563eb) 10%,transparent);border-radius:8px}
+nav.site.im a.mi{display:flex!important;align-items:center;gap:5px;box-sizing:border-box;width:100%;height:28px;min-height:28px;max-height:28px;min-width:0;padding:0 8px;border-radius:999px;border:1px solid color-mix(in srgb,var(--im-accent,#2563eb) 40%,var(--menu-pill-bd,#3a4456))!important;background:var(--menu-pill,#1b2330)!important;color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:color-mix(in srgb,var(--im-accent,#2563eb) 16%,var(--menu-hover,#26344a))!important}
+nav.site.im a.mi.on{background:var(--im-accent,#2563eb)!important;border-color:var(--im-accent,#2563eb)!important;color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{display:inline-flex;align-items:center;justify-content:center;flex:none;width:18px;height:18px;border-radius:50%;background:color-mix(in srgb,var(--im-accent,#2563eb) 22%,transparent);font-size:11px;line-height:1}
+nav.site.im a.mi.on .ic{background:rgba(255,255,255,.22)}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1;text-align:left}
+nav.site.im a.mi.sm{font-size:11px}
+nav.site.im a.sl,nav.site.im summary.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px;display:flex;align-items:center;gap:6px;cursor:pointer;list-style:none}
+nav.site.im summary.sl::-webkit-details-marker{display:none}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:14px;height:14px;padding:0 4px;border-radius:999px;font-size:9px;font-weight:700;line-height:1;background:color-mix(in srgb,var(--im-accent,#2563eb) 35%,#93c5fd);color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex!important;align-items:center;justify-content:center;flex:none;min-width:16px;height:16px;padding:0 4px;border-radius:999px;font-size:10px!important;font-weight:800;line-height:1;background:#0f172a!important;color:#fff!important}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc!important;color:#0f172a!important}
+nav.site.im a.mi.on .im-seq{background:#fff!important;color:var(--im-accent,#1d4ed8)!important}
+nav.site.im a.mi .im-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 2px color-mix(in srgb,var(--im-accent,#2563eb) 18%,transparent);flex:none}
+nav.site.im .im-stats{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font:600 11px/1.3 system-ui,Arial,sans-serif;color:var(--menu-fg,#94a3b8);padding:2px 2px 0;opacity:.9}
+nav.site.im .im-stats a{color:var(--link,#8ecbff);text-decoration:none}
+nav.site.im .im-stats .im-stat-n{font-variant-numeric:tabular-nums;font-weight:700}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:28px;flex:none}
+#sg-link,#tt-btn,#mm-link{height:28px;border-radius:999px;font-size:12px}
+#mm-link{width:28px;padding:0}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){
+  nav.site.im .im-main{grid-template-columns:repeat(2,minmax(0,1fr))}
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  nav.site.im summary.sl .im-toggle{display:inline}
+}
+@media (min-width:721px){
+  nav.site.im details.im-sub[open] .im-sub-pills,nav.site.im details.im-sub .im-sub-pills{display:grid!important}
+  nav.site.im summary.sl .im-toggle{display:none}
+}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["About Me","/about-me/","👤",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Cursor_Tenant6","/ARR/provisioning/cursor-tenant6/","🚀"],["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"],["ရှေ့သို့ချီ","/roadmap/forward/","⏩"],["Time Map 2026–2030","/roadmap/forward/time-map/","🗓️"],["BridgeWhy","/roadmap/bridgewhy/","📚"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["ARR-LargeTopology","/ARR-LargeTopology/","🗺️",[["Overview","/ARR-LargeTopology/","🗺️"],["Nodes","/ARR-LargeTopology/nodes.html","🖥️"],["Serials","/ARR-LargeTopology/serials.html","🔢"],["Mgmt IPs","/ARR-LargeTopology/mgmt-ips.html","🌐"],["Links","/ARR-LargeTopology/links.html","🔗"],["Tenants","/ARR-LargeTopology/tenants.html","🏢"],["VRFs","/ARR-LargeTopology/vrfs.html","🧭"],["BDs","/ARR-LargeTopology/bds.html","🌉"],["Subnets","/ARR-LargeTopology/subnets.html","🔢"],["EPGs","/ARR-LargeTopology/epgs.html","🎯"],["Leaf VNIs","/ARR-LargeTopology/vni.html","💠"],["VXLAN","/ARR-LargeTopology/vxlan/","🧵"],["VNI compare","/ARR-LargeTopology/vni-compare/","🔷"],["Access policies","/ARR-LargeTopology/access-policies/","🧱"],["BD GIPo & FTAG","/ARR-LargeTopology/bd-gipo-ftag/","📡"],["IAC files","/ARR-LargeTopology/iac-files/","📦"],["ARR-netbox","/ARR-LargeTopology/arr-netbox/","🗄️"],["Hardware monitor","/ARR-LargeTopology/hw-monitor/","📟"],["Site map","/ARR-LargeTopology/site-map/","🌳"],["Provisioning","/ARR-LargeTopology/provisioning/","🚀"],["Test explain","/ARR-LargeTopology/test-explain/","🧪"],["GitLab","/ARR-LargeTopology/gitlab/","🦊"],["GitLab Runner","/ARR-LargeTopology/gitlab-runner/","🏃"]]],["Terragrunt","/terragrunt/","🧰",[["Terragrunt","/terragrunt/","🧰"]]],["zFrontier","/zfrontier/","🌠",[["zFrontier","/zfrontier/","🌠"],["Southwest Chief","/zfrontier/southwest-chief/","🚂"],["Southwest Chief tracker","/zfrontier/southwest-chief/tracker/","📡"],["Southwest Chief stations","/zfrontier/southwest-chief/stations/","🚉"],["Farzad","/zfrontier/farzad/","📺"],["SpaceX vs Tesla shares","/zfrontier/shares/","📈"],["Optimus","/zfrontier/optimus/","🤖"],["Gigafactory","/zfrontier/gigafactory/","🏭"],["FSD versions","/zfrontier/fsd-versions/","🛣️"],["Liquid cooling","/zfrontier/liquid-cooling/","💧"],["SpaceX Tracking","/zfrontier/spacex/","🚀"],["CyberCab","/zfrontier/cybercab/","🚕"],["AI FineTune Pod","/zfrontier/ai-finetune-pod/","🎛️"],["MCP Servers","/zfrontier/mcp-servers/","🔌"],["NaC CLI","/zfrontier/nac-cli/","🧰"],["GPU Workflow","/zfrontier/3gpu-ai-workflow/","🧮"],["MWMESH","/zfrontier/mwmesh/","📡"],["Notebooks","/zfrontier/notebooks/","📓"],["RAG documents","/zfrontier/rag-documents/","📚"],["Foundation-Sec-8B","/zfrontier/foundation-sec-8b/","🛡️"],["Terafab","/zfrontier/terafab/","💠"],["3DiffsVXLAN","/zfrontier/3diffsvxlan/","🔀"],["ARR-LargePod","/zfrontier/arr-largepod/","🏗️"],["Nvidia A100 & H100","/zfrontier/Nvidia-A100-H100/","🟩"],["AgenticAI","/zfrontier/agenticai/","🧠"],["MS-02 GPU Monitoring","/zfrontier/MS-02-GPU-Monitoring/","📟"],["MBPro","/zfrontier/MBPro/","💻"],["Observability catalogues","/zfrontier/observability-catalogues/","🔭"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"]]],["ACI GUI Forms","/ACI-GUI-Forms/","📝",[["ACI GUI Forms","/ACI-GUI-Forms/","📝"],["GUI Map","/aci-gui-forms/WIP/gui-map/","🗺️"],["APG Access Policy Group","/ACI-GUI-Forms/apg/","🧩"],["Spine Access Policy Group","/ACI-GUI-Forms/spine-apg/","🛰️"]]],["ACI GUI","/aci-gui/","🖥️",[["Create Pod Policy Group","/aci-gui/create-pod-policy-group/","🧬"],["Create Bridge Domain (step 3)","/aci-gui/create-bridge-domain-step3/","🌉"],["Create Subnet","/aci-gui/create-subnet/","🔢"],["Create Application Profile","/aci-gui/create-application-profile/","🧩"],["Create Management EPG","/aci-gui/create-management-epg/","🛠️"],["Static Node Management Addresses","/aci-gui/static-node-management-addresses/","📍"],["Create Fabric Policies","/aci-gui/create-fabric-policies/","🧵"],["Create Access Policies","/aci-gui/create-access-policies/","🔐"],["Create VLAN Pool","/aci-gui/create-vlan-pool/","🏷️"],["Create Physical Domain","/aci-gui/create-physical-domain/","🏛️"],["Create Access Interface Policy Group","/aci-gui/create-access-interface-policy-group/","🔌"],["Create PC Interface Policy Group","/aci-gui/create-pc-interface-policy-group/","🔀"],["Note on Interface Policies","/aci-gui/interface-policies/","📘"],["Interface Wizard for vPC","/aci-gui/interface-wizard-vpc/","🪄"],["Create VMM Domain","/aci-gui/create-vmm-domain/","💻"],["vCenter Networking","/aci-gui/vcenter-networking/","🖥️"],["Create Tenant","/aci-gui/create-tenant/","🏢"],["Create L3Out","/aci-gui/create-l3out/","🌐"],["L3Out Contracts","/aci-gui/l3out-contracts/","📜"],["Create Bridge Domain","/aci-gui/create-bridge-domain/","🌉"],["Bridge Domain","/aci-gui/bridge-domain/","🌉"],["Mgmt Bridge Domain","/aci-gui/mgmt-bridge-domain/","🔧"],["DHCP Relay","/aci-gui/dhcp-relay/","📡"],["Management Application Profile","/aci-gui/management-application-profile/","📦"],["Application Profile (web + app)","/aci-gui/application-profile/","🧩"],["Create VRF","/aci-gui/create-vrf/","🧭"],["Create Endpoint Group","/aci-gui/create-endpoint-group/","🎯"],["Contracts Between Tenants","/aci-gui/contracts-between-tenants/","🤝"],["Create Filter","/aci-gui/create-filter/","🧹"],["Create Contract","/aci-gui/create-contract/","📃"],["Create Management Contracts","/aci-gui/create-management-contracts/","📑"],["Mgmt PortGroup to VM","/aci-gui/mgmt-portgroup-to-vm/","🧷"],["Pod Policy Group","/aci-gui/pod-policy-group/","🕒"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+var IM_UPDATED=["/","/netbox-aci-objects/","/netbox-aci-tenants/","/netbox-aci-tenants/diagrams/","/netbox-aci-tenants/diagrams/aci-p01-tenant/","/netbox-aci-tenants/diagrams/cursor-tenant1/","/netbox-aci-tenants/diagrams/cursor-tenant2/","/netbox-aci-tenants/diagrams/cursor-tenant3/","/netbox-aci-tenants/diagrams/cursor-tenant5/","/netbox-aci-tenants/diagrams/cursor-tenant6/","/netbox-aci-tenants/diagrams/msite-p01-tenant/","/netbox-hw-inventory/","/netbox-yaml-model/","/netbox-yaml-model/aci-p01-tenant/","/netbox-yaml-model/cursor-tenant1/","/netbox-yaml-model/cursor-tenant2/","/netbox-yaml-model/cursor-tenant3/","/netbox-yaml-model/cursor-tenant5/","/netbox-yaml-model/cursor-tenant6/","/netbox-yaml-model/msite-p01-tenant/","/report17-aoapic-monitoring/","/report17-aoapic-monitoring/objects/","/report17-aoapic-monitoring/objects/access_port_pgs/","/report17-aoapic-monitoring/objects/aeps/","/report17-aoapic-monitoring/objects/app_profiles/","/report17-aoapic-monitoring/objects/audit_24h/","/report17-aoapic-monitoring/objects/audit_7d/","/report17-aoapic-monitoring/objects/bd_subnets/","/report17-aoapic-monitoring/objects/bds/","/report17-aoapic-monitoring/objects/bundle_pgs/","/report17-aoapic-monitoring/objects/contracts/","/report17-aoapic-monitoring/objects/endpoints/","/report17-aoapic-monitoring/objects/epg_subnets/","/report17-aoapic-monitoring/objects/epgs/","/report17-aoapic-monitoring/objects/events_24h/","/report17-aoapic-monitoring/objects/faults/","/report17-aoapic-monitoring/objects/filters/","/report17-aoapic-monitoring/objects/interfaces/","/report17-aoapic-monitoring/objects/interfaces_up/","/report17-aoapic-monitoring/objects/l3_domains/","/report17-aoapic-monitoring/objects/l3outs/","/report17-aoapic-monitoring/objects/nodes/","/report17-aoapic-monitoring/objects/phys_domains/","/report17-aoapic-monitoring/objects/port_channels/","/report17-aoapic-monitoring/objects/static_paths/","/report17-aoapic-monitoring/objects/tenants/","/report17-aoapic-monitoring/objects/vlan_pools/","/report17-aoapic-monitoring/objects/vmm_domains/","/report17-aoapic-monitoring/objects/vpcs/","/report17-aoapic-monitoring/objects/vrfs/","/report17-aoapic-monitoring/pending-provisioning/","/report17-aoapic-monitoring/tenants/","/report17-aoapic-monitoring/universal-provisioning/","/report17-aoapic-monitoring/universal-provisioning/rma/","/roadmap/","/roadmap/america-driving/","/roadmap/america-driving/car-hire-boise-las-vegas/","/roadmap/america-driving/car-hire-las-vegas-phoenix/","/roadmap/america-driving/car-hire-san-jose-boise/","/roadmap/america-driving/las-vegas-to-boca-chica/","/roadmap/america-driving/leg-1-sfo-boise/","/roadmap/america-driving/leg-2-boise-las-vegas/","/roadmap/america-driving/leg-3-las-vegas-tucson-via-phoenix/","/roadmap/america-driving/leg-4-tucson-los-angeles/","/roadmap/bridgewhy/","/roadmap/bridgewhy/america-driving/","/roadmap/bridgewhy/bgp-mpls-enterprise-network-design/","/roadmap/bridgewhy/campus-network-design/","/roadmap/bridgewhy/ccna/","/roadmap/bridgewhy/cisco-aci/","/roadmap/bridgewhy/cisco-aci/lesson-01/","/roadmap/bridgewhy/cisco-aci/lesson-02/","/roadmap/bridgewhy/cisco-aci/lesson-03/","/roadmap/bridgewhy/cisco-aci/lesson-04/","/roadmap/bridgewhy/cisco-aci/lesson-05/","/roadmap/bridgewhy/cisco-aci/lesson-06/","/roadmap/bridgewhy/cisco-aci/lesson-07/","/roadmap/bridgewhy/cisco-aci/lesson-08/","/roadmap/bridgewhy/cisco-aci/lesson-09/","/roadmap/bridgewhy/cisco-aci/lesson-10/","/roadmap/bridgewhy/cisco-aci/lesson-11/","/roadmap/bridgewhy/cisco-aci/lesson-12/","/roadmap/bridgewhy/cisco-ise/","/roadmap/bridgewhy/cisco-sd-access/","/roadmap/bridgewhy/cisco-sd-wan/","/roadmap/bridgewhy/data-center-vxlan-bgp-evpn/","/roadmap/bridgewhy/enterprise-quality-of-service/","/roadmap/bridgewhy/git-for-network-engineers/","/roadmap/bridgewhy/introduction/","/roadmap/bridgewhy/ipv6-fundamentals/","/roadmap/bridgewhy/is-is-routing-protocol/","/roadmap/bridgewhy/linux-operating-system/","/roadmap/bridgewhy/llms-from-scratch/","/roadmap/bridgewhy/machine-learning-fundamentals/","/roadmap/bridgewhy/network-automation/","/roadmap/bridgewhy/network-security-fundamentals/","/roadmap/bridgewhy/ospf-deep-dive/","/roadmap/bridgewhy/switching-fundamentals/","/roadmap/bridgewhy/tcp-protocol-deep-dive/","/roadmap/bridgewhy/wireless-fundamentals-wlc-9800/","/roadmap/bridgewhy/wireshark-packet-analysis/","/visitors/","/visitors/countries/","/zfrontier/","/zfrontier/3diffsvxlan/","/zfrontier/3gpu-ai-workflow/","/zfrontier/3gpu-ai-workflow/check/","/zfrontier/3gpu-ai-workflow/checklist/","/zfrontier/3gpu-ai-workflow/ms-02-ultra/","/zfrontier/MBPro/","/zfrontier/MS-02-GPU-Monitoring/","/zfrontier/Nvidia-A100-H100/","/zfrontier/agenticai/","/zfrontier/ai-finetune-pod/","/zfrontier/ai-finetune-pod/checklist/","/zfrontier/ai-finetune-pod/plan/","/zfrontier/ai-finetune-pod/showcase/","/zfrontier/arr-largepod/","/zfrontier/ces-2027/","/zfrontier/ces-2027/03-jan/","/zfrontier/ces-2027/03-jan/autonomous-drones/","/zfrontier/ces-2027/03-jan/frontier-tech/","/zfrontier/ces-2027/03-jan/physical-ai/","/zfrontier/ces-2027/03-jan/robots/","/zfrontier/ces-2027/04-jan/","/zfrontier/ces-2027/04-jan/autonomous-drones/","/zfrontier/ces-2027/04-jan/frontier-tech/","/zfrontier/ces-2027/04-jan/physical-ai/","/zfrontier/ces-2027/04-jan/robots/","/zfrontier/ces-2027/05-jan/","/zfrontier/ces-2027/05-jan/autonomous-drones/","/zfrontier/ces-2027/05-jan/frontier-tech/","/zfrontier/ces-2027/05-jan/physical-ai/","/zfrontier/ces-2027/05-jan/robots/","/zfrontier/ces-2027/06-jan/","/zfrontier/ces-2027/06-jan/autonomous-drones/","/zfrontier/ces-2027/06-jan/frontier-tech/","/zfrontier/ces-2027/06-jan/physical-ai/","/zfrontier/ces-2027/06-jan/robots/","/zfrontier/ces-2027/07-jan/","/zfrontier/ces-2027/07-jan/autonomous-drones/","/zfrontier/ces-2027/07-jan/frontier-tech/","/zfrontier/ces-2027/07-jan/physical-ai/","/zfrontier/ces-2027/07-jan/robots/","/zfrontier/ces-2027/08-jan/","/zfrontier/ces-2027/08-jan/autonomous-drones/","/zfrontier/ces-2027/08-jan/frontier-tech/","/zfrontier/ces-2027/08-jan/physical-ai/","/zfrontier/ces-2027/08-jan/robots/","/zfrontier/cybercab/","/zfrontier/cybercab/city-info/","/zfrontier/cybercab/production/","/zfrontier/cybercab/taxi-fleet/","/zfrontier/farzad/","/zfrontier/foundation-sec-8b/","/zfrontier/fsd-versions/","/zfrontier/gigafactory/","/zfrontier/liquid-cooling/","/zfrontier/mcp-servers/","/zfrontier/mcp-servers/aci/","/zfrontier/mcp-servers/dna/","/zfrontier/mcp-servers/nexus-dashboard/","/zfrontier/meraki/","/zfrontier/meraki/alerts/","/zfrontier/meraki/devices/","/zfrontier/meraki/firmware/","/zfrontier/meraki/licensing/","/zfrontier/meraki/networks/","/zfrontier/mwmesh/","/zfrontier/mwmesh/australia-plan/","/zfrontier/nac-cli/","/zfrontier/nac-cli/apply/","/zfrontier/nac-cli/destroy/","/zfrontier/nac-cli/init/","/zfrontier/nac-cli/integration/","/zfrontier/nac-cli/plan/","/zfrontier/nac-cli/setup/","/zfrontier/nac-cli/test/","/zfrontier/nac-cli/validate/","/zfrontier/notebooks/","/zfrontier/notebooks/advanced-agentic-ai/","/zfrontier/notebooks/cisco-fdtn-model/","/zfrontier/notebooks/f1-qualifying-prediction/","/zfrontier/notebooks/simple-agentic-ai/","/zfrontier/optimus/","/zfrontier/rag-documents/","/zfrontier/shares/","/zfrontier/southwest-chief/","/zfrontier/southwest-chief/stations/","/zfrontier/southwest-chief/stations/abq/","/zfrontier/southwest-chief/stations/bar/","/zfrontier/southwest-chief/stations/chi/","/zfrontier/southwest-chief/stations/ddg/","/zfrontier/southwest-chief/stations/flg/","/zfrontier/southwest-chief/stations/fmd/","/zfrontier/southwest-chief/stations/ful/","/zfrontier/southwest-chief/stations/gbb/","/zfrontier/southwest-chief/stations/gck/","/zfrontier/southwest-chief/stations/glp/","/zfrontier/southwest-chief/stations/hut/","/zfrontier/southwest-chief/stations/kcy/","/zfrontier/southwest-chief/stations/kng/","/zfrontier/southwest-chief/stations/laj/","/zfrontier/southwest-chief/stations/lap/","/zfrontier/southwest-chief/stations/lax/","/zfrontier/southwest-chief/stations/lmr/","/zfrontier/southwest-chief/stations/lmy/","/zfrontier/southwest-chief/stations/lrc/","/zfrontier/southwest-chief/stations/lsv/","/zfrontier/southwest-chief/stations/mdt/","/zfrontier/southwest-chief/stations/ndl/","/zfrontier/southwest-chief/stations/new/","/zfrontier/southwest-chief/stations/npv/","/zfrontier/southwest-chief/stations/pct/","/zfrontier/southwest-chief/stations/rat/","/zfrontier/southwest-chief/stations/riv/","/zfrontier/southwest-chief/stations/snb/","/zfrontier/southwest-chief/stations/top/","/zfrontier/southwest-chief/stations/tri/","/zfrontier/southwest-chief/stations/vrv/","/zfrontier/southwest-chief/stations/wlo/","/zfrontier/southwest-chief/tracker/","/zfrontier/spacex/","/zfrontier/spacex/boosters/","/zfrontier/spacex/boosters/previous/","/zfrontier/spacex/control-center/","/zfrontier/spacex/launch-monitoring/","/zfrontier/spacex/launch-preparation/","/zfrontier/spacex/launch-sequence/","/zfrontier/spacex/raptor/","/zfrontier/spacex/ships/","/zfrontier/spacex/sites/","/zfrontier/terafab/"];
+var IM_ACCENT={"/":"#64748b","/tasks/netbox/":"#2563eb","/tasks/provisioning/":"#0d9488","/tasks/monitoring/":"#0891b2","/tasks/testing/":"#d97706","/aci-policy/":"#16a34a","/aci-multipod/":"#15803d","/aci-azure-vxlan/":"#059669","/firewall-domain/":"#dc2626","/aci-lab-guide/":"#22c55e","/demo-ai-pod/":"#7c3aed","/intersight-demo/":"#0284c7","/tasks/itil/":"#4f46e5","/roadmap/":"#ea580c","/virtual-dc/":"#0f766e","/ARR-LargeTopology/":"#0e7490","/terragrunt/":"#a16207","/zfrontier/":"#7c3aed","/visitors/":"#059669","/ACI-GUI-Forms/":"#16a34a","/aci-gui/":"#15803d"};
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function normPath(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function accentOf(href){var h=String(href||'');return IM_ACCENT[h]||IM_ACCENT[h.replace(/\/?$/,'/')]||IM_ACCENT[normPath(h)+'/']||'#2563eb'}
+function pathUpdated(href){
+  var h=normPath(href), list=IM_UPDATED||[];
+  if(h==='/') return list.indexOf('/')>=0;
+  for(var i=0;i<list.length;i++){
+    var u=normPath(list[i]);
+    if(u===h||u.indexOf(h+'/')===0) return true;
+  }
+  return false;
+}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq,accent){
+  var a=document.createElement('a');
+  a.className=cls+(on?' on':'');
+  a.href=e[1];
+  a.title=(seq?String(seq)+'. ':'')+e[0]+(pathUpdated(e[1])?' (updated in the last 7 days)':'');
+  a.style.setProperty('--im-accent', accent||accentOf(e[1]));
+  if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}
+  var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);
+  var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);
+  if(pathUpdated(e[1])){var dot=document.createElement('span');dot.className='im-dot';dot.title='Updated in the last 7 days';dot.setAttribute('aria-label','Updated in the last 7 days');a.appendChild(dot)}
+  if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}
+  return a;
+}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function statsRow(){
+  var d=document.createElement('div');d.className='im-stats';
+  d.innerHTML='<a href="/visitors/">Visitors <span class="im-stat-n im-stat-vis">\u2026</span></a><span>\u00b7</span><a href="/visitors/countries/">Countries <span class="im-stat-n im-stat-cc">\u2026</span></a><span>\u00b7</span><span>Updated <span class="im-stat-n im-stat-asof">\u2026</span></span>';
+  return d;
+}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length,0,accentOf(g[1])))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){
+var acc=accentOf(G[gi][1]);
+var r2=document.createElement('details');r2.className='im-sub';r2.style.setProperty('--im-accent',acc);
+if(window.matchMedia&&window.matchMedia('(min-width:721px)').matches) r2.open=true;
+var t=document.createElement('summary');t.className='sl';
+t.innerHTML='<span>'+G[gi][0]+' tasks \u203A</span><span class="im-toggle"> (tap to expand)</span>';
+r2.appendChild(t);
+t.addEventListener('click',function(ev){if(window.matchMedia&&window.matchMedia('(min-width:721px)').matches){ev.preventDefault();location.href=G[gi][1];}});
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1,acc))});r2.appendChild(pills);n.appendChild(r2)}}
+n.appendChild(statsRow());});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+<!-- uv-badge v2 -->
+<style id="uv-badge-style">
+.uv-pop{position:relative;display:inline-block;vertical-align:middle}
+.uv-pop .uv-card{display:none;position:absolute;right:0;top:calc(100% + 6px);z-index:80;min-width:228px;padding:10px 12px;border-radius:10px;background:var(--card,#0f172a);color:var(--ink,#e2e8f0);border:1px solid var(--line,#334155);box-shadow:0 10px 28px rgba(0,0,0,.28);font:12px/1.4 system-ui,Arial,sans-serif;text-align:left;white-space:normal}
+.uv-pop.open .uv-card{display:block}
+.uv-card svg{display:block;width:204px;height:44px;margin:6px 0 8px}
+.uv-card .uv-k{font-weight:700;margin:0 0 2px}
+.uv-card .uv-m{color:var(--muted,#94a3b8);font-size:11px}
+.uv-card a{color:var(--link,#8ecbff)}
+</style>
+<script id="uv-badge">(function(){
+function norm(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function tzParts(iso){
+  var pt=new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'2-digit',minute:'2-digit',hour12:false,hourCycle:'h23',timeZoneName:'short',day:'2-digit',month:'short'}).formatToParts(new Date(iso));
+  var g=function(t){return (pt.find(function(x){return x.type===t})||{}).value||''};
+  var tz=(g('timeZoneName')||'AEDT').replace('GMT+11','AEDT').replace('GMT+10','AEST');
+  return {hh:g('hour'),mm:g('minute'),tz:tz,day:g('day'),mon:g('month')};
+}
+function last30(daysMap){
+  var out=[], now=new Date();
+  var fmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'});
+  for(var i=29;i>=0;i--){
+    var d=new Date(now.getTime()-i*86400000);
+    var key=fmt.format(d);
+    out.push({day:key,count:+((daysMap||{})[key]||0)});
+  }
+  return out;
+}
+function spark(series){
+  var w=204,h=44,p=2;
+  var max=Math.max.apply(null,series.map(function(x){return x.count}).concat([1]));
+  var n=series.length||1;
+  var pts=series.map(function(x,i){
+    var X=p+(i*(w-2*p)/Math.max(1,n-1));
+    var Y=h-p-((x.count/max)*(h-2*p));
+    return X.toFixed(1)+','+Y.toFixed(1);
+  }).join(' ');
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true"><polyline fill="none" stroke="#22c55e" stroke-width="2" points="'+pts+'"/></svg>';
+}
+function fillStats(d){
+  var total=(d.total&& (d.total.total||d.total.total_utc))||0;
+  var cc=(d.countries||[]).length;
+  var asof=d.as_of_aedt||'';
+  document.querySelectorAll('.im-stat-vis').forEach(function(e){e.textContent=total||'0'});
+  document.querySelectorAll('.im-stat-cc').forEach(function(e){e.textContent=cc||'0'});
+  document.querySelectorAll('.im-stat-asof').forEach(function(e){e.textContent=asof||'n/a'});
+}
+function attachPopover(d, count, series){
+  document.querySelectorAll('.uv').forEach(function(uv){
+    if(uv.closest('.uv-pop')) return;
+    var wrap=document.createElement('span');wrap.className='uv-pop';
+    uv.parentNode.insertBefore(wrap,uv);wrap.appendChild(uv);
+    var card=document.createElement('div');card.className='uv-card';card.setAttribute('role','dialog');
+    var last=series.length?series[series.length-1].count:0;
+    card.innerHTML='<p class="uv-k">This page: '+count+' unique visitors</p>'+spark(series)+'<p class="uv-m">Last 30 days (this page). Today so far: '+last+'.</p><p><a href="/visitors/">Full visitor stats \u203A</a></p>';
+    wrap.appendChild(card);
+    function tog(ev){ev.preventDefault();ev.stopPropagation();document.querySelectorAll('.uv-pop.open').forEach(function(x){if(x!==wrap)x.classList.remove('open')});wrap.classList.toggle('open')}
+    uv.addEventListener('click',tog);
+    uv.style.cursor='pointer';
+    uv.title='Click for a 30-day sparkline';
+  });
+  document.addEventListener('click',function(){document.querySelectorAll('.uv-pop.open').forEach(function(x){x.classList.remove('open')})});
+}
+function apply(d){
+  var p=norm(location.pathname);
+  var page=(d.pages||[]).filter(function(x){return norm(x.path)===p});
+  var c=page.reduce(function(a,x){return a+(+x.count||0)},0);
+  var days={};
+  page.forEach(function(x){var m=x.days||{};Object.keys(m).forEach(function(k){days[k]=(days[k]||0)+(+m[k]||0)})});
+  document.querySelectorAll('.uvc').forEach(function(e){e.textContent=c});
+  document.querySelectorAll('.uvt').forEach(function(e){
+    if(d.updated_utc){var t=tzParts(d.updated_utc);e.textContent=' (data as of '+t.hh+':'+t.mm+' '+t.tz+')'}
+  });
+  fillStats(d);
+  attachPopover(d,c,last30(days));
+}
+function fail(){
+  document.querySelectorAll('.uvc').forEach(function(e){if(e.textContent==='\u2026'||e.textContent==='...') e.textContent='n/a'});
+  document.querySelectorAll('.im-stat-vis,.im-stat-cc,.im-stat-asof').forEach(function(e){if(e.textContent==='\u2026') e.textContent='n/a'});
+}
+if(!window.__visitorsData){
+  var ac=typeof AbortController==='function'?new AbortController():null;
+  var timer=setTimeout(function(){try{ac&&ac.abort()}catch(e){}},8000);
+  window.__visitorsData=fetch('/data/visitors.json?'+Date.now(),ac?{signal:ac.signal}:undefined).then(function(r){
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('visitors.json '+r.status);
+    return r.json();
+  });
+}
+window.__visitorsData.then(apply).catch(function(){fail()});
+})();</script>
+</body>
+</html>

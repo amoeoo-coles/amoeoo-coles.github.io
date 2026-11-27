@@ -1,0 +1,80 @@
+---
+# Create the flood_lab tenant, VRF, and one bridge domain per scenario.
+# Requires cisco.aci (verified against 3.0.x / latest docs for aci_bd).
+# Usage: ACI_URL=... ACI_USERNAME=... ACI_PASSWORD=... ansible-playbook playbook.yml
+- name: ACI bridge-domain flooding scenarios
+  hosts: controllers
+  gather_facts: false
+  vars_files:
+    - vars/scenarios.yml
+  vars:
+    aci_login: &aci_login
+      host: "{{ aci_host }}"
+      username: "{{ aci_username }}"
+      password: "{{ aci_password }}"
+      validate_certs: "{{ aci_validate_certs }}"
+  tasks:
+    - name: Fail if APIC connection environment variables are missing
+      ansible.builtin.assert:
+        that:
+          - aci_host | length > 0
+          - aci_username | length > 0
+          - aci_password | length > 0
+        fail_msg: >-
+          Set ACI_URL, ACI_USERNAME and ACI_PASSWORD in the environment.
+          Do not put credentials in this repository.
+
+    - name: Create lab tenant
+      cisco.aci.aci_tenant:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        description: zFrontier flood_lab — BD flooding scenarios
+        state: present
+
+    - name: Create lab VRF
+      cisco.aci.aci_vrf:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        vrf: "{{ vrf }}"
+        description: zFrontier flood_lab VRF
+        state: present
+
+    - name: Create one bridge domain per flooding scenario
+      cisco.aci.aci_bd:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        vrf: "{{ vrf }}"
+        bd: "{{ item.bd }}"
+        description: "{{ item.description }}"
+        enable_routing: "{{ item.enable_routing }}"
+        l2_unknown_unicast: "{{ item.l2_unknown_unicast }}"
+        l3_unknown_multicast: "{{ item.l3_unknown_multicast }}"
+        ipv6_l3_unknown_multicast: "{{ item.ipv6_l3_unknown_multicast }}"
+        multi_dest: "{{ item.multi_dest }}"
+        arp_flooding: "{{ item.arp_flooding }}"
+        enable_multicast: "{{ item.enable_multicast }}"
+        endpoint_move_detect: "{{ item.endpoint_move_detect }}"
+        state: present
+      loop: "{{ scenarios }}"
+      loop_control:
+        label: "{{ item.id }} ({{ item.bd }})"
+
+    # endpoint_clear / Clear Remote MAC Entries is a one-shot "clear endpoints
+    # now" action in cisco.aci.aci_bd (endpoint_clear: true). It is not a
+    # persistent "clear remote MAC when an endpoint is deleted" flag. The
+    # persistent fvBD epClear behaviour is called out on the page; do not flip
+    # endpoint_clear here or a playbook re-run would flush endpoints.
+
+    - name: Add a BD subnet where unicast routing is in use
+      cisco.aci.aci_bd_subnet:
+        <<: *aci_login
+        tenant: "{{ tenant }}"
+        bd: "{{ item.bd }}"
+        gateway: "{{ item.subnet.split('/')[0] }}"
+        mask: "{{ item.subnet.split('/')[1] }}"
+        scope: private
+        state: present
+      loop: "{{ scenarios }}"
+      when: item.subnet | default(false)
+      loop_control:
+        label: "{{ item.bd }} {{ item.subnet }}"

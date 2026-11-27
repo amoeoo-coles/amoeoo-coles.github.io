@@ -1,0 +1,123 @@
+---
+# One BD per flooding scenario. Values use cisco.aci.aci_bd literals.
+scenarios:
+  - id: l3-optimized
+    bd: bd_l3_optimized
+    description: "L3 BD, default Optimize"
+    enable_routing: true
+    l2_unknown_unicast: proxy
+    l3_unknown_multicast: flood
+    ipv6_l3_unknown_multicast: flood
+    multi_dest: bd-flood
+    arp_flooding: false
+    enable_multicast: false
+    # clear_remote_mac (False) maps to fvBD epClear.
+    # cisco.aci.aci_bd endpoint_clear is a one-shot endpoint flush, not this flag;
+    # it is deliberately omitted from the playbook.
+    endpoint_move_detect: default
+    subnet: 10.10.10.1/24
+  - id: l2-only
+    bd: bd_l2_only
+    description: "L2-only BD (unicast routing off)"
+    enable_routing: false
+    l2_unknown_unicast: flood
+    l3_unknown_multicast: flood
+    ipv6_l3_unknown_multicast: flood
+    multi_dest: bd-flood
+    arp_flooding: true
+    enable_multicast: false
+    # clear_remote_mac (True) maps to fvBD epClear.
+    # cisco.aci.aci_bd endpoint_clear is a one-shot endpoint flush, not this flag;
+    # it is deliberately omitted from the playbook.
+    endpoint_move_detect: default
+    subnet: null
+  - id: l2-migration
+    bd: bd_l2_migration
+    description: "L2 stretched / legacy migration BD"
+    enable_routing: true
+    l2_unknown_unicast: flood
+    l3_unknown_multicast: flood
+    ipv6_l3_unknown_multicast: flood
+    multi_dest: bd-flood
+    arp_flooding: true
+    enable_multicast: false
+    # clear_remote_mac (True) maps to fvBD epClear.
+    # cisco.aci.aci_bd endpoint_clear is a one-shot endpoint flush, not this flag;
+    # it is deliberately omitted from the playbook.
+    endpoint_move_detect: default
+    subnet: 10.10.20.1/24
+  - id: silent-hosts
+    bd: bd_silent_hosts
+    description: "Silent-host BD (L2 reachability)"
+    enable_routing: true
+    l2_unknown_unicast: flood
+    l3_unknown_multicast: flood
+    ipv6_l3_unknown_multicast: flood
+    multi_dest: bd-flood
+    arp_flooding: true
+    enable_multicast: false
+    # clear_remote_mac (True) maps to fvBD epClear.
+    # cisco.aci.aci_bd endpoint_clear is a one-shot endpoint flush, not this flag;
+    # it is deliberately omitted from the playbook.
+    endpoint_move_detect: default
+    subnet: 10.10.30.1/24
+  - id: flood-in-encap
+    bd: bd_flood_in_encap
+    description: "Flood in Encapsulation (VLAN-per-EPG shared BD)"
+    enable_routing: true
+    l2_unknown_unicast: flood
+    l3_unknown_multicast: flood
+    ipv6_l3_unknown_multicast: flood
+    multi_dest: encap-flood
+    arp_flooding: true
+    enable_multicast: false
+    # clear_remote_mac (True) maps to fvBD epClear.
+    # cisco.aci.aci_bd endpoint_clear is a one-shot endpoint flush, not this flag;
+    # it is deliberately omitted from the playbook.
+    endpoint_move_detect: default
+    subnet: 10.10.40.1/24
+  - id: drop-bum
+    bd: bd_drop_bum
+    description: "Drop multi-destination (security)"
+    enable_routing: true
+    l2_unknown_unicast: proxy
+    l3_unknown_multicast: flood
+    ipv6_l3_unknown_multicast: flood
+    multi_dest: drop
+    arp_flooding: false
+    enable_multicast: false
+    # clear_remote_mac (False) maps to fvBD epClear.
+    # cisco.aci.aci_bd endpoint_clear is a one-shot endpoint flush, not this flag;
+    # it is deliberately omitted from the playbook.
+    endpoint_move_detect: default
+    subnet: 10.10.50.1/24
+  - id: multicast-app
+    bd: bd_multicast_app
+    description: "Multicast application BD"
+    enable_routing: true
+    l2_unknown_unicast: proxy
+    l3_unknown_multicast: opt-flood
+    ipv6_l3_unknown_multicast: opt-flood
+    multi_dest: bd-flood
+    arp_flooding: false
+    enable_multicast: true
+    # clear_remote_mac (False) maps to fvBD epClear.
+    # cisco.aci.aci_bd endpoint_clear is a one-shot endpoint flush, not this flag;
+    # it is deliberately omitted from the playbook.
+    endpoint_move_detect: default
+    subnet: 10.10.60.1/24
+  - id: fw-cluster-garp
+    bd: bd_fw_cluster
+    description: "Firewall / load-balancer cluster (GARP)"
+    enable_routing: true
+    l2_unknown_unicast: proxy
+    l3_unknown_multicast: flood
+    ipv6_l3_unknown_multicast: flood
+    multi_dest: bd-flood
+    arp_flooding: true
+    enable_multicast: false
+    # clear_remote_mac (False) maps to fvBD epClear.
+    # cisco.aci.aci_bd endpoint_clear is a one-shot endpoint flush, not this flag;
+    # it is deliberately omitted from the playbook.
+    endpoint_move_detect: garp
+    subnet: 10.10.70.1/24
