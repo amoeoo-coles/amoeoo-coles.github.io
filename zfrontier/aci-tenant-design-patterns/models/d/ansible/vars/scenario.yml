@@ -1,0 +1,43 @@
+---
+# Pattern D — each user tenant owns its VRF, bridge domains, subnets and EPGs.
+# D1: two application teams, fully isolated, each with a security domain.
+# D2: a third shared-services tenant whose subnet is marked shared and whose
+#     contract is exported (scope global) so the application tenants can consume it.
+pattern: D
+vrf_enforcement: enforced
+preferred_group: disabled
+l2_unknown_unicast: proxy
+filter: flt-tcp-80
+subject: subj-http
+app_tenants:
+  - tenant: app_a
+    vrf: vrf-app-a
+    bd: bd-a
+    subnet_gateway: 192.0.2.1
+    subnet_mask: 24
+    subnet_scope: private
+    ap: ap-a
+    epg: epg-a
+    security_domain: sec-app-a
+  - tenant: app_b
+    vrf: vrf-app-b
+    bd: bd-b
+    subnet_gateway: 198.51.100.1
+    subnet_mask: 24
+    subnet_scope: private
+    ap: ap-b
+    epg: epg-b
+    security_domain: sec-app-b
+shared_services:
+  tenant: shared_svc
+  vrf: vrf-shared
+  bd: bd-shared
+  subnet_gateway: 203.0.113.1
+  subnet_mask: 24
+  subnet_scope: shared
+  ap: ap-shared
+  epg: epg-shared
+  security_domain: sec-shared
+  contract: ctr-shared-http
+  contract_scope: global
+  export_name: ctr-shared-http-if

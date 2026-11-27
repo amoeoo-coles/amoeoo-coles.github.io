@@ -1,0 +1,93 @@
+---
+# Network-as-Code style data for pattern D.
+# Each tenant owns its VRF, BD, subnet and EPG. Shared services use a
+# shared subnet and a global contract exported to the application tenants.
+apic:
+  url: "{{ apic_url }}"
+  username: "{{ apic_username }}"
+  password: "{{ apic_password }}"
+  validate_certs: false
+
+pattern: D
+
+tenants:
+  - name: app_a
+    security_domain: sec-app-a
+    vrfs:
+      - name: vrf-app-a
+        policy_control_preference: enforced
+        preferred_group: disabled
+    bridge_domains:
+      - name: bd-a
+        vrf: vrf-app-a
+        l2_unknown_unicast: proxy
+        subnets:
+          - gateway: 192.0.2.1/24
+            scope: [private]
+    application_profiles:
+      - name: ap-a
+        endpoint_groups:
+          - name: epg-a
+            bridge_domain: bd-a
+            contracts:
+              consumed_interfaces: [ctr-shared-http-if]
+
+  - name: app_b
+    security_domain: sec-app-b
+    vrfs:
+      - name: vrf-app-b
+        policy_control_preference: enforced
+        preferred_group: disabled
+    bridge_domains:
+      - name: bd-b
+        vrf: vrf-app-b
+        l2_unknown_unicast: proxy
+        subnets:
+          - gateway: 198.51.100.1/24
+            scope: [private]
+    application_profiles:
+      - name: ap-b
+        endpoint_groups:
+          - name: epg-b
+            bridge_domain: bd-b
+            contracts:
+              consumed_interfaces: [ctr-shared-http-if]
+
+  - name: shared_svc
+    security_domain: sec-shared
+    vrfs:
+      - name: vrf-shared
+        policy_control_preference: enforced
+        preferred_group: disabled
+    bridge_domains:
+      - name: bd-shared
+        vrf: vrf-shared
+        l2_unknown_unicast: proxy
+        subnets:
+          - gateway: 203.0.113.1/24
+            scope: [public, shared]
+    filters:
+      - name: flt-tcp-80
+        entries:
+          - name: allow-http
+            ether_type: ip
+            ip_protocol: tcp
+            destination_port: 80
+    contracts:
+      - name: ctr-shared-http
+        scope: global
+        subjects:
+          - name: subj-http
+            filters: [flt-tcp-80]
+        export_to:
+          - tenant: app_a
+            name: ctr-shared-http-if
+          - tenant: app_b
+            name: ctr-shared-http-if
+    application_profiles:
+      - name: ap-shared
+        endpoint_groups:
+          - name: epg-shared
+            bridge_domain: bd-shared
+            contracts:
+              provided: [ctr-shared-http]

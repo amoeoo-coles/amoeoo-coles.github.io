@@ -1,0 +1,88 @@
+---
+# Network-as-Code style data for pattern B.
+# VRF and bridge domains are in tenant common; EPGs are in user tenants.
+apic:
+  url: "{{ apic_url }}"
+  username: "{{ apic_username }}"
+  password: "{{ apic_password }}"
+  validate_certs: false
+
+pattern: B
+
+tenants:
+  - name: common
+    managed: false
+    vrfs:
+      - name: vrf-01
+        policy_control_preference: enforced
+        preferred_group: disabled
+    bridge_domains:
+      - name: bd-web
+        vrf: vrf-01
+        l2_unknown_unicast: proxy
+        subnets:
+          - gateway: 192.0.2.1/24
+            scope: [private]
+      - name: bd-app
+        vrf: vrf-01
+        l2_unknown_unicast: proxy
+        subnets:
+          - gateway: 198.51.100.1/24
+            scope: [private]
+    filters:
+      - name: flt-tcp-80
+        entries:
+          - name: allow-http
+            ether_type: ip
+            ip_protocol: tcp
+            destination_port: 80
+      - name: flt-shared-http
+        entries:
+          - name: allow-http
+            ether_type: ip
+            ip_protocol: tcp
+            destination_port: 80
+    contracts:
+      - name: ctr-web-to-app
+        scope: context
+        subjects:
+          - name: subj-http
+            filters: [flt-tcp-80]
+      - name: ctr-shared-http
+        scope: context
+        subjects:
+          - name: subj-http
+            filters: [flt-shared-http]
+
+  - name: app_web
+    security_domain: sec-app-web
+    application_profiles:
+      - name: ap-web
+        endpoint_groups:
+          - name: epg-web
+            bridge_domain: bd-web
+            bridge_domain_tenant: common
+            contracts:
+              consumed: [ctr-web-to-app, ctr-shared-http]
+
+  - name: app_data
+    security_domain: sec-app-data
+    application_profiles:
+      - name: ap-data
+        endpoint_groups:
+          - name: epg-data
+            bridge_domain: bd-app
+            bridge_domain_tenant: common
+            contracts:
+              provided: [ctr-web-to-app]
+
+  - name: app_shared
+    security_domain: sec-app-shared
+    application_profiles:
+      - name: ap-shared
+        endpoint_groups:
+          - name: epg-shared
+            bridge_domain: bd-app
+            bridge_domain_tenant: common
+            contracts:
+              provided: [ctr-shared-http]

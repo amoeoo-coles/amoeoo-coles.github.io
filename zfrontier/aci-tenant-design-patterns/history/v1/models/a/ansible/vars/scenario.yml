@@ -1,0 +1,45 @@
+---
+# Pattern A — every object lives in the built-in common tenant.
+# Scenario a1 (default): a single operations team, VRF enforced, contracts required.
+# Scenario a2: the same objects, with the VRF preferred group enabled for a small lab.
+# These two are alternatives for the same VRF; do not apply both to one VRF.
+# Tenant common already exists — this file never creates or deletes it.
+pattern: A
+scenario: a1
+common_tenant: common
+vrf: vrf-01
+bridge_domains:
+  - bd: bd-web
+    subnet_gateway: 192.0.2.1
+    subnet_mask: 24
+    description: Web segment in tenant common
+  - bd: bd-app
+    subnet_gateway: 198.51.100.1
+    subnet_mask: 24
+    description: App segment in tenant common
+application_profile: ap-ops
+epgs:
+  - epg: epg-web
+    bd: bd-web
+    role: consumer
+  - epg: epg-app
+    bd: bd-app
+    role: provider
+filter: flt-tcp-80
+contract: ctr-web-to-app
+contract_scope: tenant
+subject: subj-http
+security_domain: sec-ops
+settings:
+  a1:
+    vrf_enforcement: enforced
+    preferred_group: disabled
+    epg_preferred_group: false
+    subnet_scope: private
+    l2_unknown_unicast: proxy
+  a2:
+    vrf_enforcement: enforced
+    preferred_group: enabled
+    epg_preferred_group: true
+    subnet_scope: private
+    l2_unknown_unicast: proxy

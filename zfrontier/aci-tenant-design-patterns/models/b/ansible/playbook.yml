@@ -1,0 +1,198 @@
+---
+# Illustrative playbook for the B tenant design pattern.
+# Requires cisco.aci (checked against 3.0.x documented options).
+# Usage:
+#   ansible-playbook playbook.yml -e apic_host=https://apic.example.invalid \
+#     -e apic_username={{ apic_username }} -e apic_password={{ apic_password }}
+# Do not apply this to a shared Always-On APIC unless you have written approval.
+- name: ACI tenant design pattern — B
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - vars/scenario.yml
+  vars:
+  aci_login: &aci_login
+    host: "{{ apic_host }}"
+    username: "{{ apic_username }}"
+    password: "{{ apic_password }}"
+    validate_certs: "{{ apic_validate_certs }}"
+  tasks:
+    - name: Fail if APIC connection variables are missing
+      ansible.builtin.assert:
+        that:
+          - apic_host | length > 0
+          - apic_username | length > 0
+          - apic_password | length > 0
+        fail_msg: >-
+          Set apic_host, apic_username and apic_password (placeholders
+          {{ apic_host }}, {{ apic_username }}, {{ apic_password }}) with
+          --extra-vars, or export ACI_URL, ACI_USERNAME and ACI_PASSWORD.
+          Do not put credentials in this repository.
+- name: Create the shared VRF in tenant common
+  cisco.aci.aci_vrf:
+    <<: *aci_login
+    tenant: "{{ common_tenant }}"
+    vrf: "{{ vrf }}"
+    description: Pattern B VRF in tenant common
+    policy_control_preference: "{{ vrf_enforcement }}"
+    preferred_group: "{{ preferred_group }}"
+    state: present
+
+- name: Create shared bridge domains in tenant common
+  cisco.aci.aci_bd:
+    <<: *aci_login
+    tenant: "{{ common_tenant }}"
+    vrf: "{{ vrf }}"
+    bd: "{{ item.bd }}"
+    description: "{{ item.description }}"
+    enable_routing: true
+    l2_unknown_unicast: "{{ l2_unknown_unicast }}"
+    arp_flooding: false
+    state: present
+  loop: "{{ bridge_domains }}"
+
+- name: Add shared BD subnets in tenant common
+  cisco.aci.aci_bd_subnet:
+    <<: *aci_login
+    tenant: "{{ common_tenant }}"
+    bd: "{{ item.bd }}"
+    gateway: "{{ item.subnet_gateway }}"
+    mask: "{{ item.subnet_mask }}"
+    scope: "{{ subnet_scope }}"
+    state: present
+  loop: "{{ bridge_domains }}"
+
+- name: Create HTTP filters and contracts in tenant common
+  cisco.aci.aci_filter:
+    <<: *aci_login
+    tenant: "{{ common_tenant }}"
+    filter: "{{ item }}"
+    description: TCP destination port 80
+    state: present
+  loop:
+    - "{{ filter }}"
+    - flt-shared-http
+
+- name: Add TCP/80 filter entries
+  cisco.aci.aci_filter_entry:
+    <<: *aci_login
+    tenant: "{{ common_tenant }}"
+    filter: "{{ item }}"
+    entry: allow-http
+    ether_type: ip
+    ip_protocol: tcp
+    destination_port_start: 80
+    destination_port_end: 80
+    state: present
+  loop:
+    - "{{ filter }}"
+    - flt-shared-http
+
+- name: Create contracts in tenant common (scope context)
+  cisco.aci.aci_contract:
+    <<: *aci_login
+    tenant: "{{ common_tenant }}"
+    contract: "{{ item.name }}"
+    description: "{{ item.desc }}"
+    scope: context
+    state: present
+  loop:
+    - name: "{{ contract }}"
+      desc: Pattern B web-to-app contract
+    - name: "{{ shared_services.contract }}"
+      desc: Pattern B shared-services contract
+
+- name: Add contract subjects
+  cisco.aci.aci_contract_subject:
+    <<: *aci_login
+    tenant: "{{ common_tenant }}"
+    contract: "{{ item.contract }}"
+    subject: "{{ subject }}"
+    reverse_filter: true
+    state: present
+  loop:
+    - contract: "{{ contract }}"
+      filter: "{{ filter }}"
+    - contract: "{{ shared_services.contract }}"
+      filter: flt-shared-http
+
+- name: Attach filters to subjects
+  cisco.aci.aci_contract_subject_to_filter:
+    <<: *aci_login
+    tenant: "{{ common_tenant }}"
+    contract: "{{ item.contract }}"
+    subject: "{{ subject }}"
+    filter: "{{ item.filter }}"
+    state: present
+  loop:
+    - contract: "{{ contract }}"
+      filter: "{{ filter }}"
+    - contract: "{{ shared_services.contract }}"
+      filter: flt-shared-http
+
+- name: Create user tenants for each application team
+  cisco.aci.aci_tenant:
+    <<: *aci_login
+    tenant: "{{ item.tenant }}"
+    description: Pattern B user tenant
+    state: present
+  loop: "{{ user_tenants + [shared_services] }}"
+  loop_control:
+    label: "{{ item.tenant }}"
+
+- name: Create a security domain per user tenant
+  cisco.aci.aci_aaa_domain:
+    <<: *aci_login
+    name: "{{ item.security_domain }}"
+    description: Security domain for {{ item.tenant }}
+    state: present
+  loop: "{{ user_tenants + [shared_services] }}"
+  # Tenant-to-domain attachment is in the Terraform model
+  # (aci_aaa_domain_relationship). A dedicated cisco.aci module for
+  # that relationship is not in the 3.0.0 collection list.
+
+- name: Create an application profile in each user tenant
+  cisco.aci.aci_ap:
+    <<: *aci_login
+    tenant: "{{ item.tenant }}"
+    ap: "{{ item.ap }}"
+    description: Pattern B application profile
+    state: present
+  loop: "{{ user_tenants + [shared_services] }}"
+
+- name: Create EPGs that bind to bridge domains in tenant common
+  cisco.aci.aci_epg:
+    <<: *aci_login
+    tenant: "{{ item.tenant }}"
+    ap: "{{ item.ap }}"
+    epg: "{{ item.epg }}"
+    bd: "{{ item.bd }}"
+    description: EPG in {{ item.tenant }} bound to common/{{ item.bd }}
+    preferred_group: false
+    state: present
+  loop: "{{ user_tenants + [shared_services] }}"
+  # The BD name is resolved in the user tenant first, then in common.
+
+- name: Bind team EPGs to the web-to-app contract in common
+  cisco.aci.aci_epg_to_contract:
+    <<: *aci_login
+    tenant: "{{ item.tenant }}"
+    ap: "{{ item.ap }}"
+    epg: "{{ item.epg }}"
+    contract: "{{ contract }}"
+    contract_type: "{{ item.role }}"
+    state: present
+  loop: "{{ user_tenants }}"
+
+- name: Bind shared-services and consumer EPGs to the shared contract
+  cisco.aci.aci_epg_to_contract:
+    <<: *aci_login
+    tenant: "{{ item.tenant }}"
+    ap: "{{ item.ap }}"
+    epg: "{{ item.epg }}"
+    contract: "{{ shared_services.contract }}"
+    contract_type: "{{ item.role }}"
+    state: present
+  loop:
+    - "{{ shared_services }}"
+    - "{{ user_tenants[0] }}"

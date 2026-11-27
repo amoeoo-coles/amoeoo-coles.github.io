@@ -1,0 +1,67 @@
+---
+# Network-as-Code style data for pattern A (all objects in tenant common).
+# Illustrative only. Credentials are placeholders and are not applied here.
+apic:
+  url: "{{ apic_url }}"
+  username: "{{ apic_username }}"
+  password: "{{ apic_password }}"
+  validate_certs: false
+
+pattern: A
+scenario: a1
+
+tenants:
+  - name: common
+    managed: false
+    description: Built-in tenant. Do not create or delete.
+    vrfs:
+      - name: vrf-01
+        policy_control_preference: enforced
+        preferred_group: disabled
+    bridge_domains:
+      - name: bd-web
+        vrf: vrf-01
+        unicast_routing: true
+        l2_unknown_unicast: proxy
+        arp_flooding: false
+        subnets:
+          - gateway: 192.0.2.1/24
+            scope: [private]
+      - name: bd-app
+        vrf: vrf-01
+        unicast_routing: true
+        l2_unknown_unicast: proxy
+        arp_flooding: false
+        subnets:
+          - gateway: 198.51.100.1/24
+            scope: [private]
+    application_profiles:
+      - name: ap-ops
+        endpoint_groups:
+          - name: epg-web
+            bridge_domain: bd-web
+            preferred_group: false
+            contracts:
+              consumed: [ctr-web-to-app]
+          - name: epg-app
+            bridge_domain: bd-app
+            preferred_group: false
+            contracts:
+              provided: [ctr-web-to-app]
+    filters:
+      - name: flt-tcp-80
+        entries:
+          - name: allow-http
+            ether_type: ip
+            ip_protocol: tcp
+            destination_port: 80
+    contracts:
+      - name: ctr-web-to-app
+        scope: tenant
+        subjects:
+          - name: subj-http
+            filters: [flt-tcp-80]
+
+security_domains:
+  - name: sec-ops
+    description: Operations domain. Not attached to tenant common in this model.

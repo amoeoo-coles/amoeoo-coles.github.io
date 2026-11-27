@@ -1,0 +1,34 @@
+---
+# Pattern C — the VRF lives in tenant common. Bridge domains, subnets,
+# application profiles and EPGs live in each user tenant.
+# C1: dev and test tenants share the VRF but keep their own subnets.
+# C2: a contract in common (scope context) allows selected communication
+#     between those tenants, still inside the same VRF.
+pattern: C
+common_tenant: common
+vrf: vrf-01
+vrf_enforcement: enforced
+preferred_group: disabled
+l2_unknown_unicast: proxy
+subnet_scope: private
+contract: ctr-dev-to-test
+contract_scope: context
+filter: flt-tcp-80
+subject: subj-http
+user_tenants:
+  - tenant: app_dev
+    ap: ap-dev
+    epg: epg-dev
+    bd: bd-dev
+    subnet_gateway: 192.0.2.1
+    subnet_mask: 24
+    role: consumer
+    security_domain: sec-app-dev
+  - tenant: app_test
+    ap: ap-test
+    epg: epg-test
+    bd: bd-test
+    subnet_gateway: 198.51.100.1
+    subnet_mask: 24
+    role: provider
+    security_domain: sec-app-test

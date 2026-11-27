@@ -1,0 +1,67 @@
+---
+# Network-as-Code style data for pattern C.
+# VRF in tenant common; BD, subnet, AP and EPG in each user tenant.
+apic:
+  url: "{{ apic_url }}"
+  username: "{{ apic_username }}"
+  password: "{{ apic_password }}"
+  validate_certs: false
+
+pattern: C
+
+tenants:
+  - name: common
+    managed: false
+    vrfs:
+      - name: vrf-01
+        policy_control_preference: enforced
+        preferred_group: disabled
+    filters:
+      - name: flt-tcp-80
+        entries:
+          - name: allow-http
+            ether_type: ip
+            ip_protocol: tcp
+            destination_port: 80
+    contracts:
+      - name: ctr-dev-to-test
+        scope: context
+        subjects:
+          - name: subj-http
+            filters: [flt-tcp-80]
+
+  - name: app_dev
+    security_domain: sec-app-dev
+    bridge_domains:
+      - name: bd-dev
+        vrf: vrf-01
+        vrf_tenant: common
+        l2_unknown_unicast: proxy
+        subnets:
+          - gateway: 192.0.2.1/24
+            scope: [private]
+    application_profiles:
+      - name: ap-dev
+        endpoint_groups:
+          - name: epg-dev
+            bridge_domain: bd-dev
+            contracts:
+              consumed: [ctr-dev-to-test]
+
+  - name: app_test
+    security_domain: sec-app-test
+    bridge_domains:
+      - name: bd-test
+        vrf: vrf-01
+        vrf_tenant: common
+        l2_unknown_unicast: proxy
+        subnets:
+          - gateway: 198.51.100.1/24
+            scope: [private]
+    application_profiles:
+      - name: ap-test
+        endpoint_groups:
+          - name: epg-test
+            bridge_domain: bd-test
+            contracts:
+              provided: [ctr-dev-to-test]

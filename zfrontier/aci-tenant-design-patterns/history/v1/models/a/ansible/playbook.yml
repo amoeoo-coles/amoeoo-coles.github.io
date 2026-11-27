@@ -1,0 +1,162 @@
+---
+# Illustrative playbook for the A tenant design pattern.
+# Requires cisco.aci (checked against 3.0.x documented options).
+# Usage:
+#   ansible-playbook playbook.yml -e apic_host=https://apic.example.invalid \
+#     -e apic_username={{ apic_username }} -e apic_password={{ apic_password }}
+# Do not apply this to a shared Always-On APIC unless you have written approval.
+- name: ACI tenant design pattern — A
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - vars/scenario.yml
+  vars:
+  aci_login: &aci_login
+    host: "{{ apic_host }}"
+    username: "{{ apic_username }}"
+    password: "{{ apic_password }}"
+    validate_certs: "{{ apic_validate_certs }}"
+  tasks:
+    - name: Fail if APIC connection variables are missing
+      ansible.builtin.assert:
+        that:
+          - apic_host | length > 0
+          - apic_username | length > 0
+          - apic_password | length > 0
+        fail_msg: >-
+          Set apic_host, apic_username and apic_password (placeholders
+          {{ apic_host }}, {{ apic_username }}, {{ apic_password }}) with
+          --extra-vars, or export ACI_URL, ACI_USERNAME and ACI_PASSWORD.
+          Do not put credentials in this repository.
+- name: Resolve settings for the selected scenario
+  ansible.builtin.set_fact:
+    knob: "{{ settings[scenario] }}"
+
+- name: Create VRF in tenant common
+  cisco.aci.aci_vrf:
+    <<: *aci_login
+    tenant: "{{ common_tenant }}"
+    vrf: "{{ vrf }}"
+    description: Pattern A VRF in tenant common
+    policy_control_preference: "{{ knob.vrf_enforcement }}"
+    preferred_group: "{{ knob.preferred_group }}"
+    state: present
+
+- name: Create bridge domains in tenant common
+  cisco.aci.aci_bd:
+    <<: *aci_login
+    tenant: "{{ common_tenant }}"
+    vrf: "{{ vrf }}"
+    bd: "{{ item.bd }}"
+    description: "{{ item.description }}"
+    enable_routing: true
+    l2_unknown_unicast: "{{ knob.l2_unknown_unicast }}"
+    arp_flooding: false
+    state: present
+  loop: "{{ bridge_domains }}"
+  loop_control:
+    label: "{{ item.bd }}"
+
+- name: Add private BD subnets in tenant common
+  cisco.aci.aci_bd_subnet:
+    <<: *aci_login
+    tenant: "{{ common_tenant }}"
+    bd: "{{ item.bd }}"
+    gateway: "{{ item.subnet_gateway }}"
+    mask: "{{ item.subnet_mask }}"
+    scope: "{{ knob.subnet_scope }}"
+    state: present
+  loop: "{{ bridge_domains }}"
+  loop_control:
+    label: "{{ item.bd }} {{ item.subnet_gateway }}/{{ item.subnet_mask }}"
+
+- name: Create the application profile in tenant common
+  cisco.aci.aci_ap:
+    <<: *aci_login
+    tenant: "{{ common_tenant }}"
+    ap: "{{ application_profile }}"
+    description: Pattern A application profile
+    state: present
+
+- name: Create EPGs in tenant common
+  cisco.aci.aci_epg:
+    <<: *aci_login
+    tenant: "{{ common_tenant }}"
+    ap: "{{ application_profile }}"
+    epg: "{{ item.epg }}"
+    bd: "{{ item.bd }}"
+    description: Pattern A {{ item.epg }}
+    preferred_group: "{{ knob.epg_preferred_group }}"
+    state: present
+  loop: "{{ epgs }}"
+  loop_control:
+    label: "{{ item.epg }}"
+
+- name: Create an HTTP filter in tenant common
+  cisco.aci.aci_filter:
+    <<: *aci_login
+    tenant: "{{ common_tenant }}"
+    filter: "{{ filter }}"
+    description: TCP destination port 80
+    state: present
+
+- name: Add a TCP/80 filter entry
+  cisco.aci.aci_filter_entry:
+    <<: *aci_login
+    tenant: "{{ common_tenant }}"
+    filter: "{{ filter }}"
+    entry: allow-http
+    ether_type: ip
+    ip_protocol: tcp
+    destination_port_start: 80
+    destination_port_end: 80
+    state: present
+
+- name: Create the web-to-app contract in tenant common
+  cisco.aci.aci_contract:
+    <<: *aci_login
+    tenant: "{{ common_tenant }}"
+    contract: "{{ contract }}"
+    description: Pattern A HTTP contract
+    scope: "{{ contract_scope }}"
+    state: present
+
+- name: Add the contract subject
+  cisco.aci.aci_contract_subject:
+    <<: *aci_login
+    tenant: "{{ common_tenant }}"
+    contract: "{{ contract }}"
+    subject: "{{ subject }}"
+    reverse_filter: true
+    state: present
+
+- name: Attach the filter to the subject
+  cisco.aci.aci_contract_subject_to_filter:
+    <<: *aci_login
+    tenant: "{{ common_tenant }}"
+    contract: "{{ contract }}"
+    subject: "{{ subject }}"
+    filter: "{{ filter }}"
+    state: present
+
+- name: Bind EPGs to the contract
+  cisco.aci.aci_epg_to_contract:
+    <<: *aci_login
+    tenant: "{{ common_tenant }}"
+    ap: "{{ application_profile }}"
+    epg: "{{ item.epg }}"
+    contract: "{{ contract }}"
+    contract_type: "{{ item.role }}"
+    state: present
+  loop: "{{ epgs }}"
+  loop_control:
+    label: "{{ item.epg }} {{ item.role }}"
+
+- name: Create an operations security domain (not attached to common)
+  cisco.aci.aci_aaa_domain:
+    <<: *aci_login
+    name: "{{ security_domain }}"
+    description: Pattern A operations security domain
+    state: present
+# Associating a security domain with the built-in common tenant is an
+# APIC administrative decision and is deliberately left unchanged here.

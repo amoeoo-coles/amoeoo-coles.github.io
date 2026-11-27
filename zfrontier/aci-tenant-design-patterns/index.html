@@ -1,0 +1,2107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- theme-boot v2 -->
+<script id="tt-boot">(function(){
+  var t;
+  try{t=localStorage.getItem('siteTheme')}catch(e){t=null}
+  if(t!=='light'&&t!=='dark'){
+    t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  var h=document.documentElement;
+  h.setAttribute('data-theme',t);
+  h.style.colorScheme=t;
+})();</script>
+<style id="tt-theme">
+/* Site-wide light/dark theme. Driven by html[data-theme], set early in <head>. */
+:root,
+html[data-theme="light"]{
+  color-scheme:light;
+  --site-content-max:1200px;
+  --site-content-pad:20px;
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --code:#0b1220;
+  --code-fg:#e2e8f0;
+  --link:#1d4ed8;
+  --menu-bg:#f1f5f9;
+  --menu-fg:#0f172a;
+  --menu-pill:#ffffff;
+  --menu-pill-bd:#cbd5e1;
+  --menu-pill-fg:#0f172a;
+  --menu-hover:#e2e8f0;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#e8eef7;
+  --btn-bg:#ffffff;
+  --btn-fg:#0f172a;
+  --btn-bd:#94a3b8;
+  --th-bg:#f1f5f9;
+  --chip:#e2e8f0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e2e8f0;
+    --muted:#94a3b8;
+    --line:#334155;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --code:#020617;
+    --code-fg:#e2e8f0;
+    --link:#93c5fd;
+    --menu-bg:#020617;
+    --menu-fg:#cbd5e1;
+    --menu-pill:#1e293b;
+    --menu-pill-bd:#334155;
+    --menu-pill-fg:#e2e8f0;
+    --menu-hover:#334155;
+    --menu-on:#2563eb;
+    --menu-on-fg:#ffffff;
+    --menu-sub:#0b1a33;
+    --btn-bg:#1e293b;
+    --btn-fg:#e2e8f0;
+    --btn-bd:#475569;
+    --th-bg:#163056;
+    --chip:#334155;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e2e8f0;
+  --muted:#94a3b8;
+  --line:#334155;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --code:#020617;
+  --code-fg:#e2e8f0;
+  --link:#93c5fd;
+  --menu-bg:#020617;
+  --menu-fg:#cbd5e1;
+  --menu-pill:#1e293b;
+  --menu-pill-bd:#334155;
+  --menu-pill-fg:#e2e8f0;
+  --menu-hover:#334155;
+  --menu-on:#2563eb;
+  --menu-on-fg:#ffffff;
+  --menu-sub:#0b1a33;
+  --btn-bg:#1e293b;
+  --btn-fg:#e2e8f0;
+  --btn-bd:#475569;
+  --th-bg:#163056;
+  --chip:#334155;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+
+/* Shared content column. Every public page uses one centred max width.
+   Per-generator max-widths are overridden here so a missed rebuild cannot
+   reopen the narrow/wide mismatch. Wide tables and diagrams scroll inside
+   their card (overflow-x:auto) instead of stretching the page.
+   A documented wider variant is not used: diagrams already sit in .diag /
+   .treewrap / .scroll cards. */
+html{
+  overflow-x:hidden;
+}
+body{
+  max-width:var(--site-content-max) !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:var(--site-content-pad) !important;
+  padding-right:var(--site-content-pad) !important;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  min-width:0;
+}
+main,
+main.wide,
+main.art{
+  max-width:none !important;
+  width:100%;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+.wrapx{
+  max-width:none !important;
+  width:100%;
+  box-sizing:border-box;
+  min-width:0;
+  overflow-x:auto;
+}
+nav.site.im{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.treewrap,
+.diag,
+.tblwrap,
+.scroll,
+.wrapt,
+#pagehist .wrapt,
+.codebox,
+pre,
+.shot-wide{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow-x:auto;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+figure{
+  max-width:100%;
+  box-sizing:border-box;
+}
+#mrtg,
+#mrtg .g,
+#pagehist{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mrtg .g{overflow-x:auto}
+#mrtg svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  overflow:hidden;
+}
+
+
+/* Force the chosen theme over pages that hard-code #111 / #eee or #fff. */
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="dark"],
+html[data-theme="dark"] body{
+  background:var(--bg)!important;
+  color:var(--ink)!important;
+}
+
+html[data-theme="light"] main,
+html[data-theme="dark"] main,
+html[data-theme="light"] header,
+html[data-theme="dark"] header,
+html[data-theme="light"] footer,
+html[data-theme="dark"] footer{
+  background-color:transparent;
+  color:var(--ink);
+}
+
+html[data-theme="light"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker),
+html[data-theme="dark"] a:not(.mi):not(.sl):not(.sg-link):not(#sg-link):not(#mm-link):not(.kicker){
+  color:var(--link);
+}
+
+/* Cards, tables, code, notes — follow the theme */
+html[data-theme="light"] table,
+html[data-theme="dark"] table,
+html[data-theme="light"] .card,
+html[data-theme="dark"] .card,
+html[data-theme="light"] .pbox,
+html[data-theme="dark"] .pbox,
+html[data-theme="light"] .group,
+html[data-theme="dark"] .group,
+html[data-theme="light"] .kpi,
+html[data-theme="dark"] .kpi,
+html[data-theme="light"] .wrap,
+html[data-theme="dark"] .wrap,
+html[data-theme="light"] .treewrap,
+html[data-theme="dark"] .treewrap,
+html[data-theme="light"] .lab-sec,
+html[data-theme="dark"] .lab-sec,
+html[data-theme="light"] .lab-break,
+html[data-theme="dark"] .lab-break,
+html[data-theme="light"] .related a,
+html[data-theme="dark"] .related a,
+html[data-theme="light"] .pn a,
+html[data-theme="dark"] .pn a,
+html[data-theme="light"] input,
+html[data-theme="dark"] input,
+html[data-theme="light"] select,
+html[data-theme="dark"] select,
+html[data-theme="light"] textarea,
+html[data-theme="dark"] textarea{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] th,
+html[data-theme="dark"] th{
+  background:var(--th-bg)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] td,
+html[data-theme="dark"] td{
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre,
+html[data-theme="dark"] pre,
+html[data-theme="light"] .codebox,
+html[data-theme="dark"] .codebox,
+html[data-theme="light"] .codebox pre,
+html[data-theme="dark"] .codebox pre{
+  background:var(--code)!important;
+  color:var(--code-fg)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .dn,
+html[data-theme="dark"] .dn,
+html[data-theme="light"] .dn-chip,
+html[data-theme="dark"] .dn-chip,
+html[data-theme="light"] code,
+html[data-theme="dark"] code{
+  background:var(--chip)!important;
+  color:var(--ink)!important;
+}
+html[data-theme="light"] pre code,
+html[data-theme="dark"] pre code,
+html[data-theme="light"] .codebox code,
+html[data-theme="dark"] .codebox code{
+  background:transparent!important;
+  color:inherit!important;
+}
+html[data-theme="light"] h1,
+html[data-theme="dark"] h1,
+html[data-theme="light"] h2,
+html[data-theme="dark"] h2,
+html[data-theme="light"] h3,
+html[data-theme="dark"] h3,
+html[data-theme="light"] h4,
+html[data-theme="dark"] h4,
+html[data-theme="light"] p,
+html[data-theme="dark"] p,
+html[data-theme="light"] li,
+html[data-theme="dark"] li,
+html[data-theme="light"] dt,
+html[data-theme="dark"] dt,
+html[data-theme="light"] dd,
+html[data-theme="dark"] dd,
+html[data-theme="light"] label,
+html[data-theme="dark"] label,
+html[data-theme="light"] figcaption,
+html[data-theme="dark"] figcaption{
+  color:var(--ink);
+}
+html[data-theme="light"] .lede,
+html[data-theme="dark"] .lede,
+html[data-theme="light"] .crumb,
+html[data-theme="dark"] .crumb,
+html[data-theme="light"] .field-help,
+html[data-theme="dark"] .field-help,
+html[data-theme="light"] .muted,
+html[data-theme="dark"] .muted,
+html[data-theme="light"] .tr17,
+html[data-theme="dark"] .tr17,
+html[data-theme="light"] .hint,
+html[data-theme="dark"] .hint,
+html[data-theme="light"] .lead,
+html[data-theme="dark"] .lead{
+  color:var(--muted)!important;
+}
+html[data-theme="light"] .note,
+html[data-theme="dark"] .note,
+html[data-theme="light"] .warn,
+html[data-theme="dark"] .warn,
+html[data-theme="light"] .example-flag,
+html[data-theme="dark"] .example-flag{
+  background-color:var(--card)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="dark"] .note{background:#163056!important;border-left-color:#3b82f6!important}
+html[data-theme="dark"] .warn{background:#3b2a12!important;border-left-color:#f59e0b!important}
+html[data-theme="dark"] .example-flag{background:#3b1515!important;border-left-color:#ef4444!important}
+html[data-theme="light"] .kicker,
+html[data-theme="dark"] .kicker{color:#fff}
+
+/* Menu follows the same theme (overrides the old inline #111 panel).
+   Compact 28px pills, 6 columns on wide screens, 4 mid, 2 on mobile.
+   Per-section accent colour is set as --im-accent on each pill. */
+nav.site,
+nav.site.im{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  box-sizing:border-box;
+  width:100%;
+  margin:0!important;
+  padding:6px 12px 8px;
+  gap:6px;
+  background:var(--menu-bg)!important;
+  color:var(--menu-fg)!important;
+  border-bottom:1px solid var(--line)!important;
+  font:650 11.5px/1 system-ui,Arial,sans-serif;
+}
+nav.site.im .im-main,
+nav.site.im .im-sub-pills{
+  display:grid!important;
+  width:100%;
+  gap:4px;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;
+}
+nav.site.im details.im-sub,
+nav.site.im .im-sub{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  box-sizing:border-box;
+  gap:4px;
+  margin:0;
+  padding:6px 8px;
+  border-left:3px solid var(--im-accent,var(--menu-on,#2563eb))!important;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 10%,transparent)!important;
+  border-radius:8px;
+}
+nav.site.im a.sl,
+nav.site.im summary.sl{
+  color:var(--link)!important;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  padding:0 2px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+  list-style:none;
+}
+nav.site.im summary.sl::-webkit-details-marker{display:none}
+nav.site.im a.mi{
+  display:flex!important;
+  align-items:center;
+  gap:5px;
+  box-sizing:border-box;
+  width:100%;
+  height:28px;
+  min-height:28px;
+  max-height:28px;
+  min-width:0;
+  padding:0 8px;
+  border-radius:999px;
+  border:1px solid color-mix(in srgb,var(--im-accent,#2563eb) 40%,var(--menu-pill-bd,#3a4456))!important;
+  background:var(--menu-pill)!important;
+  color:var(--menu-pill-fg)!important;
+  text-decoration:none!important;
+  transition:background .12s;
+}
+nav.site.im a.mi:hover{background:color-mix(in srgb,var(--im-accent,#2563eb) 16%,var(--menu-hover))!important}
+nav.site.im a.mi.on{
+  background:var(--im-accent,var(--menu-on,#2563eb))!important;
+  border-color:var(--im-accent,var(--menu-on,#2563eb))!important;
+  color:var(--menu-on-fg)!important;
+}
+nav.site.im a.mi.sm{font-size:11px;height:28px;min-height:28px;max-height:28px}
+nav.site.im a.mi .ic{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 22%,transparent);
+  font-size:11px;
+  line-height:1;
+}
+nav.site.im a.mi.on .ic{background:rgba(255,255,255,.22)}
+nav.site.im a.mi .im-l{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  line-height:1;
+  text-align:left;
+}
+nav.site.im a.mi .im-n{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  margin-left:auto;
+  min-width:14px;
+  height:14px;
+  padding:0 4px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:700;
+  line-height:1;
+  background:color-mix(in srgb,var(--im-accent,#2563eb) 35%,#93c5fd);
+  color:#0f172a;
+}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-width:16px;
+  height:16px;
+  padding:0 4px;
+  border-radius:999px;
+  font-size:10px!important;
+  font-weight:800;
+  line-height:1;
+  background:#0f172a!important;
+  color:#fff!important;
+}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+nav.site.im a.mi.on .im-seq{
+  background:#fff!important;
+  color:var(--im-accent,#1d4ed8)!important;
+}
+nav.site.im a.mi .im-dot{
+  width:7px;height:7px;border-radius:50%;background:#22c55e;flex:none;
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--im-accent,#2563eb) 18%,transparent);
+}
+nav.site.im .im-stats{
+  display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;
+  font:600 11px/1.3 system-ui,Arial,sans-serif;color:var(--menu-fg);padding:2px 2px 0;opacity:.9;
+}
+nav.site.im .im-stats a{color:var(--link);text-decoration:none}
+
+/* Suggest + Dark sit on a right-aligned toolbar row above the menu grid, not in a pill cell. */
+#tt-wrap{
+  position:static!important;
+  z-index:auto;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  box-sizing:border-box;
+  width:100%;
+  height:28px;
+  padding:0;
+  flex:none;
+}
+#sg-link,#tt-btn,#mm-link{
+  font:600 12px/1 system-ui,Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:28px;
+  padding:0 12px;
+  border-radius:999px;
+  border:1px solid var(--btn-bd);
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  cursor:pointer;
+  opacity:.92;
+  text-decoration:none;
+  white-space:nowrap;
+  flex:none;
+}
+#sg-link:hover,#tt-btn:hover,#mm-link:hover{opacity:1}
+#mm-link{width:28px;padding:0}
+#mm-link svg{display:block;flex:none}
+#sg-link .sg-short{display:none}
+@media (max-width:1099px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  nav.site.im .im-main,
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tt-wrap{flex-wrap:nowrap;width:100%;height:28px}
+  #sg-link .sg-wide{display:none}
+  #sg-link .sg-short{display:inline}
+  #sg-link,#tt-btn,#mm-link{height:28px;padding:0 10px}
+  nav.site.im summary.sl .im-toggle{display:inline}
+}
+@media (min-width:721px){
+  nav.site.im summary.sl .im-toggle{display:none}
+}
+
+/* SVG labels on themed canvases: dark text on light, light text on dark.
+   Coloured strokes/fills on the boxes themselves are left alone. */
+html[data-theme="dark"] .treewrap svg rect.box,
+html[data-theme="dark"] .treewrap svg rect[fill="#fff"],
+html[data-theme="dark"] .treewrap svg rect[fill="#ffffff"],
+html[data-theme="dark"] svg.arch rect[fill="#fff"]{
+  fill:var(--card);
+}
+html[data-theme="dark"] .treewrap svg text,
+html[data-theme="dark"] svg.arch text[fill="#0f172a"],
+html[data-theme="dark"] svg.arch text[fill="#475569"]{
+  fill:var(--ink);
+}
+html[data-theme="light"] .treewrap{background:var(--card)!important}
+
+/* APIC dialog replicas: keep the form chrome readable in both themes. */
+html[data-theme="dark"] .apic{
+  background:#1e293b!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+html[data-theme="dark"] .apic .fake-input,
+html[data-theme="dark"] .apic input,
+html[data-theme="dark"] .apic select{
+  background:#0f172a!important;color:#e2e8f0!important;border-color:#475569!important;
+}
+
+/* Copy buttons and chips */
+html[data-theme="dark"] .copy,
+html[data-theme="dark"] .copy-dn{
+  background:var(--btn-bg)!important;color:var(--btn-fg)!important;border-color:var(--btn-bd)!important;
+}
+html[data-theme="dark"] a.dn-chip:hover{background:#1e3a5f!important;color:#93c5fd!important}
+
+/* Visitor badge stays green; don't force ink on it. */
+.uv,.uvc{color:#fff!important}
+
+</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ACI tenant design patterns — zFrontier</title>
+<meta name="description" content="Four Cisco ACI tenant design patterns: where the VRF, bridge domain, subnet and EPG live, how that affects RBAC and contracts, with original diagrams, settings tables, create and delete flow charts, and Ansible and Terraform models.">
+<style>
+
+
+
+
+:root {
+  color-scheme: light dark;
+  --bg: #f4f6f8;
+  --bg-accent: #e8eef4;
+  --card: #ffffff;
+  --ink: #15202b;
+  --muted: #5b6b7c;
+  --line: #d5dee7;
+  --accent: #0e7490;
+  --accent-soft: #e0f4f8;
+  --link: #0e7490;
+  --good: #047857;
+  --warn: #a16207;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --radius: 14px;
+  --mono: "IBM Plex Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+  --sans: "Source Sans 3", "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --map-land: #dfe8ef;
+  --map-stroke: #8aa0b3;
+  --map-water: #c5d6e6;
+  --leg1: #0e7490;
+  --leg2: #6d28d9;
+  --leg3: #b45309;
+  --leg4: #047857;
+  --sc-fill: #dc2626;
+  --sc-stroke: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+    --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+    --link: #5eead4; --good: #34d399; --warn: #fbbf24;
+    --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+    --map-land: #1b2a3d; --map-stroke: #4b6480; --map-water: #0f2740;
+    --leg1: #5eead4; --leg2: #c4b5fd; --leg3: #fdba74; --leg4: #34d399;
+    --sc-fill: #f87171; --sc-stroke: #0b1220;
+  }
+}
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f4f6f8; --bg-accent: #e8eef4; --card: #ffffff; --ink: #15202b;
+  --muted: #5b6b7c; --line: #d5dee7; --accent: #0e7490; --accent-soft: #e0f4f8;
+  --link: #0e7490; --good: #047857; --warn: #a16207;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --map-land: #dfe8ef; --map-stroke: #8aa0b3; --map-water: #c5d6e6;
+  --leg1: #0e7490; --leg2: #6d28d9; --leg3: #b45309; --leg4: #047857;
+  --sc-fill: #dc2626; --sc-stroke: #ffffff;
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b1220; --bg-accent: #111827; --card: #152033; --ink: #e6edf5;
+  --muted: #93a4b8; --line: #2a3b52; --accent: #5eead4; --accent-soft: #12313a;
+  --link: #5eead4; --good: #34d399; --warn: #fbbf24;
+  --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.28);
+  --map-land: #1b2a3d; --map-stroke: #4b6480; --map-water: #0f2740;
+  --leg1: #5eead4; --leg2: #c4b5fd; --leg3: #fdba74; --leg4: #34d399;
+  --sc-fill: #f87171; --sc-stroke: #0b1220;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--sans);
+  background: radial-gradient(1200px 500px at 10% -10%, var(--bg-accent), transparent 60%), var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  min-height: 100vh;
+}
+a { color: var(--link); }
+code, .mono { font-family: var(--mono); font-size: 0.92em; }
+main.wrap, footer.wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem; }
+main.wrap { padding-top: 0.4rem; padding-bottom: 2.2rem; }
+footer.wrap { padding-bottom: 3.5rem; }
+.tr17 { margin: 0 0 8px; }
+h1 { font-size: clamp(1.7rem, 3vw, 2.25rem); margin: 0 0 0.35rem; letter-spacing: -0.03em; font-weight: 700; }
+.ver { margin: 0 0 0.85rem; color: var(--muted); font-weight: 650; }
+.lede { font-size: 1.05rem; margin: 0 0 1rem; max-width: 78ch; }
+h2 { font-size: 1.25rem; margin: 2rem 0 0.7rem; letter-spacing: -0.02em; scroll-margin-top: 80px; }
+h3 { font-size: 1.05rem; margin: 1.2rem 0 0.45rem; }
+p, ul, ol { margin: 0 0 0.85rem; }
+ul, ol { padding-left: 1.25rem; }
+li { margin: 0.2rem 0; }
+.kicker {
+  display: inline-block; text-transform: uppercase; letter-spacing: 0.14em;
+  font-size: 0.72rem; color: var(--accent); font-weight: 700; margin: 0 0 0.35rem;
+}
+.note, .muted, .meta, .footer { color: var(--muted); }
+.meta { margin: 0 0 0.25rem; }
+.footer { margin: 0.4rem 0 0; font-size: 0.92rem; }
+.na { font-style: italic; color: var(--warn); }
+.callout, .card, .module, .leg, .comment-notes {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 1rem 1.15rem; margin: 0 0 1.1rem;
+  min-width: 0;
+}
+.module h3, .leg h2 { margin-top: 0; }
+.table-wrap { overflow-x: auto; margin: 0 0 1rem; max-width: 100%; }
+table {
+  width: 100%; border-collapse: collapse; background: var(--card);
+  border: 1px solid var(--line); border-radius: var(--radius);
+}
+th, td { text-align: left; padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--line); vertical-align: top; overflow-wrap: break-word; }
+.table-wrap table td:first-child { overflow-wrap: normal; word-break: normal; }
+th { font-size: 0.82rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); background: var(--bg-accent); }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.toc a { margin-right: 0.75rem; }
+.mapwrap { overflow-x: auto; max-width: 100%; margin: 0 0 1rem; }
+.mapwrap > svg { display: block; width: 100%; max-width: 100%; height: auto; }
+.map-legend { display: flex; flex-wrap: wrap; gap: 0.6rem 1.1rem; margin: 0 0 0.8rem; font-size: 0.92rem; }
+.map-legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+.map-swatch { width: 18px; height: 4px; border-radius: 2px; display: inline-block; }
+.map-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; background: var(--sc-fill); border: 2px solid var(--sc-stroke); box-sizing: content-box; }
+.gap { border-left: 4px solid var(--warn); padding-left: 0.8rem; margin: 0.8rem 0; }
+.sources li { overflow-wrap: anywhere; }
+.ad-card h2 { margin: 0 0 0.4rem; }
+
+.leg-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem;
+  margin: 0 0 1.1rem;
+  min-width: 0;
+}
+.leg-cards .card { margin: 0; min-width: 0; }
+.leg-cards h3 { margin: 0 0 0.35rem; font-size: 1.02rem; overflow-wrap: anywhere; }
+
+.hire-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem;
+  margin: 0 0 1.1rem;
+  min-width: 0;
+}
+.hire-cards .card { margin: 0; min-width: 0; }
+.hire-cards h3 { margin: 0 0 0.35rem; font-size: 1.02rem; overflow-wrap: anywhere; }
+.price { font-variant-numeric: tabular-nums; font-weight: 700; }
+@media (max-width: 390px) {
+  main.wrap, footer.wrap { padding-left: 0.85rem; padding-right: 0.85rem; }
+  th, td { padding: 0.45rem 0.5rem; }
+  .leg-cards { grid-template-columns: 1fr; }
+  .hire-cards { grid-template-columns: 1fr; }
+}
+
+
+
+.page-menu { margin: 0 0 1.2rem; padding-left: 1.3rem; }
+.page-menu li { margin: 0 0 0.25rem; }
+
+
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem 1rem;margin:0 0 1rem}
+.facts div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.6rem .8rem}
+.facts b{display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:.85rem;margin:0 0 1.2rem}
+.tcards a.card{display:block;text-decoration:none;color:var(--ink);margin:0}
+.tcards a.card h3{margin:0 0 .3rem;color:var(--link)}
+.tcards a.card p{margin:0;font-size:.92rem;color:var(--muted)}
+.tag{display:inline-block;font-size:.75rem;font-weight:700;letter-spacing:.03em;border-radius:999px;padding:.1rem .5rem;white-space:nowrap;border:1px solid var(--line)}
+.tag-builtin{background:#dcfce7;color:#166534;border-color:#86efac}
+.tag-user{background:#fef3c7;color:#92400e;border-color:#fcd34d}
+.tag-absent{background:var(--chip);color:var(--muted)}
+html[data-theme="dark"] .tag-builtin{background:#14532d;color:#bbf7d0;border-color:#166534}
+html[data-theme="dark"] .tag-user{background:#78350f;color:#fde68a;border-color:#b45309}
+.legend{display:flex;flex-wrap:wrap;gap:.6rem 1.1rem;margin:0 0 1rem;font-size:.92rem}
+.howto{font-size:.95rem;color:var(--muted);margin:.2rem 0 0.8rem}
+.bc{font-size:.9rem;color:var(--muted);margin:0 0 .4rem}
+code{font-size:.9em}
+
+
+
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem 1rem;margin:0 0 1rem}
+.facts div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.6rem .8rem}
+.facts b{display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.bc{font-size:.9rem;color:var(--muted);margin:0 0 .4rem}
+code{font-size:.9em}
+.callout,.note,.warn,.tip{border:1px solid var(--line);border-left-width:4px;border-radius:10px;padding:.7rem 1rem;margin:0 0 1rem;background:var(--card)}
+.note{border-left-color:#2563eb}
+.warn{border-left-color:#d97706}
+.tip{border-left-color:#15803d}
+.shot{margin:0 0 1.1rem;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.6rem}
+.shot img{display:block;width:100%;height:auto;border-radius:8px}
+.shot figcaption{font-size:.88rem;color:var(--muted);padding:.45rem .2rem 0}
+.downloads{display:flex;flex-wrap:wrap;gap:.6rem;margin:.4rem 0 1rem}
+.downloads a{display:inline-block;background:var(--btn-bg);color:var(--btn-fg);border:1px solid var(--btn-bd);border-radius:999px;padding:.35rem .85rem;text-decoration:none;font-weight:650;font-size:.92rem}
+.downloads a:hover{border-color:var(--link)}
+.downloads a.primary{background:var(--menu-on);color:var(--menu-on-fg);border-color:var(--menu-on)}
+.scen{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;margin:0 0 1rem}
+.scen h3{margin:.1rem 0 .35rem}
+.kv{display:flex;flex-wrap:wrap;gap:.35rem .5rem;margin:.2rem 0 .7rem}
+.kv span{background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:.12rem .55rem;font-size:.82rem}
+.kv b{font-weight:700}
+.mapwrap{margin:0 0 1rem;overflow-x:auto}
+svg.flow{width:100%;height:auto;display:block}
+.flow-box{fill:var(--bg);stroke:var(--line);stroke-width:1.4}
+.flow-host{fill:var(--card)}
+.flow-leaf{fill:var(--th-bg)}
+.flow-spine{fill:var(--menu-sub)}
+.flow-drop{fill:#fef2f2;stroke:#ef4444}
+html[data-theme="dark"] .flow-drop{fill:#3f1212;stroke:#f87171}
+.flow-t{fill:var(--ink);font:650 13px system-ui,Segoe UI,sans-serif}
+.flow-sub{fill:var(--muted);font:12px system-ui,Segoe UI,sans-serif}
+.flow-lab{fill:var(--muted);font:12px system-ui,Segoe UI,sans-serif}
+.flow-title{fill:var(--ink);font:700 13px system-ui,Segoe UI,sans-serif}
+.ov-note{fill:var(--muted);font:11px system-ui,Segoe UI,sans-serif}
+.ov-bg{fill:var(--card);stroke:var(--line)}
+.flow-edge{stroke:var(--link);stroke-width:2;fill:none}
+.flow-edge-ok{stroke:#15803d;stroke-width:2;fill:none}
+.flow-edge-bad{stroke:#b91c1c;stroke-width:2;fill:none}
+html[data-theme="dark"] .flow-edge-ok{stroke:#4ade80}
+html[data-theme="dark"] .flow-edge-bad{stroke:#f87171}
+.flow-ah{fill:var(--link)}
+.flow-ah-ok{fill:#15803d}
+.flow-ah-bad{fill:#b91c1c}
+html[data-theme="dark"] .flow-ah-ok{fill:#4ade80}
+html[data-theme="dark"] .flow-ah-bad{fill:#f87171}
+.filelist{font-size:.95rem}
+.sources li{margin:0 0 .35rem}
+
+</style>
+
+
+<style id="tenant-patterns">
+.pattern-fig{margin:12px 0 18px;border:1px solid var(--line,#e2e8f0);border-radius:14px;background:var(--card,#fff);padding:10px 10px 6px;overflow-x:auto}
+.pattern-fig svg{display:block;width:100%;height:auto;max-width:860px;margin:0 auto}
+.pattern-fig figcaption,.flow-fig figcaption{font-size:13px;color:var(--muted,#475569);padding:6px 4px 2px}
+.flow-fig{margin:12px 0 18px;border:1px solid var(--line,#e2e8f0);border-radius:14px;background:var(--card,#fff);padding:10px;overflow-x:auto}
+.flow-fig svg{display:block;width:100%;height:auto;max-width:980px;margin:0 auto}
+.settings{margin:0 0 16px}
+.dlrow{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+.dlrow a{display:inline-block;padding:6px 10px;border:1px solid var(--line,#e2e8f0);border-radius:8px;text-decoration:none;color:var(--link,#1d4ed8);background:var(--card,#fff);font-size:13.5px}
+.dlrow a:hover{background:var(--menu-hover,#e2e8f0)}
+pre.code,pre{background:var(--code,#0b1220);color:var(--code-fg,#e2e8f0);border-radius:10px;padding:12px 14px;overflow-x:auto;font-size:12.5px;line-height:1.45}
+h3{margin-top:1.3rem}
+.legend{font-size:13px;color:var(--muted,#475569);margin:0 0 10px}
+</style>
+</head>
+<body>
+<!-- theme-toggle v2 -->
+<script id="tt-script">(function(){
+function preferred(){
+  try{var t=localStorage.getItem('siteTheme');if(t==='light'||t==='dark')return t}catch(e){}
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+}
+function apply(m){
+  var h=document.documentElement;
+  h.setAttribute('data-theme',m);
+  h.style.colorScheme=m;
+  var btn=document.getElementById('tt-btn');
+  if(btn){
+    btn.textContent=(m==='dark')?'☀️ Light':'🌙 Dark';
+    btn.title='Switch to '+(m==='dark'?'light':'dark')+' theme';
+  }
+}
+var wrap=document.createElement('div');wrap.id='tt-wrap';
+var mm=document.createElement('a');mm.id='mm-link';mm.href='/mindmap/';mm.title='Mind map';mm.setAttribute('aria-label','Mind map');
+mm.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.25" fill="currentColor"/><circle cx="12" cy="4.25" r="1.7" fill="currentColor"/><circle cx="19.1" cy="15.6" r="1.7" fill="currentColor"/><circle cx="4.9" cy="15.6" r="1.7" fill="currentColor"/><path d="M12 9.7V5.95M13.85 13.2l3.7 1.85M10.15 13.2L6.45 15.05" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>';
+wrap.appendChild(mm);
+var btn=document.createElement('button');btn.id='tt-btn';btn.type='button';wrap.appendChild(btn);
+var b=document.body;
+if(b){b.insertBefore(wrap,b.firstChild)}
+btn.onclick=function(){var m=preferred()==='dark'?'light':'dark';try{localStorage.setItem('siteTheme',m)}catch(e){}apply(m);};
+apply(preferred());
+})();</script>
+<!-- site-menu v1 -->
+<nav class="site"></nav>
+<main class="wrap">
+<!--arr-uv-tr17 v1--><div class="tr17" style="margin-left:auto;text-align:right;font-size:13px;color:#bbb"><a href="/visitors/" style="color:#fff;text-decoration:none"><span class="uv" style="margin-left:8px;background:#198754;color:#fff;border-radius:4px;padding:2px 8px;font-size:13px;white-space:nowrap">Unique visitors (this page): <b class="uvc">…</b></span></a><span class="uvt" style="font-size:11px;color:#888"></span></div><!--/arr-uv-tr17-->
+<p class="kicker">zFrontier · ACI</p>
+<h1>ACI tenant design patterns</h1>
+<p class="ver"><a href="/zfrontier/aci-tenant-design-patterns/history/">v1 · 28 Nov 2026, 9:47 AM AEDT</a></p>
+<p class="lede">Four ways to place a VRF, a bridge domain and an EPG across tenant common and a user tenant — with original diagrams, settings, create and delete order, and downloadable Ansible and Terraform models.</p>
+<div class="facts">
+<div><b>Patterns</b>A · B · C · D</div>
+<div><b>Models</b>Ansible · Terraform · NaC YAML</div>
+<div><b>Addresses</b>Documentation ranges only</div>
+<div><b>Common tenant</b>Never created or deleted</div>
+</div>
+<ol class="page-menu" aria-label="On this page">
+<li><a href="#about">What this is</a></li>
+<li><a href="#comparison">Comparison</a></li>
+<li><a href="#pattern-a">Pattern A</a></li>
+<li><a href="#pattern-b">Pattern B</a></li>
+<li><a href="#pattern-c">Pattern C</a></li>
+<li><a href="#pattern-d">Pattern D</a></li>
+<li><a href="#models">Models and downloads</a></li>
+<li><a href="#sources">Sources</a></li>
+<li><a href="#comments">Comments</a></li>
+<li><a href="#versions">Versions</a></li>
+</ol>
+
+<h2 id="about">What this is</h2>
+<p>A tenant in ACI is a policy container, not a routing domain. The VRF is the routing domain, the bridge domain holds the subnet, and the EPG is where endpoints and contracts attach. Those three objects do not have to live in the same tenant. This page describes four placement patterns that show up often when a fabric is shared by one operations team, or by several application teams.</p>
+<p>The diagrams are original. They are not copies of a conference slide. Object names such as <code>vrf-01</code> and <code>app_dev</code> are teaching names used in the models, not names from a live fabric.</p>
+<p>Named relations in ACI (bridge domain to VRF, EPG to bridge domain, EPG to contract) are resolved by name in the current tenant first, then in tenant common. If a user tenant and tenant common both have a VRF called <code>vrf-01</code>, a typo or a deletion in the user tenant can silently bind objects to the common VRF. In production, prefix names in common so they cannot collide. That behaviour is described in Cisco’s ACI policy-model documentation, linked under <a href="#sources">Sources</a>.</p>
+<p>Nothing on this page was written to an APIC. The models use only documentation IPv4 ranges (192.0.2.0/24, 198.51.100.0/24 and 203.0.113.0/24). Credentials are placeholders (<code>{{ apic_host }}</code>, <code>{{ apic_username }}</code>, <code>{{ apic_password }}</code>). Do not apply these models to a shared Always-On APIC unless you have written approval.</p>
+
+<h2 id="comparison">Comparison</h2>
+<p>Use the table to see, at a glance, where each object sits and what that means for subnet visibility, RBAC and contracts. Click a heading to sort.</p>
+<div class="tblwrap"><table class="sortable" id="cmp" aria-label="Comparison of the four tenant design patterns">
+<thead><tr>
+<th>Pattern</th>
+<th>VRF location</th>
+<th>BD and subnets</th>
+<th>EPG location</th>
+<th>Subnet visibility</th>
+<th>RBAC fit</th>
+<th>Contracts and route leak</th>
+</tr></thead>
+<tbody>
+<tr>
+<td data-k="A"><strong>A</strong></td>
+<td>Tenant common</td>
+<td>Tenant common</td>
+<td>Tenant common</td>
+<td>Visible to every tenant that can use objects in common</td>
+<td>One operations team. Tight per-team RBAC is a poor fit, because most of the policy lives in common</td>
+<td>Contracts stay in common (this model uses scope tenant). No inter-VRF leak is required</td>
+</tr>
+<tr>
+<td data-k="B"><strong>B</strong></td>
+<td>Tenant common</td>
+<td>Tenant common</td>
+<td>User tenant</td>
+<td>Any user tenant can bind an EPG to those common subnets</td>
+<td>A network team owns addressing in common. Application teams are limited to their own tenants</td>
+<td>Contracts in common with scope context cover EPGs in different tenants that share the VRF. Subnets stay private</td>
+</tr>
+<tr>
+<td data-k="C"><strong>C</strong></td>
+<td>Tenant common</td>
+<td>User tenant</td>
+<td>User tenant</td>
+<td>Each tenant keeps its own subnets. They are not automatically usable by another tenant</td>
+<td>Teams can manage their own addressing without editing the shared VRF, if they cannot write to common</td>
+<td>A contract in common with scope context allows selected communication inside the shared VRF. Subnet scope shared is not required unless you also leak to another VRF</td>
+</tr>
+<tr>
+<td data-k="D"><strong>D</strong></td>
+<td>User tenant</td>
+<td>User tenant</td>
+<td>User tenant</td>
+<td>Dedicated to that tenant unless a subnet is marked shared</td>
+<td>Best fit for several teams. Pair each tenant with its own security domain</td>
+<td>Inter-tenant, inter-VRF traffic needs a contract of scope global and a provider subnet with scope shared, usually plus a contract export</td>
+</tr>
+</tbody></table></div>
+<p class="legend">“Route leak” here means advertising a subnet into another VRF. Endpoints that already share a VRF (patterns A–C in these models) still need a contract when the VRF is enforced, but they do not need a shared-scope subnet for that communication.</p>
+
+<h2 id="pattern-a">Pattern A — everything in tenant common</h2>
+<p>The VRF, the bridge domains and their subnets, and the application profile with its EPGs all live in the built-in common tenant. This suits a fabric that one operations team owns, where splitting edit rights between teams is not the main goal. Because objects in common can be used by name from every other tenant, a change here has fabric-wide reach.</p>
+<figure class="pattern-fig">
+<svg viewBox="0 0 720 300" role="img" aria-label="Pattern A: VRF, bridge domains and EPGs all inside tenant common" xmlns="http://www.w3.org/2000/svg">
+<title>Pattern A — all objects in tenant common</title>
+
+<style>
+  .tbox{fill:var(--card,#fff);stroke:var(--line,#94a3b8);stroke-width:1.4}
+  .tbox-common{fill:#ecfeff;stroke:#0f766e;stroke-width:1.8}
+  .tbox-user{fill:#eef2ff;stroke:#4338ca;stroke-width:1.8}
+  .tbox-shared{fill:#fff7ed;stroke:#c2410c;stroke-width:1.8}
+  html[data-theme="dark"] .tbox-common{fill:#134e4a;stroke:#5eead4}
+  html[data-theme="dark"] .tbox-user{fill:#1e1b4b;stroke:#a5b4fc}
+  html[data-theme="dark"] .tbox-shared{fill:#431407;stroke:#fdba74}
+  .tlbl{font:700 13px system-ui,sans-serif;fill:var(--ink,#0f172a)}
+  .obj{fill:var(--card,#fff);stroke:var(--line,#64748b);stroke-width:1.2;rx:8;ry:8}
+  .obj-vrf{stroke:#0f766e;stroke-width:1.5}
+  .obj-bd{stroke:#0369a1;stroke-width:1.5}
+  .obj-epg{stroke:#6d28d9;stroke-width:1.5}
+  .olbl{font:650 11.5px system-ui,sans-serif;fill:var(--ink,#0f172a);text-anchor:middle}
+  .osub{font:400 10px system-ui,sans-serif;fill:var(--muted,#475569);text-anchor:middle}
+  .arr{stroke:var(--ink,#334155);stroke-width:1.4;fill:none;marker-end:url(#arrow)}
+  .arrd{stroke:#b91c1c;stroke-width:1.4;fill:none;stroke-dasharray:5 3;marker-end:url(#arrow-del)}
+  .fn{fill:#ecfdf5;stroke:#047857;stroke-width:1.3}
+  .fd{fill:#fef2f2;stroke:#b91c1c;stroke-width:1.3}
+  html[data-theme="dark"] .fn{fill:#064e3b;stroke:#34d399}
+  html[data-theme="dark"] .fd{fill:#7f1d1d;stroke:#fca5a5}
+  .flbl{font:650 11px system-ui,sans-serif;fill:var(--ink,#0f172a);text-anchor:middle}
+  .fsec{font:700 12px system-ui,sans-serif;fill:var(--ink,#0f172a)}
+  .note{font:400 10.5px system-ui,sans-serif;fill:var(--muted,#475569)}
+</style>
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink,#334155)"/>
+  </marker>
+  <marker id="arrow-del" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+  </marker>
+</defs>
+
+<rect class="tbox-common" x="40" y="24" width="640" height="250" rx="16" ry="16"/>
+<text class="tlbl" x="58" y="50">Tenant common (built-in)</text>
+<rect class="obj obj obj-vrf" x="80" y="70" width="160" height="52" rx="8" ry="8"/>
+  <text class="olbl" x="160.0" y="94.0">VRF  vrf-01</text>
+  <text class="osub" x="160.0" y="108.0">enforced</text>
+<rect class="obj obj obj-bd" x="160" y="160" width="150" height="52" rx="8" ry="8"/>
+  <text class="olbl" x="235.0" y="184.0">BD  bd-web</text>
+  <text class="osub" x="235.0" y="198.0">192.0.2.1/24</text>
+<rect class="obj obj obj-bd" x="410" y="160" width="150" height="52" rx="8" ry="8"/>
+  <text class="olbl" x="485.0" y="184.0">BD  bd-app</text>
+  <text class="osub" x="485.0" y="198.0">198.51.100.1/24</text>
+<rect class="obj obj obj-epg" x="80" y="230" width="560" height="30" rx="8" ry="8"/>
+  <text class="olbl" x="360.0" y="243.0">Application profile  ap-ops   ·   EPG epg-web   ·   EPG epg-app</text>
+  <text class="osub" x="360.0" y="257.0"></text>
+<path class="arr" d="M160 122 L235 160"/>
+<path class="arr" d="M160 122 L485 160"/>
+<path class="arr" d="M235 212 L235 230"/>
+<path class="arr" d="M485 212 L485 230"/>
+</svg>
+<figcaption>Pattern A. The VRF, both bridge domains and the application profile with its EPGs sit in tenant common. One team sees the whole stack.</figcaption>
+</figure>
+
+<h3 id="pattern-a-scenarios">Scenarios</h3>
+<p><strong>A1 — Single operations team.</strong> The VRF is enforced and the preferred group is disabled, so EPGs talk only through a contract. This is the default in the model (<code>terraform plan -var='scenario=a1'</code>, or the Ansible default).</p>
+<div class="tblwrap settings"><table class="sortable" aria-label="Pattern A1 settings">
+<thead><tr><th>Setting</th><th>Value in this model</th></tr></thead>
+<tbody>
+<tr><th>Tenant</th><td>common (built-in, not created or deleted)</td></tr>
+<tr><th>VRF</th><td>vrf-01 · policy control enforced · preferred group disabled</td></tr>
+<tr><th>BD subnets</th><td>bd-web 192.0.2.1/24 and bd-app 198.51.100.1/24 · scope private</td></tr>
+<tr><th>L2 unknown unicast</th><td>Hardware Proxy (<code>proxy</code>)</td></tr>
+<tr><th>EPG</th><td>epg-web (consumer) and epg-app (provider) in ap-ops, preferred group not used</td></tr>
+<tr><th>Contract / scope</th><td>ctr-web-to-app · scope tenant · TCP/80 filter</td></tr>
+<tr><th>Security domain / RBAC</th><td>sec-ops is created but is not attached to tenant common</td></tr>
+</tbody></table></div>
+<p><strong>A2 — Small lab on the same layout.</strong> The objects are the same, but the VRF preferred group is enabled and the EPGs are included in it, so they can talk without the contract. A1 and A2 are alternatives for the same VRF; do not apply both at once.</p>
+<div class="tblwrap settings"><table class="sortable" aria-label="Pattern A2 settings">
+<thead><tr><th>Setting</th><th>Value in this model</th></tr></thead>
+<tbody>
+<tr><th>Tenant</th><td>common</td></tr>
+<tr><th>VRF</th><td>vrf-01 · enforced · preferred group enabled</td></tr>
+<tr><th>BD subnets</th><td>Same as A1 · scope private</td></tr>
+<tr><th>L2 unknown unicast</th><td>Hardware Proxy</td></tr>
+<tr><th>EPG</th><td>Same EPGs, preferred group included</td></tr>
+<tr><th>Contract / scope</th><td>The HTTP contract is still created, but preferred-group members can communicate without it</td></tr>
+<tr><th>Security domain / RBAC</th><td>Same as A1</td></tr>
+</tbody></table></div>
+<p><strong>When to use it.</strong> A single team already operates the fabric, and you want the fewest moving parts. Avoid this pattern when several teams need independent edit rights: almost everyone who can change common can change everyone else’s networking.</p>
+<p><strong>RBAC and security domains.</strong> Restricting the built-in common tenant is an APIC administrative decision. These models do not attach a security domain to common, and they never delete that tenant.</p>
+<p><strong>Contracts and leaking.</strong> All endpoints in this pattern share one VRF, so a contract is enough. A subnet does not need to be marked shared unless you later leak it to another VRF.</p>
+<figure class="flow-fig">
+<svg viewBox="0 0 920 210" role="img" aria-label="Create VRF, BD, AP, EPG, contracts; delete in reverse. Never delete tenant common." xmlns="http://www.w3.org/2000/svg">
+<title>Pattern A — create and delete order</title>
+
+<style>
+  .tbox{fill:var(--card,#fff);stroke:var(--line,#94a3b8);stroke-width:1.4}
+  .tbox-common{fill:#ecfeff;stroke:#0f766e;stroke-width:1.8}
+  .tbox-user{fill:#eef2ff;stroke:#4338ca;stroke-width:1.8}
+  .tbox-shared{fill:#fff7ed;stroke:#c2410c;stroke-width:1.8}
+  html[data-theme="dark"] .tbox-common{fill:#134e4a;stroke:#5eead4}
+  html[data-theme="dark"] .tbox-user{fill:#1e1b4b;stroke:#a5b4fc}
+  html[data-theme="dark"] .tbox-shared{fill:#431407;stroke:#fdba74}
+  .tlbl{font:700 13px system-ui,sans-serif;fill:var(--ink,#0f172a)}
+  .obj{fill:var(--card,#fff);stroke:var(--line,#64748b);stroke-width:1.2;rx:8;ry:8}
+  .obj-vrf{stroke:#0f766e;stroke-width:1.5}
+  .obj-bd{stroke:#0369a1;stroke-width:1.5}
+  .obj-epg{stroke:#6d28d9;stroke-width:1.5}
+  .olbl{font:650 11.5px system-ui,sans-serif;fill:var(--ink,#0f172a);text-anchor:middle}
+  .osub{font:400 10px system-ui,sans-serif;fill:var(--muted,#475569);text-anchor:middle}
+  .arr{stroke:var(--ink,#334155);stroke-width:1.4;fill:none;marker-end:url(#arrow)}
+  .arrd{stroke:#b91c1c;stroke-width:1.4;fill:none;stroke-dasharray:5 3;marker-end:url(#arrow-del)}
+  .fn{fill:#ecfdf5;stroke:#047857;stroke-width:1.3}
+  .fd{fill:#fef2f2;stroke:#b91c1c;stroke-width:1.3}
+  html[data-theme="dark"] .fn{fill:#064e3b;stroke:#34d399}
+  html[data-theme="dark"] .fd{fill:#7f1d1d;stroke:#fca5a5}
+  .flbl{font:650 11px system-ui,sans-serif;fill:var(--ink,#0f172a);text-anchor:middle}
+  .fsec{font:700 12px system-ui,sans-serif;fill:var(--ink,#0f172a)}
+  .note{font:400 10.5px system-ui,sans-serif;fill:var(--muted,#475569)}
+</style>
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink,#334155)"/>
+  </marker>
+  <marker id="arrow-del" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+  </marker>
+</defs>
+
+<text class="fsec" x="20" y="22">Create (dependency order)</text>
+<rect class="obj fn" x="20" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="75.0" y="58">VRF in common</text>
+<rect class="obj fn" x="146" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="201.0" y="58">BD + subnet</text>
+<rect class="obj fn" x="272" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="327.0" y="58">AP</text>
+<rect class="obj fn" x="398" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="453.0" y="58">EPG</text>
+<rect class="obj fn" x="524" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="579.0" y="51">Filter</text>
+<text class="flbl" x="579.0" y="63">+ contract</text>
+<rect class="obj fn" x="650" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="705.0" y="51">Provide</text>
+<text class="flbl" x="705.0" y="63">/ consume</text>
+<rect class="obj fn" x="776" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="831.0" y="58">Security domain</text>
+<path class="arr" d="M130 54.0 L146 54.0"/>
+<path class="arr" d="M256 54.0 L272 54.0"/>
+<path class="arr" d="M382 54.0 L398 54.0"/>
+<path class="arr" d="M508 54.0 L524 54.0"/>
+<path class="arr" d="M634 54.0 L650 54.0"/>
+<path class="arr" d="M760 54.0 L776 54.0"/>
+<text class="fsec" x="20" y="108">Delete (reverse order)</text>
+<rect class="obj fd" x="20" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="75.0" y="144">Security domain</text>
+<rect class="obj fd" x="146" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="201.0" y="137">Provide</text>
+<text class="flbl" x="201.0" y="149">/ consume</text>
+<rect class="obj fd" x="272" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="327.0" y="137">Filter</text>
+<text class="flbl" x="327.0" y="149">+ contract</text>
+<rect class="obj fd" x="398" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="453.0" y="144">EPG</text>
+<rect class="obj fd" x="524" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="579.0" y="144">AP</text>
+<rect class="obj fd" x="650" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="705.0" y="144">BD + subnet</text>
+<rect class="obj fd" x="776" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="831.0" y="144">VRF in common</text>
+<path class="arrd" d="M130 140.0 L146 140.0"/>
+<path class="arrd" d="M256 140.0 L272 140.0"/>
+<path class="arrd" d="M382 140.0 L398 140.0"/>
+<path class="arrd" d="M508 140.0 L524 140.0"/>
+<path class="arrd" d="M634 140.0 L650 140.0"/>
+<path class="arrd" d="M760 140.0 L776 140.0"/>
+<text class="note" x="20" y="186">Tenant common already exists. Do not create or delete it. The operations security domain is created but not attached to common.</text>
+</svg>
+<figcaption>Pattern A — create and delete order</figcaption>
+</figure>
+<p>Ansible and Terraform excerpts (full files are under <a href="/zfrontier/aci-tenant-design-patterns/models/a/">models/a/</a>):</p>
+<pre class="code"><code>- name: Create VRF in tenant common
+  cisco.aci.aci_vrf:
+    host: &quot;{{ apic_host }}&quot;
+    username: &quot;{{ apic_username }}&quot;
+    password: &quot;{{ apic_password }}&quot;
+    tenant: common
+    vrf: vrf-01
+    policy_control_preference: enforced
+    preferred_group: disabled
+    state: present</code></pre>
+<pre class="code"><code>locals {
+  common_dn = &quot;uni/tn-common&quot;
+}
+resource &quot;aci_vrf&quot; &quot;common&quot; {
+  parent_dn                       = local.common_dn
+  name                            = &quot;vrf-01&quot;
+  policy_control_enforcement_mode = &quot;enforced&quot;
+}
+resource &quot;aci_application_epg&quot; &quot;web&quot; {
+  parent_dn = aci_application_profile.ops.id
+  name      = &quot;epg-web&quot;
+  relation_to_bridge_domain = {
+    bridge_domain_name = aci_bridge_domain.web.name
+  }
+}</code></pre>
+<div class="dlrow">
+<a href="/zfrontier/aci-tenant-design-patterns/models/a/">models/a/</a>
+<a href="/zfrontier/aci-tenant-design-patterns/models/a/ansible/playbook.yml">Ansible playbook</a>
+<a href="/zfrontier/aci-tenant-design-patterns/models/a/ansible/vars/scenario.yml">Ansible vars</a>
+<a href="/zfrontier/aci-tenant-design-patterns/models/a/terraform/main.tf">Terraform main.tf</a>
+<a href="/zfrontier/aci-tenant-design-patterns/models/a/terraform/variables.tf">Terraform variables.tf</a>
+<a href="/zfrontier/aci-tenant-design-patterns/models/a/nac/data.yml">NaC data YAML</a>
+</div>
+
+<h2 id="pattern-b">Pattern B — VRF and bridge domains in common, EPGs in the user tenant</h2>
+<p>A network team keeps the VRF and the subnets in tenant common. Application teams get their own tenants and only create application profiles and EPGs, which bind to those common bridge domains. Any tenant can use any of those shared subnets, which is useful when addressing is central, and risky if a team binds to the wrong BD.</p>
+<figure class="pattern-fig">
+<svg viewBox="0 0 720 340" role="img" aria-label="Pattern B: VRF and bridge domains in common, EPGs in user tenants" xmlns="http://www.w3.org/2000/svg">
+<title>Pattern B — VRF and BDs in common, EPGs in user tenants</title>
+
+<style>
+  .tbox{fill:var(--card,#fff);stroke:var(--line,#94a3b8);stroke-width:1.4}
+  .tbox-common{fill:#ecfeff;stroke:#0f766e;stroke-width:1.8}
+  .tbox-user{fill:#eef2ff;stroke:#4338ca;stroke-width:1.8}
+  .tbox-shared{fill:#fff7ed;stroke:#c2410c;stroke-width:1.8}
+  html[data-theme="dark"] .tbox-common{fill:#134e4a;stroke:#5eead4}
+  html[data-theme="dark"] .tbox-user{fill:#1e1b4b;stroke:#a5b4fc}
+  html[data-theme="dark"] .tbox-shared{fill:#431407;stroke:#fdba74}
+  .tlbl{font:700 13px system-ui,sans-serif;fill:var(--ink,#0f172a)}
+  .obj{fill:var(--card,#fff);stroke:var(--line,#64748b);stroke-width:1.2;rx:8;ry:8}
+  .obj-vrf{stroke:#0f766e;stroke-width:1.5}
+  .obj-bd{stroke:#0369a1;stroke-width:1.5}
+  .obj-epg{stroke:#6d28d9;stroke-width:1.5}
+  .olbl{font:650 11.5px system-ui,sans-serif;fill:var(--ink,#0f172a);text-anchor:middle}
+  .osub{font:400 10px system-ui,sans-serif;fill:var(--muted,#475569);text-anchor:middle}
+  .arr{stroke:var(--ink,#334155);stroke-width:1.4;fill:none;marker-end:url(#arrow)}
+  .arrd{stroke:#b91c1c;stroke-width:1.4;fill:none;stroke-dasharray:5 3;marker-end:url(#arrow-del)}
+  .fn{fill:#ecfdf5;stroke:#047857;stroke-width:1.3}
+  .fd{fill:#fef2f2;stroke:#b91c1c;stroke-width:1.3}
+  html[data-theme="dark"] .fn{fill:#064e3b;stroke:#34d399}
+  html[data-theme="dark"] .fd{fill:#7f1d1d;stroke:#fca5a5}
+  .flbl{font:650 11px system-ui,sans-serif;fill:var(--ink,#0f172a);text-anchor:middle}
+  .fsec{font:700 12px system-ui,sans-serif;fill:var(--ink,#0f172a)}
+  .note{font:400 10.5px system-ui,sans-serif;fill:var(--muted,#475569)}
+</style>
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink,#334155)"/>
+  </marker>
+  <marker id="arrow-del" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+  </marker>
+</defs>
+
+<rect class="tbox-common" x="20" y="20" width="680" height="130" rx="16" ry="16"/>
+<text class="tlbl" x="36" y="44">Tenant common</text>
+<rect class="obj obj obj-vrf" x="50" y="58" width="150" height="52" rx="8" ry="8"/>
+  <text class="olbl" x="125.0" y="82.0">VRF  vrf-01</text>
+  <text class="osub" x="125.0" y="96.0">shared</text>
+<rect class="obj obj obj-bd" x="250" y="58" width="170" height="52" rx="8" ry="8"/>
+  <text class="olbl" x="335.0" y="82.0">BD  bd-web</text>
+  <text class="osub" x="335.0" y="96.0">192.0.2.1/24</text>
+<rect class="obj obj obj-bd" x="470" y="58" width="180" height="52" rx="8" ry="8"/>
+  <text class="olbl" x="560.0" y="82.0">BD  bd-app</text>
+  <text class="osub" x="560.0" y="96.0">198.51.100.1/24</text>
+<path class="arr" d="M200 84 L250 84"/>
+<path class="arr" d="M200 84 L200 110 L470 110 L470 84"/>
+<rect class="tbox-user" x="20" y="170" width="210" height="150" rx="14" ry="14"/>
+<text class="tlbl" x="36" y="192">Tenant app_web</text>
+<rect class="obj obj obj-epg" x="40" y="210" width="170" height="52" rx="8" ry="8"/>
+  <text class="olbl" x="125.0" y="234.0">AP / EPG  epg-web</text>
+  <text class="osub" x="125.0" y="248.0">binds to bd-web</text>
+<rect class="tbox-user" x="255" y="170" width="210" height="150" rx="14" ry="14"/>
+<text class="tlbl" x="271" y="192">Tenant app_data</text>
+<rect class="obj obj obj-epg" x="275" y="210" width="170" height="52" rx="8" ry="8"/>
+  <text class="olbl" x="360.0" y="234.0">AP / EPG  epg-data</text>
+  <text class="osub" x="360.0" y="248.0">binds to bd-app</text>
+<rect class="tbox-shared" x="490" y="170" width="210" height="150" rx="14" ry="14"/>
+<text class="tlbl" x="506" y="192">Tenant app_shared</text>
+<rect class="obj obj obj-epg" x="510" y="210" width="170" height="52" rx="8" ry="8"/>
+  <text class="olbl" x="595.0" y="234.0">AP / EPG  epg-shared</text>
+  <text class="osub" x="595.0" y="248.0">binds to bd-app</text>
+<path class="arr" d="M125 210 L125 130 L335 130 L335 110"/>
+<path class="arr" d="M360 210 L360 130 L560 130 L560 110"/>
+<path class="arr" d="M595 210 L595 110"/>
+</svg>
+<figcaption>Pattern B. Addressing stays in tenant common. Each team’s EPG lives in its own tenant and binds to a common bridge domain by name.</figcaption>
+</figure>
+
+<h3 id="pattern-b-scenarios">Scenarios</h3>
+<p><strong>B1 — Central addressing, two application teams.</strong> Tenants <code>app_web</code> and <code>app_data</code> each have an EPG bound to a BD in common. A contract in common with scope context lets them communicate inside the shared VRF.</p>
+<div class="tblwrap settings"><table class="sortable" aria-label="Pattern B1 settings">
+<thead><tr><th>Setting</th><th>Value in this model</th></tr></thead>
+<tbody>
+<tr><th>Tenants</th><td>common (VRF and BDs) · app_web · app_data</td></tr>
+<tr><th>VRF</th><td>vrf-01 in common · enforced · preferred group disabled</td></tr>
+<tr><th>BD subnets</th><td>bd-web 192.0.2.1/24 and bd-app 198.51.100.1/24 in common · scope private</td></tr>
+<tr><th>L2 unknown unicast</th><td>Hardware Proxy</td></tr>
+<tr><th>EPG</th><td>epg-web in app_web, epg-data in app_data, each bound to a common BD by name</td></tr>
+<tr><th>Contract / scope</th><td>ctr-web-to-app in common · scope context</td></tr>
+<tr><th>Security domain / RBAC</th><td>sec-app-web and sec-app-data, attached to the user tenants in Terraform</td></tr>
+</tbody></table></div>
+<p><strong>B2 — Shared services on the same addressing.</strong> A third user tenant, <code>app_shared</code>, provides an HTTP contract (also in common, scope context) that <code>epg-web</code> consumes. The provider EPG still uses a common BD. This is additive with B1 in the same model.</p>
+<div class="tblwrap settings"><table class="sortable" aria-label="Pattern B2 settings">
+<thead><tr><th>Setting</th><th>Value in this model</th></tr></thead>
+<tbody>
+<tr><th>Tenants</th><td>Same as B1, plus app_shared</td></tr>
+<tr><th>VRF</th><td>Same shared vrf-01 in common</td></tr>
+<tr><th>BD subnets</th><td>epg-shared binds to bd-app in common · scope private</td></tr>
+<tr><th>L2 unknown unicast</th><td>Hardware Proxy</td></tr>
+<tr><th>EPG</th><td>epg-shared in app_shared (provider)</td></tr>
+<tr><th>Contract / scope</th><td>ctr-shared-http in common · scope context</td></tr>
+<tr><th>Security domain / RBAC</th><td>sec-app-shared attached to app_shared in Terraform</td></tr>
+</tbody></table></div>
+<p><strong>When to use it.</strong> You want one IP plan and one VRF, but you still want application teams to manage only their EPGs and contracts bindings.</p>
+<p><strong>RBAC and security domains.</strong> Give each user tenant its own security domain. Keep write access to common with the network team. Remember that an EPG in a user tenant can still attach to any named BD in common.</p>
+<p><strong>Contracts and leaking.</strong> Scope context is the right contract scope when the EPGs already share a VRF but live in different tenants. Subnets stay private in this model. If two teams share a BD, they also share that L2 segment, so isolation has to come from contracts (and from not placing endpoints that should be apart on the same BD).</p>
+<figure class="flow-fig">
+<svg viewBox="0 0 920 210" role="img" aria-label="Create common VRF and BDs first, then user tenants, APs, EPGs, contracts and security domains." xmlns="http://www.w3.org/2000/svg">
+<title>Pattern B — create and delete order</title>
+
+<style>
+  .tbox{fill:var(--card,#fff);stroke:var(--line,#94a3b8);stroke-width:1.4}
+  .tbox-common{fill:#ecfeff;stroke:#0f766e;stroke-width:1.8}
+  .tbox-user{fill:#eef2ff;stroke:#4338ca;stroke-width:1.8}
+  .tbox-shared{fill:#fff7ed;stroke:#c2410c;stroke-width:1.8}
+  html[data-theme="dark"] .tbox-common{fill:#134e4a;stroke:#5eead4}
+  html[data-theme="dark"] .tbox-user{fill:#1e1b4b;stroke:#a5b4fc}
+  html[data-theme="dark"] .tbox-shared{fill:#431407;stroke:#fdba74}
+  .tlbl{font:700 13px system-ui,sans-serif;fill:var(--ink,#0f172a)}
+  .obj{fill:var(--card,#fff);stroke:var(--line,#64748b);stroke-width:1.2;rx:8;ry:8}
+  .obj-vrf{stroke:#0f766e;stroke-width:1.5}
+  .obj-bd{stroke:#0369a1;stroke-width:1.5}
+  .obj-epg{stroke:#6d28d9;stroke-width:1.5}
+  .olbl{font:650 11.5px system-ui,sans-serif;fill:var(--ink,#0f172a);text-anchor:middle}
+  .osub{font:400 10px system-ui,sans-serif;fill:var(--muted,#475569);text-anchor:middle}
+  .arr{stroke:var(--ink,#334155);stroke-width:1.4;fill:none;marker-end:url(#arrow)}
+  .arrd{stroke:#b91c1c;stroke-width:1.4;fill:none;stroke-dasharray:5 3;marker-end:url(#arrow-del)}
+  .fn{fill:#ecfdf5;stroke:#047857;stroke-width:1.3}
+  .fd{fill:#fef2f2;stroke:#b91c1c;stroke-width:1.3}
+  html[data-theme="dark"] .fn{fill:#064e3b;stroke:#34d399}
+  html[data-theme="dark"] .fd{fill:#7f1d1d;stroke:#fca5a5}
+  .flbl{font:650 11px system-ui,sans-serif;fill:var(--ink,#0f172a);text-anchor:middle}
+  .fsec{font:700 12px system-ui,sans-serif;fill:var(--ink,#0f172a)}
+  .note{font:400 10.5px system-ui,sans-serif;fill:var(--muted,#475569)}
+</style>
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink,#334155)"/>
+  </marker>
+  <marker id="arrow-del" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+  </marker>
+</defs>
+
+<text class="fsec" x="20" y="22">Create (dependency order)</text>
+<rect class="obj fn" x="20" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="75.0" y="51">VRF + BD</text>
+<text class="flbl" x="75.0" y="63">in common</text>
+<rect class="obj fn" x="146" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="201.0" y="51">Filter</text>
+<text class="flbl" x="201.0" y="63">+ contract</text>
+<rect class="obj fn" x="272" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="327.0" y="58">User tenants</text>
+<rect class="obj fn" x="398" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="453.0" y="58">AP + EPG</text>
+<rect class="obj fn" x="524" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="579.0" y="51">Bind EPG</text>
+<text class="flbl" x="579.0" y="63">to common BD</text>
+<rect class="obj fn" x="650" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="705.0" y="51">Provide</text>
+<text class="flbl" x="705.0" y="63">/ consume</text>
+<rect class="obj fn" x="776" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="831.0" y="58">Security domain</text>
+<path class="arr" d="M130 54.0 L146 54.0"/>
+<path class="arr" d="M256 54.0 L272 54.0"/>
+<path class="arr" d="M382 54.0 L398 54.0"/>
+<path class="arr" d="M508 54.0 L524 54.0"/>
+<path class="arr" d="M634 54.0 L650 54.0"/>
+<path class="arr" d="M760 54.0 L776 54.0"/>
+<text class="fsec" x="20" y="108">Delete (reverse order)</text>
+<rect class="obj fd" x="20" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="75.0" y="144">Security domain</text>
+<rect class="obj fd" x="146" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="201.0" y="137">Provide</text>
+<text class="flbl" x="201.0" y="149">/ consume</text>
+<rect class="obj fd" x="272" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="327.0" y="144">EPG + AP</text>
+<rect class="obj fd" x="398" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="453.0" y="144">User tenants</text>
+<rect class="obj fd" x="524" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="579.0" y="137">Filter</text>
+<text class="flbl" x="579.0" y="149">+ contract</text>
+<rect class="obj fd" x="650" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="705.0" y="144">BD + subnet</text>
+<rect class="obj fd" x="776" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="831.0" y="144">VRF in common</text>
+<path class="arrd" d="M130 140.0 L146 140.0"/>
+<path class="arrd" d="M256 140.0 L272 140.0"/>
+<path class="arrd" d="M382 140.0 L398 140.0"/>
+<path class="arrd" d="M508 140.0 L524 140.0"/>
+<path class="arrd" d="M634 140.0 L650 140.0"/>
+<path class="arrd" d="M760 140.0 L776 140.0"/>
+<text class="note" x="20" y="186">Create objects in common before the user-tenant EPGs that bind to them. Delete the EPGs before removing the common BD. Never delete tenant common.</text>
+</svg>
+<figcaption>Pattern B — create and delete order</figcaption>
+</figure>
+<pre class="code"><code>- name: Create EPGs that bind to bridge domains in tenant common
+  cisco.aci.aci_epg:
+    host: &quot;{{ apic_host }}&quot;
+    username: &quot;{{ apic_username }}&quot;
+    password: &quot;{{ apic_password }}&quot;
+    tenant: &quot;{{ item.tenant }}&quot;
+    ap: &quot;{{ item.ap }}&quot;
+    epg: &quot;{{ item.epg }}&quot;
+    bd: &quot;{{ item.bd }}&quot;
+    state: present
+  loop: &quot;{{ user_tenants }}&quot;
+  # Named relations resolve in the current tenant first, then in common.</code></pre>
+<pre class="code"><code>resource &quot;aci_application_epg&quot; &quot;web&quot; {
+  parent_dn = aci_application_profile.web.id
+  name      = &quot;epg-web&quot;
+  relation_to_bridge_domain = {
+    bridge_domain_name = aci_bridge_domain.web.name
+  }
+}
+resource &quot;aci_aaa_domain_relationship&quot; &quot;web&quot; {
+  aaa_domain_dn = aci_aaa_domain.web.id
+  parent_dn     = aci_tenant.app_web.id
+}</code></pre>
+<div class="dlrow">
+<a href="/zfrontier/aci-tenant-design-patterns/models/b/">models/b/</a>
+<a href="/zfrontier/aci-tenant-design-patterns/models/b/ansible/playbook.yml">Ansible playbook</a>
+<a href="/zfrontier/aci-tenant-design-patterns/models/b/ansible/vars/scenario.yml">Ansible vars</a>
+<a href="/zfrontier/aci-tenant-design-patterns/models/b/terraform/main.tf">Terraform main.tf</a>
+<a href="/zfrontier/aci-tenant-design-patterns/models/b/terraform/variables.tf">Terraform variables.tf</a>
+<a href="/zfrontier/aci-tenant-design-patterns/models/b/nac/data.yml">NaC data YAML</a>
+</div>
+
+<h2 id="pattern-c">Pattern C — VRF in common, bridge domains and EPGs in the user tenant</h2>
+<p>The VRF still lives in tenant common, so every user tenant can attach a bridge domain to it. Subnets, though, are created in the user tenant. Another tenant cannot simply reuse those subnets. This is a natural split between a shared routing domain and team-owned addressing — for example a development tenant and a test tenant that should not share prefixes.</p>
+<figure class="pattern-fig">
+<svg viewBox="0 0 720 320" role="img" aria-label="Pattern C: VRF in common, bridge domains and EPGs in user tenants" xmlns="http://www.w3.org/2000/svg">
+<title>Pattern C — VRF in common, BD and EPG in each user tenant</title>
+
+<style>
+  .tbox{fill:var(--card,#fff);stroke:var(--line,#94a3b8);stroke-width:1.4}
+  .tbox-common{fill:#ecfeff;stroke:#0f766e;stroke-width:1.8}
+  .tbox-user{fill:#eef2ff;stroke:#4338ca;stroke-width:1.8}
+  .tbox-shared{fill:#fff7ed;stroke:#c2410c;stroke-width:1.8}
+  html[data-theme="dark"] .tbox-common{fill:#134e4a;stroke:#5eead4}
+  html[data-theme="dark"] .tbox-user{fill:#1e1b4b;stroke:#a5b4fc}
+  html[data-theme="dark"] .tbox-shared{fill:#431407;stroke:#fdba74}
+  .tlbl{font:700 13px system-ui,sans-serif;fill:var(--ink,#0f172a)}
+  .obj{fill:var(--card,#fff);stroke:var(--line,#64748b);stroke-width:1.2;rx:8;ry:8}
+  .obj-vrf{stroke:#0f766e;stroke-width:1.5}
+  .obj-bd{stroke:#0369a1;stroke-width:1.5}
+  .obj-epg{stroke:#6d28d9;stroke-width:1.5}
+  .olbl{font:650 11.5px system-ui,sans-serif;fill:var(--ink,#0f172a);text-anchor:middle}
+  .osub{font:400 10px system-ui,sans-serif;fill:var(--muted,#475569);text-anchor:middle}
+  .arr{stroke:var(--ink,#334155);stroke-width:1.4;fill:none;marker-end:url(#arrow)}
+  .arrd{stroke:#b91c1c;stroke-width:1.4;fill:none;stroke-dasharray:5 3;marker-end:url(#arrow-del)}
+  .fn{fill:#ecfdf5;stroke:#047857;stroke-width:1.3}
+  .fd{fill:#fef2f2;stroke:#b91c1c;stroke-width:1.3}
+  html[data-theme="dark"] .fn{fill:#064e3b;stroke:#34d399}
+  html[data-theme="dark"] .fd{fill:#7f1d1d;stroke:#fca5a5}
+  .flbl{font:650 11px system-ui,sans-serif;fill:var(--ink,#0f172a);text-anchor:middle}
+  .fsec{font:700 12px system-ui,sans-serif;fill:var(--ink,#0f172a)}
+  .note{font:400 10.5px system-ui,sans-serif;fill:var(--muted,#475569)}
+</style>
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink,#334155)"/>
+  </marker>
+  <marker id="arrow-del" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+  </marker>
+</defs>
+
+<rect class="tbox-common" x="180" y="16" width="360" height="88" rx="16" ry="16"/>
+<text class="tlbl" x="196" y="40">Tenant common</text>
+<rect class="obj obj obj-vrf" x="265" y="42" width="190" height="48" rx="8" ry="8"/>
+  <text class="olbl" x="360.0" y="64.0">VRF  vrf-01</text>
+  <text class="osub" x="360.0" y="78.0">available to every tenant</text>
+<rect class="tbox-user" x="20" y="130" width="330" height="170" rx="14" ry="14"/>
+<text class="tlbl" x="36" y="152">Tenant app_dev</text>
+<rect class="obj obj obj-bd" x="50" y="168" width="270" height="48" rx="8" ry="8"/>
+  <text class="olbl" x="185.0" y="190.0">BD  bd-dev</text>
+  <text class="osub" x="185.0" y="204.0">192.0.2.1/24 private</text>
+<rect class="obj obj obj-epg" x="50" y="230" width="270" height="48" rx="8" ry="8"/>
+  <text class="olbl" x="185.0" y="252.0">AP / EPG  epg-dev</text>
+  <text class="osub" x="185.0" y="266.0">uses bd-dev</text>
+<rect class="tbox-user" x="370" y="130" width="330" height="170" rx="14" ry="14"/>
+<text class="tlbl" x="386" y="152">Tenant app_test</text>
+<rect class="obj obj obj-bd" x="400" y="168" width="270" height="48" rx="8" ry="8"/>
+  <text class="olbl" x="535.0" y="190.0">BD  bd-test</text>
+  <text class="osub" x="535.0" y="204.0">198.51.100.1/24 private</text>
+<rect class="obj obj obj-epg" x="400" y="230" width="270" height="48" rx="8" ry="8"/>
+  <text class="olbl" x="535.0" y="252.0">AP / EPG  epg-test</text>
+  <text class="osub" x="535.0" y="266.0">uses bd-test</text>
+<path class="arr" d="M185 168 L185 120 L360 120 L360 90"/>
+<path class="arr" d="M535 168 L535 120 L360 120"/>
+</svg>
+<figcaption>Pattern C. Tenants share a VRF in common, but each keeps its own bridge domain and subnet. A contract with scope context can allow selected communication inside that VRF.</figcaption>
+</figure>
+
+<h3 id="pattern-c-scenarios">Scenarios</h3>
+<p><strong>C1 — Dev and test, shared VRF, separate subnets.</strong> Tenants <code>app_dev</code> and <code>app_test</code> each have their own BD and private subnet, both attached to <code>vrf-01</code> in common.</p>
+<div class="tblwrap settings"><table class="sortable" aria-label="Pattern C1 settings">
+<thead><tr><th>Setting</th><th>Value in this model</th></tr></thead>
+<tbody>
+<tr><th>Tenants</th><td>common (VRF only) · app_dev · app_test</td></tr>
+<tr><th>VRF</th><td>vrf-01 in common · enforced · preferred group disabled</td></tr>
+<tr><th>BD subnets</th><td>bd-dev 192.0.2.1/24 in app_dev · bd-test 198.51.100.1/24 in app_test · scope private</td></tr>
+<tr><th>L2 unknown unicast</th><td>Hardware Proxy</td></tr>
+<tr><th>EPG</th><td>epg-dev in app_dev, epg-test in app_test, each bound to its local BD</td></tr>
+<tr><th>Contract / scope</th><td>None required for C1 isolation; C2 adds one</td></tr>
+<tr><th>Security domain / RBAC</th><td>sec-app-dev and sec-app-test, attached in Terraform</td></tr>
+</tbody></table></div>
+<p><strong>C2 — Selected communication inside the shared VRF.</strong> A contract in common with scope context is provided by the test EPG and consumed by the dev EPG. Because both BDs already sit in the same VRF, the subnets stay private; this is not an inter-VRF leak.</p>
+<div class="tblwrap settings"><table class="sortable" aria-label="Pattern C2 settings">
+<thead><tr><th>Setting</th><th>Value in this model</th></tr></thead>
+<tbody>
+<tr><th>Tenants</th><td>Same as C1</td></tr>
+<tr><th>VRF</th><td>Same shared vrf-01</td></tr>
+<tr><th>BD subnets</th><td>Still private in each user tenant</td></tr>
+<tr><th>L2 unknown unicast</th><td>Hardware Proxy</td></tr>
+<tr><th>EPG</th><td>Same EPGs</td></tr>
+<tr><th>Contract / scope</th><td>ctr-dev-to-test in common · scope context · TCP/80</td></tr>
+<tr><th>Security domain / RBAC</th><td>Same as C1</td></tr>
+</tbody></table></div>
+<p><strong>When to use it.</strong> Several teams should share a routing domain (and maybe a shared L3Out later) but must keep their own prefixes. It is also a reasonable way to split development and test without giving each team a separate VRF.</p>
+<p><strong>RBAC and security domains.</strong> Teams can be allowed to edit their tenant (BDs, subnets, EPGs) and still be denied write access to the VRF in common.</p>
+<p><strong>Contracts and leaking.</strong> Same-VRF, cross-tenant traffic uses a contract of scope context. Mark a subnet shared only if you also need to advertise it into a different VRF. That step is not part of this model.</p>
+<figure class="flow-fig">
+<svg viewBox="0 0 920 210" role="img" aria-label="Create the common VRF first, then each user tenant BD, subnet, AP, EPG and the shared contract." xmlns="http://www.w3.org/2000/svg">
+<title>Pattern C — create and delete order</title>
+
+<style>
+  .tbox{fill:var(--card,#fff);stroke:var(--line,#94a3b8);stroke-width:1.4}
+  .tbox-common{fill:#ecfeff;stroke:#0f766e;stroke-width:1.8}
+  .tbox-user{fill:#eef2ff;stroke:#4338ca;stroke-width:1.8}
+  .tbox-shared{fill:#fff7ed;stroke:#c2410c;stroke-width:1.8}
+  html[data-theme="dark"] .tbox-common{fill:#134e4a;stroke:#5eead4}
+  html[data-theme="dark"] .tbox-user{fill:#1e1b4b;stroke:#a5b4fc}
+  html[data-theme="dark"] .tbox-shared{fill:#431407;stroke:#fdba74}
+  .tlbl{font:700 13px system-ui,sans-serif;fill:var(--ink,#0f172a)}
+  .obj{fill:var(--card,#fff);stroke:var(--line,#64748b);stroke-width:1.2;rx:8;ry:8}
+  .obj-vrf{stroke:#0f766e;stroke-width:1.5}
+  .obj-bd{stroke:#0369a1;stroke-width:1.5}
+  .obj-epg{stroke:#6d28d9;stroke-width:1.5}
+  .olbl{font:650 11.5px system-ui,sans-serif;fill:var(--ink,#0f172a);text-anchor:middle}
+  .osub{font:400 10px system-ui,sans-serif;fill:var(--muted,#475569);text-anchor:middle}
+  .arr{stroke:var(--ink,#334155);stroke-width:1.4;fill:none;marker-end:url(#arrow)}
+  .arrd{stroke:#b91c1c;stroke-width:1.4;fill:none;stroke-dasharray:5 3;marker-end:url(#arrow-del)}
+  .fn{fill:#ecfdf5;stroke:#047857;stroke-width:1.3}
+  .fd{fill:#fef2f2;stroke:#b91c1c;stroke-width:1.3}
+  html[data-theme="dark"] .fn{fill:#064e3b;stroke:#34d399}
+  html[data-theme="dark"] .fd{fill:#7f1d1d;stroke:#fca5a5}
+  .flbl{font:650 11px system-ui,sans-serif;fill:var(--ink,#0f172a);text-anchor:middle}
+  .fsec{font:700 12px system-ui,sans-serif;fill:var(--ink,#0f172a)}
+  .note{font:400 10.5px system-ui,sans-serif;fill:var(--muted,#475569)}
+</style>
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink,#334155)"/>
+  </marker>
+  <marker id="arrow-del" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+  </marker>
+</defs>
+
+<text class="fsec" x="20" y="22">Create (dependency order)</text>
+<rect class="obj fn" x="20" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="75.0" y="58">VRF in common</text>
+<rect class="obj fn" x="146" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="201.0" y="51">Filter</text>
+<text class="flbl" x="201.0" y="63">+ contract</text>
+<rect class="obj fn" x="272" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="327.0" y="58">User tenants</text>
+<rect class="obj fn" x="398" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="453.0" y="58">BD + subnet</text>
+<rect class="obj fn" x="524" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="579.0" y="58">AP + EPG</text>
+<rect class="obj fn" x="650" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="705.0" y="51">Provide</text>
+<text class="flbl" x="705.0" y="63">/ consume</text>
+<rect class="obj fn" x="776" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="831.0" y="58">Security domain</text>
+<path class="arr" d="M130 54.0 L146 54.0"/>
+<path class="arr" d="M256 54.0 L272 54.0"/>
+<path class="arr" d="M382 54.0 L398 54.0"/>
+<path class="arr" d="M508 54.0 L524 54.0"/>
+<path class="arr" d="M634 54.0 L650 54.0"/>
+<path class="arr" d="M760 54.0 L776 54.0"/>
+<text class="fsec" x="20" y="108">Delete (reverse order)</text>
+<rect class="obj fd" x="20" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="75.0" y="144">Security domain</text>
+<rect class="obj fd" x="146" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="201.0" y="137">Provide</text>
+<text class="flbl" x="201.0" y="149">/ consume</text>
+<rect class="obj fd" x="272" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="327.0" y="144">EPG + AP</text>
+<rect class="obj fd" x="398" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="453.0" y="144">BD + subnet</text>
+<rect class="obj fd" x="524" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="579.0" y="144">User tenants</text>
+<rect class="obj fd" x="650" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="705.0" y="137">Filter</text>
+<text class="flbl" x="705.0" y="149">+ contract</text>
+<rect class="obj fd" x="776" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="831.0" y="144">VRF in common</text>
+<path class="arrd" d="M130 140.0 L146 140.0"/>
+<path class="arrd" d="M256 140.0 L272 140.0"/>
+<path class="arrd" d="M382 140.0 L398 140.0"/>
+<path class="arrd" d="M508 140.0 L524 140.0"/>
+<path class="arrd" d="M634 140.0 L650 140.0"/>
+<path class="arrd" d="M760 140.0 L776 140.0"/>
+<text class="note" x="20" y="186">Each user-tenant BD refers to the common VRF by name, so the VRF must exist first. Never delete tenant common.</text>
+</svg>
+<figcaption>Pattern C — create and delete order</figcaption>
+</figure>
+<pre class="code"><code>- name: Create a bridge domain in each user tenant, bound to the common VRF
+  cisco.aci.aci_bd:
+    host: &quot;{{ apic_host }}&quot;
+    username: &quot;{{ apic_username }}&quot;
+    password: &quot;{{ apic_password }}&quot;
+    tenant: &quot;{{ item.tenant }}&quot;
+    vrf: vrf-01
+    bd: &quot;{{ item.bd }}&quot;
+    state: present
+  loop: &quot;{{ user_tenants }}&quot;</code></pre>
+<pre class="code"><code>resource &quot;aci_bridge_domain&quot; &quot;dev&quot; {
+  parent_dn = aci_tenant.dev.id
+  name      = &quot;bd-dev&quot;
+  relation_to_vrf = {
+    vrf_name = aci_vrf.common.name
+  }
+}
+resource &quot;aci_subnet&quot; &quot;dev&quot; {
+  parent_dn = aci_bridge_domain.dev.id
+  ip        = &quot;192.0.2.1/24&quot;
+  scope     = [&quot;private&quot;]
+}</code></pre>
+<div class="dlrow">
+<a href="/zfrontier/aci-tenant-design-patterns/models/c/">models/c/</a>
+<a href="/zfrontier/aci-tenant-design-patterns/models/c/ansible/playbook.yml">Ansible playbook</a>
+<a href="/zfrontier/aci-tenant-design-patterns/models/c/ansible/vars/scenario.yml">Ansible vars</a>
+<a href="/zfrontier/aci-tenant-design-patterns/models/c/terraform/main.tf">Terraform main.tf</a>
+<a href="/zfrontier/aci-tenant-design-patterns/models/c/terraform/variables.tf">Terraform variables.tf</a>
+<a href="/zfrontier/aci-tenant-design-patterns/models/c/nac/data.yml">NaC data YAML</a>
+</div>
+
+<h2 id="pattern-d">Pattern D — everything in the user tenant</h2>
+<p>Each team gets a complete stack: tenant, VRF, bridge domain, subnet and EPG. This is the usual choice when more than one team uses the APIC and you want RBAC to line up with the policy boundary. Isolation is the default. Connecting tenants is then an explicit shared-services design, not an accident of a common VRF.</p>
+<figure class="pattern-fig">
+<svg viewBox="0 0 720 300" role="img" aria-label="Pattern D: each user tenant owns its VRF, bridge domain and EPG" xmlns="http://www.w3.org/2000/svg">
+<title>Pattern D — dedicated VRF and subnets per tenant</title>
+
+<style>
+  .tbox{fill:var(--card,#fff);stroke:var(--line,#94a3b8);stroke-width:1.4}
+  .tbox-common{fill:#ecfeff;stroke:#0f766e;stroke-width:1.8}
+  .tbox-user{fill:#eef2ff;stroke:#4338ca;stroke-width:1.8}
+  .tbox-shared{fill:#fff7ed;stroke:#c2410c;stroke-width:1.8}
+  html[data-theme="dark"] .tbox-common{fill:#134e4a;stroke:#5eead4}
+  html[data-theme="dark"] .tbox-user{fill:#1e1b4b;stroke:#a5b4fc}
+  html[data-theme="dark"] .tbox-shared{fill:#431407;stroke:#fdba74}
+  .tlbl{font:700 13px system-ui,sans-serif;fill:var(--ink,#0f172a)}
+  .obj{fill:var(--card,#fff);stroke:var(--line,#64748b);stroke-width:1.2;rx:8;ry:8}
+  .obj-vrf{stroke:#0f766e;stroke-width:1.5}
+  .obj-bd{stroke:#0369a1;stroke-width:1.5}
+  .obj-epg{stroke:#6d28d9;stroke-width:1.5}
+  .olbl{font:650 11.5px system-ui,sans-serif;fill:var(--ink,#0f172a);text-anchor:middle}
+  .osub{font:400 10px system-ui,sans-serif;fill:var(--muted,#475569);text-anchor:middle}
+  .arr{stroke:var(--ink,#334155);stroke-width:1.4;fill:none;marker-end:url(#arrow)}
+  .arrd{stroke:#b91c1c;stroke-width:1.4;fill:none;stroke-dasharray:5 3;marker-end:url(#arrow-del)}
+  .fn{fill:#ecfdf5;stroke:#047857;stroke-width:1.3}
+  .fd{fill:#fef2f2;stroke:#b91c1c;stroke-width:1.3}
+  html[data-theme="dark"] .fn{fill:#064e3b;stroke:#34d399}
+  html[data-theme="dark"] .fd{fill:#7f1d1d;stroke:#fca5a5}
+  .flbl{font:650 11px system-ui,sans-serif;fill:var(--ink,#0f172a);text-anchor:middle}
+  .fsec{font:700 12px system-ui,sans-serif;fill:var(--ink,#0f172a)}
+  .note{font:400 10.5px system-ui,sans-serif;fill:var(--muted,#475569)}
+</style>
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink,#334155)"/>
+  </marker>
+  <marker id="arrow-del" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+  </marker>
+</defs>
+
+<rect class="tbox-user" x="16" y="20" width="220" height="260" rx="14" ry="14"/>
+<text class="tlbl" x="32" y="44">Tenant app_a</text>
+<rect class="obj obj obj-vrf" x="36" y="60" width="180" height="48" rx="8" ry="8"/>
+  <text class="olbl" x="126.0" y="82.0">VRF  vrf-app-a</text>
+  <text class="osub" x="126.0" y="96.0">enforced</text>
+<rect class="obj obj obj-bd" x="36" y="128" width="180" height="48" rx="8" ry="8"/>
+  <text class="olbl" x="126.0" y="150.0">BD  bd-a</text>
+  <text class="osub" x="126.0" y="164.0">192.0.2.1/24 private</text>
+<rect class="obj obj obj-epg" x="36" y="196" width="180" height="48" rx="8" ry="8"/>
+  <text class="olbl" x="126.0" y="218.0">AP / EPG  epg-a</text>
+  <text class="osub" x="126.0" y="232.0"></text>
+<rect class="tbox-user" x="250" y="20" width="220" height="260" rx="14" ry="14"/>
+<text class="tlbl" x="266" y="44">Tenant app_b</text>
+<rect class="obj obj obj-vrf" x="270" y="60" width="180" height="48" rx="8" ry="8"/>
+  <text class="olbl" x="360.0" y="82.0">VRF  vrf-app-b</text>
+  <text class="osub" x="360.0" y="96.0">enforced</text>
+<rect class="obj obj obj-bd" x="270" y="128" width="180" height="48" rx="8" ry="8"/>
+  <text class="olbl" x="360.0" y="150.0">BD  bd-b</text>
+  <text class="osub" x="360.0" y="164.0">198.51.100.1/24 private</text>
+<rect class="obj obj obj-epg" x="270" y="196" width="180" height="48" rx="8" ry="8"/>
+  <text class="olbl" x="360.0" y="218.0">AP / EPG  epg-b</text>
+  <text class="osub" x="360.0" y="232.0"></text>
+<rect class="tbox-shared" x="484" y="20" width="220" height="260" rx="14" ry="14"/>
+<text class="tlbl" x="500" y="44">Tenant shared_svc</text>
+<rect class="obj obj obj-vrf" x="504" y="60" width="180" height="48" rx="8" ry="8"/>
+  <text class="olbl" x="594.0" y="82.0">VRF  vrf-shared</text>
+  <text class="osub" x="594.0" y="96.0">enforced</text>
+<rect class="obj obj obj-bd" x="504" y="128" width="180" height="48" rx="8" ry="8"/>
+  <text class="olbl" x="594.0" y="150.0">BD  bd-shared</text>
+  <text class="osub" x="594.0" y="164.0">203.0.113.1/24 shared</text>
+<rect class="obj obj obj-epg" x="504" y="196" width="180" height="48" rx="8" ry="8"/>
+  <text class="olbl" x="594.0" y="218.0">AP / EPG  epg-shared</text>
+  <text class="osub" x="594.0" y="232.0">provides global contract</text>
+<path class="arr" d="M126 108 L126 128"/>
+<path class="arr" d="M126 176 L126 196"/>
+<path class="arr" d="M360 108 L360 128"/>
+<path class="arr" d="M360 176 L360 196"/>
+<path class="arr" d="M594 108 L594 128"/>
+<path class="arr" d="M594 176 L594 196"/>
+</svg>
+<figcaption>Pattern D. Each tenant is a complete stack. Application tenants stay isolated until a shared-services contract of scope global, and a subnet marked shared, connect them.</figcaption>
+</figure>
+
+<h3 id="pattern-d-scenarios">Scenarios</h3>
+<p><strong>D1 — Two application teams, fully isolated.</strong> Tenants <code>app_a</code> and <code>app_b</code> each have a dedicated VRF and a private subnet. There is no communication between them until D2 is added.</p>
+<div class="tblwrap settings"><table class="sortable" aria-label="Pattern D1 settings">
+<thead><tr><th>Setting</th><th>Value in this model</th></tr></thead>
+<tbody>
+<tr><th>Tenants</th><td>app_a · app_b</td></tr>
+<tr><th>VRF</th><td>vrf-app-a and vrf-app-b · enforced · preferred group disabled</td></tr>
+<tr><th>BD subnets</th><td>bd-a 192.0.2.1/24 and bd-b 198.51.100.1/24 · scope private</td></tr>
+<tr><th>L2 unknown unicast</th><td>Hardware Proxy</td></tr>
+<tr><th>EPG</th><td>epg-a and epg-b in their own application profiles</td></tr>
+<tr><th>Contract / scope</th><td>None between the two tenants in D1</td></tr>
+<tr><th>Security domain / RBAC</th><td>sec-app-a and sec-app-b, each attached to its tenant in Terraform</td></tr>
+</tbody></table></div>
+<p><strong>D2 — Shared services between tenants.</strong> Tenant <code>shared_svc</code> has its own VRF and a subnet at 203.0.113.1/24 with scope <code>shared</code> (and <code>public</code> in the Terraform model, so it can also be advertised to an L3Out later). It provides a contract of scope global, which is exported into <code>app_a</code> and <code>app_b</code> for those EPGs to consume. D2 is additive with D1 in the same model.</p>
+<div class="tblwrap settings"><table class="sortable" aria-label="Pattern D2 settings">
+<thead><tr><th>Setting</th><th>Value in this model</th></tr></thead>
+<tbody>
+<tr><th>Tenants</th><td>app_a · app_b · shared_svc</td></tr>
+<tr><th>VRF</th><td>Each tenant keeps its own VRF</td></tr>
+<tr><th>BD subnets</th><td>shared_svc bd-shared 203.0.113.1/24 · scope shared (and public in Terraform)</td></tr>
+<tr><th>L2 unknown unicast</th><td>Hardware Proxy</td></tr>
+<tr><th>EPG</th><td>epg-shared provides the contract; app EPGs consume the exported interface</td></tr>
+<tr><th>Contract / scope</th><td>ctr-shared-http in shared_svc · scope global · exported as ctr-shared-http-if</td></tr>
+<tr><th>Security domain / RBAC</th><td>sec-shared attached to shared_svc in Terraform</td></tr>
+</tbody></table></div>
+<p><strong>When to use it.</strong> Multiple teams, a requirement for clear RBAC, or a design where shared services should be called out as their own tenant rather than objects in common.</p>
+<p><strong>RBAC and security domains.</strong> Map each tenant to a security domain, then map each team’s APIC users to that domain. That is the main reason to choose this pattern.</p>
+<p><strong>Contracts and leaking.</strong> Inter-VRF shared services need both a contract of scope global and a provider subnet marked shared. Exporting the contract (Ansible <code>aci_contract_export</code>, Terraform <code>aci_imported_contract</code>) gives the consumer tenant a local interface to bind to. A contract that stays in common is an alternative that this model does not use, to keep the D boundary intact.</p>
+<figure class="flow-fig">
+<svg viewBox="0 0 920 210" role="img" aria-label="Create each tenant stack, then the shared-services contract, export it, and attach consumers. Delete in reverse." xmlns="http://www.w3.org/2000/svg">
+<title>Pattern D — create and delete order</title>
+
+<style>
+  .tbox{fill:var(--card,#fff);stroke:var(--line,#94a3b8);stroke-width:1.4}
+  .tbox-common{fill:#ecfeff;stroke:#0f766e;stroke-width:1.8}
+  .tbox-user{fill:#eef2ff;stroke:#4338ca;stroke-width:1.8}
+  .tbox-shared{fill:#fff7ed;stroke:#c2410c;stroke-width:1.8}
+  html[data-theme="dark"] .tbox-common{fill:#134e4a;stroke:#5eead4}
+  html[data-theme="dark"] .tbox-user{fill:#1e1b4b;stroke:#a5b4fc}
+  html[data-theme="dark"] .tbox-shared{fill:#431407;stroke:#fdba74}
+  .tlbl{font:700 13px system-ui,sans-serif;fill:var(--ink,#0f172a)}
+  .obj{fill:var(--card,#fff);stroke:var(--line,#64748b);stroke-width:1.2;rx:8;ry:8}
+  .obj-vrf{stroke:#0f766e;stroke-width:1.5}
+  .obj-bd{stroke:#0369a1;stroke-width:1.5}
+  .obj-epg{stroke:#6d28d9;stroke-width:1.5}
+  .olbl{font:650 11.5px system-ui,sans-serif;fill:var(--ink,#0f172a);text-anchor:middle}
+  .osub{font:400 10px system-ui,sans-serif;fill:var(--muted,#475569);text-anchor:middle}
+  .arr{stroke:var(--ink,#334155);stroke-width:1.4;fill:none;marker-end:url(#arrow)}
+  .arrd{stroke:#b91c1c;stroke-width:1.4;fill:none;stroke-dasharray:5 3;marker-end:url(#arrow-del)}
+  .fn{fill:#ecfdf5;stroke:#047857;stroke-width:1.3}
+  .fd{fill:#fef2f2;stroke:#b91c1c;stroke-width:1.3}
+  html[data-theme="dark"] .fn{fill:#064e3b;stroke:#34d399}
+  html[data-theme="dark"] .fd{fill:#7f1d1d;stroke:#fca5a5}
+  .flbl{font:650 11px system-ui,sans-serif;fill:var(--ink,#0f172a);text-anchor:middle}
+  .fsec{font:700 12px system-ui,sans-serif;fill:var(--ink,#0f172a)}
+  .note{font:400 10.5px system-ui,sans-serif;fill:var(--muted,#475569)}
+</style>
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink,#334155)"/>
+  </marker>
+  <marker id="arrow-del" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+  </marker>
+</defs>
+
+<text class="fsec" x="20" y="22">Create (dependency order)</text>
+<rect class="obj fn" x="20" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="75.0" y="58">User tenants</text>
+<rect class="obj fn" x="146" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="201.0" y="58">VRF</text>
+<rect class="obj fn" x="272" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="327.0" y="58">BD + subnet</text>
+<rect class="obj fn" x="398" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="453.0" y="58">AP + EPG</text>
+<rect class="obj fn" x="524" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="579.0" y="58">Shared contract</text>
+<rect class="obj fn" x="650" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="705.0" y="58">Export / import</text>
+<rect class="obj fn" x="776" y="36" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="831.0" y="58">Security domain</text>
+<path class="arr" d="M130 54.0 L146 54.0"/>
+<path class="arr" d="M256 54.0 L272 54.0"/>
+<path class="arr" d="M382 54.0 L398 54.0"/>
+<path class="arr" d="M508 54.0 L524 54.0"/>
+<path class="arr" d="M634 54.0 L650 54.0"/>
+<path class="arr" d="M760 54.0 L776 54.0"/>
+<text class="fsec" x="20" y="108">Delete (reverse order)</text>
+<rect class="obj fd" x="20" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="75.0" y="144">Security domain</text>
+<rect class="obj fd" x="146" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="201.0" y="144">Export / import</text>
+<rect class="obj fd" x="272" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="327.0" y="144">Shared contract</text>
+<rect class="obj fd" x="398" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="453.0" y="144">EPG + AP</text>
+<rect class="obj fd" x="524" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="579.0" y="144">BD + subnet</text>
+<rect class="obj fd" x="650" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="705.0" y="144">VRF</text>
+<rect class="obj fd" x="776" y="122" width="110" height="36" rx="8" ry="8"/>
+<text class="flbl" x="831.0" y="144">User tenants</text>
+<path class="arrd" d="M130 140.0 L146 140.0"/>
+<path class="arrd" d="M256 140.0 L272 140.0"/>
+<path class="arrd" d="M382 140.0 L398 140.0"/>
+<path class="arrd" d="M508 140.0 L524 140.0"/>
+<path class="arrd" d="M634 140.0 L650 140.0"/>
+<path class="arrd" d="M760 140.0 L776 140.0"/>
+<text class="note" x="20" y="186">Export the shared-services contract only after the provider contract exists. Remove consumer bindings before deleting the exported interface or the provider contract.</text>
+</svg>
+<figcaption>Pattern D — create and delete order</figcaption>
+</figure>
+<pre class="code"><code>- name: Export the shared-services contract into each application tenant
+  cisco.aci.aci_contract_export:
+    host: &quot;{{ apic_host }}&quot;
+    username: &quot;{{ apic_username }}&quot;
+    password: &quot;{{ apic_password }}&quot;
+    tenant: shared_svc
+    contract: ctr-shared-http
+    destination_tenant: &quot;{{ item.tenant }}&quot;
+    name: ctr-shared-http-if
+    state: present
+  loop: &quot;{{ app_tenants }}&quot;</code></pre>
+<pre class="code"><code>resource &quot;aci_subnet&quot; &quot;shared&quot; {
+  parent_dn = aci_bridge_domain.shared.id
+  ip        = &quot;203.0.113.1/24&quot;
+  scope     = [&quot;public&quot;, &quot;shared&quot;]
+}
+resource &quot;aci_contract&quot; &quot;shared&quot; {
+  tenant_dn = aci_tenant.shared.id
+  name      = &quot;ctr-shared-http&quot;
+  scope     = &quot;global&quot;
+}</code></pre>
+<div class="dlrow">
+<a href="/zfrontier/aci-tenant-design-patterns/models/d/">models/d/</a>
+<a href="/zfrontier/aci-tenant-design-patterns/models/d/ansible/playbook.yml">Ansible playbook</a>
+<a href="/zfrontier/aci-tenant-design-patterns/models/d/ansible/vars/scenario.yml">Ansible vars</a>
+<a href="/zfrontier/aci-tenant-design-patterns/models/d/terraform/main.tf">Terraform main.tf</a>
+<a href="/zfrontier/aci-tenant-design-patterns/models/d/terraform/variables.tf">Terraform variables.tf</a>
+<a href="/zfrontier/aci-tenant-design-patterns/models/d/nac/data.yml">NaC data YAML</a>
+</div>
+
+<h2 id="models">Models and downloads</h2>
+<p>Each pattern folder has an Ansible playbook and vars file, a Terraform root module, and a Network-as-Code style data YAML. A zip of the whole set is at <a href="/zfrontier/aci-tenant-design-patterns/downloads/aci-tenant-design-patterns-models.zip">downloads/aci-tenant-design-patterns-models.zip</a>. Read <a href="/zfrontier/aci-tenant-design-patterns/models/">models/</a> and <a href="/zfrontier/aci-tenant-design-patterns/models/README.md">models/README.md</a> before you run anything.</p>
+<div class="tblwrap"><table class="sortable" aria-label="Model folders">
+<thead><tr><th>Pattern</th><th>Folder</th><th>What the model creates</th></tr></thead>
+<tbody>
+<tr><td>A</td><td><a href="/zfrontier/aci-tenant-design-patterns/models/a/">models/a/</a></td><td>Objects under tenant common, plus security domain sec-ops (not attached to common)</td></tr>
+<tr><td>B</td><td><a href="/zfrontier/aci-tenant-design-patterns/models/b/">models/b/</a></td><td>Common VRF and BDs, tenants app_web, app_data and app_shared, contracts in common</td></tr>
+<tr><td>C</td><td><a href="/zfrontier/aci-tenant-design-patterns/models/c/">models/c/</a></td><td>Common VRF, tenants app_dev and app_test with their own BDs, contract in common</td></tr>
+<tr><td>D</td><td><a href="/zfrontier/aci-tenant-design-patterns/models/d/">models/d/</a></td><td>Tenants app_a, app_b and shared_svc, global contract export</td></tr>
+</tbody></table></div>
+<p>YAML in these models was checked with a Python parser. Each Terraform root was passed through <code>terraform fmt</code> and <code>terraform validate</code> against CiscoDevNet/aci 2.22.0. The playbooks were not applied to an APIC, so a live run may still fail on fabric-specific policy or on a newer or older schema. Associating a security domain with a tenant is shown in Terraform (<code>aci_aaa_domain_relationship</code>). The cisco.aci 3.0.0 module list on this site includes <code>aci_aaa_domain</code> but not a dedicated module for that relationship, so the Ansible playbooks create the domain object only.</p>
+
+<h2 id="sources">Sources</h2>
+<ul>
+<li>Cisco, <a href="https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/aci-fundamentals/cisco-aci-fundamentals-62x/policy-model-62x.html">ACI policy model (Fundamentals, release 6.2)</a> — tenants, VRFs, bridge domains, EPGs, and how named relations resolve in the current tenant and then in tenant common.</li>
+<li>Ansible collection <a href="https://docs.ansible.com/projects/ansible/latest/collections/cisco/aci/index.html">cisco.aci</a> — module options used in the playbooks were checked against the documented 3.0.x names on this site’s catalogue.</li>
+<li>Terraform provider <a href="https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs">CiscoDevNet/aci</a> — resource attributes follow the current Plugin Framework names (<code>parent_dn</code>, <code>relation_to_vrf</code>, <code>relation_to_bridge_domain</code>). Contract and filter resources in 2.16+ still use <code>tenant_dn</code>.</li>
+<li>zFrontier catalogues: <a href="/zfrontier/ansible-aci-modules/">Ansible cisco.aci modules</a>, <a href="/zfrontier/terraform-aci-resources/">Terraform ACI resources</a>, <a href="/zfrontier/apic-object-model/">APIC object model</a>, <a href="/zfrontier/ACI-BD-Flooding/">ACI bridge-domain flooding scenarios</a>, and <a href="/zfrontier/AOAPIC-3Builtin/">AOAPIC built-in tenants</a>.</li>
+</ul>
+<p>Live opening hours, prices and any booking details are not collected on this page. APIC class IDs and GUI menu paths that are not cited above are also marked not collected in the catalogue models this page draws from.</p>
+
+<section id="comments" aria-labelledby="comments-h">
+<h2 id="comments-h">Comments</h2>
+<p>Use this thread for questions or corrections about the four ACI tenant design patterns. Sign in with GitHub to comment. Comments are stored as GitHub Discussions in this site’s repository, one thread per page (mapped by pathname). Do not post credentials, addresses or other personal details.</p>
+<div id="comments-mount"></div>
+<script>
+(function(){
+  var b=String.fromCharCode(99,111,108,101,115);
+  var repo='amoeoo-'+b+'/amoeoo-'+b+'.github.io';
+  var s=document.createElement('script');
+  s.src='https://giscus.app/client.js';
+  s.setAttribute('data-repo',repo);
+  s.setAttribute('data-repo-id','R_kgDOVM0-Fw');
+  s.setAttribute('data-category','Announcements');
+  s.setAttribute('data-category-id','DIC_kwDOVM0-F84DLoq4');
+  s.setAttribute('data-mapping','pathname');
+  s.setAttribute('data-strict','1');
+  s.setAttribute('data-reactions-enabled','1');
+  s.setAttribute('data-input-position','top');
+  s.setAttribute('data-theme','preferred_color_scheme');
+  s.setAttribute('data-lang','en');
+  s.setAttribute('data-loading','lazy');
+  s.crossOrigin='anonymous';
+  s.async=true;
+  var m=document.getElementById('comments-mount');
+  if(m) m.appendChild(s);
+})();
+</script>
+</section>
+<section id="versions">
+<h2>Versions</h2>
+<p>This is <strong>v1 · 28 Nov 2026, 9:47 AM AEDT</strong>. Snapshots are under <a href="/zfrontier/aci-tenant-design-patterns/history/">history/</a>.</p>
+<ul><li><b>v1 (current)</b> · 28 Nov 2026, 9:47 AM AEDT (Melbourne time) · first publication: four ACI tenant design patterns, original diagrams, settings tables, create and delete flow charts, and Ansible, Terraform and NaC models. · <a href="/zfrontier/aci-tenant-design-patterns/history/v1/">history/v1/</a></li></ul>
+</section>
+</main>
+<footer class="wrap">
+<p class="meta">Page: <strong>ACI tenant design patterns</strong> · Version: <strong>v1 · 28 Nov 2026, 9:47 AM AEDT</strong></p>
+<p class="meta">Illustrative reference for placing a VRF, bridge domain and EPG in tenant common or a user tenant, with Ansible and Terraform models. Nothing on this page was written to an APIC. Folder links end with <code>/</code>.</p>
+</footer>
+<script src="/zfrontier/travel/sort.js"></script>
+<script>window.goatcounter={path:function(){return location.pathname.replace(/\/index\.html$/i,"").replace(/\/+$/,"")||"/"}}</script>
+<script>(function(){var b=String.fromCharCode(99,111,108,101,115);var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';s.setAttribute('data-goatcounter','https://amoeoo-'+b+'.goatcounter.com/count');document.head.appendChild(s);}());</script>
+<!-- icon-menu v1 -->
+<style id="im-style">
+nav.site.im{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:var(--site-content-max,1200px);box-sizing:border-box;padding:6px 0 8px;gap:6px;font:650 11.5px/1 system-ui,Arial,sans-serif}
+nav.site.im .im-main,nav.site.im .im-sub-pills{display:grid!important;width:100%;gap:4px;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+nav.site.im details.im-sub,nav.site.im .im-sub{display:flex;flex-direction:column;align-items:stretch;width:100%;box-sizing:border-box;gap:4px;margin:0;padding:6px 8px;border-left:3px solid var(--im-accent,var(--menu-on,#2563eb));background:color-mix(in srgb,var(--im-accent,#2563eb) 10%,transparent);border-radius:8px}
+nav.site.im a.mi{display:flex!important;align-items:center;gap:5px;box-sizing:border-box;width:100%;height:28px;min-height:28px;max-height:28px;min-width:0;padding:0 8px;border-radius:999px;border:1px solid color-mix(in srgb,var(--im-accent,#2563eb) 40%,var(--menu-pill-bd,#3a4456))!important;background:var(--menu-pill,#1b2330)!important;color:var(--menu-pill-fg,#d6e9ff)!important;text-decoration:none!important}
+nav.site.im a.mi:hover{background:color-mix(in srgb,var(--im-accent,#2563eb) 16%,var(--menu-hover,#26344a))!important}
+nav.site.im a.mi.on{background:var(--im-accent,#2563eb)!important;border-color:var(--im-accent,#2563eb)!important;color:var(--menu-on-fg,#fff)!important}
+nav.site.im a.mi .ic{display:inline-flex;align-items:center;justify-content:center;flex:none;width:18px;height:18px;border-radius:50%;background:color-mix(in srgb,var(--im-accent,#2563eb) 22%,transparent);font-size:11px;line-height:1}
+nav.site.im a.mi.on .ic{background:rgba(255,255,255,.22)}
+nav.site.im a.mi .im-l{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1;text-align:left}
+nav.site.im a.mi.sm{font-size:11px}
+nav.site.im a.sl,nav.site.im summary.sl{color:var(--link,#8ecbff)!important;font-size:12px;font-weight:700;text-decoration:none;padding:0 2px;display:flex;align-items:center;gap:6px;cursor:pointer;list-style:none}
+nav.site.im summary.sl::-webkit-details-marker{display:none}
+nav.site.im a.mi .im-n{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto;min-width:14px;height:14px;padding:0 4px;border-radius:999px;font-size:9px;font-weight:700;line-height:1;background:color-mix(in srgb,var(--im-accent,#2563eb) 35%,#93c5fd);color:#0f172a}
+nav.site.im a.mi.on .im-n{background:#fff;color:#1d4ed8}
+nav.site.im a.mi .im-seq{display:inline-flex!important;align-items:center;justify-content:center;flex:none;min-width:16px;height:16px;padding:0 4px;border-radius:999px;font-size:10px!important;font-weight:800;line-height:1;background:#0f172a!important;color:#fff!important}
+html[data-theme="dark"] nav.site.im a.mi .im-seq{background:#f8fafc!important;color:#0f172a!important}
+nav.site.im a.mi.on .im-seq{background:#fff!important;color:var(--im-accent,#1d4ed8)!important}
+nav.site.im a.mi .im-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 2px color-mix(in srgb,var(--im-accent,#2563eb) 18%,transparent);flex:none}
+nav.site.im .im-stats{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font:600 11px/1.3 system-ui,Arial,sans-serif;color:var(--menu-fg,#94a3b8);padding:2px 2px 0;opacity:.9}
+nav.site.im .im-stats a{color:var(--link,#8ecbff);text-decoration:none}
+nav.site.im .im-stats .im-stat-n{font-variant-numeric:tabular-nums;font-weight:700}
+#tt-wrap{position:static!important;display:flex;flex-wrap:nowrap;gap:6px;align-items:center;justify-content:flex-end;width:100%;height:28px;flex:none}
+#sg-link,#tt-btn,#mm-link{height:28px;border-radius:999px;font-size:12px}
+#mm-link{width:28px;padding:0}
+@media (max-width:1099px){nav.site.im .im-main,nav.site.im .im-sub-pills{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:720px){
+  nav.site.im .im-main{grid-template-columns:repeat(2,minmax(0,1fr))}
+  nav.site.im .im-sub-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  nav.site.im summary.sl .im-toggle{display:inline}
+}
+@media (min-width:721px){
+  nav.site.im details.im-sub[open] .im-sub-pills,nav.site.im details.im-sub .im-sub-pills{display:grid!important}
+  nav.site.im summary.sl .im-toggle{display:none}
+}
+</style>
+<script id="im-script">(function(){
+var G=[["Home","/","🏠",[]],["About Me","/about-me/","👤",[]],["NETBOX","/tasks/netbox/","🗄️",[["NetBox ACI Tenants","/netbox-aci-tenants/","🗄️"],["Tenant Diagrams","/netbox-aci-tenants/diagrams/","📐"],["NB ACI Objects","/netbox-aci-objects/","🧱"],["NB HW Inventory","/netbox-hw-inventory/","🖥️"],["YAML Model","/netbox-yaml-model/","📄"],["AOAPIC Model","/netbox-yaml-model/aoapic/","🌐"],["NetBox History","/tasks/netbox/history/","🔀"]]],["PROVISIONING","/tasks/provisioning/","⚙️",[["Cursor_Tenant6","/ARR/provisioning/cursor-tenant6/","🚀"],["Pending Provisioning","/report17-aoapic-monitoring/pending-provisioning/","⏳"],["Universal Provisioning","/report17-aoapic-monitoring/universal-provisioning/","🧩"],["ACI Demo Guide Policy","/tasks/provisioning/aci-lab-guide-policy/","🚀"]]],["MONITORING","/tasks/monitoring/","📊",[["Report 17","/report17-aoapic-monitoring/","📊"],["Tenants Detail","/report17-aoapic-monitoring/tenants/","🏢"],["Object Drill-down","/report17-aoapic-monitoring/objects/","🔍"],["AOAPIC Faults","/tasks/monitoring/aoapic/","🌐"],["ARR Faults","/tasks/monitoring/arr/","🗄️"],["Group 1","/grafana-screenshots/","📈"],["Group 2","/grafana-screenshots-part2/","📉"]]],["TESTING","/tasks/testing/","🧪",[["nac-test Status","/aoapic-nac-test-status/","✅"],["AOAPIC defaults","/testing/aoapic-defaults/","📄"],["ARR defaults","/testing/arr-defaults/","🧪"],["Defaults compare","/testing/defaults-compare/","⚖️"]]],["ACI Policy","/aci-policy/","🧭",[["ACI Policy","/aci-policy/","🧭"],["Policy Universe","/aci-policy/policy-universe/","🌌"],["Tenants","/aci-policy/tenants/","🏢"],["Policy Tenant","/aci-policy/policy-tenant/","🧱"],["ACI Demo Guide Policy","/aci-policy/aci-lab-guide-policy/","📘"],["Demo Guide Diagrams","/aci-policy/aci-lab-guide-policy/diagrams/","🗺️"],["Fabric, Access, Inventory","/aci-policy/fabric-access-inventory/","🕸️"]]],["ACI Multi-Pod","/aci-multipod/","🔗",[["ACI Multi-Pod","/aci-multipod/","🔗"],["Overview","/aci-multipod/overview/","📘"],["Planning","/aci-multipod/planning/","📋"],["Design","/aci-multipod/design/","📐"],["Migration","/aci-multipod/migration/","↪️"],["Deployment","/aci-multipod/deployment/","🛠️"],["Operations","/aci-multipod/operations/","🩺"],["NaC YAML","/aci-multipod/yaml/","📄"]]],["ACI Azure VXLAN","/aci-azure-vxlan/","☁️",[["ACI Azure VXLAN","/aci-azure-vxlan/","☁️"],["Physical Rack","/aci-azure-vxlan/physical-rack/","🗄️"],["Logical Topology","/aci-azure-vxlan/logical/","🔀"],["Tenant Diagram","/aci-azure-vxlan/tenant-diagram/","🗺️"],["YAML Files","/aci-azure-vxlan/yaml/","📄"],["Deployment","/aci-azure-vxlan/deployment/","🛠️"]]],["Firewall Domain","/firewall-domain/","🛡️",[["Firewall Domain","/firewall-domain/","🛡️"],["Cisco FMT","/firewall-domain/cisco-fmt/","🔄"],["Palo Alto","/firewall-domain/palo-alto/","🟧"],["Other tools","/firewall-domain/other/","🧰"],["ASA build","/firewall-domain/asa-build/","📄"]]],["ACI Demo Guide","/aci-lab-guide/","🧪",[["ACI Demo Guide","/aci-lab-guide/","🧪"],["Introduction","/aci-lab-guide/introduction/","👋"],["ACI Basics","/aci-lab-guide/aci-basics/","📘"],["Access Policies","/aci-lab-guide/access-policies/","🔗"],["VMM Integration","/aci-lab-guide/vmm/","💻"],["Tenants","/aci-lab-guide/tenants/","🏢"],["Day 2 Operations","/aci-lab-guide/day2/","🩺"],["Endpoint Security Group","/aci-lab-guide/esg/","🛡️"],["ACI Segmentation","/aci-lab-guide/segmentation/","✂️"],["Nexus Dashboard","/aci-lab-guide/nexus-dashboard/","🟩"],["Orchestrator","/aci-lab-guide/orchestrator/","🌐"],["Insights","/aci-lab-guide/insights/","💡"],["Conclusion","/aci-lab-guide/conclusion/","✅"],["References","/aci-lab-guide/references/","📚"]]],["Demo AI Pod","/demo-ai-pod/","🤖",[["Demo AI Pod","/demo-ai-pod/","🤖"],["Learning Objectives","/demo-ai-pod/learning-objectives/","🎯"],["Get Started","/demo-ai-pod/get-started/","🚀"],["Network Diagram","/demo-ai-pod/network-diagram/","🗺️"],["Task 1: Environment","/demo-ai-pod/task-1/","🖥️"],["Task 2: RAG","/demo-ai-pod/task-2/","📚"],["Task 3: vLLM","/demo-ai-pod/task-3/","⚡"],["Task 4: Vision","/demo-ai-pod/task-4/","👁️"],["Task 5: Explore Further","/demo-ai-pod/task-5/","🔬"],["What We Have Shown","/demo-ai-pod/wrap-up/","✅"],["About Cisco AI PODs","/demo-ai-pod/addendum/","ℹ️"],["Training & Fine-Tuning","/demo-ai-pod/training-fine-tuning/","📘"],["VXLAN EVPN","/demo-ai-pod/vxlan-evpn/","🔷"]]],["Intersight Demo","/intersight-demo/","🔭",[["Intersight Demo","/intersight-demo/","🔭"],["Get Started","/intersight-demo/get-started/","🚀"],["Power & Energy","/intersight-demo/power-energy/","⚡"],["Servers, FIs & Chassis","/intersight-demo/operate/","🗄️"],["Server & GPU Inventory","/intersight-demo/gpu-inventory/","🎮"],["Intersight in AI POD Design","/intersight-demo/ai-pod-design/","📘"],["What We Have Shown","/intersight-demo/wrap-up/","✅"],["Cheat Sheet","/intersight-demo/cheat-sheet/","📋"],["Reports","/intersight-demo/reports/","📑"]]],["ITIL","/tasks/itil/","📋",[["AOAPIC ITIL","/itil/aoapic/","🌐"],["ARR ITIL","/itil/arr/","🧪"],["Site Wiki","/itil/wiki/","📖"]]],["RoadMap","/roadmap/","🗺️",[["RoadMap","/roadmap/","🗺️"],["MindMap","/mindmap/","🧠"],["ရှေ့သို့ချီ","/roadmap/forward/","⏩"],["Time Map 2026–2030","/roadmap/forward/time-map/","🗓️"],["BridgeWhy","/roadmap/bridgewhy/","📚"]]],["Virtual DC","/virtual-dc/","🏢",[["Data center","/virtual-dc/","🏢"],["Design report","/virtual-dc/report.html","📘"],["Capacity planning","/virtual-dc/capacity.html","📊"]]],["ARR-LargeTopology","/ARR-LargeTopology/","🗺️",[["Overview","/ARR-LargeTopology/","🗺️"],["Nodes","/ARR-LargeTopology/nodes.html","🖥️"],["Serials","/ARR-LargeTopology/serials.html","🔢"],["Mgmt IPs","/ARR-LargeTopology/mgmt-ips.html","🌐"],["Links","/ARR-LargeTopology/links.html","🔗"],["Tenants","/ARR-LargeTopology/tenants.html","🏢"],["VRFs","/ARR-LargeTopology/vrfs.html","🧭"],["BDs","/ARR-LargeTopology/bds.html","🌉"],["Subnets","/ARR-LargeTopology/subnets.html","🔢"],["EPGs","/ARR-LargeTopology/epgs.html","🎯"],["Leaf VNIs","/ARR-LargeTopology/vni.html","💠"],["VXLAN","/ARR-LargeTopology/vxlan/","🧵"],["VNI compare","/ARR-LargeTopology/vni-compare/","🔷"],["Access policies","/ARR-LargeTopology/access-policies/","🧱"],["BD GIPo & FTAG","/ARR-LargeTopology/bd-gipo-ftag/","📡"],["IAC files","/ARR-LargeTopology/iac-files/","📦"],["ARR-netbox","/ARR-LargeTopology/arr-netbox/","🗄️"],["Hardware monitor","/ARR-LargeTopology/hw-monitor/","📟"],["Site map","/ARR-LargeTopology/site-map/","🌳"],["Provisioning","/ARR-LargeTopology/provisioning/","🚀"],["Test explain","/ARR-LargeTopology/test-explain/","🧪"],["GitLab","/ARR-LargeTopology/gitlab/","🦊"],["GitLab Runner","/ARR-LargeTopology/gitlab-runner/","🏃"]]],["Terragrunt","/terragrunt/","🧰",[["Terragrunt","/terragrunt/","🧰"]]],["zFrontier","/zfrontier/","🌠",[["zFrontier","/zfrontier/","🌠"],["Southwest Chief","/zfrontier/southwest-chief/","🚂"],["Southwest Chief tracker","/zfrontier/southwest-chief/tracker/","📡"],["Southwest Chief stations","/zfrontier/southwest-chief/stations/","🚉"],["Farzad","/zfrontier/farzad/","📺"],["SpaceX vs Tesla shares","/zfrontier/shares/","📈"],["Optimus","/zfrontier/optimus/","🤖"],["Gigafactory","/zfrontier/gigafactory/","🏭"],["FSD versions","/zfrontier/fsd-versions/","🛣️"],["Liquid cooling","/zfrontier/liquid-cooling/","💧"],["SpaceX Tracking","/zfrontier/spacex/","🚀"],["CyberCab","/zfrontier/cybercab/","🚕"],["AI FineTune Pod","/zfrontier/ai-finetune-pod/","🎛️"],["MCP Servers","/zfrontier/mcp-servers/","🔌"],["NaC CLI","/zfrontier/nac-cli/","🧰"],["GPU Workflow","/zfrontier/3gpu-ai-workflow/","🧮"],["MWMESH","/zfrontier/mwmesh/","📡"],["Notebooks","/zfrontier/notebooks/","📓"],["RAG documents","/zfrontier/rag-documents/","📚"],["Foundation-Sec-8B","/zfrontier/foundation-sec-8b/","🛡️"],["Terafab","/zfrontier/terafab/","💠"],["3DiffsVXLAN","/zfrontier/3diffsvxlan/","🔀"],["ARR-LargePod","/zfrontier/arr-largepod/","🏗️"],["Nvidia A100 & H100","/zfrontier/Nvidia-A100-H100/","🟩"],["AgenticAI","/zfrontier/agenticai/","🧠"],["MS-02 GPU Monitoring","/zfrontier/MS-02-GPU-Monitoring/","📟"],["MBPro","/zfrontier/MBPro/","💻"],["Observability catalogues","/zfrontier/observability-catalogues/","🔭"]]],["Visitors","/visitors/","👥",[["Visitors","/visitors/","👥"],["Status","/status/","🚦"],["Trends","/visitors/trends/","📈"],["Countries","/visitors/countries/","🌍"],["Git Tracking","/visitors/git-tracking/","🔀"]]],["ACI GUI Forms","/ACI-GUI-Forms/","📝",[["ACI GUI Forms","/ACI-GUI-Forms/","📝"],["GUI Map","/aci-gui-forms/WIP/gui-map/","🗺️"],["APG Access Policy Group","/ACI-GUI-Forms/apg/","🧩"],["Spine Access Policy Group","/ACI-GUI-Forms/spine-apg/","🛰️"]]],["ACI GUI","/aci-gui/","🖥️",[["Create Pod Policy Group","/aci-gui/create-pod-policy-group/","🧬"],["Create Bridge Domain (step 3)","/aci-gui/create-bridge-domain-step3/","🌉"],["Create Subnet","/aci-gui/create-subnet/","🔢"],["Create Application Profile","/aci-gui/create-application-profile/","🧩"],["Create Management EPG","/aci-gui/create-management-epg/","🛠️"],["Static Node Management Addresses","/aci-gui/static-node-management-addresses/","📍"],["Create Fabric Policies","/aci-gui/create-fabric-policies/","🧵"],["Create Access Policies","/aci-gui/create-access-policies/","🔐"],["Create VLAN Pool","/aci-gui/create-vlan-pool/","🏷️"],["Create Physical Domain","/aci-gui/create-physical-domain/","🏛️"],["Create Access Interface Policy Group","/aci-gui/create-access-interface-policy-group/","🔌"],["Create PC Interface Policy Group","/aci-gui/create-pc-interface-policy-group/","🔀"],["Note on Interface Policies","/aci-gui/interface-policies/","📘"],["Interface Wizard for vPC","/aci-gui/interface-wizard-vpc/","🪄"],["Create VMM Domain","/aci-gui/create-vmm-domain/","💻"],["vCenter Networking","/aci-gui/vcenter-networking/","🖥️"],["Create Tenant","/aci-gui/create-tenant/","🏢"],["Create L3Out","/aci-gui/create-l3out/","🌐"],["L3Out Contracts","/aci-gui/l3out-contracts/","📜"],["Create Bridge Domain","/aci-gui/create-bridge-domain/","🌉"],["Bridge Domain","/aci-gui/bridge-domain/","🌉"],["Mgmt Bridge Domain","/aci-gui/mgmt-bridge-domain/","🔧"],["DHCP Relay","/aci-gui/dhcp-relay/","📡"],["Management Application Profile","/aci-gui/management-application-profile/","📦"],["Application Profile (web + app)","/aci-gui/application-profile/","🧩"],["Create VRF","/aci-gui/create-vrf/","🧭"],["Create Endpoint Group","/aci-gui/create-endpoint-group/","🎯"],["Contracts Between Tenants","/aci-gui/contracts-between-tenants/","🤝"],["Create Filter","/aci-gui/create-filter/","🧹"],["Create Contract","/aci-gui/create-contract/","📃"],["Create Management Contracts","/aci-gui/create-management-contracts/","📑"],["Mgmt PortGroup to VM","/aci-gui/mgmt-portgroup-to-vm/","🧷"],["Pod Policy Group","/aci-gui/pod-policy-group/","🕒"]]]];
+var MM_EXTRA=[["IaC flow","/iac/form/","🔄",[["Form","/iac/form/","📝"],["NetBox","/iac/netbox/","🗄️"],["Super Portal Front End","/iac/super-portal/","🖥️"],["Pipeline","/iac/pipeline/","⚙️"],["Approval","/iac/approval/","✅"],["Dev and Prod","/iac/dev-prod/","🚀"]]],["Environments","/iac/aci/","🌐",[["ACI","/iac/aci/","🔌"],["SDA","/iac/sda/","📡"],["SD-WAN","/iac/sdwan/","🌍"],["VXLAN EVPN","/iac/vxlan-evpn/","🔀"],["Nexus Dashboard","/iac/nexus-dashboard/","📊"],["Meraki","/iac/meraki/","📡"],["Load Balancer","/iac/loadbalancer/","🟦"],["Firewall","/iac/firewall/","🛡️"]]]];
+var IM_UPDATED=["/","/netbox-aci-objects/","/netbox-aci-tenants/","/netbox-aci-tenants/diagrams/","/netbox-aci-tenants/diagrams/aci-p01-tenant/","/netbox-aci-tenants/diagrams/cursor-tenant1/","/netbox-aci-tenants/diagrams/cursor-tenant2/","/netbox-aci-tenants/diagrams/cursor-tenant3/","/netbox-aci-tenants/diagrams/cursor-tenant5/","/netbox-aci-tenants/diagrams/cursor-tenant6/","/netbox-aci-tenants/diagrams/msite-p01-tenant/","/netbox-hw-inventory/","/netbox-yaml-model/","/netbox-yaml-model/aci-p01-tenant/","/netbox-yaml-model/cursor-tenant1/","/netbox-yaml-model/cursor-tenant2/","/netbox-yaml-model/cursor-tenant3/","/netbox-yaml-model/cursor-tenant5/","/netbox-yaml-model/cursor-tenant6/","/netbox-yaml-model/msite-p01-tenant/","/report17-aoapic-monitoring/","/report17-aoapic-monitoring/objects/","/report17-aoapic-monitoring/objects/access_port_pgs/","/report17-aoapic-monitoring/objects/aeps/","/report17-aoapic-monitoring/objects/app_profiles/","/report17-aoapic-monitoring/objects/audit_24h/","/report17-aoapic-monitoring/objects/audit_7d/","/report17-aoapic-monitoring/objects/bd_subnets/","/report17-aoapic-monitoring/objects/bds/","/report17-aoapic-monitoring/objects/bundle_pgs/","/report17-aoapic-monitoring/objects/contracts/","/report17-aoapic-monitoring/objects/endpoints/","/report17-aoapic-monitoring/objects/epg_subnets/","/report17-aoapic-monitoring/objects/epgs/","/report17-aoapic-monitoring/objects/events_24h/","/report17-aoapic-monitoring/objects/faults/","/report17-aoapic-monitoring/objects/filters/","/report17-aoapic-monitoring/objects/interfaces/","/report17-aoapic-monitoring/objects/interfaces_up/","/report17-aoapic-monitoring/objects/l3_domains/","/report17-aoapic-monitoring/objects/l3outs/","/report17-aoapic-monitoring/objects/nodes/","/report17-aoapic-monitoring/objects/phys_domains/","/report17-aoapic-monitoring/objects/port_channels/","/report17-aoapic-monitoring/objects/static_paths/","/report17-aoapic-monitoring/objects/tenants/","/report17-aoapic-monitoring/objects/vlan_pools/","/report17-aoapic-monitoring/objects/vmm_domains/","/report17-aoapic-monitoring/objects/vpcs/","/report17-aoapic-monitoring/objects/vrfs/","/report17-aoapic-monitoring/pending-provisioning/","/report17-aoapic-monitoring/tenants/","/report17-aoapic-monitoring/universal-provisioning/","/report17-aoapic-monitoring/universal-provisioning/rma/","/roadmap/","/roadmap/america-driving/","/roadmap/america-driving/car-hire-boise-las-vegas/","/roadmap/america-driving/car-hire-las-vegas-phoenix/","/roadmap/america-driving/car-hire-san-jose-boise/","/roadmap/america-driving/las-vegas-to-boca-chica/","/roadmap/america-driving/leg-1-sfo-boise/","/roadmap/america-driving/leg-2-boise-las-vegas/","/roadmap/america-driving/leg-3-las-vegas-tucson-via-phoenix/","/roadmap/america-driving/leg-4-tucson-los-angeles/","/roadmap/bridgewhy/","/roadmap/bridgewhy/america-driving/","/roadmap/bridgewhy/bgp-mpls-enterprise-network-design/","/roadmap/bridgewhy/campus-network-design/","/roadmap/bridgewhy/ccna/","/roadmap/bridgewhy/cisco-aci/","/roadmap/bridgewhy/cisco-aci/lesson-01/","/roadmap/bridgewhy/cisco-aci/lesson-02/","/roadmap/bridgewhy/cisco-aci/lesson-03/","/roadmap/bridgewhy/cisco-aci/lesson-04/","/roadmap/bridgewhy/cisco-aci/lesson-05/","/roadmap/bridgewhy/cisco-aci/lesson-06/","/roadmap/bridgewhy/cisco-aci/lesson-07/","/roadmap/bridgewhy/cisco-aci/lesson-08/","/roadmap/bridgewhy/cisco-aci/lesson-09/","/roadmap/bridgewhy/cisco-aci/lesson-10/","/roadmap/bridgewhy/cisco-aci/lesson-11/","/roadmap/bridgewhy/cisco-aci/lesson-12/","/roadmap/bridgewhy/cisco-ise/","/roadmap/bridgewhy/cisco-sd-access/","/roadmap/bridgewhy/cisco-sd-wan/","/roadmap/bridgewhy/data-center-vxlan-bgp-evpn/","/roadmap/bridgewhy/enterprise-quality-of-service/","/roadmap/bridgewhy/git-for-network-engineers/","/roadmap/bridgewhy/introduction/","/roadmap/bridgewhy/ipv6-fundamentals/","/roadmap/bridgewhy/is-is-routing-protocol/","/roadmap/bridgewhy/linux-operating-system/","/roadmap/bridgewhy/llms-from-scratch/","/roadmap/bridgewhy/machine-learning-fundamentals/","/roadmap/bridgewhy/network-automation/","/roadmap/bridgewhy/network-security-fundamentals/","/roadmap/bridgewhy/ospf-deep-dive/","/roadmap/bridgewhy/switching-fundamentals/","/roadmap/bridgewhy/tcp-protocol-deep-dive/","/roadmap/bridgewhy/wireless-fundamentals-wlc-9800/","/roadmap/bridgewhy/wireshark-packet-analysis/","/visitors/","/visitors/countries/","/zfrontier/","/zfrontier/3diffsvxlan/","/zfrontier/3gpu-ai-workflow/","/zfrontier/3gpu-ai-workflow/check/","/zfrontier/3gpu-ai-workflow/checklist/","/zfrontier/3gpu-ai-workflow/ms-02-ultra/","/zfrontier/MBPro/","/zfrontier/MS-02-GPU-Monitoring/","/zfrontier/Nvidia-A100-H100/","/zfrontier/agenticai/","/zfrontier/ai-finetune-pod/","/zfrontier/ai-finetune-pod/checklist/","/zfrontier/ai-finetune-pod/plan/","/zfrontier/ai-finetune-pod/showcase/","/zfrontier/arr-largepod/","/zfrontier/ces-2027/","/zfrontier/ces-2027/03-jan/","/zfrontier/ces-2027/03-jan/autonomous-drones/","/zfrontier/ces-2027/03-jan/frontier-tech/","/zfrontier/ces-2027/03-jan/physical-ai/","/zfrontier/ces-2027/03-jan/robots/","/zfrontier/ces-2027/04-jan/","/zfrontier/ces-2027/04-jan/autonomous-drones/","/zfrontier/ces-2027/04-jan/frontier-tech/","/zfrontier/ces-2027/04-jan/physical-ai/","/zfrontier/ces-2027/04-jan/robots/","/zfrontier/ces-2027/05-jan/","/zfrontier/ces-2027/05-jan/autonomous-drones/","/zfrontier/ces-2027/05-jan/frontier-tech/","/zfrontier/ces-2027/05-jan/physical-ai/","/zfrontier/ces-2027/05-jan/robots/","/zfrontier/ces-2027/06-jan/","/zfrontier/ces-2027/06-jan/autonomous-drones/","/zfrontier/ces-2027/06-jan/frontier-tech/","/zfrontier/ces-2027/06-jan/physical-ai/","/zfrontier/ces-2027/06-jan/robots/","/zfrontier/ces-2027/07-jan/","/zfrontier/ces-2027/07-jan/autonomous-drones/","/zfrontier/ces-2027/07-jan/frontier-tech/","/zfrontier/ces-2027/07-jan/physical-ai/","/zfrontier/ces-2027/07-jan/robots/","/zfrontier/ces-2027/08-jan/","/zfrontier/ces-2027/08-jan/autonomous-drones/","/zfrontier/ces-2027/08-jan/frontier-tech/","/zfrontier/ces-2027/08-jan/physical-ai/","/zfrontier/ces-2027/08-jan/robots/","/zfrontier/cybercab/","/zfrontier/cybercab/city-info/","/zfrontier/cybercab/production/","/zfrontier/cybercab/taxi-fleet/","/zfrontier/farzad/","/zfrontier/foundation-sec-8b/","/zfrontier/fsd-versions/","/zfrontier/gigafactory/","/zfrontier/liquid-cooling/","/zfrontier/mcp-servers/","/zfrontier/mcp-servers/aci/","/zfrontier/mcp-servers/dna/","/zfrontier/mcp-servers/nexus-dashboard/","/zfrontier/meraki/","/zfrontier/meraki/alerts/","/zfrontier/meraki/devices/","/zfrontier/meraki/firmware/","/zfrontier/meraki/licensing/","/zfrontier/meraki/networks/","/zfrontier/mwmesh/","/zfrontier/mwmesh/australia-plan/","/zfrontier/nac-cli/","/zfrontier/nac-cli/apply/","/zfrontier/nac-cli/destroy/","/zfrontier/nac-cli/init/","/zfrontier/nac-cli/integration/","/zfrontier/nac-cli/plan/","/zfrontier/nac-cli/setup/","/zfrontier/nac-cli/test/","/zfrontier/nac-cli/validate/","/zfrontier/notebooks/","/zfrontier/notebooks/advanced-agentic-ai/","/zfrontier/notebooks/cisco-fdtn-model/","/zfrontier/notebooks/f1-qualifying-prediction/","/zfrontier/notebooks/simple-agentic-ai/","/zfrontier/optimus/","/zfrontier/rag-documents/","/zfrontier/shares/","/zfrontier/southwest-chief/","/zfrontier/southwest-chief/stations/","/zfrontier/southwest-chief/stations/abq/","/zfrontier/southwest-chief/stations/bar/","/zfrontier/southwest-chief/stations/chi/","/zfrontier/southwest-chief/stations/ddg/","/zfrontier/southwest-chief/stations/flg/","/zfrontier/southwest-chief/stations/fmd/","/zfrontier/southwest-chief/stations/ful/","/zfrontier/southwest-chief/stations/gbb/","/zfrontier/southwest-chief/stations/gck/","/zfrontier/southwest-chief/stations/glp/","/zfrontier/southwest-chief/stations/hut/","/zfrontier/southwest-chief/stations/kcy/","/zfrontier/southwest-chief/stations/kng/","/zfrontier/southwest-chief/stations/laj/","/zfrontier/southwest-chief/stations/lap/","/zfrontier/southwest-chief/stations/lax/","/zfrontier/southwest-chief/stations/lmr/","/zfrontier/southwest-chief/stations/lmy/","/zfrontier/southwest-chief/stations/lrc/","/zfrontier/southwest-chief/stations/lsv/","/zfrontier/southwest-chief/stations/mdt/","/zfrontier/southwest-chief/stations/ndl/","/zfrontier/southwest-chief/stations/new/","/zfrontier/southwest-chief/stations/npv/","/zfrontier/southwest-chief/stations/pct/","/zfrontier/southwest-chief/stations/rat/","/zfrontier/southwest-chief/stations/riv/","/zfrontier/southwest-chief/stations/snb/","/zfrontier/southwest-chief/stations/top/","/zfrontier/southwest-chief/stations/tri/","/zfrontier/southwest-chief/stations/vrv/","/zfrontier/southwest-chief/stations/wlo/","/zfrontier/southwest-chief/tracker/","/zfrontier/spacex/","/zfrontier/spacex/boosters/","/zfrontier/spacex/boosters/previous/","/zfrontier/spacex/control-center/","/zfrontier/spacex/launch-monitoring/","/zfrontier/spacex/launch-preparation/","/zfrontier/spacex/launch-sequence/","/zfrontier/spacex/raptor/","/zfrontier/spacex/ships/","/zfrontier/spacex/sites/","/zfrontier/terafab/"];
+var IM_ACCENT={"/":"#64748b","/tasks/netbox/":"#2563eb","/tasks/provisioning/":"#0d9488","/tasks/monitoring/":"#0891b2","/tasks/testing/":"#d97706","/aci-policy/":"#16a34a","/aci-multipod/":"#15803d","/aci-azure-vxlan/":"#059669","/firewall-domain/":"#dc2626","/aci-lab-guide/":"#22c55e","/demo-ai-pod/":"#7c3aed","/intersight-demo/":"#0284c7","/tasks/itil/":"#4f46e5","/roadmap/":"#ea580c","/virtual-dc/":"#0f766e","/ARR-LargeTopology/":"#0e7490","/terragrunt/":"#a16207","/zfrontier/":"#7c3aed","/visitors/":"#059669","/ACI-GUI-Forms/":"#16a34a","/aci-gui/":"#15803d"};
+function mmSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'node'}
+function normPath(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function accentOf(href){var h=String(href||'');return IM_ACCENT[h]||IM_ACCENT[h.replace(/\/?$/,'/')]||IM_ACCENT[normPath(h)+'/']||'#2563eb'}
+function pathUpdated(href){
+  var h=normPath(href), list=IM_UPDATED||[];
+  if(h==='/') return list.indexOf('/')>=0;
+  for(var i=0;i<list.length;i++){
+    var u=normPath(list[i]);
+    if(u===h||u.indexOf(h+'/')===0) return true;
+  }
+  return false;
+}
+function setMindmapLink(){
+  var a=document.getElementById('mm-link'); if(!a) return;
+  var path=location.pathname.replace(/index\.html$/,'');
+  if(path==='/mindmap'||path==='/mindmap/'||path.indexOf('/mindmap/')===0){a.href='/mindmap/';return;}
+  var groups=G.concat(MM_EXTRA), best=null, bl=0;
+  groups.forEach(function(g){
+    var items=[[g[0],g[1],null]].concat((g[3]||[]).map(function(e){return [e[0],e[1],g[0]];}));
+    items.forEach(function(it){
+      var u=it[1];
+      if(u==='/'?path==='/':path.indexOf(u)===0){ if(u.length>bl){ bl=u.length; best=it; } }
+    });
+  });
+  if(!best||best[1]==='/'||best[0]==='Home'){ a.href='/mindmap/'; return; }
+  a.href='/mindmap/#'+(best[2]?mmSlug(best[2])+'/'+mmSlug(best[0]):mmSlug(best[0]));
+}
+function mk(e,on,cls,n,seq,accent){
+  var a=document.createElement('a');
+  a.className=cls+(on?' on':'');
+  a.href=e[1];
+  a.title=(seq?String(seq)+'. ':'')+e[0]+(pathUpdated(e[1])?' (updated in the last 7 days)':'');
+  a.style.setProperty('--im-accent', accent||accentOf(e[1]));
+  if(seq){var sq=document.createElement('span');sq.className='im-seq';sq.textContent=String(seq);a.appendChild(sq)}
+  var ic=document.createElement('span');ic.className='ic tt-keep';ic.textContent=e[2];a.appendChild(ic);
+  var lb=document.createElement('span');lb.className='im-l';lb.textContent=e[0];a.appendChild(lb);
+  if(pathUpdated(e[1])){var dot=document.createElement('span');dot.className='im-dot';dot.title='Updated in the last 7 days';dot.setAttribute('aria-label','Updated in the last 7 days');a.appendChild(dot)}
+  if(n){var b=document.createElement('span');b.className='im-n';b.textContent=String(n);a.appendChild(b)}
+  return a;
+}
+function placeWrap(nav){var w=document.getElementById('tt-wrap');if(w&&nav&&(w.parentNode!==nav||nav.firstChild!==w))nav.insertBefore(w,nav.firstChild)}
+function statsRow(){
+  var d=document.createElement('div');d.className='im-stats';
+  d.innerHTML='<a href="/visitors/">Visitors <span class="im-stat-n im-stat-vis">\u2026</span></a><span>\u00b7</span><a href="/visitors/countries/">Countries <span class="im-stat-n im-stat-cc">\u2026</span></a><span>\u00b7</span><span>Updated <span class="im-stat-n im-stat-asof">\u2026</span></span>';
+  return d;
+}
+function run(){var navs=document.querySelectorAll('nav.site');if(!navs.length)return;
+var path=location.pathname.replace(/index\.html$/,'');var gi=-1,si=-1,bl=0;
+G.forEach(function(g,i){var c=[];g[3].forEach(function(e,k){c.push([e[1],k])});c.push([g[1],-1]);c.forEach(function(x){var u=x[0];if(u==='/'?path==='/':path.indexOf(u)===0){if(u.length>bl){bl=u.length;gi=i;si=x[1]}}})});
+navs.forEach(function(n){if(n.classList.contains('im'))return;var keep=document.getElementById('tt-wrap');if(keep&&keep.parentNode===n)n.removeChild(keep);n.classList.add('im');n.innerHTML='';
+var r1=document.createElement('div');r1.className='im-main';G.forEach(function(g,i){r1.appendChild(mk(g,i===gi,'mi',g[3].length,0,accentOf(g[1])))});n.appendChild(r1);placeWrap(n);
+if(gi>=0&&G[gi][3].length){var onlySame=G[gi][3].length===1&&G[gi][3][0][1]===G[gi][1];if(!onlySame){
+var acc=accentOf(G[gi][1]);
+var r2=document.createElement('details');r2.className='im-sub';r2.style.setProperty('--im-accent',acc);
+if(window.matchMedia&&window.matchMedia('(min-width:721px)').matches) r2.open=true;
+var t=document.createElement('summary');t.className='sl';
+t.innerHTML='<span>'+G[gi][0]+' tasks \u203A</span><span class="im-toggle"> (tap to expand)</span>';
+r2.appendChild(t);
+t.addEventListener('click',function(ev){if(window.matchMedia&&window.matchMedia('(min-width:721px)').matches){ev.preventDefault();location.href=G[gi][1];}});
+var pills=document.createElement('div');pills.className='im-sub-pills';G[gi][3].forEach(function(e,k){pills.appendChild(mk(e,k===si,'mi sm',0,k+1,acc))});r2.appendChild(pills);n.appendChild(r2)}}
+n.appendChild(statsRow());});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){run();setMindmapLink();});else {run();setMindmapLink();}
+})();</script>
+<!-- isp-asn v1 -->
+<script id="isp-asn">(function(){
+try{if(sessionStorage.getItem('ispAsnSent'))return}catch(e){}
+function asnOf(v){var s=String(v||'').toUpperCase().replace(/^AS/,'');return /^\d+$/.test(s)?'AS'+s:''}
+function pick(d){
+  if(!d||typeof d!=='object')return null;
+  var cc=String(d.country_code||d.countryCode||'').toUpperCase();
+  if(!/^[A-Z]{2}$/.test(cc)) cc='XX';
+  var asn='',org='';
+  if(d.connection&&typeof d.connection==='object'){
+    asn=d.connection.asn;org=d.connection.org||d.connection.isp||'';
+  }
+  asn=asnOf(asn||d.asn||d.as);
+  if(!asn)return null;
+  org=String(org||d.organization_name||d.organization||d.org||d.isp||d.asn_organization||'').replace(/^AS\d+\s*/i,'').trim()||asn;
+  return {cc:cc,asn:asn,org:org.slice(0,120)};
+}
+function get(url){return fetch(url,{credentials:'omit',cache:'no-store',mode:'cors'}).then(function(r){return r.ok?r.json():Promise.reject()})}
+function send(x){
+  function go(){
+    try{
+      if(!window.goatcounter||typeof window.goatcounter.count!=='function')return false;
+      window.goatcounter.count({path:'isp/'+x.cc+'/'+x.asn,title:x.org,event:true});
+      try{sessionStorage.setItem('ispAsnSent','1')}catch(e){}
+      return true;
+    }catch(e){return true}
+  }
+  if(go())return;
+  var n=0,t=setInterval(function(){if(go()||++n>40)clearInterval(t)},250);
+}
+get('https://get.geojs.io/v1/ip/geo.json').then(pick).catch(function(){return null}).then(function(x){
+  if(x)return x;
+  return get('https://ipwho.is/').then(pick);
+}).then(function(x){if(x)send(x)}).catch(function(){});
+})();</script>
+<!-- uv-badge v2 -->
+<style id="uv-badge-style">
+.uv-pop{position:relative;display:inline-block;vertical-align:middle}
+.uv-pop .uv-card{display:none;position:absolute;right:0;top:calc(100% + 6px);z-index:80;min-width:228px;padding:10px 12px;border-radius:10px;background:var(--card,#0f172a);color:var(--ink,#e2e8f0);border:1px solid var(--line,#334155);box-shadow:0 10px 28px rgba(0,0,0,.28);font:12px/1.4 system-ui,Arial,sans-serif;text-align:left;white-space:normal}
+.uv-pop.open .uv-card{display:block}
+.uv-card svg{display:block;width:204px;height:44px;margin:6px 0 8px}
+.uv-card .uv-k{font-weight:700;margin:0 0 2px}
+.uv-card .uv-m{color:var(--muted,#94a3b8);font-size:11px}
+.uv-card a{color:var(--link,#8ecbff)}
+</style>
+<script id="uv-badge">(function(){
+function norm(s){return String(s||'').split('?')[0].replace(/\/index\.html$/i,'').replace(/\/+$/,'')||'/'}
+function tzParts(iso){
+  var pt=new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'2-digit',minute:'2-digit',hour12:false,hourCycle:'h23',timeZoneName:'short',day:'2-digit',month:'short'}).formatToParts(new Date(iso));
+  var g=function(t){return (pt.find(function(x){return x.type===t})||{}).value||''};
+  var tz=(g('timeZoneName')||'AEDT').replace('GMT+11','AEDT').replace('GMT+10','AEST');
+  return {hh:g('hour'),mm:g('minute'),tz:tz,day:g('day'),mon:g('month')};
+}
+function last30(daysMap){
+  var out=[], now=new Date();
+  var fmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'});
+  for(var i=29;i>=0;i--){
+    var d=new Date(now.getTime()-i*86400000);
+    var key=fmt.format(d);
+    out.push({day:key,count:+((daysMap||{})[key]||0)});
+  }
+  return out;
+}
+function spark(series){
+  var w=204,h=44,p=2;
+  var max=Math.max.apply(null,series.map(function(x){return x.count}).concat([1]));
+  var n=series.length||1;
+  var pts=series.map(function(x,i){
+    var X=p+(i*(w-2*p)/Math.max(1,n-1));
+    var Y=h-p-((x.count/max)*(h-2*p));
+    return X.toFixed(1)+','+Y.toFixed(1);
+  }).join(' ');
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true"><polyline fill="none" stroke="#22c55e" stroke-width="2" points="'+pts+'"/></svg>';
+}
+function fillStats(d){
+  var total=(d.total&& (d.total.total||d.total.total_utc))||0;
+  var cc=(d.countries||[]).length;
+  var asof=d.as_of_aedt||'';
+  document.querySelectorAll('.im-stat-vis').forEach(function(e){e.textContent=total||'0'});
+  document.querySelectorAll('.im-stat-cc').forEach(function(e){e.textContent=cc||'0'});
+  document.querySelectorAll('.im-stat-asof').forEach(function(e){e.textContent=asof||'n/a'});
+}
+function attachPopover(d, count, series){
+  document.querySelectorAll('.uv').forEach(function(uv){
+    if(uv.closest('.uv-pop')) return;
+    var wrap=document.createElement('span');wrap.className='uv-pop';
+    uv.parentNode.insertBefore(wrap,uv);wrap.appendChild(uv);
+    var card=document.createElement('div');card.className='uv-card';card.setAttribute('role','dialog');
+    var last=series.length?series[series.length-1].count:0;
+    card.innerHTML='<p class="uv-k">This page: '+count+' unique visitors</p>'+spark(series)+'<p class="uv-m">Last 30 days (this page). Today so far: '+last+'.</p><p><a href="/visitors/">Full visitor stats \u203A</a></p>';
+    wrap.appendChild(card);
+    function tog(ev){ev.preventDefault();ev.stopPropagation();document.querySelectorAll('.uv-pop.open').forEach(function(x){if(x!==wrap)x.classList.remove('open')});wrap.classList.toggle('open')}
+    uv.addEventListener('click',tog);
+    uv.style.cursor='pointer';
+    uv.title='Click for a 30-day sparkline';
+  });
+  document.addEventListener('click',function(){document.querySelectorAll('.uv-pop.open').forEach(function(x){x.classList.remove('open')})});
+}
+function apply(d){
+  var p=norm(location.pathname);
+  var page=(d.pages||[]).filter(function(x){return norm(x.path)===p});
+  var c=page.reduce(function(a,x){return a+(+x.count||0)},0);
+  var days={};
+  page.forEach(function(x){var m=x.days||{};Object.keys(m).forEach(function(k){days[k]=(days[k]||0)+(+m[k]||0)})});
+  document.querySelectorAll('.uvc').forEach(function(e){e.textContent=c});
+  document.querySelectorAll('.uvt').forEach(function(e){
+    if(d.updated_utc){var t=tzParts(d.updated_utc);e.textContent=' (data as of '+t.hh+':'+t.mm+' '+t.tz+')'}
+  });
+  fillStats(d);
+  attachPopover(d,c,last30(days));
+}
+function fail(){
+  document.querySelectorAll('.uvc').forEach(function(e){if(e.textContent==='\u2026'||e.textContent==='...') e.textContent='n/a'});
+  document.querySelectorAll('.im-stat-vis,.im-stat-cc,.im-stat-asof').forEach(function(e){if(e.textContent==='\u2026') e.textContent='n/a'});
+}
+if(!window.__visitorsData){
+  var ac=typeof AbortController==='function'?new AbortController():null;
+  var timer=setTimeout(function(){try{ac&&ac.abort()}catch(e){}},8000);
+  window.__visitorsData=fetch('/data/visitors.json?'+Date.now(),ac?{signal:ac.signal}:undefined).then(function(r){
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('visitors.json '+r.status);
+    return r.json();
+  });
+}
+window.__visitorsData.then(apply).catch(function(){fail()});
+})();</script>
+</body>
+</html>

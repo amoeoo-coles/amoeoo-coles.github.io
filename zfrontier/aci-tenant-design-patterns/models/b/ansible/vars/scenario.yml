@@ -1,0 +1,48 @@
+---
+# Pattern B — VRF and bridge domains (and their subnets) live in tenant common.
+# Application profiles and EPGs live in user tenants and bind to those common BDs.
+# B1: two application teams, each with a user tenant, share addressing from common.
+# B2: the same fabric, plus a shared-services EPG that provides HTTP to both teams.
+# Both scenarios are additive and are created by this playbook.
+pattern: B
+common_tenant: common
+vrf: vrf-01
+bridge_domains:
+  - bd: bd-web
+    subnet_gateway: 192.0.2.1
+    subnet_mask: 24
+    description: Shared web subnet in tenant common
+  - bd: bd-app
+    subnet_gateway: 198.51.100.1
+    subnet_mask: 24
+    description: Shared app subnet in tenant common
+vrf_enforcement: enforced
+preferred_group: disabled
+subnet_scope: private
+l2_unknown_unicast: proxy
+contract: ctr-web-to-app
+contract_scope: context
+filter: flt-tcp-80
+subject: subj-http
+user_tenants:
+  - tenant: app_web
+    ap: ap-web
+    epg: epg-web
+    bd: bd-web
+    role: consumer
+    security_domain: sec-app-web
+  - tenant: app_data
+    ap: ap-data
+    epg: epg-data
+    bd: bd-app
+    role: provider
+    security_domain: sec-app-data
+shared_services:
+  tenant: app_shared
+  ap: ap-shared
+  epg: epg-shared
+  bd: bd-app
+  role: provider
+  security_domain: sec-app-shared
+  contract: ctr-shared-http
+  contract_scope: context
