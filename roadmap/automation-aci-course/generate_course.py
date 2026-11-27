@@ -922,7 +922,7 @@ def write_lesson(sec: dict, les: dict) -> None:
         "Expand the topic sections for study notes. The Ansible example uses the "
         f"cisco.aci collection. This playbook is a <strong>{kind_word}</strong> example."
     )
-    body = chrome_open(html_title, desc, page_title, lede, menu, show_ai=True, current_path=href)
+    body = chrome_open(html_title, desc, page_title, lede, menu, show_ai=False, current_path=href)
     if n == 20:
         body += (
             '<p>This lesson is kept consistent with the existing note '
@@ -1109,11 +1109,10 @@ def write_hub() -> None:
     n_les = sum(len(s["lessons"]) for s in COURSE["sections"])
     n_quiz = sum(1 for s in COURSE["sections"] if s.get("quiz"))
     lede = (
-        f"A hidden study course on Cisco ACI automation. There are {n_sec} sections, {n_les} lessons and {n_quiz} quizzes. "
+        f"There are {n_sec} sections, {n_les} lessons and {n_quiz} quizzes. "
         "Each lesson has expandable study notes and an Ansible playbook that uses the cisco.aci collection. "
         "This area is not listed on the public RoadMap page or in the site menu. "
-        "Use the navigation bar or the Outline control to move between pages. "
-        'A hidden course visitor tracking view is at <a href="/roadmap/automation-aci-course/visitors/">visitors/</a>.'
+        "Use the navigation bar or the Outline control to move between pages."
     )
     body = chrome_open(
         "Automation ACI Course",
@@ -1121,7 +1120,7 @@ def write_hub() -> None:
         "Automation ACI Course",
         lede,
         [],
-        show_ai=True,
+        show_ai=False,
         current_path=HUB_PATH,
     )
     body += '<h2 id="course-contents">Course contents</h2>\n' + "\n".join(blocks) + "\n"
